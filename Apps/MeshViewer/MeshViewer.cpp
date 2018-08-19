@@ -6,6 +6,7 @@
 #include "MeshViewer.h"
 #include "Base\Core\Core.h"
 #include "Base\Core\IRefCount.h"
+#include "Rendering\RenderWindow\IRenderWindow.h"
 #include "Rendering\SceneGraph\SceneGraph.h"
 #include "Geometry\MeshImport\MeshImport.h"
 #include <Windows.h>
@@ -15,53 +16,21 @@
 
 using namespace Caustic;
 
-class CCausticRenderer
-{
-public:
-    CRefObj<IRendererMarshaller> m_spMarshaller;
-    CRefObj<ISceneGraph> m_spSceneGraph;
-    CRefObj<ICamera> m_spCamera;
-    CRefObj<IRenderer> m_spRenderer;
-    CRefObj<ITrackball> m_spTrackball;
-    bool m_tracking;
-    Vector3 m_eye;
-    Vector3 m_look;
-    Vector3 m_up;
-    HWND m_hwnd;
-    DirectX::XMMATRIX m_view;
-    DirectX::XMMATRIX m_invview;
-public:
-    CCausticRenderer() : m_tracking(false)
-    {
-    }
+CRefObj<IRenderWindow> spRenderWindow;
 
-    void Initialize(HWND hWnd);
-    void MouseDown(int x, int y);
-    void MouseMove(int x, int y, uint32 flags);
-    void MouseUp(int x, int y);
-    void MouseWheel(int factor);
-    void AddPointLight(Vector3 &lightPos);
-};
-
-void CCausticRenderer::AddPointLight(Vector3 &lightPos)
+void AddPointLight(Vector3 &lightPos)
 {
     CRefObj<IScenePointLightElem> spLightElem;
     Scene::CreatePointLightElem(&spLightElem);
     spLightElem->SetPosition(lightPos);
     Vector3 lightColor(1.0f, 1.0f, 1.0f);
     spLightElem->SetColor(lightColor);
-    m_spSceneGraph->AddChild(spLightElem.p);
+    spRenderWindow->GetSceneGraph()->AddChild(spLightElem.p);
 }
 
-void CCausticRenderer::Initialize(HWND hWnd)
+void InitializeCaustic(HWND hWnd)
 {
-    m_hwnd = hWnd;
     Caustic::CausticSetup();
-    Caustic::CreateRendererMarshaller(&m_spMarshaller);
-    m_spMarshaller->Initialize(hWnd);
-    Scene::CreateSceneGraph(&m_spSceneGraph);
-    m_spMarshaller->SetSceneGraph(m_spSceneGraph.p);
-    CreateCamera(true, &m_spCamera);
     Vector3 lightPos(10.0f, 10.0f, 10.0f);
     AddPointLight(lightPos);
     lightPos = Vector3(-10.0f, 10.0f, 10.0f);
@@ -78,81 +47,9 @@ void CCausticRenderer::Initialize(HWND hWnd)
     AddPointLight(lightPos);
     lightPos = Vector3(-10.0f, -10.0f, -10.0f);
     AddPointLight(lightPos);
-    m_spMarshaller->GetRenderer(&m_spRenderer);
-    m_spRenderer->SetCamera(m_spCamera.p);
-    CreateTrackball(&m_spTrackball);
-}
-
-void CCausticRenderer::MouseDown(int x, int y)
-{
-    Vector3 up;
-    m_spCamera->GetPosition(&m_eye, &m_look, nullptr, nullptr, &up, nullptr);
-    m_up.x = m_eye.x + up.x;
-    m_up.y = m_eye.y + up.y;
-    m_up.z = m_eye.z + up.z;
-    RECT rect;
-    GetClientRect(m_hwnd, &rect);
-    int w = rect.right - rect.left;
-    int h = rect.bottom - rect.top;
-    m_view = m_spCamera->GetView();
-    m_invview = DirectX::XMMatrixInverse(nullptr, m_view);
-    m_spTrackball->BeginTracking(x, y, w, h);
-    m_tracking = true;
-}
-
-void CCausticRenderer::MouseMove(int x, int y, uint32 flags)
-{
-    if (m_tracking)
-    {
-        DirectX::XMMATRIX mat;
-        ETrackballConstrain constraint;
-        if (flags & MK_CONTROL)
-            constraint = ETrackballConstrain::Constraint_XAxis;
-        else if (flags & MK_SHIFT)
-            constraint = ETrackballConstrain::Constraint_YAxis;
-        else
-            constraint = ETrackballConstrain::Constraint_None;
-        if (m_spTrackball->UpdateTracking(x, y, constraint, &mat))
-        {
-            DirectX::XMVECTOR vLook = DirectX::XMVectorSet(m_look.x, m_look.y, m_look.z, 1.0f);
-            vLook = DirectX::XMVector3Transform(vLook, m_view);
-            DirectX::XMMATRIX mtrans = DirectX::XMMatrixTranslation(-DirectX::XMVectorGetX(vLook), -DirectX::XMVectorGetY(vLook), -DirectX::XMVectorGetZ(vLook));
-            DirectX::XMMATRIX minvtrans = DirectX::XMMatrixTranslation(DirectX::XMVectorGetX(vLook), DirectX::XMVectorGetY(vLook), DirectX::XMVectorGetZ(vLook));
-            DirectX::XMMATRIX m = DirectX::XMMatrixMultiply(m_view,
-                DirectX::XMMatrixMultiply(mtrans,
-                    DirectX::XMMatrixMultiply(mat,
-                        DirectX::XMMatrixMultiply(minvtrans, m_invview))));
-            DirectX::XMVECTOR eye = DirectX::XMVectorSet(m_eye.x, m_eye.y, m_eye.z, 1.0f);
-            DirectX::XMVECTOR up = DirectX::XMVectorSet(m_up.x, m_up.y, m_up.z, 1.0f);
-            eye = DirectX::XMVector4Transform(eye, m);
-            up = DirectX::XMVector3Transform(up, m);
-            Vector3 neye(DirectX::XMVectorGetX(eye), DirectX::XMVectorGetY(eye), DirectX::XMVectorGetZ(eye));
-            Vector3 nup(DirectX::XMVectorGetX(up), DirectX::XMVectorGetY(up), DirectX::XMVectorGetZ(up));
-            nup = nup - neye;
-            nup.Normalize();
-            m_spCamera->SetPosition(neye, m_look, nup);
-        }
-    }
-}
-
-void CCausticRenderer::MouseUp(int x, int y)
-{
-    m_spTrackball->EndTracking();
-    m_tracking = false;
-}
-
-void CCausticRenderer::MouseWheel(int factor)
-{
-    Vector3 eye, look, up, n;
-    //    float distance = factor / 120;
-    m_spCamera->GetPosition(&eye, &look, &up, nullptr, nullptr, &n);
-    Vector3 dirVec = ((factor < 0.0f) ? -1.0f : +1.0f) * n;
-    eye = eye + dirVec;
-    m_spCamera->SetPosition(eye, look, up);
 }
 
 // Global Variables:
-CCausticRenderer *pRenderer;
 HWND hWnd;
 HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
@@ -253,8 +150,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    }
 
    // Setup our renderer
-   pRenderer = new CCausticRenderer();
-   pRenderer->Initialize(hWnd);
+   CreateRenderWindow(hWnd, &spRenderWindow);
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
@@ -324,7 +220,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                             CShaderMgr::GetInstance()->FindShader(L"Default", &spShader);
                             spMaterialElem->SetPixelShader(spShader.p);
 
-                            pRenderer->m_spSceneGraph->AddChild(spMaterialElem.p);
+                            spRenderWindow->GetSceneGraph()->AddChild(spMaterialElem.p);
                             spMaterialElem->AddChild(spElem.p);
                         }
                     }
@@ -350,16 +246,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         PostQuitMessage(0);
         break;
     case WM_LBUTTONDOWN:
-        pRenderer->MouseDown((int)LOWORD(lParam), (int)HIWORD(lParam));
+        spRenderWindow->MouseDown((int)LOWORD(lParam), (int)HIWORD(lParam));
         break;
     case WM_LBUTTONUP:
-        pRenderer->MouseUp((int)LOWORD(lParam), (int)HIWORD(lParam));
+        spRenderWindow->MouseUp((int)LOWORD(lParam), (int)HIWORD(lParam));
         break;
     case WM_MOUSEMOVE:
-        pRenderer->MouseMove((int)LOWORD(lParam), (int)HIWORD(lParam), (uint32)wParam);
+        spRenderWindow->MouseMove((int)LOWORD(lParam), (int)HIWORD(lParam), (uint32)wParam);
         break;
     case WM_MOUSEWHEEL:
-        pRenderer->MouseWheel((int)wParam);
+        spRenderWindow->MouseWheel((int)wParam);
         break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);

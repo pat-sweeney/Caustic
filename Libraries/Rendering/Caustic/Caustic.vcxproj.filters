@@ -164,7 +164,6 @@
     <CustomBuild Include="FullQuad.ps">
       <Filter>Source Files\Shaders</Filter>
     </CustomBuild>
-    <CustomBuild Include="ObjID.ps" />
     <CustomBuild Include="FullQuad.vs">
       <Filter>Source Files\Shaders</Filter>
     </CustomBuild>
@@ -175,6 +174,9 @@
       <Filter>Source Files\Shaders</Filter>
     </CustomBuild>
     <CustomBuild Include="ShadowMap.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ObjID.ps">
       <Filter>Source Files\Shaders</Filter>
     </CustomBuild>
   </ItemGroup>
