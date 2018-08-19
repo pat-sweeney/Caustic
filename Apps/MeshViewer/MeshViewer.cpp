@@ -40,7 +40,18 @@ public:
     void MouseMove(int x, int y, uint32 flags);
     void MouseUp(int x, int y);
     void MouseWheel(int factor);
+    void AddPointLight(Vector3 &lightPos);
 };
+
+void CCausticRenderer::AddPointLight(Vector3 &lightPos)
+{
+    CRefObj<IScenePointLightElem> spLightElem;
+    Scene::CreatePointLightElem(&spLightElem);
+    spLightElem->SetPosition(lightPos);
+    Vector3 lightColor(1.0f, 1.0f, 1.0f);
+    spLightElem->SetColor(lightColor);
+    m_spSceneGraph->AddChild(spLightElem.p);
+}
 
 void CCausticRenderer::Initialize(HWND hWnd)
 {
@@ -49,14 +60,24 @@ void CCausticRenderer::Initialize(HWND hWnd)
     Caustic::CreateRendererMarshaller(&m_spMarshaller);
     m_spMarshaller->Initialize(hWnd);
     Scene::CreateSceneGraph(&m_spSceneGraph);
-    CRefObj<ISceneMeshElem> spCube;
-    Scene::CreateMeshElem(&spCube);
-    CRefObj<IMesh> spCubeMesh;
-    CreateCube(&spCubeMesh);
-    spCube->SetMesh(spCubeMesh.p);
-    m_spSceneGraph->AddChild(spCube.p);
     m_spMarshaller->SetSceneGraph(m_spSceneGraph.p);
     CreateCamera(true, &m_spCamera);
+    Vector3 lightPos(10.0f, 10.0f, 10.0f);
+    AddPointLight(lightPos);
+    lightPos = Vector3(-10.0f, 10.0f, 10.0f);
+    AddPointLight(lightPos);
+    lightPos = Vector3(-10.0f, -10.0f, 10.0f);
+    AddPointLight(lightPos);
+    lightPos = Vector3(-10.0f, 10.0f, 10.0f);
+    AddPointLight(lightPos);
+    lightPos = Vector3(10.0f, 10.0f, -10.0f);
+    AddPointLight(lightPos);
+    lightPos = Vector3(-10.0f, 10.0f, -10.0f);
+    AddPointLight(lightPos);
+    lightPos = Vector3(10.0f, -10.0f, -10.0f);
+    AddPointLight(lightPos);
+    lightPos = Vector3(-10.0f, -10.0f, -10.0f);
+    AddPointLight(lightPos);
     m_spMarshaller->GetRenderer(&m_spRenderer);
     m_spRenderer->SetCamera(m_spCamera.p);
     CreateTrackball(&m_spTrackball);
@@ -287,7 +308,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                             Scene::CreateMeshElem(&spElem);
                             CRefObj<IMesh> spMesh = Caustic::MeshImport::LoadPLY(fn);
                             spElem->SetMesh(spMesh.p);
-                            pRenderer->m_spSceneGraph->AddChild(spElem.p);
+
+                            CRefObj<ISceneMaterialElem> spMaterialElem;
+                            Scene::CreateMaterialElem(&spMaterialElem);
+
+                            CRefObj<IMaterialAttrib> spMaterial;
+                            spMaterialElem->GetMaterial(&spMaterial);
+
+                            Vector3 ambient(0.2f, 0.2f, 0.2f);
+                            Vector3 diffuse(0.4f, 0.4f, 0.4f);
+                            spMaterial->SetAmbientColor(ambient);
+                            spMaterial->SetDiffuseColor(diffuse);
+
+                            CRefObj<IShader> spShader;
+                            CShaderMgr::GetInstance()->FindShader(L"Default", &spShader);
+                            spMaterialElem->SetPixelShader(spShader.p);
+
+                            pRenderer->m_spSceneGraph->AddChild(spMaterialElem.p);
+                            spMaterialElem->AddChild(spElem.p);
                         }
                     }
                 }

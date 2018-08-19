@@ -27,6 +27,8 @@ namespace Caustic
         std::vector<CRefObj<IPointLight>> m_lights;
         int m_CurrentPass;
         CRefObj<IMaterialAttrib> m_spCurrentMaterial;
+        CRefObj<Caustic::IShader> m_spCurrentVertexShader;
+        CRefObj<Caustic::IShader> m_spCurrentPixelShader;
         CRefObj<IGraphics> m_spGraphics;
     };
 

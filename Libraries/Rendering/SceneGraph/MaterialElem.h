@@ -14,6 +14,8 @@ namespace Caustic
         public ISceneMaterialElem
     {
         CRefObj<IMaterialAttrib> m_spMaterial;
+        CRefObj<IShader> m_spVertexShader;
+        CRefObj<IShader> m_spPixelShader;
     public:
         friend CAUSTICAPI void Scene::CreateMaterialElem(ISceneMaterialElem **ppElem);
         
@@ -55,8 +57,14 @@ namespace Caustic
         //**********************************************************************
         // ISceneMaterialElem
         //**********************************************************************
-        virtual void SetPixelShader(IShader *pShader) override {}
-        virtual void SetVertexShader(IShader *pShader) override {}
+        virtual void SetPixelShader(IShader *pShader) override
+        {
+            m_spPixelShader = pShader;
+        }
+        virtual void SetVertexShader(IShader *pShader) override
+        {
+            m_spVertexShader = pShader;
+        }
         virtual void GetMaterial(IMaterialAttrib **ppMaterial)
         {
             *ppMaterial = m_spMaterial.p;

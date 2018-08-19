@@ -30,9 +30,15 @@ namespace Caustic
     void CSceneMaterialElem::Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx)
     {
         CRefObj<IMaterialAttrib> spOldMaterial = pSceneCtx->m_spCurrentMaterial;
+        CRefObj<IShader> spOldVertexShader = pSceneCtx->m_spCurrentVertexShader;
+        CRefObj<IShader> spOldPixelShader = pSceneCtx->m_spCurrentPixelShader;
         pSceneCtx->m_spCurrentMaterial = m_spMaterial;
+        pSceneCtx->m_spCurrentVertexShader = m_spVertexShader;
+        pSceneCtx->m_spCurrentPixelShader = m_spPixelShader;
         CSceneGroupElem::Render(pRenderer, pRenderCtx, pSceneCtx);
         pSceneCtx->m_spCurrentMaterial = spOldMaterial;
+        pSceneCtx->m_spCurrentVertexShader = spOldVertexShader;
+        pSceneCtx->m_spCurrentPixelShader = spOldPixelShader;
     }
 
     void CSceneMaterialElem::Store(IStream *pStream)
