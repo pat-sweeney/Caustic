@@ -1,0 +1,13 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2015-2018
+// All Rights Reserved
+//**********************************************************************
+struct VSOutput
+{
+    float4 pos : SV_POSITION;
+};
+
+float4 PS(VSOutput p) : SV_Target
+{
+    return float4(0.0f, 0.7f, 1.0f, 1.0f);
+}

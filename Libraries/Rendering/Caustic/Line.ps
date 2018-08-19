@@ -1,0 +1,23 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2015-2018
+// All Rights Reserved
+//**********************************************************************
+struct VSInput
+{
+    float3 pos : POSITION;
+};
+
+struct VSOutput
+{
+    float4 pos : SV_POSITION;
+};
+
+cbuffer VS_CONSTANT_BUFFER : register(b0)
+{
+    float4 color;
+};
+
+float4 PS(VSOutput p) : SV_Target
+{
+    return color;
+}

@@ -1,0 +1,14 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2015-2018
+// All Rights Reserved
+//**********************************************************************
+struct VSOutput
+{
+    float4 posPS : SV_POSITION; // Position of vertex in projected coordinates
+    float4 posPS2 : TEXCOORD0;
+};
+
+float4 PS(VSOutput p) : SV_Target
+{
+    return float4(p.posPS2.xy/10.0f - floor(p.posPS2.xy/10.0f),0.0f, 1.0f);
+}

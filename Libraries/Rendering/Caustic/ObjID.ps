@@ -1,0 +1,15 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2015-2018
+// All Rights Reserved
+//**********************************************************************
+#include "defs.h"
+
+cbuffer PS_CONSTANT_BUFFER
+{
+    int objID;
+};
+
+int4 PS(VSOutput p) : SV_Target
+{
+    return objID.xxxx;
+}

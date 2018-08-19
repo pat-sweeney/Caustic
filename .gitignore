@@ -39,3 +39,16 @@ Documentation/**
 *.idb
 *.log
 *.tlog
+*.vcxproj.user
+**/x64/**
+**/Debug/**
+**/Release/**
+**/Dotnet/**
+*.opensdf
+*.sdf
+*.suo
+*.tbl
+*PS.h
+*VS.h
+*.ipch
+

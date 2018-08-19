@@ -1,0 +1,21 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2015-2018
+// All Rights Reserved
+//**********************************************************************
+#include "defs.h"
+
+cbuffer PS_CONSTANT_BUFFER
+{
+    float4 lightPos;
+    float4 lightColor;
+    float4 ambientColor;
+    float4 diffuseColor;
+    float4 specularColor;
+    float4 specularExp;
+    float transparency;
+};
+
+float4 PS(VSOutput p) : SV_Target
+{
+    return float4(p.normWS.xyz, 1.0f);
+}

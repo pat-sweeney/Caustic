@@ -1,0 +1,28 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2015-2018
+// All Rights Reserved
+//**********************************************************************
+cbuffer PS_CONSTANT_BUFFER
+{
+    float4x4 worldViewProjInv;
+    float3 eye;
+};
+
+struct VSOutput
+{
+    float4 posPS : SV_POSITION; // Position of vertex in projected coordinates
+    float4 posPS2 : TEXCOORD0;
+};
+
+float4 PS(VSOutput p) : SV_Target
+{
+    // Given point (in projected space) transform into world space
+    float4 wp = mul(p.posPS2, worldViewProjInv);
+    float3 raydir = normalize(wp.xyz - eye);
+    // (origin - eye) . N / (raydir . N)
+    float t = -eye.y / raydir.y;
+    clip(t);
+    float3 ip = eye + raydir * t;
+    return float4(ip.xy/10.0f - floor(ip.xy/10.0f),0.0f, 1.0f);
+//    return float4(t,t,t,1);
+}

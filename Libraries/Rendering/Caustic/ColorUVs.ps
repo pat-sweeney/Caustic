@@ -1,0 +1,10 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2015-2018
+// All Rights Reserved
+//**********************************************************************
+#include "defs.h"
+
+float4 PS(VSOutput p) : SV_Target
+{
+    return float4(abs(p.uvs.xy), 0.0f, 1.0f);
+}
