@@ -28,24 +28,13 @@ void AddPointLight(Vector3 &lightPos)
     spRenderWindow->GetSceneGraph()->AddChild(spLightElem.p);
 }
 
-void InitializeCaustic(HWND hWnd)
+void InitializeCaustic(HWND hwnd)
 {
     Caustic::CausticSetup();
-    Vector3 lightPos(10.0f, 10.0f, 10.0f);
+    CreateRenderWindow(hwnd, &spRenderWindow);
+    Vector3 lightPos(10.0f, 10.0f, 0.0f);
     AddPointLight(lightPos);
-    lightPos = Vector3(-10.0f, 10.0f, 10.0f);
-    AddPointLight(lightPos);
-    lightPos = Vector3(-10.0f, -10.0f, 10.0f);
-    AddPointLight(lightPos);
-    lightPos = Vector3(-10.0f, 10.0f, 10.0f);
-    AddPointLight(lightPos);
-    lightPos = Vector3(10.0f, 10.0f, -10.0f);
-    AddPointLight(lightPos);
-    lightPos = Vector3(-10.0f, 10.0f, -10.0f);
-    AddPointLight(lightPos);
-    lightPos = Vector3(10.0f, -10.0f, -10.0f);
-    AddPointLight(lightPos);
-    lightPos = Vector3(-10.0f, -10.0f, -10.0f);
+    lightPos = Vector3(-10.0f, 10.0f, 0.0f);
     AddPointLight(lightPos);
 }
 
@@ -150,7 +139,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    }
 
    // Setup our renderer
-   CreateRenderWindow(hWnd, &spRenderWindow);
+   InitializeCaustic(hWnd);
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);

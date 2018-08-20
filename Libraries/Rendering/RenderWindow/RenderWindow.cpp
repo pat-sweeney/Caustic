@@ -28,6 +28,7 @@ namespace Caustic
         m_spMarshaller->GetRenderer(&spRenderer);
         spRenderer->SetCamera(m_spCamera.p);
         CreateTrackball(&m_spTrackball);
+        m_hwnd = hwnd;
     }
     
     void CRenderWindow::MouseDown(int x, int y)
