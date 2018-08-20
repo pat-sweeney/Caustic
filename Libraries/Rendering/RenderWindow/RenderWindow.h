@@ -40,5 +40,6 @@ namespace Caustic
         virtual void MouseMove(int x, int y, uint32 flags) override;
         virtual void MouseUp(int x, int y) override;
         virtual void MouseWheel(int factor) override;
+        virtual void MapKey(uint32 wParam, uint32 lParam) override;
     };
 }

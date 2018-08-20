@@ -246,6 +246,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_MOUSEWHEEL:
         spRenderWindow->MouseWheel((int)wParam);
         break;
+    case WM_KEYDOWN:
+        spRenderWindow->MapKey((uint32)wParam, (uint32)lParam);
+        break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }

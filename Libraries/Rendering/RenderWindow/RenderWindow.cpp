@@ -98,4 +98,113 @@ namespace Caustic
         eye = eye + dirVec;
         m_spCamera->SetPosition(eye, look, up);
     }
+
+    void CRenderWindow::MapKey(uint32 wParam, uint32 lParam)
+    {
+        switch (wParam)
+        {
+        case VK_HOME:
+        {
+            static int axis = 0;
+            Vector3 eye, look, up, u, v, n;
+            m_spCamera->GetPosition(&eye, &look, &up, &u, &v, &n);
+            up = Vector3(0.0f, 1.0f, 0.0f);
+            eye = Vector3(0.0f, 0.0f, 0.0f);
+            switch (axis)
+            {
+            case 0:
+                look = Vector3(1.0f, 0.0f, 0.0f);
+                break;
+            case 1:
+                look = Vector3(0.0f, 1.0f, 0.0f);
+                up = Vector3(0.0f, 0.0f, 1.0f);
+                break;
+            case 2:
+                look = Vector3(0.0f, 0.0f, 1.0f);
+                break;
+            }
+            axis++; if (axis > 2)axis = 0;
+            m_spCamera->SetPosition(eye, look, up);
+        }
+        break;
+        case VK_UP:
+        {
+            Vector3 eye, look, up, u, v, n;
+            m_spCamera->GetPosition(&eye, &look, &up, &u, &v, &n);
+            eye.x += n.x; look.x += n.x;
+            eye.y += n.y; look.y += n.y;
+            eye.z += n.z; look.z += n.z;
+            m_spCamera->SetPosition(eye, look, up);
+        }
+        break;
+        case VK_DOWN:
+        {
+            Vector3 eye, look, up, u, v, n;
+            m_spCamera->GetPosition(&eye, &look, &up, &u, &v, &n);
+            eye.x -= n.x; look.x -= n.x;
+            eye.y -= n.y; look.y -= n.y;
+            eye.z -= n.z; look.z -= n.z;
+            m_spCamera->SetPosition(eye, look, up);
+        }
+        break;
+        case VK_RIGHT:
+        {
+            Vector3 eye, look, up, u, v, n;
+            m_spCamera->GetPosition(&eye, &look, &up, &u, &v, &n);
+            eye.x += u.x; look.x += u.x;
+            eye.y += u.y; look.y += u.y;
+            eye.z += u.z; look.z += u.z;
+            m_spCamera->SetPosition(eye, look, up);
+        }
+        break;
+        case VK_LEFT:
+        {
+            Vector3 eye, look, up, u, v, n;
+            m_spCamera->GetPosition(&eye, &look, &up, &u, &v, &n);
+            eye.x -= u.x; look.x -= u.x;
+            eye.y -= u.y; look.y -= u.y;
+            eye.z -= u.z; look.z -= u.z;
+            m_spCamera->SetPosition(eye, look, up);
+        }
+        break;
+        case VK_PRIOR:
+        {
+            Vector3 eye, look, up, u, v, n;
+            m_spCamera->GetPosition(&eye, &look, &up, &u, &v, &n);
+            eye.x += v.x; look.x += v.x;
+            eye.y += v.y; look.y += v.y;
+            eye.z += v.z; look.z += v.z;
+            m_spCamera->SetPosition(eye, look, up);
+        }
+        break;
+        case VK_NEXT:
+        {
+            Vector3 eye, look, up, u, v, n;
+            m_spCamera->GetPosition(&eye, &look, &up, &u, &v, &n);
+            eye.x -= v.x; look.x -= v.x;
+            eye.y -= v.y; look.y -= v.y;
+            eye.z -= v.z; look.z -= v.z;
+            m_spCamera->SetPosition(eye, look, up);
+        }
+        break;
+        case 'E':
+        {
+            Vector3 eye, look, up, n;
+            m_spCamera->GetPosition(&eye, &look, &up, nullptr, nullptr, &n);
+            eye += n;
+            look += n;
+            m_spCamera->SetPosition(eye, look, up);
+        }
+        break;
+        case 'D':
+        {
+            Vector3 eye, look, up, n;
+            m_spCamera->GetPosition(&eye, &look, &up, nullptr, nullptr, &n);
+            eye -= n;
+            look -= n;
+            m_spCamera->SetPosition(eye, look, up);
+        }
+        break;
+        }
+    }
 }
