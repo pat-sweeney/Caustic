@@ -1,0 +1,13 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2015-2018
+// All Rights Reserved
+//**********************************************************************
+#include "defs.h"
+
+Texture2D sourceTexture1 : register(t0);
+SamplerState sourceSampler1 : register(s0);
+
+float4 PS(VSOutput p) : SV_Target
+{
+    return float4(sourceTexture1.Sample(sourceSampler1, p.uvs).xyz, 1.0f);
+}
