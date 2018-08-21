@@ -94,7 +94,8 @@ namespace Caustic
         Vector3 eye, look, up, n;
         //    float distance = factor / 120;
         m_spCamera->GetPosition(&eye, &look, &up, nullptr, nullptr, &n);
-        Vector3 dirVec = ((factor < 0.0f) ? -1.0f : +1.0f) * n;
+        float dist = (eye - look).Length() * 0.10f;
+        Vector3 dirVec = (((factor < 0.0f) ? -1.0f : +1.0f) * n).Normalize() * dist;
         eye = eye + dirVec;
         m_spCamera->SetPosition(eye, look, up);
     }
