@@ -31,62 +31,98 @@ namespace Caustic
         m_hwnd = hwnd;
     }
     
-    void CRenderWindow::MouseDown(int x, int y)
+    void CRenderWindow::MouseDown(int x, int y, uint32 button, uint32 flags)
     {
-        Vector3 up;
-        m_spCamera->GetPosition(&m_eye, &m_look, nullptr, nullptr, &up, nullptr);
-        m_up.x = m_eye.x + up.x;
-        m_up.y = m_eye.y + up.y;
-        m_up.z = m_eye.z + up.z;
-        RECT rect;
-        GetClientRect(m_hwnd, &rect);
-        int w = rect.right - rect.left;
-        int h = rect.bottom - rect.top;
-        m_view = m_spCamera->GetView();
-        m_invview = DirectX::XMMatrixInverse(nullptr, m_view);
-        m_spTrackball->BeginTracking(x, y, w, h);
-        m_tracking = true;
+        if (button == c_LeftButton)
+        {
+            m_spCamera->GetPosition(&m_eye, &m_look, nullptr, nullptr, &m_up, nullptr);
+            RECT rect;
+            GetClientRect(m_hwnd, &rect);
+            m_winwidth = rect.right - rect.left;
+            m_winheight = rect.bottom - rect.top;
+            if (flags & MK_CONTROL)
+            {
+                m_startx = x;
+                m_starty = y;
+            }
+            else
+            {
+                m_upAsPt.x = m_eye.x + m_up.x;
+                m_upAsPt.y = m_eye.y + m_up.y;
+                m_upAsPt.z = m_eye.z + m_up.z;
+                m_view = m_spCamera->GetView();
+                m_invview = DirectX::XMMatrixInverse(nullptr, m_view);
+                m_spTrackball->BeginTracking(x, y, m_winwidth, m_winheight);
+            }
+            m_tracking = true;
+        }
     }
 
     void CRenderWindow::MouseMove(int x, int y, uint32 flags)
     {
         if (m_tracking)
         {
-            DirectX::XMMATRIX mat;
-            ETrackballConstrain constraint;
             if (flags & MK_CONTROL)
-                constraint = ETrackballConstrain::Constraint_XAxis;
-            else if (flags & MK_SHIFT)
-                constraint = ETrackballConstrain::Constraint_YAxis;
-            else
-                constraint = ETrackballConstrain::Constraint_None;
-            if (m_spTrackball->UpdateTracking(x, y, constraint, &mat))
             {
-                DirectX::XMVECTOR vLook = DirectX::XMVectorSet(m_look.x, m_look.y, m_look.z, 1.0f);
-                vLook = DirectX::XMVector3Transform(vLook, m_view);
-                DirectX::XMMATRIX mtrans = DirectX::XMMatrixTranslation(-DirectX::XMVectorGetX(vLook), -DirectX::XMVectorGetY(vLook), -DirectX::XMVectorGetZ(vLook));
-                DirectX::XMMATRIX minvtrans = DirectX::XMMatrixTranslation(DirectX::XMVectorGetX(vLook), DirectX::XMVectorGetY(vLook), DirectX::XMVectorGetZ(vLook));
-                DirectX::XMMATRIX m = DirectX::XMMatrixMultiply(m_view,
-                    DirectX::XMMatrixMultiply(mtrans,
-                        DirectX::XMMatrixMultiply(mat,
-                            DirectX::XMMatrixMultiply(minvtrans, m_invview))));
-                DirectX::XMVECTOR eye = DirectX::XMVectorSet(m_eye.x, m_eye.y, m_eye.z, 1.0f);
-                DirectX::XMVECTOR up = DirectX::XMVectorSet(m_up.x, m_up.y, m_up.z, 1.0f);
-                eye = DirectX::XMVector4Transform(eye, m);
-                up = DirectX::XMVector3Transform(up, m);
-                Vector3 neye(DirectX::XMVectorGetX(eye), DirectX::XMVectorGetY(eye), DirectX::XMVectorGetZ(eye));
-                Vector3 nup(DirectX::XMVectorGetX(up), DirectX::XMVectorGetY(up), DirectX::XMVectorGetZ(up));
-                nup = nup - neye;
-                nup.Normalize();
-                m_spCamera->SetPosition(neye, m_look, nup);
+                float dist = (m_eye - m_look).Length();
+                int dx = x - m_startx;
+                int dy = y - m_starty;
+                float offsetX = -dist * (float)dx / (float)m_winwidth;
+                float offsetY = dist * (float)dy / (float)m_winheight;
+                Vector3 u, v;
+                m_spCamera->GetUVN(&u, &v, nullptr);
+                Vector3 nl = m_look;
+                nl.x += u.x * offsetX + v.x * offsetY;
+                nl.y += u.y * offsetX + v.y * offsetY;
+                nl.z += u.z * offsetX + v.z * offsetY;
+                Vector3 ne = m_eye;
+                ne.x += u.x * offsetX + v.x * offsetY;
+                ne.y += u.y * offsetX + v.y * offsetY;
+                ne.z += u.z * offsetX + v.z * offsetY;
+                m_spCamera->SetPosition(ne, nl, m_up);
+            }
+            else
+            {
+                DirectX::XMMATRIX mat;
+                ETrackballConstrain constraint;
+                if (flags & MK_SHIFT)
+                    constraint = ETrackballConstrain::Constraint_XAxis;
+                else if (flags & MK_ALT)
+                    constraint = ETrackballConstrain::Constraint_YAxis;
+                else
+                    constraint = ETrackballConstrain::Constraint_None;
+                if (m_spTrackball->UpdateTracking(x, y, constraint, &mat))
+                {
+                    DirectX::XMVECTOR vLook = DirectX::XMVectorSet(m_look.x, m_look.y, m_look.z, 1.0f);
+                    vLook = DirectX::XMVector3Transform(vLook, m_view);
+                    DirectX::XMMATRIX mtrans = DirectX::XMMatrixTranslation(-DirectX::XMVectorGetX(vLook), -DirectX::XMVectorGetY(vLook), -DirectX::XMVectorGetZ(vLook));
+                    DirectX::XMMATRIX minvtrans = DirectX::XMMatrixTranslation(DirectX::XMVectorGetX(vLook), DirectX::XMVectorGetY(vLook), DirectX::XMVectorGetZ(vLook));
+                    DirectX::XMMATRIX m = DirectX::XMMatrixMultiply(m_view,
+                        DirectX::XMMatrixMultiply(mtrans,
+                            DirectX::XMMatrixMultiply(mat,
+                                DirectX::XMMatrixMultiply(minvtrans, m_invview))));
+                    DirectX::XMVECTOR eye = DirectX::XMVectorSet(m_eye.x, m_eye.y, m_eye.z, 1.0f);
+                    DirectX::XMVECTOR up = DirectX::XMVectorSet(m_upAsPt.x, m_upAsPt.y, m_upAsPt.z, 1.0f);
+                    eye = DirectX::XMVector4Transform(eye, m);
+                    up = DirectX::XMVector3Transform(up, m);
+                    Vector3 neye(DirectX::XMVectorGetX(eye), DirectX::XMVectorGetY(eye), DirectX::XMVectorGetZ(eye));
+                    Vector3 nup(DirectX::XMVectorGetX(up), DirectX::XMVectorGetY(up), DirectX::XMVectorGetZ(up));
+                    nup = nup - neye;
+                    nup.Normalize();
+                    m_spCamera->SetPosition(neye, m_look, nup);
+                }
             }
         }
     }
 
-    void CRenderWindow::MouseUp(int x, int y)
+    void CRenderWindow::MouseUp(int x, int y, uint32 button, uint32 flags)
     {
-        m_spTrackball->EndTracking();
-        m_tracking = false;
+        if (button == c_LeftButton)
+        {
+            if (!(flags & MK_CONTROL))
+                m_spTrackball->EndTracking();
+            m_tracking = false;
+        }
     }
 
     void CRenderWindow::MouseWheel(int factor)

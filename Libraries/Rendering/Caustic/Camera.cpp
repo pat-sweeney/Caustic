@@ -8,6 +8,7 @@
 #include "Camera.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <DirectXMath.h>
 
 namespace Caustic
 {
@@ -66,6 +67,34 @@ namespace Caustic
     DirectX::XMMATRIX CCamera::GetView()
     {
         return m_View;
+    }
+
+    //**********************************************************************
+    //! \brief Returns the camera's U,V,N axis in world coordinates
+    //**********************************************************************
+    void CCamera::GetUVN(Vector3 *u, Vector3 *v, Vector3 *n)
+    {
+        if (u)
+        {
+            u->x = DirectX::XMVectorGetX(m_View.r[0]);
+            u->y = DirectX::XMVectorGetY(m_View.r[0]);
+            u->z = DirectX::XMVectorGetZ(m_View.r[0]);
+            *u = u->Normalize();
+        }
+        if (v)
+        {
+            v->x = DirectX::XMVectorGetX(m_View.r[1]);
+            v->y = DirectX::XMVectorGetY(m_View.r[1]);
+            v->z = DirectX::XMVectorGetZ(m_View.r[1]);
+            *v = v->Normalize();
+        }
+        if (n)
+        {
+            n->x = DirectX::XMVectorGetX(m_View.r[2]);
+            n->y = DirectX::XMVectorGetY(m_View.r[2]);
+            n->z = DirectX::XMVectorGetZ(m_View.r[2]);
+            *n = n->Normalize();
+        }
     }
 
     //**********************************************************************

@@ -235,10 +235,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         PostQuitMessage(0);
         break;
     case WM_LBUTTONDOWN:
-        spRenderWindow->MouseDown((int)LOWORD(lParam), (int)HIWORD(lParam));
+        spRenderWindow->MouseDown((int)LOWORD(lParam), (int)HIWORD(lParam), c_LeftButton, (uint32)wParam);
         break;
     case WM_LBUTTONUP:
-        spRenderWindow->MouseUp((int)LOWORD(lParam), (int)HIWORD(lParam));
+        spRenderWindow->MouseUp((int)LOWORD(lParam), (int)HIWORD(lParam), c_LeftButton, (uint32)wParam);
         break;
     case WM_MOUSEMOVE:
         spRenderWindow->MouseMove((int)LOWORD(lParam), (int)HIWORD(lParam), (uint32)wParam);

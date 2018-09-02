@@ -71,6 +71,7 @@ namespace Caustic
         virtual DirectX::XMMATRIX GetView() = 0;
         virtual float GetNear() = 0;
         virtual float GetFar() = 0;
+        virtual void GetUVN(Vector3 *u, Vector3 *v, Vector3 *n) = 0;
     };
     CAUSTICAPI void CreateCamera(bool leftHanded, ICamera **ppCamera);
 

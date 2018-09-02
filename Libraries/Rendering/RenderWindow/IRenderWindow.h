@@ -10,12 +10,16 @@
 
 namespace Caustic
 {
+    const int c_LeftButton = 0;
+    const int c_MiddleButton = 1;
+    const int c_RightButton = 2;
+
     struct IRenderWindow : public IRefCount
     {
         virtual CRefObj<ISceneGraph> GetSceneGraph() = 0;
-        virtual void MouseDown(int x, int y) = 0;
+        virtual void MouseDown(int x, int y, uint32 button, uint32 flags) = 0;
         virtual void MouseMove(int x, int y, uint32 flags) = 0;
-        virtual void MouseUp(int x, int y) = 0;
+        virtual void MouseUp(int x, int y, uint32 button, uint32 flags) = 0;
         virtual void MouseWheel(int factor) = 0;
         virtual void MapKey(uint32 wParam, uint32 lParam) = 0;
     };

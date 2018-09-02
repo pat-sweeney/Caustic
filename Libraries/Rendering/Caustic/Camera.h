@@ -61,6 +61,7 @@ namespace Caustic
         virtual void GetOffset(Vector3 &offset) override;
         virtual DirectX::XMMATRIX GetProjection() override;
         virtual DirectX::XMMATRIX GetView() override;
+        virtual void GetUVN(Vector3 *u, Vector3 *v, Vector3 *n) override;
         virtual float GetNear() override { return m_NearZ; }
         virtual float GetFar() override { return m_FarZ; }
 

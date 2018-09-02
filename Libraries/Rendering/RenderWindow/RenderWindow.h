@@ -20,9 +20,12 @@ namespace Caustic
         Vector3 m_eye;
         Vector3 m_look;
         Vector3 m_up;
+        Vector3 m_upAsPt;
         HWND m_hwnd;
         DirectX::XMMATRIX m_view;
         DirectX::XMMATRIX m_invview;
+        int m_startx, m_starty;
+        int m_winwidth, m_winheight;
     public:
         CRenderWindow(HWND hwnd);
         
@@ -36,9 +39,9 @@ namespace Caustic
         // IRenderWindow
         //**********************************************************************
         virtual CRefObj<ISceneGraph> GetSceneGraph() override { return m_spSceneGraph; }
-        virtual void MouseDown(int x, int y) override;
+        virtual void MouseDown(int x, int y, uint32 button, uint32 flags) override;
         virtual void MouseMove(int x, int y, uint32 flags) override;
-        virtual void MouseUp(int x, int y) override;
+        virtual void MouseUp(int x, int y, uint32 button, uint32 flags) override;
         virtual void MouseWheel(int factor) override;
         virtual void MapKey(uint32 wParam, uint32 lParam) override;
     };
