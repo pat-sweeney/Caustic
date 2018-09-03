@@ -187,31 +187,32 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (GetOpenFileName(&ofn))
                     {
                         wchar_t *ext = StrRChrW(fn, nullptr, L'.');
-                        if (StrCmpW(ext, L".ply") == 0)
-                        {
-                            CRefObj<ISceneMeshElem> spElem;
-                            Scene::CreateMeshElem(&spElem);
-                            CRefObj<IMesh> spMesh = Caustic::MeshImport::LoadPLY(fn);
-                            spElem->SetMesh(spMesh.p);
+                        CRefObj<ISceneMeshElem> spElem;
+                        Scene::CreateMeshElem(&spElem);
+                        CRefObj<IMesh> spMesh = nullptr;
+                        if (StrCmpW(ext, L".obj") == 0)
+                            spMesh = Caustic::MeshImport::LoadObj(fn);
+                        else if (StrCmpW(ext, L".ply") == 0)
+                            spMesh = Caustic::MeshImport::LoadPLY(fn);
+                        spElem->SetMesh(spMesh.p);
 
-                            CRefObj<ISceneMaterialElem> spMaterialElem;
-                            Scene::CreateMaterialElem(&spMaterialElem);
+                        CRefObj<ISceneMaterialElem> spMaterialElem;
+                        Scene::CreateMaterialElem(&spMaterialElem);
 
-                            CRefObj<IMaterialAttrib> spMaterial;
-                            spMaterialElem->GetMaterial(&spMaterial);
+                        CRefObj<IMaterialAttrib> spMaterial;
+                        spMaterialElem->GetMaterial(&spMaterial);
 
-                            Vector3 ambient(0.2f, 0.2f, 0.2f);
-                            Vector3 diffuse(0.4f, 0.4f, 0.4f);
-                            spMaterial->SetAmbientColor(ambient);
-                            spMaterial->SetDiffuseColor(diffuse);
+                        Vector3 ambient(0.2f, 0.2f, 0.2f);
+                        Vector3 diffuse(0.4f, 0.4f, 0.4f);
+                        spMaterial->SetAmbientColor(ambient);
+                        spMaterial->SetDiffuseColor(diffuse);
 
-                            CRefObj<IShader> spShader;
-                            CShaderMgr::GetInstance()->FindShader(L"Default", &spShader);
-                            spMaterialElem->SetPixelShader(spShader.p);
+                        CRefObj<IShader> spShader;
+                        CShaderMgr::GetInstance()->FindShader(L"Default", &spShader);
+                        spMaterialElem->SetPixelShader(spShader.p);
 
-                            spRenderWindow->GetSceneGraph()->AddChild(spMaterialElem.p);
-                            spMaterialElem->AddChild(spElem.p);
-                        }
+                        spRenderWindow->GetSceneGraph()->AddChild(spMaterialElem.p);
+                        spMaterialElem->AddChild(spElem.p);
                     }
                 }
                 break;
