@@ -22,6 +22,11 @@ namespace Caustic
     //**********************************************************************
     CAUSTICAPI void CreateRenderable(IGraphics *pGraphics, ISubMesh *pSubMesh, IMaterialAttrib *pMaterial, IShader *pShader, IRenderable **ppRenderable)
     {
+        if (pSubMesh->GetNumberVertices() == 0 || pSubMesh->GetNumberEdges() == 0 || pSubMesh->GetNumberFaces() == 0)
+        {
+            *ppRenderable = nullptr;
+            return;
+        }
         CRefObj<IRenderMaterial> spFrontMaterial;
         CreateRenderMaterial(pGraphics, pMaterial, pShader, &spFrontMaterial);
         CRefObj<IRenderMaterial> spBackMaterial;

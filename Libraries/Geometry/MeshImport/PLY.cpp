@@ -111,10 +111,13 @@ namespace Caustic
             faces.push_back(index1);
             faces.push_back(index2);
         }
-        Caustic::CreateEmptyMesh(&m_spMesh);
-        CRefObj<ISubMesh> spSubMesh;
-        Caustic::CreateSubMesh(vertices, faces, 0, &spSubMesh);
-        m_spMesh->AddSubMesh(spSubMesh.p);
+        if (numFaces > 0)
+        {
+            Caustic::CreateEmptyMesh(&m_spMesh);
+            CRefObj<ISubMesh> spSubMesh;
+            Caustic::CreateSubMesh(vertices, faces, 0, &spSubMesh);
+            m_spMesh->AddSubMesh(spSubMesh.p);
+        }
         m_spMesh->ComputeNormals();
     }
 

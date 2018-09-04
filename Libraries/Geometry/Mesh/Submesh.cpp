@@ -131,44 +131,16 @@ namespace Caustic
     uint32 CSubMesh::VertexToIndex(CGeomVertex *pVertex)
     {
         return pVertex->index;
-//        uint32 index = c_InvalidIndex;
-//        for (uint32 j = 0; j < (uint32)m_vertices.size(); j++)
-//        {
-//            if (m_vertices[j].get() == pVertex)
-//            {
-//                index = j;
-//                break;
-//            }
-//        }
-//        return index;
     }
 
     uint32 CSubMesh::EdgeToIndex(CHalfEdge *pEdge)
     {
         return pEdge->index;
-//        uint32 index = c_InvalidIndex;
-//        for (uint32 i = 0; i < (uint32)m_edges.size(); i++)
-//            if (m_edges[i].get() == pEdge)
-//            {
-//                index = i;
-//                break;
-//            }
-//        return index;
     };
     
     uint32 CSubMesh::FaceToIndex(CFace *pFace)
     {
         return pFace->index;
-//        uint32 index = c_InvalidIndex;
-//        for (uint32 j = 0; j < (uint32)m_faces.size(); j++)
-//        {
-//            if (m_faces[j].get() == pFace)
-//            {
-//                index = j;
-//                break;
-//            }
-//        }
-//        return index;
     };
 
     CAUSTICAPI void CreateEmptySubMesh(ISubMesh **ppSubMesh)
