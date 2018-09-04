@@ -31,5 +31,8 @@
     <ClInclude Include="ISerialize.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="BlockAllocator.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

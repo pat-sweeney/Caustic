@@ -8,6 +8,12 @@
 
 namespace Caustic
 {
+    bool CSubMesh::s_allocatorInitialized = false;
+    CBlockAllocator<CGeomVertex> CSubMesh::m_vertexAllocator(100000);
+    CBlockAllocator<CFaceVertex> CSubMesh::m_faceVertexAllocator(100000);
+    CBlockAllocator<CHalfEdge> CSubMesh::m_edgeAllocator(100000);
+    CBlockAllocator<CFace> CSubMesh::m_faceAllocator(100000);
+
     //**********************************************************************
     //! \brief Normalize rescales a mesh so fits inside a -0.5..+0.5 bounding box
     //!
@@ -112,7 +118,7 @@ namespace Caustic
             m_vertices[i]->norm = Vector3(0.0f, 0.0f, 0.0f);
         for (size_t i = 0; i < m_faces.size(); i++)
         {
-            CFace *pFace = m_faces[i].get();
+            CFace *pFace = m_faces[i];
             pFace->ComputeFaceNormal();
             Vector3 faceNorm = pFace->GetNormal();
             for (size_t j = 0; j < pFace->m_vertices.size(); j++)
@@ -250,11 +256,11 @@ namespace Caustic
     //**********************************************************************
     CFace *CSubMesh::AllocateFace()
     {
-        std::unique_ptr<CFace> spFace(new CFace());
-        spFace->index = (int)m_faces.size();
-        spFace->m_center = Vector3(0.0f, 0.0f, 0.0f);
-        m_faces.emplace_back(spFace.release());
-        return m_faces[m_faces.size() - 1].get();
+        CFace *pFace = m_faceAllocator.Allocate();
+        pFace->index = (int)m_faces.size();
+        pFace->m_center = Vector3(0.0f, 0.0f, 0.0f);
+        m_faces.push_back(pFace);
+        return m_faces[m_faces.size() - 1];
     }
 
     //**********************************************************************
@@ -263,13 +269,13 @@ namespace Caustic
     //**********************************************************************
     CGeomVertex *CSubMesh::AllocateGeomVertex(Vector3 &pos, Vector3 &normal, Vector2 &uv)
     {
-        std::unique_ptr<CGeomVertex> spVert(new CGeomVertex());
-        spVert->pos = pos;
-        spVert->norm = normal;
-        spVert->uvs[0] = uv;
-        int index = spVert->index = (int)m_vertices.size();
-        m_vertices.emplace_back(spVert.release());
-        CGeomVertex *pVertex = m_vertices[index].get();
+        CGeomVertex *pVert = m_vertexAllocator.Allocate();
+        pVert->pos = pos;
+        pVert->norm = normal;
+        pVert->uvs[0] = uv;
+        int index = pVert->index = (int)m_vertices.size();
+        m_vertices.push_back(pVert);
+        CGeomVertex *pVertex = m_vertices[index];
         m_spKDTree->AddPoint(pos, pVertex);
         m_bbox.AddPoint(pos);
         return pVertex;
@@ -278,15 +284,12 @@ namespace Caustic
     //**********************************************************************
     CFaceVertex *CSubMesh::AllocateFaceVertex(CFace * /*face*/, Vector3 &normal, Vector2 &uv)
     {
-        std::unique_ptr<CFaceVertex> spVert(new CFaceVertex());
-        spVert->norm = normal;
-        spVert->uvs[0] = uv;
-        int index = spVert->index = (int)m_vertices.size();
-        m_faceVertices.emplace_back(spVert.release());
-        CFaceVertex *pVertex = m_faceVertices[index].get();
-      // m_spKDTree->AddPoint(pos, pVertex);
-      // m_bbox.AddPoint(pos);
-        return pVertex;
+        CFaceVertex *pVert = m_faceVertexAllocator.Allocate();
+        pVert->norm = normal;
+        pVert->uvs[0] = uv;
+        int index = pVert->index = (int)m_vertices.size();
+        m_faceVertices.push_back(pVert);
+        return m_faceVertices[index];
     }
 
     //**********************************************************************
@@ -297,29 +300,30 @@ namespace Caustic
     //**********************************************************************
     CHalfEdge *CSubMesh::AllocateEdge(CGeomVertex *pHead, CGeomVertex *pTail)
     {
-        std::unique_ptr<CHalfEdge> spLeftHalf(new CHalfEdge());
-        std::unique_ptr<CHalfEdge> spRightHalf(new CHalfEdge());
-        spLeftHalf->m_pOpposite = spRightHalf.get();
-        spLeftHalf->m_pFace = nullptr;
-        spLeftHalf->m_pNext = spRightHalf.get();
-        spLeftHalf->m_pPrev = spRightHalf.get();
-        spRightHalf->m_pOpposite = spLeftHalf.get();
-        spRightHalf->m_pNext = spLeftHalf.get();
-        spRightHalf->m_pPrev = spLeftHalf.get();
-        spRightHalf->m_pFace = nullptr;
-        spLeftHalf->m_pVertex = pHead;
-        spRightHalf->m_pVertex = pTail;
-        spLeftHalf->m_smoothingGroup = 0;
-        spRightHalf->m_smoothingGroup = 0;
-        spRightHalf->index = (int)m_edges.size();
-        spLeftHalf->index = (int)m_edges.size()+1;
-        m_edges.emplace_back(spRightHalf.release());
-        m_edges.emplace_back(spLeftHalf.release());
-        std::tuple<CGeomVertex*, CGeomVertex*> t = std::make_tuple(pTail, pHead);
-        m_vertToEdge[t] = spLeftHalf.get();
-        t = std::make_tuple(pHead, pTail);
-        m_vertToEdge[t] = spRightHalf.get();
-        return m_edges[m_edges.size() - 1].get();
+        CHalfEdge *pLeftHalf = m_edgeAllocator.Allocate();
+        CHalfEdge *pRightHalf = m_edgeAllocator.Allocate();
+        pLeftHalf->m_pOpposite = pRightHalf;
+        pLeftHalf->m_pFace = nullptr;
+        pLeftHalf->m_pNext = pRightHalf;
+        pLeftHalf->m_pPrev = pRightHalf;
+        pRightHalf->m_pOpposite = pLeftHalf;
+        pRightHalf->m_pNext = pLeftHalf;
+        pRightHalf->m_pPrev = pLeftHalf;
+        pRightHalf->m_pFace = nullptr;
+        pLeftHalf->m_pVertex = pHead;
+        pRightHalf->m_pVertex = pTail;
+        pLeftHalf->m_smoothingGroup = 0;
+        pRightHalf->m_smoothingGroup = 0;
+        pRightHalf->index = (int)m_edges.size();
+        pLeftHalf->index = (int)m_edges.size()+1;
+        m_edges.push_back(pRightHalf);
+        m_edges.push_back(pLeftHalf);
+        uint64 addr1 = (uint64)pHead;
+        uint64 addr2 = (uint64)pTail;
+        uint64 value = ((addr1 + addr2) * (addr1 + addr2 + 1)) / 2 + addr2;
+        m_vertToEdge[value] = pLeftHalf;
+        m_vertToEdge[value] = pRightHalf;
+        return m_edges[m_edges.size() - 1];
     }
 
     //**********************************************************************
@@ -328,25 +332,21 @@ namespace Caustic
     //**********************************************************************
     CHalfEdge *CSubMesh::FindEdge(CGeomVertex *pHead, CGeomVertex *pTail)
     {
-        std::tuple<CGeomVertex*, CGeomVertex*> t = std::make_tuple(pTail, pHead);
-        return m_vertToEdge[t];
-//        for (int i = (int)m_edges.size() - 1; i >= 0; i--)
-//        {
-//            CHalfEdge *pHalf = m_edges[i].get();
-//            if (pHalf->m_pVertex == pHead && pHalf->m_pPrev->m_pVertex == pTail)
-//                return pHalf;
-//        }
-//        return nullptr;
+        // Use cantor pairing to come up with hash value
+        uint64 addr1 = (uint64)pHead;
+        uint64 addr2 = (uint64)pTail;
+        uint64 value = ((addr1 + addr2) * (addr1 + addr2 + 1)) / 2 + addr2;
+        return m_vertToEdge[value];
     }
 
     //**********************************************************************
     //! \brief FindVertex will return a pointer to a vertex in our mesh
     //! that matches the specified values
     //**********************************************************************
-    CGeomVertex *CSubMesh::FindVertex(Vector3 *pPos, Vector3 *pNorm, Vector2 *pUV)
+    CGeomVertex *CSubMesh::FindVertex(Vector3 &pos, Vector3 *pNorm, Vector2 *pUV)
     {
         void *data;
-        if (m_spKDTree->FindPoint(*pPos, [pNorm, pUV](void *data) -> bool {
+        if (m_spKDTree->FindPoint(pos, [pNorm, pUV](void *data) -> bool {
                 CGeomVertex *pVertex = (CGeomVertex*)data;
                 if (pNorm && !pVertex->norm.IsEq(*pNorm))
                     return false;
@@ -372,7 +372,7 @@ namespace Caustic
             // Just return any edge
             for (size_t i = 0; i < m_edges.size(); i++)
             {
-                CHalfEdge *pNext = m_edges[i].get();
+                CHalfEdge *pNext = m_edges[i];
                 if (entering && pNext->m_pVertex == pVert)
                     return pNext;
                 if (!entering && pNext->m_pOpposite->m_pVertex == pVert)
@@ -446,7 +446,7 @@ namespace Caustic
     {
         for (size_t i = 0; i < m_faces.size(); i++)
         {
-            CFace *pFace = m_faces[i].get();
+            CFace *pFace = m_faces[i];
             std::vector<bool> touchVertex(m_vertices.size(), false);
             CHalfEdge *pEdge = pFace->m_pEdge;
             CHalfEdge *pFirst = pEdge;
@@ -481,9 +481,9 @@ namespace Caustic
         CT(pStream->Read(&numVerts, sizeof(numVerts), &bytesRead));
         for (uint32 i = 0; i < numVerts; i++)
         {
-            std::unique_ptr<CGeomVertex> spVertex(new CGeomVertex());
-            CT(pStream->Read(spVertex.get(), sizeof(CGeomVertex), &bytesRead));
-            m_vertices.emplace_back(spVertex.release());
+            CGeomVertex *pVertex = m_vertexAllocator.Allocate();
+            CT(pStream->Read(pVertex, sizeof(CGeomVertex), &bytesRead));
+            m_vertices.push_back(pVertex);
         }
 
         // Read edges
@@ -498,17 +498,17 @@ namespace Caustic
         for (uint32 i = 0; i < (uint32)numEdges; i++)
         {
             uint32 index;
-            CHalfEdge *pEdge = m_edges[i].get();
+            CHalfEdge *pEdge = m_edges[i];
             CT(pStream->Read(&index, sizeof(index), &bytesRead));
-            pEdge->m_pNext = m_edges[index].get();
+            pEdge->m_pNext = m_edges[index];
             CT(pStream->Read(&index, sizeof(index), &bytesRead));
-            pEdge->m_pPrev = m_edges[index].get();
+            pEdge->m_pPrev = m_edges[index];
             CT(pStream->Read(&index, sizeof(index), &bytesRead));
-            pEdge->m_pOpposite = m_edges[index].get();
+            pEdge->m_pOpposite = m_edges[index];
             CT(pStream->Read(&index, sizeof(index), &bytesRead));
-            pEdge->m_pVertex = m_vertices[index].get();
+            pEdge->m_pVertex = m_vertices[index];
             CT(pStream->Read(&index, sizeof(index), &bytesRead));
-            pEdge->m_pFace = m_faces[index].get();
+            pEdge->m_pFace = m_faces[index];
             CT(pStream->Read(&pEdge->m_smoothingGroup, sizeof(pEdge->m_smoothingGroup), &bytesRead));
             CT(pStream->Read(&pEdge->index, sizeof(pEdge->index), &bytesRead));
         }
@@ -516,12 +516,12 @@ namespace Caustic
         // Read faces
         for (uint32 i = 0; i < numFaces; i++)
         {
-            CFace *pFace = m_faces[i].get();
+            CFace *pFace = m_faces[i];
             CT(pStream->Read(&pFace->m_normal, sizeof(pFace->m_normal), &bytesRead));
             CT(pStream->Read(&pFace->m_center, sizeof(pFace->m_center), &bytesRead));
             uint32 edgeIndex;
             CT(pStream->Read(&edgeIndex, sizeof(edgeIndex), &bytesRead));
-            pFace->m_pEdge = m_edges[edgeIndex].get();
+            pFace->m_pEdge = m_edges[edgeIndex];
 
             uint32 numVertices;
             CT(pStream->Read(&numVertices, sizeof(numVertices), &bytesRead));
@@ -529,7 +529,7 @@ namespace Caustic
             {
                 uint32 vertIndex;
                 CT(pStream->Read(&vertIndex, sizeof(vertIndex), &bytesRead));
-                pFace->m_vertices.push_back(m_vertices[vertIndex].get());
+                pFace->m_vertices.push_back(m_vertices[vertIndex]);
             }
             CT(pStream->Read(&pFace->index, sizeof(pFace->index), &bytesRead));
         }
@@ -554,7 +554,7 @@ namespace Caustic
         uint32 numVerts = (uint32)m_vertices.size();
         CT(pStream->Write(&numVerts, sizeof(numVerts), &bytesWritten));
         for (uint32 i = 0; i < (uint32)numVerts; i++)
-            CT(pStream->Write(m_vertices[i].get(), sizeof(CGeomVertex), &bytesWritten));
+            CT(pStream->Write(m_vertices[i], sizeof(CGeomVertex), &bytesWritten));
         
         // Write out edges
         uint32 numEdges = (uint32)m_edges.size();
@@ -563,7 +563,7 @@ namespace Caustic
         CT(pStream->Write(&numFaces, sizeof(numFaces), &bytesWritten));
         for (uint32 i = 0; i < (uint32)m_edges.size(); i++)
         {
-            CHalfEdge *pEdge = m_edges[i].get();
+            CHalfEdge *pEdge = m_edges[i];
             uint32 index = EdgeToIndex(pEdge->m_pNext);
             CT(pStream->Write(&index, sizeof(index), &bytesWritten));
             index = EdgeToIndex(pEdge->m_pPrev);
@@ -581,7 +581,7 @@ namespace Caustic
         // Write out faces
         for (uint32 i = 0; i < (uint32)numFaces; i++)
         {
-            CFace *pFace = m_faces[i].get();
+            CFace *pFace = m_faces[i];
             CT(pStream->Write(&pFace->m_normal, sizeof(pFace->m_normal), &bytesWritten));
             CT(pStream->Write(&pFace->m_center, sizeof(pFace->m_center), &bytesWritten));
             uint32 edgeIndex = EdgeToIndex(pFace->m_pEdge);

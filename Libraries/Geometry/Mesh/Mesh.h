@@ -6,6 +6,7 @@
 #include "Geometry\Mesh\IMesh.h"
 #include "Geometry\GeomDS\kdtree.h"
 #include "Base\Core\RefCount.h"
+#include "Base\Core\BlockAllocator.h"
 #include <vector>
 #include <map>
 
@@ -21,20 +22,25 @@ namespace Caustic
     //**********************************************************************
     class CSubMesh : public ISubMesh, public CRefCount
     {
-        std::vector<std::unique_ptr<CGeomVertex>> m_vertices;
-        std::vector<std::unique_ptr<CFaceVertex>> m_faceVertices;
-        std::vector<std::unique_ptr<CFace>> m_faces;
-        std::vector<std::unique_ptr<CHalfEdge>> m_edges;
-        std::map<std::tuple<CGeomVertex*, CGeomVertex*>, CHalfEdge*> m_vertToEdge;
+        std::vector<CGeomVertex*> m_vertices;
+        std::vector<CFaceVertex*> m_faceVertices;
+        std::vector<CFace*> m_faces;
+        std::vector<CHalfEdge*> m_edges;
+        std::map<uint64, CHalfEdge*> m_vertToEdge;
 		CRefObj<IKDTree> m_spKDTree;
 		Caustic::BBox3 m_bbox;
         uint32 m_materialID;
         EVertexFlags m_vertexFlags;
         EMeshFlags m_meshFlags;
+        static bool s_allocatorInitialized;
+        static CBlockAllocator<CGeomVertex> m_vertexAllocator;
+        static CBlockAllocator<CFaceVertex> m_faceVertexAllocator;
+        static CBlockAllocator<CHalfEdge> m_edgeAllocator;
+        static CBlockAllocator<CFace> m_faceAllocator;
 
         CHalfEdge *FindEdge(CGeomVertex *pHead, CGeomVertex *pTail);
         CHalfEdge *FindNextEdgeAroundVertex(CGeomVertex *pVert, CHalfEdge *pEdge, bool entering, bool clockwise);
-        CGeomVertex *FindVertex(Caustic::Vector3 *pPos, Caustic::Vector3 *pNorm, Caustic::Vector2 *pUV);
+        CGeomVertex *FindVertex(Caustic::Vector3 &pos, Caustic::Vector3 *pNorm, Caustic::Vector2 *pUV);
         CFace *AllocateFace();
         CHalfEdge *AllocateEdge(CGeomVertex *pHead, CGeomVertex *pTail);
         CGeomVertex *AllocateGeomVertex(Caustic::Vector3 &pos, Vector3 &normal, Vector2 &uv);
@@ -50,7 +56,21 @@ namespace Caustic
             m_vertexFlags(EVertexFlags(HasPosition | HasNormal | HasUV0)),
             m_meshFlags(EMeshFlags(0))
         {
-			CreateKDTree(&m_spKDTree);
+            CreateKDTree(&m_spKDTree);
+        }
+
+//#pragma warning(disable:4100)
+//#pragma warning(disable:4189)
+        CSubMesh(int approxNumVertices, int approxNumEdges, int approxNumFaces)
+        {
+            if (!s_allocatorInitialized)
+            {
+                m_vertexAllocator.CBlockAllocator<CGeomVertex>::CBlockAllocator(approxNumVertices);
+                m_edgeAllocator.CBlockAllocator<CHalfEdge>::CBlockAllocator(approxNumEdges);
+                m_faceAllocator.CBlockAllocator<CFace>::CBlockAllocator(approxNumFaces);
+                m_faceVertexAllocator.CBlockAllocator<CFaceVertex>::CBlockAllocator(approxNumVertices);
+                s_allocatorInitialized = true;
+            }
         }
 
         void CheckConsistency();
@@ -65,11 +85,11 @@ namespace Caustic
         // ISubMesh
         //**********************************************************************
         uint32 GetNumberFaces() override { return (uint32)m_faces.size(); }
-        CFace *GetFace(uint32 index) override { return m_faces[index].get(); }
+        CFace *GetFace(uint32 index) override { return m_faces[index]; }
         uint32 GetNumberVertices() override { return (uint32)m_vertices.size(); }
-        CGeomVertex *GetVertex(uint32 index) override { return m_vertices[index].get(); }
+        CGeomVertex *GetVertex(uint32 index) override { return m_vertices[index]; }
         uint32 GetNumberEdges() override { return (uint32)m_edges.size(); }
-        CHalfEdge *GetEdge(uint32 index) override { return m_edges[index].get(); }
+        CHalfEdge *GetEdge(uint32 index) override { return m_edges[index]; }
         virtual EVertexFlags GetVertexFlags() override { return m_vertexFlags; }
         virtual void SetVertexFlags(EVertexFlags flags) override { m_vertexFlags = flags; }
         virtual EMeshFlags GetMeshFlags() override { return m_meshFlags; }
