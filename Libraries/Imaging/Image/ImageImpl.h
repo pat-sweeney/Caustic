@@ -16,6 +16,7 @@ namespace Caustic
         std::unique_ptr<BYTE> m_spData;
         uint32 m_width;
         uint32 m_height;
+        uint32 m_bytesPerPixel;
 
         friend void LoadImage(const wchar_t *pFilename, IImage **ppImage);
         friend void StoreImage(const wchar_t *pFilename, IImage *pImage);
@@ -29,6 +30,7 @@ namespace Caustic
         {
             m_width = w;
             m_height = h;
+            m_bytesPerPixel = 4;
             m_spData.reset(new BYTE[h * GetStride()]);
         }
 
@@ -41,12 +43,14 @@ namespace Caustic
         //**********************************************************************
         // IImage
         //**********************************************************************
-        virtual BYTE *GetData() override { return m_spData.get(); }
+        virtual uint8 *GetData() override { return m_spData.get(); }
         virtual uint32 GetWidth() override { return m_width; }
         virtual uint32 GetHeight() override { return m_height; }
-        virtual uint32 GetBytesPerPixel() override { return 4; }
+        virtual uint32 GetBytesPerPixel() override { return m_bytesPerPixel; }
         virtual uint32 GetStride() override { return m_width * GetBytesPerPixel(); }
         virtual void GaussianBlur(float sigma, IImage **ppImage) override;
+        virtual void ShowAlpha(int boxSize, IImage **ppResult) override;
+        virtual void Clone(IImage **ppImage) override;
     };
 
     class CIntegralImage : public IIntegralImage, public CRefCount

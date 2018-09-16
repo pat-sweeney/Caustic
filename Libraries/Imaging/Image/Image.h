@@ -10,7 +10,7 @@ namespace Caustic
 {
     struct IImageBase : public IRefCount
     {
-        virtual BYTE *GetData() = 0;
+        virtual uint8 *GetData() = 0;
         virtual uint32 GetWidth() = 0;
         virtual uint32 GetHeight() = 0;
         virtual uint32 GetStride() = 0;
@@ -20,6 +20,8 @@ namespace Caustic
     struct IImage : public IImageBase
     {
         virtual void GaussianBlur(float sigma, IImage **ppImage) = 0;
+        virtual void ShowAlpha(int boxSize, IImage **ppResult) = 0;
+        virtual void Clone(IImage **ppImage) = 0;
     };
     extern void CreateImage(uint32 width, uint32 height, IImage **ppImage);
 

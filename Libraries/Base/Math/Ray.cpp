@@ -13,6 +13,35 @@ namespace Caustic
 #define TINY 1e-5F
     
     //**********************************************************************
+    //! \brief Calculates intersection of a 2D ray with a line
+    //
+    //! Calculates the intersection of a 2D ray with a line.
+    //!     R.pos + R.dir * t = p0 + (p1 - p0) * u
+    //! taking cross product of R.dir with both sides gives:
+    //!     (R.pos + R.dir * t) x R.dir = (p0 + (p1 - p0) * u) x R.dir
+    //!     ((p1 - p0) * u x R.dir) = (R.pos - p0) x R.dir
+    //! given that (R.dir * t) x R.dir == 0
+    //!     u = ((R.pos - p0) x R.dir) / ((p1 - p0)x R.dir)
+    //!     t = -(R.pos - p0) x(p1 - p0) / (-(p1 - p0) xR.dir)
+    //**********************************************************************
+    bool Ray2::IntersectWithLine(Vector2 &p0, Vector2 &p1, RayIntersect2 *pIntersectInfo)
+    {
+        // First check to collinearity
+        Vector2 p1p0 = p1 - p0;
+        if (p1p0.Cross(dir) == 0)
+            return false; // Lines are either parallel -> (pos - p0).Cross(dir) != 0) or collinear -> (pos - p0).Cross(dir) == 0)
+        Vector2 p0pos = p0 - pos;
+        float c = dir.Cross(p1p0);
+        float t = p0pos.Cross(p1p0) / c;
+        float u = p0pos.Cross(dir) / c;
+        if (u < 0 || u > 1 || t < 0)
+            return false;
+        pIntersectInfo->hitPt = p0 + p1p0 * u;
+        pIntersectInfo->hitTime = t;
+        return true;
+    }
+
+    //**********************************************************************
     //! \brief Calculates intersection of a ray with a bounding box
     //
     //! Calculates the intersection of a ray with an axis-aligned bounding
@@ -23,7 +52,7 @@ namespace Caustic
     //! \param[in] pIntersectInfo Returns the interesection info. Maybe nullptr.
     //! \return true if ray interesects bbox, otherwise false
     //**********************************************************************
-    bool Ray3::Intersect(const BBox3 &bbox, Matrix4x4 *pInvTm, RayIntersect *pIntersectInfo)
+    bool Ray3::Intersect(const BBox3 &bbox, Matrix4x4 *pInvTm, RayIntersect3 *pIntersectInfo)
     {
         Ray3 genray;
         Vector3 norms[6];
@@ -235,7 +264,7 @@ namespace Caustic
     //! \param[in] pIntersectInfo Returns the interesection info. Maybe nullptr.
     //! \return true if ray interesects bbox, otherwise false
     //**********************************************************************
-    bool Ray3::Intersect(float bottomRadius, float topRadius, float height, Matrix4x4 *pInvTm, RayIntersect *pIntersectInfo)
+    bool Ray3::Intersect(float bottomRadius, float topRadius, float height, Matrix4x4 *pInvTm, RayIntersect3 *pIntersectInfo)
     {
         Ray3 genray;
         if (pInvTm)
@@ -355,7 +384,7 @@ namespace Caustic
     //! \param[in] pIntersectInfo Returns the interesection info. Maybe nullptr.
     //! \return true if ray interesects bbox, otherwise false
     //**********************************************************************
-    bool Ray3::Intersect(float radius, Matrix4x4 *pInvTm, RayIntersect *pIntersectInfo)
+    bool Ray3::Intersect(float radius, Matrix4x4 *pInvTm, RayIntersect3 *pIntersectInfo)
     {
         //
         // first convert ray into generic coordinate system
@@ -423,7 +452,7 @@ namespace Caustic
     //! \param[in] pIntersectInfo Returns the interesection info. Maybe nullptr.
     //! \return true if ray interesects bbox, otherwise false
     //**********************************************************************
-    bool Ray3::Intersect(float radius, float height, Matrix4x4 *pInvTm, RayIntersect *pIntersectInfo)
+    bool Ray3::Intersect(float radius, float height, Matrix4x4 *pInvTm, RayIntersect3 *pIntersectInfo)
     {
         //
         // first convert ray into generic coordinate system

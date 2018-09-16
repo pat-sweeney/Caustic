@@ -1,0 +1,40 @@
+﻿<Window x:Class="ImageToMesh.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:h3d="http://helix-toolkit.org/wpf"
+        xmlns:local="clr-namespace:ImageToMesh"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <DockPanel LastChildFill="True">
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="File">
+                <MenuItem Header="Load Image..." Click="LoadImageClick"/>
+                <MenuItem Header="Save Mesh..." Click="SaveMeshClick"/>
+            </MenuItem>
+            <MenuItem Header="Edit">
+                <MenuItem Header="Build Mesh..." Click="BuildMeshClick"/>
+            </MenuItem>
+        </Menu>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
+                <Image x:Name="DispImage"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Width:"/>
+                    <TextBlock x:Name="ImageWidth"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Height:"/>
+                    <TextBlock x:Name="ImageHeight"/>
+                </StackPanel>
+            </StackPanel>
+            <GridSplitter Grid.RowSpan="2"/>
+            <h3d:HelixViewport3D Grid.Column="1" HorizontalAlignment="Stretch"/>
+        </Grid>
+    </DockPanel>
+</Window>

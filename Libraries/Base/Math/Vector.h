@@ -38,6 +38,11 @@ namespace Caustic
             return Vector2(x, y);
         }
 
+        float Cross(Vector2 &v)
+        {
+            return x * v.y - y * v.x;
+        }
+        Vector2 operator-() { return Vector2(-x, -y); }
         Vector2 operator-(Vector2 &rhs) { return Vector2(x - rhs.x, y - rhs.y); }
         Vector2 operator+(Vector2 &rhs) { return Vector2(x + rhs.x, y + rhs.y); }
         Vector2 operator*(float f) { return Vector2(x * f, y * f); }

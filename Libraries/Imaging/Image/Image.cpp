@@ -205,12 +205,22 @@ namespace Caustic
         std::unique_ptr<CImage> spImage(new CImage());
         spImage->m_width = width;
         spImage->m_height = height;
-        uint32 stride = width * 4;
+        spImage->m_bytesPerPixel = 4;
+        uint32 stride = width * spImage->m_bytesPerPixel;
         uint32 numbytes = stride * height;
         spImage->m_spData.reset(new BYTE[numbytes]);
         *ppImage = spImage.release();
         (*ppImage)->AddRef();
     }
+
+    void CImage::Clone(IImage **ppImage)
+    {
+        CRefObj<IImage> spImage;
+        CreateImage(GetWidth(), GetHeight(), &spImage);
+        memcpy(spImage->GetData(), GetData(), GetStride() * GetHeight());
+        *ppImage = spImage.Detach();
+    }
+
 
 #undef LoadImage
     void LoadImage(const wchar_t *pFilename, IImage **ppImage)
@@ -226,19 +236,10 @@ namespace Caustic
         WICPixelFormatGUID guid;
         CT(spFrame->GetPixelFormat(&guid));
 
-//        if (guid == GUID_WICPixelFormat32bppBGR) OutputDebugString(L"GUID_WICPixelFormat32bppBGR");
-//        if (guid == GUID_WICPixelFormat32bppBGRA) OutputDebugString(L"GUID_WICPixelFormat32bppBGRA");
-//        if (guid == GUID_WICPixelFormat32bppPBGRA) OutputDebugString(L"GUID_WICPixelFormat32bppPBGRA");
-//        if (guid == GUID_WICPixelFormat32bppGrayFloat) OutputDebugString(L"GUID_WICPixelFormat32bppGrayFloat");
-//        if (guid == GUID_WICPixelFormat32bppRGB) OutputDebugString(L"GUID_WICPixelFormat32bppRGB");
-//        if (guid == GUID_WICPixelFormat32bppRGBA) OutputDebugString(L"GUID_WICPixelFormat32bppRGBA");
-//        if (guid == GUID_WICPixelFormat32bppPRGBA) OutputDebugString(L"GUID_WICPixelFormat32bppPRGBA");
-//        if (guid == GUID_WICPixelFormat32bppBGR101010) OutputDebugString(L"GUID_WICPixelFormat32bppBGR101010");
-//        _ASSERT(guid == GUID_WICPixelFormat32bppBGRA);
-
         spImage->m_width = (uint32)w;
         spImage->m_height = (uint32)h;
-        uint32 stride = w * 4;
+        spImage->m_bytesPerPixel = 4;
+        uint32 stride = w * spImage->m_bytesPerPixel;
         uint32 numbytes = stride * h;
         spImage->m_spData.reset(new BYTE[numbytes]);
         if (guid != GUID_WICPixelFormat32bppBGRA)

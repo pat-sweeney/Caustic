@@ -9,7 +9,28 @@
 
 namespace Caustic
 {
-    struct RayIntersect
+    struct RayIntersect2
+    {
+        float hitTime;
+        Vector2 hitPt;
+    };
+
+    struct Ray2
+    {
+        Vector2 pos;
+        Vector2 dir;
+
+        Ray2() {}
+        Ray2(Vector2 &_pos, Vector2 &_dir)
+        {
+            pos = _pos;
+            dir = _dir;
+        }
+
+        bool IntersectWithLine(Vector2 &p0, Vector2 &p1, RayIntersect2 *pIntersectInfo);
+    };
+
+    struct RayIntersect3
     {
         float hitTime;
         Vector3 hitPt;
@@ -31,9 +52,9 @@ namespace Caustic
             dir = _dir;
         }
 
-        bool Intersect(const BBox3 &bbox, Matrix4x4 *pInvTm, RayIntersect *pIntersectInfo);
-        bool Intersect(float bottomRadius, float topRadius, float height, Matrix4x4 *pInvTm, RayIntersect *pIntersectInfo);
-        bool Intersect(float radius, Matrix4x4 *pInvTm, RayIntersect *pIntersectInfo);
-        bool Intersect(float radius, float height, Matrix4x4 *pInvTm, RayIntersect *pIntersectInfo);
+        bool Intersect(const BBox3 &bbox, Matrix4x4 *pInvTm, RayIntersect3 *pIntersectInfo);
+        bool Intersect(float bottomRadius, float topRadius, float height, Matrix4x4 *pInvTm, RayIntersect3 *pIntersectInfo);
+        bool Intersect(float radius, Matrix4x4 *pInvTm, RayIntersect3 *pIntersectInfo);
+        bool Intersect(float radius, float height, Matrix4x4 *pInvTm, RayIntersect3 *pIntersectInfo);
     };
 }
