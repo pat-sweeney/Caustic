@@ -45,15 +45,28 @@ namespace Caustic
     //! @param[in] start Starting index for this subpiece
     //! @param[in] end Ending index for this subpiece
     //! @param[in] err Tolerance to allow for points we will ignore
+    //! @param[in] maxLen Longest line segment allowed. If maxLen==0 then no limit.
     //**********************************************************************
-    void CPolygon2::SimplifyRecursive(IPolygon2 *pResult, int start, int end, float err)
+    void CPolygon2::SimplifyRecursive(IPolygon2 *pResult, int start, int end, float err, float maxLen)
     {
         if (start == end)
             return;
-        float maxDist = 0.0f;
         int maxI = 0;
+        float totalLen = 0.0f;
+        float maxDist = 0.0f;
         for (int i = start + 1; i < end; i++)
         {
+            if (maxLen > 0.0f)
+            {
+                float p = (m_pts[i] - m_pts[i - 1]).Length();
+                totalLen += p;
+                if (totalLen > maxLen)
+                {
+                    if (maxDist == 0.0f)
+                        maxI = i;
+                    break;
+                }
+            }
             float dist = DistancePointToLine(m_pts[start], m_pts[end], m_pts[i]);
             if (dist > err && dist > maxDist)
             {
@@ -63,9 +76,9 @@ namespace Caustic
         }
         if (maxI != 0)
         {
-            SimplifyRecursive(pResult, start, maxI, err);
+            SimplifyRecursive(pResult, start, maxI, err, maxLen);
             pResult->AddPoint(m_pts[maxI]);
-            SimplifyRecursive(pResult, maxI, end, err);
+            SimplifyRecursive(pResult, maxI, end, err, maxLen);
         }
     }
 
@@ -75,9 +88,10 @@ namespace Caustic
     //! This function uses the Ramer-Douglas-Peucker algorithm:
     // https://en.wikipedia.org/wiki/Ramer–Douglas–Peucker_algorithm
     //! @param[in] err Tolerance for deciding whether to remove a point
+    //! @param[in] maxLen Longest line segment allowed. If maxLen==0 then no limit.
     //! @param[out] ppResult The new simplified polygon
     //**********************************************************************
-    void CPolygon2::Simplify(float err, IPolygon2 **ppResult)
+    void CPolygon2::Simplify(float err, float maxLen, IPolygon2 **ppResult)
     {
         CRefObj<IPolygon2> spPolygon;
         CreatePolygon2(&spPolygon);
@@ -87,7 +101,7 @@ namespace Caustic
         int start = 0;
         int end = (int)m_pts.size() - 1;
         spPolygon->AddPoint(m_pts[start]);
-        SimplifyRecursive(spPolygon.p, start, end, err);
+        SimplifyRecursive(spPolygon.p, start, end, err, maxLen);
         spPolygon->AddPoint(m_pts[end]);
         *ppResult = spPolygon.Detach();
     }
@@ -117,30 +131,29 @@ namespace Caustic
         int count = 0;
         Vector2 dir(1, 0);
         int li = (int)m_pts.size() - 1;
+        float lastT = 0.0f;
         for (int i = 0; i < this->m_pts.size(); i++)
         {
             RayIntersect2 intersectionPoint;
-            {
-                wchar_t buf[1024];
-                swprintf_s(buf, L"Point: %f,%f   Line:%f,%f..%f,%f\n", pos.x, pos.y, m_pts[li].x, m_pts[li].y, m_pts[i].x, m_pts[i].y);
-                OutputDebugString(buf);
-            }
             if (ray.IntersectWithLine(m_pts[li], m_pts[i], &intersectionPoint))
             {
+                // Check if the intersection time on the line segment is 0.0
+                // and the last segment's intersection time was 1.0. If so, we
+                // hit the endpoint of the last line segment and the start point
+                // of the current line segment (i.e. counting the same hitPt twice)
+                if (lastT != 1.0f || intersectionPoint.hitTime != 0.0)
                 {
-                    wchar_t buf[1024];
-                    swprintf_s(buf, L"HitPt:%f,%f  Time:%f\n", intersectionPoint.hitPt.x, intersectionPoint.hitPt.y, intersectionPoint.hitTime);
-                    OutputDebugString(buf);
+                    if (pMinDist || pMaxDist)
+                    {
+                        float dist = DistancePointToLine(m_pts[li], m_pts[i], pos);
+                        if (pMinDist && dist < *pMinDist)
+                            *pMinDist = dist;
+                        if (pMaxDist && dist > *pMaxDist)
+                            *pMaxDist = dist;
+                    }
+                    count++;
                 }
-                if (pMinDist || pMaxDist)
-                {
-                    float dist = DistancePointToLine(m_pts[li], m_pts[i], pos);
-                    if (pMinDist && dist < *pMinDist)
-                        *pMinDist = dist;
-                    if (pMaxDist && dist > *pMaxDist)
-                        *pMaxDist = dist;
-                }
-                count++;
+                lastT = intersectionPoint.hitTime;
             }
             li = i;
         }

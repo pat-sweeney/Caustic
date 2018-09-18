@@ -37,7 +37,7 @@ namespace Caustic
         if (u < 0 || u > 1 || t < 0)
             return false;
         pIntersectInfo->hitPt = p0 + p1p0 * u;
-        pIntersectInfo->hitTime = t;
+        pIntersectInfo->hitTime = u;
         return true;
     }
 

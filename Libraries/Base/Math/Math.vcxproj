@@ -78,6 +78,7 @@
   <ItemGroup>
     <ClInclude Include="BBox.h" />
     <ClInclude Include="Covariance.h" />
+    <ClInclude Include="Helper.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="OBBox.h" />
     <ClInclude Include="Quaternion.h" />
@@ -91,6 +92,7 @@
     <ClCompile Include="BBox2.cpp" />
     <ClCompile Include="BBox3.cpp" />
     <ClCompile Include="Covariance.cpp" />
+    <ClCompile Include="Helper.cpp" />
     <ClCompile Include="Matrix4x3.cpp" />
     <ClCompile Include="Matrix4x4.cpp" />
     <ClCompile Include="OBBox2.cpp" />

@@ -42,6 +42,12 @@ namespace Caustic
         {
             return x * v.y - y * v.x;
         }
+
+        float Dot(Vector2 &v)
+        {
+            return x * v.x + y * v.y;
+        }
+
         Vector2 operator-() { return Vector2(-x, -y); }
         Vector2 operator-(Vector2 &rhs) { return Vector2(x - rhs.x, y - rhs.y); }
         Vector2 operator+(Vector2 &rhs) { return Vector2(x + rhs.x, y + rhs.y); }

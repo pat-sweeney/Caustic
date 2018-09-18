@@ -16,7 +16,7 @@ namespace Caustic
         virtual void GetPoint(uint32 index, Vector2 *pt) = 0;
         virtual void AddPoint(Vector2 &pt) = 0;
         virtual void GetBBox(BBox2 *pBBox) = 0;
-        virtual void Simplify(float err, IPolygon2 **ppResult) = 0;
+        virtual void Simplify(float err, float maxLen, IPolygon2 **ppResult) = 0;
         virtual bool ContainsPoint(Vector2 &pt, float *pMinDist = nullptr, float *pMaxDist = nullptr) = 0;
     };
 

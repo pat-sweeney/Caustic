@@ -17,7 +17,7 @@ namespace Caustic
         std::vector<Vector2> m_pts;
         BBox2 m_bbox;
 
-        void SimplifyRecursive(IPolygon2 *pResult, int start, int end, float err);
+        void SimplifyRecursive(IPolygon2 *pResult, int start, int end, float err, float maxLen);
     public:
         //**********************************************************************
         // IAddRef
@@ -41,7 +41,7 @@ namespace Caustic
             *pBBox = m_bbox;
         }
 
-        void Simplify(float err, IPolygon2 **ppResult) override;
+        void Simplify(float err, float maxLen, IPolygon2 **ppResult) override;
         bool ContainsPoint(Vector2 &pos, float *pMinDist, float *pMaxDist) override;
     };
 }
