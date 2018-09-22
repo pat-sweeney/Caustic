@@ -126,6 +126,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Delaunay.h" />
+    <ClInclude Include="IDelaunay.h" />
     <ClInclude Include="IMeshConstructor.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="IMesh.h" />

@@ -7,39 +7,10 @@
 #include "Geometry\Mesh\Mesh.h"
 #include "Base\Math\Helper.h"
 #include <map>
+#include "Delaunay.h"
 
 namespace Caustic
 {
-    struct Triangle
-    {
-        bool inuse;
-        int i0, i1, i2;
-    };
-
-    class CDelaunay2
-    {
-        std::vector<Vector2> points;
-        std::vector<Triangle> triangles;
-    public:
-        CDelaunay2()
-        {
-            // First add the super triangle
-            Vector2 v0(-FLT_MAX, -FLT_MAX);
-            Vector2 v1(0.0f, FLT_MAX);
-            Vector2 v2(FLT_MAX, -FLT_MAX);
-            points.push_back(v0);
-            points.push_back(v1);
-            points.push_back(v2);
-            Triangle tri;
-            tri.i0 = 0;
-            tri.i1 = 2;
-            tri.i2 = 1;
-            tri.inuse = true;
-            triangles.push_back(tri);
-        }
-        void AddPoint(Vector2 &pt);
-    };
-
     //**********************************************************************
     //! \brief Adds a new point to our current Delaunay triangulation using
     //! the Bowyer-Watson algorithm.
@@ -83,12 +54,19 @@ namespace Caustic
                     Triangle tri;
                     tri.i0 = std::get<0>(edge.first);
                     tri.i1 = std::get<1>(edge.first);
-                    tri.i2 = points.size() - 1;
+                    tri.i2 = (int)points.size() - 1;
                     tri.inuse = true;
                     triangles.push_back(tri);
                 }
             }
         }
         // Find unshared edges in bad triangles
+    }
+
+    CAUSTICAPI void CreateDelaunay2(IDelaunay2 **ppDelaunay)
+    {
+        std::unique_ptr<CDelaunay2> spDelaunay(new CDelaunay2());
+        *ppDelaunay = spDelaunay.release();
+        (*ppDelaunay)->AddRef();
     }
 }

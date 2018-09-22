@@ -10,7 +10,9 @@ namespace ImageToMesh
     public partial class MainWindow : Window
     {
         private CausticInterop.Image image = null;
+        private CausticInterop.Image image2 = null;
         private WriteableBitmap wbm = null;
+        private WriteableBitmap wbm2 = null;
 
         public MainWindow()
         {
@@ -24,7 +26,10 @@ namespace ImageToMesh
             {
                 this.image = new CausticInterop.Image();
                 this.wbm = this.image.Load(dlg.FileName);
+                this.image2 = this.image.Clone();
+                this.wbm2 = this.image2.GetWritableBitmap();
                 DispImage.Source = this.wbm;
+                DispImage2.Source = this.wbm2;
                 ImageWidth.Text = $"{this.wbm.Width}";
                 ImageHeight.Text = $"{this.wbm.Height}";
             }
@@ -36,7 +41,7 @@ namespace ImageToMesh
 
         private void BuildMeshClick(object sender, RoutedEventArgs e)
         {
-            this.image.ExtractMesh();
+            this.image2.ExtractMesh();
         }
     }
 }

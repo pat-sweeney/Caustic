@@ -25,6 +25,12 @@
     <ClInclude Include="UnitTest.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Delaunay.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IDelaunay.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Submesh.cpp">

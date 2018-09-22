@@ -24,6 +24,7 @@
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
                 <Image x:Name="DispImage"/>
+                <Image x:Name="DispImage2"/>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Width:"/>
                     <TextBlock x:Name="ImageWidth"/>
