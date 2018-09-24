@@ -9,6 +9,7 @@
 #include "ImageImpl.h"
 #include <atlbase.h>
 #include <wincodec.h>
+#include "Geometry\Rast\Bresenham.h"
 
 namespace Caustic
 {
@@ -221,6 +222,22 @@ namespace Caustic
         *ppImage = spImage.Detach();
     }
 
+    void CImage::DrawLine(Vector2 &v0, Vector2 &v1)
+    {
+        Bresenham b((int32)v0.x, (int32)v0.y, (int32)v1.x, (int32)v1.y);
+        while (!b.eol())
+        {
+            if (b.get_x() >= 0 && b.get_x() < (int32)GetWidth() && b.get_y() >= 0 && b.get_y() < (int32)GetHeight())
+            {
+                BYTE *pData = GetData() + b.get_y() * this->GetStride() + b.get_x() * m_bytesPerPixel;
+                pData[0] = 0;
+                pData[1] = 0;
+                pData[2] = 255;
+                pData[3] = 255;
+            }
+            b.step();
+        }
+    }
 
 #undef LoadImage
     void LoadImage(const wchar_t *pFilename, IImage **ppImage)

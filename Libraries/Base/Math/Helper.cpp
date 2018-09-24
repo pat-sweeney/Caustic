@@ -59,7 +59,7 @@ namespace Caustic
             p2dotp2, p2.x, p2.y);
         pCircumCenter->x = -Bx / (2 * a);
         pCircumCenter->y = -By / (2 * a);
-        *pRadius = (float)sqrt(Bx * Bx + By * By - 4 * a * c) / (2 * a);
+        *pRadius = (float)sqrt(Bx * Bx + By * By - 4 * a * c) / (2 * fabs(a));
     }
 
     //**********************************************************************
