@@ -20,11 +20,11 @@
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                 <Image x:Name="DispImage"/>
                 <Image x:Name="DispImage2"/>
+                <!--
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Width:"/>
                     <TextBlock x:Name="ImageWidth"/>
@@ -33,9 +33,12 @@
                     <TextBlock Text="Height:"/>
                     <TextBlock x:Name="ImageHeight"/>
                 </StackPanel>
+                -->
             </StackPanel>
+            <!--
             <GridSplitter Grid.RowSpan="2"/>
             <h3d:HelixViewport3D Grid.Column="1" HorizontalAlignment="Stretch"/>
+            -->
         </Grid>
     </DockPanel>
 </Window>

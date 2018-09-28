@@ -30,8 +30,8 @@ namespace ImageToMesh
                 this.wbm2 = this.image2.GetWritableBitmap();
                 DispImage.Source = this.wbm;
                 DispImage2.Source = this.wbm2;
-                ImageWidth.Text = $"{this.wbm.Width}";
-                ImageHeight.Text = $"{this.wbm.Height}";
+                //ImageWidth.Text = $"{this.wbm.Width}";
+                //ImageHeight.Text = $"{this.wbm.Height}";
             }
         }
 

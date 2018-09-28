@@ -44,7 +44,9 @@ namespace Caustic
         }
     };
 
-    const uint8 c_BoundaryVertex = 0x1;
+    const uint8 c_SuperTriangleVertex = 0x1;
+    const uint8 c_BoundaryVertex = 0x2;
+    const uint8 c_InteriorVertex = 0x4;
 
     struct Vertex
     {
@@ -76,7 +78,10 @@ namespace Caustic
         std::vector<Triangle> m_triangles;
         int m_numTriangles;
 
-        int FindOrAddEdge(int v0, int v1, int tri);
+        int FindOrAddEdge(int v0, int v1, int tri, bool isBoundaryEdge);
+        void CreateBoundaryEdges();
+        void ComputeTriangulation();
+        void TriangulatePoints(uint8 flag);
     public:
         CDelaunay2(BBox2 &bb);
 
@@ -90,7 +95,7 @@ namespace Caustic
         // IDelaunay2
         //**********************************************************************
         virtual void Open() override {}
-        virtual void AddPoint(Vector2 &pt, Vector2 &uv, bool isExterior) override;
+        virtual void AddPoint(Vector2 &pt, Vector2 &uv, bool isBoundary) override;
         virtual void Close() override;
 
         virtual uint32 GetNumberTriangles() override 
@@ -98,11 +103,14 @@ namespace Caustic
             return m_numTriangles;
         }
 
-        virtual void GetTriangle(uint32 index, Vector2 &v0, Vector2 &v1, Vector2 &v2) override
+        virtual void GetTriangle(uint32 index, Vector2 &v0, Vector2 &v1, Vector2 &v2, bool isExterior[3]) override
         {
             v0 = m_points[m_triangles[index].v0].pos;
             v1 = m_points[m_triangles[index].v1].pos;
             v2 = m_points[m_triangles[index].v2].pos;
+            isExterior[0] = (m_edges[m_triangles[index].e0].flags & c_BoundaryEdge) ? true : false;
+            isExterior[1] = (m_edges[m_triangles[index].e1].flags & c_BoundaryEdge) ? true : false;
+            isExterior[2] = (m_edges[m_triangles[index].e2].flags & c_BoundaryEdge) ? true : false;
         }
 
         virtual void WritePLY() override;
