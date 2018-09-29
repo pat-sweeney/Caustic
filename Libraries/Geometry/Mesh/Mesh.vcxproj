@@ -145,6 +145,9 @@
     <ClCompile Include="UnitTest.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Imaging\Image\Image.vcxproj">
+      <Project>{f7bef797-220c-4585-a489-f06df155ea60}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\GeomDS\GeomDS.vcxproj">
       <Project>{163426b2-af7c-4713-8e3c-1a56a9cc0abf}</Project>
     </ProjectReference>

@@ -82,6 +82,7 @@ namespace Caustic
         void CreateBoundaryEdges();
         void ComputeTriangulation();
         void TriangulatePoints(uint8 flag);
+        void DrawTriangulation(bool skipExterior);
     public:
         CDelaunay2(BBox2 &bb);
 
