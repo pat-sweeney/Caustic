@@ -7,6 +7,10 @@
 #include "IDelaunay.h"
 #include <vector>
 
+#if 0
+#define DEBUGGING_AIDS // Determine whether to dump debug
+#endif
+
 namespace Caustic
 {
     const int c_TriangleBad = 0x1;      //!< Flag indicating whether triangle was removed due to violating Delaunay property
@@ -82,7 +86,9 @@ namespace Caustic
         void CreateBoundaryEdges();
         void ComputeTriangulation();
         void TriangulatePoints(uint8 flag);
-        void DrawTriangulation(bool skipExterior);
+#ifdef DEBUGGING_AIDS
+        void DrawTriangulation(bool skipExterior, int currentTri = -1, int nextTri = -1, int crossEdge = -1);
+#endif
     public:
         CDelaunay2(BBox2 &bb);
 

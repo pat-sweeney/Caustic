@@ -51,7 +51,7 @@ namespace Caustic
         virtual void GaussianBlur(float sigma, IImage **ppImage) override;
         virtual void ShowAlpha(int boxSize, IImage **ppResult) override;
         virtual void Clone(IImage **ppImage) override;
-        virtual void DrawLine(Vector2 &v0, Vector2 &v1, bool exterior) override;
+        virtual void DrawLine(Vector2 &v0, Vector2 &v1, uint8 color[4]) override;
     };
 
     class CIntegralImage : public IIntegralImage, public CRefCount

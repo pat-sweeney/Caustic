@@ -112,35 +112,54 @@ namespace Caustic
         TriangulatePoints(c_InteriorVertex);
     }
 
+#ifdef DEBUGGING_AIDS
 #include "Imaging\Image\Image.h"
-    void CDelaunay2::DrawTriangulation(bool skipExterior)
+    void CDelaunay2::DrawTriangulation(bool skipExterior, int currentTri, int nextTri, int crossEdge)
     {
         static int frame = 0;
         CRefObj<IImage> spImage;
         CreateImage(1024, 1024, &spImage);
+        uint8 blue[4] = { 0, 0, 255, 255 };
+        uint8 red[4] = { 255, 0, 0, 255 };
+        // Draw current triangle in green and boundary edge in yellow
+        uint8 green[4] = { 0, 255, 0, 255 };
+        uint8 yellow[4] = { 255, 255, 0, 255 };
+        uint8 cyan[4] = { 0, 255, 255, 255 };
         for (int i = 0; i < (int)m_triangles.size(); i++)
         {
             if (m_triangles[i].flags & c_TriangleBad)
                 continue;
             if (skipExterior && (m_triangles[i].flags & c_ExteriorTriangle))
                 continue;
+            if (i != currentTri && i != nextTri && currentTri != -1 && nextTri != -1)
+                continue;
             spImage->DrawLine(
                 m_points[m_edges[m_triangles[i].e0].v0].pos,
                 m_points[m_edges[m_triangles[i].e0].v1].pos,
-                m_edges[m_triangles[i].e0].flags & c_BoundaryEdge);
+                (m_triangles[i].e0 == crossEdge) ? yellow :
+                 ((i == nextTri) ? cyan :
+                  ((i == currentTri) ? green :
+                   ((m_edges[m_triangles[i].e0].flags & c_BoundaryEdge) ? blue : red))));
             spImage->DrawLine(
                 m_points[m_edges[m_triangles[i].e1].v0].pos,
                 m_points[m_edges[m_triangles[i].e1].v1].pos,
-                m_edges[m_triangles[i].e1].flags & c_BoundaryEdge);
+                (m_triangles[i].e1 == crossEdge) ? yellow :
+                ((i == nextTri) ? cyan :
+                ((i == currentTri) ? green :
+                    ((m_edges[m_triangles[i].e1].flags & c_BoundaryEdge) ? blue : red))));
             spImage->DrawLine(
                 m_points[m_edges[m_triangles[i].e2].v0].pos,
                 m_points[m_edges[m_triangles[i].e2].v1].pos,
-                m_edges[m_triangles[i].e2].flags & c_BoundaryEdge);
+                (m_triangles[i].e2 == crossEdge) ? yellow :
+                ((i == nextTri) ? cyan :
+                ((i == currentTri) ? green :
+                    ((m_edges[m_triangles[i].e2].flags & c_BoundaryEdge) ? blue : red))));
         }
         wchar_t fn[1024];
         swprintf_s(fn, L"d:\\images\\frame-%d.png", frame++);
         StoreImage(fn, spImage.p);
     }
+#endif
 
     //**********************************************************************
     //! \brief Adds the set of vertex points that match the specified vertex
@@ -153,7 +172,9 @@ namespace Caustic
         //**********************************************************************
         for (int ptIndex = 0; ptIndex < (int)m_points.size(); ptIndex++)
         {
-            DrawTriangulation(false);
+#ifdef DEBUGGING_AIDS
+//            DrawTriangulation(flag & c_InteriorVertex);
+#endif
             if (!(m_points[ptIndex].flags & flag))
                 continue;
 
@@ -246,6 +267,7 @@ namespace Caustic
                     else
                         m_edges[i].t1 = triIndex;
                     m_triangles.push_back(Triangle(v0, v1, ptIndex, i, ei1, ei0, 0));
+#ifdef DEBUGGING_AIDS
                     {
                         wchar_t buf[1024];
                         swprintf_s(buf, L"Creating Triangle: v0:%3d v1:%3d v2:%3d\te0:%3d e1:%3d e2:%3d\n",
@@ -267,6 +289,7 @@ namespace Caustic
                         swprintf_s(buf, L"                   e2:%3d v0:%3d v1:%3d t0:%3d t1:%3d\n", ei1, m_edges[ei1].v0, m_edges[ei1].v1, m_edges[ei1].t0, m_edges[ei1].t1);
                         OutputDebugString(buf);
                     }
+#endif
                     m_numTriangles++;
                 }
             }
@@ -286,7 +309,9 @@ namespace Caustic
             if (m_triangles[i].v0 <= 3 || m_triangles[i].v1 <= 3 || m_triangles[i].v2 <= 3) // Part of super triangle
             {
                 m_triangles[i].flags |= c_ExteriorTriangle;
+#ifdef DEBUGGING_AIDS
                 DrawTriangulation(true);
+#endif
                 exteriorTriangles.push(i);
             }
         }
@@ -303,15 +328,20 @@ namespace Caustic
                 if (!(m_edges[edge].flags & c_BoundaryEdge))
                 {
                     int nextTri = (m_edges[edge].t0 != tri) ? m_edges[edge].t0 : m_edges[edge].t1;
+#ifdef DEBUGGING_AIDS
                     {
                         wchar_t buf[1024];
                         swprintf_s(buf, L"Stepping across edge: %d  into Triangle: %d\n", edge, nextTri);
                         OutputDebugString(buf);
                     }
+#endif
                     if (!(m_triangles[nextTri].flags & c_ExteriorTriangle))
                     {
-                        m_triangles[tri].flags |= c_ExteriorTriangle;
+#ifdef DEBUGGING_AIDS
                         DrawTriangulation(true);
+//                        DrawTriangulation(true, tri, nextTri, edge);
+#endif
+                        m_triangles[nextTri].flags |= c_ExteriorTriangle;
                         exteriorTriangles.push(nextTri);
                     }
                 }
