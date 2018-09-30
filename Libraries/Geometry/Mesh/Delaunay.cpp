@@ -173,7 +173,7 @@ namespace Caustic
         for (int ptIndex = 0; ptIndex < (int)m_points.size(); ptIndex++)
         {
 #ifdef DEBUGGING_AIDS
-//            DrawTriangulation(flag & c_InteriorVertex);
+            DrawTriangulation(flag & c_InteriorVertex);
 #endif
             if (!(m_points[ptIndex].flags & flag))
                 continue;
@@ -232,6 +232,9 @@ namespace Caustic
                 m_numTriangles--;
             }
 
+#ifdef DEBUGGING_AIDS
+            DrawTriangulation(true);
+#endif
             //**********************************************************************
             // Now find all the edges whose count == 1, that is they are used by only
             // 1 "bad" triangle. These edges define the boundary of our hole (created
@@ -308,7 +311,7 @@ namespace Caustic
                 continue;
             if (m_triangles[i].v0 <= 3 || m_triangles[i].v1 <= 3 || m_triangles[i].v2 <= 3) // Part of super triangle
             {
-                m_triangles[i].flags |= c_ExteriorTriangle;
+                m_triangles[i].flags |= c_ExteriorTriangle | c_TriangleBad;
 #ifdef DEBUGGING_AIDS
                 DrawTriangulation(true);
 #endif
@@ -339,9 +342,9 @@ namespace Caustic
                     {
 #ifdef DEBUGGING_AIDS
                         DrawTriangulation(true);
-//                        DrawTriangulation(true, tri, nextTri, edge);
+                        DrawTriangulation(true, tri, nextTri, edge);
 #endif
-                        m_triangles[nextTri].flags |= c_ExteriorTriangle;
+                        m_triangles[nextTri].flags |= c_ExteriorTriangle | c_TriangleBad;
                         exteriorTriangles.push(nextTri);
                     }
                 }

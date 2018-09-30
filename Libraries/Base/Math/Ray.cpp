@@ -38,6 +38,8 @@ namespace Caustic
             return false;
         pIntersectInfo->hitPt = p0 + p1p0 * u;
         pIntersectInfo->hitTime = u;
+        pIntersectInfo->hitTimeRay = t;
+        pIntersectInfo->hitPtRay = pos + dir * t;
         return true;
     }
 

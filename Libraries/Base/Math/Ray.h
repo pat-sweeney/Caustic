@@ -11,8 +11,10 @@ namespace Caustic
 {
     struct RayIntersect2
     {
-        float hitTime;
-        Vector2 hitPt;
+        float hitTime;      //!< Value of 't' on line equation where ray intersects line
+        Vector2 hitPt;      //!< Point on line where ray intersects
+        float hitTimeRay;   //!< Value of 'u' on ray equation where ray intersects line
+        Vector2 hitPtRay;   //!< Point on ray where line intersects
     };
 
     struct Ray2
