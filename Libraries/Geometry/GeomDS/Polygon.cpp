@@ -141,7 +141,7 @@ namespace Caustic
                 // and the last segment's intersection time was 1.0. If so, we
                 // hit the endpoint of the last line segment and the start point
                 // of the current line segment (i.e. counting the same hitPt twice)
-                if ((lastT != 1.0f || intersectionPoint.hitTime != 0.0f) && intersectionPoint.hitTimeRay > 0.0f)
+                if ((!IsEq(lastT, 1.0f) || !IsZero(intersectionPoint.hitTime)) && IsGreater(intersectionPoint.hitTimeRay, 0.0f))
                 {
                     if (pMinDist || pMaxDist)
                     {

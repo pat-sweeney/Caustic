@@ -38,7 +38,7 @@ namespace Caustic
         // IAddRef
         //**********************************************************************
         virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::AddRef(); }
+        virtual uint32 Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IImage
@@ -48,10 +48,12 @@ namespace Caustic
         virtual uint32 GetHeight() override { return m_height; }
         virtual uint32 GetBytesPerPixel() override { return m_bytesPerPixel; }
         virtual uint32 GetStride() override { return m_width * GetBytesPerPixel(); }
+        virtual void Clear() override;
         virtual void GaussianBlur(float sigma, IImage **ppImage) override;
         virtual void ShowAlpha(int boxSize, IImage **ppResult) override;
         virtual void Clone(IImage **ppImage) override;
         virtual void DrawLine(Vector2 &v0, Vector2 &v1, uint8 color[4]) override;
+        virtual void SetPixel(uint32 x, uint32 y, uint8 color[4]) override;
     };
 
     class CIntegralImage : public IIntegralImage, public CRefCount
@@ -78,7 +80,7 @@ namespace Caustic
         // IAddRef
         //**********************************************************************
         virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::AddRef(); }
+        virtual uint32 Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IImage

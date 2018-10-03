@@ -222,6 +222,22 @@ namespace Caustic
         *ppImage = spImage.Detach();
     }
 
+    void CImage::Clear()
+    {
+        memset(GetData(), 0, GetStride() * GetHeight());
+    }
+
+    void CImage::SetPixel(uint32 x, uint32 y, uint8 color[4])
+    {
+        if (x >= GetWidth() || y >= GetHeight())
+            return;
+        BYTE *pData = GetData() + y * this->GetStride() + x * m_bytesPerPixel;
+        pData[0] = color[2];
+        pData[1] = color[1];
+        pData[2] = color[0];
+        pData[3] = color[3];
+    }
+
     void CImage::DrawLine(Vector2 &v0, Vector2 &v1, uint8 color[4])
     {
         Bresenham b((int32)v0.x, (int32)v0.y, (int32)v1.x, (int32)v1.y);

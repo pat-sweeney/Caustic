@@ -24,6 +24,8 @@ namespace Caustic
         virtual void ShowAlpha(int boxSize, IImage **ppResult) = 0;
         virtual void Clone(IImage **ppImage) = 0;
         virtual void DrawLine(Vector2 &v0, Vector2 &v1, uint8 color[4]) = 0;
+        virtual void Clear() = 0;
+        virtual void SetPixel(uint32 x, uint32 y, uint8 color[4]) = 0;
     };
     extern void CreateImage(uint32 width, uint32 height, IImage **ppImage);
 

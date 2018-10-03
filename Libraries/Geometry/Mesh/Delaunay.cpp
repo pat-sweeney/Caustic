@@ -32,11 +32,6 @@ namespace Caustic
         int e3 = FindOrAddEdge(1, 3, 1, false);
         int e4 = FindOrAddEdge(3, 2, 1, false);
         int e5 = FindOrAddEdge(2, 1, 1, false);
-        m_edges[e0].t1 = 0;
-        m_edges[e1].t1 = 0;
-        m_edges[e2].t1 = 0;
-        m_edges[e3].t1 = 1;
-        m_edges[e4].t1 = 1;
         m_triangles.push_back(Triangle(0, 1, 2, e0, e1, e2, c_ExteriorTriangle));
         m_triangles.push_back(Triangle(1, 3, 2, e3, e4, e5, c_ExteriorTriangle));
         m_numTriangles = 2;
@@ -114,9 +109,11 @@ namespace Caustic
 
 #ifdef DEBUGGING_AIDS
 #include "Imaging\Image\Image.h"
-    void CDelaunay2::DrawTriangulation(bool skipExterior, int currentTri, int nextTri, int crossEdge)
+    static int frame = 0;
+    void CDelaunay2::DrawTriangulation(int type, int currentTri)
     {
-        static int frame = 0;
+        if (frame == 267)
+            DebugBreak();
         CRefObj<IImage> spImage;
         CreateImage(1024, 1024, &spImage);
         uint8 blue[4] = { 0, 0, 255, 255 };
@@ -125,8 +122,137 @@ namespace Caustic
         uint8 green[4] = { 0, 255, 0, 255 };
         uint8 yellow[4] = { 255, 255, 0, 255 };
         uint8 cyan[4] = { 0, 255, 255, 255 };
+        uint8 grey[4] = { 0, 0, 0, 255 };
         for (int i = 0; i < (int)m_triangles.size(); i++)
         {
+            if (type == 0)
+            {
+                if (m_triangles[i].flags & c_TriangleBad)
+                    continue;
+                uint8 *color = red;
+                m_triangles[i].flags &= ~c_RemovedTriangle;
+                spImage->DrawLine(
+                    m_points[m_edges[m_triangles[i].e0].v0].pos,
+                    m_points[m_edges[m_triangles[i].e0].v1].pos,
+                    color);
+                spImage->DrawLine(
+                    m_points[m_edges[m_triangles[i].e1].v0].pos,
+                    m_points[m_edges[m_triangles[i].e1].v1].pos,
+                    color);
+                spImage->DrawLine(
+                    m_points[m_edges[m_triangles[i].e2].v0].pos,
+                    m_points[m_edges[m_triangles[i].e2].v1].pos,
+                    color);
+                for (int j = -3; j < 3; j++)
+                    for (int k = -3; k < 3; k++)
+                        spImage->SetPixel((int)m_points[currentTri].pos.x + j, (int)m_points[currentTri].pos.y + k, yellow);
+            }
+            else if (type == 1)
+            {
+                if (m_triangles[i].flags & c_TriangleBad)
+                    continue;
+                if (m_triangles[i].flags & c_RemovedTriangle)
+                    continue;
+                m_triangles[i].flags &= ~c_RemovedTriangle;
+                Vector2 mid;
+                mid.x = (m_points[m_edges[m_triangles[i].e0].v0].pos.x + m_points[m_edges[m_triangles[i].e0].v1].pos.x) / 2.0f;
+                mid.y = (m_points[m_edges[m_triangles[i].e0].v0].pos.y + m_points[m_edges[m_triangles[i].e0].v1].pos.y) / 2.0f;
+                spImage->DrawLine(
+                    m_points[m_edges[m_triangles[i].e0].v0].pos,
+                    mid,
+                    red);
+                spImage->DrawLine(
+                    mid,
+                    m_points[m_edges[m_triangles[i].e0].v1].pos,
+                    green);
+                mid.x = (m_points[m_edges[m_triangles[i].e1].v0].pos.x + m_points[m_edges[m_triangles[i].e1].v1].pos.x) / 2.0f;
+                mid.y = (m_points[m_edges[m_triangles[i].e1].v0].pos.y + m_points[m_edges[m_triangles[i].e1].v1].pos.y) / 2.0f;
+                spImage->DrawLine(
+                    m_points[m_edges[m_triangles[i].e1].v0].pos,
+                    mid,
+                    red);
+                spImage->DrawLine(
+                    mid,
+                    m_points[m_edges[m_triangles[i].e1].v1].pos,
+                    green);
+                mid.x = (m_points[m_edges[m_triangles[i].e2].v0].pos.x + m_points[m_edges[m_triangles[i].e2].v1].pos.x) / 2.0f;
+                mid.y = (m_points[m_edges[m_triangles[i].e2].v0].pos.y + m_points[m_edges[m_triangles[i].e2].v1].pos.y) / 2.0f;
+                spImage->DrawLine(
+                    m_points[m_edges[m_triangles[i].e2].v0].pos,
+                    mid,
+                    red);
+                spImage->DrawLine(
+                    mid,
+                    m_points[m_edges[m_triangles[i].e2].v1].pos,
+                    green);
+                spImage->SetPixel((int)m_points[currentTri].pos.x, (int)m_points[currentTri].pos.y, yellow);
+            }
+            else if (type == 2)
+            {
+                if (m_triangles[i].flags & c_TriangleBad)
+                    continue;
+                uint8 *color;
+                if (m_triangles[i].v0 == currentTri ||
+                    m_triangles[i].v1 == currentTri ||
+                    m_triangles[i].v2 == currentTri)
+                    color = green;
+                else
+                    color = red;
+                spImage->DrawLine(
+                    m_points[m_edges[m_triangles[i].e0].v0].pos,
+                    m_points[m_edges[m_triangles[i].e0].v1].pos,
+                    color);
+                spImage->DrawLine(
+                    m_points[m_edges[m_triangles[i].e1].v0].pos,
+                    m_points[m_edges[m_triangles[i].e1].v1].pos,
+                    color);
+                spImage->DrawLine(
+                    m_points[m_edges[m_triangles[i].e2].v0].pos,
+                    m_points[m_edges[m_triangles[i].e2].v1].pos,
+                    color);
+                spImage->SetPixel((int)m_points[currentTri].pos.x, (int)m_points[currentTri].pos.y, yellow);
+            }
+        }
+        wchar_t fn[1024];
+        swprintf_s(fn, L"d:\\images\\frame-%d.png", frame++);
+        StoreImage(fn, spImage.p);
+    }
+    void CDelaunay2::DrawTriangulation(bool skipExterior, int currentTri, int nextTri, int crossEdge)
+    {
+        CRefObj<IImage> spImage;
+        CreateImage(1024, 1024, &spImage);
+        uint8 blue[4] = { 0, 0, 255, 255 };
+        uint8 red[4] = { 255, 0, 0, 255 };
+        // Draw current triangle in green and boundary edge in yellow
+        uint8 green[4] = { 0, 255, 0, 255 };
+        uint8 yellow[4] = { 255, 255, 0, 255 };
+        uint8 cyan[4] = { 0, 255, 255, 255 };
+        uint8 grey[4] = { 180, 180, 180, 255 };
+        for (int i = 0; i < (int)m_triangles.size(); i++)
+        {
+            if (currentTri == -2 && nextTri > 0)
+            {
+                for (int i2 = -3; i2<3; i2++)
+                    for (int j2 = -3; j2<3; j2++)
+                        spImage->SetPixel((int)m_points[nextTri].pos.x + i2, (int)m_points[nextTri].pos.y + j2, yellow);
+            }
+            if (currentTri == -2 && (m_triangles[i].flags & c_RemovedTriangle))
+            {
+                spImage->DrawLine(
+                    m_points[m_edges[m_triangles[i].e0].v0].pos,
+                    m_points[m_edges[m_triangles[i].e0].v1].pos,
+                    grey);
+                spImage->DrawLine(
+                    m_points[m_edges[m_triangles[i].e1].v0].pos,
+                    m_points[m_edges[m_triangles[i].e1].v1].pos,
+                    grey);
+                spImage->DrawLine(
+                    m_points[m_edges[m_triangles[i].e2].v0].pos,
+                    m_points[m_edges[m_triangles[i].e2].v1].pos,
+                    grey);
+                m_triangles[i].flags &= ~c_RemovedTriangle;
+                continue;
+            }
             if (m_triangles[i].flags & c_TriangleBad)
                 continue;
             if (skipExterior && (m_triangles[i].flags & c_ExteriorTriangle))
@@ -137,23 +263,26 @@ namespace Caustic
                 m_points[m_edges[m_triangles[i].e0].v0].pos,
                 m_points[m_edges[m_triangles[i].e0].v1].pos,
                 (m_triangles[i].e0 == crossEdge) ? yellow :
+                ((m_edges[m_triangles[i].e0].t0 == -1 || m_edges[m_triangles[i].e0].t1 == -1)?green :
                  ((i == nextTri) ? cyan :
                   ((i == currentTri) ? green :
-                   ((m_edges[m_triangles[i].e0].flags & c_BoundaryEdge) ? blue : red))));
+                   ((m_edges[m_triangles[i].e0].flags & c_BoundaryEdge) ? blue : red)))));
             spImage->DrawLine(
                 m_points[m_edges[m_triangles[i].e1].v0].pos,
                 m_points[m_edges[m_triangles[i].e1].v1].pos,
                 (m_triangles[i].e1 == crossEdge) ? yellow :
+                ((m_edges[m_triangles[i].e1].t0 == -1 || m_edges[m_triangles[i].e1].t1 == -1) ? green :
                 ((i == nextTri) ? cyan :
                 ((i == currentTri) ? green :
-                    ((m_edges[m_triangles[i].e1].flags & c_BoundaryEdge) ? blue : red))));
+                    ((m_edges[m_triangles[i].e1].flags & c_BoundaryEdge) ? blue : red)))));
             spImage->DrawLine(
                 m_points[m_edges[m_triangles[i].e2].v0].pos,
                 m_points[m_edges[m_triangles[i].e2].v1].pos,
                 (m_triangles[i].e2 == crossEdge) ? yellow :
+                ((m_edges[m_triangles[i].e2].t0 == -1 || m_edges[m_triangles[i].e2].t0 == -1) ? green :
                 ((i == nextTri) ? cyan :
                 ((i == currentTri) ? green :
-                    ((m_edges[m_triangles[i].e2].flags & c_BoundaryEdge) ? blue : red))));
+                    ((m_edges[m_triangles[i].e2].flags & c_BoundaryEdge) ? blue : red)))));
         }
         wchar_t fn[1024];
         swprintf_s(fn, L"d:\\images\\frame-%d.png", frame++);
@@ -173,22 +302,22 @@ namespace Caustic
         for (int ptIndex = 0; ptIndex < (int)m_points.size(); ptIndex++)
         {
 #ifdef DEBUGGING_AIDS
-            DrawTriangulation(flag & c_InteriorVertex);
+            //DrawTriangulation(flag & c_InteriorVertex);
 #endif
             if (!(m_points[ptIndex].flags & flag))
                 continue;
 
-            for (int i = 0; i < m_triangles.size(); i++)
-            {
-                if (m_triangles[i].flags & c_TriangleBad)
-                    continue;
-                _ASSERT(m_edges[m_triangles[i].e0].t0 != -1);
-                _ASSERT(m_edges[m_triangles[i].e0].t1 != -1);
-                _ASSERT(m_edges[m_triangles[i].e1].t0 != -1);
-                _ASSERT(m_edges[m_triangles[i].e1].t1 != -1);
-                _ASSERT(m_edges[m_triangles[i].e2].t0 != -1);
-                _ASSERT(m_edges[m_triangles[i].e2].t1 != -1);
-            }
+            //for (int i = 0; i < m_triangles.size(); i++)
+            //{
+            //    if (m_triangles[i].flags & c_TriangleBad)
+            //        continue;
+            //    _ASSERT(m_edges[m_triangles[i].e0].t0 != -1);
+            //    _ASSERT(m_edges[m_triangles[i].e0].t1 != -1);
+            //    _ASSERT(m_edges[m_triangles[i].e1].t0 != -1);
+            //    _ASSERT(m_edges[m_triangles[i].e1].t1 != -1);
+            //    _ASSERT(m_edges[m_triangles[i].e2].t0 != -1);
+            //    _ASSERT(m_edges[m_triangles[i].e2].t1 != -1);
+            //}
 
             //**********************************************************************
             // First determine which triangles now fail the Delaunay property
@@ -200,8 +329,34 @@ namespace Caustic
                 if (m_triangles[i].flags & c_TriangleBad)
                     continue;
                 if (PointInTriangleCircumcircle(m_points[m_triangles[i].v0].pos, m_points[m_triangles[i].v1].pos, m_points[m_triangles[i].v2].pos, m_points[ptIndex].pos))
-                    badTriangles.push_back(i);
+                {
+                    // Next make sure that all three vertices of the triangle are not boundary vertices.
+                    // This can happen when two of the triangle edges are inside the boundary and one edge
+                    // is on the boundary.  Alternatively, it can happen if two edges are boundary edges and
+                    // the third edge is a non-boundary edge. For instance, if edge e0 is a boundary edge, 
+                    // and e1 & e2 are interior (non-boundary) edges, but vertex v2 is on the boundary, we can
+                    // end up classifying the triangle as bad, and incorrectly remove it.
+                    //
+                    //     v0    e0   v1
+                    //    ---X-------X-----
+                    //        \     /
+                    //      e1 \   /  e2
+                    //          \ /
+                    //   --------X----------
+                    //           v2
+                    int numBoundaryVertices = 0;
+                    numBoundaryVertices += (m_points[m_triangles[i].v0].flags & c_BoundaryVertex) ? 1 : 0;
+                    numBoundaryVertices += (m_points[m_triangles[i].v1].flags & c_BoundaryVertex) ? 1 : 0;
+                    numBoundaryVertices += (m_points[m_triangles[i].v2].flags & c_BoundaryVertex) ? 1 : 0;
+                    if (numBoundaryVertices < 3)
+                    {
+                        badTriangles.push_back(i);
+                        m_triangles[i].flags |= c_RemovedTriangle;
+                    }
+                }
             }
+            DrawTriangulation(0, ptIndex);
+            DrawTriangulation(1, ptIndex);
 
             //**********************************************************************
             // Next determine which edges make up the polygon defining the hole
@@ -220,20 +375,59 @@ namespace Caustic
                 if (m_edges[t.e0].t0 == triIndex)
                     m_edges[t.e0].t0 = -1;
                 else
+                {
+                    _ASSERT(m_edges[t.e0].t1 == -1 || m_edges[t.e0].t1 == triIndex);
                     m_edges[t.e0].t1 = -1;
+                }
                 if (m_edges[t.e1].t0 == triIndex)
                     m_edges[t.e1].t0 = -1;
                 else
+                {
+                    _ASSERT(m_edges[t.e1].t1 == -1 || m_edges[t.e1].t1 == triIndex);
                     m_edges[t.e1].t1 = -1;
+                }
                 if (m_edges[t.e2].t0 == triIndex)
                     m_edges[t.e2].t0 = -1;
                 else
+                {
+                    _ASSERT(m_edges[t.e2].t1 == -1 || m_edges[t.e2].t1 == triIndex);
                     m_edges[t.e2].t1 = -1;
+                }
                 m_numTriangles--;
             }
 
 #ifdef DEBUGGING_AIDS
-            DrawTriangulation(true);
+#if 0
+            CRefObj<IImage> spImage;
+            CreateImage(1024, 1024, &spImage);
+            uint8 red[4] = { 255, 0, 0, 255 };
+            uint8 green[4] = { 0, 255, 0, 255 };
+            uint8 yellow[4] = { 0, 255, 255, 255 };
+            for (int i = 0; i < (int)edgeUseCount.size(); i++)
+            {
+                if (edgeUseCount[i] == 1)
+                {
+                    spImage->DrawLine(
+                        m_points[m_edges[i].v0].pos,
+                        m_points[m_edges[i].v1].pos,
+                        red);
+                }
+                else if (edgeUseCount[i] == 2)
+                {
+                    spImage->DrawLine(
+                        m_points[m_edges[i].v0].pos,
+                        m_points[m_edges[i].v1].pos,
+                        green);
+                }
+            }
+            for (int i = -3; i<3; i++)
+                for (int j = -3; j<3; j++)
+                    spImage->SetPixel((int)m_points[ptIndex].pos.x+i, (int)m_points[ptIndex].pos.y+j, yellow);
+            wchar_t fn[1024];
+            swprintf_s(fn, L"d:\\images\\frame-%d.png", frame++);
+            StoreImage(fn, spImage.p);
+            //DrawTriangulation(true);
+#endif
 #endif
             //**********************************************************************
             // Now find all the edges whose count == 1, that is they are used by only
@@ -250,7 +444,7 @@ namespace Caustic
                     Vector2 edge1 = m_points[ptIndex].pos - m_points[m_edges[i].v0].pos;
                     float dir = edge0.Cross(edge1);
                     int v0, v1;
-                    if (dir >= 0.0f)
+                    if (IsLess(dir, 0.0f))
                     {
                         v0 = m_edges[i].v0;
                         v1 = m_edges[i].v1;
@@ -265,7 +459,7 @@ namespace Caustic
                     int triIndex = (int)m_triangles.size();
                     int ei0 = FindOrAddEdge(ptIndex, v0, triIndex, false);
                     int ei1 = FindOrAddEdge(v1, ptIndex, triIndex, false);
-                    if (dir >= 0.0)
+                    if (IsGreaterEq(dir, 0.0f))
                         m_edges[i].t0 = triIndex;
                     else
                         m_edges[i].t1 = triIndex;
@@ -296,6 +490,7 @@ namespace Caustic
                     m_numTriangles++;
                 }
             }
+            DrawTriangulation(2, ptIndex);
         }
     }
 
@@ -313,7 +508,7 @@ namespace Caustic
             {
                 m_triangles[i].flags |= c_ExteriorTriangle | c_TriangleBad;
 #ifdef DEBUGGING_AIDS
-                DrawTriangulation(true);
+                //DrawTriangulation(true);
 #endif
                 exteriorTriangles.push(i);
             }
@@ -341,8 +536,8 @@ namespace Caustic
                     if (!(m_triangles[nextTri].flags & c_ExteriorTriangle))
                     {
 #ifdef DEBUGGING_AIDS
-                        DrawTriangulation(true);
-                        DrawTriangulation(true, tri, nextTri, edge);
+                        //DrawTriangulation(true);
+                        //DrawTriangulation(true, tri, nextTri, edge);
 #endif
                         m_triangles[nextTri].flags |= c_ExteriorTriangle | c_TriangleBad;
                         exteriorTriangles.push(nextTri);
