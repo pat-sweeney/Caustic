@@ -26,6 +26,10 @@ namespace Caustic
     const float c_Epsilon = 0.0000001f;
     inline bool IsZero(float x) { return (x >= -c_Epsilon && x <= c_Epsilon) ? true : false; }
     inline bool IsEq(float x, float y) { return IsZero(x - y); }
+    inline bool IsLess(float x, float y) { return x < (y - c_Epsilon) ? true : false; }
+    inline bool IsGreater(float x, float y) { return x > (y + c_Epsilon) ? true : false; }
+    inline bool IsLessEq(float x, float y) { return x <= (y - c_Epsilon) ? true : false; }
+    inline bool IsGreaterEq(float x, float y) { return x >= (y + c_Epsilon) ? true : false; }
     template <typename T> T clamp(T v, T minv, T maxv)
     {
         if (v < minv)
