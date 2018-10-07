@@ -24,6 +24,9 @@
     <ClInclude Include="Bresenham.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="BresenhamCircle.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

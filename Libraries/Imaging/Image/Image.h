@@ -23,6 +23,7 @@ namespace Caustic
         virtual void GaussianBlur(float sigma, IImage **ppImage) = 0;
         virtual void ShowAlpha(int boxSize, IImage **ppResult) = 0;
         virtual void Clone(IImage **ppImage) = 0;
+        virtual void DrawCircle(Vector2 &center, uint32 radius, uint8 color[4]) = 0;
         virtual void DrawLine(Vector2 &v0, Vector2 &v1, uint8 color[4]) = 0;
         virtual void Clear() = 0;
         virtual void SetPixel(uint32 x, uint32 y, uint8 color[4]) = 0;

@@ -61,6 +61,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Interop", "Interop", "{5F9C
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Image", "Libraries\Interop\Imaging\Image\Image.vcxproj", "{968E29B0-308A-43AB-AB6A-2BFD72AF06DF}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Rast", "Libraries\Geometry\Rast\Rast.vcxproj", "{1310081F-25F3-48CB-BB3B-B302D973902E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -135,6 +137,10 @@ Global
 		{968E29B0-308A-43AB-AB6A-2BFD72AF06DF}.Debug|x64.Build.0 = Debug|x64
 		{968E29B0-308A-43AB-AB6A-2BFD72AF06DF}.Release|x64.ActiveCfg = Release|x64
 		{968E29B0-308A-43AB-AB6A-2BFD72AF06DF}.Release|x64.Build.0 = Release|x64
+		{1310081F-25F3-48CB-BB3B-B302D973902E}.Debug|x64.ActiveCfg = Debug|x64
+		{1310081F-25F3-48CB-BB3B-B302D973902E}.Debug|x64.Build.0 = Debug|x64
+		{1310081F-25F3-48CB-BB3B-B302D973902E}.Release|x64.ActiveCfg = Release|x64
+		{1310081F-25F3-48CB-BB3B-B302D973902E}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -163,6 +169,7 @@ Global
 		{781E65A1-59B7-4DE7-B706-91D982F1A33C} = {13E8C4A1-0338-428F-BF47-E9AA893329D5}
 		{5F9C3BDE-23AE-4EF5-B3ED-78635E4F217C} = {FF22CFC5-99E0-43DE-A174-B01A9DA05F98}
 		{968E29B0-308A-43AB-AB6A-2BFD72AF06DF} = {5F9C3BDE-23AE-4EF5-B3ED-78635E4F217C}
+		{1310081F-25F3-48CB-BB3B-B302D973902E} = {DA791E21-720F-4AB7-814E-F0577AC43063}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {60363C0E-C20A-4E6B-AE61-6E0BD7D6B964}

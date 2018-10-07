@@ -10,6 +10,7 @@
 #include <atlbase.h>
 #include <wincodec.h>
 #include "Geometry\Rast\Bresenham.h"
+#include "Geometry\Rast\BresenhamCircle.h"
 
 namespace Caustic
 {
@@ -236,6 +237,37 @@ namespace Caustic
         pData[1] = color[1];
         pData[2] = color[0];
         pData[3] = color[3];
+    }
+
+    void CImage::DrawCircle(Vector2 &center, uint32 radius, uint8 color[4])
+    {
+        BresenhamCircle circle(radius);
+        while (!circle.end())
+        {
+            int32 curx = circle.GetX();
+            int32 cury = circle.GetY();
+            auto setPixel = [&](int x, int y) {
+                int32 nx = (int32)center.x + x;
+                int32 ny = (int32)center.y + y;
+                if (nx >= 0 && nx < (int32)GetWidth() && ny >= 0 && ny < (int32)GetHeight())
+                {
+                    BYTE *pData = GetData() + ny * this->GetStride() + nx * m_bytesPerPixel;
+                    pData[0] = color[2];
+                    pData[1] = color[1];
+                    pData[2] = color[0];
+                    pData[3] = color[3];
+                }
+            };
+            setPixel(+curx, +cury);
+            setPixel(+cury, +curx);
+            setPixel(+cury, -curx);
+            setPixel(+curx, -cury);
+            setPixel(-curx, -cury);
+            setPixel(-cury, -curx);
+            setPixel(-cury, +curx);
+            setPixel(-curx, +cury);
+            circle.step();
+        }
     }
 
     void CImage::DrawLine(Vector2 &v0, Vector2 &v1, uint8 color[4])

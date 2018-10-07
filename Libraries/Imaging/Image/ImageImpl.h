@@ -52,6 +52,7 @@ namespace Caustic
         virtual void GaussianBlur(float sigma, IImage **ppImage) override;
         virtual void ShowAlpha(int boxSize, IImage **ppResult) override;
         virtual void Clone(IImage **ppImage) override;
+        virtual void DrawCircle(Vector2 &center, uint32 radius, uint8 color[4]) override;
         virtual void DrawLine(Vector2 &v0, Vector2 &v1, uint8 color[4]) override;
         virtual void SetPixel(uint32 x, uint32 y, uint8 color[4]) override;
     };
