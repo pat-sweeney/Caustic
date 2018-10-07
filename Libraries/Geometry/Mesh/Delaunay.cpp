@@ -36,6 +36,213 @@ namespace Caustic
         m_triangles.push_back(Triangle(1, 3, 2, e3, e4, e5, c_ExteriorTriangle));
         m_numTriangles = 2;
     }
+#if 0
+#include "Imaging\Image\Image.h"
+    const int c_ShowEdges_BigPoint = 0;
+    const int c_ShowRemovedTriangles = 1;
+    const int c_ShowEdges_SmallPoint = 2;
+    const int c_ShowExteriorTriangles = 3;
+    const int c_ShowOutline = 4;
+    const int c_ShowPointInTriangle = 5;
+    static int frame = 0;
+    void CDelaunay2::DrawTriangulation(int type, int currentTri, int currentPoint)
+    {
+        CRefObj<IImage> spImage;
+        CreateImage(1024, 1024, &spImage);
+        uint8 blue[4] = { 0, 0, 255, 255 };
+        uint8 red[4] = { 255, 0, 0, 255 };
+        uint8 orange[4] = { 255, 127, 39, 255 };
+        // Draw current triangle in green and boundary edge in yellow
+        uint8 green[4] = { 0, 255, 0, 255 };
+        uint8 yellow[4] = { 255, 255, 0, 255 };
+        uint8 cyan[4] = { 0, 255, 255, 255 };
+        uint8 grey[4] = { 0, 0, 0, 255 };
+        for (int i = 0; i < (int)m_triangles.size(); i++)
+        {
+            if (type == c_ShowExteriorTriangles)
+            {
+                if (m_triangles[i].flags & c_TriangleBad)
+                    continue;
+                if (m_triangles[i].flags & c_ExteriorTriangle)
+                    continue;
+                spImage->DrawLine(
+                    m_points[m_edges[m_triangles[i].e0].v0].pos,
+                    m_points[m_edges[m_triangles[i].e0].v1].pos,
+                    (m_edges[m_triangles[i].e0].t0 == -1 || m_edges[m_triangles[i].e0].t1 == -1) ? green : red);
+                spImage->DrawLine(
+                    m_points[m_edges[m_triangles[i].e1].v0].pos,
+                    m_points[m_edges[m_triangles[i].e1].v1].pos,
+                    (m_edges[m_triangles[i].e1].t0 == -1 || m_edges[m_triangles[i].e1].t1 == -1) ? green : red);
+                spImage->DrawLine(
+                    m_points[m_edges[m_triangles[i].e2].v0].pos,
+                    m_points[m_edges[m_triangles[i].e2].v1].pos,
+                    (m_edges[m_triangles[i].e2].t0 == -1 || m_edges[m_triangles[i].e2].t1 == -1) ? green : red);
+                if (currentPoint >= 0)
+                    spImage->SetPixel((int)m_points[currentPoint].pos.x, (int)m_points[currentPoint].pos.y, yellow);
+            }
+            else if (type == c_ShowOutline)
+            {
+                if (m_triangles[i].flags & c_TriangleBad)
+                    continue;
+                if (m_triangles[i].flags & c_RemovedTriangle)
+                    continue;
+
+                uint8 *color;
+                if (m_edges[m_triangles[i].e0].flags & c_OutlineEdge)
+                    color = yellow;
+                else if (m_edges[m_triangles[i].e0].t0 == -1 || m_edges[m_triangles[i].e0].t1 == -1)
+                    color = green;
+                else if (m_edges[m_triangles[i].e0].flags & c_BoundaryEdge)
+                    color = blue;
+                else
+                    color = red;
+                spImage->DrawLine(
+                    m_points[m_edges[m_triangles[i].e0].v0].pos,
+                    m_points[m_edges[m_triangles[i].e0].v1].pos,
+                    color);
+
+                if (m_edges[m_triangles[i].e1].flags & c_OutlineEdge)
+                    color = yellow;
+                else if (m_edges[m_triangles[i].e1].t0 == -1 || m_edges[m_triangles[i].e1].t1 == -1)
+                    color = green;
+                else if (m_edges[m_triangles[i].e1].flags & c_BoundaryEdge)
+                    color = blue;
+                else
+                    color = red;
+                spImage->DrawLine(
+                    m_points[m_edges[m_triangles[i].e1].v0].pos,
+                    m_points[m_edges[m_triangles[i].e1].v1].pos,
+                    color);
+
+                if (m_edges[m_triangles[i].e2].flags & c_OutlineEdge)
+                    color = yellow;
+                else if (m_edges[m_triangles[i].e2].t0 == -1 || m_edges[m_triangles[i].e2].t1 == -1)
+                    color = green;
+                else if (m_edges[m_triangles[i].e2].flags & c_BoundaryEdge)
+                    color = blue;
+                else
+                    color = red;
+                spImage->DrawLine(
+                    m_points[m_edges[m_triangles[i].e2].v0].pos,
+                    m_points[m_edges[m_triangles[i].e2].v1].pos,
+                    color);
+                spImage->SetPixel((int)m_points[currentPoint].pos.x, (int)m_points[currentPoint].pos.y, yellow);
+            }
+            else if (type == c_ShowRemovedTriangles)
+            {
+                if (m_triangles[i].flags & c_TriangleBad)
+                    continue;
+                uint8 *color;
+                if (m_triangles[i].flags & c_RemovedTriangle)
+                    color = grey;
+                else if (m_edges[m_triangles[i].e0].flags & c_BoundaryEdge)
+                    color = blue;
+                else
+                    color = red;
+                spImage->DrawLine(
+                    m_points[m_edges[m_triangles[i].e0].v0].pos,
+                    m_points[m_edges[m_triangles[i].e0].v1].pos,
+                    color);
+
+                if (m_triangles[i].flags & c_RemovedTriangle)
+                    color = grey;
+                else if (m_edges[m_triangles[i].e0].flags & c_BoundaryEdge)
+                    color = blue;
+                else
+                    color = red;
+                spImage->DrawLine(
+                    m_points[m_edges[m_triangles[i].e1].v0].pos,
+                    m_points[m_edges[m_triangles[i].e1].v1].pos,
+                    color);
+
+                if (m_triangles[i].flags & c_RemovedTriangle)
+                    color = grey;
+                else if (m_edges[m_triangles[i].e0].flags & c_BoundaryEdge)
+                    color = blue;
+                else
+                    color = red;
+                spImage->DrawLine(
+                    m_points[m_edges[m_triangles[i].e2].v0].pos,
+                    m_points[m_edges[m_triangles[i].e2].v1].pos,
+                    color);
+                spImage->SetPixel((int)m_points[currentPoint].pos.x, (int)m_points[currentPoint].pos.y, yellow);
+                for (int j = -3; j < 3; j++)
+                    for (int k = -3; k < 3; k++)
+                        spImage->SetPixel((int)m_points[currentPoint].pos.x + j, (int)m_points[currentPoint].pos.y + k, yellow);
+                m_triangles[i].flags &= ~c_RemovedTriangle;
+            }
+            else if (type == c_ShowPointInTriangle)
+            {
+                if (m_triangles[i].flags & c_TriangleBad)
+                    continue;
+                if (m_triangles[i].flags & c_RemovedTriangle)
+                    continue;
+                if (i == currentTri)
+                    continue;
+
+                uint8 *color;
+                if (m_edges[m_triangles[i].e0].t0 == -1 || m_edges[m_triangles[i].e0].t1 == -1)
+                    color = green;
+                else if (m_edges[m_triangles[i].e0].flags & c_BoundaryEdge)
+                    color = blue;
+                else
+                    color = red;
+                spImage->DrawLine(
+                    m_points[m_edges[m_triangles[i].e0].v0].pos,
+                    m_points[m_edges[m_triangles[i].e0].v1].pos,
+                    color);
+
+                if (m_edges[m_triangles[i].e1].t0 == -1 || m_edges[m_triangles[i].e1].t1 == -1)
+                    color = green;
+                else if (m_edges[m_triangles[i].e1].flags & c_BoundaryEdge)
+                    color = blue;
+                else
+                    color = red;
+                spImage->DrawLine(
+                    m_points[m_edges[m_triangles[i].e1].v0].pos,
+                    m_points[m_edges[m_triangles[i].e1].v1].pos,
+                    color);
+
+                if (m_edges[m_triangles[i].e2].t0 == -1 || m_edges[m_triangles[i].e2].t1 == -1)
+                    color = green;
+                else if (m_edges[m_triangles[i].e2].flags & c_BoundaryEdge)
+                    color = blue;
+                else
+                    color = red;
+                spImage->DrawLine(
+                    m_points[m_edges[m_triangles[i].e2].v0].pos,
+                    m_points[m_edges[m_triangles[i].e2].v1].pos,
+                    color);
+            }
+        }
+        if (type == c_ShowPointInTriangle && currentTri >= 0)
+        {
+            spImage->DrawLine(
+                m_points[m_edges[m_triangles[currentTri].e0].v0].pos,
+                m_points[m_edges[m_triangles[currentTri].e0].v1].pos,
+                orange);
+            spImage->DrawLine(
+                m_points[m_edges[m_triangles[currentTri].e1].v0].pos,
+                m_points[m_edges[m_triangles[currentTri].e1].v1].pos,
+                orange);
+            spImage->DrawLine(
+                m_points[m_edges[m_triangles[currentTri].e2].v0].pos,
+                m_points[m_edges[m_triangles[currentTri].e2].v1].pos,
+                orange);
+            Caustic::Vector2 center;
+            float radius;
+            CircumCircle(m_points[m_triangles[currentTri].v0].pos, m_points[m_triangles[currentTri].v1].pos, m_points[m_triangles[currentTri].v2].pos,
+                &center, &radius);
+            spImage->DrawCircle(center, (uint32)radius, grey);
+            for (int j = -3; j < 3; j++)
+                for (int k = -3; k < 3; k++)
+                    spImage->SetPixel((int)m_points[currentPoint].pos.x + j, (int)m_points[currentPoint].pos.y + k, yellow);
+        }
+        wchar_t fn[1024];
+        swprintf_s(fn, L"d:\\images\\frame-%d.png", frame++);
+        StoreImage(fn, spImage.p);
+    }
+#endif
 
     //**********************************************************************
     ///! \brief Adds a new edge to our mesh
@@ -211,7 +418,14 @@ namespace Caustic
                 m_numTriangles--;
             }
 
-            
+            //for (int i = 0; i < (int)edgeUseCount.size(); i++)
+            //{
+            //    if (edgeUseCount[i] == 1)
+            //        m_edges[i].flags |= c_OutlineEdge;
+            //    else
+            //        m_edges[i].flags &= ~c_OutlineEdge;
+            //}
+
             //**********************************************************************
             // Now find all the edges whose count == 1, that is they are used by only
             // 1 "bad" triangle. These edges define the boundary of our hole (created
