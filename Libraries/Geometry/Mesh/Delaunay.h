@@ -87,10 +87,6 @@ namespace Caustic
         void CreateBoundaryEdges();
         void ComputeTriangulation();
         void TriangulatePoints(uint8 flag);
-#ifdef DEBUGGING_AIDS
-        void DrawTriangulation(bool skipExterior, int currentTri = -1, int nextTri = -1, int crossEdge = -1);
-        void DrawTriangulation(int type, int currentTri);
-#endif
     public:
         CDelaunay2(BBox2 &bb);
 
