@@ -16,6 +16,7 @@ namespace PsiEditor
         {
             graph = new Graph();
             graph.nodes = new List<Node>();
+
             Node node = new Node("Join");
             InputConnector ic = new InputConnector(node, "Input");
             node.inputs.Add(ic);
@@ -23,22 +24,23 @@ namespace PsiEditor
             node.outputs.Add(oc);
             graph.nodes.Add(node);
 
-            node = new Node("Do");
-            ic = new InputConnector(node, "Input");
-            node.inputs.Add(ic);
-            ic = new InputConnector(node, "Opacity");
-            node.inputs.Add(ic);
-            oc = new OutputConnector(node, "Output");
-            node.outputs.Add(oc);
-            graph.nodes.Add(node);
+            var doNode = new Node("Do");
+            ic = new InputConnector(doNode, "Input");
+            doNode.inputs.Add(ic);
+            ic = new InputConnector(doNode, "Opacity");
+            doNode.inputs.Add(ic);
+            oc = new OutputConnector(doNode, "Output");
+            doNode.outputs.Add(oc);
+            graph.nodes.Add(doNode);
         }
 
         public void BuildDispGraph()
         {
-            this.dispGraph = new DispGraph(this.ParentCanvas);
+            VisualNode.MasterCanvas = this.MasterCanvas;
+            this.dispGraph = new DispGraph(this.MasterCanvas);
             for (int i = 0; i < graph.nodes.Count; i++)
             {
-                var dispNode = new DispNode(graph.nodes[i], this.ParentCanvas);
+                var dispNode = new DispNode(graph.nodes[i], this.MasterCanvas);
                 dispGraph.dispNodes.Add(dispNode);
             }
             dispGraph.Layout(0.0, 0.0);
@@ -70,7 +72,7 @@ namespace PsiEditor
         {
             if (mode == Mode.DragNode)
             {
-                Point p = e.GetPosition(this.ParentCanvas);
+                Point p = e.GetPosition(this.MasterCanvas);
                 curNode.X = p.X - nodeOffsetX;
                 curNode.Y = p.Y - nodeOffsetY;
             }
@@ -80,7 +82,7 @@ namespace PsiEditor
         {
             if (mode == Mode.DragNode)
             {
-                Point p = e.GetPosition(this.ParentCanvas);
+                Point p = e.GetPosition(this.MasterCanvas);
                 curNode.X = p.X - nodeOffsetX;
                 curNode.Y = p.Y - nodeOffsetY;
                 curNode = null;
@@ -90,7 +92,7 @@ namespace PsiEditor
 
         private void MainWindow_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            Point p = e.GetPosition(this.ParentCanvas);
+            Point p = e.GetPosition(this.MasterCanvas);
             if (mode == Mode.None)
             {
                 // Check if point is in node

@@ -59,6 +59,7 @@
     <Compile Include="DispConnector.cs" />
     <Compile Include="DispGraph.cs" />
     <Compile Include="Graph.cs" />
+    <Compile Include="Operators.cs" />
     <Compile Include="VisualNode.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

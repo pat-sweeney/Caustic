@@ -24,7 +24,7 @@
             </ToolBar>
         </ToolBarPanel>
         -->
-        <Canvas x:Name="ParentCanvas" Width="500" Height="500">
+        <Canvas x:Name="MasterCanvas" Width="500" Height="500">
             <Canvas Canvas.Top="50" Canvas.Left="100">
                 <!-- Draw main body rectangle -->
                 <Rectangle  Width="100" Height="100" Fill="#FF5A9AE0" RadiusX="10" RadiusY="10" Stretch="UniformToFill">

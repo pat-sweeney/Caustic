@@ -8,6 +8,7 @@ namespace PsiEditor
         private double y;
 
         public Canvas ParentCanvas { get; set; }
+        public static Canvas MasterCanvas { get; set; }
         public double X { get { return x; } set { x = value; Layout(x, y); } }
         public double Y { get { return y; } set { y = value; Layout(x, y); } }
         public double Width { get; set; }
@@ -15,7 +16,7 @@ namespace PsiEditor
 
         public VisualNode(Canvas parent)
         {
-            ParentCanvas = parent;
+            this.ParentCanvas = parent;
         }
 
         public virtual void Layout(double x, double y) { }
