@@ -60,9 +60,9 @@ namespace PsiEditor
             this.tb.SetValue(Canvas.TopProperty, y + 0.0);
             this.tb.SetValue(Canvas.LeftProperty, x + 20.0);
             this.separator.X1 = x + 0.0;
-            this.separator.Y1 = y + 9.0;
+            this.separator.Y1 = y + 17.0;
             this.separator.X2 = x + 100.0;
-            this.separator.Y2 = y + 9.0;
+            this.separator.Y2 = y + 17.0;
         }
     }
 }

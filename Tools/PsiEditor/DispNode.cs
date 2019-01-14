@@ -38,7 +38,7 @@ namespace PsiEditor
             this.rect.Fill = new SolidColorBrush(Color.FromRgb(0x5a, 0x9a, 0xe0));
             this.rect.RadiusX = 10.0;
             this.rect.RadiusY = 10.0;
-            this.rect.Stretch = Stretch.Uniform;
+            this.rect.Stretch = Stretch.Fill;
             this.rect.Effect = new DropShadowEffect();
             this.rect.Effect.SetCurrentValue(DropShadowEffect.ShadowDepthProperty, 10.0);
             this.rect.Effect.SetCurrentValue(DropShadowEffect.DirectionProperty, 315.0);
@@ -59,7 +59,7 @@ namespace PsiEditor
             this.selectRect.Height = 110.0; // Depends on connector count
             this.selectRect.RadiusX = 10.0;
             this.selectRect.RadiusY = 10.0;
-            this.selectRect.Stretch = Stretch.UniformToFill;
+            this.selectRect.Stretch = Stretch.Fill;
 
             // Define delete rectangle in upper right corner of node (when clicked on will delete node)
             var rect = new Rectangle();
@@ -135,21 +135,20 @@ namespace PsiEditor
 
         public override void Layout(double x, double y)
         {
-            this.ParentCanvas.SetValue(Canvas.LeftProperty, x);
-            this.ParentCanvas.SetValue(Canvas.TopProperty, y);
-            this.rect.Width = 100.0;
+            this.canvas.SetValue(Canvas.LeftProperty, x);
+            this.canvas.SetValue(Canvas.TopProperty, y);
             this.rect.Height = this.NodeHeight;
-            this.selectRect.Width = 100.0;
+            this.selectRect.Width = 110.0;
             this.selectRect.Height = this.NodeHeight + 10;
-            double offset = 33.0;
+            double offset = 25.0;
             for (int i = 0; i < this.inputs.Count; i++)
             {
-                this.inputs[i].Layout(x, offset);
+                this.inputs[i].Layout(0.0, offset);
                 offset += this.inputs[i].Height;
             }
             for (int i = 0; i < this.outputs.Count; i++)
             {
-                this.outputs[i].Layout(x, offset);
+                this.outputs[i].Layout(0.0, offset);
                 offset += this.inputs[i].Height;
             }
         }
