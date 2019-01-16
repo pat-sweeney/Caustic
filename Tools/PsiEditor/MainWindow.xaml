@@ -6,72 +6,133 @@
         xmlns:local="clr-namespace:PsiEditor"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <DockPanel>
+    <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
                 <MenuItem Header="Load graph..."/>
                 <MenuItem Header="Save graph..."/>
             </MenuItem>
-            <MenuItem Header="_Create">
-                <MenuItem Header="Select..."/>
-                <MenuItem Header="Save graph..."/>
+            <MenuItem Header="_Build">
+                <MenuItem Header="Generate code" Click="GenerateCodeClick"/>
             </MenuItem>
         </Menu>
-        <!--
-        <ToolBarPanel>
-            <ToolBar>
-                <Image Source="C:\Users\patri\Pictures\bch.png"/>
-            </ToolBar>
-        </ToolBarPanel>
-        -->
+        <ScrollViewer>
+            <ToolBarPanel>
+                <ToolBarTray Orientation="Vertical">
+                    <ToolBar>
+                        <Label Background="LightBlue" Content="Producers"/>
+                        <Separator/>
+                        <Button Content="Return">
+                            <Button.BitmapEffect>
+                                <BevelBitmapEffect BevelWidth="10"
+            EdgeProfile="CurvedIn" LightAngle="45" Relief="0.2"
+            Smoothness="0.5" />
+                            </Button.BitmapEffect>
+                        </Button>
+                        <Button Content="Range"/>
+                        <Button Content="Repeat"/>
+                        <Button Content="Sequence"/>
+                        <Button Content="Timer"/>
+                        <Separator/>
+                        <Label Background="LightBlue" Content="Mapping"/>
+                        <Separator/>
+                        <Button Content="Select"/>
+                        <Button Content="NullableSelect"/>
+                        <Separator/>
+                        <Label Background="LightBlue" Content="Filtering"/>
+                        <Separator/>
+                        <Button Content="Where"/>
+                        <Button Content="First"/>
+                        <Separator/>
+                        <Label Background="LightBlue" Content="Aggregating"/>
+                        <Separator/>
+                        <Button Content="Aggregate"/>
+                        <Button Content="Count"/>
+                        <Button Content="LongCount"/>
+                        <Button Content="Sum"/>
+                        <Button Content="Average"/>
+                        <Button Content="Max"/>
+                        <Button Content="Min"/>
+                        <Button Content="Std"/>
+                        <Button Content="Abs"/>
+                        <Button Content="Log"/>
+                        <Separator/>
+                        <Label Background="LightBlue" Content="Actuating"/>
+                        <Separator/>
+                        <Button Content="Do"/>
+                        <Button Content="ToEnumerable"/>
+                        <Button Content="ToObservable"/>
+                        <Separator/>
+                        <Label Background="LightBlue" Content="Synchronizing"/>
+                        <Separator/>
+                        <Button Content="Join"/>
+                        <Button Content="Pair"/>
+                        <Separator/>
+                        <Label Background="LightBlue" Content="Sampling"/>
+                        <Separator/>
+                        <Button Content="Sample"/>
+                        <Separator/>
+                        <Label Background="LightBlue" Content="Parallel"/>
+                        <Separator/>
+                        <Button Content="Parallel"/>
+                        <Separator/>
+                        <Label Background="LightBlue" Content="Timing"/>
+                        <Separator/>
+                        <Button Content="TimeOf"/>
+                        <Button Content="Delay"/>
+                        <Button Content="Latency"/>
+                        <Separator/>
+                        <Label Background="LightBlue" Content="Miscellaneous"/>
+                        <Separator/>
+                        <Button Content="PipeTo"/>
+                        <Button Content="Process"/>
+                        <Button Content="Name"/>
+                        <Separator/>
+                        <Label Background="LightBlue" Content="Media"/>
+                        <Separator/>
+                        <Button Content="WebCam" Click="WebCamClick"/>
+                        <Button Content="RealSense"/>
+                        <Button Content="Kinect"/>
+                        <Button Content="MediaSource"/>
+                        <Button Content="MPEGSink"/>
+                        <Button Content="FFMPEGSource"/>
+                        <Separator/>
+                        <Label Background="LightBlue" Content="Imaging"/>
+                        <Separator/>
+                        <Button Content="ImageEncoder"/>
+                        <Button Content="ImageDecoder"/>
+                        <Button Content="Convert"/>
+                        <Button Content="Transform"/>
+                        <Button Content="Crop" Click="CropClick"/>
+                        <Button Content="ToGray"/>
+                        <Button Content="Resize"/>
+                        <Button Content="Flip"/>
+                        <Button Content="AbsDiff"/>
+                        <Button Content="Threshold"/>
+                        <Button Content="ToPixelFormat"/>
+                        <Separator/>
+                        <Label Background="LightBlue" Content="Display"/>
+                        <Separator/>
+                        <Button Content="DisplayImage" Click="DisplayImageClick"/>
+                    </ToolBar>
+                </ToolBarTray>
+            </ToolBarPanel>
+        </ScrollViewer>
+        <StackPanel DockPanel.Dock="Right" Orientation="Vertical" Width="150">
+            <Label Content="Properties:" Background="LightBlue"/>
+            <Grid x:Name="PropertyGrid" Background="Aqua">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Grid.Column="0" Content="Name"/>
+                <Label Grid.Row="0" Grid.Column="1" Content="Value"/>
+            </Grid>
+        </StackPanel>
         <Canvas x:Name="MasterCanvas" Width="500" Height="500">
-            <Canvas Canvas.Top="50" Canvas.Left="100">
-                <!-- Draw main body rectangle -->
-                <Rectangle  Width="100" Height="100" Fill="#FF5A9AE0" RadiusX="10" RadiusY="10" Stretch="UniformToFill">
-                    <Rectangle.Effect>
-                        <DropShadowEffect ShadowDepth="10" Direction="315" Color="Black" Opacity="0.5" BlurRadius="10"/>
-                    </Rectangle.Effect>
-                </Rectangle>
-                <Rectangle Stroke="Red"  Canvas.Top="-5" Canvas.Left="-5" Width="110" Height="110" RadiusX="10" RadiusY="10" Stretch="UniformToFill"/>
-                <Rectangle Canvas.Top="5" Canvas.Left="80" Width="10" Height="10" Fill="Black"/>
-                <Line Stroke="Red" StrokeThickness="3" X1="81" Y1="6" X2="89" Y2="14"/>
-                <Line Stroke="Red" StrokeThickness="3" X1="81" Y1="14" X2="89" Y2="6"/>
-
-                <!-- Name of node-->
-                <TextBlock Canvas.Top="0" Canvas.Left="20" Text="Select"/>
-
-                <!-- Separator between node name and node fields -->
-                <Line X1="0" Y1="20" X2="100" Y2="20" Stroke="Black" StrokeThickness="3"/>
-
-                <!-- Line delimiter -->
-                <Line X1="0" Y1="27" X2="100" Y2="27" Stroke="Black" StrokeThickness="1"/>
-
-                <!-- Draw connector line-->
-                <Line X1="-20" Y1="33" X2="10" Y2="33" Stroke="Black" StrokeThickness="3"/>
-                <!-- Draw connector circle -->
-                <Ellipse Canvas.Top="28" Canvas.Left="-20" Fill="Black" Width="10" Height="10" Stroke="Black" StrokeThickness="2" />
-                <!-- Name of connector -->
-                <TextBlock Canvas.Top="25" Canvas.Left="20" Text="Input"/>
-                <!-- Line delimiter -->
-                <Line X1="0" Y1="42" X2="100" Y2="42" Stroke="Black" StrokeThickness="1"/>
-
-                <Path Stroke="Black" Opacity="0.7" StrokeThickness="4">
-                    <Path.Data>
-                        <PathGeometry Figures="M -20,33 C -30,33 -70,10 -80,10">
-                        </PathGeometry>
-                    </Path.Data>
-                </Path>
-
-                <Line X1="-20" Y1="48" X2="10" Y2="48" Stroke="Black" StrokeThickness="3"/>
-                <Ellipse Canvas.Top="43" Canvas.Left="-20" Fill="White" Width="10" Height="10" Stroke="Black" StrokeThickness="2" />
-                <TextBlock Canvas.Top="40" Canvas.Left="20" Text="Input"/>
-                <Line X1="0" Y1="57" X2="100" Y2="57" Stroke="Black" StrokeThickness="1"/>
-
-                <Line X1="90" Y1="63" X2="120" Y2="63" Stroke="Black" StrokeThickness="3"/>
-                <Ellipse Canvas.Top="58" Canvas.Left="110" Fill="White" Width="10" Height="10" Stroke="Black" StrokeThickness="2" />
-                <TextBlock Canvas.Top="55" Canvas.Left="20" Text="Output"/>
-                <Line X1="0" Y1="73" X2="100" Y2="73" Stroke="Black" StrokeThickness="1"/>
-            </Canvas>
         </Canvas>
     </DockPanel>
 </Window>

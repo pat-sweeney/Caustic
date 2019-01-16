@@ -20,5 +20,9 @@ namespace PsiEditor
         }
 
         public virtual void Layout(double x, double y) { }
+        public virtual bool PointInObject(double x, double y) { return false; }
+        public virtual void GenerateVariableDefinitions(System.IO.StreamWriter strm, int indent) { }
+        public virtual void GenerateSetup(System.IO.StreamWriter strm, int indent) { }
+        public virtual void GenerateCode(System.IO.StreamWriter strm, int indent) { }
     }
 }

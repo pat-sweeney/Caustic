@@ -55,11 +55,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Connector.cs" />
     <Compile Include="DispConnector.cs" />
     <Compile Include="DispGraph.cs" />
-    <Compile Include="Graph.cs" />
-    <Compile Include="Operators.cs" />
+    <Compile Include="PsiNodes.cs" />
     <Compile Include="VisualNode.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -70,15 +68,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DispNode.cs" />
-    <Compile Include="InputConnector.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Node.cs" />
-    <Compile Include="OutputConnector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
