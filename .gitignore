@@ -53,3 +53,4 @@ Documentation/**
 *.ipch
 
 /packages
+/External/sqlite3.def
