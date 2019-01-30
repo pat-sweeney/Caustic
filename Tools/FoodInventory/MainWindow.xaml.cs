@@ -122,6 +122,12 @@ namespace FoodInventory
                     fn = @"d:\Food\Images\" + args[0] + ".jpg";
                     if (File.Exists(fn))
                         imageExists = true;
+                    else
+                    {
+                        fn = @"d:\Food\Images\unknown.png";
+                        if (File.Exists(fn))
+                            imageExists = true;
+                    }
                 }
                 if (imageExists)
                 {

@@ -4,6 +4,6 @@
     <StartArguments>-merge d:\inventory.csv d:\food\Food.csv d:\output.csv</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartArguments>-merge d:\food\Food.csv d:\inventory.csv d:\final.csv</StartArguments>
+    <StartArguments>-input d:\food\Food.csv d:\inventory.csv</StartArguments>
   </PropertyGroup>
 </Project>
