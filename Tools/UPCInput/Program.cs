@@ -14,6 +14,7 @@ namespace UPCInput
             {
                 System.Console.WriteLine("UPC:");
                 string s = System.Console.ReadLine();
+                System.Console.WriteLine(s);
                 if (s == "")
                     break;
                 if (items.ContainsKey(s))
