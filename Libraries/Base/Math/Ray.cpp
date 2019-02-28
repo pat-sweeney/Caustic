@@ -31,17 +31,6 @@ namespace Caustic
         return true;
     }
 
-    //**********************************************************************
-    //! \brief Calculates intersection of a ray with a bounding box
-    //
-    //! Calculates the intersection of a ray with an axis-aligned bounding
-    //! box. If pIntersectInfo is not nullptr then the intersection data
-    //! is returned via this pointer.
-    //! \param[in] bbox Bbox to intersect against
-    //! \param[in] pInvTm Matrix to convert from ray's coordinate space to unit space (generally world=>object)
-    //! \param[in] pIntersectInfo Returns the interesection info. Maybe nullptr.
-    //! \return true if ray interesects bbox, otherwise false
-    //**********************************************************************
     bool Ray3::Intersect(const BBox3 &bbox, Matrix4x4 *pInvTm, RayIntersect3 *pIntersectInfo)
     {
         Ray3 genray;
@@ -235,25 +224,6 @@ namespace Caustic
     }
 
 
-    //**********************************************************************
-    //! \brief Calculates intersection of a ray with a cone
-    //
-    //! Calculates the intersection of a ray with a cone. The cone is defined
-    //! by a top and bottom radius (which maybe something other than 0.0f and
-    //! 1.0f resulting in a tapered cone). The equation for the cone is:
-    //
-    //        b = bottom radius
-    //        t = top radius
-    //        h = height of cone
-    //        x^2 + y^2 = (((z + 1) * t - (z - 1) * b) / 2)^2
-    //
-    //! \param[in] bottomRadius Radius of the bottom of the cone
-    //! \param[in] topRadius Radius of the top of the cone
-    //! \param[in] height Height of cone
-    //! \param[in] pInvTm Matrix to convert from ray's coordinate space to unit space (generally world=>object)
-    //! \param[in] pIntersectInfo Returns the interesection info. Maybe nullptr.
-    //! \return true if ray interesects bbox, otherwise false
-    //**********************************************************************
     bool Ray3::Intersect(float bottomRadius, float topRadius, float height, Matrix4x4 *pInvTm, RayIntersect3 *pIntersectInfo)
     {
         Ray3 genray;
