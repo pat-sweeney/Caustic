@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("ise",["Function","Interface"],[["IsEq",,[[,,,,0,"File:Libraries/Base/Core/Core.h:IsEq"]]],["ISerialize",,[[,,,,1,"File:Libraries/Base/Core/ISerialize.h:ISerialize","CClass:ISerialize"]]]]);

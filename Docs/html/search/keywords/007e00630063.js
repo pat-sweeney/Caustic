@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("~cc",["Function"],[["~CCritSec",,[["CCritSec",,,,0,"File:Libraries/Base/Core/CritSec.h:CCritSec.~CCritSec","CClass:CCritSec:~CCritSec"]]]]);

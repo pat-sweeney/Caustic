@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("isl",["Function"],[["IsLess",,[[,,,,0,"File:Libraries/Base/Core/Core.h:IsLess"]]],["IsLessEq",,[[,,,,0,"File:Libraries/Base/Core/Core.h:IsLessEq"]]]]);

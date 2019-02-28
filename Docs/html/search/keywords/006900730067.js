@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("isg",["Function"],[["IsGreater",,[[,,,,0,"File:Libraries/Base/Core/Core.h:IsGreater"]]],["IsGreaterEq",,[[,,,,0,"File:Libraries/Base/Core/Core.h:IsGreaterEq"]]]]);

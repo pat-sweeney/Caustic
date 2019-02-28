@@ -1,0 +1,1 @@
+NDSummary.OnToolTipsLoaded("CClass:BBox2",{196:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines a axis-aligned bounding box (in 2D)</div></div>"});

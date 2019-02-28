@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("swa",["Function"],[["Swap",,[[,,,,0,"File:Libraries/Base/Core/Core.h:Swap"]]]]);

@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("File:Libraries/Rendering/Caustic/Camera.cpp","Camera.cpp");NDSummary.OnSummaryLoaded("File:Libraries/Rendering/Caustic/Camera.cpp",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"]],[[206,0,1,"Functions","Functions"],[207,0,0,"CreateCamera","CreateCamera"]]);

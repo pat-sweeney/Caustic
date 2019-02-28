@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:IScenePointLightElem","IScenePointLightElem");NDSummary.OnSummaryLoaded("CClass:IScenePointLightElem",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Interfaces","Interface"]],[[259,0,2,"IScenePointLightElem"],[260,0,1,"Functions","Functions"],[261,0,0,"SetPosition","SetPosition"],[262,0,0,"SetColor","SetColor"]]);

@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("int",["Function"],[["IntersectWithLine",,[["Ray2",,,,0,"File:Libraries/Base/Math/Ray.h:Ray2.IntersectWithLine","CClass:Ray2:IntersectWithLine"]]]]);

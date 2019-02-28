@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:ISerialize","ISerialize");NDSummary.OnSummaryLoaded("CClass:ISerialize",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Interfaces","Interface"]],[[107,0,2,"ISerialize"],[108,0,1,"Functions","Functions"],[109,0,0,"Load","Load"],[110,0,0,"Store","Store"]]);

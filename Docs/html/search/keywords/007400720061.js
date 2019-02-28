@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("tra",["Function"],[["Transpose",,[["Matrix4x4",,,,0,"File:Libraries/Base/Math/Matrix.h:Matrix4x4.Transpose","CClass:Matrix4x4:Transpose"]]]]);

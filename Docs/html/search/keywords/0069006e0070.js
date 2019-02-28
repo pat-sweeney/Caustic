@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("inp",["Function","Variable"],[["InputProc",,[["UPCInput.Program",,,,0,"File:Tools/UPCInput/Program.cs:UPCInput.Program.InputProc","CSharpClass:UPCInput.Program:InputProc"]]],["inputs",,[["PsiEditor.DispNode",,,,1,"File:Tools/PsiEditor/DispNode.cs:PsiEditor.DispNode.inputs","CSharpClass:PsiEditor.DispNode:inputs"]]]]);
