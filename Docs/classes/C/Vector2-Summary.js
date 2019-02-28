@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:Vector2","Vector2");NDSummary.OnSummaryLoaded("CClass:Vector2",[["C/C++","C"]],[["Structs","Struct"]],[[149,0,0,"Vector2"]]);

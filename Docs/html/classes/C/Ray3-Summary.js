@@ -1,1 +1,0 @@
-NDFramePage.OnPageTitleLoaded("CClass:Ray3","Ray3");NDSummary.OnSummaryLoaded("CClass:Ray3",[["C/C++","C"]],[["Structs","Struct"]],[[157,0,0,"Ray3"]]);

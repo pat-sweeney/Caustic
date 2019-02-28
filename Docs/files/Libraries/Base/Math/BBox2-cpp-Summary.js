@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("File:Libraries/Base/Math/BBox2.cpp","BBox2.cpp");NDSummary.OnSummaryLoaded("File:Libraries/Base/Math/BBox2.cpp",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"]],[[186,0,1,"Functions","Functions"],[187,0,0,"BBox2","BBox2"],[188,0,0,"BBox2","BBox2(2)"],[189,0,0,"Empty","Empty"]]);

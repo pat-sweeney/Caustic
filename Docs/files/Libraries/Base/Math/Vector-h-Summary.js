@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("File:Libraries/Base/Math/Vector.h","Vector.h");NDSummary.OnSummaryLoaded("File:Libraries/Base/Math/Vector.h",[["C/C++","C"]],[["Structs","Struct"]],[[149,0,0,"Vector2","Vector2"],[150,0,0,"Vector3","Vector3"],[151,0,0,"Vector4","Vector4"]]);

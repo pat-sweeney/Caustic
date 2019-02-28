@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("bbo",["Struct","Constant"],[["BBox2",,[[,,,,0,"File:Libraries/Base/Math/BBox.h:BBox2","CClass:BBox2"]]],["BBox3",,[[,,,,0,"File:Libraries/Base/Math/BBox.h:BBox3","CClass:BBox3"]]],["BBoxDirty",,[["SceneCtx",,,,1,"File:Libraries/Rendering/SceneGraph/SceneGraph.h:SceneCtx.BBoxDirty","CClass:SceneCtx:BBoxDirty"]]]]);

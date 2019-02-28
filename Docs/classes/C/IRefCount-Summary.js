@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:IRefCount","IRefCount");NDSummary.OnSummaryLoaded("CClass:IRefCount",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Structs","Struct"]],[[112,0,2,"IRefCount"],[113,0,1,"Functions","Functions"],[114,0,0,"AddRef","AddRef"],[115,0,0,"Release","Release"]]);
