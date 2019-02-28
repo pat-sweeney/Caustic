@@ -334,16 +334,6 @@ namespace Caustic
         return false;
     }
 
-    //**********************************************************************
-    //! \brief Calculates intersection of a ray with a sphere
-    //
-    //! Calculates the intersection of a ray with an sphere. If pIntersectInfo
-    //! is not nullptr then the intersection data is returned via this pointer.
-    //! \param[in] radius Radius of sphere
-    //! \param[in] pInvTm Matrix to convert from ray's coordinate space to unit space (generally world=>object)
-    //! \param[in] pIntersectInfo Returns the interesection info. Maybe nullptr.
-    //! \return true if ray interesects bbox, otherwise false
-    //**********************************************************************
     bool Ray3::Intersect(float radius, Matrix4x4 *pInvTm, RayIntersect3 *pIntersectInfo)
     {
         //
@@ -401,17 +391,6 @@ namespace Caustic
         return false;
     }
 
-    //**********************************************************************
-    //! \brief Calculates intersection of a ray with a cylinder
-    //
-    //! Calculates the intersection of a ray with an cylinder. If pIntersectInfo
-    //! is not nullptr then the intersection data is returned via this pointer.
-    //! \param[in] radius Radius of top/bottom of cylinder
-    //! \param[in] height Height of cylinder
-    //! \param[in] pInvTm Matrix to convert from ray's coordinate space to unit space (generally world=>object)
-    //! \param[in] pIntersectInfo Returns the interesection info. Maybe nullptr.
-    //! \return true if ray interesects bbox, otherwise false
-    //**********************************************************************
     bool Ray3::Intersect(float radius, float height, Matrix4x4 *pInvTm, RayIntersect3 *pIntersectInfo)
     {
         //

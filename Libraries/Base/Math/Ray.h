@@ -154,7 +154,36 @@ namespace Caustic
         // True if ray intersects cone. False otherwise.
 	//**********************************************************************
         bool Intersect(float bottomRadius, float topRadius, float height, Matrix4x4 *pInvTm, RayIntersect3 *pIntersectInfo);
+      
+	//**********************************************************************
+	// Method: Intersect
+        // Calculates the intersection of a ray with an sphere. If pIntersectInfo
+	// is not nullptr then the intersection data is returned via this pointer.
+        //
+        // Parameters:
+	// radius - Radius of sphere
+	// pInvTm - Matrix to convert from ray's coordinate space to unit space (generally world=>object)
+	// pIntersectInfo - Returns the interesection info. Maybe nullptr.
+        //
+        // Returns:
+	// True if ray interesects bbox. False otherwise.
+	//**********************************************************************
         bool Intersect(float radius, Matrix4x4 *pInvTm, RayIntersect3 *pIntersectInfo);
+      
+	//**********************************************************************
+	// Method: Intersect
+	// Calculates the intersection of a ray with an cylinder. If pIntersectInfo
+	// is not nullptr then the intersection data is returned via this pointer.
+        //
+        // Parameters:
+	// radius - Radius of top/bottom of cylinder
+	// height - Height of cylinder
+	// pInvTm - Matrix to convert from ray's coordinate space to unit space (generally world=>object)
+	// pIntersectInfo - Returns the interesection info. Maybe nullptr.
+        //
+        // Returns:
+	// \return true if ray interesects bbox, otherwise false
+	//**********************************************************************
         bool Intersect(float radius, float height, Matrix4x4 *pInvTm, RayIntersect3 *pIntersectInfo);
     };
 }
