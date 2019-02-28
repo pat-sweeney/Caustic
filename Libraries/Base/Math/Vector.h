@@ -9,16 +9,38 @@ namespace Caustic
 {
     //**********************************************************************
     // Structure: Vector2
-	// Defines a simple vector with 2 components
+    // Defines a simple vector with 2 components
     //**********************************************************************
     struct Vector2
     {
         float x, y;
 
+	//**********************************************************************
+	// Constructor: Vector2
+	// Default contructor
+	//**********************************************************************
         Vector2() {}
+
+	//**********************************************************************
+	// Constructor: Vector2
+	// Contructor for a 2D vector
+        //
+        // Parameters:
+        // _x - X coordinate
+        // _y - Y coordinate
+	//**********************************************************************
         Vector2(float _x, float _y) { x = _x; y = _y; }
 
-        //! \brief IsEq returns whether two points are equivalent (within some tolerance)
+	//**********************************************************************
+	// Method: IsEq
+	// Returns whether two points are equivalent (within some tolerance)
+        //
+        // Parameters:
+        // p - Point to compare against
+        //
+        // Returns:
+        // True if points are equivalent. False otherwise.
+	//**********************************************************************
         bool IsEq(Vector2 &p)
         {
             if (IsZero(p.x - x) &&
@@ -27,7 +49,22 @@ namespace Caustic
             return false;
         }
 
+	//**********************************************************************
+	// Method: Length
+	// Returns the L2 norm for the vector
+        //
+        // Returns:
+        // Length of vector
+	//**********************************************************************
         float Length() { return (float)sqrt(x * x + y * y); }
+      
+	//**********************************************************************
+	// Method: Normalize
+	// Normalizes the vector
+        //
+        // Returns:
+        // Normalized vector
+	//**********************************************************************
         Vector2 Normalize()
         {
             float len = Length();
@@ -39,11 +76,25 @@ namespace Caustic
             return Vector2(x, y);
         }
 
+	//**********************************************************************
+	// Method: Cross
+	// Computes cross product between two vectors
+        //
+        // Returns:
+        // Cross product vector
+	//**********************************************************************
         float Cross(Vector2 &v)
         {
             return x * v.y - y * v.x;
         }
 
+	//**********************************************************************
+	// Method: Dot
+	// Computes dot product between two vectors
+        //
+        // Returns:
+        // Dot product
+	//**********************************************************************
         float Dot(Vector2 &v)
         {
             return x * v.x + y * v.y;
@@ -58,7 +109,7 @@ namespace Caustic
     };
 
     //**********************************************************************
-	// Structure: Vector3
+    // Structure: Vector3
     // Defines a simple vector with 3 components
     //**********************************************************************
     struct Vector3
@@ -143,7 +194,7 @@ namespace Caustic
 #pragma warning(pop)
 
     //**********************************************************************
-	// Structure: Vector4
+    // Structure: Vector4
     // Defines a simple vector with 4 components
     //**********************************************************************
     struct Vector4
