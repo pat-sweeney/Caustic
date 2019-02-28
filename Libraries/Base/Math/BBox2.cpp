@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2018
+// Copyright Patrick Sweeney 2015-2019
 // All Rights Reserved
 //**********************************************************************
 #include "stdafx.h"
@@ -8,19 +8,38 @@
 
 namespace Caustic
 {
-    BBox2::BBox2() :
+	//**********************************************************************
+	// Constructor: BBox2
+	// Default constructor
+	//**********************************************************************
+	BBox2::BBox2() :
         minPt(FLT_MAX, FLT_MAX),
         maxPt(-FLT_MAX, -FLT_MAX)
     {
     }
 
-    BBox2::BBox2(Vector2 &topLeft, Vector2 &bottomRight)
+	//**********************************************************************
+	// Constructor: BBox2
+	// Constructor
+	//
+	// Parameters:
+	// topLeft - top left corner for bbox
+	// bottomRight - bottom right corner for bbox
+	//**********************************************************************
+	BBox2::BBox2(Vector2 &topLeft, Vector2 &bottomRight)
     {
         minPt = topLeft;
         maxPt = bottomRight;
     }
 
-    bool BBox2::Empty()
+	//**********************************************************************
+	// Method: Empty
+	// Determines if bbox is empty
+	//
+	// Returns:
+	// Returns true if bbox is empty. False otherwise.
+	//**********************************************************************
+	bool BBox2::Empty()
     {
         if (minPt.x == FLT_MAX && minPt.y == FLT_MAX &&
             maxPt.x == -FLT_MAX && maxPt.y == -FLT_MAX)

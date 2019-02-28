@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2018
+// Copyright Patrick Sweeney 2015-2019
 // All Rights Reserved
 //**********************************************************************
 #include "stdafx.h"
@@ -13,6 +13,7 @@
 namespace Caustic
 {
     //**********************************************************************
+    // Function: CreateCamera
     //! \brief CreateCamera returns a new ICamera object
     //!
     //! This method creates a new camera object. This camera can then

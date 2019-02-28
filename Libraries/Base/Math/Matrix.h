@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2018
+// Copyright Patrick Sweeney 2015-2019
 // All Rights Reserved
 //**********************************************************************
 #pragma once
@@ -9,21 +9,30 @@
 #include <string.h>
 #include <vector>
 
+// Namespace: Caustic
 namespace Caustic
 {
-    struct Matrix2x2
+	//**********************************************************************
+	// Structure: Matrix2x2
+	// Defines a 2x2 matrix
+	//**********************************************************************
+	struct Matrix2x2
     {
         float v[2][2];
         // TODO: Fill this in
     };
 
-    //!    3-dimensional affine matrix
-    //!
-    //!    0,0    0,1    0,2        a  b  c 
-    //!    1,0    1,1    1,2        d  e  f
-    //!    2,0    2,1    2,2        g  h  i
-    //!    3,0    3,1    3,2        tx ty tz
-    struct Matrix4x3
+	//**********************************************************************
+	// Structure: Matrix4x3
+	//    3-dimensional affine matrix
+    // --- Text ---
+    //    0,0    0,1    0,2        a  b  c 
+    //    1,0    1,1    1,2        d  e  f
+    //    2,0    2,1    2,2        g  h  i
+    //    3,0    3,1    3,2        tx ty tz
+	// ------------
+	//**********************************************************************
+	struct Matrix4x3
     {
         float v[4][3];
     public:
@@ -51,7 +60,11 @@ namespace Caustic
         bool Inverse(Matrix4x3 &tm);
     };
 
-    struct Matrix4x4
+	//**********************************************************************
+	// Structure: Matrix4x4
+	// A 4x4 matrix
+	//**********************************************************************
+	struct Matrix4x4
     {
         float v[4][4];
 
@@ -99,13 +112,52 @@ namespace Caustic
         }
         Matrix4x4 operator *(const Matrix4x4 &m);
 
-        float Determinant();
-        Matrix4x4 Adjoint();
-        void Transpose();
-        void Transpose(Matrix4x4 &tm);
-        bool Inverse();
-        bool Inverse(Matrix4x4 &tm);
-        void Decompose(Caustic::Vector3 *scale, Caustic::Vector3 *shear, Caustic::Vector3 *rotate, Caustic::Vector3 *translate);
-        void Decompose(std::vector<Matrix4x4> &, bool undoshear);
+		//**********************************************************************
+		// Method: Determinant
+		// Returns the determinant of the matrix
+		//**********************************************************************
+		float Determinant();
+
+		//**********************************************************************
+		// Method: Adjoint
+		// Returns the adjoint of the matrix
+		//**********************************************************************
+		Matrix4x4 Adjoint();
+
+		//**********************************************************************
+		// Method: Transpose
+		// Computes the inplace transpose of the matrix
+		//**********************************************************************
+		void Transpose();
+
+		//**********************************************************************
+		// Method: Transpose
+		// Returns the transpose of the matrix
+		//**********************************************************************
+		void Transpose(Matrix4x4 &tm);
+
+		//**********************************************************************
+		// Method: Inverse
+		// Computes the inplace inverse of the matrix
+		//**********************************************************************
+		bool Inverse();
+
+		//**********************************************************************
+		// Method: Inverse
+		// Returns the inverse of the matrix
+		//**********************************************************************
+		bool Inverse(Matrix4x4 &tm);
+
+		//**********************************************************************
+		// Method: Decompose
+		// Decomposes the matrix into a scale, shear, rotate and translate components
+		//
+		// Returns:
+		// scale - Returns the scale factors
+		// shear - Returns shear factors
+		// rotate - Returns rotation as Euler angles
+		// translate - Returns translation components
+		//**********************************************************************
+		void Decompose(Vector3 *scale, Vector3 *shear, Vector3 *rotate, Vector3 *translate);
     };
 }

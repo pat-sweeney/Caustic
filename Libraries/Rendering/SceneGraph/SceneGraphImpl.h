@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2018
+// Copyright Patrick Sweeney 2015-2019
 // All Rights Reserved
 //**********************************************************************
 #pragma once
@@ -13,9 +13,10 @@
 
 namespace Caustic
 {
-    ///**********************************************************************
-    /// \brief CSceneElem defines the base class for all our scene graph elements
-    ///**********************************************************************
+    //**********************************************************************
+    // Class: CSceneElem
+	// Defines the base class for all our scene graph elements
+    //**********************************************************************
     class CSceneElem
     {
     protected:

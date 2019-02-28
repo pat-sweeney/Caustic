@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2018
+// Copyright Patrick Sweeney 2015-2019
 // All Rights Reserved
 //**********************************************************************
 #pragma once
@@ -10,13 +10,25 @@
 
 namespace Caustic
 {
-    class CausticException : public std::exception
+	//**********************************************************************
+	// Class: CausticException
+	// Class for handling throwing of exceptions
+	//**********************************************************************
+	class CausticException : public std::exception
     {
         HRESULT m_hr;
         std::string m_fn;
         int m_line;
     public:
-        CausticException(HRESULT hr, const char *pFilename, int line)
+		//**********************************************************************
+		// Constructor: CausticException
+		// Constructor
+		//
+		// hr - HRESULT to throw
+		// pFilename - Name of source file where exception was thrown from
+		// line - Line number in source file where exception was thrown from
+		//**********************************************************************
+		CausticException(HRESULT hr, const char *pFilename, int line)
         {
             m_hr = hr;
             m_fn = pFilename;
@@ -25,6 +37,12 @@ namespace Caustic
     };
 };
 
+//**********************************************************************
+// Macro: CT
+// Macro for testing result from function and throwing an exception if the result is an error
+//
+// hr - HRESULT to throw
+//**********************************************************************
 #define CT(hr) \
 do {\
     HRESULT _hr = (hr);\
@@ -32,6 +50,12 @@ do {\
         throw ::Caustic::CausticException(hr, __FILE__, __LINE__);\
 } while(0)
 
+//**********************************************************************
+// Macro: CTWIN32
+// Macro for calling a Win32 function and throwing if it fails
+//
+// func - function to call
+//**********************************************************************
 #define CTWIN32(func) \
 do {\
     if (!(func))\

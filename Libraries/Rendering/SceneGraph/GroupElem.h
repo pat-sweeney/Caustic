@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2018
+// Copyright Patrick Sweeney 2015-2019
 // All Rights Reserved
 //**********************************************************************
 #pragma once
@@ -8,9 +8,10 @@
 
 namespace Caustic
 {
-    ///**********************************************************************
-    /// \brief CSceneGroupElem defines a simple group of scene graph elements
-    ///**********************************************************************
+    //**********************************************************************
+    // Class: CSceneGroupElem
+	// Defines a simple group of scene graph elements
+    //**********************************************************************
     class CSceneGroupElem : 
         public CSceneElem, 
         public ISceneGroupElem, 
@@ -20,35 +21,98 @@ namespace Caustic
         std::vector<CRefObj<ISceneElem>> m_Children;
         Matrix4x4 m_Transform;
     public:
-        virtual void Load(IStream *pStream, std::function<void(ISceneElem *pElem)> func);
-        virtual void Store(IStream *pStream, std::function<void(ISceneElem *pElem)> func);
+		//**********************************************************************
+		// Method: Load
+		// Loads a scene element from a stream
+		//**********************************************************************
+		virtual void Load(IStream *pStream, std::function<void(ISceneElem *pElem)> func);
 
-        //**********************************************************************
-        // IUnknown
-        //**********************************************************************
+		//**********************************************************************
+		// Method: Store
+		// Saves a scene element to a stream
+		//**********************************************************************
+		virtual void Store(IStream *pStream, std::function<void(ISceneElem *pElem)> func);
+
+//======================================================================
+// IUnknown
+//======================================================================
+
+		//**********************************************************************
+		// Method: AddRef
+		// Increments the reference count on the scene element
+		//**********************************************************************
         virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
 
-        //**********************************************************************
-        // ISceneElem
-        //**********************************************************************
-        virtual ESceneElemType GetType() override { return ESceneElemType::Group; }
-        virtual std::wstring &Name() override;
-        virtual void Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx) override;
-        virtual void GetBBox(BBox3 *pBBox) override;
-        virtual uint32 GetFlags() override { return m_Flags; }
-        virtual void SetFlags(uint32 flags) override { m_Flags = flags; }
+		//**********************************************************************
+		// Method: Release
+		// Decrements the reference count on the scene element
+		//**********************************************************************
+		virtual uint32 Release() override { return CRefCount::Release(); }
 
-        //**********************************************************************
-        // ISerialize
-        //**********************************************************************
-        virtual void Load(IStream *pStream) override;
+//======================================================================
+// ISceneElem
+//======================================================================
+
+		//**********************************************************************
+		// Method: GetType
+		// Returns the scene element's type
+		//**********************************************************************
+		virtual ESceneElemType GetType() override { return ESceneElemType::Group; }
+
+		//**********************************************************************
+		// Method: Name
+		// Returns the scene element's name
+		//**********************************************************************
+		virtual std::wstring &Name() override;
+
+		//**********************************************************************
+		// Method: Render
+		// Renders the scene element
+		//
+		// Parameters:
+		// pRenderer - renderer to render to
+		// pRenderCtx - current render context
+		// pSceneCtx - current scene context
+		//**********************************************************************
+		virtual void Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx) override;
+
+		//**********************************************************************
+		// Method: GetBBox
+		// Returns the bounding box of the scene element
+		//
+		// Parameters:
+		// pBBox - Element's bounding box
+		//**********************************************************************
+		virtual void GetBBox(BBox3 *pBBox) override;
+
+		//**********************************************************************
+		// Method: GetFlags
+		// Returns the flags associated with this scene element. See ESceneElemFlags.
+		//
+		// Returns:
+		// Set of flags as defined by ESceneElemFlags
+		//**********************************************************************
+		virtual uint32 GetFlags() override { return m_Flags; }
+
+		//**********************************************************************
+		// Method: SetFlags
+		// Sets the flags associated with this scene element. See ESceneElemFlags.
+		//
+		// Parameters:
+		// flags - set of flags to set on the scene element
+		//**********************************************************************
+		virtual void SetFlags(uint32 flags) override { m_Flags = flags; }
+
+//======================================================================
+// ISerialize
+//======================================================================
+		virtual void Load(IStream *pStream) override;
         virtual void Store(IStream *pStream) override;
 
-        //**********************************************************************
-        // ISceneGroupElem
-        //**********************************************************************
-        virtual uint32 NumberChildren() override;
+//======================================================================
+// ISceneGroupElem
+//======================================================================
+		virtual uint32 NumberChildren() override;
         virtual CRefObj<ISceneElem> GetChild(uint32 index) override;
         virtual void AddChild(ISceneElem *pElem) override;
         virtual void InsertChild(ISceneElem *pElem, uint32 index) override;

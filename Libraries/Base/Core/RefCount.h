@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2018
+// Copyright Patrick Sweeney 2015-2019
 // All Rights Reserved
 //**********************************************************************
 #pragma once
@@ -9,13 +9,14 @@
 namespace Caustic
 {
     //**********************************************************************
-    //! \brief CRefCount defines a base class that all our reference counted
-    //! objects are derived from. When an obejcts reference count goes to 0
-    //! the object will be deleted.
+    // Class: CRefCount 
+	// Defines a base class that all our reference counted
+    // objects are derived from. When an obejcts reference count goes to 0
+    // the object will be deleted.
     //**********************************************************************
     class CRefCount
     {
-        ULONG m_RefCnt; ///! Current reference count
+        ULONG m_RefCnt; // Current reference count
     public:
         CRefCount() :
             m_RefCnt(0)

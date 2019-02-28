@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2018
+// Copyright Patrick Sweeney 2015-2019
 // All Rights Reserved
 //**********************************************************************
 #pragma once
@@ -8,33 +8,71 @@
 namespace Caustic
 {
     //**********************************************************************
-    ///! \brief CEvent defines a smart wrapper for handling events
+    // Class: CEvent
+	// Defines a smart wrapper for handling events
     //**********************************************************************
     class CEvent
     {
         HANDLE m_h;
     public:
-        explicit CEvent(bool defaultState, bool manualReset)
+		//**********************************************************************
+		// Constructor: CEvent
+		// Defines the constructor for an event
+		//
+		// Parameters:
+		//
+		// defaultState - Sets the initial state of the event
+		// manualReset - Specifies whether event needs to be manually reset
+		//**********************************************************************
+		explicit CEvent(bool defaultState, bool manualReset)
         {
             m_h = CreateEvent(nullptr, manualReset, defaultState, NULL);
         }
 
-        ~CEvent()
+		//**********************************************************************
+		// Destructor: ~CEvent
+		// Default destructor
+		//**********************************************************************
+		~CEvent()
         {
             CloseHandle(m_h);
         }
 
-        bool Set()
+		//**********************************************************************
+		// Method: Set
+		// Sets the event
+		//
+		// Returns:
+		// Returns true if event was successfully set. Otherwise returns false.
+		//**********************************************************************
+		bool Set()
         {
             return SetEvent(m_h) ? true : false;
         }
 
-        bool Clear()
+		//**********************************************************************
+		// Method: Clear
+		// Clears the event
+		//
+		// Returns:
+		// Returns true if event was successfully reset. Otherwise returns false.
+		//**********************************************************************
+		bool Clear()
         {
             return ResetEvent(m_h) ? true : false;
         }
 
-        DWORD Wait(DWORD dwTimeout)
+		//**********************************************************************
+		// Method: Wait
+		// Waits till the event is signaled or times out
+		//
+		// Parameters:
+		// dwTimeout - time in milliseconds to wait before timing out
+		//
+		// Returns:
+		// Returns true if event was successfully reset. Otherwise returns false.
+		//**********************************************************************
+		DWORD Wait(DWORD dwTimeout)
         {
             return WaitForSingleObject(m_h, dwTimeout);
         }

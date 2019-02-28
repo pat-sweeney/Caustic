@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2018
+// Copyright Patrick Sweeney 2015-2019
 // All Rights Reserved
 //**********************************************************************
 #pragma once
@@ -8,7 +8,8 @@
 namespace Caustic
 {
     //**********************************************************************
-    //! Defines a simple vector with 2 components
+    // Structure: Vector2
+	// Defines a simple vector with 2 components
     //**********************************************************************
     struct Vector2
     {
@@ -57,7 +58,8 @@ namespace Caustic
     };
 
     //**********************************************************************
-    //! Defines a simple vector with 3 components
+	// Structure: Vector3
+    // Defines a simple vector with 3 components
     //**********************************************************************
     struct Vector3
     {
@@ -141,7 +143,8 @@ namespace Caustic
 #pragma warning(pop)
 
     //**********************************************************************
-    //! Defines a simple vector with 4 components
+	// Structure: Vector4
+    // Defines a simple vector with 4 components
     //**********************************************************************
     struct Vector4
     {

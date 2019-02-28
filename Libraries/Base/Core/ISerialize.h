@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2018
+// Copyright Patrick Sweeney 2015-2019
 // All Rights Reserved
 //**********************************************************************
 #pragma once
@@ -10,14 +10,27 @@
 namespace Caustic
 {
     //**********************************************************************
-    //! \brief Defines an interface for serializing out our objects
-    //!
-    //! ISerialize defines an interface for serializing out objects to some
-    //! stream. 
+    // Interface: ISerialize
+    // Defines an interface for serializing out objects to some stream. 
     //**********************************************************************
     struct ISerialize : public IRefCount
     {
-        virtual void Load(IStream *pStream) = 0;
-        virtual void Store(IStream *pStream) = 0;
+		//**********************************************************************
+		// Method: Load
+		// Loads an object from the specified stream
+		//
+		// Parameters:
+		// pStream - Stream to read from
+		//**********************************************************************
+		virtual void Load(IStream *pStream) = 0;
+
+		//**********************************************************************
+		// Method: Store
+		// Saves an object to the specified stream
+		//
+		// Parameters:
+		// pStream - Stream to write to
+		//**********************************************************************
+		virtual void Store(IStream *pStream) = 0;
     };
 }

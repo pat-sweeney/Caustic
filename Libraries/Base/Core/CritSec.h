@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2018
+// Copyright Patrick Sweeney 2015-2019
 // All Rights Reserved
 //**********************************************************************
 #pragma once
@@ -7,27 +7,37 @@
 
 namespace Caustic
 {
+	// Class: CCritSec
+	// Defines a smart object for managing a critical section
     class CCritSec
     {
     protected:
         CRITICAL_SECTION m_cs;
     public:
+		// Constructor: CCritSec
+		// Defines the default constructor
         CCritSec()
         {
             InitializeCriticalSection(&m_cs);
         }
         
-        ~CCritSec()
+		// Destructor: ~CCritSec
+		// Defines the destructor
+		~CCritSec()
         {
             DeleteCriticalSection(&m_cs);
         }
 
-        void Enter()
+		// Method: Enter
+		// Enters the critical section
+		void Enter()
         {
             EnterCriticalSection(&m_cs);
         }
 
-        void Leave()
+		// Method: Leave
+		// Leaves the critical section
+		void Leave()
         {
             LeaveCriticalSection(&m_cs);
         }

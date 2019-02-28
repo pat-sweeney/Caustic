@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2018
+// Copyright Patrick Sweeney 2015-2019
 // All Rights Reserved
 //**********************************************************************
 #pragma once
@@ -13,7 +13,8 @@ namespace Caustic
     using namespace Caustic;
 
     //**********************************************************************
-    //! Defines a oriented bounding box (in 2D)
+	// Structure: OBBox2
+    // Defines a oriented bounding box (in 2D)
     //**********************************************************************
     struct OBBox2
     {
@@ -34,8 +35,9 @@ namespace Caustic
         void Transform(Matrix2x2 *tm);
     };
 
-    //**********************************************************************
-    //! Defines a oriented bounding box (in 3D)
+	//**********************************************************************
+	// Structure: OBBox3
+    // Defines a oriented bounding box (in 3D)
     //**********************************************************************
     struct OBBox3
     {

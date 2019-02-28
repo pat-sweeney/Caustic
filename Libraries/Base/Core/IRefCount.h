@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2018
+// Copyright Patrick Sweeney 2015-2019
 // All Rights Reserved
 //**********************************************************************
 #pragma once
@@ -8,43 +8,74 @@
 namespace Caustic
 {
     //**********************************************************************
-    //! \brief Defines the basic interface used by reference counted objects
+    // Struct: IRefCount
+	// Defines the basic interface used by reference counted objects
     //**********************************************************************
     struct IRefCount
     {
-        virtual uint32 AddRef() = 0;
-        virtual uint32 Release() = 0;
+		//**********************************************************************
+		// Method: AddRef
+		// Increments the reference count
+		//**********************************************************************
+		virtual uint32 AddRef() = 0;
+
+		//**********************************************************************
+		// Method: Release
+		// Decrements the reference count. If the reference count goes to zero
+		// the underlying object is destroyed.
+		//**********************************************************************
+		virtual uint32 Release() = 0;
     };
 
     //**********************************************************************
-    //! \brief CRefObj is a smart class (similar to CComPtr) for managing
-    //! a IRefCount-ed object's lifetime.
+    // Struct: CRefObj<T>
+	// CRefObj is a smart class (similar to CComPtr) for managing
+    // a IRefCount-ed object's lifetime.
+	//
+	// Parameters:
+	// T - type of object to manage
     //**********************************************************************
     template <typename T>
     struct CRefObj
     {
         T *p;
     public:
-        CRefObj()
+		//**********************************************************************
+		// Constructor: CRefObj
+		// Default constructor
+		//**********************************************************************
+		CRefObj()
         {
             p = nullptr;
         }
 
-        CRefObj(const CRefObj &v)
+		//**********************************************************************
+		// Constructor: CRefObj
+		// Copy constructor
+		//**********************************************************************
+		CRefObj(const CRefObj &v)
         {
             p = v.p;
             if (p)
                 p->AddRef();
         }
 
-        CRefObj(T *v)
+		//**********************************************************************
+		// Constructor: CRefObj
+		// Constructor from base type
+		//**********************************************************************
+		CRefObj(T *v)
         {
             p = v;
             if (p)
                 p->AddRef();
         }
 
-        ~CRefObj()
+		//**********************************************************************
+		// Destructor: ~CRefObj
+		// Destructor
+		//**********************************************************************
+		~CRefObj()
         {
             if (p)
                 p->Release();
