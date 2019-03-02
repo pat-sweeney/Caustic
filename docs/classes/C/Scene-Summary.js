@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:Scene","Scene");NDSummary.OnSummaryLoaded("CClass:Scene",[["C/C++","C"]],[["Classes","Class"]],[[278,0,0,"Scene"]]);
+NDFramePage.OnPageTitleLoaded("CClass:Scene","Scene");NDSummary.OnSummaryLoaded("CClass:Scene",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[287,0,0,"Scene"],[639,0,2,"Functions","Functions"],[640,0,1,"CreateSceneFactory","CreateSceneFactory"]]);

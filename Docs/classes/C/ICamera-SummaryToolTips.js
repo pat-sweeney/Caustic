@@ -1,0 +1,1 @@
+NDSummary.OnToolTipsLoaded("CClass:ICamera",{696:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines our camera object</div></div>"});

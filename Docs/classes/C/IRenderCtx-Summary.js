@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:IRenderCtx","IRenderCtx");NDSummary.OnSummaryLoaded("CClass:IRenderCtx",[["C/C++","C"]],[["Interfaces","Interface"]],[[711,0,0,"IRenderCtx"]]);

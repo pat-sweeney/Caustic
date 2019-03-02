@@ -1,1 +1,1 @@
-NDContentPage.OnToolTipsLoaded({});
+NDContentPage.OnToolTipsLoaded({710:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines the public interface for using CShader</div></div>",300:"<div class=\"NDToolTip TClass LC\"><div class=\"NDClassPrototype\" id=\"NDClassPrototype300\"><div class=\"CPEntry TClass Current\"><div class=\"CPName\">CSceneMaterialElem</div></div></div><div class=\"TTSummary\">Defines a material that can be assigned to a scene element</div></div>"});

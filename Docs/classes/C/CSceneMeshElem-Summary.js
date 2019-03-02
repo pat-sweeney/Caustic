@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:CSceneMeshElem","CSceneMeshElem");NDSummary.OnSummaryLoaded("CClass:CSceneMeshElem",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[232,0,0,"CSceneMeshElem"],[631,0,2,"Functions","Functions"],[641,0,1,"CSceneMeshElem","CSceneMeshElem"]]);

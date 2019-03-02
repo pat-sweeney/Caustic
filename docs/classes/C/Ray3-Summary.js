@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:Ray3","Ray3");NDSummary.OnSummaryLoaded("CClass:Ray3",[["C/C++","C"]],[["Structs","Struct"]],[[159,0,0,"Ray3"]]);
+NDFramePage.OnPageTitleLoaded("CClass:Ray3","Ray3");NDSummary.OnSummaryLoaded("CClass:Ray3",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Structs","Struct"]],[[167,0,2,"Ray3"],[168,0,1,"Functions","Functions"],[169,0,0,"Ray3","Ray3"],[170,0,0,"Ray3","Ray3(2)"],[171,0,0,"Intersect","Intersect"],[172,0,0,"Intersect","Intersect(2)"],[173,0,0,"Intersect","Intersect(3)"],[174,0,0,"Intersect","Intersect(4)"]]);

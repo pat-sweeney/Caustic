@@ -1,0 +1,1 @@
+NDSummary.OnToolTipsLoaded("CClass:IRenderCtx",{711:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines the main interface for setting various features in the renderer</div></div>"});

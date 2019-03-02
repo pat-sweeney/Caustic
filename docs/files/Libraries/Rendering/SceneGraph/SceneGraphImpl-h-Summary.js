@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("File:Libraries/Rendering/SceneGraph/SceneGraphImpl.h","SceneGraphImpl.h");NDSummary.OnSummaryLoaded("File:Libraries/Rendering/SceneGraph/SceneGraphImpl.h",[["C/C++","C"]],[["Classes","Class"]],[[208,0,0,"CSceneElem","CSceneElem"]]);
+NDFramePage.OnPageTitleLoaded("File:Libraries/Rendering/SceneGraph/SceneGraphImpl.h","SceneGraphImpl.h");NDSummary.OnSummaryLoaded("File:Libraries/Rendering/SceneGraph/SceneGraphImpl.h",[["C/C++","C"]],[["Classes","Class"]],[[229,0,0,"CSceneElem","CSceneElem"],[642,0,0,"CSceneGraph","CSceneGraph"]]);

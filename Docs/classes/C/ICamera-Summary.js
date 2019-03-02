@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:ICamera","ICamera");NDSummary.OnSummaryLoaded("CClass:ICamera",[["C/C++","C"]],[["Interfaces","Interface"]],[[696,0,0,"ICamera"]]);

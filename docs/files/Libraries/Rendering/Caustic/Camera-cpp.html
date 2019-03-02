@@ -8,14 +8,50 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="Functions"></a><a name="Topic206"></a><div class="CTopic TGroup LC first">
+<a name="Functions"></a><a name="Topic227"></a><div class="CTopic TGroup LC first">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="CreateCamera"></a><a name="Topic207"></a><div class="CTopic TFunction LC last">
- <div class="CTitle">CreateCamera</div>
- <div id="NDPrototype207" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">CAUSTICAPI <span class="SHKeyword">void</span> CreateCamera(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">bool</span>&nbsp;</td><td></td><td class="PName last">leftHanded,</td></tr><tr><td class="PType first">ICamera&nbsp;</td><td class="PNamePrefix">**</td><td class="PName last">ppCamera</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
- <div class="CBody"><p>! \brief CreateCamera returns a new ICamera object !&nbsp; ! This method creates a new camera object. This camera can then ! be passed to IRenderer to be used for rendering.&nbsp; ! \param[in] leftHanded Defines whether we have a left or right handed coordinate system ! \param[out] ppCamera Returns the newly created camera object !</p></div>
+<a name="CCamera"></a><a name="Topic656"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">CCamera</div>
+ <div id="NDPrototype656" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">CCamera::CCamera(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">bool</span>&nbsp;</td><td class="PName last">leftHanded</td></tr></table></td><td class="PAfterParameters">) : m_leftHanded(leftHanded)</td></tr></table></div>
+ <div class="CBody"><p>Constructor for CCamera.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">leftHanded<div class="CDLParameterType"><span class="SHKeyword">bool</span></div></td><td class="CDLDefinition"><p>Defines whether we have a left or right handed coordinate system</p></td></tr></table></div>
+</div>
+
+<a name="~CCamera"></a><a name="Topic657"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">~CCamera</div>
+ <div id="NDPrototype657" class="NDPrototype NoParameterForm">CCamera::~CCamera()</div>
+ <div class="CBody"><p>Defines the dtor for CCamera</p></div>
+</div>
+
+<a name="GetProject"></a><a name="Topic658"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetProject</div>
+ <div id="NDPrototype658" class="NDPrototype NoParameterForm">DirectX::XMMATRIX CCamera::GetProjection()</div>
+ <div class="CBody"><p>Returns the camera's projection matrix</p></div>
+</div>
+
+<a name="GetView"></a><a name="Topic659"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetView</div>
+ <div id="NDPrototype659" class="NDPrototype NoParameterForm">DirectX::XMMATRIX CCamera::GetView()</div>
+ <div class="CBody"><p>Returns the camera's view matrix</p></div>
+</div>
+
+<a name="GetUVN"></a><a name="Topic660"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetUVN</div>
+ <div id="NDPrototype660" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CCamera::GetUVN(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../../index.html#File:Libraries/Base/Math/Vector.h:Vector3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,158);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector3</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">u,</td></tr><tr><td class="PType first"><a href="../../../../index.html#File:Libraries/Base/Math/Vector.h:Vector3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,158);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector3</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">v,</td></tr><tr><td class="PType first"><a href="../../../../index.html#File:Libraries/Base/Math/Vector.h:Vector3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,158);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector3</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">n</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div class="CBody"><p>Returns the camera's U,V,N axis in world coordinates</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">u<div class="CDLParameterType"><a href="../../../../index.html#File:Libraries/Base/Math/Vector.h:Vector3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,158);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector3</a>*</div></td><td class="CDLDefinition"><p>returns the U axis. Maybe nullptr.</p></td></tr><tr><td class="CDLEntry">v<div class="CDLParameterType"><a href="../../../../index.html#File:Libraries/Base/Math/Vector.h:Vector3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,158);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector3</a>*</div></td><td class="CDLDefinition"><p>returns the V axis. Maybe nullptr.</p></td></tr><tr><td class="CDLEntry">n<div class="CDLParameterType"><a href="../../../../index.html#File:Libraries/Base/Math/Vector.h:Vector3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,158);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector3</a>*</div></td><td class="CDLDefinition"><p>returns the N axis. Maybe nullptr.</p></td></tr></table></div>
+</div>
+
+<a name="SetOffset"></a><a name="Topic661"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">SetOffset</div>
+ <div id="NDPrototype661" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CCamera::SetOffset(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../../index.html#File:Libraries/Base/Math/Vector.h:Vector3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,158);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector3</a>&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">offset</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div class="CBody"><p>Defines an offset to apply to the camera's eye and look position</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">offset<div class="CDLParameterType"><a href="../../../../index.html#File:Libraries/Base/Math/Vector.h:Vector3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,158);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector3</a>&amp;</div></td><td class="CDLDefinition"><p>offset to apply to eye and look position</p></td></tr></table></div>
+</div>
+
+<a name="GetOffset"></a><a name="Topic662"></a><div class="CTopic TFunction LC last">
+ <div class="CTitle">GetOffset</div>
+ <div id="NDPrototype662" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CCamera::GetOffset(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../../index.html#File:Libraries/Base/Math/Vector.h:Vector3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,158);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector3</a>&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">offset</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div class="CBody"><p>Returns the camera's current offset</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">offset<div class="CDLParameterType"><a href="../../../../index.html#File:Libraries/Base/Math/Vector.h:Vector3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,158);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector3</a>&amp;</div></td><td class="CDLDefinition"><p>returns the current offset</p></td></tr></table></div>
 </div>
 
 </body></html>
