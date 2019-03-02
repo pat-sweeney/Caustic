@@ -84,10 +84,10 @@ namespace Caustic
             . . . . . . . . . .
             */
         uint32 *pData = (uint32*)GetData();
-        x1 = Caustic::clamp<int>(x1, 0, GetWidth() - 1);
-        x2 = Caustic::clamp<int>(x2, 0, GetWidth() - 1);
-        y1 = Caustic::clamp<int>(y1, 0, GetHeight() - 1);
-        y2 = Caustic::clamp<int>(y2, 0, GetHeight() - 1);
+        x1 = Caustic::Clamp<int>(x1, 0, GetWidth() - 1);
+        x2 = Caustic::Clamp<int>(x2, 0, GetWidth() - 1);
+        y1 = Caustic::Clamp<int>(y1, 0, GetHeight() - 1);
+        y2 = Caustic::Clamp<int>(y2, 0, GetHeight() - 1);
         uint32 w = GetWidth();
         uint32 sum = pData[y2 * 3 * w + 3 * x2 + channel];
         if (x1 > 0)

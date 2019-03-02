@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("cfa",["Class"],[["CFace",,[[,,,,0,"File:Libraries/Geometry/Mesh/IMesh.h:CFace","CClass:CFace"]]]]);

@@ -7,6 +7,7 @@
 #include "Rendering\Caustic\RendererMarshaller.h"
 #include "Renderer.h"
 #include "Rendering\SceneGraph\SceneGraph.h"
+#include "Rendering\Caustic\CausticFactory.h"
 #include <queue>
 #include <functional>
 #include <algorithm>
@@ -34,7 +35,7 @@ namespace Caustic {
 
     void CRendererMarshaller::Initialize(HWND hwnd)
     {
-        Caustic::CreateRenderer(hwnd, &m_spRenderer);
+		CCausticFactory::Instance()->CreateRenderer(hwnd, &m_spRenderer);
         InitializeCriticalSection(&m_cs);
         m_thread = CreateThread(nullptr, 0, RenderThreadProc, this, 0, nullptr);
     }
@@ -85,7 +86,7 @@ namespace Caustic {
         AddLambda(
             [this, pPath, evt, ppTexture]()
             {
-                Caustic::LoadTexture(pPath, m_spRenderer.p, ppTexture);
+                Caustic::CCausticFactory::Instance()->LoadTexture(pPath, m_spRenderer.p, ppTexture);
                 SetEvent(evt);
             }
         );
@@ -98,7 +99,7 @@ namespace Caustic {
         AddLambda(
             [this, pPath, evt, ppTexture]()
             {
-                Caustic::LoadVideoTexture(pPath, m_spRenderer.p, ppTexture);
+				Caustic::CCausticFactory::Instance()->LoadVideoTexture(pPath, m_spRenderer.p, ppTexture);
                 SetEvent(evt);
             }
         );

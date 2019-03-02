@@ -6,6 +6,7 @@
 #include "Renderer.h"
 #include "Sampler.h"
 #include "Geometry\Mesh\Material.h"
+#include "Rendering\Caustic\CausticFactory.h"
 
 namespace Caustic
 {
@@ -28,11 +29,11 @@ namespace Caustic
             return;
         }
         CRefObj<IRenderMaterial> spFrontMaterial;
-        CreateRenderMaterial(pGraphics, pMaterial, pShader, &spFrontMaterial);
+		CCausticFactory::Instance()->CreateRenderMaterial(pGraphics, pMaterial, pShader, &spFrontMaterial);
         CRefObj<IRenderMaterial> spBackMaterial;
         if (pSubMesh->GetMeshFlags() & EMeshFlags::TwoSided)
         {
-            CreateRenderMaterial(pGraphics, pMaterial, pShader, &spBackMaterial);
+			CCausticFactory::Instance()->CreateRenderMaterial(pGraphics, pMaterial, pShader, &spBackMaterial);
         }
 
         DirectX::XMMATRIX mat = DirectX::XMMatrixIdentity();
@@ -102,27 +103,16 @@ namespace Caustic
         m_passes = 1 << c_PassTransparent;
     }
 
-    //**********************************************************************
-    //! \brief CRenderable creates a renderable object
-    //! Creates a renderable. A renderable is a vertex buffer, index buffer,
-    //! and a shader. Objects are rendered in arbitrary order
-    //! (as opposed to objects in the scene graph which are rendered in order).
-    //! \param[in] pGraphics Our graphics renderer
-    //! \param[in] pSubMesh Submesh object to render
-    //! \param[in] pFrontMaterial Material to apply to front facing polygons
-    //! \param[in] pBackMaterial Material to apply to back facing polygons (maybe nullptr)
-    //! \param[in] mat Transform to apply (object=>world)
-    //**********************************************************************
     CRenderable::CRenderable(IGraphics *pGraphics, ISubMesh *pSubMesh, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat)
     {
         CComPtr<ID3D11Buffer> spVB;
         CComPtr<ID3D11Buffer> spIB;
         uint32 numVerts;
         uint32 numIndices;
-        Caustic::MeshToD3D(pGraphics, pSubMesh, 2, &spVB, &numVerts, 1, &spIB, &numIndices, nullptr, nullptr);
+		Caustic::CCausticFactory::Instance()->MeshToD3D(pGraphics, pSubMesh, 2, &spVB, &numVerts, 1, &spIB, &numIndices, nullptr, nullptr);
         uint32 numNormalVerts;
         CComPtr<ID3D11Buffer> spNormalVB;
-        Caustic::MeshToNormals(pGraphics, pSubMesh, &spNormalVB, &numNormalVerts);
+		Caustic::CCausticFactory::Instance()->MeshToNormals(pGraphics, pSubMesh, &spNormalVB, &numNormalVerts);
         CRefObj<ITexture> spTexture;
         *this = CRenderable(
             spVB, numVerts, 

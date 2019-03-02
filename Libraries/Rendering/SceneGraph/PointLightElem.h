@@ -9,7 +9,11 @@
 
 namespace Caustic
 {
-    class CPointLightElem :
+	//**********************************************************************
+	// Class: CPointLightElem
+	// Defines a point light
+	//**********************************************************************
+	class CPointLightElem :
         public CSceneElem,
         public IScenePointLightElem,
         public CRefCount
@@ -17,10 +21,16 @@ namespace Caustic
         CRefObj<IPointLight> m_spPointLight;
 
     public:
-        friend void Scene::CreatePointLightElem(IScenePointLightElem **ppElem);
-
-        CPointLightElem()
+		//**********************************************************************
+		// Constructor: CPointLightElem
+		// Default ctor
+		//
+		// Parameters:
+		// pPointLight - underlying point light this scene element controls
+		//**********************************************************************
+		CPointLightElem(IPointLight *pPointLight)
         {
+			m_spPointLight = pPointLight;
         }
 
         //**********************************************************************

@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("che",["Function"],[["CheckboardTexture",,[["ICausticFactory",,,,0,"File:Libraries/Rendering/Caustic/ICausticFactory.h:ICausticFactory.CheckboardTexture","CClass:ICausticFactory:CheckboardTexture"]]]]);
+NDSearch.OnPrefixDataLoaded("che",["Function"],[["CheckerboardTexture",,[["ICausticFactory",,,,0,"File:Libraries/Rendering/Caustic/ICausticFactory.h:ICausticFactory.CheckerboardTexture","CClass:ICausticFactory:CheckerboardTexture"]]]]);

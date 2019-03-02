@@ -12,16 +12,6 @@
 
 namespace Caustic
 {
-    //**********************************************************************
-    // Function: CreateCamera
-    //! \brief CreateCamera returns a new ICamera object
-    //!
-    //! This method creates a new camera object. This camera can then
-    //! be passed to IRenderer to be used for rendering.
-    //! \param[in] leftHanded Defines whether we have a left or right handed coordinate system
-    //! \param[out] ppCamera Returns the newly created camera object
-    //!
-    //**********************************************************************
     CAUSTICAPI void CreateCamera(bool leftHanded, ICamera **ppCamera)
     {
         std::unique_ptr<CCamera> pCamera(new CCamera(leftHanded));
@@ -29,12 +19,6 @@ namespace Caustic
         (*ppCamera)->AddRef();
     }
 
-    //**********************************************************************
-    //! \brief Defines our camera object
-    //!
-    //! This is the ctor for CCamera.
-    //! \param[in] leftHanded Defines whether we have a left or right handed coordinate system
-    //!
     //**********************************************************************
     CCamera::CCamera(bool leftHanded) :
         m_leftHanded(leftHanded)
@@ -48,14 +32,10 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Defines the dtor for CCamera
-    //**********************************************************************
     CCamera::~CCamera()
     {
     }
 
-    //**********************************************************************
-    //! \brief Returns the camera's projection matrix
     //**********************************************************************
     DirectX::XMMATRIX CCamera::GetProjection()
     {
@@ -63,16 +43,12 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Returns the camera's view matrix
-    //**********************************************************************
     DirectX::XMMATRIX CCamera::GetView()
     {
         return m_View;
     }
 
-    //**********************************************************************
-    //! \brief Returns the camera's U,V,N axis in world coordinates
-    //**********************************************************************
+	//**********************************************************************
     void CCamera::GetUVN(Vector3 *u, Vector3 *v, Vector3 *n)
     {
         if (u)
@@ -98,28 +74,18 @@ namespace Caustic
         }
     }
 
-    //**********************************************************************
-    //! \brief Defines an offset to apply to the camera's eye and look position
-    //**********************************************************************
+	//**********************************************************************
     void CCamera::SetOffset(Vector3 &offset)
     {
         m_offset = offset;
     }
 
-    //**********************************************************************
-    //! \brief Defines an offset to apply to the camera's eye and look position
-    //**********************************************************************
-    void CCamera::GetOffset(Vector3 &offset)
+	//**********************************************************************
+	void CCamera::GetOffset(Vector3 &offset)
     {
         offset = m_offset;
     }
 
-    //**********************************************************************
-    //! \brief Set parameters on the camera
-    //! \param[in] fov Field of view in radians
-    //! \param[in] aspectRatio Aspect ratio of our window
-    //! \param[in] nearZ Near plane in millimeters
-    //! \param[in] farZ Far plane in millimeters
     //**********************************************************************
     void CCamera::SetParams(float fov, float aspectRatio, float nearZ, float farZ)
     {
@@ -133,11 +99,6 @@ namespace Caustic
             m_Pers = DirectX::XMMatrixPerspectiveFovRH(m_FOV, m_AspectRatio, m_NearZ, m_FarZ);
     }
 
-    //**********************************************************************
-    //! \brief Sets the camera's position, look point, and orientation
-    //! \param[in] eye Position of camera in world coordinates (millimeters)
-    //! \param[in] look Position in world coordinates that camera is looking at
-    //! \param[in] up Up vector in world coordinates
     //**********************************************************************
     void CCamera::SetPosition(Vector3 &eye, Vector3 &look, Vector3 &up)
     {
@@ -155,14 +116,6 @@ namespace Caustic
             m_View = DirectX::XMMatrixLookAtRH(vEye, vLook, vUp);
     }
 
-    //**********************************************************************
-    //! \brief Returns the camera's current position, look point, and orientation
-    //! \param[out] pEye Position of camera in world coordinates (millimeters). May be nullptr.
-    //! \param[out] pLook Position in world coordinates that camera is looking at. May be nullptr.
-    //! \param[out] pUp Up vector in world coordinates. May be nullptr.
-    //! \param[out] pU Camera's right vector (in world coordinates). May be nullptr.
-    //! \param[out] pV Camera's up vector (in world coordinates). May be nullptr.
-    //! \param[out] pN Camera's forward vector (in world coordinates). May be nullptr.
     //**********************************************************************
     void CCamera::GetPosition(Vector3 *pEye, Vector3 *pLook, Vector3 *pUp, Vector3 *pU, Vector3 *pV, Vector3 *pN)
     {
@@ -192,7 +145,8 @@ namespace Caustic
         }
     }
 
-    void CCamera::Load(IStream *pStream)
+	//**********************************************************************
+	void CCamera::Load(IStream *pStream)
     {
         ULONG bytesRead;
         CT(pStream->Read(&m_leftHanded, sizeof(m_leftHanded), &bytesRead));
@@ -206,7 +160,8 @@ namespace Caustic
         CT(pStream->Read(&m_offset, sizeof(m_offset), &bytesRead));
     }
 
-    void CCamera::Store(IStream *pStream)
+	//**********************************************************************
+	void CCamera::Store(IStream *pStream)
     {
         ULONG bytesWritten;
         CT(pStream->Write(&m_leftHanded, sizeof(m_leftHanded), &bytesWritten));

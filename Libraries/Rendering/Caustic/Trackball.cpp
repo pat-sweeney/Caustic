@@ -8,10 +8,6 @@
 
 namespace Caustic
 {
-    //**********************************************************************
-    //! \brief Creates a new trackball object
-    //! \param[out] ppTrackball Returns the created trackball
-    //**********************************************************************
     CAUSTICAPI void CreateTrackball(ITrackball **ppTrackball)
     {
         std::unique_ptr<CTrackball> spTrackball(new CTrackball());

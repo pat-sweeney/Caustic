@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:CAutoLock","CAutoLock");NDSummary.OnSummaryLoaded("CClass:CAutoLock",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[146,0,0,"CAutoLock"],[147,0,2,"Functions","Functions"],[148,0,1,"CAutoLock","CAutoLock"],[149,0,1,"CAutoLock","CAutoLock(2)"]]);

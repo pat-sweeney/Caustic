@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "Renderer.h"
 #include "RenderMaterial.h"
+#include "CausticFactory.h"
 #include "Sampler.h"
 
 namespace Caustic
@@ -21,24 +22,24 @@ namespace Caustic
             if (!fnDiffuse.empty())
             {
                 std::wstring wfn(fnDiffuse.begin(), fnDiffuse.end());
-                Caustic::LoadTexture(wfn.c_str(), pGraphics, &spRenderMaterial->m_spDiffuseTexture);
-                CreateSampler(pGraphics, spRenderMaterial->m_spDiffuseTexture.p, &spRenderMaterial->m_spDiffuseSampler);
+                Caustic::CCausticFactory::Instance()->LoadTexture(wfn.c_str(), pGraphics, &spRenderMaterial->m_spDiffuseTexture);
+				CCausticFactory::Instance()->CreateSampler(pGraphics, spRenderMaterial->m_spDiffuseTexture.p, &spRenderMaterial->m_spDiffuseSampler);
             }
 
             std::string fnSpecular = pMaterialAttrib->GetSpecularTexture();
             if (!fnSpecular.empty())
             {
                 std::wstring wfn(fnSpecular.begin(), fnSpecular.end());
-                Caustic::LoadTexture(wfn.c_str(), pGraphics, &spRenderMaterial->m_spSpecularTexture);
-                CreateSampler(pGraphics, spRenderMaterial->m_spSpecularTexture.p, &spRenderMaterial->m_spSpecularSampler);
+                Caustic::CCausticFactory::Instance()->LoadTexture(wfn.c_str(), pGraphics, &spRenderMaterial->m_spSpecularTexture);
+				CCausticFactory::Instance()->CreateSampler(pGraphics, spRenderMaterial->m_spSpecularTexture.p, &spRenderMaterial->m_spSpecularSampler);
             }
 
             std::string fnAmbient = pMaterialAttrib->GetAmbientTexture();
             if (!fnAmbient.empty())
             {
                 std::wstring wfn(fnAmbient.begin(), fnAmbient.end());
-                Caustic::LoadTexture(wfn.c_str(), pGraphics, &spRenderMaterial->m_spAmbientTexture);
-                CreateSampler(pGraphics, spRenderMaterial->m_spAmbientTexture.p, &spRenderMaterial->m_spAmbientSampler);
+				Caustic::CCausticFactory::Instance()->LoadTexture(wfn.c_str(), pGraphics, &spRenderMaterial->m_spAmbientTexture);
+				CCausticFactory::Instance()->CreateSampler(pGraphics, spRenderMaterial->m_spAmbientTexture.p, &spRenderMaterial->m_spAmbientSampler);
             }
         }
 
@@ -51,21 +52,21 @@ namespace Caustic
     {
         m_spDiffuseTexture = pTexture;
         m_spDiffuseSampler = nullptr;
-        CreateSampler(pGraphics, m_spDiffuseTexture.p, &m_spDiffuseSampler);
+		CCausticFactory::Instance()->CreateSampler(pGraphics, m_spDiffuseTexture.p, &m_spDiffuseSampler);
     }
 
     void CRenderMaterial::SetSpecularTexture(IGraphics *pGraphics, ITexture *pTexture)
     {
         m_spAmbientTexture = pTexture;
         m_spSpecularSampler = nullptr;
-        CreateSampler(pGraphics, m_spAmbientTexture.p, &m_spSpecularSampler);
+		CCausticFactory::Instance()->CreateSampler(pGraphics, m_spAmbientTexture.p, &m_spSpecularSampler);
     }
 
     void CRenderMaterial::SetAmbientTexture(IGraphics *pGraphics, ITexture *pTexture)
     {
         m_spSpecularTexture = pTexture;
         m_spAmbientSampler = nullptr;
-        CreateSampler(pGraphics, m_spSpecularTexture.p, &m_spAmbientSampler);
+		CCausticFactory::Instance()->CreateSampler(pGraphics, m_spSpecularTexture.p, &m_spAmbientSampler);
     }
 
     void CRenderMaterial::SetShader(IShader *pShader) 

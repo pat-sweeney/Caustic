@@ -4,20 +4,18 @@
 //**********************************************************************
 #include "stdafx.h"
 #include "Rendering\SceneGraph\SceneGraph.h"
+#include "Rendering\Caustic\CausticFactory.h"
 #include "MeshElem.h"
 #include <string>
 
 namespace Caustic
 {
-    namespace Scene
+    CAUSTICAPI void CreateMeshElem(ISceneMeshElem **ppElem)
     {
-        CAUSTICAPI void CreateMeshElem(ISceneMeshElem **ppElem)
-        {
-            std::unique_ptr<CSceneMeshElem> spMeshObj(new CSceneMeshElem());
-            *ppElem = spMeshObj.release();
-            (*ppElem)->AddRef();
-        }
-    };
+        std::unique_ptr<CSceneMeshElem> spMeshObj(new CSceneMeshElem());
+        *ppElem = spMeshObj.release();
+        (*ppElem)->AddRef();
+    }
 
     std::wstring &CSceneMeshElem::Name()
     {
@@ -97,7 +95,7 @@ namespace Caustic
                 CRefObj<ISubMesh> spSubMesh;
                 m_spMesh->GetSubMesh(i, &spSubMesh);
                 CRefObj<IRenderable> spRenderable;
-                Caustic::CreateRenderable(spGraphics.p, spSubMesh.p, pSceneCtx->m_spCurrentMaterial.p, pSceneCtx->m_spCurrentPixelShader.p, &spRenderable);
+                Caustic::CCausticFactory::Instance()->CreateRenderable(spGraphics.p, spSubMesh.p, pSceneCtx->m_spCurrentMaterial.p, pSceneCtx->m_spCurrentPixelShader.p, &spRenderable);
                 if (spRenderable != nullptr)
                 {
                     m_renderables.push_back(spRenderable);

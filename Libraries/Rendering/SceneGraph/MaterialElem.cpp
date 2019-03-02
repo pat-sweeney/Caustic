@@ -11,16 +11,15 @@
 
 namespace Caustic
 {
-    namespace Scene
+    CAUSTICAPI void CreateMaterialElem(ISceneMaterialElem **ppElem)
     {
-        CAUSTICAPI void CreateMaterialElem(ISceneMaterialElem **ppElem)
-        {
-            std::unique_ptr<CSceneMaterialElem> spMeshObj(new CSceneMaterialElem());
-            Caustic::CreateMaterial(&spMeshObj->m_spMaterial);
-            *ppElem = spMeshObj.release();
-            (*ppElem)->AddRef();
-        }
-    };
+        std::unique_ptr<CSceneMaterialElem> spMeshObj(new CSceneMaterialElem());
+		CRefObj<IMaterialAttrib> spMaterial;
+        Caustic::CreateMaterial(&spMaterial);
+		spMeshObj->SetMaterial(spMaterial.p);
+        *ppElem = spMeshObj.release();
+        (*ppElem)->AddRef();
+    }
 
     std::wstring &CSceneMaterialElem::Name()
     {

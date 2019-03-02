@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:IGraphics","IGraphics");NDSummary.OnSummaryLoaded("CClass:IGraphics",[["C/C++","C"]],[["Interfaces","Interface"]],[[252,0,0,"IGraphics"]]);
+NDFramePage.OnPageTitleLoaded("CClass:IGraphics","IGraphics");NDSummary.OnSummaryLoaded("CClass:IGraphics",[["C/C++","C"]],[["Interfaces","Interface"]],[[259,0,0,"IGraphics"]]);

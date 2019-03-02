@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:CRefCount","CRefCount");NDSummary.OnSummaryLoaded("CClass:CRefCount",[["C/C++","C"]],[["Classes","Class"]],[[142,0,0,"CRefCount"]]);
+NDFramePage.OnPageTitleLoaded("CClass:CRefCount","CRefCount");NDSummary.OnSummaryLoaded("CClass:CRefCount",[["C/C++","C"]],[["Classes","Class"]],[[111,0,0,"CRefCount"]]);

@@ -10,16 +10,14 @@
 namespace Caustic
 {
     //**********************************************************************
-    // \brief CBlockAllocator is a simple block allocator for creating lots
-    // of objects that are the same size.
+    // Class: CBlockAllocator
+	// A simple block allocator for creating lots of objects that are the same size.
     //**********************************************************************
     template <typename T>
     class CBlockAllocator
     {
         template <typename T> struct CBlock;
         
-        //**********************************************************************
-        // \brief CItem defines a single item in our block
         //**********************************************************************
         template <typename T>
         struct CItem
@@ -29,8 +27,6 @@ namespace Caustic
             T m_data;
         };
 
-        //**********************************************************************
-        // \brief CBlock defines a block of objects.
         //**********************************************************************
         template <typename T>
         struct CBlock
@@ -56,14 +52,25 @@ namespace Caustic
         int m_defaultBlockSize;             //!< Size of each item
         CBlock<T> *m_curBlock;              //!< Current block to allocate items from
     public:
-        CBlockAllocator(int defaultBlockSize)
+		//**********************************************************************
+		// Constructor: CBlockAllocator
+		// Constructor
+		//
+		// Parameters:
+		// defaultBlockSize - size of each object allocated by this block allocator
+		//**********************************************************************
+		CBlockAllocator(int defaultBlockSize)
         {
             m_defaultBlockSize = defaultBlockSize;
             m_curBlock = new CBlock<T>(m_defaultBlockSize);
             m_blocks.push_back(m_curBlock);
         }
 
-        T *Allocate()
+		//**********************************************************************
+		// Method: Allocate
+		// Allocates and returns a new object
+		//**********************************************************************
+		T *Allocate()
         {
             // Search the current block for a free item
             if (m_curBlock->m_itemsFree > 0)
@@ -102,7 +109,11 @@ namespace Caustic
             return p;
         }
 
-        void Free(T *p)
+		//**********************************************************************
+		// Method: Free
+		// Frees an object previously allocated by Allocate()
+		//**********************************************************************
+		void Free(T *p)
         {
             uint64 offset = (uint64)(uint64*)(&((CItem<T>*)nullptr)->m_data);
             CItem<T> *pItem = (CItem<T>*)((char*)p - offset);

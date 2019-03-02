@@ -39,13 +39,13 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief SimplifyRecursive is used internally for simplifying a subpiece
-    //! of the polygon
-    //! @param[in] pResult Polygon we are adding the simplified results to
-    //! @param[in] start Starting index for this subpiece
-    //! @param[in] end Ending index for this subpiece
-    //! @param[in] err Tolerance to allow for points we will ignore
-    //! @param[in] maxLen Longest line segment allowed. If maxLen==0 then no limit.
+    // SimplifyRecursive is used internally for simplifying a subpiece
+    // of the polygon
+    // pResult - Polygon we are adding the simplified results to
+    // start - Starting index for this subpiece
+    // end - Ending index for this subpiece
+    // err - Tolerance to allow for points we will ignore
+    // maxLen - Longest line segment allowed. If maxLen==0 then no limit.
     //**********************************************************************
     void CPolygon2::SimplifyRecursive(IPolygon2 *pResult, int start, int end, float err, float maxLen)
     {

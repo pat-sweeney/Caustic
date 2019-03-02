@@ -5,21 +5,19 @@
 #include "stdafx.h"
 #include "Rendering\SceneGraph\SceneGraph.h"
 #include "SceneGraphImpl.h"
+#include "SceneFactory.h"
 #include "GroupElem.h"
 #include <string>
 #include <functional>
 
 namespace Caustic
 {
-    namespace Scene
+    CAUSTICAPI void CreateGroupElem(ISceneGroupElem **ppElem)
     {
-        CAUSTICAPI void CreateGroupElem(ISceneGroupElem **ppElem)
-        {
-            std::unique_ptr<CSceneGroupElem> spGroupObj(new CSceneGroupElem());
-            *ppElem = spGroupObj.release();
-            (*ppElem)->AddRef();
-        }
-    };
+        std::unique_ptr<CSceneGroupElem> spGroupObj(new CSceneGroupElem());
+        *ppElem = spGroupObj.release();
+        (*ppElem)->AddRef();
+    }
 
     std::wstring &CSceneGroupElem::Name()
     {
@@ -119,28 +117,28 @@ namespace Caustic
             case ESceneElemType::Group:
             {
                 CRefObj<ISceneGroupElem> spGroupElem;
-                Scene::CreateGroupElem(&spGroupElem);
+				Caustic::CSceneFactory::Instance()->CreateGroupElem(&spGroupElem);
                 spElem = spGroupElem.p;
             }
             break;
             case ESceneElemType::Material:
             {
                 CRefObj<ISceneMaterialElem> spMaterialElem;
-                Scene::CreateMaterialElem(&spMaterialElem);
+				Caustic::CSceneFactory::Instance()->CreateMaterialElem(&spMaterialElem);
                 spElem = spMaterialElem.p;
             }
             break;
             case ESceneElemType::Mesh:
             {
                 CRefObj<ISceneMeshElem> spMeshElem;
-                Scene::CreateMeshElem(&spMeshElem);
+                Caustic::CSceneFactory::Instance()->CreateMeshElem(&spMeshElem);
                 spElem = spMeshElem.p;
             }
             break;
             case ESceneElemType::PointLight:
             {
                 CRefObj<IScenePointLightElem> spPointLightElem;
-                Scene::CreatePointLightElem(&spPointLightElem);
+				Caustic::CSceneFactory::Instance()->CreatePointLightElem(&spPointLightElem);
                 spElem = spPointLightElem.p;
             }
             break;

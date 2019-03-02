@@ -36,9 +36,10 @@ namespace Caustic
 
 namespace Caustic
 {
-    ///**********************************************************************
-    /// \brief CSceneGraph defines our scene graph
-    ///**********************************************************************
+	//**********************************************************************
+	// Class: CSceneGraph
+	// Defines our scene graph
+    //**********************************************************************
     class CSceneGraph : public CSceneElem, public ISceneGraph, public CRefCount
     {
         bool m_locked;
@@ -47,13 +48,12 @@ namespace Caustic
         CRefObj<IRenderer> m_spRenderer;
         std::vector<CRefObj<ISceneElem>> m_Selected;
         uint32 m_Flags;
-
-        friend CAUSTICAPI void Scene::CreateSceneGraph(ISceneGraph **ppGraph);
     public:
-        CSceneGraph() :
+        CSceneGraph(ISceneGroupElem *pGroup) :
             m_locked(false)
         {
             InitializeCriticalSection(&m_cs);
+			m_spRoot = pGroup;
         }
 
         //**********************************************************************

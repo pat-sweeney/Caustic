@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright CausticPixel LLC 2015-2018
+// Copyright Patrick Sweeney 2015-2019
 // All Rights Reserved
 //**********************************************************************
 #include "stdafx.h"
@@ -7,6 +7,7 @@
 #include "Base\Core\error.h"
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\SceneGraph\SceneGraph.h"
+#include "Rendering\SceneGraph\SceneFactory.h"
 #include "Collada.h"
 
 namespace Caustic
@@ -471,7 +472,7 @@ while(*p)//        for (int i = 0; i < pPolylist->m_count; i++)
         ParseAttribute(spAttributes, L"url", url);
 
         CRefObj<ISceneGraph> spSceneGraph;
-        Caustic::Scene::CreateSceneGraph(&spSceneGraph);
+		Caustic::CSceneFactory::Instance()->CreateSceneGraph(&spSceneGraph);
 
         Collada::SVisualScene *pScene = pCollada->m_visualScenes[url.substr(1)];
         std::map<std::wstring, Collada::SNode*>::iterator it = pScene->m_nodes.begin();
@@ -485,10 +486,10 @@ while(*p)//        for (int i = 0; i < pPolylist->m_count; i++)
             case Collada::c_NodeType_Light:
                 {
                     CRefObj<Caustic::ISceneGroupElem> spXform;
-                    Caustic::Scene::CreateGroupElem(&spXform);
+					Caustic::CSceneFactory::Instance()->CreateGroupElem(&spXform);
                     spXform->SetTransform(pNode->m_mat);
                     CRefObj<Caustic::IScenePointLightElem> spLight;
-                    Caustic::Scene::CreatePointLightElem(&spLight);
+					Caustic::CSceneFactory::Instance()->CreatePointLightElem(&spLight);
                     spXform->AddChild(spLight.p);
                     spSceneGraph->AddChild(spXform.p);
                 }
@@ -496,11 +497,11 @@ while(*p)//        for (int i = 0; i < pPolylist->m_count; i++)
             case Collada::c_NodeType_Geometry:
                 {
                     CRefObj<Caustic::ISceneGroupElem> spXform;
-                    Caustic::Scene::CreateGroupElem(&spXform);
+					Caustic::CSceneFactory::Instance()->CreateGroupElem(&spXform);
                     spXform->SetTransform(pNode->m_mat);
                     
                     CRefObj<Caustic::ISceneMeshElem> spMeshElem;
-                    Caustic::Scene::CreateMeshElem(&spMeshElem);
+					Caustic::CSceneFactory::Instance()->CreateMeshElem(&spMeshElem);
 
                     Collada::SGeometry *pGeometry = pCollada->m_geometries[pNode->m_url.substr(1)];
                     CRefObj<IMesh> spMesh;

@@ -12,10 +12,6 @@
 
 namespace Caustic
 {
-    //**********************************************************************
-    //! \brief Generates all the MIP levels for the texture
-    //! \param[in] pGraphics Graphics renderer
-    //**********************************************************************
     void CTexture::GenerateMips(IGraphics *pGraphics)
     {
         CD3D11_TEXTURE2D_DESC desc(m_Format, m_Width, m_Height);
@@ -78,38 +74,21 @@ namespace Caustic
     {
     }
     
-    //**********************************************************************
-    //! \brief Returns the width of the texture
-    //**********************************************************************
     uint32 CTexture::GetWidth()
     {
         return m_Width;
     }
     
-    //**********************************************************************
-    //! \brief Returns the height of the texture
-    //**********************************************************************
     uint32 CTexture::GetHeight()
     {
         return m_Height;
     }
     
-    //**********************************************************************
-    //! \brief Returns the format of the texture
-    //**********************************************************************
     DXGI_FORMAT CTexture::GetFormat()
     {
         return m_Format;
     }
 
-    //**********************************************************************
-    //! \brief Creates a new empty texture
-    //! \param[in] pGraphics Renderer
-    //! \param[in] width Width of texture in pixels
-    //! \param[in] height Height of texture in pixels
-    //! \param[in] format Format of pixel
-    //! \param[out] ppTexture Returns the newly created texture
-    //**********************************************************************
     CAUSTICAPI void CreateTexture(IGraphics *pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, uint32 cpuFlags, uint32 bindFlags, ITexture **ppTexture)
     {
         std::unique_ptr<CTexture> spTexture(new CTexture(pGraphics, width, height, format, cpuFlags, bindFlags));
@@ -117,12 +96,7 @@ namespace Caustic
         (*ppTexture)->AddRef();
     }
     
-    //**********************************************************************
-    //! \brief Creates a static texture that looks like a checkerboard
-    //! \param[in] pGraphics Renderer
-    //! \returns Checkerboard texture
-    //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> CheckboardTexture(IGraphics *pGraphics)
+    CAUSTICAPI CRefObj<ITexture> CheckerboardTexture(IGraphics *pGraphics)
     {
         static CRefObj<ITexture> s_spCheckerBoard;
         if (s_spCheckerBoard == nullptr)

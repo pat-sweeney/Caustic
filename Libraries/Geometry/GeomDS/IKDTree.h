@@ -12,13 +12,33 @@
 namespace Caustic
 {
     //**********************************************************************
-    //! \brief Defines an interface for interacting with the KD tree
-    //!
-    //! IKDTree defines an interface for manipulating a KD Tree.
+    // Interface: IKDTree
+    // Defines an interface for manipulating a KD Tree.
     //**********************************************************************
     struct IKDTree : public IRefCount
     {
-        virtual void AddPoint(Caustic::Vector3 &vec, void *data) = 0;
-        virtual bool FindPoint(Caustic::Vector3 &vec, std::function<bool(void *data)> comparator, void **data) = 0;
+		//**********************************************************************
+		// Method: AddPoint
+		// Adds a point to our KD tree
+		//
+		// Parameters:
+		// vec - point to add to tree
+		// data - user data to associate with the point
+		//**********************************************************************
+		virtual void AddPoint(Caustic::Vector3 &vec, void *data) = 0;
+
+		//**********************************************************************
+		// Method: FindPoint
+		// Checks if the specified point is in the tree
+		//
+		// Parameters
+		// vec - point to find
+		// comparator - user defined comparison function
+		// data - user data associated with found point
+		//
+		// Returns:
+		// True if point is found in tree. False otherwise.
+		//**********************************************************************
+		virtual bool FindPoint(Caustic::Vector3 &vec, std::function<bool(void *data)> comparator, void **data) = 0;
     };
 }

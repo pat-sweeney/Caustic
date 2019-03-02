@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright CausticPixel LLC 2015-2018
+// Copyright Patrick Sweeney 2015-2019
 // Ported from Nestegg Software (Copyright 1995-1997)
 // All Rights Reserved
 //**********************************************************************
@@ -8,7 +8,11 @@
 #include <assert.h>
 
 namespace Caustic {
-    class Bresenham
+	//**********************************************************************
+	// Class: Bresenham
+	// Defines a class for walking a line using Bresenham's algorithm
+	//**********************************************************************
+	class Bresenham
     {
         int32 x;        // current x coordinate
         int32 y;        // current y coordinate
@@ -21,11 +25,25 @@ namespace Caustic {
     public:
         int32 err;        // total error
 
-        Bresenham()
+		//**********************************************************************
+		// Constructor: Bresenham
+		// Default constructor
+		//**********************************************************************
+		Bresenham()
         {
         }
 
-        Bresenham(int32 fx, int32 fy, int32 tx, int32 ty)
+		//**********************************************************************
+		// Constructor: Bresenham
+		// Constructor
+		//
+		// Parameters:
+		// fx - starting X coordinate of line
+		// fy - starting Y coordinate of line
+		// tx - ending X coordinate of line
+		// ty - ending Y coordinate of line
+		//**********************************************************************
+		Bresenham(int32 fx, int32 fy, int32 tx, int32 ty)
         {
             stopx = tx;
             stopy = ty;
@@ -59,20 +77,44 @@ namespace Caustic {
             ey <<= 1;
         }
 
-        int32 get_x() { return x; }
-        int32 get_y() { return y; }
-        int32 get_endx() { return stopx; }
-        int32 get_endy() { return stopy; }
+		//**********************************************************************
+		// Method: get_x
+		// Returns the X coordinate where the iterator is currently positioned
+		//**********************************************************************
+		int32 get_x() { return x; }
 
-        //
-        // eol() returns TRUE if we are at the end of the line
-        //
-        bool eol()
+		//**********************************************************************
+		// Method: get_y
+		// Returns the Y coordinate where the iterator is currently positioned
+		//**********************************************************************
+		int32 get_y() { return y; }
+
+		//**********************************************************************
+		// Method: get_endx
+		// Returns the ending pixel's X coordinate
+		//**********************************************************************
+		int32 get_endx() { return stopx; }
+
+		//**********************************************************************
+		// Method: get_endy
+		// Returns the ending pixel's Y coordinate
+		//**********************************************************************
+		int32 get_endy() { return stopy; }
+
+		//**********************************************************************
+		// Method: eol
+		// Returns true if iterator has reached end of line. False otherwise.
+		//**********************************************************************
+		bool eol()
         {
             return (stopx == get_x() && stopy == get_y());
         }
 
-        void step()
+		//**********************************************************************
+		// Method: step
+		// Steps one unit along the line
+		//**********************************************************************
+		void step()
         {
             if (swapped)
             {
@@ -97,24 +139,32 @@ namespace Caustic {
             return;
         }
 
-        bool step_in_x()
+		//**********************************************************************
+		// Method: step_in_x
+		// Returns if a call to step() will result in a step in the X direction
+		//**********************************************************************
+		bool step_in_x()
         {
             if (swapped)
                 return (err > 0 || (err == 0 && dx > 0)) ? true : false;
             return true;
         }
 
-        bool step_in_y()
+		//**********************************************************************
+		// Method: step_in_y
+		// Returns if a call to step() will result in a step in the Y direction
+		//**********************************************************************
+		bool step_in_y()
         {
             if (swapped)
                 return true;
             return (err > 0 || (err == 0 && dy > 0)) ? true : false;
         }
 
-        //
-        // step_in_minor() is used to determine whether we are about
-        // to step along the minor axis.
-        //
+		//**********************************************************************
+		// Method: step_in_minor
+		// Determines whether we are about to step along the minor axis.
+		//**********************************************************************
         bool step_in_minor()
         {
             return ((swapped) ?
@@ -122,9 +172,13 @@ namespace Caustic {
                 ((err > 0 || (err == 0 && dy > 0)) ? true : false));
         }
 
-        //
-        // step_x() moves the iterator 'dx' units along the x axis
-        //
+		//**********************************************************************
+		// Method: step_x
+		// Moves the iterator 'dx' units along the x axis
+		//
+		// Parameters:
+		// dx - Number of units to step along the x axis
+		//**********************************************************************
         void step_x(int32 dx)
         {
             int32 _dy;
@@ -164,7 +218,14 @@ namespace Caustic {
             return;
         }
 
-        void step_y(int32 dy)
+		//**********************************************************************
+		// Method: step_y
+		// Moves the iterator 'dy' units along the y axis
+		//
+		// Parameters:
+		// dy - Number of units to step along the y axis
+		//**********************************************************************
+		void step_y(int32 dy)
         {
             int32 _dx;
 
@@ -202,9 +263,13 @@ namespace Caustic {
             y += dy;
         }
 
-        //
-        // step_inc() moves 'delta' units along the major axis
-        //
+		//**********************************************************************
+		// Method: step_inc
+		// Moves 'delta' units along the major axis
+		//
+		// Parameters:
+		// delta - Number of units to step along the major axis
+		//**********************************************************************
         void step_inc(int32 delta)
         {
             if (swapped)

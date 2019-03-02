@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "Base\Core\Error.h"
 #include "Rendering\Caustic\Caustic.h"
+#include "Rendering\Caustic\CausticFactory.h"
 #include "VideoTexture.h"
 #include <memory>
 #include <wincodec.h>
@@ -17,7 +18,7 @@ namespace Caustic {
 //**********************************************************************
 CVideoTexture::CVideoTexture(IGraphics *pGraphics)
 {
-    CreateTexture(pGraphics, 1, 1, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE, &m_spTexture);
+	CCausticFactory::Instance()->CreateTexture(pGraphics, 1, 1, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE, &m_spTexture);
 }
 
 //**********************************************************************
@@ -120,7 +121,7 @@ void CVideoTexture::Update(IGraphics *pGraphics)
     {
         GetVideoFormat(&m_format);
         m_spTexture = nullptr;
-        CreateTexture(pGraphics, m_Width, m_Height, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE, &m_spTexture);
+		CCausticFactory::Instance()->CreateTexture(pGraphics, m_Width, m_Height, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE, &m_spTexture);
     }
     if (spSample)
     {
@@ -186,7 +187,7 @@ void CVideoTexture::LoadFromFile(const wchar_t *pFilename, IGraphics *pGraphics)
     m_Width = m_format.m_width;
     m_Height = m_format.m_height;
     m_spTexture = nullptr;
-    CreateTexture(pGraphics, m_Width, m_Height, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE, &m_spTexture);
+	CCausticFactory::Instance()->CreateTexture(pGraphics, m_Width, m_Height, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE, &m_spTexture);
 }
 
 //**********************************************************************

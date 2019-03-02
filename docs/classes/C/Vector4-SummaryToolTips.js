@@ -1,1 +1,1 @@
-NDSummary.OnToolTipsLoaded("CClass:Vector4",{153:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines a simple vector with 4 components</div></div>"});
+NDSummary.OnToolTipsLoaded("CClass:Vector4",{145:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines a simple vector with 4 components</div></div>"});

@@ -7,6 +7,7 @@
 #include "Rendering\Caustic\Shader.h"
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\Sampler.h"
+#include "Rendering\Caustic\CausticFactory.h"
 #include <memory>
 #include <Windows.h>
 #include "GPUPipelineImpl.h"
@@ -175,7 +176,7 @@ namespace Caustic
     void CGPUPipeline::Initialize(IGraphics *pGraphics)
     {
         if (pGraphics == nullptr)
-            CreateGraphics(nullptr, &pGraphics);
+			Caustic::CCausticFactory::Instance()->CreateGraphics(nullptr, &pGraphics);
         m_spGraphics = pGraphics;
         // Setup vertex buffer
         CD3D11_BUFFER_DESC vbdesc(sizeof(GPUVertex) * 4, D3D11_BIND_VERTEX_BUFFER);
@@ -318,7 +319,7 @@ namespace Caustic
             m_sourceNodes[i]->GetOutputTexture(pPipeline, &spTexture);
             textures.push_back(spTexture);
             CRefObj<ISampler> spSampler;
-            CreateSampler(spGraphics.p, spTexture.p, &spSampler);
+			Caustic::CCausticFactory::Instance()->CreateSampler(spGraphics.p, spTexture.p, &spSampler);
             samplers.push_back(CSamplerRef(spSampler.p));
         }
 
@@ -340,7 +341,7 @@ namespace Caustic
                 m_width = textures[0]->GetWidth();
                 m_height = textures[0]->GetHeight();
             }
-            CreateTexture(spGraphics.p, m_width, m_height, DXGI_FORMAT_R8G8B8A8_UNORM, m_cpuFlags, m_bindFlags, &m_spOutputTexture);
+			Caustic::CCausticFactory::Instance()->CreateTexture(spGraphics.p, m_width, m_height, DXGI_FORMAT_R8G8B8A8_UNORM, m_cpuFlags, m_bindFlags, &m_spOutputTexture);
             CComPtr<ID3D11RenderTargetView> spRTView;
             CT(spDevice->CreateRenderTargetView(m_spOutputTexture->GetD3DTexture(), nullptr, &spRTView));
 
@@ -363,7 +364,7 @@ namespace Caustic
     {
         CRefObj<IGraphics> spGraphics;
         pPipeline->GetGraphics(&spGraphics);
-        CreateTexture(spGraphics.p, pSource->GetWidth(), pSource->GetHeight(), DXGI_FORMAT_R8G8B8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE, &m_spOutputTexture);
+		Caustic::CCausticFactory::Instance()->CreateTexture(spGraphics.p, pSource->GetWidth(), pSource->GetHeight(), DXGI_FORMAT_R8G8B8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE, &m_spOutputTexture);
         CComPtr<ID3D11DeviceContext> spCtx = spGraphics->GetContext();
         CComPtr<ID3D11Texture2D> spTexture = m_spOutputTexture->GetD3DTexture();
         D3D11_MAPPED_SUBRESOURCE mapinfo;
@@ -418,7 +419,7 @@ namespace Caustic
             m_width = spTexture->GetWidth();
             m_height = spTexture->GetHeight();
         }
-        CreateTexture(spGraphics.p, m_width, m_height, DXGI_FORMAT_R8G8B8A8_UNORM, m_cpuFlags, m_bindFlags, &m_spOutputTexture);
+		Caustic::CCausticFactory::Instance()->CreateTexture(spGraphics.p, m_width, m_height, DXGI_FORMAT_R8G8B8A8_UNORM, m_cpuFlags, m_bindFlags, &m_spOutputTexture);
         spCtx->CopyResource(m_spOutputTexture->GetD3DTexture(), spTexture->GetD3DTexture());
     }
 

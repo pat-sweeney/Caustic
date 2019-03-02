@@ -12,11 +12,6 @@
 namespace Caustic
 {
     //**********************************************************************
-    //! \brief CCamera defines our camera object
-    //!
-    //! The CCamera object defines our camera. We pass this to our IRenderer
-    //! to determine where to render from.
-    //**********************************************************************
     _declspec(align(16)) class CCamera : public ICamera, public CRefCount
     {
     protected:

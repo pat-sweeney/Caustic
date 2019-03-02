@@ -12,9 +12,10 @@ namespace Caustic
 {
     struct ICamera;
 
-    ///**********************************************************************
-    /// \brief IGraphics acts as a simple wrapper around our D3D renderer
-    ///**********************************************************************
+    //**********************************************************************
+    // Interface: IGraphics
+	// Defines a simple wrapper around our D3D renderer
+    //**********************************************************************
     struct IGraphics : public IRefCount
     {
         virtual CComPtr<ID3D11Device> GetDevice() = 0;

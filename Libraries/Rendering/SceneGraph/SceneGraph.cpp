@@ -5,19 +5,18 @@
 #include "stdafx.h"
 #include "Rendering\SceneGraph\SceneGraph.h"
 #include "SceneGraphImpl.h"
+#include "SceneFactory.h"
 
 namespace Caustic
 {
-    namespace Scene
+    CAUSTICAPI void CreateSceneGraph(ISceneGraph **ppGraph)
     {
-        CAUSTICAPI void CreateSceneGraph(ISceneGraph **ppGraph)
-        {
-            std::unique_ptr<CSceneGraph> spGraphObj(new CSceneGraph());
-            Scene::CreateGroupElem(&spGraphObj->m_spRoot);
-            *ppGraph = spGraphObj.release();
-            (*ppGraph)->AddRef();
-        }
-    };
+		CRefObj<ISceneGroupElem> spGroup;
+		CSceneFactory::Instance()->CreateGroupElem(&spGroup);
+		std::unique_ptr<CSceneGraph> spGraphObj(new CSceneGraph(spGroup.p));
+        *ppGraph = spGraphObj.release();
+        (*ppGraph)->AddRef();
+    }
 
     void CSceneGraph::Lock()
     {

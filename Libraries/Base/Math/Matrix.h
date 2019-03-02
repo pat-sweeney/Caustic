@@ -159,5 +159,7 @@ namespace Caustic
 		// translate - Returns translation components
 		//**********************************************************************
 		void Decompose(Vector3 *scale, Vector3 *shear, Vector3 *rotate, Vector3 *translate);
-    };
+
+		void Decompose(std::vector<Matrix4x4> &tm, bool undoshear);
+	};
 }

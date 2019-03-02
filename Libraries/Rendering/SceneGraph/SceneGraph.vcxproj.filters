@@ -34,6 +34,12 @@
     <ClInclude Include="SceneGraph.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="ISceneFactory.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneFactory.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -54,10 +60,8 @@
     <ClCompile Include="MaterialElem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="ReadMe.txt">
+    <ClCompile Include="SceneFactory.cpp">
       <Filter>Source Files</Filter>
-    </Text>
+    </ClCompile>
   </ItemGroup>
 </Project>

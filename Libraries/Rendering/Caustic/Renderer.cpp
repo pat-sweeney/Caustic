@@ -4,6 +4,7 @@
 //**********************************************************************
 #include "stdafx.h"
 #include "Rendering\Caustic\Caustic.h"
+#include "Rendering\Caustic\CausticFactory.h"
 #include "Renderer.h"
 #include <vector>
 #include <any>
@@ -327,12 +328,12 @@ namespace Caustic
     void CRenderer::DrawMesh(ISubMesh *pSubMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat)
     {
         CRefObj<IRenderMaterial> spFrontMaterial;
-        CreateRenderMaterial(this, pMaterial, pShader, &spFrontMaterial);
+		CCausticFactory::Instance()->CreateRenderMaterial(this, pMaterial, pShader, &spFrontMaterial);
         spFrontMaterial->SetDiffuseTexture(this, pTexture);
         CRefObj<IRenderMaterial> spBackMaterial;
         if (pSubMesh->GetMeshFlags() & EMeshFlags::TwoSided)
         {
-            CreateRenderMaterial(this, pMaterial, pShader, &spBackMaterial);
+			CCausticFactory::Instance()->CreateRenderMaterial(this, pMaterial, pShader, &spBackMaterial);
             spBackMaterial->SetDiffuseTexture(this, pTexture);
         }
         CRenderable renderable(this, pSubMesh, spFrontMaterial.p, spBackMaterial.p, mat);
@@ -554,15 +555,6 @@ namespace Caustic
         m_waitForShutdown.Set();
     }
 
-    //!**********************************************************************
-    //! \brief CreateGraphics creates a wrapper around our D3D device.
-    //! \param[in] hwnd HWND to attach D3D renderer to
-    //! \param[out] ppGraphics Returns the graphics device
-    //!
-    //! CreateRenderer creates the renderer object that the client will use to
-    //! talk to the renderer. This object runs on the clients thread and acts
-    //! only as a proxy for marshalling commands+data over to the renderer thread.
-    //!**********************************************************************
     CAUSTICAPI void CreateGraphics(HWND hwnd, IGraphics **ppGraphics)
     {
         _ASSERT(ppGraphics);
@@ -570,22 +562,13 @@ namespace Caustic
         spGraphics->Setup(hwnd, true);
 
         CRefObj<ICamera> spCamera;
-        CreateCamera(true, &spCamera);
+        CCausticFactory::Instance()->CreateCamera(true, &spCamera);
         spGraphics->SetCamera(spCamera.p);
 
         *ppGraphics = spGraphics.release();
         (*ppGraphics)->AddRef();
     }
 
-    //!**********************************************************************
-    //! \brief CreateRenderer creates our basic renderer object to be used by the client
-    //! \param[in] hwnd HWND to attach D3D renderer to
-    //! \param[out] ppRenderer Returns the created renderer
-    //!
-    //! CreateRenderer creates the renderer object that the client will use to
-    //! talk to the renderer. This object runs on the clients thread and acts
-    //! only as a proxy for marshalling commands+data over to the renderer thread.
-    //!**********************************************************************
     CAUSTICAPI void CreateRenderer(HWND hwnd, IRenderer **ppRenderer)
     {
         _ASSERT(ppRenderer);
@@ -593,7 +576,7 @@ namespace Caustic
         spRenderer->Setup(hwnd, true);
 
         CRefObj<ICamera> spCamera;
-        CreateCamera(true, &spCamera);
+		CCausticFactory::Instance()->CreateCamera(true, &spCamera);
         spRenderer->SetCamera(spCamera.p);
 
         *ppRenderer = spRenderer.release();
@@ -696,6 +679,6 @@ namespace Caustic
         InitializeD3D(hwnd);
 
         // Create a default camera
-        CreateCamera(false, &m_spCamera);
+		CCausticFactory::Instance()->CreateCamera(false, &m_spCamera);
     }
 }

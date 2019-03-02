@@ -277,16 +277,6 @@ namespace Caustic
         BuildIndexBufferGPU(pDevice, pIndexData, *pNumIndices, ppBuffer);
     }
 
-    //**********************************************************************
-    //! \brief Stores the renderable data from an ISubMesh to the specified stream.
-    //!
-    //! This function converts an ISubMesh into data that can later be converted into
-    //! an IRenderable object. This data is then saved to the specified stream. Later
-    //! the data can be loaded via this function's complementary function (LoadSubMeshRenderableDataFromStream())
-    //! and then pass the data to BuildIndexBufferGPU/BuildVertexBufferGPU to create an ID3D11Buffer object
-    //! from which an IRenderable object can be created from.
-    //!
-    //**********************************************************************
     CAUSTICAPI void StoreSubMeshRenderableDataToStream(IStream *pStream, ISubMesh *pMesh, int vertexVersion, int indexVersion)
     {
         std::vector<int> vertexReferenced(pMesh->GetNumberVertices(), c_Vertex_Unreferenced);

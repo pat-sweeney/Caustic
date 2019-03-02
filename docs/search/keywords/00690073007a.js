@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("isz",["Function"],[["IsZero",,[[,,,,0,"File:Libraries/Base/Core/Core.h:IsZero"]]]]);
+NDSearch.OnPrefixDataLoaded("isz",["Function"],[["IsZero",,[["Caustic",,,,0,"File:Libraries/Base/Core/Core.h:Caustic.IsZero","CClass:Caustic:IsZero"]]]]);

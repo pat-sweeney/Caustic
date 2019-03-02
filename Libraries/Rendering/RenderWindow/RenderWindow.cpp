@@ -1,11 +1,13 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2018
+// Copyright Patrick Sweeney 2018-2019
 // All Rights Reserved
 //**********************************************************************
 #include "stdafx.h"
 #include "Base\Core\Core.h"
 #include "Rendering\RenderWindow\RenderWindow.h"
 #include "Rendering\SceneGraph\SceneGraph.h"
+#include "Rendering\SceneGraph\SceneFactory.h"
+#include "Rendering\Caustic\CausticFactory.h"
 #include <Windows.h>
 
 namespace Caustic
@@ -19,15 +21,15 @@ namespace Caustic
 
     CRenderWindow::CRenderWindow(HWND hwnd)
     {
-        Caustic::CreateRendererMarshaller(&m_spMarshaller);
+        Caustic::CCausticFactory::Instance()->CreateRendererMarshaller(&m_spMarshaller);
         m_spMarshaller->Initialize(hwnd);
-        Scene::CreateSceneGraph(&m_spSceneGraph);
+		CSceneFactory::Instance()->CreateSceneGraph(&m_spSceneGraph);
         m_spMarshaller->SetSceneGraph(m_spSceneGraph.p);
-        CreateCamera(true, &m_spCamera);
+		Caustic::CCausticFactory::Instance()->CreateCamera(true, &m_spCamera);
         CRefObj<IRenderer> spRenderer;
         m_spMarshaller->GetRenderer(&spRenderer);
         spRenderer->SetCamera(m_spCamera.p);
-        CreateTrackball(&m_spTrackball);
+		Caustic::CCausticFactory::Instance()->CreateTrackball(&m_spTrackball);
         m_hwnd = hwnd;
     }
     

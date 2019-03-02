@@ -10,7 +10,9 @@
 namespace Caustic
 {
     //**********************************************************************
-    //! \brief CRenderable defines a self contained renderable object
+    // Class: CRenderMaterial
+	// Defines a render material (material attributes, shaders, and textures).
+	// This can be applied to a renderable object.
     //**********************************************************************
     class CRenderMaterial :
         public IRenderMaterial,
@@ -27,7 +29,7 @@ namespace Caustic
         CRefObj<ISampler> m_spSpecularSampler;
     public:
         friend class CRenderer;
-        friend void CreateRenderMaterial(IGraphics *pGraphics, IMaterialAttrib *pMaterialAttrib, IShader *pShader, IRenderMaterial **ppRenderMaterial);
+        friend CAUSTICAPI void CreateRenderMaterial(IGraphics *pGraphics, IMaterialAttrib *pMaterialAttrib, IShader *pShader, IRenderMaterial **ppRenderMaterial);
 
         //**********************************************************************
         // IRefCount

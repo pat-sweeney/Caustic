@@ -7,7 +7,9 @@
 #include "Base\Core\Core.h"
 #include "Base\Core\IRefCount.h"
 #include "Rendering\RenderWindow\IRenderWindow.h"
+#include "Rendering\Caustic\ICausticFactory.h"
 #include "Rendering\SceneGraph\SceneGraph.h"
+#include "Rendering\SceneGraph\ISceneFactory.h"
 #include "Geometry\MeshImport\MeshImport.h"
 #include <Windows.h>
 #include <commdlg.h>
@@ -17,11 +19,13 @@
 using namespace Caustic;
 
 CRefObj<IRenderWindow> spRenderWindow;
+CRefObj<Caustic::ICausticFactory> spCausticFactory;
+CRefObj<Caustic::ISceneFactory> spSceneFactory;
 
 void AddPointLight(Vector3 &lightPos)
 {
     CRefObj<IScenePointLightElem> spLightElem;
-    Scene::CreatePointLightElem(&spLightElem);
+    spSceneFactory->CreatePointLightElem(&spLightElem);
     spLightElem->SetPosition(lightPos);
     Vector3 lightColor(1.0f, 1.0f, 1.0f);
     spLightElem->SetColor(lightColor);
@@ -30,7 +34,8 @@ void AddPointLight(Vector3 &lightPos)
 
 void InitializeCaustic(HWND hwnd)
 {
-    Caustic::CausticSetup();
+	Caustic::CreateSceneFactory(&spSceneFactory);
+	Caustic::CreateCausticFactory(&spCausticFactory);
     CreateRenderWindow(hwnd, &spRenderWindow);
     Vector3 lightPos(10.0f, 10.0f, 0.0f);
     AddPointLight(lightPos);
@@ -188,7 +193,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     {
                         wchar_t *ext = StrRChrW(fn, nullptr, L'.');
                         CRefObj<ISceneMeshElem> spElem;
-                        Scene::CreateMeshElem(&spElem);
+                        spSceneFactory->CreateMeshElem(&spElem);
                         CRefObj<IMesh> spMesh = nullptr;
                         if (StrCmpW(ext, L".obj") == 0)
                             spMesh = Caustic::MeshImport::LoadObj(fn);
@@ -197,7 +202,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                         spElem->SetMesh(spMesh.p);
 
                         CRefObj<ISceneMaterialElem> spMaterialElem;
-                        Scene::CreateMaterialElem(&spMaterialElem);
+                        spSceneFactory->CreateMaterialElem(&spMaterialElem);
 
                         CRefObj<IMaterialAttrib> spMaterial;
                         spMaterialElem->GetMaterial(&spMaterial);

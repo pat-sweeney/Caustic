@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("clo",["Function"],[["Close",,[["IDelaunay2",,,,0,"File:Libraries/Geometry/Mesh/IDelaunay.h:IDelaunay2.Close","CClass:IDelaunay2:Close"]]]]);

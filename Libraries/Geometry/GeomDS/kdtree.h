@@ -20,7 +20,7 @@ namespace Caustic
     };
 
     //**********************************************************************
-    //! \brief CKDTreeNode defines a single cutting plane in the tree
+    // CKDTreeNode defines a single cutting plane in the tree
     //**********************************************************************
     struct CKDTreeNode
     {
@@ -39,7 +39,7 @@ namespace Caustic
     };
  
     //**********************************************************************
-    //! \brief CKDTree defines a K-D tree used for storing/lookup of vertex data
+    // CKDTree defines a K-D tree used for storing/lookup of vertex data
     //**********************************************************************
     class CKDTree : public IKDTree, public CRefCount
     {

@@ -4,6 +4,7 @@
 //**********************************************************************
 #include "stdafx.h"
 #include "Sampler.h"
+#include "CausticFactory.h"
 
 namespace Caustic
 {
@@ -40,7 +41,7 @@ namespace Caustic
         else
         {
             // No valid texture?! Checkerboard it
-            CRefObj<ITexture> spTexture = CheckboardTexture(pGraphics);
+            CRefObj<ITexture> spTexture = CCausticFactory::Instance()->CheckerboardTexture(pGraphics);
             CComPtr<ID3D11ShaderResourceView> spResource = spTexture->GetD3DTextureRV();
             pGraphics->GetContext()->PSSetShaderResources(slot, 1, &spResource.p);
         }

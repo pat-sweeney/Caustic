@@ -144,9 +144,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <CustomBuild Include="Textured.ps">
       <ExcludedFromBuild>false</ExcludedFromBuild>
       <EntryPointName>PS</EntryPointName>
@@ -317,6 +314,8 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Caustic.h" />
+    <ClInclude Include="CausticFactory.h" />
+    <ClInclude Include="ICausticFactory.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="RendererMarshaller.h" />
     <ClInclude Include="DefaultPS.h" />
@@ -337,7 +336,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Caustic.cpp" />
+    <ClCompile Include="CausticFactory.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="RendererMarshaller.cpp" />
     <ClCompile Include="MeshToVB.cpp" />

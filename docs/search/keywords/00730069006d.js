@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("sim",["Function"],[["Simplify",,[["IPolygon2",,,,0,"File:Libraries/Geometry/GeomDS/IPolygon.h:IPolygon2.Simplify","CClass:IPolygon2:Simplify"]]]]);

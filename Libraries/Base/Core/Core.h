@@ -11,6 +11,7 @@
 #define CAUSTICAPI extern
 #endif
 
+// Namespace: Caustic
 namespace Caustic
 {
     // Define the basic types used throughout Caustic

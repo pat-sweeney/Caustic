@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("cca",["Function"],[["CCamera",,[[,,,,0,"File:Libraries/Rendering/Caustic/Camera.cpp:CCamera"]]]]);

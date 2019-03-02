@@ -5,20 +5,19 @@
 #include "stdafx.h"
 #include "Rendering\SceneGraph\SceneGraph.h"
 #include "PointLightElem.h"
+#include "Rendering\Caustic\CausticFactory.h"
 #include <string>
 
 namespace Caustic
 {
-    namespace Scene
+    CAUSTICAPI void CreatePointLightElem(IScenePointLightElem **ppElem)
     {
-        CAUSTICAPI void CreatePointLightElem(IScenePointLightElem **ppElem)
-        {
-            std::unique_ptr<CPointLightElem> spPointLightObj(new CPointLightElem());
-            CreatePointLight(Vector3(0.0f, 0.0f, 0.0f), &spPointLightObj->m_spPointLight);
-            *ppElem = spPointLightObj.release();
-            (*ppElem)->AddRef();
-        }
-    };
+		CRefObj<IPointLight> spPointLight;
+		Caustic::CCausticFactory::Instance()->CreatePointLight(Vector3(0.0f, 0.0f, 0.0f), &spPointLight);
+		std::unique_ptr<CPointLightElem> spPointLightObj(new CPointLightElem(spPointLight.p));
+        *ppElem = spPointLightObj.release();
+        (*ppElem)->AddRef();
+    }
 
     std::wstring &CPointLightElem::Name()
     {

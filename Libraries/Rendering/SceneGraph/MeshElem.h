@@ -9,7 +9,11 @@
 
 namespace Caustic
 {
-    class CSceneMeshElem :
+	//**********************************************************************
+	// Class: CSceneMeshElem
+	// Defines a mesh element in our scene graph
+	//**********************************************************************
+	class CSceneMeshElem :
         public CSceneElem,
         public ISceneMeshElem,
         public CRefCount
@@ -17,7 +21,11 @@ namespace Caustic
         CRefObj<IMesh> m_spMesh;
         std::vector<CRefObj<IRenderable>> m_renderables;
     public:
-        CSceneMeshElem()
+		//**********************************************************************
+		// Constructor: CSceneMeshElem
+		// Default constructor
+		//**********************************************************************
+		CSceneMeshElem()
         {
         }
 

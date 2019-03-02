@@ -80,13 +80,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="GroupElem.h" />
+    <ClInclude Include="ISceneFactory.h" />
     <ClInclude Include="MaterialElem.h" />
     <ClInclude Include="MeshElem.h" />
     <ClInclude Include="PointLightElem.h" />
+    <ClInclude Include="SceneFactory.h" />
     <ClInclude Include="SceneGraph.h" />
     <ClInclude Include="SceneGraphImpl.h" />
     <ClInclude Include="stdafx.h" />
@@ -97,6 +96,7 @@
     <ClCompile Include="MaterialElem.cpp" />
     <ClCompile Include="MeshElem.cpp" />
     <ClCompile Include="PointLightElem.cpp" />
+    <ClCompile Include="SceneFactory.cpp" />
     <ClCompile Include="SceneGraph.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

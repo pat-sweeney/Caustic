@@ -33,7 +33,7 @@ namespace Caustic
         //**********************************************************************
         // ITexture
         //**********************************************************************
-        virtual uint32 GetWidth() override;
+		virtual uint32 GetWidth() override;
         virtual uint32 GetHeight() override;
         virtual DXGI_FORMAT GetFormat() override;
         virtual void Update(IGraphics * /*pGraphics*/) override {}

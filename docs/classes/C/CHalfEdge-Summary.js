@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:CHalfEdge","CHalfEdge");NDSummary.OnSummaryLoaded("CClass:CHalfEdge",[["C/C++","C"]],[["Classes","Class"]],[[811,0,0,"CHalfEdge"]]);

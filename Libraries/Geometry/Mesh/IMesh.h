@@ -17,31 +17,146 @@
 namespace Caustic
 {
     //**********************************************************************
-    //! \brief Defines the attributes associated with a material.
-    //!
-    //! IMaterial is used for manipulating the materials assigned to a mesh.
-    //! Each \link ISubMesh \endlink may have a single material assigned to it.
+    // Interface: IMaterialAttrib
+    // IMaterial is used for manipulating the materials assigned to a mesh.
+    // Each ISubMesh may have a single material assigned to it.
     //**********************************************************************
     struct IMaterialAttrib : public ISerialize
     {
-        virtual Vector3 GetAmbientColor() = 0;
-        virtual Vector3 GetDiffuseColor() = 0;
-        virtual Vector3 GetSpecularColor() = 0;
-        virtual float GetSpecularExp() = 0;
-        virtual float GetAlpha() = 0;
-        virtual uint32 GetMaterialID() = 0;
-        virtual void SetAmbientColor(Vector3 &v) = 0;
-        virtual void SetDiffuseColor(Vector3 &v) = 0;
-        virtual void SetSpecularColor(Vector3 &v) = 0;
-        virtual void SetSpecularExp(float v) = 0;
-        virtual void SetAlpha(float v) = 0;
-        virtual void SetMaterialID(uint32 v) = 0;
-        virtual void SetAmbientTexture(std::string p) = 0;
-        virtual void SetDiffuseTexture(std::string p) = 0;
-        virtual void SetSpecularTexture(std::string p) = 0;
-        virtual std::string GetAmbientTexture() = 0;
-        virtual std::string GetDiffuseTexture() = 0;
-        virtual std::string GetSpecularTexture() = 0;
+		//**********************************************************************
+		// Method: GetAmbientColor
+		// Returns the ambient color for the material
+		//**********************************************************************
+		virtual Vector3 GetAmbientColor() = 0;
+
+		//**********************************************************************
+		// Method: GetDiffuseColor
+		// Returns the diffuse color for the material
+		//**********************************************************************
+		virtual Vector3 GetDiffuseColor() = 0;
+
+		//**********************************************************************
+		// Method: GetSpecularColor
+		// Returns the specular color for the material
+		//**********************************************************************
+		virtual Vector3 GetSpecularColor() = 0;
+
+		//**********************************************************************
+		// Method: GetSpecularExp
+		// Returns the specular color's exponent
+		//**********************************************************************
+		virtual float GetSpecularExp() = 0;
+
+		//**********************************************************************
+		// Method: GetAlpha
+		// Returns the alpha value for the material. 0.0 = transparent; 1.0 = opaque
+		//**********************************************************************
+		virtual float GetAlpha() = 0;
+
+		//**********************************************************************
+		// Method: GetMaterialID
+		// Returns a unique Id associated with this material
+		//**********************************************************************
+		virtual uint32 GetMaterialID() = 0;
+
+		//**********************************************************************
+		// Method: SetAmbientColor
+		// Sets the ambient color
+		//
+		// Parameters:
+		// v - color value (0.0 to 1.0) to set ambient color to
+		//**********************************************************************
+		virtual void SetAmbientColor(Vector3 &v) = 0;
+
+		//**********************************************************************
+		// Method: SetDiffuseColor
+		// Sets the diffuse color
+		//
+		// Parameters:
+		// v - color value (0.0 to 1.0) to set diffuse color to
+		//**********************************************************************
+		virtual void SetDiffuseColor(Vector3 &v) = 0;
+
+		//**********************************************************************
+		// Method: SetSpecularColor
+		// Sets the specular color
+		//
+		// Parameters:
+		// v - color value (0.0 to 1.0) to set specular color to
+		//**********************************************************************
+		virtual void SetSpecularColor(Vector3 &v) = 0;
+
+		//**********************************************************************
+		// Method: SetSpecularExp
+		// Sets the specular exponent
+		//
+		// Parameters:
+		// v - value for the specular component
+		//**********************************************************************
+		virtual void SetSpecularExp(float v) = 0;
+
+		//**********************************************************************
+		// Method: SetAlpha
+		// Sets the alpha component
+		//
+		// Parameters:
+		// v - value for the alpha component. 0.0 = transparent, 1.0 = opaque
+		//**********************************************************************
+		virtual void SetAlpha(float v) = 0;
+
+		//**********************************************************************
+		// Method: SetMaterialID
+		// Sets the material's unique ID
+		//
+		// Parameters:
+		// v - material identifier
+		//**********************************************************************
+		virtual void SetMaterialID(uint32 v) = 0;
+
+		//**********************************************************************
+		// Method: SetAmbientTexture
+		// Sets the ambient texture
+		//
+		// Parameters:
+		// v - Path to ambient texture file
+		//**********************************************************************
+		virtual void SetAmbientTexture(std::string p) = 0;
+
+		//**********************************************************************
+		// Method: SetDiffuseTexture
+		// Sets the diffuse texture
+		//
+		// Parameters:
+		// v - Path to diffuse texture file
+		//**********************************************************************
+		virtual void SetDiffuseTexture(std::string p) = 0;
+
+		//**********************************************************************
+		// Method: SetSpecularTexture
+		// Sets the specular texture
+		//
+		// Parameters:
+		// v - Path to specular texture file
+		//**********************************************************************
+		virtual void SetSpecularTexture(std::string p) = 0;
+
+		//**********************************************************************
+		// Method: GetAmbientTexture
+		// Returns the ambient texture filename
+		//**********************************************************************
+		virtual std::string GetAmbientTexture() = 0;
+
+		//**********************************************************************
+		// Method: GetDiffuseTexture
+		// Returns the diffuse texture filename
+		//**********************************************************************
+		virtual std::string GetDiffuseTexture() = 0;
+
+		//**********************************************************************
+		// Method: GetSpecularTexture
+		// Returns the specular texture filename
+		//**********************************************************************
+		virtual std::string GetSpecularTexture() = 0;
     };
 
     CAUSTICAPI void CreateMaterial(Vector3 ambientColor, Vector3 diffuseColor, 
@@ -83,7 +198,8 @@ namespace Caustic
     class CFace;
     
     //**********************************************************************
-    //! \brief CHalfEdge defines a single half edge on our graph
+    // Class: CHalfEdge
+	// Defines a single half edge on our graph
     //**********************************************************************
     class CHalfEdge
     {
@@ -116,7 +232,8 @@ namespace Caustic
     };
 
     //**********************************************************************
-    //! \brief CFace defines a face in our CMesh
+    // Class: CFace
+	// Defines a face in our CMesh
     //**********************************************************************
     class CFace
     {
@@ -142,7 +259,8 @@ namespace Caustic
     };
     
     //**********************************************************************
-    //! \brief EVertexFlags define flags describing what fields are available in a SVertex
+    // Enum: EVertexFlags
+	// Define flags describing what fields are available in a SVertex
     //**********************************************************************
     enum EVertexFlags
     {
@@ -155,8 +273,8 @@ namespace Caustic
     };
 
     //**********************************************************************
-    //! \brief ETriangulateMethod defines the method used for converting
-    //! a polygonal mesh into a trianglar mesh.
+    // Enum: ETriangulateMethod
+	// Defines the method used for converting a polygonal mesh into a trianglar mesh.
     //**********************************************************************
     enum ETriangulateMethod
     {
@@ -167,7 +285,8 @@ namespace Caustic
     const uint32 c_InvalidIndex = 0xffffffff;
 
     //**********************************************************************
-    //! \brief Defines various flags associated with an ISubMesh
+    // Enum: EMeshFlags
+	// Defines various flags associated with an ISubMesh
     //**********************************************************************
     enum EMeshFlags
     {
@@ -175,11 +294,10 @@ namespace Caustic
     };
 
     //**********************************************************************
-    //! \brief ISubMesh defines the public interface used to manipulate a submesh
-    //!
-    //! ISubMesh is used by clients for manipulating a submesh. A submesh contains
-    //! actual mesh data. This is different from a mesh object which is just
-    //! a collection of submesh objects.
+    // Interface: ISubMesh
+    // ISubMesh is used by clients for manipulating a submesh. A submesh contains
+    // actual mesh data. This is different from a mesh object which is just
+    // a collection of submesh objects.
     //**********************************************************************
     struct ISubMesh : public ISerialize
     {
@@ -205,11 +323,11 @@ namespace Caustic
     };
 
     //**********************************************************************
-    //! \brief IMesh defines the public interface used to manipulate a mesh
-    //!
-    //! IMesh is simply a collection of submesh objects (ISubMesh).
-    //! NOTE: This mesh is different from a renderable mesh. There is a function
-    //! MeshToD3D which will convert the mesh into a renderable mesh.
+    // Interface: IMesh
+    // IMesh is simply a collection of submesh objects (ISubMesh).
+	//
+    // NOTE: This mesh is different from a renderable mesh. There is a function
+    // MeshToD3D which will convert the mesh into a renderable mesh.
     //**********************************************************************
     struct IMesh : public ISerialize
     {

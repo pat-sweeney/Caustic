@@ -33,9 +33,9 @@ namespace Caustic
 		//**********************************************************************
 		virtual void Store(IStream *pStream, std::function<void(ISceneElem *pElem)> func);
 
-//======================================================================
-// IUnknown
-//======================================================================
+	//======================================================================
+	// IUnknown
+	//======================================================================
 
 		//**********************************************************************
 		// Method: AddRef
@@ -49,9 +49,9 @@ namespace Caustic
 		//**********************************************************************
 		virtual uint32 Release() override { return CRefCount::Release(); }
 
-//======================================================================
-// ISceneElem
-//======================================================================
+	//======================================================================
+	// ISceneElem
+	//======================================================================
 
 		//**********************************************************************
 		// Method: GetType
@@ -103,19 +103,77 @@ namespace Caustic
 		//**********************************************************************
 		virtual void SetFlags(uint32 flags) override { m_Flags = flags; }
 
-//======================================================================
-// ISerialize
-//======================================================================
+	//======================================================================
+	// ISerialize
+	//======================================================================
+		//**********************************************************************
+		// Method: Load
+		// Loads the group element from the specified stream
+		//
+		// Parameters:
+		// pStream - stream to read from
+		//**********************************************************************
 		virtual void Load(IStream *pStream) override;
-        virtual void Store(IStream *pStream) override;
 
-//======================================================================
-// ISceneGroupElem
-//======================================================================
+		//**********************************************************************
+		// Method: Store
+		// Saves the group element to the specified stream
+		//
+		// Parameters:
+		// pStream - stream to write to
+		//**********************************************************************
+		virtual void Store(IStream *pStream) override;
+
+	//======================================================================
+	// ISceneGroupElem
+	//======================================================================
+		//**********************************************************************
+		// Method: NumberChildren
+		// Returns the number of scene elements in the group
+		//
+		// Returns:
+		// Returns the number of children in the group
+		//**********************************************************************
 		virtual uint32 NumberChildren() override;
-        virtual CRefObj<ISceneElem> GetChild(uint32 index) override;
-        virtual void AddChild(ISceneElem *pElem) override;
-        virtual void InsertChild(ISceneElem *pElem, uint32 index) override;
-        virtual void SetTransform(Matrix4x4 &transform) override { m_Transform = transform; }
+
+		//**********************************************************************
+		// Method: GetChild
+		// Returns the Nth child in the group
+		//
+		// Parameters:
+		// index - index of element to return
+		//
+		// Returns:
+		// Returns the element at index
+		//**********************************************************************
+		virtual CRefObj<ISceneElem> GetChild(uint32 index) override;
+
+		//**********************************************************************
+		// Method: AddChild
+		// Adds a child element to the group
+		//
+		// Parameters:
+		// pElem - element to add
+		//**********************************************************************
+		virtual void AddChild(ISceneElem *pElem) override;
+
+		//**********************************************************************
+		// Method: InsertChild
+		// Adds a child element to the group at position 'index'
+		//
+		// Parameters:
+		// pElem - element to add
+		// index - index to insert element at
+		//**********************************************************************
+		virtual void InsertChild(ISceneElem *pElem, uint32 index) override;
+
+		//**********************************************************************
+		// Method: SetTransform
+		// Sets the transform for the group
+		//
+		// Parameters:
+		// transform - transform to apply to group (and its children)
+		//**********************************************************************
+		virtual void SetTransform(Matrix4x4 &transform) override { m_Transform = transform; }
     };
 }

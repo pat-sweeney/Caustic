@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:CFace","CFace");NDSummary.OnSummaryLoaded("CClass:CFace",[["C/C++","C"]],[["Classes","Class"],["Enums","Enumeration"],["Groups","Group"]],[[812,0,0,"CFace"],[813,0,2,"Types","Types"],[814,0,1,"EVertexFlags","EVertexFlags"],[815,0,1,"ETriangulateMethod","ETriangulateMethod"],[816,0,1,"EMeshFlags","EMeshFlags"]]);
