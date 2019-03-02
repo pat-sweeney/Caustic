@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("inv",["Function"],[["Inverse",,[["Matrix4x4",,,,0,"File:Libraries/Base/Math/Matrix.h:Matrix4x4.Inverse","CClass:Matrix4x4:Inverse"]]]]);

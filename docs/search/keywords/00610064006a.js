@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("adj",["Function"],[["Adjoint",,[["Matrix4x4",,,,0,"File:Libraries/Base/Math/Matrix.h:Matrix4x4.Adjoint","CClass:Matrix4x4:Adjoint"]]]]);

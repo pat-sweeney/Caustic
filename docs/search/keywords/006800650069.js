@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("hei",["Property"],[["Height",,[["PsiEditor.VisualNode",,,,0,"File:Tools/PsiEditor/VisualNode.cs:PsiEditor.VisualNode.Height","CSharpClass:PsiEditor.VisualNode:Height"]]]]);

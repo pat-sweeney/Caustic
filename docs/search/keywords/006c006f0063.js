@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("loc",["Function"],[["Lock",,[["ISceneGraph",,,,0,"File:Libraries/Rendering/SceneGraph/SceneGraph.h:ISceneGraph.Lock","CClass:ISceneGraph:Lock"]]]]);

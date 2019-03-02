@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("sce",["Class","Struct","Constant"],[["Scene",,[[,,,,0,"File:Libraries/Rendering/SceneGraph/SceneGraph.h:Scene","CClass:Scene"]]],["SceneCtx",,[[,,,,1,"File:Libraries/Rendering/SceneGraph/SceneGraph.h:SceneCtx","CClass:SceneCtx"]]],["SceneGraph",,[[,,,,2,"File:Libraries/Rendering/SceneGraph/SceneGraph.h:SceneGraph"]]]]);

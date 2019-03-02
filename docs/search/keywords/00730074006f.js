@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("sto",["Function"],[["Store",,[["CSceneGroupElem",,,,0,"File:Libraries/Rendering/SceneGraph/GroupElem.h:CSceneGroupElem.Store","CClass:CSceneGroupElem:Store"],["ISerialize",,,,0,"File:Libraries/Base/Core/ISerialize.h:ISerialize.Store","CClass:ISerialize:Store"]]]]);

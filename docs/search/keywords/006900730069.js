@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("isi",["Property"],[["IsInput",,[["PsiEditor.DispConnector",,,,0,"File:Tools/PsiEditor/DispConnector.cs:PsiEditor.DispConnector.IsInput","CSharpClass:PsiEditor.DispConnector:IsInput"]]]]);

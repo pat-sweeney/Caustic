@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("ope",["Function","Class"],[["operator*",,[["Quaternion",,,,0,"File:Libraries/Base/Math/Quaternion.h:Quaternion.operator*","CClass:Quaternion:operator*"]]],["Operators",,[["PsiEditor",,,,1,"File:Tools/PsiEditor/MainWindow.xaml.cs:PsiEditor.Operators","CSharpClass:PsiEditor.Operators"]]]]);

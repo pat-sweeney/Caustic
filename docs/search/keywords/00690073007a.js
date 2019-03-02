@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("isz",["Function"],[["IsZero",,[[,,,,0,"File:Libraries/Base/Core/Core.h:IsZero"]]]]);

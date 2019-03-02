@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("cro",["Function"],[["CropClick",,[["PsiEditor.MainWindow",,,,0,"File:Tools/PsiEditor/MainWindow.xaml.cs:PsiEditor.MainWindow.CropClick","CSharpClass:PsiEditor.MainWindow:CropClick"]]],["Cross",,[["Vector2",,,,0,"File:Libraries/Base/Math/Vector.h:Vector2.Cross","CClass:Vector2:Cross"]]]]);

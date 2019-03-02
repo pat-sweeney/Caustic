@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("web",["Function"],[["WebCamClick",,[["PsiEditor.MainWindow",,,,0,"File:Tools/PsiEditor/MainWindow.xaml.cs:PsiEditor.MainWindow.WebCamClick","CSharpClass:PsiEditor.MainWindow:WebCamClick"]]]]);

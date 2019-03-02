@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("mer",["Function"],[["Merge",,[["ISceneGraph",,,,0,"File:Libraries/Rendering/SceneGraph/SceneGraph.h:ISceneGraph.Merge","CClass:ISceneGraph:Merge"],["UPCInput.Program",,,,0,"File:Tools/UPCInput/Program.cs:UPCInput.Program.Merge","CSharpClass:UPCInput.Program:Merge"]]]]);

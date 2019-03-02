@@ -1,1 +1,0 @@
-NDSummary.OnToolTipsLoaded("File:Libraries/Base/Math/OBBox.h",{160:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines a oriented bounding box (in 2D)</div></div>",161:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines a oriented bounding box (in 3D)</div></div>"});

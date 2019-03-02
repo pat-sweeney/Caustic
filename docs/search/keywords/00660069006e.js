@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("fin",["Function"],[["FindConnector",,[["PsiEditor.DispNode",,,,0,"File:Tools/PsiEditor/DispNode.cs:PsiEditor.DispNode.FindConnector","CSharpClass:PsiEditor.DispNode:FindConnector"]]],["FindShader",,[["IShaderMgr",,,,0,"File:Libraries/Rendering/Caustic/Caustic.h:IShaderMgr.FindShader","CClass:IShaderMgr:FindShader"]]]]);
