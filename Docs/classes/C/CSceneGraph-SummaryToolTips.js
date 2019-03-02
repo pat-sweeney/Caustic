@@ -1,1 +1,0 @@
-NDSummary.OnToolTipsLoaded("CClass:CSceneGraph",{642:"<div class=\"NDToolTip TClass LC\"><div class=\"NDClassPrototype\" id=\"NDClassPrototype642\"><div class=\"CPEntry TClass Current\"><div class=\"CPName\">CSceneGraph</div></div></div><div class=\"TTSummary\">Defines our scene graph</div></div>"});

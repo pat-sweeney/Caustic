@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("beg",["Function"],[["BeginTracking",,[["ITrackball",,,,0,"File:Libraries/Rendering/Caustic/Caustic.h:ITrackball.BeginTracking","CClass:ITrackball:BeginTracking"]]]]);

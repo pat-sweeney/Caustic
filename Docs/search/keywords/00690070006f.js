@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("ipo",["Interface"],[["IPointLight",,[[,,,,0,"File:Libraries/Rendering/Caustic/Caustic.h:IPointLight","CClass:IPointLight"]]]]);
