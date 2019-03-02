@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("File:Tools/UPCReader/App.xaml.cs","App.xaml.cs");NDSummary.OnSummaryLoaded("File:Tools/UPCReader/App.xaml.cs",[["C#","CSharp"]],[["Classes","Class"]],[[619,0,0,"<span class=\"Qualifier\">UPCReader.</span>&#8203;App","UPCReader.App"]]);
+NDFramePage.OnPageTitleLoaded("File:Tools/UPCReader/App.xaml.cs","App.xaml.cs");NDSummary.OnSummaryLoaded("File:Tools/UPCReader/App.xaml.cs",[["C#","CSharp"]],[["Classes","Class"]],[[768,0,0,"<span class=\"Qualifier\">UPCReader.</span>&#8203;App","UPCReader.App"]]);

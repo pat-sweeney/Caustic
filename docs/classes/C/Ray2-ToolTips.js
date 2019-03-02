@@ -1,1 +1,1 @@
-NDContentPage.OnToolTipsLoaded({149:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines a simple vector with 2 components</div></div>",160:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines results of a 2D ray intersection</div></div>"});
+NDContentPage.OnToolTipsLoaded({149:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines a simple vector with 2 components</div></div>",194:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines results of a 2D ray intersection</div></div>"});

@@ -1,1 +1,1 @@
-NDSummary.OnToolTipsLoaded("CClass:RayIntersect3",{166:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines results of a 3D ray intersection</div></div>"});
+NDSummary.OnToolTipsLoaded("CClass:RayIntersect3",{200:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines results of a 3D ray intersection</div></div>"});

@@ -1,1 +1,1 @@
-NDSummary.OnToolTipsLoaded("CClass:OBBox3",{176:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines a oriented bounding box (in 3D)</div></div>"});
+NDSummary.OnToolTipsLoaded("CClass:OBBox3",{161:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines a oriented bounding box (in 3D)</div></div>"});
