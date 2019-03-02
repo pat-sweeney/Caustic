@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:CSceneGraph","CSceneGraph");NDSummary.OnSummaryLoaded("CClass:CSceneGraph",[["C/C++","C"]],[["Classes","Class"]],[[344,0,0,"CSceneGraph"]]);

@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:ETrackballConstrain","ETrackballConstrain");NDSummary.OnSummaryLoaded("CClass:ETrackballConstrain",[["C/C++","C"]],[["Classes","Class"]],[[312,0,0,"ETrackballConstrain"]]);

@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("map",["Function"],[["MapKey",,[["IRenderWindow",,,,0,"File:Libraries/Rendering/RenderWindow/IRenderWindow.h:IRenderWindow.MapKey","CClass:IRenderWindow:MapKey"]]]]);

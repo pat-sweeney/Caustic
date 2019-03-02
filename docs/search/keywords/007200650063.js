@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("rec",["Variable"],[["rect",,[["PsiEditor.DispNode",,,,0,"File:Tools/PsiEditor/DispNode.cs:PsiEditor.DispNode.rect","CSharpClass:PsiEditor.DispNode:rect"]]]]);

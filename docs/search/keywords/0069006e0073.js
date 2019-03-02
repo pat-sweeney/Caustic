@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("ins",["Function"],[["InsertChild",,[["CSceneGroupElem",,,,0,"File:Libraries/Rendering/SceneGraph/GroupElem.h:CSceneGroupElem.InsertChild","CClass:CSceneGroupElem:InsertChild"],["ISceneGroupElem",,,,0,"File:Libraries/Rendering/SceneGraph/SceneGraph.h:ISceneGroupElem.InsertChild","CClass:ISceneGroupElem:InsertChild"]]]]);

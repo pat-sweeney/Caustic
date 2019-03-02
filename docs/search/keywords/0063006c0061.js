@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("cla",["Function"],[["Clamp",,[[,,,,0,"File:Libraries/Base/Core/Core.h:Clamp"]]]]);

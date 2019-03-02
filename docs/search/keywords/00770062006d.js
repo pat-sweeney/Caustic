@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("wbm",["Variable"],[["wbm",,[["ImageToMesh.MainWindow",,,,0,"File:Apps/ImageToMesh/MainWindow.xaml.cs:ImageToMesh.MainWindow.wbm","CSharpClass:ImageToMesh.MainWindow:wbm"]]],["wbm2",,[["ImageToMesh.MainWindow",,,,0,"File:Apps/ImageToMesh/MainWindow.xaml.cs:ImageToMesh.MainWindow.wbm2","CSharpClass:ImageToMesh.MainWindow:wbm2"]]]]);

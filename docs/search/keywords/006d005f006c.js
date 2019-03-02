@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("m_l",["Property"],[["m_lights",,[["SceneCtx",,,,0,"File:Libraries/Rendering/SceneGraph/SceneGraph.h:SceneCtx.m_lights","CClass:SceneCtx:m_lights"]]]]);

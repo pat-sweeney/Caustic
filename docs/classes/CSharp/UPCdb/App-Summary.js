@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CSharpClass:UPCdb.App","App");NDSummary.OnSummaryLoaded("CSharpClass:UPCdb.App",[["C#","CSharp"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[708,0,0,"<span class=\"Qualifier\">UPCdb.</span>&#8203;App"],[709,0,2,"Functions","Functions"],[710,0,1,"InitializeComponent","InitializeComponent"],[711,0,1,"Main","Main"]]);

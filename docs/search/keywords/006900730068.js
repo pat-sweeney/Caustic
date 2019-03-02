@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("ish",["Interface"],[["IShader",,[[,,,,0,"File:Libraries/Rendering/Caustic/Caustic.h:IShader","CClass:IShader"]]],["IShaderMgr",,[[,,,,0,"File:Libraries/Rendering/Caustic/Caustic.h:IShaderMgr","CClass:IShaderMgr"]]]]);

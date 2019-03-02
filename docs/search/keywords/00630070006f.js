@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("cpo",["Class"],[["CPointLightElem",,[[,,,,0,"File:Libraries/Rendering/SceneGraph/PointLightElem.h:CPointLightElem","CClass:CPointLightElem"]]]]);

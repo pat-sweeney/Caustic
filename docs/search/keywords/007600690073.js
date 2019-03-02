@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("vis",["Class"],[["VisualNode",,[["PsiEditor",,,,0,"File:Tools/PsiEditor/VisualNode.cs:PsiEditor.VisualNode","CSharpClass:PsiEditor.VisualNode"]]]]);

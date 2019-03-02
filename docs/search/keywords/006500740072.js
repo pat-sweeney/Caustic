@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("etr",["Class"],[["ETrackballConstrain",,[[,,,,0,"File:Libraries/Rendering/Caustic/Caustic.h:ETrackballConstrain","CClass:ETrackballConstrain"]]]]);

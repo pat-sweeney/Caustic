@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("y",["Variable","Property"],[["y",,[["PsiEditor.VisualNode",,,,0,"File:Tools/PsiEditor/VisualNode.cs:PsiEditor.VisualNode.y","CSharpClass:PsiEditor.VisualNode:y"],["PsiEditor.VisualNode","Y",,,1,"File:Tools/PsiEditor/VisualNode.cs:PsiEditor.VisualNode.Y","CSharpClass:PsiEditor.VisualNode:Y"]]]]);
