@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("box",["Function"],[["BoxBlur",,[["IIntegralImage",,,,0,"File:Libraries/Imaging/Image/Image.h:IIntegralImage.BoxBlur","CClass:IIntegralImage:BoxBlur"]]]]);
