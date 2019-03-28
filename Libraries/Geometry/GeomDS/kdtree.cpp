@@ -39,10 +39,13 @@ namespace Caustic
                 _ASSERT(!"This should never happen");
                 break;
             }
+			int nCut = cutAxis + 1;
+			if (nCut > 2)
+				nCut = 0;
             if (value < pNode->m_cutPoint)
-                AddPointRecursive(pNode->m_pLower, (CutAxis)((cutAxis + 1) % 3), vec, data);
+                AddPointRecursive(pNode->m_pLower, (CutAxis)nCut, vec, data);
             else
-                AddPointRecursive(pNode->m_pUpper, (CutAxis)((cutAxis + 1) % 3), vec, data);
+                AddPointRecursive(pNode->m_pUpper, (CutAxis)nCut, vec, data);
         }
         else
         {
@@ -173,14 +176,18 @@ namespace Caustic
         }
         if (pNode->m_pUpper != nullptr)
         {
+			int nCut = cutAxis + 1;
+			if (nCut > 2)
+				nCut = 0;
             if (v < pNode->m_cutPoint)
-                return FindPointRecursive(pNode->m_pLower, (CutAxis)((cutAxis + 1) % 3), vec, comparator, data);
+                return FindPointRecursive(pNode->m_pLower, (CutAxis)cutAxis, vec, comparator, data);
             else
-                return FindPointRecursive(pNode->m_pUpper, (CutAxis)((cutAxis + 1) % 3), vec, comparator, data);
+                return FindPointRecursive(pNode->m_pUpper, (CutAxis)cutAxis, vec, comparator, data);
         }
         else
         {
-            for (size_t i = 0; i < pNode->m_pPoints->size(); i++)
+			size_t nPoints = pNode->m_pPoints->size();
+            for (size_t i = 0; i < nPoints; i++)
             {
                 if (std::get<0>((*pNode->m_pPoints)[i]).IsEq(vec))
                 {

@@ -19,93 +19,92 @@ namespace Caustic
 	// Constructor: Vector2
 	// Default contructor
 	//**********************************************************************
-        Vector2() {}
+	Vector2() {}
 
 	//**********************************************************************
 	// Constructor: Vector2
 	// Contructor for a 2D vector
-        //
-        // Parameters:
-        // _x - X coordinate
-        // _y - Y coordinate
+	//
+	// Parameters:
+	// _x - X coordinate
+	// _y - Y coordinate
 	//**********************************************************************
-        Vector2(float _x, float _y) { x = _x; y = _y; }
+	Vector2(float _x, float _y) { x = _x; y = _y; }
 
 	//**********************************************************************
 	// Method: IsEq
 	// Returns whether two points are equivalent (within some tolerance)
-        //
-        // Parameters:
-        // p - Point to compare against
-        //
-        // Returns:
-        // True if points are equivalent. False otherwise.
+	//
+	// Parameters:
+	// p - Point to compare against
+	//
+	// Returns:
+	// True if points are equivalent. False otherwise.
 	//**********************************************************************
-        bool IsEq(Vector2 &p)
-        {
-            if (IsZero(p.x - x) &&
-                IsZero(p.y - y))
-                return true;
-            return false;
-        }
+	bool IsEq(Vector2 &p)
+	{
+	    if (IsZero(p.x - x) && IsZero(p.y - y))
+		return true;
+	    return false;
+	}
 
 	//**********************************************************************
 	// Method: Length
 	// Returns the L2 norm for the vector
-        //
-        // Returns:
-        // Length of vector
+	//
+	// Returns:
+	// Length of vector
 	//**********************************************************************
-        float Length() { return (float)sqrt(x * x + y * y); }
-      
+	float Length() { return (float)sqrt(x * x + y * y); }
+
 	//**********************************************************************
 	// Method: Normalize
 	// Normalizes the vector
-        //
-        // Returns:
-        // Normalized vector
+	//
+	// Returns:
+	// Normalized vector
 	//**********************************************************************
-        Vector2 Normalize()
-        {
-            float len = Length();
-            if (!IsZero(len))
-            {
-                x /= len;
-                y /= len;
-            }
-            return Vector2(x, y);
-        }
+	Vector2 Normalize()
+	{
+	    float len = Length();
+	    if (!IsZero(len))
+	    {
+		x /= len;
+		y /= len;
+	    }
+	    return Vector2(x, y);
+	}
 
 	//**********************************************************************
 	// Method: Cross
 	// Computes cross product between two vectors
-        //
-        // Returns:
-        // Cross product vector
+	//
+	// Returns:
+	// Cross product vector
 	//**********************************************************************
-        float Cross(Vector2 &v)
-        {
-            return x * v.y - y * v.x;
-        }
+	float Cross(Vector2 &v)
+	{
+	    return x * v.y - y * v.x;
+	}
 
 	//**********************************************************************
 	// Method: Dot
 	// Computes dot product between two vectors
-        //
-        // Returns:
-        // Dot product
+	//
+	// Returns:
+	// Dot product
 	//**********************************************************************
-        float Dot(Vector2 &v)
-        {
-            return x * v.x + y * v.y;
-        }
+	float Dot(Vector2 &v)
+	{
+	    return x * v.x + y * v.y;
+	}
 
-        Vector2 operator-() { return Vector2(-x, -y); }
-        Vector2 operator-(Vector2 &rhs) { return Vector2(x - rhs.x, y - rhs.y); }
-        Vector2 operator+(Vector2 &rhs) { return Vector2(x + rhs.x, y + rhs.y); }
-        Vector2 operator*(float f) { return Vector2(x * f, y * f); }
-        bool operator==(Vector2 &rhs) { return this->IsEq(rhs); }
-        bool operator!=(Vector2 &rhs) { return !this->IsEq(rhs); }
+	Vector2 operator-() { return Vector2(-x, -y); }
+	Vector2 operator-(Vector2 &rhs) { return Vector2(x - rhs.x, y - rhs.y); }
+	Vector2 operator+(Vector2 &rhs) { return Vector2(x + rhs.x, y + rhs.y); }
+	Vector2 operator*(float f) { return Vector2(x * f, y * f); }
+	bool operator==(Vector2 &rhs) { return this->IsEq(rhs); }
+	bool operator!=(Vector2 &rhs) { return !this->IsEq(rhs); }
     };
 
     //**********************************************************************
@@ -116,10 +115,27 @@ namespace Caustic
     {
         float x, y, z;
 
+		//**********************************************************************
+		// Constructor: Vector3
+		// Default constructor
+		//**********************************************************************
         Vector3() {}
+
+		//**********************************************************************
+		// Constructor: Vector3
+		// Constructor
+		//
+		// Parameters:
+		// _x - X coordinate
+		// _y - Y coordinate
+		// _z - Z coordinate
+		//**********************************************************************
         Vector3(float _x, float _y, float _z) { x = _x; y = _y; z = _z; }
 
-        //! \brief Returns -1 or +1 depending on direction vector is pointing
+		//**********************************************************************
+		// Method: Sign
+		// Returns -1 or +1 depending on direction vector is pointing
+		//**********************************************************************
         int Sign()
         {
             int s0 = (x < 0) ? -1 : +1;
@@ -128,7 +144,16 @@ namespace Caustic
             return s0 * s1 * s2;
         }
 
-        //! \brief IsEq returns whether two points are equivalent (within some tolerance)
+		//**********************************************************************
+		// Method: IsEq
+		// Returns whether two points are equivalent (within some tolerance)
+        //
+        // Parameters:
+        // p - point to test against
+		//
+		// Returns:
+		// True if points are considered equivalent. False otherwise.
+		//**********************************************************************
         bool IsEq(Vector3 &p)
         {
             if (IsZero(p.x - x) &&
@@ -138,6 +163,16 @@ namespace Caustic
             return false;
         }
 
+		//**********************************************************************
+		// Method: cross
+		// Returns the cross product between two vectors
+        //
+        // Parameters:
+        // v - vector to compute cross product against
+		//
+		// Returns:
+		// The cross product
+		//**********************************************************************
         Vector3 cross(Vector3 &v)
         {
             Vector3 nv;
@@ -147,10 +182,22 @@ namespace Caustic
             nv.z = x * v.y - y * v.x;
             return nv;
         }
+
+		//**********************************************************************
+		// Method: dot
+		// Returns the dot product between two vectors
+        //
+        // Parameters:
+        // v - vector to compute dot product against
+		//
+		// Returns:
+		// The dot product
+		//**********************************************************************
         float dot(Vector3 &v)
         {
             return x * v.x + y * v.y + z * v.z;
         }
+      
         bool operator==(Vector3 &rhs) { return this->IsEq(rhs); }
         bool operator!=(Vector3 &rhs) { return !this->IsEq(rhs); }
         Vector3 operator-(Vector3 &rhs) { return Vector3(x - rhs.x, y - rhs.y, z - rhs.z); }
