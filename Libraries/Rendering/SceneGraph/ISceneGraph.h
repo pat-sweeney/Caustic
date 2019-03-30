@@ -38,10 +38,10 @@ namespace Caustic
 	struct SceneCtx
 	{
 		//**********************************************************************
-		// Property: m_spDevice
+		// Property: m_spRenderer
 		// Defines our current rendering device
 		//**********************************************************************
-		CComPtr<ID3D11Device> m_spDevice;
+		CComPtr<IRenderer> m_spRenderer;
 
 		//**********************************************************************
 		// Property: m_Transform
@@ -78,12 +78,6 @@ namespace Caustic
 		// Defines the current pixel shader
 		//**********************************************************************
 		CRefObj<Caustic::IShader> m_spCurrentPixelShader;
-
-		//**********************************************************************
-		// Property: m_spGraphics
-		// Defines our graphics renderer
-		//**********************************************************************
-		CRefObj<IGraphics> m_spGraphics;
 	};
 
 	//**********************************************************************
@@ -140,7 +134,7 @@ namespace Caustic
 		// Method: Render
 		// Renders the current element
 		//**********************************************************************
-		virtual void Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx) = 0;
+		virtual void Render(IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx) = 0;
 
 		//**********************************************************************
 		// Method: GetBBox

@@ -48,11 +48,17 @@ namespace Caustic
 		//**********************************************************************
 		virtual void CreateSceneGraph(ISceneGraph **ppGraph) = 0;
 	};
+}
 
+//**********************************************************************
+// Namespace: Caustic
+//**********************************************************************
+namespace Caustic
+{
 	//**********************************************************************
 	// Function: CreateSceneFactory
 	// Creates a scene factory. This factory is used to create elements in
 	// the scene graph.
 	//**********************************************************************
 	CAUSTICAPI void CreateSceneFactory(ISceneFactory **ppElem);
-};
+}

@@ -12,19 +12,12 @@
 
 namespace Caustic
 {
-    CAUSTICAPI void CreateGroupElem(ISceneGroupElem **ppElem)
-    {
-        std::unique_ptr<CSceneGroupElem> spGroupObj(new CSceneGroupElem());
-        *ppElem = spGroupObj.release();
-        (*ppElem)->AddRef();
-    }
-
     std::wstring &CSceneGroupElem::Name()
     {
         return m_Name;
     }
 
-    void CSceneGroupElem::Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx)
+    void CSceneGroupElem::Render(IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx)
     {
         Matrix4x4 old = pSceneCtx->m_Transform;
         pSceneCtx->m_Transform = pSceneCtx->m_Transform * m_Transform;
@@ -34,18 +27,18 @@ namespace Caustic
         {
             if (m_Children[i]->GetType() == ESceneElemType::PointLight)
             {
-                m_Children[i]->Render(pRenderer, pRenderCtx, pSceneCtx);
+                m_Children[i]->Render(pRenderCtx, pSceneCtx);
             }
         }
         for (size_t i = 0; i < m_Children.size(); i++)
         {
             if (m_Children[i]->GetType() != ESceneElemType::PointLight)
             {
-                m_Children[i]->Render(pRenderer, pRenderCtx, pSceneCtx);
+                m_Children[i]->Render(pRenderCtx, pSceneCtx);
             }
         }
         pSceneCtx->m_lights = lights;
-        DrawSelected(pRenderer, this, pSceneCtx);
+        DrawSelected(this, pSceneCtx);
         pSceneCtx->m_Transform = old;
     }
 

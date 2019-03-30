@@ -10,6 +10,7 @@
 #include "Base\Math\Matrix.h"
 #include "ISceneFactory.h"
 #include "SceneFactory.h"
+#include "GroupElem.h"
 
 namespace Caustic
 {
@@ -40,10 +41,11 @@ namespace Caustic
 		Caustic::CreatePointLightElem(ppLight);
 	}
 
-	CAUSTICAPI void CreateGroupElem(ISceneGroupElem **ppGroup);
 	void CSceneFactory::CreateGroupElem(ISceneGroupElem **ppGroup)
 	{
-		Caustic::CreateGroupElem(ppGroup);
+		std::unique_ptr<CSceneGroupElem> spGroupObj(new CSceneGroupElem());
+		*ppElem = spGroupObj.release();
+		(*ppElem)->AddRef();
 	}
 
 	CAUSTICAPI void CreateMeshElem(ISceneMeshElem **ppMesh);

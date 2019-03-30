@@ -8,6 +8,9 @@
     <Filter Include="Source Files\Shaders">
       <UniqueIdentifier>{9e52d0b6-6d44-49cc-acda-839dd6cc06c4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Published">
+      <UniqueIdentifier>{f524883d-e89a-44f4-9c46-da4f61128089}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SceneGraphImpl.h">
@@ -31,14 +34,14 @@
     <ClInclude Include="targetver.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="SceneGraph.h">
+    <ClInclude Include="SceneFactory.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="ISceneFactory.h">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Published</Filter>
     </ClInclude>
-    <ClInclude Include="SceneFactory.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="ISceneGraph.h">
+      <Filter>Source Files\Published</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
