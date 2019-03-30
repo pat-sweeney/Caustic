@@ -13,9 +13,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SceneGraphImpl.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="GroupElem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -42,6 +39,9 @@
     </ClInclude>
     <ClInclude Include="ISceneGraph.h">
       <Filter>Source Files\Published</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraph.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

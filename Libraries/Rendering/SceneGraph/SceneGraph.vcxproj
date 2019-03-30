@@ -87,7 +87,7 @@
     <ClInclude Include="PointLightElem.h" />
     <ClInclude Include="SceneFactory.h" />
     <ClInclude Include="ISceneGraph.h" />
-    <ClInclude Include="SceneGraphImpl.h" />
+    <ClInclude Include="SceneGraph.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
