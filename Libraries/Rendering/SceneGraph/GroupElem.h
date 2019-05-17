@@ -3,7 +3,8 @@
 // All Rights Reserved
 //**********************************************************************
 #pragma once
-#include "SceneGraphImpl.h"
+#include "ISceneGraph.h"
+#include "SceneElem.h"
 #include <functional>
 
 namespace Caustic
@@ -74,7 +75,7 @@ namespace Caustic
 		// pRenderCtx - current render context
 		// pSceneCtx - current scene context
 		//**********************************************************************
-		virtual void Render(IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx) override;
+		virtual void Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx) override;
 
 		//**********************************************************************
 		// Method: GetBBox

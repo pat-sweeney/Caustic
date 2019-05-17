@@ -51,20 +51,19 @@ namespace Caustic
     };
 
     // Define list of predefined filter names
-    static const wchar_t *g_GaussianVerticalFilter = L"GaussianVertical"; //!< Name of GPU node that performs a gaussian blur in the vertical direction
-    static const wchar_t *g_GaussianHorizontalFilter = L"GaussianHorizontal"; //!< Name of GPU node that performs a gaussian blur in the horizontal direction
-    static const wchar_t *g_RawCopyFilter = L"RawCopy"; //!< Name of GPU node that performs a raw copy of the data
+    static const wchar_t *g_GaussianVerticalFilter = L"GaussianVertical"; // Name of GPU node that performs a gaussian blur in the vertical direction
+    static const wchar_t *g_GaussianHorizontalFilter = L"GaussianHorizontal"; // Name of GPU node that performs a gaussian blur in the horizontal direction
+    static const wchar_t *g_RawCopyFilter = L"RawCopy"; // Name of GPU node that performs a raw copy of the data
 
     struct IGPUPipeline : public IRefCount
     {
-        virtual void GetGraphics(IGraphics **ppGraphics) = 0;
         virtual void RenderQuad(IShader *pShader) = 0;
         virtual void Process() = 0;
         virtual void CreateSourceNode(IImage *pImage, IGPUImageSourceNode **ppNewNode) = 0;
         virtual void CreateSinkNode(uint32 numInputs, IShader *pShader, IGPUImageSinkNode **ppNewNode) = 0;
         virtual void CreateNode(uint32 numInputs, IShader *pShader, IGPUImageNode **ppNewNode) = 0;
         virtual void CreatePredefinedNode(wchar_t *pShaderName, IGPUImageNode **ppNewNode) = 0;
-        virtual void CreateShader(BYTE *pShaderCode, uint32 shaderCodeSize, ShaderDefs *pShaderParams, uint32 shaderParamSize, IShader **ppShader) = 0;
+        virtual void CreateShader(BYTE *pShaderCode, uint32 shaderCodeSize, ShaderParam *pShaderParams, uint32 shaderParamSize, IShader **ppShader) = 0;
     };
-    extern void CreateGPUPipeline(IGraphics *pGraphics, IGPUPipeline **ppPipeline);
+    extern void CreateGPUPipeline(IRenderer *pRenderer, IGPUPipeline **ppPipeline);
 }

@@ -13,56 +13,15 @@
 #include <any>
 #include <vector>
 #include <atlbase.h>
-#include <d3d11.h>
+#include <d3d12.h>
+#include <dxgi1_6.h>
 
 namespace Caustic
 {
-    const int c_RenderCmd_DrawMesh = 0; //!< Command ID for rendering a mesh
-    const int c_RenderCmd_SetCamera = 1; //!< Command ID for setting the camera
+    const int c_RenderCmd_DrawMesh = 0; // Command ID for rendering a mesh
+    const int c_RenderCmd_SetCamera = 1; // Command ID for setting the camera
 
-    //**********************************************************************
-    //! \brief SVertex_1 defines a vertex in our vertex buffer that contains
-    //! a position and 1 set of UVs
-    //**********************************************************************
-    struct SVertex_1
-    {
-        float m_pos[3]; //!< Defines the world coordinate position for this vertex
-        float m_uvs[2]; //!< Defines the UV coordinates
-    };
-
-    //**********************************************************************
-    //! \brief SVertex_2 defines the default rendering vertex
-    //**********************************************************************
-    struct SVertex_2
-    {
-        float m_pos[3]; //!< Defines the world coordinate position for this vertex
-        float m_norm[3]; //!< Defines the vertex normal
-        float m_uvs[2]; //!< Defines the UV coordinates
-    };
-
-    //**********************************************************************
-    //! \brief SVertex_3 defines the default rendering vertex
-    //**********************************************************************
-    struct SVertex_3
-    {
-        float m_pos[3]; //!< Defines the world coordinate position for this vertex
-    };
-
-    //**********************************************************************
-    //! \brief SVertex_4 defines the vertex used for drawing normal
-    //**********************************************************************
-    struct SVertex_4
-    {
-        float m_pos[3]; //!< Defines the world coordinate position for this vertex
-        float m_dir[4]; //!< Direction vector to be added to the position (maybe <0.0f,0.0f,0.0f>)
-    };
-
-    struct SVertex_5
-    {
-        float m_pos[4];
-    };
-
-    const int c_DefaultVertexVerion = 1; //!< Defines the default vertex version
+    const int c_DefaultVertexVerion = 1; // Defines the default vertex version
 
     const int c_PassFirst = 0;
     const int c_PassObjID = 0;
@@ -74,63 +33,31 @@ namespace Caustic
     const int c_PassAllPasses = (1 << c_PassLast) - 1;
 
     struct IRenderMaterial;
+	struct IRenderable;
+
+	struct CVertexBuffer
+	{
+		CComPtr<ID3D12Resource> m_spVB; // Our vertex buffer
+		CComPtr<ID3D12Resource> m_spIB; // Our index buffer. Maybe nullptr
+		uint32 m_vertexSize; // Size in bytes of each vertex
+		uint32 m_numVertices; // Number of vertices
+		uint32 m_numIndices; // Number of indices. Maybe 0
+	public:
+		CVertexBuffer() :
+			m_vertexSize(0),
+			m_numVertices(0),
+			m_numIndices(0)
+		{
+		}
+	};
 
     //**********************************************************************
-    //! \brief CRenderable defines a self contained renderable object
-    //**********************************************************************
-    class CRenderable : public IRenderable, public CRefCount
-    {
-    protected:
-        CComPtr<ID3D11Buffer> m_spVB; //!< Defines the vertex buffer
-        CComPtr<ID3D11Buffer> m_spIB; //!< Defines the index buffer
-        CRefObj<IRenderMaterial> m_spFrontMaterial;
-        CRefObj<IRenderMaterial> m_spBackMaterial;
-        uint32 m_numIndices; //!< Number of indices in m_spIB
-        uint32 m_numVerts; //!< Number of vertices in m_spVB
-        uint32 m_passes; //!< List of passes to render this object in
-        DirectX::XMMATRIX m_xform; //!< Current transform to apply to object
-
-        CComPtr<ID3D11Buffer> m_spNormalVB;
-        uint32 m_numNormalVerts;
-
-        void RenderMesh(IGraphics *pGraphics, std::vector<CRefObj<IPointLight>> &lights, IRenderCtx *pRenderCtx, IRenderMaterial *pRenderMaterial,
-            D3D11_CULL_MODE cullmode);
-    public:
-        explicit CRenderable(
-            ID3D11Buffer *pVB, uint32 numVertices,
-            ID3D11Buffer *pIB, uint32 numIndices,
-            ID3D11Buffer *pNormalVB, uint32 numNormalVertices,
-            IRenderMaterial *pFrontMaterial,
-            IRenderMaterial *pBackMaterial,
-            DirectX::XMMATRIX &mat);
-        explicit CRenderable(IGraphics *pGraphics, ISubMesh *pMesh, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat);
-        CRenderable() {}
-        explicit CRenderable(ID3D11Buffer *pIndexBuffer, uint32 numIndices, ID3D11Buffer *pVertexBuffer, uint32 numVertices, IRenderable **ppRenderable);
-        friend class CRenderer;
-
-        //**********************************************************************
-        // IRefCount
-        //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
-
-        //**********************************************************************
-        // IRenderable
-        //**********************************************************************
-        virtual Vector3 GetPos() override { return Vector3(DirectX::XMVectorGetX(m_xform.r[3]), DirectX::XMVectorGetY(m_xform.r[3]), DirectX::XMVectorGetZ(m_xform.r[3])); }
-        virtual void Render(IGraphics *pGraphics, std::vector<CRefObj<IPointLight>> &lights, IRenderCtx *pRenderCtx);
-        virtual void SetTransform(DirectX::XMMATRIX &mat) override { m_xform = mat; }
-        virtual DirectX::XMMATRIX &GetTransform() override { return m_xform; }
-        virtual bool InPass(int pass) { return ((m_passes | (1 << Caustic::c_PassObjID)) & (1 << pass)) ? true : false; }
-    };
-
-    //**********************************************************************
-    //! \brief CLight defines a simple point light
+    // CLight defines a simple point light
     //**********************************************************************
     class CLight : public IPointLight, public CRefCount
     {
     public:
-        void Render(IGraphics * /*pGraphics*/) {}
+        void Render(IRenderer * /*pRenderer*/) {}
     };
 
     //**********************************************************************
@@ -171,48 +98,70 @@ namespace Caustic
     };
 
     const int c_MaxShadowMaps = 4;
+	static const int c_NumBackBuffers = 2;
 
     //**********************************************************************
-    //! \brief CGraphicsBase defines the data shared between our CGraphics
-    //! and CRenderer objects
-    //**********************************************************************
-    class CGraphicsBase : public CRefCount
+    class CRenderer :
+		public CRefCount,
+        public IRenderer
     {
-    protected:
-        CComPtr<ID3D11Device> m_spDevice;                   //!< D3D Device
-        CComPtr<ID3D11DeviceContext> m_spContext;           //!< D3D Device context
-        CComPtr<IDXGISwapChain> m_spSwapChain;              //!< D3D Swap chain
-        D3D_FEATURE_LEVEL m_featureLevel;                   //!< D3D feature level
-        CRefObj<ICamera> m_spCamera;                        //!< Camera to use for rendering
-        CRefObj<IRenderCtx> m_spRenderCtx;                  //!< D3D Render context
-        CComPtr<ID3D11RenderTargetView> m_spRTView;         //!< Render target view
-        CComPtr<ID3D11DepthStencilView> m_spStencilView;    //!< Stencil view
-        CComPtr<ID3D11Texture2D> m_spDepthStencilBuffer;    //!< Our depth map
-        D3D11_TEXTURE2D_DESC m_BBDesc;                      //!< Description of our back buffer
+		void SetupDebugLayer();
+		void CreateSwapChain(HWND hwnd);
+		void AllocateBackBuffers();
+		void CreateFences();
+		void CreateRootSignature();
+		void LoadDefaultShaders(const wchar_t *pFilename);
+		void LoadShaderBlob(std::wstring &filename, ID3DBlob **ppBlob);
+		void LoadShaderInfo(std::wstring &filename, IShaderInfo **ppShaderInfo);
+		void LoadBasicGeometry();
 
-        friend CAUSTICAPI void CreateGraphics(HWND hwnd, IGraphics **ppGraphics);
+		int m_width;
+		int m_height;
+		UINT m_numerator;
+		UINT m_denominator;
+		DXGI_SWAP_CHAIN_DESC m_swapDesc;
+		CComPtr<IDXGIFactory5> m_spDXGIFactory;
+		CComPtr<IDXGIAdapter4> m_spAdapter;
+		CComPtr<ID3D12Device5> m_spDevice;
+		CComPtr<ID3D12CommandQueue> m_spCmdQueue;
+		CComPtr<ID3D12CommandAllocator> m_spCommandAllocator;
+		CComPtr<ID3D12GraphicsCommandList4> m_spCommandList;
+		CComPtr<ID3D12DescriptorHeap> m_spBackBufferHeap;
+		D3D12_CPU_DESCRIPTOR_HANDLE m_hBackBuffers[c_NumBackBuffers];
+		CComPtr<ID3D12Resource> m_spBackBuffers[c_NumBackBuffers];
+		UINT m_backBufferSize;
+		UINT m_currentFrame;
+		CComPtr<IDXGISwapChain4> m_spSwapChain;
+		CComPtr<ID3D12Fence1> m_spFences[c_NumBackBuffers];
+		HANDLE m_fenceEvents[c_NumBackBuffers];
+		UINT m_fenceValue;
+		CComPtr<ID3D12RootSignature> m_spRootSignature;
+	public:
 
-        void InitializeD3D(HWND hwnd);
-        void Setup(HWND hwnd, bool createDebugDevice);
-        void SetCamera(ICamera *pCamera);
-        CComPtr<ID3D11Device> GetDevice() { return m_spDevice; }
-        CComPtr<ID3D11DeviceContext> GetContext() { return m_spContext; }
-        CRefObj<ICamera> GetCamera() { return m_spCamera; }
-    };
+        std::vector<CRefObj<IRenderable>> m_singleObjs;             // List of individual renderable objects (outside scene graph)
+        std::vector<CRefObj<IPointLight>> m_lights;                 // List of lights in this scene
+        CComPtr<ID3D12Resource> m_spObjIDTexture;                   // Texture for rendering object IDs
+        CComPtr<ID3D12Resource> m_spShadowTexture[c_MaxShadowMaps]; // Texture for shadow map
 
-    //**********************************************************************
-    //! \brief CGraphics defines our basic rendering device
-    //!
-    //! CGraphics differs from CRenderer in that it is essentially just
-    //! a wrapper around our underlying graphics device. It does not support
-    //! things such as a scene graph, complex lighting (list of lights),
-    //! or HMD support. Also, all rendering occurs on whatever thread this
-    //! object is created on (versus marshalling the rendering over to a render
-    //! thread). For those features, use CRenderer.
-    //**********************************************************************
-    class CGraphics : public CGraphicsBase, public IGraphics
-    {
+		CRefObj<IShaderMgr> m_spShaderMgr;
+		CRefObj<ICamera> m_spCamera;                       // Camera to use for rendering
+		CRefObj<IRenderCtx> m_spRenderCtx;                 // D3D Render context
+		CComPtr<ID3D12Resource> m_spDepthStencilBuffer;    // Our depth map
+		CVertexBuffer m_lineVB;
+		CRefObj<IShader> m_spLineShader;
+		CEvent m_waitForShutdown;                       //!< Event to control shutdown (waits for render thread to exit)
+		bool m_exitThread;                              //!< Controls whether we are exiting the render thread
+
+		void InitializeD3D(HWND hwnd);
+
+        void RenderScene();
+        void DrawSceneObjects(int pass);
     public:
+        explicit CRenderer();
+        virtual ~CRenderer();
+		void RenderLoop();
+		void RenderFrame();
+        
         //**********************************************************************
         // IRefCount
         //**********************************************************************
@@ -220,78 +169,22 @@ namespace Caustic
         virtual uint32 Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
-        // IGraphics
-        //**********************************************************************
-        virtual CComPtr<ID3D11Device> GetDevice() override { return CGraphicsBase::GetDevice(); }
-        virtual CComPtr<ID3D11DeviceContext> GetContext() override { return CGraphicsBase::GetContext(); }
-        virtual CRefObj<ICamera> GetCamera() override { return CGraphicsBase::GetCamera(); }
-        virtual void SetCamera(ICamera *pCamera) override { CGraphicsBase::SetCamera(pCamera); }
-    };
-
-    //**********************************************************************
-    //! \brief CRenderer defines our basic renderer
-    //!
-    //! CRenderer handles all rendering commands. It is generally expected that
-    //! this object is running on its own thread.
-    //**********************************************************************
-    class CRenderer : 
-        public CGraphicsBase,
-        public IRenderer
-    {
-        CRefObj<ISceneGraph> m_spSceneGraph;
-        std::vector<CRenderable> m_singleObjs;                              //!< List of individual renderable objects (outside scene graph)
-        std::vector<CRefObj<IPointLight>> m_lights;                         //!< List of lights in this scene
-        CComPtr<ID3D11Texture2D> m_spObjIDTexture;                          //!< Texture for rendering object IDs
-        CComPtr<ID3D11RenderTargetView> m_spObjIDRTView;                    //!< Render target view for m_spObjIDTexture
-        CComPtr<ID3D11Texture2D> m_spShadowTexture[c_MaxShadowMaps];        //!< Texture for shadow map
-        CComPtr<ID3D11RenderTargetView> m_spShadowRTView[c_MaxShadowMaps];  //!< Render target view for m_spShadowTexture
-
-        CEvent m_waitForShutdown;                       //!< Event to control shutdown (waits for render thread to exit)
-        bool m_exitThread;                              //!< Controls whether we are exiting the render thread
-        CComPtr<ID3D11Buffer> m_spLineVB;               //!< Vertex buffer used to draw lines
-        CRefObj<IShader> m_spLineShader;                //!< Shader used to draw lines
-        CComPtr<ID3D11Buffer> m_spInfinitePlaneVB;      //!< Vertex buffer used to draw ground plane
-        CComPtr<ID3D11Buffer> m_spInfinitePlaneIB;      //!< Index buffer used to draw ground plane
-        CRefObj<IShader> m_spInfinitePlaneShader;       //!< Shader used to draw ground plane
-#ifdef SUPPORT_FULLQUAD
-        CComPtr<ID3D11Buffer> m_spFullQuadVB;           //!< Vertex buffer used for drawing full screen quad
-        CComPtr<ID3D11Buffer> m_spFullQuadIB;           //!< Index buffer used for drawing full screen quad
-        CRefObj<IShader> m_spFullQuadShader;            //!< Shader used for drawing full screen quad
-#endif // SUPPORT_FULLQUAD
-
-        void RenderScene();
-        void DrawSceneObjects(int pass);
-    public:
-        explicit CRenderer();
-        virtual ~CRenderer();
-        void RenderLoop();
-        void RenderFrame();
-        void InitializeD3D(HWND hwnd);
-        
-        //**********************************************************************
-        // IRefCount
-        //**********************************************************************
-        virtual uint32 AddRef() override { return CGraphicsBase::AddRef(); }
-        virtual uint32 Release() override { return CGraphicsBase::Release(); }
-
-        //**********************************************************************
-        // IGraphics
-        //**********************************************************************
-        virtual CComPtr<ID3D11Device> GetDevice() override { return CGraphicsBase::GetDevice(); }
-        virtual CComPtr<ID3D11DeviceContext> GetContext() override { return CGraphicsBase::GetContext(); }
-        virtual CRefObj<ICamera> GetCamera() override { return CGraphicsBase::GetCamera(); }
-        virtual void SetCamera(ICamera *pCamera) override { CGraphicsBase::SetCamera(pCamera); }
-
-        //**********************************************************************
         // IRenderer
         //**********************************************************************
-        virtual void Setup(HWND hwnd, bool createDebugDevice) override;
-        virtual void DrawMesh(ISubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) override;
+		virtual CRefObj<IShaderMgr> GetShaderMgr() override { return m_spShaderMgr; };
+		virtual DXGI_SAMPLE_DESC GetSampleDesc() override { return m_swapDesc.SampleDesc; }
+		virtual DXGI_FORMAT GetFormat() override { return m_swapDesc.BufferDesc.Format; }
+		virtual CComPtr<ID3D12RootSignature> GetRootSignature() override { return m_spRootSignature; }
+		virtual CComPtr<ID3D12Device5> GetDevice() override { return m_spDevice; }
+		virtual CComPtr<ID3D12GraphicsCommandList4> GetCommandList() override { return m_spCommandList; }
+		virtual CRefObj<ICamera> GetCamera() override { return m_spCamera; }
+		virtual uint32 GetFrameIndex() override { return m_currentFrame; }
+		virtual void SetCamera(ICamera *pCamera) override { m_spCamera = pCamera; }
+		virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice) override;
+        //virtual void DrawMesh(ISubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) override;
         virtual void AddPointLight(IPointLight *pLight) override;
         virtual void GetRenderCtx(IRenderCtx **ppCtx) override;
-        virtual void SetSceneGraph(ISceneGraph *pSceneGraph) override;
         virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) override;
-        virtual void GetGraphics(IGraphics **ppGraphics) override;
         void DrawInfinitePlane();
     };
 }

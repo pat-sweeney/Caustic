@@ -245,19 +245,19 @@ namespace Caustic
 #endif
 
     //**********************************************************************
-    ///! \brief Adds a new edge to our mesh
-    ///!
-    ///! Adds a new edge to our mesh. Each edge is directed from v0=>v1.
-    ///! Each face is oriented so that edges go in counter-clockwise order.
-    ///!
-    ///!        v0
-    ///!        +-------------+
-    ///!        |           /
-    ///!      t1|t0      /
-    ///!        |     /
-    ///!        |  /
-    ///!        +
-    ///!        v1
+    /// Adds a new edge to our mesh
+    //
+    // Adds a new edge to our mesh. Each edge is directed from v0=>v1.
+    // Each face is oriented so that edges go in counter-clockwise order.
+    //
+    //        v0
+    //        +-------------+
+    //        |           /
+    //      t1|t0      /
+    //        |     /
+    //        |  /
+    //        +
+    //        v1
     //**********************************************************************
     int CDelaunay2::FindOrAddEdge(int v0, int v1, int tri, bool isBoundaryEdge)
     {
@@ -284,8 +284,8 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Adds a new point to our current Delaunay triangulation using
-    //! the Bowyer-Watson algorithm.
+    // Adds a new point to our current Delaunay triangulation using
+    // the Bowyer-Watson algorithm.
     //**********************************************************************
     void CDelaunay2::AddPoint(Vector2 &pt, Vector2 &uv, bool isBoundary)
     {
@@ -293,9 +293,9 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Pre-allocates all the edges that form our meshes boundary.
-    //! We assume that boundary edges are added in counter-clockwise order
-    //! around the mesh.
+    // Pre-allocates all the edges that form our meshes boundary.
+    // We assume that boundary edges are added in counter-clockwise order
+    // around the mesh.
     //**********************************************************************
     void CDelaunay2::CreateBoundaryEdges()
     {
@@ -317,9 +317,9 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Computes the Delaunay triangulation of our mesh. We first compute
-    //! a triangulation based on the boundary vertices. We then remove the exterior
-    //! triangles (super triangles) and then add the interior vertices.
+    // Computes the Delaunay triangulation of our mesh. We first compute
+    // a triangulation based on the boundary vertices. We then remove the exterior
+    // triangles (super triangles) and then add the interior vertices.
     //**********************************************************************
     void CDelaunay2::ComputeTriangulation()
     {
@@ -330,8 +330,8 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Adds the set of vertex points that match the specified vertex
-    //! flag to the current triangulation.
+    // Adds the set of vertex points that match the specified vertex
+    // flag to the current triangulation.
     //**********************************************************************
     void CDelaunay2::TriangulatePoints(uint8 flag)
     {

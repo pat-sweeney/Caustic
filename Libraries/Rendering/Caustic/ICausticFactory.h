@@ -5,13 +5,11 @@
 #pragma once
 
 #include "Base\Core\Core.h"
+#include "Base/Core/IRefCount.h"
 #include "Base\Math\Vector.h"
-#include "Geometry\Mesh\Mesh.h"
-#include "Rendering\Caustic\Graphics.h"
-#include "Rendering\Caustic\Texture.h"
 #include <Windows.h>
 #include <atlbase.h>
-#include <d3d11.h>
+#include <d3d12.h>
 #include <DirectXMath.h>
 #include <vector>
 #include <any>
@@ -19,6 +17,18 @@
 // Namespace: Caustic
 namespace Caustic
 {
+	struct IRenderer;
+	struct IPointLight;
+	struct ITrackball;
+	struct IMaterialAttrib;
+	struct IRenderMaterial;
+	struct ICamera;
+	struct ITexture;
+	struct IShader;
+	struct IRenderable;
+	struct ISampler;
+	struct IShaderInfo;
+
 	//**********************************************************************
 	// Interface: ICausticFactory
 	// Defines the main factory for creating Caustic objects
@@ -31,23 +41,10 @@ namespace Caustic
 		//
 		// Parameters:
 		// hwnd - HWND to attach D3D renderer to
+		// shaderFolder - folder that contains our shaders
 		// ppRenderer - Returns the created renderer
-		//
-		// CreateRenderer creates the renderer object that the client will use to
-		// talk to the renderer. This object runs on the clients thread and acts
-		// only as a proxy for marshalling commands+data over to the renderer thread.
 		//**********************************************************************
-		virtual void CreateRenderer(HWND hwnd, IRenderer **ppRenderer) = 0;
-
-		//**********************************************************************
-		// Method: CreateGraphics
-		// Creates a wrapper around our D3D device.
-		//
-		// Paramters:
-		// hwnd - HWND to attach D3D renderer to
-		// ppGraphics - Returns the graphics device
-		//**********************************************************************
-		virtual void CreateGraphics(HWND hwnd, IGraphics **ppGraphics) = 0;
+		virtual void CreateRenderer(HWND hwnd, std::wstring &shaderFolder, IRenderer **ppRenderer) = 0;
 
 		//**********************************************************************
 		// Method: CreatePointLight
@@ -69,16 +66,6 @@ namespace Caustic
 		virtual void CreateTrackball(ITrackball **ppTrackball) = 0;
 
 		//**********************************************************************
-		// Method: CreateRendererMarshaller
-		// Creates the marshalled version of the renderer. This renderer marshals
-		// all calls over to the render thread (i.e. can be called on any thread)
-		//
-		// Parameters:
-		// ppMarshaller - Returns the created marshalled renderer
-		//**********************************************************************
-		virtual void CreateRendererMarshaller(IRendererMarshaller **ppMarshaller) = 0;
-
-		//**********************************************************************
 		// Method: CreateRenderMaterial
 		// Creates a RenderMaterial object.
 		//
@@ -88,30 +75,8 @@ namespace Caustic
 		// pShader - Vertex+Pixel shader
 		// ppRenderMaterial - Returns the created RenderMaterial object
 		//**********************************************************************
-		virtual void CreateRenderMaterial(IGraphics *pGraphics, IMaterialAttrib *pMaterialAttrib, IShader *pShader, IRenderMaterial **ppRenderMaterial) = 0;
+		virtual void CreateRenderMaterial(IRenderer *pRenderer, IMaterialAttrib *pMaterialAttrib, IShader *pShader, IRenderMaterial **ppRenderMaterial) = 0;
 		
-		//**********************************************************************
-		// Method: CreateRenderable
-		// Creates a renderable object. A Renderable is a mesh+material+shader.
-		//
-		// Parameters:
-		// pGraphics - Graphics device
-		// pSubMesh - mesh object
-		// pMaterial - Material definition
-		// pShader - Vertex+Pixel shader
-		// ppRenderable - Returns the created Renderable object
-		//**********************************************************************
-		virtual void CreateRenderable(IGraphics *pGraphics, ISubMesh *pSubMesh, IMaterialAttrib *pMaterial, IShader *pShader, IRenderable **ppRenderable) = 0;
-
-		//**********************************************************************
-		// Method: CreateRenderable
-		// Creates a renderable object. A Renderable is a mesh+material+shader.
-		//
-		// Parameters:
-		// ppRenderable - Returns the created Renderable object
-		//**********************************************************************
-		virtual void CreateRenderable(IRenderable **ppRenderable) = 0;
-
 		//**********************************************************************
 		// Method: CreateRenderable
 		// Creates a renderable object. A Renderable is a mesh+material+shader.
@@ -126,18 +91,39 @@ namespace Caustic
 		// mat - matrix to apply to mesh
 		// ppRenderable - Returns the created Renderable object
 		//**********************************************************************
-		virtual void CreateRenderable(ID3D11Buffer *pVB, uint32 numVertices, ID3D11Buffer *pIB, uint32 numIndices, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat, IRenderable **ppRenderable) = 0;
+		virtual void CreateRenderable(ID3D12Resource *pVB, uint32 numVertices, ID3D12Resource *pIB, uint32 numIndices, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat, IRenderable **ppRenderable) = 0;
 
 		//**********************************************************************
 		// Method: CreateSampler
 		// Creates a new sampler. Samplers defined how shaders read from textures.
 		//
 		// Parameters:
-		// pGraphics - graphics device
+		// pRenderer - Rendering device
 		// pTexture - texture to associate with sampler
 		// ppSampler - Returns the newly create sampler
 		//**********************************************************************
-		virtual void CreateSampler(IGraphics *pGraphics, ITexture *pTexture, ISampler **ppSampler) = 0;
+		virtual void CreateSampler(IRenderer *pRenderer, ITexture *pTexture, ISampler **ppSampler) = 0;
+
+		//**********************************************************************
+		// Method: CreateShader
+		// Creates a new shader.
+		//
+		// Parameters:
+		// pRenderer - Rendering device
+		// pShaderName - name of shader
+		// pVertexShaderBlob - binary defining out vertex shader
+		// pPixelShaderBlob - binary defining out pixel shader
+		// pShaderInfo - Information about the shader
+		// ppShader - returns the newly created shader
+		//**********************************************************************
+		virtual void CreateShader(IRenderer *pRenderer, const wchar_t *pShaderName,
+			ID3DBlob *pVertexShaderBlob, ID3DBlob *pPixelShaderBlob, IShaderInfo *pShaderInfo,
+			IShader **ppShader) = 0;
+		
+		virtual void CreateShaderInfo(const wchar_t *pFilename, IShaderInfo **ppShaderInfo) = 0;
+
+		virtual void CreateMaterial(Vector3 ambientColor, Vector3 diffuseColor, Vector3 specularColor, float specularExp, float alpha, IMaterialAttrib **ppMaterial) = 0;
+		virtual void CreateMaterial(IMaterialAttrib **ppMaterial) = 0;
 
 		//**********************************************************************
 		// Function: CreateCamera
@@ -163,7 +149,7 @@ namespace Caustic
 		// bindFlags - DirectX bind flags
 		// ppTexture - returns the newly created texture
 		//**********************************************************************
-		virtual void CreateTexture(IGraphics *pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, uint32 cpuFlags, uint32 bindFlags, ITexture **ppTexture) = 0;
+		virtual void CreateTexture(IRenderer *pRenderer, uint32 width, uint32 height, DXGI_FORMAT format, ITexture **ppTexture) = 0;
 
 		//**********************************************************************
 		// Method: CheckerboardTexture
@@ -172,7 +158,7 @@ namespace Caustic
 		// Parameters:
 		// pGraphics - graphics device
 		//**********************************************************************
-		virtual CRefObj<ITexture> CheckerboardTexture(IGraphics *pGraphics) = 0;
+		virtual CRefObj<ITexture> CheckerboardTexture(IRenderer *pRenderer) = 0;
 
 		//**********************************************************************
 		// Method: LoadTexture
@@ -183,7 +169,7 @@ namespace Caustic
 		// pGraphics - graphics device
 		// ppTexture - returns the newly created texture
 		//**********************************************************************
-		virtual void LoadTexture(const wchar_t *pFilename, IGraphics *pGraphics, ITexture **ppTexture) = 0;
+		virtual void LoadTexture(const wchar_t *pFilename, IRenderer *pRenderer, ITexture **ppTexture) = 0;
 
 		//**********************************************************************
 		// Method: LoadVideoTexture
@@ -194,7 +180,7 @@ namespace Caustic
 		// pGraphics - graphics device
 		// ppTexture - returns the newly created texture
 		//**********************************************************************
-		virtual void LoadVideoTexture(const wchar_t *pFilename, IGraphics *pGraphics, ITexture **ppTexture) = 0;
+		virtual void LoadVideoTexture(const wchar_t *pFilename, IRenderer *pRenderer, ITexture **ppTexture) = 0;
 
 		//**********************************************************************
 		// Method: MeshToD3D
@@ -210,13 +196,13 @@ namespace Caustic
 		// pBbox - Returns the bounding box of the mesh
 		// pVertexSize - Returns the size of each vertex in bytes
 		//**********************************************************************
-		virtual void MeshToD3D(IGraphics *pGraphics, ISubMesh *pMesh,
-			int vertexVersion, ID3D11Buffer **ppVertexBuffer, uint32 *pNumVerts,
-			int indexVersion, ID3D11Buffer **ppIndexBuffer, uint32 *pNumIndices,
-			BBox3 *pBbox, uint32 *pVertexSize) = 0;
-		
-		virtual void MeshToNormals(IGraphics *pGraphics, ISubMesh *pSubMesh,
-			ID3D11Buffer **ppVB, uint32 *pNumVerts) = 0;
+		//virtual void MeshToD3D(IRenderer *pRenderer, ISubMesh *pMesh,
+		//	int vertexVersion, ID3D11Buffer **ppVertexBuffer, uint32 *pNumVerts,
+		//	int indexVersion, ID3D11Buffer **ppIndexBuffer, uint32 *pNumIndices,
+		//	BBox3 *pBbox, uint32 *pVertexSize) = 0;
+		//
+		//virtual void MeshToNormals(IRenderer *pRenderer, ISubMesh *pSubMesh,
+		//	ID3D11Buffer **ppVB, uint32 *pNumVerts) = 0;
 
 		//**********************************************************************
 		// Method: StoreSubMeshRenderableDataToStream
@@ -230,8 +216,8 @@ namespace Caustic
 		// pStream - stream to save to
 		// pMesh - mesh to store
 		//**********************************************************************
-		virtual void StoreSubMeshRenderableDataToStream(IStream *pStream, ISubMesh *pMesh, int vertexVersion, int indexVersion) = 0;
-		virtual void LoadSubMeshRenderableDataFromStream(IStream *pStream, ID3D11Device *pDevice, ID3D11Buffer **ppIndexBuffer, uint32 *pNumIndices, ID3D11Buffer **ppVertexBuffer, uint32 *pNumVertices, int *pVertexVersion, int *pIndexVersion) = 0;
+		//virtual void StoreSubMeshRenderableDataToStream(IStream *pStream, ISubMesh *pMesh, int vertexVersion, int indexVersion) = 0;
+		//virtual void LoadSubMeshRenderableDataFromStream(IStream *pStream, ID3D11Device *pDevice, ID3D11Buffer **ppIndexBuffer, uint32 *pNumIndices, ID3D11Buffer **ppVertexBuffer, uint32 *pNumVertices, int *pVertexVersion, int *pIndexVersion) = 0;
 
 	};
 	

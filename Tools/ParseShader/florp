@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ShaderDef>
+    <VertexLayout>
+        <Field Name='SV_POSITION' Semantic='SV_POSITION' SemanticIndex='0' Format='DXGI_FORMAT_R32G32B32A32_FLOAT'/>
+        <Field Name='TEXCOORD' Semantic='TEXCOORD' SemanticIndex='0' Format='DXGI_FORMAT_R32G32B32_FLOAT'/>
+        <Field Name='TEXCOORD' Semantic='TEXCOORD' SemanticIndex='1' Format='DXGI_FORMAT_R32G32B32_FLOAT'/>
+        <Field Name='TEXCOORD' Semantic='TEXCOORD' SemanticIndex='2' Format='DXGI_FORMAT_R32G32_FLOAT'/>
+    </VertexLayout>
+    <Textures>
+    <Texture Name='diffuseTexture' Register='0'/>
+    </Textures>
+    <Samplers>
+    <SamplerState Name='diffuseSampler' Register='0'/>
+    </Samplers>
+    <CBuffer>
+         <Property Name='lightPos' Type='float4'/>
+         <Property Name='lightColor' Type='float4'/>
+         <Property Name='ambientColor' Type='float4'/>
+         <Property Name='diffuseColor' Type='float4'/>
+         <Property Name='specularColor' Type='float4'/>
+         <Property Name='specularExp' Type='float4'/>
+         <Property Name='lightPosWS' Type='float4'/>
+         <Property Name='transparency' Type='float4'/>
+         <Property Name='viewInv' Type='float4x4'/>
+         <Property Name='numLights' Type='int'/>
+    </CBuffer>
+</ShaderDef>

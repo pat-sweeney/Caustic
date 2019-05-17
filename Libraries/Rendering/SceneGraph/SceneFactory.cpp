@@ -11,7 +11,12 @@
 #include "ISceneFactory.h"
 #include "SceneFactory.h"
 #include "GroupElem.h"
+#include "SceneGraph.h"
+#include "MaterialElem.h"
+#include "PointLightElem.h"
+#include "MeshElem.h"
 
+// Namespace: Caustic
 namespace Caustic
 {
 	CAUSTICAPI void CreateSceneFactory(ISceneFactory **ppElem)
@@ -20,37 +25,51 @@ namespace Caustic
 		*ppElem = pFactory;
 		(*ppElem)->AddRef();
 	}
+}
 	
+namespace Caustic
+{
 	CRefObj<ISceneFactory> CSceneFactory::s_factory;
 
-	CAUSTICAPI void CreateSceneGraph(ISceneGraph **ppGraph);
 	void CSceneFactory::CreateSceneGraph(ISceneGraph **ppGraph)
 	{
-		Caustic::CreateSceneGraph(ppGraph);
+		CRefObj<ISceneGroupElem> spGroup;
+		CSceneFactory::Instance()->CreateGroupElem(&spGroup);
+		std::unique_ptr<CSceneGraph> spGraphObj(new CSceneGraph(spGroup.p));
+		*ppGraph = spGraphObj.release();
+		(*ppGraph)->AddRef();
 	}
 
-	CAUSTICAPI void CreateMaterialElem(ISceneMaterialElem **ppElem);
 	void CSceneFactory::CreateMaterialElem(ISceneMaterialElem **ppElem)
 	{
-		Caustic::CreateMaterialElem(ppElem);
+		std::unique_ptr<CSceneMaterialElem> spMeshObj(new CSceneMaterialElem());
+		CRefObj<IMaterialAttrib> spMaterial;
+		m_spCausticFactory->CreateMaterial(&spMaterial);
+		spMeshObj->SetMaterial(spMaterial.p);
+		*ppElem = spMeshObj.release();
+		(*ppElem)->AddRef();
 	}
 
-	CAUSTICAPI void CreatePointLightElem(IScenePointLightElem **ppLight);
-	void CSceneFactory::CreatePointLightElem(IScenePointLightElem **ppLight)
+	void CSceneFactory::CreatePointLightElem(IScenePointLightElem **ppElem)
 	{
-		Caustic::CreatePointLightElem(ppLight);
+		CRefObj<IPointLight> spPointLight;
+		m_spCausticFactory->CreatePointLight(Vector3(0.0f, 0.0f, 0.0f), &spPointLight);
+		std::unique_ptr<CPointLightElem> spPointLightObj(new CPointLightElem(spPointLight.p));
+		*ppElem = spPointLightObj.release();
+		(*ppElem)->AddRef();
 	}
 
-	void CSceneFactory::CreateGroupElem(ISceneGroupElem **ppGroup)
+	void CSceneFactory::CreateGroupElem(ISceneGroupElem **ppElem)
 	{
 		std::unique_ptr<CSceneGroupElem> spGroupObj(new CSceneGroupElem());
 		*ppElem = spGroupObj.release();
 		(*ppElem)->AddRef();
 	}
 
-	CAUSTICAPI void CreateMeshElem(ISceneMeshElem **ppMesh);
-	void CSceneFactory::CreateMeshElem(ISceneMeshElem **ppMesh)
+	void CSceneFactory::CreateMeshElem(ISceneMeshElem **ppElem)
 	{
-		Caustic::CreateMeshElem(ppMesh);
+		std::unique_ptr<CSceneMeshElem> spMeshObj(new CSceneMeshElem());
+		*ppElem = spMeshObj.release();
+		(*ppElem)->AddRef();
 	}
 };

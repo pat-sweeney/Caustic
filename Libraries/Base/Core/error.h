@@ -47,7 +47,7 @@ namespace Caustic
 do {\
     HRESULT _hr = (hr);\
     if (FAILED(_hr))\
-        throw ::Caustic::CausticException(hr, __FILE__, __LINE__);\
+        throw ::Caustic::CausticException(_hr, __FILE__, __LINE__);\
 } while(0)
 
 //**********************************************************************

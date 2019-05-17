@@ -21,14 +21,13 @@ namespace Caustic
 
     CRenderWindow::CRenderWindow(HWND hwnd)
     {
-        Caustic::CCausticFactory::Instance()->CreateRendererMarshaller(&m_spMarshaller);
-        m_spMarshaller->Initialize(hwnd);
+		CRefObj<ICausticFactory> spFactory;
+		CreateCausticFactory(&spFactory);
+		std::wstring shaderFolder(L"F:\\github\\Caustic12\\Caustic\\Release");
+		spFactory->CreateRenderer(hwnd, shaderFolder, &m_spRenderer);
 		CSceneFactory::Instance()->CreateSceneGraph(&m_spSceneGraph);
-        m_spMarshaller->SetSceneGraph(m_spSceneGraph.p);
 		Caustic::CCausticFactory::Instance()->CreateCamera(true, &m_spCamera);
-        CRefObj<IRenderer> spRenderer;
-        m_spMarshaller->GetRenderer(&spRenderer);
-        spRenderer->SetCamera(m_spCamera.p);
+        m_spRenderer->SetCamera(m_spCamera.p);
 		Caustic::CCausticFactory::Instance()->CreateTrackball(&m_spTrackball);
         m_hwnd = hwnd;
     }
@@ -86,13 +85,13 @@ namespace Caustic
             else
             {
                 DirectX::XMMATRIX mat;
-                ETrackballConstrain constraint;
+                ETrackballConstraint constraint;
                 if (flags & MK_SHIFT)
-                    constraint = ETrackballConstrain::Constraint_XAxis;
+                    constraint = ETrackballConstraint::Constraint_XAxis;
                 else if (flags & MK_ALT)
-                    constraint = ETrackballConstrain::Constraint_YAxis;
+                    constraint = ETrackballConstraint::Constraint_YAxis;
                 else
-                    constraint = ETrackballConstrain::Constraint_None;
+                    constraint = ETrackballConstraint::Constraint_None;
                 if (m_spTrackball->UpdateTracking(x, y, constraint, &mat))
                 {
                     DirectX::XMVECTOR vLook = DirectX::XMVectorSet(m_look.x, m_look.y, m_look.z, 1.0f);

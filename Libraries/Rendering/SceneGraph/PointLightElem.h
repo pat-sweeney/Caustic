@@ -3,8 +3,9 @@
 // All Rights Reserved
 //**********************************************************************
 #pragma once
-#include "SceneGraphImpl.h"
-#include <d3d11.h>
+#include "ISceneGraph.h"
+#include "SceneElem.h"
+#include <d3d12.h>
 #include <atlbase.h>
 
 namespace Caustic

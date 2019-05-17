@@ -9,6 +9,7 @@
 #include "Rendering\SceneGraph\SceneGraph.h"
 #include "Rendering\SceneGraph\SceneFactory.h"
 #include "Collada.h"
+#include <d3d12.h>
 
 namespace Caustic
 {

@@ -15,6 +15,7 @@ namespace Caustic
 	class CSceneFactory : public ISceneFactory, public CRefCount
 	{
 		static CRefObj<ISceneFactory> s_factory;
+		CRefObj<ICausticFactory> m_spCausticFactory;
 
 	public:
 		static CRefObj<ISceneFactory> Instance()
@@ -28,6 +29,7 @@ namespace Caustic
 
 		CSceneFactory()
 		{
+			CreateCausticFactory(&m_spCausticFactory);
 		}
 
 		//**********************************************************************

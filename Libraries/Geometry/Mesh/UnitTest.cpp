@@ -8,6 +8,7 @@
 #include "Base\Core\error.h"
 #include "Geometry\Mesh\IMesh.h"
 #include "Geometry\Mesh\IMeshConstructor.h"
+#include "Rendering/Caustic/ICausticFactory.h"
 #include "UnitTest.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -112,7 +113,9 @@ namespace CausticTestSuite
         Vector3 diffuse(0.0f, 0.0f, 0.0f);
         Vector3 specular(0.0f, 0.0f, 0.0f);
         CRefObj<IMaterialAttrib> spMaterial;
-        CreateMaterial(ambient, diffuse, specular, 1.0f, 1.0f, &spMaterial);
+		CRefObj<ICausticFactory> spFactory;
+		CreateCausticFactory(&spFactory);
+		spFactory->CreateMaterial(ambient, diffuse, specular, 1.0f, 1.0f, &spMaterial);
         return true;
     }
 
@@ -122,7 +125,9 @@ namespace CausticTestSuite
         Vector3 diffuse(0.0f, 0.0f, 0.0f);
         Vector3 specular(0.0f, 0.0f, 0.0f);
         CRefObj<IMaterialAttrib> spMaterial;
-        CreateMaterial(ambient, diffuse, specular, 1.0f, 1.0f, &spMaterial);
+		CRefObj<ICausticFactory> spFactory;
+		CreateCausticFactory(&spFactory);
+		spFactory->CreateMaterial(ambient, diffuse, specular, 1.0f, 1.0f, &spMaterial);
         wchar_t fn[MAX_PATH + 1];
         wchar_t dir[MAX_PATH + 1];
         GetTempPath(MAX_PATH, dir);
@@ -132,8 +137,8 @@ namespace CausticTestSuite
         spMaterial->Store(spStream.p);
         spStream = nullptr;
         CRefObj<IMaterialAttrib> spMaterialLoad;
-        CreateMaterial(&spMaterialLoad);
-        CRefObj<IStream> spStreamLoad;
+		spFactory->CreateMaterial(&spMaterial);
+		CRefObj<IStream> spStreamLoad;
         CT(SHCreateStreamOnFile(fn, STGM_READ, &spStreamLoad));
         spMaterialLoad->Load(spStreamLoad.p);
         return true;

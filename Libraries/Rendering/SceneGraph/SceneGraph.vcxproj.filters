@@ -43,6 +43,9 @@
     <ClInclude Include="SceneGraph.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="SceneElem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

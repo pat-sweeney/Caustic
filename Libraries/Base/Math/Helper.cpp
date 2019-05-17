@@ -9,7 +9,7 @@
 namespace Caustic
 {
     //**********************************************************************
-    //! \brief Determinant2x2 computes the determinant of a 2x2matrix.
+    // Determinant2x2 computes the determinant of a 2x2matrix.
     //**********************************************************************
     float Determinant2x2(
         float a00, float a01,
@@ -19,10 +19,10 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Determinant3x3 computes the determinant of a 3x3 matrix.
-    //! This is a temporary function. At some point I should just add
-    //! general support for 3x3 matrices, but would rather have this simple
-    //! function instead of a half implemented Matrix3x3 class.
+    // Determinant3x3 computes the determinant of a 3x3 matrix.
+    // This is a temporary function. At some point I should just add
+    // general support for 3x3 matrices, but would rather have this simple
+    // function instead of a half implemented Matrix3x3 class.
     //**********************************************************************
     float Determinant3x3(
         float a00, float a01, float a02,
@@ -33,8 +33,8 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief CircumCircle computes the circumcircle for a given triangle.
-    //! For complete details on the math see: http://mathworld.wolfram.com/Circumcircle.html
+    // CircumCircle computes the circumcircle for a given triangle.
+    // For complete details on the math see: http://mathworld.wolfram.com/Circumcircle.html
     //**********************************************************************
     void CircumCircle(Vector2 &p0, Vector2 &p1, Vector2 &p2, Vector2 *pCircumCenter, float *pRadius)
     {
@@ -59,17 +59,17 @@ namespace Caustic
             p2dotp2, p2.x, p2.y);
         pCircumCenter->x = -Bx / (2 * a);
         pCircumCenter->y = -By / (2 * a);
-        *pRadius = sqrtf(Bx * Bx + By * By - 4 * a * c) / (2 * fabs(a));
+        *pRadius = (float)(sqrtf(Bx * Bx + By * By - 4 * a * c) / (2 * fabs(a)));
     }
 
     //**********************************************************************
-    //! \brief PointInTriangleCircumcircle tests whether the specified point
-    //! is inside the circumcircle for the given triangle.
-    //! @param[in] p0 First point in the triangle
-    //! @param[in] p1 Second point in the triangle
-    //! @param[in] p2 Third point in the triangle
-    //! @param[in] pt Point to test
-    //! \returns Returns true if point is inside the circumcircle
+    // PointInTriangleCircumcircle tests whether the specified point
+    // is inside the circumcircle for the given triangle.
+    // p0 - First point in the triangle
+    // p1 - Second point in the triangle
+    // p2 - Third point in the triangle
+    // pt - Point to test
+    // Returns true if point is inside the circumcircle
     //**********************************************************************
     bool PointInTriangleCircumcircle(Vector2 &p0, Vector2 &p1, Vector2 &p2, Vector2 &pt)
     {

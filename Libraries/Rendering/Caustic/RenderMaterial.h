@@ -29,9 +29,23 @@ namespace Caustic
         CRefObj<ISampler> m_spSpecularSampler;
     public:
         friend class CRenderer;
-        friend CAUSTICAPI void CreateRenderMaterial(IGraphics *pGraphics, IMaterialAttrib *pMaterialAttrib, IShader *pShader, IRenderMaterial **ppRenderMaterial);
 
-        //**********************************************************************
+		CRenderMaterial(IMaterialAttrib *pMaterialAttrib, IShader *pShader)
+		{
+			m_spMaterial = pMaterialAttrib;
+			m_spShader = pShader;
+		}
+
+		CRenderMaterial(IMaterialAttrib *pMaterialAttrib, IShader *pShader,
+			ITexture *pAmbientTexture, ISampler *pAmbientSampler,
+			ITexture *pDiffuseTexture, ISampler *pDiffuseSampler,
+			ITexture *pSpecularTexture, ISampler *pSpecularSampler)
+		{
+			m_spMaterial = pMaterialAttrib;
+			m_spShader = pShader;
+		}
+
+		//**********************************************************************
         // IRefCount
         //**********************************************************************
         virtual uint32 AddRef() override { return CRefCount::AddRef(); }
@@ -49,9 +63,12 @@ namespace Caustic
             if (m_spMaterial.p)
                 (*ppMaterial)->AddRef();
         }
-        virtual void SetDiffuseTexture(IGraphics *pGraphics, ITexture *pTexture) override;
-        virtual void SetSpecularTexture(IGraphics *pGraphics, ITexture *pTexture) override;
-        virtual void SetAmbientTexture(IGraphics *pGraphics, ITexture *pTexture) override;
-        virtual void Render(IGraphics *pGraphics, std::vector<CRefObj<IPointLight>> &lights, IRenderCtx *pRenderCtx, IShader *pOverrideShader) override;
+        virtual void SetDiffuseTexture(IRenderer *pRenderer, ITexture *pTexture) override;
+		virtual CRefObj<ITexture> GetDiffuseTexture() override;
+		virtual void SetSpecularTexture(IRenderer *pRenderer, ITexture *pTexture) override;
+		virtual CRefObj<ITexture> GetSpecularTexture() override;
+		virtual void SetAmbientTexture(IRenderer *pRenderer, ITexture *pTexture) override;
+		virtual CRefObj<ITexture> GetAmbientTexture() override;
+		virtual void Render(IRenderer *pRenderer, std::vector<CRefObj<IPointLight>> &lights, IRenderCtx *pRenderCtx, IShader *pOverrideShader) override;
     };
 }

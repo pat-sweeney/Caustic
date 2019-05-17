@@ -6,324 +6,314 @@
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\CausticFactory.h"
 #include "Renderer.h"
+#include "DirectX-Graphics-Samples\Libraries\D3DX12\d3dx12.h"
 #include <vector>
 #include <any>
+#include <dxgidebug.h>
+#include <d3dcompiler.h>
 #include "Base\Core\CritSec.h"
-#include <d3d11.h>
-namespace Caustic {
-#include "DefaultVS.h"
-#include "DefaultVS.tbl"
-#include "DrawNormalPS.h"
-#include "DrawNormalPS.tbl"
-#include "DrawNormalVS.h"
-#include "DrawNormalVS.tbl"
-#include "ColorNormalPS.h"
-#include "ColorNormalPS.tbl"
-#include "ColorUVsPS.h"
-#include "ColorUVsPS.tbl"
-#include "DefaultPS.h"
-#include "DefaultPS.tbl"
-#include "TexturedPS.h"
-#include "TexturedPS.tbl"
-#include "LineVS.h"
-#include "LineVS.tbl"
-#include "LinePS.h"
-#include "LinePS.tbl"
-#ifdef SUPPORT_SHADOW_MAPPING
-#include "ShadowMapPS.h"
-#include "ShadowMapPS.tbl"
-#include "ShadowMapVS.h"
-#include "ShadowMapVS.tbl"
-#endif // SUPPORT_SHADOW_MAPPING
-    //#include "InfinitePlaneVS.h"
-//#include "InfinitePlaneVS.tbl"
-//#include "InfinitePlanePS.h"
-//#include "InfinitePlanePS.tbl"
-#ifdef SUPPORT_FULLQUAD
-#include "FullQuadVS.h"
-#include "FullQuadVS.tbl"
-#include "FullQuadPS.h"
-#include "FullQuadPS.tbl"
-#endif // SUPPORT_FULLQUAD
-#include "NormalPS.h"
-#include "NormalPS.tbl"
-}
-#include "Rendering\SceneGraph\SceneGraph.h"
+#include <d3d12.h>
 #include <algorithm>
+#include "Renderable.h"
 
 namespace Caustic
 {
-    //**********************************************************************
-    //! \brief s_defaultVSLayout defines the default layout for our default vertex
-    //**********************************************************************
-    D3D11_INPUT_ELEMENT_DESC s_defaultVSLayout[] =
-    {
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-    };
+	//**********************************************************************
+	CRenderer::CRenderer() :
+		m_waitForShutdown(false, true),
+		m_exitThread(false)
+	{
+	}
+
+	//**********************************************************************
+	CRenderer::~CRenderer()
+	{
+		m_exitThread = true;
+		m_waitForShutdown.Wait(INFINITE);
+	}
+
+	//**********************************************************************
+	void CRenderer::SetupDebugLayer()
+	{
+		CComPtr<ID3D12Debug> debugController;
+		if (SUCCEEDED(D3D12GetDebugInterface(__uuidof(ID3D12Debug), (void**)&debugController)))
+			debugController->EnableDebugLayer();
+		else
+			OutputDebugStringA("WARNING: Direct3D Debug Device is not available\n");
+		CComPtr<IDXGIInfoQueue> dxgiInfoQueue;
+		UINT dxgiFactoryFlags;
+		if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&dxgiInfoQueue))))
+		{
+			dxgiFactoryFlags = DXGI_CREATE_FACTORY_DEBUG;
+			dxgiInfoQueue->SetBreakOnSeverity(DXGI_DEBUG_ALL, DXGI_INFO_QUEUE_MESSAGE_SEVERITY_ERROR, true);
+			dxgiInfoQueue->SetBreakOnSeverity(DXGI_DEBUG_ALL, DXGI_INFO_QUEUE_MESSAGE_SEVERITY_CORRUPTION, true);
+			DXGI_INFO_QUEUE_MESSAGE_ID hide[] =
+			{
+				80 /* IDXGISwapChain::GetContainingOutput: The swapchain's adapter does not control the output on which the swapchain's window resides. */,
+			};
+			DXGI_INFO_QUEUE_FILTER filter = {};
+			filter.DenyList.NumIDs = _countof(hide);
+			filter.DenyList.pIDList = hide;
+			dxgiInfoQueue->AddStorageFilterEntries(DXGI_DEBUG_DXGI, &filter);
+		}
+		CT(CreateDXGIFactory2(dxgiFactoryFlags, __uuidof(IDXGIFactory5), (void**)&m_spDXGIFactory));
+		CComPtr<IDXGIAdapter1> spAdapter;
+		CT(m_spDXGIFactory->EnumAdapters1(0, &spAdapter));
+		CT(spAdapter->QueryInterface(__uuidof(IDXGIAdapter4), (void**)&m_spAdapter));
+		CComPtr<IDXGIOutput> spOutput;
+		CT(m_spAdapter->EnumOutputs(0, &spOutput));
+		UINT numModes;
+		CT(spOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, nullptr));
+		DXGI_MODE_DESC *modeDesc = new DXGI_MODE_DESC[numModes];
+		ZeroMemory(modeDesc, sizeof(modeDesc) * numModes);
+		CT(spOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, modeDesc));
+		for (UINT i = 0; i < numModes; i++)
+		{
+			if (modeDesc[i].Width == m_width && modeDesc[i].Height == m_height)
+			{
+				m_numerator = modeDesc[i].RefreshRate.Numerator;
+				m_denominator = modeDesc[i].RefreshRate.Denominator;
+				break;
+			}
+		}
+		delete[] modeDesc;
+
+		CComPtr<ID3D12Debug> spDebugController0;
+		CComPtr<ID3D12Debug1> spDebugController1;
+		CT(D3D12GetDebugInterface(IID_PPV_ARGS(&spDebugController0)));
+		CT(spDebugController0->QueryInterface(IID_PPV_ARGS(&spDebugController1)));
+		spDebugController1->SetEnableGPUBasedValidation(true);
+	}
+
+	//**********************************************************************
+	void CRenderer::CreateSwapChain(HWND hwnd)
+	{
+		// Create swap chain
+		ZeroMemory(&m_swapDesc, sizeof(m_swapDesc));
+		m_swapDesc.BufferCount = 2;
+		m_swapDesc.BufferDesc.Width = m_width;
+		m_swapDesc.BufferDesc.Height = m_height;
+		m_swapDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		m_swapDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+		m_swapDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+		m_swapDesc.Windowed = true;
+		m_swapDesc.OutputWindow = hwnd;
+		m_swapDesc.BufferDesc.RefreshRate.Numerator = m_numerator;
+		m_swapDesc.BufferDesc.RefreshRate.Denominator = m_denominator;
+		m_swapDesc.SampleDesc.Count = 1;
+		m_swapDesc.SampleDesc.Quality = 0;
+		m_swapDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+		m_swapDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+		m_swapDesc.Flags = 0;
+		CComPtr<IDXGISwapChain> spSwapChain;
+		CT(m_spDXGIFactory->CreateSwapChain(m_spCmdQueue, &m_swapDesc, &spSwapChain));
+		CT(spSwapChain->QueryInterface(__uuidof(IDXGISwapChain4), (void**)&m_spSwapChain));
+	}
+
+	void CRenderer::AllocateBackBuffers()
+	{
+		D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
+		heapDesc.NumDescriptors = 2;
+		heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+		heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+		CT(m_spDevice->CreateDescriptorHeap(&heapDesc, __uuidof(ID3D12DescriptorHeap), (void**)&m_spBackBufferHeap));
+		m_backBufferSize = m_spDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+		for (int i = 0; i < 2; i++)
+		{
+			m_hBackBuffers[i] = m_spBackBufferHeap->GetCPUDescriptorHandleForHeapStart();
+			m_hBackBuffers[i].ptr = m_hBackBuffers[0].ptr + i * m_backBufferSize;
+			CT(m_spSwapChain->GetBuffer(i, __uuidof(ID3D12Resource), (void**)&m_spBackBuffers[i]));
+			m_spDevice->CreateRenderTargetView(m_spBackBuffers[i], NULL, m_hBackBuffers[i]);
+			m_spBackBuffers[i]->SetName(L"m_spBackBuffer");
+		}
+		m_currentFrame = 0;
+	}
+
+	void CRenderer::CreateFences()
+	{
+		// Create fence for synchronization
+		for (int i = 0; i < c_NumBackBuffers; i++)
+		{
+			CT(m_spDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE, __uuidof(ID3D12Fence1), (void**)&m_spFences[i]));
+			m_fenceEvents[i] = ::CreateEventEx(nullptr, nullptr, 0, EVENT_ALL_ACCESS);
+		}
+		m_fenceValue = 0;
+	}
+
+	void CRenderer::CreateRootSignature()
+	{
+		D3D12_ROOT_CONSTANTS constants;
+		constants.Num32BitValues = 16;
+		constants.ShaderRegister = 0;
+		constants.RegisterSpace = 0;
+
+		D3D12_ROOT_PARAMETER  rootParameters[2];
+		rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
+		rootParameters[0].Constants = constants;
+		rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+
+		D3D12_DESCRIPTOR_RANGE  descriptorTableRanges[1];
+		descriptorTableRanges[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE::D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+		descriptorTableRanges[0].NumDescriptors = 1;
+		descriptorTableRanges[0].BaseShaderRegister = 0;
+		descriptorTableRanges[0].RegisterSpace = 0;
+		descriptorTableRanges[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+		D3D12_ROOT_DESCRIPTOR_TABLE descriptorTable;
+		descriptorTable.NumDescriptorRanges = _countof(descriptorTableRanges);
+		descriptorTable.pDescriptorRanges = &descriptorTableRanges[0];
+
+		rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE::D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+		rootParameters[1].DescriptorTable = descriptorTable;
+		rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL;
+
+		// create a static sampler
+		D3D12_STATIC_SAMPLER_DESC sampler = {};
+		sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
+		sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE::D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+		sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE::D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+		sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE::D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+		sampler.MipLODBias = 0;
+		sampler.MaxAnisotropy = 0;
+		sampler.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+		sampler.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+		sampler.MinLOD = 0.0f;
+		sampler.MaxLOD = D3D12_FLOAT32_MAX;
+		sampler.ShaderRegister = 0;
+		sampler.RegisterSpace = 0;
+		sampler.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+
+		CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc;
+		rootSignatureDesc.Init(_countof(rootParameters), rootParameters, 1,
+			&sampler,
+			D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
+			D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS |
+			D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS |
+			D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS);
+
+		CComPtr<ID3DBlob> spSignatureBlob;
+		CT(D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &spSignatureBlob, nullptr));
+		CT(m_spDevice->CreateRootSignature(0, spSignatureBlob->GetBufferPointer(), spSignatureBlob->GetBufferSize(), IID_PPV_ARGS(&m_spRootSignature)));
+	}
+
+	//**********************************************************************
+	void CRenderer::InitializeD3D(HWND hwnd)
+	{
+		SetupDebugLayer();
+
+		CT(D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_12_1, __uuidof(ID3D12Device5), (void**)&m_spDevice));
+
+		// Create the command queue
+		D3D12_COMMAND_QUEUE_DESC cmdQueueDesc = {};
+		cmdQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+		cmdQueueDesc.Priority = D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
+		cmdQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+		cmdQueueDesc.NodeMask = 1;
+		CT(m_spDevice->CreateCommandQueue(&cmdQueueDesc, __uuidof(ID3D12CommandQueue), (void**)&m_spCmdQueue));
+
+		CT(m_spDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT, __uuidof(ID3D12CommandAllocator), (void**)&m_spCommandAllocator));
+		CT(m_spDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT, m_spCommandAllocator, nullptr, __uuidof(ID3D12GraphicsCommandList4), (void**)&m_spCommandList));
+		CT(m_spCommandList->Close());
+		m_spCommandAllocator->SetName(L"m_spCommandAllocator");
+		m_spCommandList->SetName(L"m_spCommandList");
+
+		CreateSwapChain(hwnd);
+		AllocateBackBuffers();
+		CreateFences();
+		CreateRootSignature();
+
+		//	// Create texture for rendering object IDs
+		//   CD3D11_TEXTURE2D_DESC texObjID(DXGI_FORMAT_R32_UINT, m_BBDesc.Width, m_BBDesc.Height, 1, 1, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
+		//   CT(m_spDevice->CreateTexture2D(&texObjID, NULL, &m_spObjIDTexture));
+		//   D3D11_RENDER_TARGET_VIEW_DESC objIDRVDesc;
+		//   objIDRVDesc.Format = texObjID.Format;
+		//   objIDRVDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+		//   objIDRVDesc.Texture2D.MipSlice = 0;
+		//   CT(m_spDevice->CreateRenderTargetView(m_spObjIDTexture, &objIDRVDesc, &m_spObjIDRTView));
+	}
+
+	//**********************************************************************
+	void CRenderer::LoadShaderBlob(std::wstring &filename, ID3DBlob **ppBlob)
+	{
+		HANDLE f = ::CreateFile(filename.c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr);
+		if (f != INVALID_HANDLE_VALUE)
+		{
+			DWORD dwSize = GetFileSize(f, nullptr);
+			CT(D3DCreateBlob(dwSize, ppBlob));
+			DWORD bytesRead;
+			ReadFile(f, (*ppBlob)->GetBufferPointer(), dwSize, &bytesRead, nullptr);
+			CloseHandle(f);
+		}
+	}
+
+	//**********************************************************************
+	void CRenderer::LoadShaderInfo(std::wstring &filename, IShaderInfo **ppShaderInfo)
+	{
+		CCausticFactory::Instance()->CreateShaderInfo(filename.c_str(), ppShaderInfo);
+	}
+
+	//**********************************************************************
+	void CRenderer::LoadDefaultShaders(const wchar_t *pFolder)
+	{
+		WIN32_FIND_DATA findData;
+		std::wstring fn(pFolder);
+		fn += L"\\*.shi";
+		HANDLE h = ::FindFirstFile(fn.c_str(), &findData);
+		if (h == INVALID_HANDLE_VALUE)
+			CT(E_FAIL);
+		while (true)
+		{
+			std::wstring fn(findData.cFileName);
+			std::size_t found = fn.rfind(L".shi");
+			if (found != std::wstring::npos)
+			{
+				CComPtr<ID3DBlob> spPixelShaderBlob;
+				CComPtr<ID3DBlob> spVertexShaderBlob;
+				CComPtr<IShaderInfo> spShaderInfo;
+				CComPtr<IShader> spShader;
+				std::wstring shaderName(fn.substr(0, found));
+				LoadShaderBlob(std::wstring(const_cast<wchar_t*>(pFolder)) + std::wstring(L"\\") + shaderName + L"_PS.cso", &spPixelShaderBlob);
+				LoadShaderBlob(std::wstring(const_cast<wchar_t*>(pFolder)) + std::wstring(L"\\") + shaderName + L"_VS.cso", &spVertexShaderBlob);
+				LoadShaderInfo(std::wstring(const_cast<wchar_t*>(pFolder)) + std::wstring(L"\\") + shaderName + L".shi", &spShaderInfo);
+				CCausticFactory::Instance()->CreateShader(this, shaderName.c_str(), spVertexShaderBlob, spPixelShaderBlob, spShaderInfo, &spShader);
+				CShaderMgr::Instance()->RegisterShader(shaderName.c_str(), spShader.p);
+			}
+			if (!::FindNextFile(h, &findData))
+				break;
+		}
+	}
+
+	//**********************************************************************
+	void CRenderer::LoadBasicGeometry()
+	{
+	}
 
     //**********************************************************************
-    //! \brief s_lineVSLayout defines the default layout for our line vertex
+    // Setup is called at the start of the application to initialize
+    // the server side of our renderer
+    // hwnd HWND to use for drawing
     //**********************************************************************
-    D3D11_INPUT_ELEMENT_DESC s_lineVSLayout[] =
+    void CRenderer::Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice)
     {
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-    };
+		InitializeD3D(hwnd);
+	  
+	    // Create a default camera
+		CCausticFactory::Instance()->CreateCamera(false, &m_spCamera);
 
-    //**********************************************************************
-    //! \brief s_InfinitePlaneVSLayout defines the default layout for our infinite plane
-    //**********************************************************************
-    D3D11_INPUT_ELEMENT_DESC s_InfinitePlaneVSLayout[] =
-    {
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-    };
+		LoadDefaultShaders(shaderFolder.c_str());
 
-    //**********************************************************************
-    //! \brief s_drawNormalVSLayout defines the default layout for our line vertex
-    //**********************************************************************
-    D3D11_INPUT_ELEMENT_DESC s_drawNormalVSLayout[] =
-    {
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "TEXCOORD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-    };
-
-    //**********************************************************************
-    //! \brief CRenderer ctor
-    //**********************************************************************
-    CRenderer::CRenderer() :
-        m_waitForShutdown(false, true),
-        m_exitThread(false)
-    {
+		LoadBasicGeometry();
     }
-
+#if 0
     //**********************************************************************
-    CRenderer::~CRenderer()
-    {
-        m_exitThread = true;
-        m_waitForShutdown.Wait(INFINITE);
-    }
-
-    //**********************************************************************
-    //! \brief Setup is called at the start of the application to initialize
-    //! the server side of our renderer
-    //! \param[in] hwnd HWND to use for drawing
-    //**********************************************************************
-    void CRenderer::InitializeD3D(HWND hwnd)
-    {
-        CGraphicsBase::InitializeD3D(hwnd);
-
-        // Create texture for rendering object IDs
-        CD3D11_TEXTURE2D_DESC texObjID(DXGI_FORMAT_R32_UINT, m_BBDesc.Width, m_BBDesc.Height, 1, 1, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
-        CT(m_spDevice->CreateTexture2D(&texObjID, NULL, &m_spObjIDTexture));
-        D3D11_RENDER_TARGET_VIEW_DESC objIDRVDesc;
-        objIDRVDesc.Format = texObjID.Format;
-        objIDRVDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-        objIDRVDesc.Texture2D.MipSlice = 0;
-        CT(m_spDevice->CreateRenderTargetView(m_spObjIDTexture, &objIDRVDesc, &m_spObjIDRTView));
-    }
-
-    //**********************************************************************
-    //! \brief Setup is called at the start of the application to initialize
-    //! the server side of our renderer
-    //! \param[in] hwnd HWND to use for drawing
-    //**********************************************************************
-    void CRenderer::Setup(HWND hwnd, bool createDebugDevice)
-    {
-        CGraphicsBase::Setup(hwnd, createDebugDevice);
-
-        // Create our default shaders
-        CRefObj<IShader> spShader;
-        CreateShader(this, L"Default",
-            g_DefaultPS_ParamTable, _countof(g_DefaultPS_ParamTable),
-            g_DefaultVS_ParamTable, _countof(g_DefaultVS_ParamTable),
-            g_DefaultPS, sizeof(g_DefaultPS),
-            g_DefaultVS, sizeof(g_DefaultVS),
-            s_defaultVSLayout, _countof(s_defaultVSLayout), &spShader);
-        CShaderMgr::GetInstance()->RegisterShader(L"Default", spShader.p);
-
-#ifdef SUPPORT_SHADOW_MAPPING
-        spShader = nullptr;
-        CreateShader(this, L"ShadowMap",
-            g_ShadowMapPS_ParamTable, _countof(g_ShadowMapPS_ParamTable),
-            g_ShadowMapVS_ParamTable, _countof(g_ShadowMapVS_ParamTable),
-            g_ShadowMapPS, sizeof(g_ShadowMapPS),
-            g_ShadowMapVS, sizeof(g_ShadowMapVS),
-            s_ShadowMapVSLayout, _countof(s_ShadowMapVSLayout), &spShader);
-        CShaderMgr::GetInstance()->RegisterShader(L"ShadowMap", spShader.p);
-#endif // SUPPORT_SHADOW_MAPPING
-
-        spShader = nullptr;
-        CreateShader(this, L"DrawNormal",
-            g_DrawNormalPS_ParamTable, _countof(g_DrawNormalPS_ParamTable),
-            g_DrawNormalVS_ParamTable, _countof(g_DrawNormalVS_ParamTable),
-            g_DrawNormalPS, sizeof(g_DrawNormalPS),
-            g_DrawNormalVS, sizeof(g_DrawNormalVS),
-            s_drawNormalVSLayout, _countof(s_drawNormalVSLayout), &spShader);
-        CShaderMgr::GetInstance()->RegisterShader(L"DrawNormal", spShader.p);
-
-        spShader = nullptr;
-        CreateShader(this, L"ColorNormal",
-            g_ColorNormalPS_ParamTable, _countof(g_ColorNormalPS_ParamTable),
-            g_DefaultVS_ParamTable, _countof(g_DefaultVS_ParamTable),
-            g_ColorNormalPS, sizeof(g_ColorNormalPS),
-            g_DefaultVS, sizeof(g_DefaultVS),
-            s_defaultVSLayout, _countof(s_defaultVSLayout), &spShader);
-        CShaderMgr::GetInstance()->RegisterShader(L"ColorNormal", spShader.p);
-
-        spShader = nullptr;
-        CreateShader(this, L"ColorUVs",
-            g_ColorUVsPS_ParamTable, _countof(g_ColorUVsPS_ParamTable),
-            g_DefaultVS_ParamTable, _countof(g_DefaultVS_ParamTable),
-            g_ColorUVsPS, sizeof(g_ColorUVsPS),
-            g_DefaultVS, sizeof(g_DefaultVS),
-            s_defaultVSLayout, _countof(s_defaultVSLayout), &spShader);
-        CShaderMgr::GetInstance()->RegisterShader(L"ColorUVs", spShader.p);
-
-        spShader = nullptr;
-        CreateShader(this, L"Textured",
-            g_TexturedPS_ParamTable, _countof(g_TexturedPS_ParamTable),
-            g_DefaultVS_ParamTable, _countof(g_DefaultVS_ParamTable),
-            g_TexturedPS, sizeof(g_TexturedPS),
-            g_DefaultVS, sizeof(g_DefaultVS),
-            s_defaultVSLayout, _countof(s_defaultVSLayout), &spShader);
-        CShaderMgr::GetInstance()->RegisterShader(L"Textured", spShader.p);
-
-        spShader = nullptr;
-        CreateShader(this, L"Normal",
-            g_NormalPS_ParamTable, _countof(g_NormalPS_ParamTable),
-            g_DefaultVS_ParamTable, _countof(g_DefaultVS_ParamTable),
-            g_NormalPS, sizeof(g_NormalPS),
-            g_DefaultVS, sizeof(g_DefaultVS),
-            s_defaultVSLayout, _countof(s_defaultVSLayout), &spShader);
-        CShaderMgr::GetInstance()->RegisterShader(L"Normal", spShader.p);
-
-        //**********************************************************************
-        // Create vertex buffer used to draw lines
-        //**********************************************************************
-        {
-            CD3D11_BUFFER_DESC bufdesc(sizeof(SVertex_3) * 2, D3D11_BIND_VERTEX_BUFFER);
-            SVertex_3 *pVertexBuffer = new SVertex_3[2];
-            pVertexBuffer[0].m_pos[0] = 0.0f;
-            pVertexBuffer[0].m_pos[1] = 0.0f;
-            pVertexBuffer[0].m_pos[2] = 0.0f;
-            pVertexBuffer[1].m_pos[0] = 1.0f;
-            pVertexBuffer[1].m_pos[1] = 1.0f;
-            pVertexBuffer[1].m_pos[2] = 1.0f;
-            D3D11_SUBRESOURCE_DATA data;
-            data.pSysMem = pVertexBuffer;
-            data.SysMemPitch = 0;
-            data.SysMemSlicePitch = 0;
-            CT(m_spDevice->CreateBuffer(&bufdesc, &data, &m_spLineVB));
-        }
-
-        // Get Shader for lines
-        CreateShader(this, L"Line",
-            g_LinePS_ParamTable, _countof(g_LinePS_ParamTable),
-            g_LineVS_ParamTable, _countof(g_LineVS_ParamTable),
-            g_LinePS, sizeof(g_LinePS),
-            g_LineVS, sizeof(g_LineVS),
-            s_lineVSLayout, _countof(s_lineVSLayout), &m_spLineShader);
-        CShaderMgr::GetInstance()->RegisterShader(L"Line", m_spLineShader.p);
-
-        //**********************************************************************
-        // Create vertex buffer used to draw infinite plane
-        //**********************************************************************
-        {
-            CD3D11_BUFFER_DESC bufdesc(sizeof(SVertex_5) * 5, D3D11_BIND_VERTEX_BUFFER);
-            SVertex_5 planePts[5] = {
-                { 0.0f, 0.0f, 0.0f, 1.0f },
-                { 1.0f, 0.0f, 0.0f, 0.0f },
-                { 0.0f, 0.0f, 1.0f, 0.0f },
-                { -1.0f, 0.0f, 0.0f, 0.0f },
-                { 0.0f, 0.0f, -1.0f, 0.0f },
-            };
-            D3D11_SUBRESOURCE_DATA data;
-            data.pSysMem = planePts;
-            data.SysMemPitch = 0;
-            data.SysMemSlicePitch = 0;
-            CT(m_spDevice->CreateBuffer(&bufdesc, &data, &m_spInfinitePlaneVB));
-        }
-
-        //**********************************************************************
-        // Create index buffer used to draw infinite plane
-        //**********************************************************************
-        {
-            CD3D11_BUFFER_DESC bufdesc(sizeof(uint32) * 12, D3D11_BIND_INDEX_BUFFER);
-            uint32 planeIndices[4][3] = {
-                { 0, 1, 2 },
-                { 0, 2, 3 },
-                { 0, 3, 4 },
-                { 0, 4, 1 }
-            };
-            D3D11_SUBRESOURCE_DATA data;
-            data.pSysMem = planeIndices;
-            data.SysMemPitch = 0;
-            data.SysMemSlicePitch = 0;
-            CT(m_spDevice->CreateBuffer(&bufdesc, &data, &m_spInfinitePlaneIB));
-        }
-
-        // Get Shader for plane
-//        CreateShader(this, L"Plane",
-//            g_InfinitePlanePS_ParamTable, _countof(g_InfinitePlanePS_ParamTable),
-//            g_InfinitePlaneVS_ParamTable, _countof(g_InfinitePlaneVS_ParamTable),
-//            g_InfinitePlanePS, sizeof(g_InfinitePlanePS),
-//            g_InfinitePlaneVS, sizeof(g_InfinitePlaneVS),
-//            s_InfinitePlaneVSLayout, _countof(s_InfinitePlaneVSLayout), &m_spInfinitePlaneShader);
-//        CShaderMgr::GetInstance()->RegisterShader(L"Plane", m_spInfinitePlaneShader.p);
-
-#ifdef SUPPORT_FULLQUAD
-        //**********************************************************************
-        // Create vertex buffer used to draw fullscreen quad
-        //**********************************************************************
-        {
-            CD3D11_BUFFER_DESC vbdesc(sizeof(SVertex_5) * 4, D3D11_BIND_VERTEX_BUFFER);
-            SVertex_5 quadPts[5] = {
-                { -1.0f, -1.0f, 0.9f, 1.0f },
-                { -1.0f, +1.0f, 0.9f, 1.0f },
-                { +1.0f, +1.0f, 0.9f, 1.0f },
-                { +1.0f, -1.0f, 0.9f, 1.0f },
-            };
-            D3D11_SUBRESOURCE_DATA data;
-            data.pSysMem = quadPts;
-            data.SysMemPitch = 0;
-            data.SysMemSlicePitch = 0;
-            CT(m_spDevice->CreateBuffer(&vbdesc, &data, &m_spFullQuadVB));
-
-            //**********************************************************************
-            // Create index buffer used to draw full quad
-            //**********************************************************************
-            CD3D11_BUFFER_DESC ibdesc(sizeof(uint32) * 6, D3D11_BIND_INDEX_BUFFER);
-            uint32 quadIndices[2][3] = {
-                { 0, 2, 1 },
-                { 0, 3, 2 },
-            };
-            data.pSysMem = quadIndices;
-            data.SysMemPitch = 0;
-            data.SysMemSlicePitch = 0;
-            CT(m_spDevice->CreateBuffer(&ibdesc, &data, &m_spFullQuadIB));
-
-            // Get Shader for plane
-            CreateShader(this, L"FullQuad",
-                g_FullQuadPS_ParamTable, _countof(g_FullQuadPS_ParamTable),
-                g_FullQuadVS_ParamTable, _countof(g_FullQuadVS_ParamTable),
-                g_FullQuadPS, sizeof(g_FullQuadPS),
-                g_FullQuadVS, sizeof(g_FullQuadVS),
-                s_InfinitePlaneVSLayout, _countof(s_InfinitePlaneVSLayout), &m_spFullQuadShader);
-            CShaderMgr::GetInstance()->RegisterShader(L"FullQuad", m_spFullQuadShader.p);
-        }
-#endif // SUPPORT_FULLQUAD
-    }
-
-    //**********************************************************************
-    //! \brief DrawMesh draws a single mesh
-    //! \param[in] pMesh Mesh to render
-    //! \param[in] pMaterial Material definition for mesh (maybe nullptr)
-    //! \param[in] pTexture Texture to use when rendering (maybe nullptr)
-    //! \param[in] pShader Shader to use when rendering (maybe nullptr)
-    //! \param[in] mat Transformation matrix to apply to mesh
-    //!
-    //! CRendererServer::DrawMesh() draws the specified mesh.
+    // DrawMesh draws a single mesh
+    // pMesh Mesh to render
+    // pMaterial Material definition for mesh (maybe nullptr)
+    // pTexture Texture to use when rendering (maybe nullptr)
+    // pShader Shader to use when rendering (maybe nullptr)
+    // mat Transformation matrix to apply to mesh
+    //
+    // CRendererServer::DrawMesh() draws the specified mesh.
     //**********************************************************************
     void CRenderer::DrawMesh(ISubMesh *pSubMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat)
     {
@@ -339,6 +329,7 @@ namespace Caustic
         CRenderable renderable(this, pSubMesh, spFrontMaterial.p, spBackMaterial.p, mat);
         m_singleObjs.push_back(renderable);
     }
+#endif
 
     //**********************************************************************
     void CRenderer::AddPointLight(IPointLight *pLight)
@@ -384,9 +375,11 @@ namespace Caustic
     void CRenderer::DrawLine(Vector3 p1, Vector3 p2, Vector4 clr)
     {
         UINT offset = 0;
-        UINT vertexSize = sizeof(SVertex_3);
-        ID3D11DeviceContext *pContext = GetContext();
-        pContext->IASetVertexBuffers(0, 1, &m_spLineVB.p, &vertexSize, &offset);
+		D3D12_VERTEX_BUFFER_VIEW vbView = {};
+		vbView.BufferLocation = m_lineVB.m_spVB->GetGPUVirtualAddress();
+		vbView.SizeInBytes = m_lineVB.m_numVertices * m_lineVB.m_vertexSize;
+		vbView.StrideInBytes = m_lineVB.m_vertexSize;
+		m_spCommandList->IASetVertexBuffers(0, 1, &vbView);
         Matrix m;
         m.x[0] = p2.x - p1.x;    m.x[4] = 0.0f;            m.x[8] = 0.0f;            m.x[12] = 0.0f;
         m.x[1] = 0.0f;            m.x[5] = p2.y - p1.y;    m.x[9] = 0.0f;            m.x[13] = 0.0f;
@@ -396,50 +389,32 @@ namespace Caustic
         Float4 color(clr.x, clr.y, clr.z, clr.w);
         m_spLineShader->SetPSParam(L"color", std::any(color));
         m_spLineShader->BeginRender(this);
-        pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-        pContext->Draw(2, 0);
+        m_spCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+		m_spCommandList->DrawInstanced(m_lineVB.m_numVertices, 1, 0, 0);
         m_spLineShader->EndRender(this);
     }
-
-    void CRenderer::SetSceneGraph(ISceneGraph *pSceneGraph)
+	
+	void CRenderer::DrawSceneObjects(int pass)
     {
-        m_spSceneGraph = pSceneGraph;
-    }
-
-    void CRenderer::GetGraphics(IGraphics **ppGraphics)
-    {
-        *ppGraphics = this;
-        (*ppGraphics)->AddRef();
-    }
-
-    void CRenderer::DrawSceneObjects(int pass)
-    {
-        if (m_spSceneGraph.p)
-        {
-            SceneCtx sceneCtx;
-            sceneCtx.m_CurrentPass = pass;
-            m_spSceneGraph->Render(this, m_spRenderCtx.p, &sceneCtx);
-        }
-
         // Render any single objects
         for (size_t i = 0; i < m_singleObjs.size(); i++)
         {
-            if (m_singleObjs[i].m_passes & (1 << pass))
-                m_singleObjs[i].Render(this, m_lights, m_spRenderCtx.p);
+            if (m_singleObjs[i]->InPass(pass))
+                m_singleObjs[i]->Render(this, m_lights, m_spRenderCtx.p);
         }
     }
 
     void CRenderer::RenderScene()
     {
         DrawInfinitePlane();
-        if (m_spRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayWorldAxis)
+		if (m_spRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayWorldAxis)
         {
             DrawLine(Vector3(0.0f, 0.0f, 0.0f), Vector3(10.0f, 0.0f, 0.0f), Vector4(1.0f, 0.0f, 0.0f, 1.0f));
             DrawLine(Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 10.0f, 0.0f), Vector4(0.0f, 1.0f, 0.0f, 1.0f));
             DrawLine(Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 10.0f), Vector4(0.0f, 0.0f, 1.0f, 1.0f));
         }
 
-        if (m_spRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayLightDir &&
+		if (m_spRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayLightDir &&
             m_lights.size() > 0)
         {
             for (size_t i = 0; i < m_lights.size(); i++)
@@ -489,12 +464,12 @@ namespace Caustic
                 std::vector<int> order;
                 order.resize(m_singleObjs.size());
                 std::sort(m_singleObjs.begin(), m_singleObjs.end(),
-                    [&](CRenderable &left, CRenderable &right)->bool
+                    [&](CRefObj<IRenderable> &left, CRefObj<IRenderable> &right)->bool
                     {
                         Vector3 cameraPos;
                         GetCamera()->GetPosition(&cameraPos, nullptr, nullptr, nullptr, nullptr, nullptr);
-                        float dist1 = (left.GetPos() - cameraPos).Length();
-                        float dist2 = (right.GetPos() - cameraPos).Length();
+                        float dist1 = (left->GetPos() - cameraPos).Length();
+                        float dist2 = (right->GetPos() - cameraPos).Length();
                         if (dist1 < dist2)
                             return true;
                         return false;
@@ -517,168 +492,50 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief RenderFrame is typically called from the render loop to render
-    //! the next frame.
+    // RenderFrame is typically called from the render loop to render
+    // the next frame.
     //**********************************************************************
     void CRenderer::RenderFrame()
     {
-        ID3D11RenderTargetView *pView = m_spRTView;
-        m_spContext->OMSetRenderTargets(1, &pView, nullptr);
+		// Reset our command list
+		CT(m_spCommandAllocator->Reset());
+		CT(m_spCommandList->Reset(m_spCommandAllocator, nullptr));
 
-        FLOAT bgClr[4] = { 0.4f, 0.4f, 0.4f, 1.0f };
-        m_spContext->ClearRenderTargetView(pView, bgClr);
-        m_spContext->ClearDepthStencilView(m_spStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		// Make sure our backbuffer is in the correct state
+		m_spCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_spBackBuffers[m_currentFrame], D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+		
+		// Setup our render targets
+		D3D12_CPU_DESCRIPTOR_HANDLE hRTV = m_spBackBufferHeap->GetCPUDescriptorHandleForHeapStart();
+		UINT RTVSize = m_spDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+		hRTV.ptr += m_currentFrame * RTVSize;
+		m_spCommandList->OMSetRenderTargets(1, &hRTV, false, nullptr);
+		
+		// Clear the render target
+		static float color[4] = { 0.4f, 0.4f, 0.4f, 1.0f };
+		m_spCommandList->ClearRenderTargetView(hRTV, color, 0, nullptr);
+		m_spCommandList->ClearDepthStencilView(m_hBackBuffers[m_currentFrame], D3D12_CLEAR_FLAGS::D3D12_CLEAR_FLAG_DEPTH, D3D12_FLOAT32_MAX, 0, 0, nullptr);
 
-        CD3D11_DEPTH_STENCIL_DESC depthDesc(D3D11_DEFAULT);
-        depthDesc.DepthEnable = true;
-        depthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-        depthDesc.DepthFunc = D3D11_COMPARISON_LESS;
-        CComPtr<ID3D11DepthStencilState> spDepthStencilState;
-        CT(m_spDevice->CreateDepthStencilState(&depthDesc, &spDepthStencilState));
-        m_spContext->OMSetDepthStencilState(spDepthStencilState, 1);
-
-        m_spContext->OMSetRenderTargets(1, &pView, m_spStencilView);
+        //CD3DX12_DEPTH_STENCIL_DESC depthDesc(D3D12_DEFAULT);
+        //depthDesc.DepthEnable = true;
+        //depthDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+        //depthDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
+        //CComPtr<ID3D12DepthStencilState> spDepthStencilState;
+        //CT(m_spDevice->CreateDepthStencilState(&depthDesc, &spDepthStencilState));
+        //m_spCommandList->OMSetDepthStencilState(spDepthStencilState, 1);
 
         RenderScene();
         m_spSwapChain->Present(1, 0);
     }
 
-    //**********************************************************************
-    //! \brief RenderLoop is our main rendering loop
-    //**********************************************************************
-    void CRenderer::RenderLoop()
-    {
-        while (!m_exitThread)
-        {
-            RenderFrame();
-        }
-        m_waitForShutdown.Set();
-    }
-
-    CAUSTICAPI void CreateGraphics(HWND hwnd, IGraphics **ppGraphics)
-    {
-        _ASSERT(ppGraphics);
-        std::unique_ptr<CGraphics> spGraphics(new CGraphics());
-        spGraphics->Setup(hwnd, true);
-
-        CRefObj<ICamera> spCamera;
-        CCausticFactory::Instance()->CreateCamera(true, &spCamera);
-        spGraphics->SetCamera(spCamera.p);
-
-        *ppGraphics = spGraphics.release();
-        (*ppGraphics)->AddRef();
-    }
-
-    CAUSTICAPI void CreateRenderer(HWND hwnd, IRenderer **ppRenderer)
-    {
-        _ASSERT(ppRenderer);
-        std::unique_ptr<CRenderer> spRenderer(new CRenderer());
-        spRenderer->Setup(hwnd, true);
-
-        CRefObj<ICamera> spCamera;
-		CCausticFactory::Instance()->CreateCamera(true, &spCamera);
-        spRenderer->SetCamera(spCamera.p);
-
-        *ppRenderer = spRenderer.release();
-        (*ppRenderer)->AddRef();
-    }
-
-    //**********************************************************************
-    //! \brief SetCamera assigns a camera to the graphics device
-    //! \param[in] pCamera Camera for renderer to use
-    //**********************************************************************
-    void CGraphicsBase::SetCamera(ICamera *pCamera)
-    {
-        m_spCamera = pCamera;
-    }
-
-    //**********************************************************************
-    //! \brief Setup is called at the start of the application to initialize
-    //! the server side of our renderer
-    //! \param[in] hwnd HWND to use for drawing
-    //**********************************************************************
-    void CGraphicsBase::InitializeD3D(HWND hwnd)
-    {
-        std::unique_ptr<CRenderCtx> spCtx(new CRenderCtx());
-        m_spRenderCtx = spCtx.release();
-
-        CComPtr<ID3D11Texture2D> m_spBackBuffer;
-        CT(m_spSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&m_spBackBuffer)));
-        D3D11_TEXTURE2D_DESC m_BBDesc;
-        m_spBackBuffer->GetDesc(&m_BBDesc);
-        CT(m_spDevice->CreateRenderTargetView(m_spBackBuffer, nullptr, &m_spRTView));
-
-#ifdef SUPPORT_SHADOW_MAPPING
-        // Create texture for rendering shadow map
-        for (int i = 0; i < c_MaxShadowMaps; i++)
-        {
-            CD3D11_TEXTURE2D_DESC texObjID(DXGI_FORMAT_R32_FLOAT, m_BBDesc.Width, m_BBDesc.Height, 1, 1, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
-            CT(m_spDevice->CreateTexture2D(&texObjID, NULL, &m_spShadowTexture[i]));
-            D3D11_RENDER_TARGET_VIEW_DESC rtdesc;
-            rtdesc.Format = texObjID.Format;
-            rtdesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-            rtdesc.Texture2D.MipSlice = 0;
-            CT(m_spDevice->CreateRenderTargetView(m_spShadowTexture[i], &rtdesc, &m_spShadowRTView[i]));
-        }
-#endif // SUPPORT_SHADOW_MAPPING
-
-        // Create depth buffer
-        CD3D11_TEXTURE2D_DESC texDesc2D(DXGI_FORMAT_D24_UNORM_S8_UINT, m_BBDesc.Width, m_BBDesc.Height, 1, 1, D3D11_BIND_DEPTH_STENCIL);
-        CT(m_spDevice->CreateTexture2D(&texDesc2D, NULL, &m_spDepthStencilBuffer));
-
-        // Create the depth buffer ressource view
-        CD3D11_DEPTH_STENCIL_VIEW_DESC stencilDesc(D3D11_DSV_DIMENSION_TEXTURE2D, DXGI_FORMAT_D24_UNORM_S8_UINT);
-        CT(m_spDevice->CreateDepthStencilView(m_spDepthStencilBuffer, &stencilDesc, &m_spStencilView));
-
-        RECT rect;
-        ::GetClientRect(hwnd, &rect);
-        D3D11_VIEWPORT viewport;
-        ZeroMemory(&viewport, sizeof(viewport));
-        viewport.TopLeftX = 0;
-        viewport.TopLeftY = 0;
-        viewport.Width = (float)(rect.right - rect.left);
-        viewport.Height = (float)(rect.bottom - rect.top);
-        viewport.MinDepth = 0.0f;
-        viewport.MaxDepth = 1.0f;
-        m_spContext->RSSetViewports(1, &viewport);
-    }
-
-    //**********************************************************************
-    //! \brief Setup is called at the start of the application to initialize
-    //! the server side of our renderer
-    //! \param[in] hwnd HWND to use for drawing
-    //**********************************************************************
-    void CGraphicsBase::Setup(HWND hwnd, bool createDebugDevice)
-    {
-        DXGI_SWAP_CHAIN_DESC desc = { 0 };
-        desc.BufferDesc.Width = 0;
-        desc.BufferDesc.Height = 0;
-        desc.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-        desc.BufferDesc.RefreshRate.Numerator = 1;
-        desc.BufferDesc.RefreshRate.Denominator = 30;
-        desc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-        desc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-        desc.SampleDesc.Count = 1;
-        desc.SampleDesc.Quality = 0;
-        desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-        desc.BufferCount = 2;
-        desc.OutputWindow = hwnd;
-        desc.Windowed = TRUE;
-        desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;// DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
-        desc.Flags = 0;
-
-        CT(D3D11CreateDeviceAndSwapChain(nullptr,
-            D3D_DRIVER_TYPE_HARDWARE,
-            nullptr, // software module
-            D3D11_CREATE_DEVICE_DEBUG, // flags
-            nullptr, // pFeatureLevels
-            0, // numFeatureLevels
-            D3D11_SDK_VERSION,
-            &desc, &m_spSwapChain, &m_spDevice, &m_featureLevel, &m_spContext));
-
-        InitializeD3D(hwnd);
-
-        // Create a default camera
-		CCausticFactory::Instance()->CreateCamera(false, &m_spCamera);
-    }
+	//**********************************************************************
+	//! \brief RenderLoop is our main rendering loop
+	//**********************************************************************
+	void CRenderer::RenderLoop()
+	{
+		while (!m_exitThread)
+		{
+			RenderFrame();
+		}
+		m_waitForShutdown.Set();
+	}
 }

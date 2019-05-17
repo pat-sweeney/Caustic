@@ -14,7 +14,7 @@
     <ProjectGuid>{49433C2E-BF12-4B0F-8DD2-204C3339D5C5}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>SceneGraph</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -85,6 +85,7 @@
     <ClInclude Include="MaterialElem.h" />
     <ClInclude Include="MeshElem.h" />
     <ClInclude Include="PointLightElem.h" />
+    <ClInclude Include="SceneElem.h" />
     <ClInclude Include="SceneFactory.h" />
     <ClInclude Include="ISceneGraph.h" />
     <ClInclude Include="SceneGraph.h" />

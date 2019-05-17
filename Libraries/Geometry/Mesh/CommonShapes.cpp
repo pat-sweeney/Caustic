@@ -11,14 +11,14 @@
 namespace Caustic
 {
     //**********************************************************************
-    //! \brief CreateSurfaceRevolution is used to generate a solid by revolving the specified
-    //! polygon around the Y axis. All points are assumed to be relative to the world coordinate
-    //! origin (thus the point specifies the point's normal vector).
-    //! @param[in] pts List of points (should be increasing Y value)
-    //! @param[in] npts Number of points in 'pts'
-    //! @param[in] subdivisions Number of subdivisions to generate around the Y axis
-    //! @param[in] maxAngle Maximum number of degrees to rotate around Y axis
-    //! @param[out] ppMesh Newly generated mesh
+    // CreateSurfaceRevolution is used to generate a solid by revolving the specified
+    // polygon around the Y axis. All points are assumed to be relative to the world coordinate
+    // origin (thus the point specifies the point's normal vector).
+    // pts - List of points (should be increasing Y value)
+    // npts - Number of points in 'pts'
+    // subdivisions - Number of subdivisions to generate around the Y axis
+    // maxAngle - Maximum number of degrees to rotate around Y axis
+    // ppMesh - Newly generated mesh
     //**********************************************************************
     CAUSTICAPI void CreateSurfaceRevolution(std::vector<Vector3> &pts, uint32 npts, uint32 subdivisions, float maxAngle, IMesh **ppMesh)
     {
@@ -185,11 +185,11 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Generates a sphere mesh.
-    //!
-    //! Creates a mesh in the shape of a sphere. 
-    //! \param[in] subdivisions  Number of divisions along azimuth and elevation
-    //! \param[out] ppMesh Returns the created mesh
+    // Generates a sphere mesh.
+    // 
+    // Creates a mesh in the shape of a sphere. 
+    // subdivisions - Number of divisions along azimuth and elevation
+    // ppMesh - Returns the created mesh
     //**********************************************************************
     CAUSTICAPI void CreateSphere(uint32 subdivisions, IMesh **ppMesh)
     {
@@ -208,10 +208,10 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Generates a tetrahedron mesh.
-    //!
-    //! Creates a mesh in the shape of a tetrahedro. 
-    //! \param[out] ppMesh Returns the created mesh
+    // Generates a tetrahedron mesh.
+    // 
+    // Creates a mesh in the shape of a tetrahedro. 
+    // ppMesh - Returns the created mesh
     //**********************************************************************
     CAUSTICAPI void CreateTetrahedron(IMesh **ppMesh)
     {
@@ -250,12 +250,12 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Generates a grid mesh
-    //!
-    //! Generates a grid mesh of size -1..+1,-1..+1 with texture coordinates
-    //! spanning the entire mesh from 0..1
-    //! \param[in] subdivisions Number of times to subdivide the grid
-    //! \param[out] ppMesh Returns the created mesh
+    // Generates a grid mesh
+    // 
+    // Generates a grid mesh of size -1..+1,-1..+1 with texture coordinates
+    // spanning the entire mesh from 0..1
+    //subdivisions Number of times to subdivide the grid
+    // ppMesh - Returns the created mesh
     //**********************************************************************
     CAUSTICAPI void CreateGrid(uint32 subdivisions, IMesh **ppMesh)
     {
@@ -303,8 +303,8 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Returns a cube mesh
-    //! @param [out] ppMesh Returns the newly created mesh object
+    // Returns a cube mesh
+    // ppMesh - Returns the newly created mesh object
     //**********************************************************************
     CAUSTICAPI void CreateCube(IMesh **ppMesh)
     {

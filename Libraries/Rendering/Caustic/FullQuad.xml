@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Shader>
+  <PixelShader Filename="$(CausticRoot)\Libraries\Rendering\Caustic\FullQuad.ps" Output="$(CausticRoot)\$(Configuration)\FullQuad_PS.cso"/>
+  <VertexShader Filename="$(CausticRoot)\Libraries\Rendering\Caustic\FullQuad.vs" Output="$(CausticRoot)\$(Configuration)\FullQuad_VS.cso"/>
+</Shader>

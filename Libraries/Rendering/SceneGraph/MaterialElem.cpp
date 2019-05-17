@@ -5,22 +5,12 @@
 #include "stdafx.h"
 #include "Rendering\SceneGraph\SceneGraph.h"
 #include "Geometry\Mesh\Mesh.h"
-#include "Geometry\Mesh\Material.h"
+#include "Rendering/Caustic/Material.h"
 #include "MaterialElem.h"
 #include <string>
 
 namespace Caustic
 {
-    CAUSTICAPI void CreateMaterialElem(ISceneMaterialElem **ppElem)
-    {
-        std::unique_ptr<CSceneMaterialElem> spMeshObj(new CSceneMaterialElem());
-		CRefObj<IMaterialAttrib> spMaterial;
-        Caustic::CreateMaterial(&spMaterial);
-		spMeshObj->SetMaterial(spMaterial.p);
-        *ppElem = spMeshObj.release();
-        (*ppElem)->AddRef();
-    }
-
     std::wstring &CSceneMaterialElem::Name()
     {
         return CSceneElem::m_Name;

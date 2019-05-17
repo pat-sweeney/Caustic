@@ -32,10 +32,10 @@ namespace Caustic
 	// An unsigned 64b value
 	typedef unsigned long long uint64;
 
-    typedef char int8;                  //!< A signed 8b value
-    typedef short int16;                //!< A signed 16b value
-    typedef int int32;                  //!< A signed 32b value
-    typedef long long int64;            //!< A signed 64b value
+    typedef char int8;                  // A signed 8b value
+    typedef short int16;                // A signed 16b value
+    typedef int int32;                  // A signed 32b value
+    typedef long long int64;            // A signed 64b value
 
     const float c_Epsilon = 0.0000001f;
 

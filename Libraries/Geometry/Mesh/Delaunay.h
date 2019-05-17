@@ -13,15 +13,15 @@
 
 namespace Caustic
 {
-    const int c_TriangleBad = 0x1;      //!< Flag indicating whether triangle was removed due to violating Delaunay property
-    const int c_ExteriorTriangle = 0x2; //!< Flag indicating whether triangle is a part of the exterior (super triangle)
+    const int c_TriangleBad = 0x1;      // Flag indicating whether triangle was removed due to violating Delaunay property
+    const int c_ExteriorTriangle = 0x2; // Flag indicating whether triangle is a part of the exterior (super triangle)
     const int c_RemovedTriangle = 0x4;
 
     struct Triangle
     {
-        uint8 flags;    //!< Miscellaneous triangle flags
-        int v0, v1, v2; //!< Indices into CDelaunay2.points defining the triangle's vertices
-        int e0, e1, e2; //!< Indices into CDelaunay2.edges defining the triangle's edges
+        uint8 flags;    // Miscellaneous triangle flags
+        int v0, v1, v2; // Indices into CDelaunay2.points defining the triangle's vertices
+        int e0, e1, e2; // Indices into CDelaunay2.edges defining the triangle's edges
 
         Triangle() {}
         Triangle(int _v0, int _v1, int _v2, int _e0, int _e1, int _e2, uint8 triFlags) :
@@ -36,8 +36,8 @@ namespace Caustic
     struct Edge
     {
         uint8 flags;
-        int v0, v1; //!< Indices into CDelaunay2.points defining the triangle's edges
-        int t0, t1; //!< Triangles sharing this edge
+        int v0, v1; // Indices into CDelaunay2.points defining the triangle's edges
+        int t0, t1; // Triangles sharing this edge
 
         Edge() : flags(0) {}
         Edge(int i0, int i1, int tri0, int tri1) : flags(0)
@@ -72,8 +72,8 @@ namespace Caustic
     };
 
     //**********************************************************************
-    //! \brief CDelaunay2 defines a class for creating a Delaunay triangulation
-    //! from a set of 2D points
+    // CDelaunay2 defines a class for creating a Delaunay triangulation
+    // from a set of 2D points
     //**********************************************************************
     class CDelaunay2 : public IDelaunay2, public CRefCount
     {

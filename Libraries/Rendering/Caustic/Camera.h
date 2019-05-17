@@ -6,7 +6,7 @@
 #include "Rendering\Caustic\Caustic.h"
 #include "Base\Core\Core.h"
 #include "Base\Core\RefCount.h"
-#include <d3d11.h>
+#include <d3d12.h>
 #include <DirectXMath.h>
 
 namespace Caustic
@@ -15,17 +15,17 @@ namespace Caustic
     _declspec(align(16)) class CCamera : public ICamera, public CRefCount
     {
     protected:
-        bool m_leftHanded;        ///< Indicates if camera uses left or right handed coordinates
-        float m_FOV;              ///< Field of view in radians
-        float m_AspectRatio;      ///< Aspect ratio of the output camera
-        float m_NearZ;            ///< Near clipping plane in meters
-        float m_FarZ;             ///< Far clipping plane in meters
+        bool m_leftHanded;        // Indicates if camera uses left or right handed coordinates
+        float m_FOV;              // Field of view in radians
+        float m_AspectRatio;      // Aspect ratio of the output camera
+        float m_NearZ;            // Near clipping plane in meters
+        float m_FarZ;             // Far clipping plane in meters
         Vector3 m_Eye;
         Vector3 m_Look;
         Vector3 m_Up;
         Vector3 m_offset;
-        DirectX::XMMATRIX m_Pers; ///< Our perspective matrix
-        DirectX::XMMATRIX m_View; ///< Our view matrix (world to camera transform)
+        DirectX::XMMATRIX m_Pers; // Our perspective matrix
+        DirectX::XMMATRIX m_View; // Our view matrix (world to camera transform)
     public:
         CCamera(bool leftHanded);
         ~CCamera();

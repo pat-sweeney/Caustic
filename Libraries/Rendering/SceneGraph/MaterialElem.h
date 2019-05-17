@@ -3,7 +3,7 @@
 // All Rights Reserved
 //**********************************************************************
 #pragma once
-#include "SceneGraphImpl.h"
+#include "ISceneGraph.h"
 #include "Rendering\Caustic\Caustic.h"
 #include "GroupElem.h"
 

@@ -5,16 +5,19 @@
 #include "stdafx.h"
 #include "Base\Core\Error.h"
 #include "Texture.h"
+#include "CausticFactory.h"
 #include <memory>
 #include <wincodec.h>
 #include <objbase.h>
 #include <map>
+#include <d3dx12.h>
 
 namespace Caustic
 {
-    void CTexture::GenerateMips(IGraphics *pGraphics)
+    void CTexture::GenerateMips(IRenderer *pRenderer)
     {
-        CD3D11_TEXTURE2D_DESC desc(m_Format, m_Width, m_Height);
+#if 0
+        CD3DX12_TEXTURE2D_DESC desc(m_Format, m_Width, m_Height);
         desc.Usage = D3D11_USAGE_DEFAULT;
         desc.CPUAccessFlags = 0;
         desc.MipLevels = 0;
@@ -33,41 +36,48 @@ namespace Caustic
         srvDesc.Texture2D.MipLevels = (UINT)-1;
         m_spTextureRV = nullptr;
         CT(pGraphics->GetDevice()->CreateShaderResourceView(m_spTexture, &srvDesc, &m_spTextureRV));
-        pGraphics->GetContext()->GenerateMips(m_spTextureRV);
+		pRenderer->GetContext()->GenerateMips(m_spTextureRV);
+#endif
     }
 
     //**********************************************************************
-    //! \brief Ctor for our texture wrapper object
-    //! \param[in] pGraphics Graphics renderer
-    //! \param[in] width Width in pixels of image
-    //! \param[in] height Height in pixels of image
-    //! \param[in format Defines the pixel format for the image
-    //**********************************************************************
-    CTexture::CTexture(IGraphics *pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, uint32 cpuFlags, uint32 bindFlags) :
+    CTexture::CTexture(IRenderer *pRenderer, uint32 width, uint32 height, DXGI_FORMAT format) :
         m_Format(format),
         m_Width(width),
         m_Height(height)
     {
-        CD3D11_TEXTURE2D_DESC desc(format, width, height);
-        if (cpuFlags & D3D11_CPU_ACCESS_READ)
-            desc.Usage = D3D11_USAGE_STAGING;
-        else if (cpuFlags & D3D11_CPU_ACCESS_WRITE)
-            desc.Usage = D3D11_USAGE_DYNAMIC;
-        else
-            desc.Usage = D3D11_USAGE_DEFAULT;
-        desc.CPUAccessFlags = cpuFlags;
-        desc.MipLevels = 1;
-        desc.BindFlags = bindFlags;
-        CT(pGraphics->GetDevice()->CreateTexture2D(&desc, nullptr, &m_spTexture.p));
+		D3D12_RESOURCE_DESC texDesc = {};
+		texDesc.Dimension = D3D12_RESOURCE_DIMENSION::D3D12_RESOURCE_DIMENSION_BUFFER;
+		texDesc.Alignment = D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT;
+		texDesc.Width = width;
+		texDesc.Height = height;
+		texDesc.DepthOrArraySize = 1;
+		texDesc.MipLevels = 1;
+		texDesc.Format = format;
+		texDesc.SampleDesc.Count = 1;
+		texDesc.SampleDesc.Quality = 0;
+		texDesc.Layout = D3D12_TEXTURE_LAYOUT::D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+		texDesc.Flags = D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE;
 
-        if (desc.Usage == D3D11_USAGE_DYNAMIC || desc.Usage == D3D11_USAGE_DEFAULT)
-        {
-            D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-            srvDesc.Format = desc.Format;
-            srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-            srvDesc.Texture2D.MipLevels = 1;
-            CT(pGraphics->GetDevice()->CreateShaderResourceView(m_spTexture, &srvDesc, &m_spTextureRV));
-        }
+		CComPtr<ID3D12Device> spDevice = pRenderer->GetDevice();
+
+		// this function gets the size an upload buffer needs to be to upload a texture to the gpu.
+		// each row must be 256 byte aligned except for the last row, which can just be the size in bytes of the row
+		// eg. textureUploadBufferSize = ((((width * numBytesPerPixel) + 255) & ~255) * (height - 1)) + (width * numBytesPerPixel);
+		uint32 imageBytesPerRow = width * 4;
+		UINT64 textureUploadBufferSize = (((imageBytesPerRow + 255) & ~255) * (texDesc.Height - 1)) + imageBytesPerRow;
+		D3D12_RESOURCE_ALLOCATION_INFO info = spDevice->GetResourceAllocationInfo(0, 0, &texDesc);
+		spDevice->GetCopyableFootprints(&texDesc, 0, 1, 0, nullptr, nullptr, nullptr, &textureUploadBufferSize);
+
+		// now we create an upload heap to upload our texture to the GPU
+		spDevice->CreateCommittedResource(
+			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD), // upload heap
+			D3D12_HEAP_FLAG_NONE, // no flags
+			&CD3DX12_RESOURCE_DESC::Buffer(textureUploadBufferSize), // resource description for a buffer (storing the image data in this heap just to copy to the default heap)
+			D3D12_RESOURCE_STATE_GENERIC_READ, // We will copy the contents from this heap to the default heap above
+			nullptr,
+			IID_PPV_ARGS(&m_spTexture));
+		m_spTexture->SetName(L"Texture");
     }
     
     CTexture::~CTexture()
@@ -89,58 +99,13 @@ namespace Caustic
         return m_Format;
     }
 
-    CAUSTICAPI void CreateTexture(IGraphics *pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, uint32 cpuFlags, uint32 bindFlags, ITexture **ppTexture)
-    {
-        std::unique_ptr<CTexture> spTexture(new CTexture(pGraphics, width, height, format, cpuFlags, bindFlags));
-        *ppTexture = spTexture.release();
-        (*ppTexture)->AddRef();
-    }
-    
-    CAUSTICAPI CRefObj<ITexture> CheckerboardTexture(IGraphics *pGraphics)
-    {
-        static CRefObj<ITexture> s_spCheckerBoard;
-        if (s_spCheckerBoard == nullptr)
-        {
-            CreateTexture(pGraphics, 32, 32, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE, &s_spCheckerBoard);
-            CComPtr<ID3D11Texture2D> spTexture = s_spCheckerBoard->GetD3DTexture();
-            D3D11_MAPPED_SUBRESOURCE ms;
-            CT(pGraphics->GetContext()->Map(spTexture, 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
-            BYTE *pr = reinterpret_cast<BYTE*>(ms.pData);
-            for (int i = 0; i < 32; i++)
-            {
-                BYTE *pc = pr;
-                for (int j = 0; j < 32; j++)
-                {
-                    if ((i & 1) == (j & 1))
-                    {
-                        pc[0] = 0x00;
-                        pc[1] = 0x00;
-                        pc[2] = 0x00;
-                        pc[3] = 0xff;
-                    }
-                    else
-                    {
-                        pc[0] = 0xff;
-                        pc[1] = 0xff;
-                        pc[2] = 0xff;
-                        pc[3] = 0xff;
-                    }
-                    pc += 4;
-                }
-                pr += ms.RowPitch;
-            }
-            pGraphics->GetContext()->Unmap(spTexture, 0);
-        }
-        return s_spCheckerBoard;
-    }
-    
     //**********************************************************************
-    //! \brief LoadTexture loads a texture from a file using WIC
-    //! \param[in] pFilename Name of file to load
-    //! \param[in] pGraphics Renderer
-    //! \param[out] ppTexture Returns the new texture
+    // LoadTexture loads a texture from a file using WIC
+    // pFilename Name of file to load
+    // pGraphics Renderer
+    // \param[out] ppTexture Returns the new texture
     //**********************************************************************
-    CAUSTICAPI void LoadTexture(const wchar_t *pFilename, IGraphics *pGraphics, ITexture **ppTexture)
+    CAUSTICAPI void LoadTexture(const wchar_t *pFilename, IRenderer *pGraphics, ITexture **ppTexture)
     {
         static std::map<std::wstring, CRefObj<ITexture>> cache;
         std::map<std::wstring, CRefObj<ITexture>>::iterator it;
@@ -188,11 +153,13 @@ namespace Caustic
             WICBitmapPaletteType::WICBitmapPaletteTypeMedianCut));
 
         CRefObj<ITexture> spTexture;
-        CreateTexture(pGraphics, width, height, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE, &spTexture);
-        CComPtr<ID3D11Texture2D> spD3DTexture = spTexture->GetD3DTexture();
-        D3D11_MAPPED_SUBRESOURCE ms;
-        CT(pGraphics->GetContext()->Map(spD3DTexture, 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
-        BYTE *prDst = reinterpret_cast<BYTE*>(ms.pData);
+        Caustic::CCausticFactory::Instance()->CreateTexture(pGraphics, width, height, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM, &spTexture);
+        CComPtr<ID3D12Resource> spD3DTexture = spTexture->GetD3DTexture();
+		D3D12_RANGE range;
+		range.Begin = 0;
+		range.End = 0;
+		BYTE *prDst;
+		CT(spD3DTexture->Map(0, &range, (void**)&prDst));
         for (UINT i = 0; i < height; i++)
         {
             WICRect r;
@@ -201,9 +168,9 @@ namespace Caustic
             r.Width = width;
             r.Height = 1;
             CT(spConverter->CopyPixels(&r, width * 4, width * 4, prDst));
-            prDst += ms.RowPitch;
+            prDst += width * 4;
         }
-        pGraphics->GetContext()->Unmap(spD3DTexture, 0);
+		spD3DTexture->Unmap(0, &range);
 
         spTexture->GenerateMips(pGraphics);
         

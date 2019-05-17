@@ -16,9 +16,9 @@
 namespace Caustic {
     
 //**********************************************************************
-CVideoTexture::CVideoTexture(IGraphics *pGraphics)
+CVideoTexture::CVideoTexture(IRenderer *pRenderer)
 {
-	CCausticFactory::Instance()->CreateTexture(pGraphics, 1, 1, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE, &m_spTexture);
+	CCausticFactory::Instance()->CreateTexture(pRenderer, 1, 1, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM, &m_spTexture);
 }
 
 //**********************************************************************
@@ -27,7 +27,7 @@ CVideoTexture::~CVideoTexture()
 }
 
 //**********************************************************************
-//! \brief Returns the width of the texture
+// Returns the width of the texture
 //**********************************************************************
 uint32 CVideoTexture::GetWidth()
 {
@@ -35,7 +35,7 @@ uint32 CVideoTexture::GetWidth()
 }
 
 //**********************************************************************
-//! \brief Returns the height of the texture
+// Returns the height of the texture
 //**********************************************************************
 uint32 CVideoTexture::GetHeight()
 {
@@ -77,7 +77,7 @@ static RECT CorrectAspectRatio(const RECT& src, const MFRatio& srcPAR)
 }
 
 //**********************************************************************
-//! \brief Retrieves the current image format from the video
+// Retrieves the current image format from the video
 //**********************************************************************
 void CVideoTexture::GetVideoFormat(CVideoFormat *pFormat)
 {
@@ -104,9 +104,9 @@ void CVideoTexture::GetVideoFormat(CVideoFormat *pFormat)
 }
 
 //**********************************************************************
-//! \brief Updates the underlying texture
+// Updates the underlying texture
 //**********************************************************************
-void CVideoTexture::Update(IGraphics *pGraphics)
+void CVideoTexture::Update(IRenderer *pRenderer)
 {
     DWORD streamIndex;
     DWORD flags;
@@ -121,11 +121,12 @@ void CVideoTexture::Update(IGraphics *pGraphics)
     {
         GetVideoFormat(&m_format);
         m_spTexture = nullptr;
-		CCausticFactory::Instance()->CreateTexture(pGraphics, m_Width, m_Height, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE, &m_spTexture);
+		CCausticFactory::Instance()->CreateTexture(pRenderer, m_Width, m_Height, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM, &m_spTexture);
     }
     if (spSample)
     {
-        CComPtr<ID3D11Texture2D> spD3DTexture = m_spTexture->GetD3DTexture();
+#if 0
+        CComPtr<ID3D12Resource> spD3DTexture = m_spTexture->GetD3DTexture();
         D3D11_MAPPED_SUBRESOURCE ms;
         CT(pGraphics->GetContext()->Map(spD3DTexture, 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
 
@@ -145,14 +146,15 @@ void CVideoTexture::Update(IGraphics *pGraphics)
             pSrc += pitch;
             pDst += ms.RowPitch;
         }
-        pGraphics->GetContext()->Unmap(spD3DTexture, 0);
+        pRenderer->GetContext()->Unmap(spD3DTexture, 0);
         CT(spBuffer->Unlock());
-    }
+#endif
+	}
 
 }
 
 //**********************************************************************
-void CVideoTexture::LoadFromFile(const wchar_t *pFilename, IGraphics *pGraphics)
+void CVideoTexture::LoadFromFile(const wchar_t *pFilename, IRenderer *pRenderer)
 {
     CComPtr<IMFAttributes> spAttributes;
     CT(MFCreateAttributes(&spAttributes, 1));
@@ -187,19 +189,19 @@ void CVideoTexture::LoadFromFile(const wchar_t *pFilename, IGraphics *pGraphics)
     m_Width = m_format.m_width;
     m_Height = m_format.m_height;
     m_spTexture = nullptr;
-	CCausticFactory::Instance()->CreateTexture(pGraphics, m_Width, m_Height, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE, &m_spTexture);
+	CCausticFactory::Instance()->CreateTexture(pRenderer, m_Width, m_Height, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM, &m_spTexture);
 }
 
 //**********************************************************************
-//! \brief LoadVideoTexture loads a video and uses it as the texture source
-//! \param[in] pFilename Name of file to load
-//! \param[in] pGraphics Renderer
-//! \param[out] ppTexture Returns the new texture
+// LoadVideoTexture loads a video and uses it as the texture source
+// pFilename Name of file to load
+// pGraphics Renderer
+// \param[out] ppTexture Returns the new texture
 //**********************************************************************
-CAUSTICAPI void LoadVideoTexture(const wchar_t *pFilename, IGraphics *pGraphics, ITexture **ppTexture)
+CAUSTICAPI void LoadVideoTexture(const wchar_t *pFilename, IRenderer *pRenderer, ITexture **ppTexture)
 {
-    std::unique_ptr<CVideoTexture> spTexture(new CVideoTexture(pGraphics));
-    spTexture->LoadFromFile(pFilename, pGraphics);
+    std::unique_ptr<CVideoTexture> spTexture(new CVideoTexture(pRenderer));
+    spTexture->LoadFromFile(pFilename, pRenderer);
     *ppTexture = spTexture.release();
     (*ppTexture)->AddRef();
 }

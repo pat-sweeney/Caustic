@@ -24,10 +24,10 @@ namespace Caustic
     //**********************************************************************
     struct CKDTreeNode
     {
-        double m_cutPoint;                                          //!< Values < m_cutPoint are added to the left child (m_pLower), while >= are added to the right child (m_pUpper)
-        CKDTreeNode *m_pLower;                                      //!< Left child (points < than m_cutPoint)
-        CKDTreeNode *m_pUpper;                                      //!< Right child (points >= than m_cutPoint)
-        std::vector<std::tuple<Caustic::Vector3,void*>> *m_pPoints; //!< List of points in this leaf node
+        double m_cutPoint;                                          // Values < m_cutPoint are added to the left child (m_pLower), while >= are added to the right child (m_pUpper)
+        CKDTreeNode *m_pLower;                                      // Left child (points < than m_cutPoint)
+        CKDTreeNode *m_pUpper;                                      // Right child (points >= than m_cutPoint)
+        std::vector<std::tuple<Caustic::Vector3,void*>> *m_pPoints; // List of points in this leaf node
 
         CKDTreeNode() :
             m_cutPoint(0.0f),
@@ -43,8 +43,8 @@ namespace Caustic
     //**********************************************************************
     class CKDTree : public IKDTree, public CRefCount
     {
-        CKDTreeNode *m_pChildren;       //!< Nodes in our tree
-        int m_maxPoints;                //!< Maximum # of points allowed in any leaf node
+        CKDTreeNode *m_pChildren;       // Nodes in our tree
+        int m_maxPoints;                // Maximum # of points allowed in any leaf node
 
         void AddPointRecursive(CKDTreeNode *pNode, CutAxis cutAxis, Caustic::Vector3 &vec, void *data);
         bool FindPointRecursive(CKDTreeNode *pNode, CutAxis cutAxis, Caustic::Vector3 &vec, std::function<bool(void *data)> comparator, void **data);

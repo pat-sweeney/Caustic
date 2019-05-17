@@ -12,14 +12,7 @@
 
 namespace Caustic
 {
-    CAUSTICAPI void CreateCamera(bool leftHanded, ICamera **ppCamera)
-    {
-        std::unique_ptr<CCamera> pCamera(new CCamera(leftHanded));
-        *ppCamera = pCamera.release();
-        (*ppCamera)->AddRef();
-    }
-
-    //**********************************************************************
+	//**********************************************************************
     CCamera::CCamera(bool leftHanded) :
         m_leftHanded(leftHanded)
     {

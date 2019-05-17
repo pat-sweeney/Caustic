@@ -8,7 +8,6 @@
 #include "Rendering\Caustic\Shader.h"
 #include "Base\Math\Matrix.h"
 #include "SceneGraph.h"
-#include "ISceneFactory.h"
 
 namespace Caustic
 {
@@ -22,7 +21,7 @@ namespace Caustic
 		// Method: CreateMaterialElem
 		// Creates a material element
 		//**********************************************************************
-		virtual void CreateMaterialElem(Caustic::ISceneMaterialElem **ppElem) = 0;
+		virtual void CreateMaterialElem(ISceneMaterialElem **ppElem) = 0;
 
 		//**********************************************************************
 		// Method: CreatePointLightElem

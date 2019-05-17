@@ -15,9 +15,9 @@ namespace Caustic
     CBlockAllocator<CFace> CSubMesh::m_faceAllocator(100000);
 
     //**********************************************************************
-    //! \brief Normalize rescales a mesh so fits inside a -0.5..+0.5 bounding box
-    //!
-    //! \param bbox Bounding box of the mesh
+    // Normalize rescales a mesh so fits inside a -0.5..+0.5 bounding box
+    // 
+    // \param bbox Bounding box of the mesh
     //**********************************************************************
     void CSubMesh::Normalize(const BBox3 &bbox)
     {
@@ -83,8 +83,8 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \Brief This method converts a mesh from arbitrary polygons into
-    //! a triangulated mesh.
+    // This method converts a mesh from arbitrary polygons into
+	// a triangulated mesh.
     //**********************************************************************
     void CSubMesh::Triangulate(ETriangulateMethod method)
     {
@@ -100,17 +100,17 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \Brief This method will compute all the vertex normals
-    //! by averaging the surrounding face normals.
-    //! 
-    //! This method will compute all the vertex normals
-    //! on the mesh by summing and normalizing the face vertices
-    //! around each vertex (via Newell's method). NOTE: This makes
-    //! an implicit assumption that each face is planar. This is not
-    //! always the case and can thus result in incorrect normals (for
-    //! instance, the faces from CreateSphere() will not be planar).
-    //! To prevent incorrect normals, it is first recommended that
-    //! the mesh be triangulated first via CSubMesh::Triangulate().
+    // This method will compute all the vertex normals
+    // by averaging the surrounding face normals.
+    // 
+    // This method will compute all the vertex normals
+    // on the mesh by summing and normalizing the face vertices
+    // around each vertex (via Newell's method). NOTE: This makes
+    // an implicit assumption that each face is planar. This is not
+    // always the case and can thus result in incorrect normals (for
+    // instance, the faces from CreateSphere() will not be planar).
+    // To prevent incorrect normals, it is first recommended that
+    // the mesh be triangulated first via CSubMesh::Triangulate().
     //**********************************************************************
     void CSubMesh::ComputeNormals()
     {
@@ -224,7 +224,7 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief AllocateFace allocates a new face and places in our face list.
+    // AllocateFace allocates a new face and places in our face list.
     //**********************************************************************
     CFace *CSubMesh::AllocateFace()
     {
@@ -236,8 +236,8 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief AllocateVertex allocates a new vertex given a position,
-    //! normal, and UVs and places it in our vertex list.
+    // AllocateVertex allocates a new vertex given a position,
+	// normal, and UVs and places it in our vertex list.
     //**********************************************************************
     CGeomVertex *CSubMesh::AllocateGeomVertex(Vector3 &pos, Vector3 &normal, Vector2 &uv)
     {
@@ -265,10 +265,10 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief AllocateEdge allocates a new edge going from
-    //! pTail->pHead. NOTE: This function does not insert
-    //! the edge into our edge list. That occurs during the call
-    //! to LinkEdges().
+    // AllocateEdge allocates a new edge going from
+    // pTail->pHead. NOTE: This function does not insert
+    // the edge into our edge list. That occurs during the call
+    // to LinkEdges().
     //**********************************************************************
     CHalfEdge *CSubMesh::AllocateEdge(CGeomVertex *pHead, CGeomVertex *pTail)
     {
@@ -299,8 +299,8 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief FindEdge returns the edge from pTail->pHead. If the edge does
-    //! not exist then nullptr is returned.
+    // FindEdge returns the edge from pTail->pHead. If the edge does
+    // not exist then nullptr is returned.
     //**********************************************************************
     CHalfEdge *CSubMesh::FindEdge(CGeomVertex *pHead, CGeomVertex *pTail)
     {
@@ -312,8 +312,8 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief FindVertex will return a pointer to a vertex in our mesh
-    //! that matches the specified values
+    // FindVertex will return a pointer to a vertex in our mesh
+	// that matches the specified values
     //**********************************************************************
     CGeomVertex *CSubMesh::FindVertex(Vector3 &pos, Vector3 *pNorm, Vector2 *pUV)
     {
@@ -333,9 +333,9 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief FindNextEdgeAroundVertex returns the next edge around the vertex
-    //! in the given direction (clockwise or counter-clockwise) that is either
-    //! entering or leaving the vertex.
+    // FindNextEdgeAroundVertex returns the next edge around the vertex
+    // in the given direction (clockwise or counter-clockwise) that is either
+    // entering or leaving the vertex.
     //**********************************************************************
     CHalfEdge *CSubMesh::FindNextEdgeAroundVertex(CGeomVertex *pVert, CHalfEdge *pEdge, bool entering, bool clockwise)
     {
@@ -379,7 +379,7 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief LinkEdges links two edges (full edges) together
+    // LinkEdges links two edges (full edges) together
     // We start with the picture at the top. The solid lines represent
     // HalfEdge's, while the dotted lines represent their m_pPrev/m_pNext
     // links. We are trying to add newEdge and link it to oldEdge (an existing

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -22,7 +22,7 @@
     <ProjectGuid>{60A04400-10F9-4C6D-B34C-D5C7EBAFA262}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Caustic</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <PropertyGroup>
     <CustomBuildBeforeTargets>ClCompile</CustomBuildBeforeTargets>
@@ -96,7 +96,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>CAUSTIC_EXPORT;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(CausticRoot)\External\OculusSDK\LibOVRKernel\Src;$(CausticRoot)\External\OculusSDK;$(CausticRoot)\External\$(BoostVersion);$(CausticRoot)\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CausticRoot)\External\DirectX-Graphics-Samples\Libraries\D3DX12;$(CausticRoot)\External\OculusSDK\LibOVRKernel\Src;$(CausticRoot)\External\OculusSDK;$(CausticRoot)\External\$(BoostVersion);$(CausticRoot)\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
@@ -132,7 +132,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>CAUSTIC_EXPORT;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(CausticRoot)\External\OculusSDK\LibOVRKernel\Src;$(CausticRoot)\External\OculusSDK;$(CausticRoot)\External\$(BoostVersion);$(CausticRoot)\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CausticRoot)\External\DirectX-Graphics-Samples\Libraries\D3DX12;$(CausticRoot)\External\OculusSDK\LibOVRKernel\Src;$(CausticRoot)\External\OculusSDK;$(CausticRoot)\External\$(BoostVersion);$(CausticRoot)\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
@@ -144,190 +144,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="Textured.ps">
-      <ExcludedFromBuild>false</ExcludedFromBuild>
-      <EntryPointName>PS</EntryPointName>
-      <ShaderType>Pixel</ShaderType>
-      <VariableName>g_TexturedPS</VariableName>
-      <HeaderFileOutput>TexturedPS.h</HeaderFileOutput>
-      <Command>$(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS Textured</Command>
-      <Outputs>TexturedPS.h;TexturedPS.tbl</Outputs>
-      <Inputs>$(TargetFileName)</Inputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TexturedPS.h;TexturedPS.tbl</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">TexturedPS.h;TexturedPS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS Textured</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS Textured</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS Textured</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS Textured</Command>
-    </CustomBuild>
-    <CustomBuild Include="ColorNormal.ps">
-      <ExcludedFromBuild>false</ExcludedFromBuild>
-      <EntryPointName>PS</EntryPointName>
-      <ShaderType>Pixel</ShaderType>
-      <VariableName>g_ColorNormalPS</VariableName>
-      <HeaderFileOutput>ColorNormalPS.h</HeaderFileOutput>
-      <Command>$(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS ColorNormal</Command>
-      <Outputs>ColorNormalPS.h;ColorNormalPS.tbl</Outputs>
-      <Inputs>$(TargetFileName)</Inputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">ColorNormalPS.h;ColorNormalPS.tbl</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ColorNormalPS.h;ColorNormalPS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS ColorNormal</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS ColorNormal</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS ColorNormal</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS ColorNormal</Command>
-    </CustomBuild>
-    <CustomBuild Include="ColorUVs.ps">
-      <ExcludedFromBuild>false</ExcludedFromBuild>
-      <EntryPointName>PS</EntryPointName>
-      <ShaderType>Pixel</ShaderType>
-      <VariableName>g_ColorUVsPS</VariableName>
-      <HeaderFileOutput>ColorUVsPS.h</HeaderFileOutput>
-      <Command>$(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS ColorUVs</Command>
-      <Outputs>ColorUVsPS.h;ColorUVsPS.tbl</Outputs>
-      <Inputs>$(TargetFileName)</Inputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">ColorUVsPS.h;ColorUVsPS.tbl</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ColorUVsPS.h;ColorUVsPS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS ColorUVs</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS ColorUVs</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS ColorUVs</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS ColorUVs</Command>
-    </CustomBuild>
-    <CustomBuild Include="Default.ps">
-      <ExcludedFromBuild>false</ExcludedFromBuild>
-      <EntryPointName>PS</EntryPointName>
-      <ShaderType>Pixel</ShaderType>
-      <VariableName>g_DefaultPS</VariableName>
-      <HeaderFileOutput>DefaultPS.h</HeaderFileOutput>
-      <Command>$(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS Default</Command>
-      <Outputs>DefaultPS.h;DefaultPS.tbl</Outputs>
-      <Inputs>$(TargetFileName)</Inputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">DefaultPS.h;DefaultPS.tbl</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">DefaultPS.h;DefaultPS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS Default</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS Default</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS Default</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS Default</Command>
-    </CustomBuild>
-    <CustomBuild Include="Default.vs">
-      <ExcludedFromBuild>false</ExcludedFromBuild>
-      <ShaderType>Vertex</ShaderType>
-      <EntryPointName>VS</EntryPointName>
-      <VariableName>g_DefaultVS</VariableName>
-      <HeaderFileOutput>DefaultVS.h</HeaderFileOutput>
-      <Command>$(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS Default</Command>
-      <Outputs>DefaultVS.h;DefaultVS.tbl</Outputs>
-      <Inputs>$(TargetFileName)</Inputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">DefaultVS.h;DefaultVS.tbl</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">DefaultVS.h;DefaultVS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS Default</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS Default</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS Default</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS Default</Command>
-    </CustomBuild>
-    <CustomBuild Include="DrawNormal.vs">
-      <ExcludedFromBuild>false</ExcludedFromBuild>
-      <ShaderType>Vertex</ShaderType>
-      <EntryPointName>VS</EntryPointName>
-      <VariableName>g_DrawNormalVS</VariableName>
-      <HeaderFileOutput>DrawNormalVS.h</HeaderFileOutput>
-      <Command>$(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS DrawNormal</Command>
-      <Outputs>DrawNormalVS.h;DrawNormalVS.tbl</Outputs>
-      <Inputs>$(TargetFileName)</Inputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">DrawNormalVS.h;DrawNormalVS.tbl</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">DrawNormalVS.h;DrawNormalVS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS DrawNormal</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS DrawNormal</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS DrawNormal</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS DrawNormal</Command>
-    </CustomBuild>
-    <CustomBuild Include="Line.ps">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-      <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS Line</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS Line</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">LinePS.h;LinePS.tbl</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">LinePS.h;LinePS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS Line</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">LinePS.h;LinePS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS Line</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">LinePS.h;LinePS.tbl</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="Line.vs">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-      <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS Line</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS Line</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">LineVS.h;LineVS.tbl</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">LineVS.h;LineVS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS Line</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">LineVS.h;LineVS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS Line</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">LineVS.h;LineVS.tbl</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="Normal.ps">
-      <ExcludedFromBuild>false</ExcludedFromBuild>
-      <EntryPointName>PS</EntryPointName>
-      <ShaderType>Pixel</ShaderType>
-      <VariableName>g_NormalPS</VariableName>
-      <HeaderFileOutput>NormalPS.h</HeaderFileOutput>
-      <Command>$(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS Normal</Command>
-      <Outputs>NormalPS.h;NormalPS.tbl</Outputs>
-      <Inputs>$(TargetFileName)</Inputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NormalPS.h;NormalPS.tbl</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NormalPS.h;NormalPS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS Normal</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS Normal</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS Normal</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS Normal</Command>
-    </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Caustic.h" />
     <ClInclude Include="CausticFactory.h" />
+    <ClInclude Include="ICamera.h" />
     <ClInclude Include="ICausticFactory.h" />
+    <ClInclude Include="IMaterialAttrib.h" />
+    <ClInclude Include="IPointLight.h" />
+    <ClInclude Include="IRenderable.h" />
+    <ClInclude Include="IRenderCtx.h" />
+    <ClInclude Include="IRenderer.h" />
+    <ClInclude Include="IRendererMarshaller.h" />
+    <ClInclude Include="IRenderMaterial.h" />
+    <ClInclude Include="ISampler.h" />
+    <ClInclude Include="IShader.h" />
+    <ClInclude Include="IShaderInfo.h" />
+    <ClInclude Include="IShaderMgr.h" />
+    <ClInclude Include="ITexture.h" />
+    <ClInclude Include="ITrackball.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="PointLight.h" />
-    <ClInclude Include="RendererMarshaller.h" />
-    <ClInclude Include="DefaultPS.h" />
-    <ClInclude Include="DefaultVS.h" />
     <ClInclude Include="defs.h" />
-    <ClInclude Include="Graphics.h" />
-    <ClInclude Include="LinePS.h" />
-    <ClInclude Include="LineVS.h" />
+    <ClInclude Include="Renderable.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="RendererMarshaller.h" />
     <ClInclude Include="RenderMaterial.h" />
     <ClInclude Include="Sampler.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShaderInfo.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Texture.h" />
@@ -337,14 +181,20 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CausticFactory.cpp" />
+    <ClCompile Include="DebugGUIDs.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="PointLight.cpp" />
-    <ClCompile Include="RendererMarshaller.cpp" />
-    <ClCompile Include="MeshToVB.cpp" />
+    <ClCompile Include="MeshToVB.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Renderable.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="RendererMarshaller.cpp" />
     <ClCompile Include="RenderMaterial.cpp" />
     <ClCompile Include="Sampler.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="ShaderInfo.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -356,118 +206,124 @@
     <ClCompile Include="VideoTexture.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DefaultPS.tbl">
-      <FileType>Document</FileType>
-    </ClInclude>
-    <ClInclude Include="DefaultVS.tbl">
-      <FileType>Document</FileType>
-    </ClInclude>
-    <ClInclude Include="LinePS.tbl">
-      <FileType>Document</FileType>
-    </ClInclude>
-    <ClInclude Include="LineVS.tbl">
-      <FileType>Document</FileType>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="DrawNormal.ps">
-      <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS DrawNormal</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">DrawNormalPS.h;DrawNormalPS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS DrawNormal</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">DrawNormalPS.h;DrawNormalPS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS DrawNormal</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">DrawNormalPS.h;DrawNormalPS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS DrawNormal</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">DrawNormalPS.h;DrawNormalPS.tbl</Outputs>
+    <CustomBuild Include="ColorNormal.xml">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\x64\Release\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\ColorNormal.xml -o $(CausticRoot)\$(Configuration)\ColorNormal.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\x64\Release\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\ColorNormal.xml -o $(CausticRoot)\$(Configuration)\ColorNormal.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\ColorNormal.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\ColorNormal.shi</Outputs>
+      <SubType>Designer</SubType>
     </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="ObjID.ps">
-      <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS ObjID</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ObjIDPS.h;ObjIDPS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS ObjID</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ObjIDPS.h;ObjIDPS.tbl</Outputs>
+    <CustomBuild Include="Default.xml">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\x64\Release\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\Default.xml -o $(CausticRoot)\$(Configuration)\Default.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\x64\Release\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\Default.xml -o $(CausticRoot)\$(Configuration)\Default.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\Default.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\Default.shi</Outputs>
+      <SubType>Designer</SubType>
     </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="InfinitePlane.ps">
-      <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS InfinitePlane</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS InfinitePlane</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">InfinitePlanePS.h;InfinitePlanePS.tbl</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">InfinitePlanePS.h;InfinitePlanePS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS InfinitePlane</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">InfinitePlanePS.h;InfinitePlanePS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS InfinitePlane</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">InfinitePlanePS.h;InfinitePlanePS.tbl</Outputs>
+    <CustomBuild Include="ColorUVs.xml">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\x64\Release\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\ColorUVs.xml -o $(CausticRoot)\$(Configuration)\ColorUVs.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\x64\Release\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\ColorUVs.xml -o $(CausticRoot)\$(Configuration)\ColorUVs.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\ColorUVs.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\ColorUVs.shi</Outputs>
+      <SubType>Designer</SubType>
     </CustomBuild>
-    <CustomBuild Include="InfinitePlane.vs">
-      <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS InfinitePlane</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS InfinitePlane</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">InfinitePlaneVS.h;InfinitePlaneVS.tbl</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">InfinitePlaneVS.h;InfinitePlaneVS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS InfinitePlane</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS InfinitePlane</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">InfinitePlaneVS.h;InfinitePlaneVS.tbl</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">InfinitePlaneVS.h;InfinitePlaneVS.tbl</Outputs>
+    <CustomBuild Include="DrawNormal.xml">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\x64\Release\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\DrawNormal.xml -o $(CausticRoot)\$(Configuration)\DrawNormal.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\x64\Release\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\DrawNormal.xml -o $(CausticRoot)\$(Configuration)\DrawNormal.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\DrawNormal.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\DrawNormal.shi</Outputs>
+      <SubType>Designer</SubType>
     </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="FullQuad.ps">
-      <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS FullQuad</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">FullQuadPS.h;FullQuadPS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS FullQuad</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">FullQuadPS.h;FullQuadPS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS FullQuad</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">FullQuadPS.h;FullQuadPS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS FullQuad</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">FullQuadPS.h;FullQuadPS.tbl</Outputs>
+    <CustomBuild Include="FullQuad.xml">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\x64\Release\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\FullQuad.xml -o $(CausticRoot)\$(Configuration)\FullQuad.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\x64\Release\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\FullQuad.xml -o $(CausticRoot)\$(Configuration)\FullQuad.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\FullQuad.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\FullQuad.shi</Outputs>
+      <SubType>Designer</SubType>
     </CustomBuild>
-    <CustomBuild Include="FullQuad.vs">
-      <FileType>CSharpFile</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS FullQuad</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS FullQuad</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">FullQuadVS.h;FullQuadVS.tbl</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">FullQuadVS.h;FullQuadVS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS FullQuad</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">FullQuadVS.h;FullQuadVS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS FullQuad</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">FullQuadVS.h;FullQuadVS.tbl</Outputs>
+    <CustomBuild Include="InfinitePlane.xml">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\x64\Release\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\InfinitePlane.xml -o $(CausticRoot)\$(Configuration)\InfinitePlane.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\x64\Release\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\InfinitePlane.xml -o $(CausticRoot)\$(Configuration)\InfinitePlane.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\InfinitePlane.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\InfinitePlane.shi</Outputs>
+      <SubType>Designer</SubType>
     </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="ShadowMap.ps">
-      <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS ShadowMap</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS ShadowMap</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">ShadowMapPS.h;ShadowMapPS.tbl</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ShadowMapPS.h;ShadowMapPS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS ShadowMap</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS ShadowMap</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">ShadowMapPS.h;ShadowMapPS.tbl</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ShadowMapPS.h;ShadowMapPS.tbl</Outputs>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    <CustomBuild Include="Line.xml">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\x64\Release\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\Line.xml -o $(CausticRoot)\$(Configuration)\Line.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\x64\Release\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\Line.xml -o $(CausticRoot)\$(Configuration)\Line.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\Line.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\Line.shi</Outputs>
+      <SubType>Designer</SubType>
+    </CustomBuild>
+    <CustomBuild Include="Normal.xml">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\x64\Release\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\Normal.xml -o $(CausticRoot)\$(Configuration)\Normal.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\x64\Release\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\Normal.xml -o $(CausticRoot)\$(Configuration)\Normal.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\Normal.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\Normal.shi</Outputs>
+      <SubType>Designer</SubType>
+    </CustomBuild>
+    <CustomBuild Include="ObjID.xml">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\x64\Release\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\ObjID.xml -o $(CausticRoot)\$(Configuration)\ObjID.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\x64\Release\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\ObjID.xml -o $(CausticRoot)\$(Configuration)\ObjID.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\ObjID.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\ObjID.shi</Outputs>
+      <SubType>Designer</SubType>
+    </CustomBuild>
+    <CustomBuild Include="ShadowMap.xml">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\x64\Release\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\ShadowMap.xml -o $(CausticRoot)\$(Configuration)\ShadowMap.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\x64\Release\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\ShadowMap.xml -o $(CausticRoot)\$(Configuration)\ShadowMap.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\ShadowMap.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\ShadowMap.shi</Outputs>
+      <SubType>Designer</SubType>
     </CustomBuild>
-    <CustomBuild Include="ShadowMap.vs">
-      <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS ShadowMap</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS ShadowMap</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">ShadowMapVS.h;ShadowMapVS.tbl</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ShadowMapVS.h;ShadowMapVS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS ShadowMap</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS ShadowMap</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">ShadowMapVS.h;ShadowMapVS.tbl</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ShadowMapVS.h;ShadowMapVS.tbl</Outputs>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    <CustomBuild Include="Textured.xml">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\x64\Release\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\Textured.xml -o $(CausticRoot)\$(Configuration)\Textured.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\x64\Release\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\Textured.xml -o $(CausticRoot)\$(Configuration)\Textured.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\Textured.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\Textured.shi</Outputs>
+      <SubType>Designer</SubType>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ColorNormal.ps" />
+    <None Include="ColorUVs.ps" />
+    <None Include="Default.ps" />
+    <None Include="DrawNormal.ps" />
+    <None Include="FullQuad.ps" />
+    <None Include="InfinitePlane.ps" />
+    <None Include="Line.ps" />
+    <None Include="Normal.ps" />
+    <None Include="ObjID.ps" />
+    <None Include="ShadowMap.ps" />
+    <None Include="Textured.ps" />
+    <None Include="Default.vs" />
+    <None Include="DrawNormal.vs" />
+    <None Include="FullQuad.vs" />
+    <None Include="InfinitePlane.vs" />
+    <None Include="Line.vs" />
+    <None Include="ShadowMap.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

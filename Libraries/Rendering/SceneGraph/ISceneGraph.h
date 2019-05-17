@@ -134,7 +134,7 @@ namespace Caustic
 		// Method: Render
 		// Renders the current element
 		//**********************************************************************
-		virtual void Render(IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx) = 0;
+		virtual void Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx) = 0;
 
 		//**********************************************************************
 		// Method: GetBBox

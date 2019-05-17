@@ -10,11 +10,4 @@
 
 namespace Caustic
 {
-    CAUSTICAPI void CreatePointLight(Vector3 &pos, IPointLight **ppLight)
-    {
-        std::unique_ptr<CPointLight> spPointLight(new CPointLight());
-        spPointLight->SetPosition(pos);
-        *ppLight = spPointLight.release();
-        (*ppLight)->AddRef();
-    }
 }

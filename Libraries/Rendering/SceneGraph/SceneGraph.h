@@ -11,27 +11,7 @@
 #include <vector>
 #include <string>
 
-namespace Caustic
-{
-    //**********************************************************************
-    // Class: CSceneElem
-	// Defines the base class for all our scene graph elements
-    //**********************************************************************
-    class CSceneElem
-    {
-    protected:
-        std::wstring m_Name; //!< User provided name for this element
-        uint32 m_Flags;
-        BBox3 m_BBox;
-
-        void DrawSelected(IRenderer *pRenderer, ISceneElem *pElem, SceneCtx *pSceneCtx);
-    public:
-        CSceneElem() :
-            m_Flags(0)
-        {
-        }
-    };
-}
+#include "SceneElem.h"
 #include "GroupElem.h"
 
 namespace Caustic

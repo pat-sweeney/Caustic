@@ -9,190 +9,44 @@
 #include "Base\Core\ISerialize.h"
 #include "Base\Math\Vector.h"
 #include "Base\Math\BBox.h"
+#include "Rendering/Caustic/IMaterialAttrib.h"
 #include <memory>
 #include <atlbase.h>
 #include <vector>
-#include <d3d11.h>
+#include <d3d12.h>
 
 namespace Caustic
 {
     //**********************************************************************
-    // Interface: IMaterialAttrib
-    // IMaterial is used for manipulating the materials assigned to a mesh.
-    // Each ISubMesh may have a single material assigned to it.
-    //**********************************************************************
-    struct IMaterialAttrib : public ISerialize
-    {
-		//**********************************************************************
-		// Method: GetAmbientColor
-		// Returns the ambient color for the material
-		//**********************************************************************
-		virtual Vector3 GetAmbientColor() = 0;
-
-		//**********************************************************************
-		// Method: GetDiffuseColor
-		// Returns the diffuse color for the material
-		//**********************************************************************
-		virtual Vector3 GetDiffuseColor() = 0;
-
-		//**********************************************************************
-		// Method: GetSpecularColor
-		// Returns the specular color for the material
-		//**********************************************************************
-		virtual Vector3 GetSpecularColor() = 0;
-
-		//**********************************************************************
-		// Method: GetSpecularExp
-		// Returns the specular color's exponent
-		//**********************************************************************
-		virtual float GetSpecularExp() = 0;
-
-		//**********************************************************************
-		// Method: GetAlpha
-		// Returns the alpha value for the material. 0.0 = transparent; 1.0 = opaque
-		//**********************************************************************
-		virtual float GetAlpha() = 0;
-
-		//**********************************************************************
-		// Method: GetMaterialID
-		// Returns a unique Id associated with this material
-		//**********************************************************************
-		virtual uint32 GetMaterialID() = 0;
-
-		//**********************************************************************
-		// Method: SetAmbientColor
-		// Sets the ambient color
-		//
-		// Parameters:
-		// v - color value (0.0 to 1.0) to set ambient color to
-		//**********************************************************************
-		virtual void SetAmbientColor(Vector3 &v) = 0;
-
-		//**********************************************************************
-		// Method: SetDiffuseColor
-		// Sets the diffuse color
-		//
-		// Parameters:
-		// v - color value (0.0 to 1.0) to set diffuse color to
-		//**********************************************************************
-		virtual void SetDiffuseColor(Vector3 &v) = 0;
-
-		//**********************************************************************
-		// Method: SetSpecularColor
-		// Sets the specular color
-		//
-		// Parameters:
-		// v - color value (0.0 to 1.0) to set specular color to
-		//**********************************************************************
-		virtual void SetSpecularColor(Vector3 &v) = 0;
-
-		//**********************************************************************
-		// Method: SetSpecularExp
-		// Sets the specular exponent
-		//
-		// Parameters:
-		// v - value for the specular component
-		//**********************************************************************
-		virtual void SetSpecularExp(float v) = 0;
-
-		//**********************************************************************
-		// Method: SetAlpha
-		// Sets the alpha component
-		//
-		// Parameters:
-		// v - value for the alpha component. 0.0 = transparent, 1.0 = opaque
-		//**********************************************************************
-		virtual void SetAlpha(float v) = 0;
-
-		//**********************************************************************
-		// Method: SetMaterialID
-		// Sets the material's unique ID
-		//
-		// Parameters:
-		// v - material identifier
-		//**********************************************************************
-		virtual void SetMaterialID(uint32 v) = 0;
-
-		//**********************************************************************
-		// Method: SetAmbientTexture
-		// Sets the ambient texture
-		//
-		// Parameters:
-		// v - Path to ambient texture file
-		//**********************************************************************
-		virtual void SetAmbientTexture(std::string p) = 0;
-
-		//**********************************************************************
-		// Method: SetDiffuseTexture
-		// Sets the diffuse texture
-		//
-		// Parameters:
-		// v - Path to diffuse texture file
-		//**********************************************************************
-		virtual void SetDiffuseTexture(std::string p) = 0;
-
-		//**********************************************************************
-		// Method: SetSpecularTexture
-		// Sets the specular texture
-		//
-		// Parameters:
-		// v - Path to specular texture file
-		//**********************************************************************
-		virtual void SetSpecularTexture(std::string p) = 0;
-
-		//**********************************************************************
-		// Method: GetAmbientTexture
-		// Returns the ambient texture filename
-		//**********************************************************************
-		virtual std::string GetAmbientTexture() = 0;
-
-		//**********************************************************************
-		// Method: GetDiffuseTexture
-		// Returns the diffuse texture filename
-		//**********************************************************************
-		virtual std::string GetDiffuseTexture() = 0;
-
-		//**********************************************************************
-		// Method: GetSpecularTexture
-		// Returns the specular texture filename
-		//**********************************************************************
-		virtual std::string GetSpecularTexture() = 0;
-    };
-
-    CAUSTICAPI void CreateMaterial(Vector3 ambientColor, Vector3 diffuseColor, 
-        Vector3 specularColor, float specularExp, float alpha, IMaterialAttrib **ppMaterial);
-    CAUSTICAPI void CreateMaterial(IMaterialAttrib **ppMaterial);
-
-    //**********************************************************************
-    //! \brief CGeomVertex defines a vertex in our mesh. 
-    //!
-    //! Defines a vertex on our mesh. We have two types of vertex data:
-    //! 1) data that is specific to a vertex relative to a given face
-    //! 2) data that is relative to a vertex regardless of face
-    //! The reason for this split is so that positional information
-    //! can be shared across the mesh (useful for performing operations
-    //! on the geometry) while data that can change from face to face
-    //! is stored separately (such as normal information).
-    //! Typically most mesh data is stored in CGeomVertex. Only faces
-    //! at material boundaries or smoothing groups contain CFaceVertex data.
+    // CGeomVertex defines a vertex in our mesh. 
+    //
+    // Defines a vertex on our mesh. We have two types of vertex data:
+    // 1) data that is specific to a vertex relative to a given face
+    // 2) data that is relative to a vertex regardless of face
+    // The reason for this split is so that positional information
+    // can be shared across the mesh (useful for performing operations
+    // on the geometry) while data that can change from face to face
+    // is stored separately (such as normal information).
+    // Typically most mesh data is stored in CGeomVertex. Only faces
+    // at material boundaries or smoothing groups contain CFaceVertex data.
     //**********************************************************************
     struct CGeomVertex
     {
-        Vector3 pos;        //!< Defines the position
-        Vector3 norm;       //!< Defines the normal
-        Vector2 uvs[4];     //!< Defines UV coordinates
-        int index;          //!< Index (used for serialization)
+        Vector3 pos;        // Defines the position
+        Vector3 norm;       // Defines the normal
+        Vector2 uvs[4];     // Defines UV coordinates
+        int index;          // Index (used for serialization)
     };
 
     //**********************************************************************
-    //! \brief CFaceVertex defines a vertex data relative to a given face.
-    //! See CGeomVertex for further information.
+    // CFaceVertex defines a vertex data relative to a given face.
+    // See CGeomVertex for further information.
     //**********************************************************************
     struct CFaceVertex
     {
-        Vector3 norm;       //!< Defines the normal
-        Vector2 uvs[4];     //!< Defines UV coordinates
-        int index;          //!< Index (used for serialization)
+        Vector3 norm;       // Defines the normal
+        Vector2 uvs[4];     // Defines UV coordinates
+        int index;          // Index (used for serialization)
     };
 
     class CFace;
@@ -203,31 +57,31 @@ namespace Caustic
     //**********************************************************************
     class CHalfEdge
     {
-        CHalfEdge *m_pNext;            //!< Next half edge in edge loop
-        CHalfEdge *m_pPrev;            //!< Previous half edge in edge loop
-        CHalfEdge *m_pOpposite;        //!< Opposite half edge
-        CGeomVertex *m_pVertex;        //!< Vertex at head of edge
-        CFace *m_pFace;                //!< Face to the left of edge
-        uint32 m_smoothingGroup;       //!< Smoothing group this edge belongs to
+        CHalfEdge *m_pNext;            // Next half edge in edge loop
+        CHalfEdge *m_pPrev;            // Previous half edge in edge loop
+        CHalfEdge *m_pOpposite;        // Opposite half edge
+        CGeomVertex *m_pVertex;        // Vertex at head of edge
+        CFace *m_pFace;                // Face to the left of edge
+        uint32 m_smoothingGroup;       // Smoothing group this edge belongs to
         int index;
 
         friend class CFace;
         friend class CSubMesh;
         friend class CMeshConstructor;
     public:
-        //! \brief Returns the next edge in our edge loop
+        // Returns the next edge in our edge loop
         CHalfEdge *GetNextEdge() { return m_pNext; }
-        //! \brief Returns the previous edge in our edge loop
+        // Returns the previous edge in our edge loop
         CHalfEdge *GetPrevEdge() { return m_pPrev; }
-        //! \brief Returns the half edge opposite to the current edge
+        // Returns the half edge opposite to the current edge
         CHalfEdge *GetOppositeEdge() { return m_pOpposite; }
-        //! \brief Returns the vertex at the head of this edge
+        // Returns the vertex at the head of this edge
         CGeomVertex *GetHeadVertex() { return m_pVertex; }
-        //! \brief Returns the vertex at the tail of this edge
+        // Returns the vertex at the tail of this edge
         CGeomVertex *GetTailVertex() { return m_pPrev->m_pVertex; }
-        //! \brief Returns the face this edge is a boundary of
+        // Returns the face this edge is a boundary of
         CFace *GetFace() { return m_pFace; }
-        //! \brief Returns the smoothing group this edge belongs to
+        // Returns the smoothing group this edge belongs to
         uint32 GetSmoothingGroup() { return m_smoothingGroup; }
     };
 
@@ -237,11 +91,11 @@ namespace Caustic
     //**********************************************************************
     class CFace
     {
-        Vector3 m_normal;                      //!< Face's normal vector
-        Vector3 m_center;                      //!< Center position of face
-        CHalfEdge *m_pEdge;                    //!< First edge in this face
+        Vector3 m_normal;                      // Face's normal vector
+        Vector3 m_center;                      // Center position of face
+        CHalfEdge *m_pEdge;                    // First edge in this face
         std::vector<CGeomVertex*> m_vertices;
-        std::vector<CFaceVertex> m_vertexData; //!< Data at each vertex specific to this face
+        std::vector<CFaceVertex> m_vertexData; // Data at each vertex specific to this face
         int index;
         
         friend class CHalfEdge;
@@ -264,12 +118,12 @@ namespace Caustic
     //**********************************************************************
     enum EVertexFlags
     {
-        HasPosition = 0x01,    //!< Vertex's 'pos' field is valid
-        HasNormal = 0x02,    //!< Vertex's 'norm' field is valid
-        HasUV0 = 0x04,        //!< Vertex's 'uv[0]' field is valid
-        HasUV1 = 0x08,        //!< Vertex's 'uv[1]' field is valid
-        HasUV2 = 0x10,        //!< Vertex's 'uv[2]' field is valid
-        HasUV3 = 0x20,        //!< Vertex's 'uv[3]' field is valid
+        HasPosition = 0x01,    // Vertex's 'pos' field is valid
+        HasNormal = 0x02,    // Vertex's 'norm' field is valid
+        HasUV0 = 0x04,        // Vertex's 'uv[0]' field is valid
+        HasUV1 = 0x08,        // Vertex's 'uv[1]' field is valid
+        HasUV2 = 0x10,        // Vertex's 'uv[2]' field is valid
+        HasUV3 = 0x20,        // Vertex's 'uv[3]' field is valid
     };
 
     //**********************************************************************
@@ -278,8 +132,8 @@ namespace Caustic
     //**********************************************************************
     enum ETriangulateMethod
     {
-        EarClipping,   //!< Use "Ear-clipping" method (clip triangle off polygon, repeat)
-        PointInsertion //!< Use "Point-Insertion" method (insert new vertices to form triangles)
+        EarClipping,   // Use "Ear-clipping" method (clip triangle off polygon, repeat)
+        PointInsertion // Use "Point-Insertion" method (insert new vertices to form triangles)
     };
 
     const uint32 c_InvalidIndex = 0xffffffff;
@@ -290,7 +144,7 @@ namespace Caustic
     //**********************************************************************
     enum EMeshFlags
     {
-        TwoSided = 0x1, //!< Mesh is considered to be two sided
+        TwoSided = 0x1, // Mesh is considered to be two sided
     };
 
     //**********************************************************************

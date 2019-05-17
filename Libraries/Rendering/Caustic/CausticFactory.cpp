@@ -8,10 +8,20 @@
 #include "Base\Core\Core.h"
 #include "Base\Core\error.h"
 #include "Base\Core\RefCount.h"
-#include <d3d11.h>
+#include <d3d12.h>
 #include <DirectXMath.h>
 #include "Renderer.h"
 #include "CausticFactory.h"
+#include "PointLight.h"
+#include "RenderMaterial.h"
+#include "Trackball.h"
+#include "Sampler.h"
+#include "Camera.h"
+#include "Texture.h"
+#include "Shader.h"
+#include "ShaderInfo.h"
+#include "Material.h"
+#include "Renderable.h"
 #include <mfapi.h>
 #include <mfidl.h>
 #include <mfreadwrite.h>
@@ -50,126 +60,256 @@ namespace Caustic
 		}
 	}
 
-	CAUSTICAPI void CreateRenderer(HWND hwnd, IRenderer **ppRenderer);
-	void CCausticFactory::CreateRenderer(HWND hwnd, IRenderer **ppRenderer)
+	void CCausticFactory::CreateRenderer(HWND hwnd, std::wstring &shaderFolder, IRenderer **ppRenderer)
 	{
-		Caustic::CreateRenderer(hwnd, ppRenderer);
+		_ASSERT(ppRenderer);
+		std::unique_ptr<CRenderer> spRenderer(new CRenderer());
+		spRenderer->Setup(hwnd, shaderFolder, true);
+
+		CRefObj<ICamera> spCamera;
+		CCausticFactory::Instance()->CreateCamera(true, &spCamera);
+		spRenderer->SetCamera(spCamera.p);
+
+		*ppRenderer = spRenderer.release();
+		(*ppRenderer)->AddRef();
 	}
 	
-	CAUSTICAPI void CreateGraphics(HWND hwnd, IGraphics **ppGraphics);
-	void CCausticFactory::CreateGraphics(HWND hwnd, IGraphics **ppGraphics)
-	{
-		Caustic::CreateGraphics(hwnd, ppGraphics);
-	}
-
-	CAUSTICAPI void CreatePointLight(Vector3 &pos, IPointLight **ppLight);
 	void CCausticFactory::CreatePointLight(Vector3 &pos, IPointLight **ppLight)
 	{
-		Caustic::CreatePointLight(pos, ppLight);
+		std::unique_ptr<CPointLight> spPointLight(new CPointLight());
+		spPointLight->SetPosition(pos);
+		*ppLight = spPointLight.release();
+		(*ppLight)->AddRef();
 	}
 
-	CAUSTICAPI void CreateTrackball(ITrackball **ppTrackball);
+	//**********************************************************************
+	// Creates a new IMaterialAttrib object
+	// ambientColor - Normalized [0..1] ambient color value
+	// diffuseColor - Normalized [0..1] diffse color value
+	// specularColor - Normalized [0..1] specular color value
+	// specularExp - Specular power value
+	// alpha - Alpha value
+	// ppMaterial - Returns the created material object
+	//**********************************************************************
+	void CCausticFactory::CreateMaterial(Vector3 ambientColor, Vector3 diffuseColor, Vector3 specularColor, float specularExp, float alpha, IMaterialAttrib **ppMaterial)
+	{
+		std::unique_ptr<CMaterial> spMaterial(new CMaterial());
+		spMaterial->AmbientColor = ambientColor;
+		spMaterial->DiffuseColor = diffuseColor;
+		spMaterial->SpecularColor = specularColor;
+		spMaterial->SpecularExp = specularExp;
+		spMaterial->Alpha = alpha;
+		*ppMaterial = spMaterial.release();
+		(*ppMaterial)->AddRef();
+	}
+	
+	//**********************************************************************
+	// Creates a new empty IMaterial object
+	// ppMaterial - Returns the created material object
+	//**********************************************************************
+	void CCausticFactory::CreateMaterial(IMaterialAttrib **ppMaterial)
+	{
+		std::unique_ptr<CMaterial> spMaterial(new CMaterial());
+		*ppMaterial = spMaterial.release();
+		(*ppMaterial)->AddRef();
+	}
+
 	void CCausticFactory::CreateTrackball(ITrackball **ppTrackball)
 	{
-		Caustic::CreateTrackball(ppTrackball);
+		std::unique_ptr<CTrackball> spTrackball(new CTrackball());
+		*ppTrackball = spTrackball.release();
+		(*ppTrackball)->AddRef();
 	}
 
-	CAUSTICAPI void CreateRendererMarshaller(IRendererMarshaller **ppClientServer);
-	void CCausticFactory::CreateRendererMarshaller(IRendererMarshaller **ppMarshaller)
+	void CCausticFactory::CreateRenderMaterial(IRenderer *pRenderer, IMaterialAttrib *pMaterialAttrib, IShader *pShader, IRenderMaterial **ppRenderMaterial)
 	{
-		Caustic::CreateRendererMarshaller(ppMarshaller);
+		CRefObj<ITexture> spDiffuseTexture;
+		CRefObj<ITexture> spSpecularTexture;
+		CRefObj<ITexture> spAmbientTexture;
+		CRefObj<ISampler> spDiffuseSampler;
+		CRefObj<ISampler> spSpecularSampler;
+		CRefObj<ISampler> spAmbientSampler;
+		if (pMaterialAttrib)
+		{
+			std::string fnDiffuse = pMaterialAttrib->GetDiffuseTexture();
+			if (!fnDiffuse.empty())
+			{
+				std::wstring wfn(fnDiffuse.begin(), fnDiffuse.end());
+				Caustic::CCausticFactory::Instance()->LoadTexture(wfn.c_str(), pRenderer, &spDiffuseTexture);
+				CCausticFactory::Instance()->CreateSampler(pRenderer, spDiffuseTexture.p, &spDiffuseSampler);
+			}
+
+			std::string fnSpecular = pMaterialAttrib->GetSpecularTexture();
+			if (!fnSpecular.empty())
+			{
+				std::wstring wfn(fnSpecular.begin(), fnSpecular.end());
+				Caustic::CCausticFactory::Instance()->LoadTexture(wfn.c_str(), pRenderer, &spSpecularTexture);
+				CCausticFactory::Instance()->CreateSampler(pRenderer, spSpecularTexture.p, &spSpecularSampler);
+			}
+
+			std::string fnAmbient = pMaterialAttrib->GetAmbientTexture();
+			if (!fnAmbient.empty())
+			{
+				std::wstring wfn(fnAmbient.begin(), fnAmbient.end());
+				Caustic::CCausticFactory::Instance()->LoadTexture(wfn.c_str(), pRenderer, &spAmbientTexture);
+				CCausticFactory::Instance()->CreateSampler(pRenderer, spAmbientTexture.p, &spAmbientSampler);
+			}
+		}
+
+		std::unique_ptr<CRenderMaterial> spRenderMaterial(new CRenderMaterial(pMaterialAttrib, pShader));
+		*ppRenderMaterial = spRenderMaterial.release();
+		(*ppRenderMaterial)->AddRef();
 	}
 
-	CAUSTICAPI void CreateRenderMaterial(IGraphics *pGraphics, IMaterialAttrib *pMaterialAttrib, IShader *pShader, IRenderMaterial **ppRenderMaterial);
-	void CCausticFactory::CreateRenderMaterial(IGraphics *pGraphics, IMaterialAttrib *pMaterialAttrib, IShader *pShader, IRenderMaterial **ppRenderMaterial)
+	void CCausticFactory::CreateRenderable(ID3D12Resource *pVB, uint32 numVertices,
+		ID3D12Resource *pIB, uint32 numIndices,
+		IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial,
+		DirectX::XMMATRIX &mat, IRenderable **ppRenderable)
 	{
-		Caustic::CreateRenderMaterial(pGraphics, pMaterialAttrib, pShader, ppRenderMaterial);
+		CRefObj<IShader> spShader;
+		pFrontMaterial->GetShader(&spShader);
+		CVertexBuffer vb;
+		vb.m_numIndices = numVertices;
+		vb.m_spVB = pVB;
+		vb.m_numIndices = numIndices;
+		vb.m_spIB = pIB;
+		vb.m_vertexSize = spShader->GetShaderInfo()->GetVertexSize();
+		std::unique_ptr<CRenderable> spRenderable(new CRenderable(&vb, nullptr, pFrontMaterial, pBackMaterial, mat));
+		*ppRenderable = spRenderable.release();
+		(*ppRenderable)->AddRef();
 	}
 
-	CAUSTICAPI void CreateRenderable(IGraphics *pGraphics, ISubMesh *pSubMesh, IMaterialAttrib *pMaterial, IShader *pShader, IRenderable **ppRenderable);
-	void CCausticFactory::CreateRenderable(IGraphics *pGraphics, ISubMesh *pSubMesh, IMaterialAttrib *pMaterial, IShader *pShader, IRenderable **ppRenderable)
+	void CCausticFactory::CreateSampler(IRenderer *pRenderer, ITexture *pTexture, ISampler **ppSampler)
 	{
-		Caustic::CreateRenderable(pGraphics, pSubMesh, pMaterial, pShader, ppRenderable);
+		std::unique_ptr<CSampler> spSampler(new CSampler(pRenderer, pTexture));
+		*ppSampler = spSampler.release();
+		(*ppSampler)->AddRef();
 	}
 
-	CAUSTICAPI void CreateRenderable(IRenderable **ppRenderable);
-	void CCausticFactory::CreateRenderable(IRenderable **ppRenderable)
-	{
-		Caustic::CreateRenderable(ppRenderable);
-	}
-
-	CAUSTICAPI void CreateRenderable(ID3D11Buffer *pVB, uint32 numVertices, ID3D11Buffer *pIB, uint32 numIndices, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat, IRenderable **ppRenderable);
-	void CCausticFactory::CreateRenderable(ID3D11Buffer *pVB, uint32 numVertices, ID3D11Buffer *pIB, uint32 numIndices, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat, IRenderable **ppRenderable)
-	{
-		Caustic::CreateRenderable(pVB, numVertices, pIB, numIndices, pFrontMaterial, pBackMaterial, mat, ppRenderable);
-	}
-
-
-	CAUSTICAPI void CreateSampler(IGraphics *pGraphics, ITexture *pTexture, ISampler **ppSampler);
-	void CCausticFactory::CreateSampler(IGraphics *pGraphics, ITexture *pTexture, ISampler **ppSampler)
-	{
-		Caustic::CreateSampler(pGraphics, pTexture, ppSampler);
-	}
-
-	CAUSTICAPI void CreateCamera(bool leftHanded, ICamera **ppCamera);
 	void CCausticFactory::CreateCamera(bool leftHanded, ICamera **ppCamera)
 	{
-		Caustic::CreateCamera(leftHanded, ppCamera);
+		std::unique_ptr<CCamera> pCamera(new CCamera(leftHanded));
+		*ppCamera = pCamera.release();
+		(*ppCamera)->AddRef();
 	}
 
-	CAUSTICAPI void CreateTexture(IGraphics *pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, uint32 cpuFlags, uint32 bindFlags, ITexture **ppTexture);
-	void CCausticFactory::CreateTexture(IGraphics *pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, uint32 cpuFlags, uint32 bindFlags, ITexture **ppTexture)
+	void CCausticFactory::CreateTexture(IRenderer *pRenderer, uint32 width, uint32 height, DXGI_FORMAT format, ITexture **ppTexture)
 	{
-		Caustic::CreateTexture(pGraphics, width, height, format, cpuFlags, bindFlags, ppTexture);
+		std::unique_ptr<CTexture> spTexture(new CTexture(pRenderer, width, height, format));
+		*ppTexture = spTexture.release();
+		(*ppTexture)->AddRef();
 	}
 
-	CAUSTICAPI CRefObj<ITexture> CheckerboardTexture(IGraphics *pGraphics);
-	CRefObj<ITexture> CCausticFactory::CheckerboardTexture(IGraphics *pGraphics)
+	CRefObj<ITexture> CCausticFactory::CheckerboardTexture(IRenderer *pRenderer)
 	{
-		return Caustic::CheckerboardTexture(pGraphics);
+		static CRefObj<ITexture> s_spCheckerBoard;
+#if 0
+		if (s_spCheckerBoard == nullptr)
+		{
+			CreateTexture(pRenderer, 32, 32, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE, &s_spCheckerBoard);
+			CComPtr<ID3D12Resource> spTexture = s_spCheckerBoard->GetD3DTexture();
+			D3D12_MAPPED_SUBRESOURCE ms;
+			CT(pRenderer->GetContext()->Map(spTexture, 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
+			BYTE *pr = reinterpret_cast<BYTE*>(ms.pData);
+			for (int i = 0; i < 32; i++)
+			{
+				BYTE *pc = pr;
+				for (int j = 0; j < 32; j++)
+				{
+					if ((i & 1) == (j & 1))
+					{
+						pc[0] = 0x00;
+						pc[1] = 0x00;
+						pc[2] = 0x00;
+						pc[3] = 0xff;
+					}
+					else
+					{
+						pc[0] = 0xff;
+						pc[1] = 0xff;
+						pc[2] = 0xff;
+						pc[3] = 0xff;
+					}
+					pc += 4;
+				}
+				pr += ms.RowPitch;
+			}
+			pRenderer->GetContext()->Unmap(spTexture, 0);
+		}
+#endif
+		return s_spCheckerBoard;
 	}
 
-	CAUSTICAPI void LoadTexture(const wchar_t *pFilename, IGraphics *pGraphics, ITexture **ppTexture);
-	void CCausticFactory::LoadTexture(const wchar_t *pFilename, IGraphics *pGraphics, ITexture **ppTexture)
+	CAUSTICAPI void LoadTexture(const wchar_t *pFilename, IRenderer *pRenderer, ITexture **ppTexture);
+	void CCausticFactory::LoadTexture(const wchar_t *pFilename, IRenderer *pRenderer, ITexture **ppTexture)
 	{
-		Caustic::LoadTexture(pFilename, pGraphics, ppTexture);
+		Caustic::LoadTexture(pFilename, pRenderer, ppTexture);
 	}
 
-	CAUSTICAPI void LoadVideoTexture(const wchar_t *pFilename, IGraphics *pGraphics, ITexture **ppTexture);
-	void CCausticFactory::LoadVideoTexture(const wchar_t *pFilename, IGraphics *pGraphics, ITexture **ppTexture)
+	CAUSTICAPI void LoadVideoTexture(const wchar_t *pFilename, IRenderer *pRenderer, ITexture **ppTexture);
+	void CCausticFactory::LoadVideoTexture(const wchar_t *pFilename, IRenderer *pRenderer, ITexture **ppTexture)
 	{
-		Caustic::LoadVideoTexture(pFilename, pGraphics, ppTexture);
+		Caustic::LoadVideoTexture(pFilename, pRenderer, ppTexture);
 	}
 
-	CAUSTICAPI void MeshToD3D(IGraphics *pGraphics, ISubMesh *pMesh,
-		int vertexVersion, ID3D11Buffer **ppVertexBuffer, uint32 *pNumVerts,
-		int indexVersion, ID3D11Buffer **ppIndexBuffer, uint32 *pNumIndices,
-		BBox3 * /*pBbox*/, uint32 *pVertexSize);
-	void CCausticFactory::MeshToD3D(IGraphics *pGraphics, ISubMesh *pMesh,
-		int vertexVersion, ID3D11Buffer **ppVertexBuffer, uint32 *pNumVerts,
-		int indexVersion, ID3D11Buffer **ppIndexBuffer, uint32 *pNumIndices,
-		BBox3 *pBbox, uint32 *pVertexSize)
-	{
-		Caustic::MeshToD3D(pGraphics, pMesh, vertexVersion, ppVertexBuffer, pNumVerts,
-			indexVersion, ppIndexBuffer, pNumIndices, pBbox, pVertexSize);
-	}
+//	CAUSTICAPI void MeshToD3D(IRenderer *pRenderer, ISubMesh *pMesh,
+//		int vertexVersion, ID3D11Buffer **ppVertexBuffer, uint32 *pNumVerts,
+//		int indexVersion, ID3D11Buffer **ppIndexBuffer, uint32 *pNumIndices,
+//		BBox3 * /*pBbox*/, uint32 *pVertexSize);
+//	void CCausticFactory::MeshToD3D(IRenderer *pRenderer, ISubMesh *pMesh,
+//		int vertexVersion, ID3D11Buffer **ppVertexBuffer, uint32 *pNumVerts,
+//		int indexVersion, ID3D11Buffer **ppIndexBuffer, uint32 *pNumIndices,
+//		BBox3 *pBbox, uint32 *pVertexSize)
+//	{
+//		Caustic::MeshToD3D(pRenderer, pMesh, vertexVersion, ppVertexBuffer, pNumVerts,
+//			indexVersion, ppIndexBuffer, pNumIndices, pBbox, pVertexSize);
+//	}
 
-	CAUSTICAPI void MeshToNormals(IGraphics *pGraphics, ISubMesh *pSubMesh, ID3D11Buffer **ppVB, uint32 *pNumVerts);
-	void CCausticFactory::MeshToNormals(IGraphics *pGraphics, ISubMesh *pSubMesh,
-		ID3D11Buffer **ppVB, uint32 *pNumVerts)
-	{
-		Caustic::MeshToNormals(pGraphics, pSubMesh, ppVB, pNumVerts);
-	}
+//	CAUSTICAPI void MeshToNormals(IRenderer *pRenderer, ISubMesh *pSubMesh, ID3D11Buffer **ppVB, uint32 *pNumVerts);
+//	void CCausticFactory::MeshToNormals(IRenderer *pRenderer, ISubMesh *pSubMesh,
+//		ID3D11Buffer **ppVB, uint32 *pNumVerts)
+//	{
+//		Caustic::MeshToNormals(pRenderer, pSubMesh, ppVB, pNumVerts);
+//	}
 
-	CAUSTICAPI void StoreSubMeshRenderableDataToStream(IStream *pStream, ISubMesh *pMesh, int vertexVersion, int indexVersion);
-	void CCausticFactory::StoreSubMeshRenderableDataToStream(IStream *pStream, ISubMesh *pMesh, int vertexVersion, int indexVersion)
-	{
-		Caustic::StoreSubMeshRenderableDataToStream(pStream, pMesh, vertexVersion, indexVersion);
-	}
+// CAUSTICAPI void StoreSubMeshRenderableDataToStream(IStream *pStream, ISubMesh *pMesh, int vertexVersion, int indexVersion);
+// void CCausticFactory::StoreSubMeshRenderableDataToStream(IStream *pStream, ISubMesh *pMesh, int vertexVersion, int indexVersion)
+// {
+// 	Caustic::StoreSubMeshRenderableDataToStream(pStream, pMesh, vertexVersion, indexVersion);
+// }
+// 
+// CAUSTICAPI void LoadSubMeshRenderableDataFromStream(IStream *pStream, ID3D11Device *pDevice, ID3D11Buffer **ppIndexBuffer, uint32 *pNumIndices, ID3D11Buffer **ppVertexBuffer, uint32 *pNumVertices, int *pVertexVersion, int *pIndexVersion);
+// void CCausticFactory::LoadSubMeshRenderableDataFromStream(IStream *pStream, ID3D11Device *pDevice, ID3D11Buffer **ppIndexBuffer, uint32 *pNumIndices, ID3D11Buffer **ppVertexBuffer, uint32 *pNumVertices, int *pVertexVersion, int *pIndexVersion)
+// {
+// 	Caustic::LoadSubMeshRenderableDataFromStream(pStream, pDevice, ppIndexBuffer, pNumIndices, ppVertexBuffer, pNumVertices, pVertexVersion, pIndexVersion);
+// }
 
-	CAUSTICAPI void LoadSubMeshRenderableDataFromStream(IStream *pStream, ID3D11Device *pDevice, ID3D11Buffer **ppIndexBuffer, uint32 *pNumIndices, ID3D11Buffer **ppVertexBuffer, uint32 *pNumVertices, int *pVertexVersion, int *pIndexVersion);
-	void CCausticFactory::LoadSubMeshRenderableDataFromStream(IStream *pStream, ID3D11Device *pDevice, ID3D11Buffer **ppIndexBuffer, uint32 *pNumIndices, ID3D11Buffer **ppVertexBuffer, uint32 *pNumVertices, int *pVertexVersion, int *pIndexVersion)
+	void CCausticFactory::CreateShader(IRenderer *pRenderer, const wchar_t *pShaderName,
+		ID3DBlob *pVertexShaderBlob, ID3DBlob *pPixelShaderBlob, IShaderInfo *pShaderInfo,
+		IShader **ppShader)
 	{
-		Caustic::LoadSubMeshRenderableDataFromStream(pStream, pDevice, ppIndexBuffer, pNumIndices, ppVertexBuffer, pNumVertices, pVertexVersion, pIndexVersion);
+		std::unique_ptr<CShader> spShader(new CShader());
+		std::vector<ShaderParamDef> &pixelShaderDefs = pShaderInfo->PixelShaderParameterDefs();
+		std::vector<ShaderParamDef> &vertexShaderDefs = pShaderInfo->VertexShaderParameterDefs();
+		std::vector<D3D12_INPUT_ELEMENT_DESC> &vertexLayout = pShaderInfo->VertexLayout();
+		ShaderParamDef *pVertexDefs = vertexShaderDefs.data();
+		ShaderParamDef *pPixelDefs = pixelShaderDefs.data();
+		D3D12_INPUT_ELEMENT_DESC *pVertexLayout = vertexLayout.data();
+		spShader->Create(pRenderer, pShaderName,
+			pPixelDefs, (uint32)pixelShaderDefs.size(),
+			pVertexDefs, (uint32)vertexShaderDefs.size(),
+			pPixelShaderBlob, pVertexShaderBlob,
+			pVertexLayout, (uint32)vertexLayout.size());
+		*ppShader = spShader.release();
+		(*ppShader)->AddRef();
 	}
-};
+	
+	void CCausticFactory::CreateShaderInfo(const wchar_t *pFilename, IShaderInfo **ppShaderInfo)
+	{
+		CShaderInfo *pShaderInfo = new CShaderInfo();
+		std::wstring fn(pFilename);
+		pShaderInfo->LoadShaderDef(fn);
+		*ppShaderInfo = pShaderInfo;
+		(*ppShaderInfo)->AddRef();
+	}
+}

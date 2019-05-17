@@ -4,7 +4,7 @@
 //**********************************************************************
 #include "stdafx.h"
 #include "Rendering\SceneGraph\SceneGraph.h"
-#include "SceneGraphImpl.h"
+#include "ISceneGraph.h"
 #include "SceneFactory.h"
 #include "GroupElem.h"
 #include <string>
@@ -17,7 +17,7 @@ namespace Caustic
         return m_Name;
     }
 
-    void CSceneGroupElem::Render(IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx)
+    void CSceneGroupElem::Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx)
     {
         Matrix4x4 old = pSceneCtx->m_Transform;
         pSceneCtx->m_Transform = pSceneCtx->m_Transform * m_Transform;
@@ -27,18 +27,18 @@ namespace Caustic
         {
             if (m_Children[i]->GetType() == ESceneElemType::PointLight)
             {
-                m_Children[i]->Render(pRenderCtx, pSceneCtx);
+                m_Children[i]->Render(pRenderer, pRenderCtx, pSceneCtx);
             }
         }
         for (size_t i = 0; i < m_Children.size(); i++)
         {
             if (m_Children[i]->GetType() != ESceneElemType::PointLight)
             {
-                m_Children[i]->Render(pRenderCtx, pSceneCtx);
+                m_Children[i]->Render(pRenderer, pRenderCtx, pSceneCtx);
             }
         }
         pSceneCtx->m_lights = lights;
-        DrawSelected(this, pSceneCtx);
+        DrawSelected(pRenderer, this, pSceneCtx);
         pSceneCtx->m_Transform = old;
     }
 

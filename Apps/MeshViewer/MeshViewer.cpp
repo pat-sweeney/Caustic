@@ -63,7 +63,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-    // TODO: Place code here.
+	::CoInitialize(nullptr);
 
     // Initialize global strings
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -89,6 +89,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             DispatchMessage(&msg);
         }
     }
+
+	::CoUninitialize();
 
     return (int) msg.wParam;
 }
@@ -213,7 +215,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                         spMaterial->SetDiffuseColor(diffuse);
 
                         CRefObj<IShader> spShader;
-                        CShaderMgr::GetInstance()->FindShader(L"Default", &spShader);
+                        CShaderMgr::Instance()->FindShader(L"Default", &spShader);
                         spMaterialElem->SetPixelShader(spShader.p);
 
                         spRenderWindow->GetSceneGraph()->AddChild(spMaterialElem.p);

@@ -12,7 +12,7 @@ namespace Caustic
 {
     class CRenderWindow : public IRenderWindow, public CRefCount
     {
-        CRefObj<IRendererMarshaller> m_spMarshaller;
+		CRefObj<IRenderer> m_spRenderer;
         CRefObj<ISceneGraph> m_spSceneGraph;
         CRefObj<ICamera> m_spCamera;
         CRefObj<ITrackball> m_spTrackball;

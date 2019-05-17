@@ -24,5 +24,6 @@ VSOutput VS(VSInput p)
 {
     VSOutput v;
     v.posPS = mul(float4(p.posOS, 1.0f), worldViewProj);
+	v.depth = 0.0;
     return v;
 }

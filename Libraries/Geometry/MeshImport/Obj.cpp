@@ -169,7 +169,9 @@ namespace Caustic
             if (line.substr(0, 6) == "newmtl")
             {
                 std::string matname = line.substr(7);
-                CreateMaterial(&spMaterial);
+				CRefObj<ICausticFactory> spFactory;
+				CreateCausticFactory(&spFactory);
+				spFactory->CreateMaterial(&spMaterial);
                 spMaterial->SetMaterialID(materialID);
                 materialID++;
                 m_matmap.insert(std::make_pair(matname, spMaterial));

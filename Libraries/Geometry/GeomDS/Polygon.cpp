@@ -10,8 +10,8 @@
 namespace Caustic
 {
     //**********************************************************************
-    //! \brief CreatePolygon2 creates a new 2D polygon
-    //! @param[out] ppPolygon New polygon object
+    // CreatePolygon2 creates a new 2D polygon
+    // @param[out] ppPolygon New polygon object
     //**********************************************************************
     void CreatePolygon2(IPolygon2 **ppPolygon)
     {
@@ -21,11 +21,11 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief DistancePointToLine returns the shortest distance from a given
-    //! point to a line.
-    //! @param[in] p0 First point defining the line
-    //! @param[in] p1 Second point defining the line
-    //! @param[in] pt Point to test against line
+    // DistancePointToLine returns the shortest distance from a given
+    // point to a line.
+    // @param[in] p0 First point defining the line
+    // @param[in] p1 Second point defining the line
+    // @param[in] pt Point to test against line
     //**********************************************************************
     float DistancePointToLine(Caustic::Vector2 &p0, Caustic::Vector2 &p1, Caustic::Vector2 &pt)
     {
@@ -83,13 +83,13 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Simplify Removes points from a polygon that allow the resulting
-    //! polygon to still be with 'err' units from the original polygon.
-    //! This function uses the Ramer-Douglas-Peucker algorithm:
+    // Simplify Removes points from a polygon that allow the resulting
+    // polygon to still be with 'err' units from the original polygon.
+    // This function uses the Ramer-Douglas-Peucker algorithm:
     // https://en.wikipedia.org/wiki/Ramer–Douglas–Peucker_algorithm
-    //! @param[in] err Tolerance for deciding whether to remove a point
-    //! @param[in] maxLen Longest line segment allowed. If maxLen==0 then no limit.
-    //! @param[out] ppResult The new simplified polygon
+    // @param[in] err Tolerance for deciding whether to remove a point
+    // @param[in] maxLen Longest line segment allowed. If maxLen==0 then no limit.
+    // @param[out] ppResult The new simplified polygon
     //**********************************************************************
     void CPolygon2::Simplify(float err, float maxLen, IPolygon2 **ppResult)
     {
@@ -108,13 +108,13 @@ namespace Caustic
 
 
     //**********************************************************************
-    //! \brief ContainsPoint determines whether the specified point is inside
-    //! the polygon.
-    //! @param[in] pos Point to rest
-    //! @param[out] pMinDist Optional argument that returns the closest distance
-    //! from the point to the polygon
-    //! @param[out] pMaxDist Optional argument that returns the furthest distance
-    //! from the point to the polygon (Hausdorff distance)
+    // ContainsPoint determines whether the specified point is inside
+    // the polygon.
+    // @param[in] pos Point to rest
+    // @param[out] pMinDist Optional argument that returns the closest distance
+    // from the point to the polygon
+    // @param[out] pMaxDist Optional argument that returns the furthest distance
+    // from the point to the polygon (Hausdorff distance)
     //**********************************************************************
     bool CPolygon2::ContainsPoint(Vector2 &pos, float *pMinDist = nullptr, float *pMaxDist = nullptr)
     {

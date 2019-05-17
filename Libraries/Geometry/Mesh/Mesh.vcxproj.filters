@@ -10,9 +10,6 @@
     <ClInclude Include="MeshConstructor.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="IMesh.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -37,9 +34,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CommonShapes.cpp">

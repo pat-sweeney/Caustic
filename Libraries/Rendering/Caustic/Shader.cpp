@@ -7,25 +7,28 @@
 #include "Sampler.h"
 #include <DirectXMath.h>
 #include <memory>
+#include "d3dx12.h"
 
 namespace Caustic
 {
+	//**********************************************************************
+    // CShader::ComputeParamSize parses the definitions of each shader
+    // parameter that was read from the HLSL (using ParseShader.exe). For each
+    // definition we will compute the offset of the parameter within the constant
+    // buffer. This is used later when updating the constant buffer.
+    // pDefs List of shader definitions defining each parameter.
+    // numParams Number of parameters in params
+    // \param[out] params Parameter list we will copy definitions into
     //**********************************************************************
-    //! \brief CShader::ComputeParamSize parses the definitions of each shader
-    //! parameter that was read from the HLSL (using ParseShader.exe). For each
-    //! definition we will compute the offset of the parameter within the constant
-    //! buffer. This is used later when updating the constant buffer.
-    //! \param[in] pDefs List of shader definitions defining each parameter.
-    //! \param[in] numParams Number of parameters in params
-    //! \param[out] params Parameter list we will copy definitions into
-    //**********************************************************************
-    uint32 CShader::ComputeParamSize(ShaderDefs *pDefs, uint32 numParams, std::vector<ShaderParam> &params)
+    uint32 CShader::ComputeParamSize(ShaderParamDef *pDefs, uint32 numParams, std::vector<ShaderParamInstance> &params)
     {
-        uint32 s = 0;
-        params.resize(numParams - 1); // -1 since we won't add the last (undefined) entry
+		if (pDefs == nullptr || numParams == 0)
+			return 0;
+		uint32 s = 0;
+        params.resize(numParams);
         for (size_t i = 0; i < numParams; i++)
         {
-            if (wcslen(pDefs[i].m_name) == 0)
+            if (pDefs[i].m_name.length() == 0)
                 continue;
             params[i].m_dirty = true;
             params[i].m_name = pDefs[i].m_name;
@@ -116,12 +119,12 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief CShader::PushConstants pushes each shader parameter into the D3D11 constant buffer.
-    //! \param pGraphics D3D11 device/context to use
-    //! \param pBuffer Constant buffer to push values into
-    //! \param params List of parameters to push
+    // CShader::PushConstants pushes each shader parameter into the D3D11 constant buffer.
+    // pRenderer - Rendering device to use
+    // pBuffer - Constant buffer to push values into
+    // params - List of parameters to push
     //**********************************************************************
-    void CShader::PushConstants(IGraphics *pGraphics, ID3D11Buffer *pBuffer, std::vector<ShaderParam> &params)
+    void CShader::PushConstants(IRenderer *pRenderer, SConstantBuffer *pBuffer, std::vector<ShaderParamInstance> &params)
     {
         // First push samplers
         for (size_t i = 0; i < params.size(); i++)
@@ -133,7 +136,7 @@ namespace Caustic
             case EShaderParamType::ShaderType_Sampler:
                 {
                     Caustic::CSamplerRef v = std::any_cast<CSamplerRef>(params[i].m_value);
-                    v.m_spSampler->Render(pGraphics, params[i].m_offset);
+                    v.m_spSampler->Render(pRenderer, params[i].m_offset);
                 }
                 break;
             }
@@ -142,9 +145,12 @@ namespace Caustic
         // Next push constants
         if (pBuffer == nullptr)
             return;
-        D3D11_MAPPED_SUBRESOURCE ms;
-        CT(pGraphics->GetContext()->Map(pBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
-        BYTE *pb = reinterpret_cast<BYTE*>(ms.pData);
+		D3D12_RANGE range;
+		range.Begin = 0;
+		range.End = 0;
+		BYTE *pb;
+		uint32 frameIndex = pRenderer->GetFrameIndex();
+		pBuffer->m_spBuffer[frameIndex]->Map(0, &range, (void**)&pb);
         for (size_t i = 0; i < params.size(); i++)
         {
             if ( ! params[i].m_dirty)
@@ -259,16 +265,16 @@ namespace Caustic
                 break;
             }
         }
-        pGraphics->GetContext()->Unmap(pBuffer, 0);
-    }
+		pBuffer->m_spBuffer[frameIndex]->Unmap(0, &range);
+	}
 
     //**********************************************************************
-    //! \brief SetParam sets shader constant, texture or sampler
-    //! \param[in] paramName Name of the parameter
-    //! \param[in] value Value of parameter
-    //! \param[in] params List of parameters to update
+    // SetParam sets shader constant, texture or sampler
+    // paramName Name of the parameter
+    // value Value of parameter
+    // params List of parameters to update
     //**********************************************************************
-    void CShader::SetParam(std::wstring paramName, std::any &value, std::vector<ShaderParam> &params)
+    void CShader::SetParam(std::wstring paramName, std::any &value, std::vector<ShaderParamInstance> &params)
     {
         for (size_t i = 0; i < params.size(); i++)
         {
@@ -282,12 +288,12 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief SetParam sets shader constant, texture or sampler
-    //! \param[in] paramName Name of the parameter
-    //! \param[in] value Value of parameter
-    //! \param[in] params List of parameters to update
+    // SetParam sets shader constant, texture or sampler
+    // paramName Name of the parameter
+    // value Value of parameter
+    // params List of parameters to update
     //**********************************************************************
-    void CShader::SetParam(std::wstring paramName, int index, std::any &value, std::vector<ShaderParam> &params)
+    void CShader::SetParam(std::wstring paramName, int index, std::any &value, std::vector<ShaderParamInstance> &params)
     {
         for (size_t i = 0; i < params.size(); i++)
         {
@@ -301,9 +307,9 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief SetPSParam sets a pixel shader parameter
-    //! \param[in] paramName Name of parameter
-    //! \param[in] value Value of parameter
+    // SetPSParam sets a pixel shader parameter
+    // paramName Name of parameter
+    // value Value of parameter
     //**********************************************************************
     void CShader::SetPSParam(std::wstring paramName, std::any &value)
     {
@@ -311,10 +317,10 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief SetPSParam sets a pixel shader array element parameter
-    //! \param[in] paramName Name of parameter
-    //! \param[in] index Index into array
-    //! \param[in] value Value of parameter
+    // SetPSParam sets a pixel shader array element parameter
+    // paramName Name of parameter
+    // index Index into array
+    // value Value of parameter
     //**********************************************************************
     void CShader::SetPSParam(std::wstring paramName, int index, std::any &value)
     {
@@ -322,9 +328,9 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief SetVSParam sets a vertex shader parameter
-    //! \param[in] paramName Name of parameter
-    //! \param[in] value Value of parameter
+    // SetVSParam sets a vertex shader parameter
+    // paramName Name of parameter
+    // value Value of parameter
     //**********************************************************************
     void CShader::SetVSParam(std::wstring paramName, std::any &value)
     {
@@ -332,10 +338,10 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief SetPSParam sets a vertex shader array element parameter
-    //! \param[in] paramName Name of parameter
-    //! \param[in] index Index into array
-    //! \param[in] value Value of parameter
+    // SetPSParam sets a vertex shader array element parameter
+    // paramName Name of parameter
+    // index Index into array
+    // value Value of parameter
     //**********************************************************************
     void CShader::SetVSParam(std::wstring paramName, int index, std::any &value)
     {
@@ -370,10 +376,10 @@ namespace Caustic
         SetPSParam(pParamName, mat);
     }
 
-    void CShader::PushMatrices(IGraphics *pGraphics, DirectX::XMMATRIX *pWorld)
+    void CShader::PushMatrices(IRenderer *pRenderer, DirectX::XMMATRIX *pWorld)
     {
-        DirectX::XMMATRIX view = pGraphics->GetCamera()->GetView();
-        DirectX::XMMATRIX proj = pGraphics->GetCamera()->GetProjection();
+        DirectX::XMMATRIX view = pRenderer->GetCamera()->GetView();
+        DirectX::XMMATRIX proj = pRenderer->GetCamera()->GetProjection();
 
         DirectX::XMMATRIX identity = DirectX::XMMatrixIdentity();
         if (pWorld == nullptr)
@@ -394,137 +400,158 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief BeginRender is called before rendering using this shader occurs.
-    //! This call is responsible for setting up the pGraphics device to use the shader.
-    //! \param[in] pGraphics D3D11 device/context to use
+    // BeginRender is called before rendering using this shader occurs.
+    // This call is responsible for setting up the pGraphics device to use the shader.
+    // pGraphics D3D11 device/context to use
     //**********************************************************************
-    void CShader::BeginRender(IGraphics *pGraphics, DirectX::XMMATRIX *pWorld)
+    void CShader::BeginRender(IRenderer *pRenderer, DirectX::XMMATRIX *pWorld)
     {
-        pGraphics->GetContext()->IASetInputLayout(m_spLayout);
-        pGraphics->GetContext()->PSSetShader(m_spPixelShader, nullptr, 0);
-        pGraphics->GetContext()->VSSetShader(m_spVertexShader, nullptr, 0);
+        //pRenderer->GetContext()->IASetInputLayout(m_spLayout);
+		pRenderer->GetCommandList()->SetPipelineState(m_spPipelineState);
         
-        PushMatrices(pGraphics, pWorld);
-        PushConstants(pGraphics, m_spVertexConstants.p, m_vsParams);
-        PushConstants(pGraphics, m_spPixelConstants.p, m_psParams);
-        
-        pGraphics->GetContext()->VSSetConstantBuffers(0, 1, &m_spVertexConstants.p);
-        pGraphics->GetContext()->PSSetConstantBuffers(0, 1, &m_spPixelConstants.p);
+        PushMatrices(pRenderer, pWorld);
+        PushConstants(pRenderer, &m_vertexConstants, m_vsParams);
+        PushConstants(pRenderer, &m_pixelConstants, m_psParams);
+        //
+        //pRenderer->GetContext()->VSSetConstantBuffers(0, 1, &m_spVertexConstants.p);
+        //pRenderer->GetContext()->PSSetConstantBuffers(0, 1, &m_spPixelConstants.p);
     }
 
     //**********************************************************************
-    //! EndRender is called after rendering using this shader occurs.
-    //! During this call the shader may clean up any state/memory it needed
-    //! \param[in] pGraphics D3D11 device/context to use
+    // EndRender is called after rendering using this shader occurs.
+    // During this call the shader may clean up any state/memory it needed
+    // pGraphics D3D11 device/context to use
     //**********************************************************************
-    void CShader::EndRender(IGraphics * /*pGraphics*/)
+    void CShader::EndRender(IRenderer * /*pRenderer*/)
     {
     }
 
+	CRefObj<IShaderInfo> CShader::GetShaderInfo()
+	{
+		return m_spShaderInfo;
+	}
+	
+	//**********************************************************************
+    // CreateConstantBuffer creates the constant buffer (pixel or vertex shader)
+    // pDevice D3D device
+    // pDefs - List of parameter definitions (parsed from HLSL)
+    // paramsSize - Length of pDefs
+    // params - Generated parameter list
+    // ppBuffer - Returns the created constant buffer
     //**********************************************************************
-    //! \brief CreateConstantBuffer creates the constant buffer (pixel or vertex shader)
-    //! \param[in] pDevice D3D device
-    //! \param[in] pDefs List of parameter definitions (parsed from HLSL)
-    //! \param[in] paramsSize Length of pDefs
-    //! \param[out] params Generated parameter list
-    //! \param[out] ppBuffer Returns the created constant buffer
-    //**********************************************************************
-    void CShader::CreateConstantBuffer(ID3D11Device *pDevice, ShaderDefs *pDefs, uint32 paramsSize, std::vector<ShaderParam> &params, ID3D11Buffer **ppBuffer)
+    void CShader::CreateConstantBuffer(ID3D12Device *pDevice, ShaderParamDef *pDefs, uint32 paramsSize, std::vector<ShaderParamInstance> &params, SConstantBuffer *pConstantBuffer)
     {
         uint32 s = ComputeParamSize(pDefs, paramsSize, params);
         if (s > 0)
         {
-            D3D11_BUFFER_DESC buffDesc;
-            buffDesc.BindFlags = D3D10_BIND_CONSTANT_BUFFER;
-            buffDesc.ByteWidth = ((s+15)/16)*16;
-            buffDesc.CPUAccessFlags = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE;
-            buffDesc.MiscFlags = 0;
-            buffDesc.StructureByteStride = 0;
-            buffDesc.Usage = D3D11_USAGE_DYNAMIC;
-            CT(pDevice->CreateBuffer(&buffDesc, nullptr, ppBuffer));
-        }
-        else
-            *ppBuffer = nullptr;
-    }
+			for (int i = 0; i < c_MaxFrames; i++)
+			{
+				CT(pDevice->CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+					D3D12_HEAP_FLAG_NONE, &CD3DX12_RESOURCE_DESC::Buffer(s), D3D12_RESOURCE_STATE_COPY_DEST,
+					nullptr, __uuidof(ID3D12Resource), (void**)&pConstantBuffer->m_spBuffer[i]));
+				CT(pConstantBuffer->m_spBuffer[i]->SetName(L"m_spBuffer"));
+			}
+		}
+	}
 
     //**********************************************************************
-    //! \brief Create creates a shader
-    //! \param[in] pGraphics Graphics device to use
-    //! \param[in] pShaderName Name of shader
-    //! \param[in] pPSParams List of vertex shader definitions (from ParseShader.exe)
-    //! \param[in] psParamsSize Length of pPSParams
-    //! \param[in] pVSParams List of pixel shader definitions (from ParseShader.exe)
-    //! \param[in] vsParamsSize Length of pVSParams
-    //! \param[in] pPSByteCodes Byte code for pixel shader
-    //! \param[in] psBufferLen Length of pPSByteCodes in bytes
-    //! \param[in] pVSByteCodes Byte code for vertex shader
-    //! \param[in] vsBufferLen Length of pVSByteCodes in bytes
-    //! \param[in] pLayout Vertex layout
-    //! \param[in] numLayoutElems Length of pLayout (in elements)
+    // Create creates a shader
+    // pRenderer - Rendering device to use
+    // pShaderName - Name of shader
+    // pPSParams - List of vertex shader definitions (from ParseShader.exe)
+    // psParamsSize - Length of pPSParams
+    // pVSParams - List of pixel shader definitions (from ParseShader.exe)
+    // vsParamsSize - Length of pVSParams
+    // pPSByteCodes - Byte code for pixel shader
+    // psBufferLen - Length of pPSByteCodes in bytes
+    // pVSByteCodes - Byte code for vertex shader
+    // vsBufferLen - Length of pVSByteCodes in bytes
+    // pLayout - Vertex layout
+    // numLayoutElems - Length of pLayout (in elements)
     //**********************************************************************
     void CShader::Create(
-        IGraphics *pGraphics,
+        IRenderer *pRenderer,
         const wchar_t *pShaderName,
-        ShaderDefs *pPSParams, uint32 psParamsSize,
-        ShaderDefs *pVSParams, uint32 vsParamsSize,
-        const byte *pPSByteCodes, uint32 psBufferLen, 
-        const byte *pVSByteCodes, uint32 vsBufferLen,
-        D3D11_INPUT_ELEMENT_DESC *pLayout, uint32 numLayoutElems)
+        ShaderParamDef *pPSParams, uint32 psParamsSize,
+        ShaderParamDef *pVSParams, uint32 vsParamsSize,
+		ID3DBlob *pPSBlob, ID3DBlob *pVSBlob,
+        D3D12_INPUT_ELEMENT_DESC *pLayout, uint32 numLayoutElems)
     {
         if (pShaderName)
             m_name = std::wstring(pShaderName);
-        ID3D11Device *pDevice = pGraphics->GetDevice();
-        CT(pDevice->CreateVertexShader(pVSByteCodes, vsBufferLen, nullptr, &m_spVertexShader));
-        CT(pDevice->CreatePixelShader(pPSByteCodes, psBufferLen, nullptr, &m_spPixelShader));
-        CD3D11_SAMPLER_DESC sdesc(D3D11_DEFAULT);
-        CT(pDevice->CreateSamplerState(&sdesc, &m_spSamplerState));
-        CT(pDevice->CreateInputLayout(pLayout, numLayoutElems, pVSByteCodes, vsBufferLen, &m_spLayout));
-        CreateConstantBuffer(pDevice, pVSParams, vsParamsSize, m_vsParams, &m_spVertexConstants);
-        CreateConstantBuffer(pDevice, pPSParams, psParamsSize, m_psParams, &m_spPixelConstants);
-    }
-    
-    //**********************************************************************
-    //! \brief CreateShader is a helper function to create a shader
-    //! \param[in] pGraphics Graphics device to use
-    //! \param[in] pShaderName Name of shader
-    //! \param[in] pPSParams List of vertex shader definitions (from ParseShader.exe)
-    //! \param[in] psParamsSize Length of pPSParams
-    //! \param[in] pVSParams List of pixel shader definitions (from ParseShader.exe)
-    //! \param[in] vsParamsSize Length of pVSParams
-    //! \param[in] pPSByteCodes Byte code for pixel shader
-    //! \param[in] psBufferLen Length of pPSByteCodes in bytes
-    //! \param[in] pVSByteCodes Byte code for vertex shader
-    //! \param[in] vsBufferLen Length of pVSByteCodes in bytes
-    //! \param[in] pLayout Vertex layout
-    //! \param[in] numLayoutElems Length of pLayout (in elements)
-    //! \param[out] ppShader Returns the created shader
-    //**********************************************************************
-    CAUSTICAPI void CreateShader(IGraphics *pGraphics, 
-                                 const wchar_t *pShaderName,
-                                 ShaderDefs *pPSParams, uint32 psParamsSize,
-                                 ShaderDefs *pVSParams, uint32 vsParamsSize,
-                                 const byte *pPSByteCodes, uint32 psBufferLen, 
-                                 const byte *pVSByteCodes, uint32 vsBufferLen,
-                                 D3D11_INPUT_ELEMENT_DESC *pLayout, uint32 numLayoutElems,
-                                 IShader **ppShader)
-    {
-        std::unique_ptr<CShader> spShader(new CShader());
-        spShader->Create(pGraphics, pShaderName,
-                         pPSParams, psParamsSize, 
-                         pVSParams, vsParamsSize,
-                         pPSByteCodes, psBufferLen,
-                         pVSByteCodes, vsBufferLen, 
-                         pLayout, numLayoutElems);
-        *ppShader = spShader.release();
-        (*ppShader)->AddRef();
+
+		const byte *pPSByteCodes = (const byte*)pPSBlob->GetBufferPointer();
+		uint32 psBufferLen = (uint32)pPSBlob->GetBufferSize();
+		const byte *pVSByteCodes = (const byte*)pVSBlob->GetBufferPointer();
+		uint32 vsBufferLen = (uint32)pVSBlob->GetBufferSize();
+
+		//**********************************************************************
+		// Create pipeline state object
+		//**********************************************************************
+		ID3D12Device *pDevice = pRenderer->GetDevice();
+		D3D12_INPUT_LAYOUT_DESC inputLayoutDesc = {};
+		inputLayoutDesc.NumElements = numLayoutElems;
+		inputLayoutDesc.pInputElementDescs = pLayout;
+
+		D3D12_RASTERIZER_DESC rastDesc = {};
+		rastDesc.FillMode = D3D12_FILL_MODE::D3D12_FILL_MODE_SOLID;
+		rastDesc.CullMode = D3D12_CULL_MODE::D3D12_CULL_MODE_FRONT;
+		rastDesc.FrontCounterClockwise = false;
+		rastDesc.DepthBias = 0;
+		rastDesc.DepthBiasClamp = 0.0f;
+		rastDesc.SlopeScaledDepthBias = 0.0f;
+		rastDesc.DepthClipEnable = true;
+		rastDesc.MultisampleEnable = false;
+		rastDesc.AntialiasedLineEnable = true;
+		rastDesc.ForcedSampleCount = 0;
+		rastDesc.ConservativeRaster = D3D12_CONSERVATIVE_RASTERIZATION_MODE::D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF;
+
+		D3D12_BLEND_DESC blendDesc = {};
+		blendDesc.AlphaToCoverageEnable = false;
+		blendDesc.IndependentBlendEnable = false;
+		blendDesc.RenderTarget[0].BlendEnable = true;
+		blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP::D3D12_BLEND_OP_ADD;
+		blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP::D3D12_BLEND_OP_ADD;
+		blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND::D3D12_BLEND_INV_SRC_ALPHA;
+		blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND::D3D12_BLEND_INV_SRC_ALPHA;
+		blendDesc.RenderTarget[0].LogicOp = D3D12_LOGIC_OP::D3D12_LOGIC_OP_COPY;
+		blendDesc.RenderTarget[0].LogicOpEnable = false;
+		blendDesc.RenderTarget[0].RenderTargetWriteMask = 0;
+		blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND::D3D12_BLEND_SRC_ALPHA;
+		blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND::D3D12_BLEND_SRC_ALPHA;
+
+		D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
+		psoDesc.InputLayout = inputLayoutDesc;
+		psoDesc.pRootSignature = pRenderer->GetRootSignature();
+		psoDesc.VS.BytecodeLength = vsBufferLen;
+		psoDesc.VS.pShaderBytecode = pVSByteCodes;
+		psoDesc.PS.BytecodeLength = psBufferLen;
+		psoDesc.PS.pShaderBytecode = pPSByteCodes;
+		psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		psoDesc.RTVFormats[0] = pRenderer->GetFormat();
+		psoDesc.SampleDesc = pRenderer->GetSampleDesc();
+		psoDesc.SampleMask = 0xffffffff;
+		psoDesc.RasterizerState = rastDesc;
+		psoDesc.BlendState = blendDesc;
+		psoDesc.NumRenderTargets = 1;
+		CT(pRenderer->GetDevice()->CreateGraphicsPipelineState(&psoDesc, __uuidof(ID3D12PipelineState), (void**)&m_spPipelineState));
+
+		m_spVertexShader = pVSBlob;
+		m_spPixelShader = pPSBlob;
+
+        //CD3D11_SAMPLER_DESC sdesc(D3D11_DEFAULT);
+        //CT(pDevice->CreateSamplerState(&sdesc, &m_spSamplerState));
+        //CT(pDevice->CreateInputLayout(pLayout, numLayoutElems, pVSByteCodes, vsBufferLen, &m_spLayout));
+        CreateConstantBuffer(pDevice, pVSParams, vsParamsSize, m_vsParams, &m_vertexConstants);
+        CreateConstantBuffer(pDevice, pPSParams, psParamsSize, m_psParams, &m_pixelConstants);
     }
     
     CShaderMgr CShaderMgr::s_ShaderMgr;
 
     //**********************************************************************
-    //! \brief FindShader returns the requested shader
-    //! \param[in] pShaderName Name of shader to locate
-    //! \param[in] ppShader Returns the requested shader
+    // FindShader returns the requested shader
+    // pShaderName Name of shader to locate
+    // ppShader Returns the requested shader
     //**********************************************************************
     void CShaderMgr::FindShader(const wchar_t *pShaderName, IShader **ppShader)
     {
@@ -541,9 +568,9 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief RegisterShader registers the specified shader with the shader manager
-    //! \param[in] pShaderName Name of shader
-    //! \param[in] pShader Shader to register
+    // RegisterShader registers the specified shader with the shader manager
+    // pShaderName Name of shader
+    // pShader Shader to register
     //**********************************************************************
     void CShaderMgr::RegisterShader(const wchar_t *pShaderName, IShader *pShader)
     {
