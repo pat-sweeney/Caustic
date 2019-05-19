@@ -7,12 +7,13 @@
 #include "Base\Core\Core.h"
 #include "Base\Core\RefCount.h"
 #include "Rendering\RenderWindow\IRenderWindow.h"
+#include "Rendering\Caustic\RendererMarshaller.h"
 
 namespace Caustic
 {
     class CRenderWindow : public IRenderWindow, public CRefCount
     {
-		CRefObj<IRenderer> m_spRenderer;
+		CRefObj<IRendererMarshaller> m_spRenderer;
         CRefObj<ISceneGraph> m_spSceneGraph;
         CRefObj<ICamera> m_spCamera;
         CRefObj<ITrackball> m_spTrackball;
@@ -27,7 +28,7 @@ namespace Caustic
         int m_startx, m_starty;
         int m_winwidth, m_winheight;
     public:
-        CRenderWindow(HWND hwnd);
+        CRenderWindow(HWND hwnd, std::wstring &shaderFolder);
         
         //**********************************************************************
         // IRefCount

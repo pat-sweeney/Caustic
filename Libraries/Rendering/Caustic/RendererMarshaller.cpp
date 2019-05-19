@@ -29,14 +29,34 @@ namespace Caustic {
     DWORD WINAPI RenderThreadProc(LPVOID lpParameter)
     {
         CRendererMarshaller *pClientServer = (CRendererMarshaller*)lpParameter;
+		CoInitialize(nullptr);
         pClientServer->MainLoop();
+		CoUninitialize();
         return 0;
     }
 
-    void CRendererMarshaller::Initialize(HWND hwnd)
+	void CRendererMarshaller::MainLoop()
+	{
+		CCausticFactory::Instance()->CreateRenderer(m_hwnd, m_shaderFolder, &m_spRenderer);
+		while (!m_exit)
+		{
+			EnterCriticalSection(&m_cs);
+			while (!m_queue.empty())
+			{
+				(m_queue.front())();
+				m_queue.pop();
+			}
+			LeaveCriticalSection(&m_cs);
+			m_spRenderer->RenderFrame(m_renderCallback);
+		}
+	}
+
+	void CRendererMarshaller::Initialize(HWND hwnd, std::wstring &shaderFolder, std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback)
     {
-		CCausticFactory::Instance()->CreateRenderer(hwnd, &m_spRenderer);
         InitializeCriticalSection(&m_cs);
+		m_hwnd = hwnd;
+		m_shaderFolder = shaderFolder;
+		m_renderCallback = renderCallback;
         m_thread = CreateThread(nullptr, 0, RenderThreadProc, this, 0, nullptr);
     }
 
@@ -46,7 +66,57 @@ namespace Caustic {
         WaitForSingleObject(m_thread, INFINITE);
     }
 
-    void CRendererMarshaller::SaveScene(const wchar_t *pFilename, ISceneGraph *pSceneGraph)
+	void CRendererMarshaller::SetMaxCmdLength()
+	{
+	}
+
+	void CRendererMarshaller::GetRenderer(IRenderer **ppRenderer)
+	{
+		*ppRenderer = this;
+		(*ppRenderer)->AddRef();
+	}
+
+	void CRendererMarshaller::LoadTexture(const wchar_t *pPath, ITexture **ppTexture)
+	{
+		HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+		AddLambda(
+			[this, pPath, evt, ppTexture]()
+			{
+				Caustic::CCausticFactory::Instance()->LoadTexture(pPath, m_spRenderer.p, ppTexture);
+				SetEvent(evt);
+			}
+		);
+		WaitForSingleObject(evt, INFINITE);
+	}
+
+	void CRendererMarshaller::LoadVideoTexture(const wchar_t *pPath, ITexture **ppTexture)
+	{
+		HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+		AddLambda(
+			[this, pPath, evt, ppTexture]()
+			{
+				Caustic::CCausticFactory::Instance()->LoadVideoTexture(pPath, m_spRenderer.p, ppTexture);
+				SetEvent(evt);
+			}
+		);
+		WaitForSingleObject(evt, INFINITE);
+	}
+
+	void CRendererMarshaller::SetSceneGraph(ISceneGraph *pSceneGraph)
+	{
+		if (pSceneGraph)
+			pSceneGraph->AddRef();
+		AddLambda(
+			[this, pSceneGraph]()
+			{
+//				m_spRenderer->SetSceneGraph(pSceneGraph);
+				if (pSceneGraph)
+					pSceneGraph->Release();
+			}
+		);
+	}
+
+	void CRendererMarshaller::SaveScene(const wchar_t *pFilename, ISceneGraph *pSceneGraph)
     {
         HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
         AddLambda(
@@ -79,76 +149,190 @@ namespace Caustic {
         );
         WaitForSingleObject(evt, INFINITE);
     }
-    
-    void CRendererMarshaller::LoadTexture(const wchar_t *pPath, ITexture **ppTexture)
-    {
-        HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-        AddLambda(
-            [this, pPath, evt, ppTexture]()
-            {
-                Caustic::CCausticFactory::Instance()->LoadTexture(pPath, m_spRenderer.p, ppTexture);
-                SetEvent(evt);
-            }
-        );
-        WaitForSingleObject(evt, INFINITE);
-    }
 
-    void CRendererMarshaller::LoadVideoTexture(const wchar_t *pPath, ITexture **ppTexture)
-    {
-        HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-        AddLambda(
-            [this, pPath, evt, ppTexture]()
-            {
-				Caustic::CCausticFactory::Instance()->LoadVideoTexture(pPath, m_spRenderer.p, ppTexture);
-                SetEvent(evt);
-            }
-        );
-        WaitForSingleObject(evt, INFINITE);
-    }
+	DXGI_SAMPLE_DESC CRendererMarshaller::GetSampleDesc()
+	{
+		HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+		DXGI_SAMPLE_DESC desc = {};
+		AddLambda(
+			[&]()
+			{
+				desc = m_spRenderer->GetSampleDesc();
+				SetEvent(evt);
+			}
+		);
+		WaitForSingleObject(evt, INFINITE);
+		return desc;
+	}
 
-    void CRendererMarshaller::SetSceneGraph(ISceneGraph *pSceneGraph)
-    {
-        if (pSceneGraph)
-            pSceneGraph->AddRef();
-        AddLambda(
-            [this, pSceneGraph]()
-            {
-                m_spRenderer->SetSceneGraph(pSceneGraph);
-                if (pSceneGraph)
-                    pSceneGraph->Release();
-            }
-        );
-    }
+	DXGI_FORMAT CRendererMarshaller::GetFormat()
+	{
+		HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+		DXGI_FORMAT format = DXGI_FORMAT_UNKNOWN;
+		AddLambda(
+			[&]()
+			{
+				format = m_spRenderer->GetFormat();
+				SetEvent(evt);
+			}
+		);
+		WaitForSingleObject(evt, INFINITE);
+		return format;
+	}
+	
+	CComPtr<ID3D12RootSignature> CRendererMarshaller::GetRootSignature()
+	{
+		HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+		CComPtr<ID3D12RootSignature> spRootSignature;
+		AddLambda(
+			[&]()
+			{
+				spRootSignature = m_spRenderer->GetRootSignature();
+				SetEvent(evt);
+			}
+		);
+		WaitForSingleObject(evt, INFINITE);
+		return spRootSignature;
+	}
 
-    void CRendererMarshaller::MainLoop()
-    {
-        while (!m_exit)
-        {
-            EnterCriticalSection(&m_cs);
-            while (!m_queue.empty())
-            {
-                (m_queue.front())();
-                m_queue.pop();
-            }
-            LeaveCriticalSection(&m_cs);
-            m_spRenderer->RenderFrame();
-        }
-    }
+	CComPtr<ID3D12Device5> CRendererMarshaller::GetDevice()
+	{
+		HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+		CComPtr<ID3D12Device5> spDevice;
+		AddLambda(
+			[&]()
+			{
+				spDevice = m_spRenderer->GetDevice();
+				SetEvent(evt);
+			}
+		);
+		WaitForSingleObject(evt, INFINITE);
+		return spDevice;
+	}
 
-    CComPtr<ID3D11Device> CRendererMarshaller::GetDevice()
-    {
-        return CComPtr<ID3D11Device>(nullptr); // We don't allow the client access to the D3D device
-    }
+	CRefObj<ICamera> CRendererMarshaller::GetCamera()
+	{
+		HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+		CRefObj<ICamera> spCamera;
+		AddLambda(
+			[&]()
+			{
+				spCamera = m_spRenderer->GetCamera();
+				SetEvent(evt);
+			}
+		);
+		WaitForSingleObject(evt, INFINITE);
+		return spCamera;
+	}
 
-    CComPtr<ID3D11DeviceContext> CRendererMarshaller::GetContext()
-    {
-        return CComPtr<ID3D11DeviceContext>(nullptr); // We don't allow the client access to the D3D device
-    }
+	uint32 CRendererMarshaller::GetFrameIndex()
+	{
+		HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+		uint32 frameIndex;
+		AddLambda(
+			[&]()
+			{
+				frameIndex = m_spRenderer->GetFrameIndex();
+				SetEvent(evt);
+			}
+		);
+		WaitForSingleObject(evt, INFINITE);
+		return frameIndex;
+	}
 
-    CRefObj<ICamera> CRendererMarshaller::GetCamera()
-    {
-        return m_spRenderer->GetCamera();
-    }
+	CComPtr<ID3D12GraphicsCommandList4> CRendererMarshaller::GetCommandList()
+	{
+		HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+		CComPtr< ID3D12GraphicsCommandList4> spCmdList;
+		AddLambda(
+			[&]()
+			{
+				spCmdList = m_spRenderer->GetCommandList();
+				SetEvent(evt);
+			}
+		);
+		WaitForSingleObject(evt, INFINITE);
+		return spCmdList;
+	}
+
+	void CRendererMarshaller::SetCamera(ICamera *pCamera)
+	{
+		pCamera->AddRef();
+		AddLambda(
+			[&]()
+			{
+				m_spRenderer->SetCamera(pCamera);
+				pCamera->Release();
+			}
+		);
+	}
+
+	void CRendererMarshaller::Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice)
+	{
+		AddLambda(
+			[&]()
+			{
+				m_spRenderer->Setup(hwnd, shaderFolder, createDebugDevice);
+			}
+		);
+	}
+
+	CRefObj<IShaderMgr> CRendererMarshaller::GetShaderMgr()
+	{
+		HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+		CRefObj<IShaderMgr> spShaderMgr;
+		AddLambda(
+			[&]()
+			{
+				spShaderMgr = m_spRenderer->GetShaderMgr();
+				SetEvent(evt);
+			}
+		);
+		WaitForSingleObject(evt, INFINITE);
+		return spShaderMgr;
+	}
+
+	void CRendererMarshaller::RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback)
+	{
+		AddLambda(
+			[&]()
+			{
+				m_spRenderer->RenderFrame(renderCallback);
+			}
+		);
+	}
+
+	void CRendererMarshaller::AddPointLight(IPointLight *pLight)
+	{
+		pLight->AddRef();
+		AddLambda(
+			[&]()
+			{
+				m_spRenderer->AddPointLight(pLight);
+				pLight->Release();
+			}
+		);
+	}
+
+	void CRendererMarshaller::GetRenderCtx(IRenderCtx **ppCtx)
+	{
+		AddLambda(
+			[&]()
+			{
+				m_spRenderer->GetRenderCtx(ppCtx);
+			}
+		);
+	}
+
+	void CRendererMarshaller::DrawLine(Vector3 p1, Vector3 p2, Vector4 clr)
+	{
+		AddLambda(
+			[&]()
+			{
+				m_spRenderer->DrawLine(p1, p2, clr);
+			}
+		);
+	}
 
     void CRendererMarshaller::AddLambda(std::function<void()> func)
     {
@@ -157,26 +341,7 @@ namespace Caustic {
         LeaveCriticalSection(&m_cs);
     }
 
-    void CRendererMarshaller::Setup(HWND hwnd, bool createDebugDevice)
-    {
-        AddLambda(
-            [this, hwnd, createDebugDevice]()
-            {
-                m_spRenderer->Setup(hwnd, createDebugDevice);
-            }
-        );
-    }
-
-    void CRendererMarshaller::DrawLine(Vector3 p1, Vector3 p2, Vector4 clr)
-    {
-        AddLambda(
-            [this, p1, p2, clr]()
-            {
-                m_spRenderer->DrawLine(p1, p2, clr);
-            }
-        );
-    }
-
+#if 0
     void CRendererMarshaller::DrawMesh(ISubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat)
     {
         if (pMesh)
@@ -203,56 +368,5 @@ namespace Caustic {
             }
         );
     }
-
-    void CRendererMarshaller::GetRenderCtx(IRenderCtx **ppCtx)
-    {
-        HANDLE event = CreateEvent(NULL, false, false, NULL);
-        AddLambda(
-            [this, ppCtx, event]()
-            {
-                m_spRenderer->GetRenderCtx(ppCtx);
-                SetEvent(event);
-            }
-        );
-        WaitForSingleObject(event, INFINITE);
-    }
-
-    void CRendererMarshaller::AddPointLight(IPointLight *pLight)
-    {
-        pLight->AddRef();
-        AddLambda(
-            [this, pLight]()
-            {
-                m_spRenderer->AddPointLight(pLight);
-                pLight->Release();
-            }
-        );
-    }
-
-    void CRendererMarshaller::RenderLoop()
-    {
-        throw new CausticException(E_FAIL, __FILE__, __LINE__); // Don't allow client to start render loop
-    }
-
-    void CRendererMarshaller::RenderFrame()
-    {
-        AddLambda(
-            [this]()
-            {
-                m_spRenderer->RenderFrame();
-            }
-        );
-    }
-
-    void CRendererMarshaller::SetCamera(ICamera *pCamera)
-    {
-        pCamera->AddRef();
-        AddLambda(
-            [this, pCamera]()
-            {
-                m_spRenderer->SetCamera(pCamera);
-                pCamera->Release();
-            }
-        );
-    }
+#endif
 }

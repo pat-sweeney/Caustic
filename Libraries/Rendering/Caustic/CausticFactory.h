@@ -36,6 +36,7 @@ namespace Caustic
 		//**********************************************************************
 		// ICausticFactory
 		//**********************************************************************
+		virtual void CreateRendererMarshaller(HWND hwnd, std::wstring &shaderFolder, IRendererMarshaller **ppRenderer) override;
 		virtual void CreateRenderer(HWND hwnd, std::wstring &shaderFolder, IRenderer **ppRenderer) override;
 		virtual void CreatePointLight(Vector3 &pos, IPointLight **ppLight) override;
 		virtual void CreateTrackball(ITrackball **ppTrackball) override;

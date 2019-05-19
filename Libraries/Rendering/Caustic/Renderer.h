@@ -108,6 +108,7 @@ namespace Caustic
 		void SetupDebugLayer();
 		void CreateSwapChain(HWND hwnd);
 		void AllocateBackBuffers();
+		void AllocateDepthStencilBuffers();
 		void CreateFences();
 		void CreateRootSignature();
 		void LoadDefaultShaders(const wchar_t *pFilename);
@@ -130,6 +131,10 @@ namespace Caustic
 		D3D12_CPU_DESCRIPTOR_HANDLE m_hBackBuffers[c_NumBackBuffers];
 		CComPtr<ID3D12Resource> m_spBackBuffers[c_NumBackBuffers];
 		UINT m_backBufferSize;
+		CComPtr<ID3D12DescriptorHeap> m_spDepthStencilHeap;
+		D3D12_CPU_DESCRIPTOR_HANDLE m_hDepthStencilBuffers[c_NumBackBuffers];
+		CComPtr<ID3D12Resource> m_spDepthStencilBuffers[c_NumBackBuffers];
+		UINT m_depthStencilBufferSize;
 		UINT m_currentFrame;
 		CComPtr<IDXGISwapChain4> m_spSwapChain;
 		CComPtr<ID3D12Fence1> m_spFences[c_NumBackBuffers];
@@ -146,11 +151,9 @@ namespace Caustic
 		CRefObj<IShaderMgr> m_spShaderMgr;
 		CRefObj<ICamera> m_spCamera;                       // Camera to use for rendering
 		CRefObj<IRenderCtx> m_spRenderCtx;                 // D3D Render context
-		CComPtr<ID3D12Resource> m_spDepthStencilBuffer;    // Our depth map
 		CVertexBuffer m_lineVB;
 		CRefObj<IShader> m_spLineShader;
-		CEvent m_waitForShutdown;                       //!< Event to control shutdown (waits for render thread to exit)
-		bool m_exitThread;                              //!< Controls whether we are exiting the render thread
+		std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> m_callback;
 
 		void InitializeD3D(HWND hwnd);
 
@@ -159,8 +162,6 @@ namespace Caustic
     public:
         explicit CRenderer();
         virtual ~CRenderer();
-		void RenderLoop();
-		void RenderFrame();
         
         //**********************************************************************
         // IRefCount
@@ -171,20 +172,19 @@ namespace Caustic
         //**********************************************************************
         // IRenderer
         //**********************************************************************
-		virtual CRefObj<IShaderMgr> GetShaderMgr() override { return m_spShaderMgr; };
 		virtual DXGI_SAMPLE_DESC GetSampleDesc() override { return m_swapDesc.SampleDesc; }
 		virtual DXGI_FORMAT GetFormat() override { return m_swapDesc.BufferDesc.Format; }
 		virtual CComPtr<ID3D12RootSignature> GetRootSignature() override { return m_spRootSignature; }
 		virtual CComPtr<ID3D12Device5> GetDevice() override { return m_spDevice; }
-		virtual CComPtr<ID3D12GraphicsCommandList4> GetCommandList() override { return m_spCommandList; }
 		virtual CRefObj<ICamera> GetCamera() override { return m_spCamera; }
 		virtual uint32 GetFrameIndex() override { return m_currentFrame; }
+		virtual CComPtr<ID3D12GraphicsCommandList4> GetCommandList() override { return m_spCommandList; }
 		virtual void SetCamera(ICamera *pCamera) override { m_spCamera = pCamera; }
 		virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice) override;
-        //virtual void DrawMesh(ISubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) override;
-        virtual void AddPointLight(IPointLight *pLight) override;
-        virtual void GetRenderCtx(IRenderCtx **ppCtx) override;
-        virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) override;
-        void DrawInfinitePlane();
+		virtual CRefObj<IShaderMgr> GetShaderMgr() override { return m_spShaderMgr; };
+		virtual void RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) override;
+		virtual void AddPointLight(IPointLight *pLight) override;
+		virtual void GetRenderCtx(IRenderCtx **ppCtx) override;
+		virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) override;
     };
 }

@@ -17,6 +17,7 @@
 // Namespace: Caustic
 namespace Caustic
 {
+	struct IRendererMarshaller;
 	struct IRenderer;
 	struct IPointLight;
 	struct ITrackball;
@@ -35,6 +36,17 @@ namespace Caustic
 	//**********************************************************************
 	struct ICausticFactory : public IRefCount
 	{
+		//**********************************************************************
+		// Method: CreateRenderer 
+		// Creates our basic renderer object to be used by the client
+		//
+		// Parameters:
+		// hwnd - HWND to attach D3D renderer to
+		// shaderFolder - folder that contains our shaders
+		// ppRenderer - Returns the created renderer
+		//**********************************************************************
+		virtual void CreateRendererMarshaller(HWND hwnd, std::wstring &shaderFolder, IRendererMarshaller **ppRenderer) = 0;
+
 		//**********************************************************************
 		// Method: CreateRenderer 
 		// Creates our basic renderer object to be used by the client

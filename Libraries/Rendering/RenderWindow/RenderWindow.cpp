@@ -12,23 +12,29 @@
 
 namespace Caustic
 {
-    CAUSTICAPI void CreateRenderWindow(HWND hwnd, IRenderWindow **ppRenderWindow)
+    CAUSTICAPI void CreateRenderWindow(HWND hwnd, std::wstring &shaderFolder, IRenderWindow **ppRenderWindow)
     {
-        std::unique_ptr<CRenderWindow> spRenderWindow(new CRenderWindow(hwnd));
+        std::unique_ptr<CRenderWindow> spRenderWindow(new CRenderWindow(hwnd, shaderFolder));
         *ppRenderWindow = spRenderWindow.release();
         (*ppRenderWindow)->AddRef();
     }
 
-    CRenderWindow::CRenderWindow(HWND hwnd)
+    CRenderWindow::CRenderWindow(HWND hwnd, std::wstring &shaderFolder)
     {
 		CRefObj<ICausticFactory> spFactory;
 		CreateCausticFactory(&spFactory);
-		std::wstring shaderFolder(L"F:\\github\\Caustic12\\Caustic\\Release");
-		spFactory->CreateRenderer(hwnd, shaderFolder, &m_spRenderer);
-		CSceneFactory::Instance()->CreateSceneGraph(&m_spSceneGraph);
-		Caustic::CCausticFactory::Instance()->CreateCamera(true, &m_spCamera);
-        m_spRenderer->SetCamera(m_spCamera.p);
-		Caustic::CCausticFactory::Instance()->CreateTrackball(&m_spTrackball);
+		spFactory->CreateRendererMarshaller(hwnd, shaderFolder, &m_spRenderer);
+		CRefObj<ISceneFactory> spSceneFactory;
+		CreateSceneFactory(&spSceneFactory);
+		spSceneFactory->CreateSceneGraph(&m_spSceneGraph);
+		m_spRenderer->Initialize(hwnd, shaderFolder, [this](IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass) {
+			SceneCtx sceneCtx;
+			m_spSceneGraph->Render(pRenderer, pRenderCtx, &sceneCtx);
+			});
+
+		m_spRenderer->SetSceneGraph(m_spSceneGraph.p);
+
+		spFactory->CreateTrackball(&m_spTrackball);
         m_hwnd = hwnd;
     }
     

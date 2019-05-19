@@ -22,14 +22,14 @@ namespace Caustic
 	//**********************************************************************
 	struct IRendererMarshaller : public IRefCount
 	{
-		virtual void Initialize(HWND hwnd, bool useOculus) = 0;
+		virtual void Initialize(HWND hwnd, std::wstring &shaderFolder, std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) = 0;
 		virtual void Shutdown() = 0;
 		virtual void SetMaxCmdLength() = 0;
 		virtual void GetRenderer(IRenderer **ppRenderer) = 0;
 		virtual void LoadTexture(const wchar_t *pPath, ITexture **ppTexture) = 0;
 		virtual void LoadVideoTexture(const wchar_t *pPath, ITexture **ppTexture) = 0;
 		virtual void SetSceneGraph(ISceneGraph *pSceneGraph) = 0;
-		virtual void SaveScene(const wchar_t *pFilename, ISceneGraph *pSceneGraph, bool saveAsEditable) = 0;
-		virtual void LoadScene(const wchar_t *pFilename, ISceneGraph *pSceneGraph, bool loadAsEditable) = 0;
+		virtual void SaveScene(const wchar_t *pFilename, ISceneGraph *pSceneGraph) = 0;
+		virtual void LoadScene(const wchar_t *pFilename, ISceneGraph *pSceneGraph) = 0;
 	};
 }

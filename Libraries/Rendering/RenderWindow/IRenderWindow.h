@@ -90,7 +90,8 @@ namespace Caustic
 	//
 	// Parameters:
 	// hwnd - window to bind IRenderWindow to
+	// shaderFolder - folder containing shaders
 	// ppRenderWindow - returns the created render window
 	//**********************************************************************
-	CAUSTICAPI void CreateRenderWindow(HWND hwnd, IRenderWindow **ppRenderWindow);
+	CAUSTICAPI void CreateRenderWindow(HWND hwnd, std::wstring &shaderFolder, IRenderWindow **ppRenderWindow);
 }

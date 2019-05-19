@@ -4,10 +4,12 @@
 //**********************************************************************
 #pragma once
 #include "Rendering\Caustic\Caustic.h"
+#include "IRendererMarshaller.h"
 #include "Base\Core\RefCount.h"
 #include <functional>
 #include <queue>
 #include <type_traits>
+#include <string>
 
 namespace Caustic
 {
@@ -25,6 +27,9 @@ namespace Caustic
         std::queue<std::function<void()> > m_queue;
         bool m_exit;
         HANDLE m_thread;
+		HWND m_hwnd;
+		std::wstring m_shaderFolder;
+		std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> m_renderCallback;
 
         void AddLambda(std::function<void()> func);
     public:
@@ -40,38 +45,32 @@ namespace Caustic
         //**********************************************************************
         // IRendererMarshaller methods
         //**********************************************************************
-        virtual void Initialize(HWND hwnd) override;
-        virtual void Shutdown() override;
-        virtual void SetMaxCmdLength() override {}
-        virtual void GetRenderer(IRenderer **ppRenderer)
-        {
-            *ppRenderer = this;
-            (*ppRenderer)->AddRef();
-        }
-        virtual void LoadTexture(const wchar_t *pPath, ITexture **ppTexture) override;
-        virtual void LoadVideoTexture(const wchar_t *pPath, ITexture **ppTexture) override;
-        virtual void SetSceneGraph(ISceneGraph *pSceneGraph) override;
-        virtual void SaveScene(const wchar_t *pFilename, ISceneGraph *pSceneGraph) override;
-        virtual void LoadScene(const wchar_t *pFilename, ISceneGraph *pSceneGraph) override;
-
-        //**********************************************************************
-        // IGraphics methods
-        //**********************************************************************
-        virtual CComPtr<ID3D11Device> GetDevice() override;
-        virtual CComPtr<ID3D11DeviceContext> GetContext() override;
-        virtual CRefObj<ICamera> GetCamera() override;
+		virtual void Initialize(HWND hwnd, std::wstring &shaderFolder, std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) override;
+		virtual void Shutdown() override;
+		virtual void SetMaxCmdLength() override;
+		virtual void GetRenderer(IRenderer **ppRenderer) override;
+		virtual void LoadTexture(const wchar_t *pPath, ITexture **ppTexture) override;
+		virtual void LoadVideoTexture(const wchar_t *pPath, ITexture **ppTexture) override;
+		virtual void SetSceneGraph(ISceneGraph *pSceneGraph) override;
+		virtual void SaveScene(const wchar_t *pFilename, ISceneGraph *pSceneGraph) override;
+		virtual void LoadScene(const wchar_t *pFilename, ISceneGraph *pSceneGraph) override;
 
         //**********************************************************************
         // IRenderer methods
         //**********************************************************************
-        virtual void Setup(HWND hwnd, bool createDebugDevice) override;
-        virtual void DrawMesh(ISubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) override; ///< Draws a mesh
-        virtual void RenderLoop() override; ///< Renderer entry point
-        virtual void RenderFrame() override; ///< Have renderer draw and present next frame
-        virtual void SetCamera(ICamera *pCamera) override; ///< Sets camera
-        virtual void AddPointLight(IPointLight *pLight) override;
-        virtual void GetRenderCtx(IRenderCtx **ppCtx) override;
-        virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) override;
-        virtual void GetGraphics(IGraphics ** /*ppGraphics*/) override { return; }
-    };
+		virtual DXGI_SAMPLE_DESC GetSampleDesc() override;
+		virtual DXGI_FORMAT GetFormat() override;
+		virtual CComPtr<ID3D12RootSignature> GetRootSignature() override;
+		virtual CComPtr<ID3D12Device5> GetDevice() override;
+		virtual CRefObj<ICamera> GetCamera() override;
+		virtual uint32 GetFrameIndex() override;
+		virtual CComPtr<ID3D12GraphicsCommandList4> GetCommandList() override;
+		virtual void SetCamera(ICamera *pCamera) override;
+		virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice) override;
+		virtual CRefObj<IShaderMgr> GetShaderMgr() override;
+		virtual void RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) override; // Have renderer draw and present next frame
+		virtual void AddPointLight(IPointLight *pLight) override;
+		virtual void GetRenderCtx(IRenderCtx **ppCtx) override;
+		virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) override;
+	};
 }

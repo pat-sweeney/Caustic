@@ -7,7 +7,7 @@
 #include "Base\Core\RefCount.h"
 #include "Base\Math\Ray.h"
 #include "Rendering\Caustic\Caustic.h"
-#include "Rendering\SceneGraph\SceneGraph.h"
+#include "Rendering/SceneGraph/ISceneGraph.h"
 #include <vector>
 #include <string>
 

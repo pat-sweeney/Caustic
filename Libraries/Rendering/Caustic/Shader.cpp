@@ -534,8 +534,16 @@ namespace Caustic
 		psoDesc.RasterizerState = rastDesc;
 		psoDesc.BlendState = blendDesc;
 		psoDesc.NumRenderTargets = 1;
-		CT(pRenderer->GetDevice()->CreateGraphicsPipelineState(&psoDesc, __uuidof(ID3D12PipelineState), (void**)&m_spPipelineState));
 
+		psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+		psoDesc.DepthStencilState.DepthEnable = true;
+		psoDesc.DepthStencilState.StencilEnable = false;
+		psoDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC::D3D12_COMPARISON_FUNC_LESS;
+		psoDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK::D3D12_DEPTH_WRITE_MASK_ALL;
+		psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+
+		CT(pRenderer->GetDevice()->CreateGraphicsPipelineState(&psoDesc, __uuidof(ID3D12PipelineState), (void**)&m_spPipelineState));
+		
 		m_spVertexShader = pVSBlob;
 		m_spPixelShader = pPSBlob;
 

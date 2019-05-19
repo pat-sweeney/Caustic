@@ -11,6 +11,7 @@
 #include <d3d12.h>
 #include <DirectXMath.h>
 #include "Renderer.h"
+#include "RendererMarshaller.h"
 #include "CausticFactory.h"
 #include "PointLight.h"
 #include "RenderMaterial.h"
@@ -58,6 +59,14 @@ namespace Caustic
 			CoUninitialize();
 			shutdown = true;
 		}
+	}
+
+	void CCausticFactory::CreateRendererMarshaller(HWND hwnd, std::wstring &shaderFolder, IRendererMarshaller **ppRenderer)
+	{
+		_ASSERT(ppRenderer);
+		std::unique_ptr<CRendererMarshaller> spRenderer(new CRendererMarshaller());
+		*ppRenderer = spRenderer.release();
+		(*ppRenderer)->AddRef();
 	}
 
 	void CCausticFactory::CreateRenderer(HWND hwnd, std::wstring &shaderFolder, IRenderer **ppRenderer)

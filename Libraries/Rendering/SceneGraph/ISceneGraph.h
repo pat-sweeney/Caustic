@@ -38,12 +38,6 @@ namespace Caustic
 	struct SceneCtx
 	{
 		//**********************************************************************
-		// Property: m_spRenderer
-		// Defines our current rendering device
-		//**********************************************************************
-		CComPtr<IRenderer> m_spRenderer;
-
-		//**********************************************************************
 		// Property: m_Transform
 		// Defines the current transform
 		//**********************************************************************

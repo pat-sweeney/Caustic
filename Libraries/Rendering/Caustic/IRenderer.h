@@ -8,6 +8,7 @@
 #include "Base\Math\Vector.h"
 #include <Windows.h>
 #include <d3d12.h>
+#include <functional>
 
 namespace Caustic
 {
@@ -32,7 +33,7 @@ namespace Caustic
 		virtual void SetCamera(ICamera *pCamera) = 0;
 		virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice) = 0;
 		virtual CRefObj<IShaderMgr> GetShaderMgr() = 0;
-		virtual void RenderFrame() = 0; // Have renderer draw and present next frame
+		virtual void RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) = 0;
 		virtual void AddPointLight(IPointLight *pLight) = 0;
 		virtual void GetRenderCtx(IRenderCtx **ppCtx) = 0;
 		virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) = 0;
