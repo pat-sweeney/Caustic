@@ -63,15 +63,23 @@ namespace Caustic
 		DXGI_MODE_DESC *modeDesc = new DXGI_MODE_DESC[numModes];
 		ZeroMemory(modeDesc, sizeof(modeDesc) * numModes);
 		CT(spOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, modeDesc));
+		int bestDist = MAXINT;
+		UINT bestIndex;
 		for (UINT i = 0; i < numModes; i++)
 		{
-			if (modeDesc[i].Width == m_width && modeDesc[i].Height == m_height)
+			int deltaWidth = modeDesc[i].Width - m_width;
+			int deltaHeight = modeDesc[i].Height - m_height;
+			int dist = deltaWidth * deltaWidth + deltaHeight * deltaHeight;
+			if (dist < bestDist)
 			{
-				m_numerator = modeDesc[i].RefreshRate.Numerator;
-				m_denominator = modeDesc[i].RefreshRate.Denominator;
-				break;
+				bestDist = dist;
+				bestIndex = i;
 			}
 		}
+		m_numerator = modeDesc[bestIndex].RefreshRate.Numerator;
+		m_denominator = modeDesc[bestIndex].RefreshRate.Denominator;
+		m_width = modeDesc[bestIndex].Width;
+		m_height = modeDesc[bestIndex].Height;
 		delete[] modeDesc;
 
 		CComPtr<ID3D12Debug> spDebugController0;
@@ -120,11 +128,10 @@ namespace Caustic
 			clearValue.Format = DXGI_FORMAT_D32_FLOAT;
 			clearValue.DepthStencil.Depth = 1.0f;
 			clearValue.DepthStencil.Stencil = 0;
-			auto desc = m_spBackBuffers[i]->GetDesc();
 			m_spDevice->CreateCommittedResource(
 				&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
 				D3D12_HEAP_FLAG_NONE,
-				&CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_D32_FLOAT, desc.Width, desc.Height, 1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL),
+				&CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_D32_FLOAT, m_width, m_height, 1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL),
 				D3D12_RESOURCE_STATE_DEPTH_WRITE,
 				&clearValue,
 				__uuidof(ID3D12Resource), (void**)&m_spDepthStencilBuffers[i]);
@@ -162,7 +169,6 @@ namespace Caustic
 
 	void CRenderer::CreateFences()
 	{
-		// Create fence for synchronization
 		for (int i = 0; i < c_NumBackBuffers; i++)
 		{
 			CT(m_spDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE, __uuidof(ID3D12Fence1), (void**)&m_spFences[i]));
@@ -232,6 +238,11 @@ namespace Caustic
 	{
 		std::unique_ptr<CRenderCtx> spCtx(new CRenderCtx());
 		m_spRenderCtx = spCtx.release();
+
+		RECT rect;
+		GetClientRect(hwnd, &rect);
+		m_width = rect.right - rect.left;
+		m_height = rect.bottom - rect.top;
 
 		SetupDebugLayer();
 
@@ -540,6 +551,10 @@ namespace Caustic
 		// Reset our command list
 		CT(m_spCommandAllocator->Reset());
 		CT(m_spCommandList->Reset(m_spCommandAllocator, nullptr));
+		m_spCommandList->SetGraphicsRootSignature(m_spRootSignature);
+		//ID3D12DescriptorHeap *descriptorHeaps[] = { m_spBackBufferHeap, m_spDepthStencilHeap };
+		//m_spCommandList->SetDescriptorHeaps(2, descriptorHeaps);
+		//m_spCommandList->SetGraphicsRootDescriptorTable(1, m_spSRVDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 
 		// Make sure our backbuffer is in the correct state
 		m_spCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_spBackBuffers[m_currentFrame], D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
@@ -550,18 +565,29 @@ namespace Caustic
 		// Clear the render target
 		static float color[4] = { 1.0f, 0.4f, 0.4f, 1.0f };
 		m_spCommandList->ClearRenderTargetView(m_hBackBuffers[m_currentFrame], color, 0, nullptr);
-		m_spCommandList->ClearDepthStencilView(m_hDepthStencilBuffers[m_currentFrame], D3D12_CLEAR_FLAGS::D3D12_CLEAR_FLAG_DEPTH, D3D12_FLOAT32_MAX, 0, 0, nullptr);
+		m_spCommandList->ClearDepthStencilView(m_hDepthStencilBuffers[m_currentFrame], D3D12_CLEAR_FLAGS::D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
-        //CD3DX12_DEPTH_STENCIL_DESC depthDesc(D3D12_DEFAULT);
+		// Establish viewport
+		D3D12_VIEWPORT viewport = { 0.0f, 0.0f, (float)m_width, (float)m_height, 0.0f, 1.0f };
+		D3D12_RECT scissorRect = { 0, 0, (LONG)m_width, (LONG)m_height };
+		m_spCommandList->RSSetViewports(1, &viewport);
+		m_spCommandList->RSSetScissorRects(1, &scissorRect);
+		
+		//CD3DX12_DEPTH_STENCIL_DESC depthDesc(D3D12_DEFAULT);
         //depthDesc.DepthEnable = true;
         //depthDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
         //depthDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
         //CT(m_spDevice->CreateDepthStencilState(&depthDesc, &spDepthStencilState));
         //m_spCommandList->OMSetDepthStencilState(spDepthStencilState, 1);
 
-        RenderScene();
+       // RenderScene();
 		CT(m_spCommandList->Close());
 		m_currentFrame = (++m_currentFrame == c_MaxFrames) ? 0 : m_currentFrame;
         m_spSwapChain->Present(1, 0);
-    }
+
+		m_fenceValue++;
+		CT(m_spCmdQueue->Signal(m_spFences[m_currentFrame], m_fenceValue));
+		CT(m_spFences[m_currentFrame]->SetEventOnCompletion(m_fenceValue, m_fenceEvents[m_currentFrame]));
+		WaitForSingleObject(m_fenceEvents[m_currentFrame], INFINITE);
+	}
 }
