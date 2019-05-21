@@ -558,10 +558,11 @@ namespace Caustic
 
 		// Make sure our backbuffer is in the correct state
 		m_spCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_spBackBuffers[m_currentFrame], D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
-		
+
 		// Setup our render targets
-		m_spCommandList->OMSetRenderTargets(1, &m_hBackBuffers[m_currentFrame], false, nullptr);
-		
+		CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(m_hDepthStencilBuffers[m_currentFrame]);
+		m_spCommandList->OMSetRenderTargets(1, &m_hBackBuffers[m_currentFrame], false, &dsvHandle);
+
 		// Clear the render target
 		static float color[4] = { 1.0f, 0.4f, 0.4f, 1.0f };
 		m_spCommandList->ClearRenderTargetView(m_hBackBuffers[m_currentFrame], color, 0, nullptr);
@@ -582,6 +583,9 @@ namespace Caustic
 
        // RenderScene();
 		CT(m_spCommandList->Close());
+
+		m_spCmdQueue->ExecuteCommandLists(1, (ID3D12CommandList**)&m_spCommandList.p);
+
 		m_currentFrame = (++m_currentFrame == c_MaxFrames) ? 0 : m_currentFrame;
         m_spSwapChain->Present(1, 0);
 
