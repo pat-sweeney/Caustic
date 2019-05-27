@@ -20,7 +20,7 @@ namespace Caustic
 	public:
 		static CRefObj<ISceneFactory> Instance()
 		{
-			if (s_factory.p == nullptr)
+			if (s_factory == nullptr)
 			{
 				s_factory = CRefObj<ISceneFactory>(new CSceneFactory());
 			}

@@ -6,6 +6,7 @@
 #include "Base\Core\error.h"
 #include "Geometry\Mesh\Mesh.h"
 #include "Rendering/Caustic/Material.h"
+#include "Rendering/Caustic/Caustic.h"
 
 namespace Caustic
 {
@@ -54,7 +55,7 @@ namespace Caustic
     //**********************************************************************
     void CMesh::GetSubMesh(uint32 index, ISubMesh **ppSubMesh)
     {
-        *ppSubMesh = m_subMeshes[index].p;
+        *ppSubMesh = m_subMeshes[index];
         (*ppSubMesh)->AddRef();
     }
 
@@ -114,7 +115,7 @@ namespace Caustic
     {
         if (materialID < m_materials.size())
         {
-            (*ppMaterial) = m_materials[materialID].p;
+            (*ppMaterial) = m_materials[materialID];
             (*ppMaterial)->AddRef();
         }
         else
@@ -134,7 +135,7 @@ namespace Caustic
         {
             CRefObj<ISubMesh> spSubMesh(new CSubMesh());
             spSubMesh->Load(pStream);
-            m_subMeshes.push_back(spSubMesh.p);
+            m_subMeshes.push_back(spSubMesh);
         }
     }
 
@@ -155,16 +156,36 @@ namespace Caustic
         }
     }
 
-    //**********************************************************************
-    // Computes normal vectors for each vertex on the mesh
-    //**********************************************************************
-    void CMesh::ComputeNormals()
-    {
-        for (auto pSubMesh : m_subMeshes)
-            pSubMesh->ComputeNormals();
-    }
-    
-    //**********************************************************************
+	//**********************************************************************
+	// Computes normal vectors for each vertex on the mesh
+	//**********************************************************************
+	void CMesh::ComputeNormals()
+	{
+		for (auto pSubMesh : m_subMeshes)
+			pSubMesh->ComputeNormals();
+	}
+
+	//**********************************************************************
+	// Computes normal vectors for each vertex on the mesh
+	//**********************************************************************
+	void CMesh::ToRenderMesh(IRenderer *pRenderer, IShaderInfo *pShaderInfo, IRenderMesh **ppRenderMesh)
+	{
+		CRefObj<ICausticFactory> spFactory;
+		CreateCausticFactory(&spFactory);
+		CRefObj<IRenderMesh> spRenderMesh;
+		spFactory->CreateRenderMesh(&spRenderMesh);
+		for (auto pSubMesh : m_subMeshes)
+		{
+			CRefObj<IRenderSubMesh> spRenderSubMesh;
+			spFactory->CreateRenderSubMesh(&spRenderSubMesh);
+			pSubMesh->ToRenderSubMesh(pRenderer, pShaderInfo, &spRenderSubMesh);
+			spRenderMesh->AddSubMesh(spRenderSubMesh);
+		}
+		*ppRenderMesh = spRenderMesh;
+		(*ppRenderMesh)->AddRef();
+	}
+
+	//**********************************************************************
     // Returns an empty mesh
     // @param [out] ppMesh Returns the newly created mesh object
     //**********************************************************************

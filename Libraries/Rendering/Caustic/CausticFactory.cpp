@@ -23,6 +23,7 @@
 #include "ShaderInfo.h"
 #include "Material.h"
 #include "Renderable.h"
+#include "RenderMesh.h"
 #include <mfapi.h>
 #include <mfidl.h>
 #include <mfreadwrite.h>
@@ -77,12 +78,26 @@ namespace Caustic
 
 		CRefObj<ICamera> spCamera;
 		CCausticFactory::Instance()->CreateCamera(true, &spCamera);
-		spRenderer->SetCamera(spCamera.p);
+		spRenderer->SetCamera(spCamera);
 
 		*ppRenderer = spRenderer.release();
 		(*ppRenderer)->AddRef();
 	}
-	
+
+	void CCausticFactory::CreateRenderMesh(IRenderMesh **ppRenderMesh)
+	{
+		_ASSERT(ppRenderMesh);
+		*ppRenderMesh = new CRenderMesh();
+		(*ppRenderMesh)->AddRef();
+	}
+
+	void CCausticFactory::CreateRenderSubMesh(IRenderSubMesh **ppRenderSubMesh)
+	{
+		_ASSERT(ppRenderSubMesh);
+		*ppRenderSubMesh = new CRenderSubMesh();
+		(*ppRenderSubMesh)->AddRef();
+	}
+
 	void CCausticFactory::CreatePointLight(Vector3 &pos, IPointLight **ppLight)
 	{
 		std::unique_ptr<CPointLight> spPointLight(new CPointLight());
@@ -145,7 +160,7 @@ namespace Caustic
 			{
 				std::wstring wfn(fnDiffuse.begin(), fnDiffuse.end());
 				Caustic::CCausticFactory::Instance()->LoadTexture(wfn.c_str(), pRenderer, &spDiffuseTexture);
-				CCausticFactory::Instance()->CreateSampler(pRenderer, spDiffuseTexture.p, &spDiffuseSampler);
+				CCausticFactory::Instance()->CreateSampler(pRenderer, spDiffuseTexture, &spDiffuseSampler);
 			}
 
 			std::string fnSpecular = pMaterialAttrib->GetSpecularTexture();
@@ -153,7 +168,7 @@ namespace Caustic
 			{
 				std::wstring wfn(fnSpecular.begin(), fnSpecular.end());
 				Caustic::CCausticFactory::Instance()->LoadTexture(wfn.c_str(), pRenderer, &spSpecularTexture);
-				CCausticFactory::Instance()->CreateSampler(pRenderer, spSpecularTexture.p, &spSpecularSampler);
+				CCausticFactory::Instance()->CreateSampler(pRenderer, spSpecularTexture, &spSpecularSampler);
 			}
 
 			std::string fnAmbient = pMaterialAttrib->GetAmbientTexture();
@@ -161,7 +176,7 @@ namespace Caustic
 			{
 				std::wstring wfn(fnAmbient.begin(), fnAmbient.end());
 				Caustic::CCausticFactory::Instance()->LoadTexture(wfn.c_str(), pRenderer, &spAmbientTexture);
-				CCausticFactory::Instance()->CreateSampler(pRenderer, spAmbientTexture.p, &spAmbientSampler);
+				CCausticFactory::Instance()->CreateSampler(pRenderer, spAmbientTexture, &spAmbientSampler);
 			}
 		}
 

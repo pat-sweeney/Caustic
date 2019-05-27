@@ -98,7 +98,7 @@ namespace Caustic
         id++;
 
         // Setup the material
-        pRenderMaterial->Render(pRenderer, lights, pRenderCtx, spShader.p);
+        pRenderMaterial->Render(pRenderer, lights, pRenderCtx, spShader);
 
 		CComPtr<ID3D12GraphicsCommandList> spCommandList = pRenderer->GetCommandList();
 		D3D12_VERTEX_BUFFER_VIEW vbView = {};
@@ -153,13 +153,13 @@ namespace Caustic
     {
         for (int j = 0; j < 2; j++)
         {
-            if (j == 0 && m_spFrontMaterial.p)
+            if (j == 0 && m_spFrontMaterial)
             {
-                RenderMesh(pRenderer, lights, pRenderCtx, m_spFrontMaterial.p, D3D12_CULL_MODE::D3D12_CULL_MODE_BACK);
+                RenderMesh(pRenderer, lights, pRenderCtx, m_spFrontMaterial, D3D12_CULL_MODE::D3D12_CULL_MODE_BACK);
             }
-            else if (j == 1 && m_spBackMaterial.p)
+            else if (j == 1 && m_spBackMaterial)
             {
-                RenderMesh(pRenderer, lights, pRenderCtx, m_spBackMaterial.p, D3D12_CULL_MODE::D3D12_CULL_MODE_FRONT);
+                RenderMesh(pRenderer, lights, pRenderCtx, m_spBackMaterial, D3D12_CULL_MODE::D3D12_CULL_MODE_FRONT);
             }
         }
         if ((pRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayNormalsAsLines) ||

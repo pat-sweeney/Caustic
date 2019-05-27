@@ -240,7 +240,7 @@ namespace Caustic
         }
         wchar_t fn[1024];
         swprintf_s(fn, L"d:\\images\\frame-%d.png", frame++);
-        StoreImage(fn, spImage.p);
+        StoreImage(fn, spImage);
     }
 #endif
 

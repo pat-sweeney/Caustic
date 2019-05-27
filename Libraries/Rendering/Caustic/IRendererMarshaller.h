@@ -20,7 +20,7 @@ namespace Caustic
 	// thread. This interface allows the client to call the renderer from any
 	// thread (calls will be marshalled to the renderer thread).
 	//**********************************************************************
-	struct IRendererMarshaller : public IRefCount
+	struct IRendererMarshaller : public IRenderer
 	{
 		virtual void Initialize(HWND hwnd, std::wstring &shaderFolder, std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) = 0;
 		virtual void Shutdown() = 0;

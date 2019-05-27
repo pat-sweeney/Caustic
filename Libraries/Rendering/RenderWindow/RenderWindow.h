@@ -40,6 +40,7 @@ namespace Caustic
         // IRenderWindow
         //**********************************************************************
         virtual CRefObj<ISceneGraph> GetSceneGraph() override { return m_spSceneGraph; }
+		virtual CRefObj<IRendererMarshaller> GetRenderer() override { return m_spRenderer; }
         virtual void MouseDown(int x, int y, uint32 button, uint32 flags) override;
         virtual void MouseMove(int x, int y, uint32 flags) override;
         virtual void MouseUp(int x, int y, uint32 button, uint32 flags) override;

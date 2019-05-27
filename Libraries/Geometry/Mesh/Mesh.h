@@ -48,7 +48,12 @@ namespace Caustic
         void LinkEdges(CHalfEdge *pPrev, CHalfEdge *pCur);
         void TriangulateViaEarClipping();
         void TriangulateViaPointInsertion();
-    public:
+		void BuildVertexBuffer(IRenderSubMesh *pRenderSubMesh, ID3D12Device *pDevice, ID3D12GraphicsCommandList *pCommandList,
+			IShaderInfo *pShaderInfo, std::vector<int> &vertexReferenced);
+		void BuildIndexBuffer(IRenderSubMesh *pRenderSubMesh, ID3D12Device *pDevice, ID3D12GraphicsCommandList *pCommandList,
+			std::vector<int> &vertexReferenced);
+		void BuildReferencedVertexList(std::vector<int> &vertexReferenced);
+	public:
         friend class CMeshConstructor;
 
         CSubMesh() :
@@ -75,7 +80,7 @@ namespace Caustic
 
         void CheckConsistency();
 
-        //**********************************************************************
+		//**********************************************************************
         // IRefCount
         //**********************************************************************
         virtual uint32 AddRef() override { return CRefCount::AddRef(); }
@@ -103,6 +108,7 @@ namespace Caustic
         virtual uint32 FaceToIndex(CFace *pFace) override;
         virtual uint32 EdgeToIndex(CHalfEdge *pEdge) override;
         virtual void Triangulate(ETriangulateMethod method) override;
+		virtual void ToRenderSubMesh(IRenderer *pRenderer, IShaderInfo *pShaderInfo, IRenderSubMesh **ppRenderMesh) override;
 
         //**********************************************************************
         // ISerialize
@@ -142,6 +148,7 @@ namespace Caustic
         virtual void SetMaterials(std::vector<CRefObj<IMaterialAttrib>> &materials) override;
         virtual void GetMaterial(uint32 materialID, IMaterialAttrib **ppMaterial) override;
         virtual void ComputeNormals() override;
+		virtual void ToRenderMesh(IRenderer *pRenderer, IShaderInfo *pShaderInfo, IRenderMesh **ppRenderMesh) override;
 
         //**********************************************************************
         // ISerialize

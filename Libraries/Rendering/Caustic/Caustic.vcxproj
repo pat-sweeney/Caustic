@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -156,6 +156,7 @@
     <ClInclude Include="IRenderer.h" />
     <ClInclude Include="IRendererMarshaller.h" />
     <ClInclude Include="IRenderMaterial.h" />
+    <ClInclude Include="IRenderMesh.h" />
     <ClInclude Include="ISampler.h" />
     <ClInclude Include="IShader.h" />
     <ClInclude Include="IShaderInfo.h" />
@@ -169,6 +170,7 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RendererMarshaller.h" />
     <ClInclude Include="RenderMaterial.h" />
+    <ClInclude Include="RenderMesh.h" />
     <ClInclude Include="Sampler.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderInfo.h" />
@@ -192,6 +194,7 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RendererMarshaller.cpp" />
     <ClCompile Include="RenderMaterial.cpp" />
+    <ClCompile Include="RenderMesh.cpp" />
     <ClCompile Include="Sampler.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderInfo.cpp" />

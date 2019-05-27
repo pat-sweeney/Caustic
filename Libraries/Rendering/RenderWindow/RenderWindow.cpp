@@ -32,7 +32,7 @@ namespace Caustic
 			m_spSceneGraph->Render(pRenderer, pRenderCtx, &sceneCtx);
 			});
 
-		m_spRenderer->SetSceneGraph(m_spSceneGraph.p);
+		m_spRenderer->SetSceneGraph(m_spSceneGraph);
 
 		spFactory->CreateTrackball(&m_spTrackball);
         m_hwnd = hwnd;

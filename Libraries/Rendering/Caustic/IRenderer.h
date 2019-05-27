@@ -6,6 +6,7 @@
 
 #include "Base\Core\Core.h"
 #include "Base\Math\Vector.h"
+#include "IRenderMesh.h"
 #include <Windows.h>
 #include <d3d12.h>
 #include <functional>
@@ -37,5 +38,6 @@ namespace Caustic
 		virtual void AddPointLight(IPointLight *pLight) = 0;
 		virtual void GetRenderCtx(IRenderCtx **ppCtx) = 0;
 		virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) = 0;
+		virtual void DrawMesh(IRenderMesh *pMesh) = 0;
 	};
 }

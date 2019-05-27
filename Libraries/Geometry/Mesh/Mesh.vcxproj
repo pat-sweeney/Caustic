@@ -86,7 +86,7 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(CausticRoot)\Libraries</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CausticRoot)\External\DirectX-Graphics-Samples\Libraries\D3DX12;$(CausticRoot)\Libraries</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>$(CPPDefines);CAUSTIC_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -117,7 +117,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>$(CPPDefines);CAUSTIC_EXPORT;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(CausticRoot)\Libraries</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CausticRoot)\External\DirectX-Graphics-Samples\Libraries\D3DX12;$(CausticRoot)\Libraries</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -141,12 +141,16 @@
     <ClCompile Include="Delaunay.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshConstructor.cpp" />
+    <ClCompile Include="MeshToRenderMesh.cpp" />
     <ClCompile Include="Submesh.cpp" />
     <ClCompile Include="UnitTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Imaging\Image\Image.vcxproj">
       <Project>{f7bef797-220c-4585-a489-f06df155ea60}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rendering\Caustic\Caustic.vcxproj">
+      <Project>{60a04400-10f9-4c6d-b34c-d5c7ebafa262}</Project>
     </ProjectReference>
     <ProjectReference Include="..\GeomDS\GeomDS.vcxproj">
       <Project>{163426b2-af7c-4713-8e3c-1a56a9cc0abf}</Project>

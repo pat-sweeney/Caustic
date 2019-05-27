@@ -17,6 +17,11 @@
 
 namespace Caustic
 {
+	struct IRenderMesh;
+	struct IRenderSubMesh;
+	struct IRenderer;
+	struct IShaderInfo;
+
     //**********************************************************************
     // CGeomVertex defines a vertex in our mesh. 
     //
@@ -174,7 +179,8 @@ namespace Caustic
         virtual uint32 FaceToIndex(CFace *pFace) = 0;
         virtual uint32 EdgeToIndex(CHalfEdge *pEdge) = 0;
         virtual void Triangulate(ETriangulateMethod method) = 0;
-    };
+		virtual void ToRenderSubMesh(IRenderer *pRenderer, IShaderInfo *pShaderInfo, IRenderSubMesh **ppRenderMesh) = 0;
+	};
 
     //**********************************************************************
     // Interface: IMesh
@@ -193,7 +199,8 @@ namespace Caustic
         virtual void SetMaterials(std::vector<CRefObj<IMaterialAttrib>> &materials) = 0;
         virtual void GetMaterial(uint32 materialID, IMaterialAttrib **ppMaterial) = 0;
         virtual void ComputeNormals() = 0;
-    };
+		virtual void ToRenderMesh(IRenderer *pRenderer, IShaderInfo *pShaderInfo, IRenderMesh **ppRenderMesh) = 0;
+	};
     
 
     CAUSTICAPI void CreateSurfaceRevolution(std::vector<Vector3> &pts, uint32 npts, uint32 subdivisions, float maxAngle, IMesh **ppMesh);

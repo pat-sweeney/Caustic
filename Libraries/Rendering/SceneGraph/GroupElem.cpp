@@ -90,7 +90,7 @@ namespace Caustic
         {
             uint32 type = (uint32)m_Children[i]->GetType();
             CT(pStream->Write(&type, sizeof(uint32), &bytesWritten));
-            func(m_Children[i].p);
+            func(m_Children[i]);
         }
     }
 
@@ -111,36 +111,36 @@ namespace Caustic
             {
                 CRefObj<ISceneGroupElem> spGroupElem;
 				Caustic::CSceneFactory::Instance()->CreateGroupElem(&spGroupElem);
-                spElem = spGroupElem.p;
+                spElem = spGroupElem;
             }
             break;
             case ESceneElemType::Material:
             {
                 CRefObj<ISceneMaterialElem> spMaterialElem;
 				Caustic::CSceneFactory::Instance()->CreateMaterialElem(&spMaterialElem);
-                spElem = spMaterialElem.p;
+                spElem = spMaterialElem;
             }
             break;
             case ESceneElemType::Mesh:
             {
                 CRefObj<ISceneMeshElem> spMeshElem;
                 Caustic::CSceneFactory::Instance()->CreateMeshElem(&spMeshElem);
-                spElem = spMeshElem.p;
+                spElem = spMeshElem;
             }
             break;
             case ESceneElemType::PointLight:
             {
                 CRefObj<IScenePointLightElem> spPointLightElem;
 				Caustic::CSceneFactory::Instance()->CreatePointLightElem(&spPointLightElem);
-                spElem = spPointLightElem.p;
+                spElem = spPointLightElem;
             }
             break;
             default:
                 _ASSERTE(FALSE); // Unknown element type
                 break;
             }
-            func(spElem.p);
-            m_Children.push_back(spElem.p);
+            func(spElem);
+            m_Children.push_back(spElem);
         }
         SetFlags(GetFlags() | ESceneElemFlags::RenderableDirty | ESceneElemFlags::BBoxDirty);
     }

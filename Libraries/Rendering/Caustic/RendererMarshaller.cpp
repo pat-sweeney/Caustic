@@ -82,7 +82,7 @@ namespace Caustic {
 		AddLambda(
 			[this, pPath, evt, ppTexture]()
 			{
-				Caustic::CCausticFactory::Instance()->LoadTexture(pPath, m_spRenderer.p, ppTexture);
+				Caustic::CCausticFactory::Instance()->LoadTexture(pPath, m_spRenderer, ppTexture);
 				SetEvent(evt);
 			}
 		);
@@ -95,7 +95,7 @@ namespace Caustic {
 		AddLambda(
 			[this, pPath, evt, ppTexture]()
 			{
-				Caustic::CCausticFactory::Instance()->LoadVideoTexture(pPath, m_spRenderer.p, ppTexture);
+				Caustic::CCausticFactory::Instance()->LoadVideoTexture(pPath, m_spRenderer, ppTexture);
 				SetEvent(evt);
 			}
 		);

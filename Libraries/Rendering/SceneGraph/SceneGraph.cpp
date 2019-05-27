@@ -34,7 +34,7 @@ namespace Caustic
     void CSceneGraph::Merge(ISceneGraph *pSceneGraph)
     {
         CSceneGraph *pGraph = (CSceneGraph*)pSceneGraph;
-        AddChild(pGraph->m_spRoot.p);
+        AddChild(pGraph->m_spRoot);
         pGraph->m_spRoot = nullptr;
     }
 

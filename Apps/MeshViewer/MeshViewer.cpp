@@ -7,10 +7,12 @@
 #include "Base\Core\Core.h"
 #include "Base\Core\IRefCount.h"
 #include "Rendering\RenderWindow\IRenderWindow.h"
+#include "Rendering/Caustic/IRenderMesh.h"
 #include "Rendering\Caustic\ICausticFactory.h"
 #include "Rendering\SceneGraph\SceneGraph.h"
 #include "Rendering\SceneGraph\ISceneFactory.h"
 #include "Geometry\MeshImport\MeshImport.h"
+#include "Rendering/Caustic/IRendererMarshaller.h"
 #include <Windows.h>
 #include <commdlg.h>
 
@@ -29,7 +31,7 @@ void AddPointLight(Vector3 &lightPos)
     spLightElem->SetPosition(lightPos);
     Vector3 lightColor(1.0f, 1.0f, 1.0f);
     spLightElem->SetColor(lightColor);
-    spRenderWindow->GetSceneGraph()->AddChild(spLightElem.p);
+    spRenderWindow->GetSceneGraph()->AddChild(spLightElem);
 }
 
 void InitializeCaustic(HWND hwnd)
@@ -202,7 +204,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                             spMesh = Caustic::MeshImport::LoadObj(fn);
                         else if (StrCmpW(ext, L".ply") == 0)
                             spMesh = Caustic::MeshImport::LoadPLY(fn);
-                        spElem->SetMesh(spMesh.p);
+						auto renderer = spRenderWindow->GetRenderer();
+						auto pRenderer = static_cast<IRendererMarshaller*>(renderer.p);
+						auto pRef = static_cast<IRefCount*>(pRenderer);
+						spMesh->ToRenderMesh(static_cast<Caustic::IRenderer*>(pRenderer), nullptr, nullptr);
+                        spElem->SetMesh(spMesh);
 
                         CRefObj<ISceneMaterialElem> spMaterialElem;
                         spSceneFactory->CreateMaterialElem(&spMaterialElem);
@@ -217,10 +223,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
                         CRefObj<IShader> spShader;
                         CShaderMgr::Instance()->FindShader(L"Default", &spShader);
-                        spMaterialElem->SetPixelShader(spShader.p);
+                        spMaterialElem->SetPixelShader(spShader);
 
-                        spRenderWindow->GetSceneGraph()->AddChild(spMaterialElem.p);
-                        spMaterialElem->AddChild(spElem.p);
+                        spRenderWindow->GetSceneGraph()->AddChild(spMaterialElem);
+                        spMaterialElem->AddChild(spElem);
                     }
                 }
                 break;

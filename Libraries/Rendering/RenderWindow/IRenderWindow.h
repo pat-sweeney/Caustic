@@ -29,6 +29,12 @@ namespace Caustic
 		virtual CRefObj<ISceneGraph> GetSceneGraph() = 0;
 
 		//**********************************************************************
+		// Method: GetRenderer
+		// Returns the renderer associated with this render window
+		//**********************************************************************
+		virtual CRefObj<IRendererMarshaller> GetRenderer() = 0;
+		
+		//**********************************************************************
 		// Method: MouseDown
 		// Called when a mouse down event occurs in the window
 		//

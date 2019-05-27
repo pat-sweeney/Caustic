@@ -413,8 +413,8 @@ namespace Caustic
         PushConstants(pRenderer, &m_vertexConstants, m_vsParams);
         PushConstants(pRenderer, &m_pixelConstants, m_psParams);
         //
-        //pRenderer->GetContext()->VSSetConstantBuffers(0, 1, &m_spVertexConstants.p);
-        //pRenderer->GetContext()->PSSetConstantBuffers(0, 1, &m_spPixelConstants.p);
+        //pRenderer->GetContext()->VSSetConstantBuffers(0, 1, &m_spVertexConstants);
+        //pRenderer->GetContext()->PSSetConstantBuffers(0, 1, &m_spPixelConstants);
     }
 
     //**********************************************************************
@@ -570,7 +570,7 @@ namespace Caustic
         }
         else
         {
-            *ppShader = it->second.p;
+            *ppShader = it->second;
             (*ppShader)->AddRef();
         }
     }

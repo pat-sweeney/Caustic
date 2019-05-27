@@ -20,7 +20,7 @@ namespace Caustic
 
 		static CRefObj<ICausticFactory> Instance()
 		{
-			if (factory.p == nullptr)
+			if (factory == nullptr)
 			{
 				factory = CRefObj<ICausticFactory>(new CCausticFactory);
 			}
@@ -38,6 +38,8 @@ namespace Caustic
 		//**********************************************************************
 		virtual void CreateRendererMarshaller(HWND hwnd, std::wstring &shaderFolder, IRendererMarshaller **ppRenderer) override;
 		virtual void CreateRenderer(HWND hwnd, std::wstring &shaderFolder, IRenderer **ppRenderer) override;
+		virtual void CreateRenderMesh(IRenderMesh **ppRenderMesh) override;
+		virtual void CreateRenderSubMesh(IRenderSubMesh **ppRenderSubMesh) override;
 		virtual void CreatePointLight(Vector3 &pos, IPointLight **ppLight) override;
 		virtual void CreateTrackball(ITrackball **ppTrackball) override;
 		virtual void CreateRenderMaterial(IRenderer *pRenderer, IMaterialAttrib *pMaterialAttrib, IShader *pShader, IRenderMaterial **ppRenderMaterial) override;

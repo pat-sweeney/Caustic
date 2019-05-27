@@ -18,7 +18,6 @@ namespace Caustic
     //! to the render thread.
     //**********************************************************************
     class CRendererMarshaller :
-        public IRenderer,
         public IRendererMarshaller,
         public CRefCount
     {
@@ -72,5 +71,6 @@ namespace Caustic
 		virtual void AddPointLight(IPointLight *pLight) override;
 		virtual void GetRenderCtx(IRenderCtx **ppCtx) override;
 		virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) override;
+		virtual void DrawMesh(IRenderMesh *pMesh) override {}
 	};
 }

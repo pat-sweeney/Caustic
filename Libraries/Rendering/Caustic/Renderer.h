@@ -8,6 +8,7 @@
 #include "Base\Core\RefCount.h"
 #include "Base\Core\CritSec.h"
 #include "Base\Core\Event.h"
+#include "RenderMesh.h"
 #include "Shader.h"
 #include <memory>
 #include <any>
@@ -186,5 +187,6 @@ namespace Caustic
 		virtual void AddPointLight(IPointLight *pLight) override;
 		virtual void GetRenderCtx(IRenderCtx **ppCtx) override;
 		virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) override;
-    };
+		virtual void DrawMesh(IRenderMesh *pMesh) override {}
+	};
 }

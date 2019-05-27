@@ -35,7 +35,7 @@ namespace Caustic
 	{
 		CRefObj<ISceneGroupElem> spGroup;
 		CSceneFactory::Instance()->CreateGroupElem(&spGroup);
-		std::unique_ptr<CSceneGraph> spGraphObj(new CSceneGraph(spGroup.p));
+		std::unique_ptr<CSceneGraph> spGraphObj(new CSceneGraph(spGroup));
 		*ppGraph = spGraphObj.release();
 		(*ppGraph)->AddRef();
 	}
@@ -45,7 +45,7 @@ namespace Caustic
 		std::unique_ptr<CSceneMaterialElem> spMeshObj(new CSceneMaterialElem());
 		CRefObj<IMaterialAttrib> spMaterial;
 		m_spCausticFactory->CreateMaterial(&spMaterial);
-		spMeshObj->SetMaterial(spMaterial.p);
+		spMeshObj->SetMaterial(spMaterial);
 		*ppElem = spMeshObj.release();
 		(*ppElem)->AddRef();
 	}
@@ -54,7 +54,7 @@ namespace Caustic
 	{
 		CRefObj<IPointLight> spPointLight;
 		m_spCausticFactory->CreatePointLight(Vector3(0.0f, 0.0f, 0.0f), &spPointLight);
-		std::unique_ptr<CPointLightElem> spPointLightObj(new CPointLightElem(spPointLight.p));
+		std::unique_ptr<CPointLightElem> spPointLightObj(new CPointLightElem(spPointLight));
 		*ppElem = spPointLightObj.release();
 		(*ppElem)->AddRef();
 	}

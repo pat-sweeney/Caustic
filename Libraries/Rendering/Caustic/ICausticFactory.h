@@ -29,6 +29,8 @@ namespace Caustic
 	struct IRenderable;
 	struct ISampler;
 	struct IShaderInfo;
+	struct IRenderMesh;
+	struct IRenderSubMesh;
 
 	//**********************************************************************
 	// Interface: ICausticFactory
@@ -57,6 +59,24 @@ namespace Caustic
 		// ppRenderer - Returns the created renderer
 		//**********************************************************************
 		virtual void CreateRenderer(HWND hwnd, std::wstring &shaderFolder, IRenderer **ppRenderer) = 0;
+
+		//**********************************************************************
+		// Method: CreateRenderMesh
+		// Creates a render mesh object
+		//
+		// Parameters:
+		// ppRenderMesh - Returns the created render mesh
+		//**********************************************************************
+		virtual void CreateRenderMesh(IRenderMesh **ppRenderMesh) = 0;
+
+		//**********************************************************************
+		// Method: CreateRenderSubMesh
+		// Creates a render submesh object
+		//
+		// Parameters:
+		// ppRenderSubMesh - Returns the created render submesh
+		//**********************************************************************
+		virtual void CreateRenderSubMesh(IRenderSubMesh **ppRenderSubMesh) = 0;
 
 		//**********************************************************************
 		// Method: CreatePointLight

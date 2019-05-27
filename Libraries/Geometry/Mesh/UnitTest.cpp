@@ -134,13 +134,13 @@ namespace CausticTestSuite
         GetTempFileName(dir, L"mtl", 0, fn);
         CRefObj<IStream> spStream;
         CT(SHCreateStreamOnFile(fn, STGM_WRITE, &spStream));
-        spMaterial->Store(spStream.p);
+        spMaterial->Store(spStream);
         spStream = nullptr;
         CRefObj<IMaterialAttrib> spMaterialLoad;
 		spFactory->CreateMaterial(&spMaterial);
 		CRefObj<IStream> spStreamLoad;
         CT(SHCreateStreamOnFile(fn, STGM_READ, &spStreamLoad));
-        spMaterialLoad->Load(spStreamLoad.p);
+        spMaterialLoad->Load(spStreamLoad);
         return true;
     }
 

@@ -14,7 +14,7 @@ namespace Caustic
     {
         m_spDiffuseTexture = pTexture;
         m_spDiffuseSampler = nullptr;
-		CCausticFactory::Instance()->CreateSampler(pRenderer, m_spDiffuseTexture.p, &m_spDiffuseSampler);
+		CCausticFactory::Instance()->CreateSampler(pRenderer, m_spDiffuseTexture, &m_spDiffuseSampler);
     }
 
 	CRefObj<ITexture> CRenderMaterial::GetDiffuseTexture()
@@ -26,7 +26,7 @@ namespace Caustic
     {
 		m_spSpecularTexture = pTexture;
         m_spSpecularSampler = nullptr;
-		CCausticFactory::Instance()->CreateSampler(pRenderer, m_spSpecularTexture.p, &m_spSpecularSampler);
+		CCausticFactory::Instance()->CreateSampler(pRenderer, m_spSpecularTexture, &m_spSpecularSampler);
     }
 
 	CRefObj<ITexture> CRenderMaterial::GetSpecularTexture()
@@ -38,7 +38,7 @@ namespace Caustic
     {
         m_spAmbientTexture = pTexture;
         m_spAmbientSampler = nullptr;
-		CCausticFactory::Instance()->CreateSampler(pRenderer, m_spAmbientTexture.p, &m_spAmbientSampler);
+		CCausticFactory::Instance()->CreateSampler(pRenderer, m_spAmbientTexture, &m_spAmbientSampler);
     }
 
 	CRefObj<ITexture> CRenderMaterial::GetAmbientTexture()
@@ -55,13 +55,13 @@ namespace Caustic
     {
         if (m_spShader == nullptr)
         {
-            if (m_spDiffuseTexture.p == nullptr)
+            if (m_spDiffuseTexture == nullptr)
                 CShaderMgr::Instance()->FindShader(L"Default", &m_spShader);
             else
                 CShaderMgr::Instance()->FindShader(L"Textured", &m_spShader);
         }
-        *ppShader = m_spShader.p;
-        if (m_spShader.p)
+        *ppShader = m_spShader;
+        if (m_spShader)
             (*ppShader)->AddRef();
     }
 
@@ -72,7 +72,7 @@ namespace Caustic
         Float4 vSpecular(0.7f, 0.7f, 0.7f, 1.0f);
         Float4 vSpecularExp(60.0f, 60.0f, 60.0f, 60.0f);
         float transparency = 1.0f;
-        if (m_spMaterial.p)
+        if (m_spMaterial)
         {
             vAmbient.x = m_spMaterial->GetAmbientColor().x;
             vAmbient.y = m_spMaterial->GetAmbientColor().y;
@@ -118,17 +118,17 @@ namespace Caustic
             v.w = 0.0f;
             spShader->SetPSParam(L"lightColor", i, std::any(v));
         }
-        if (m_spDiffuseTexture.p)
+        if (m_spDiffuseTexture)
             m_spDiffuseTexture->Update(pRenderer);
-        if (m_spAmbientTexture.p)
+        if (m_spAmbientTexture)
             m_spAmbientTexture->Update(pRenderer);
-        if (m_spSpecularTexture.p)
+        if (m_spSpecularTexture)
             m_spSpecularTexture->Update(pRenderer);
-        if (m_spDiffuseSampler.p)
-            spShader->SetPSParam(L"diffuseSampler", std::any(CSamplerRef(m_spDiffuseSampler.p)));
-        if (m_spSpecularSampler.p)
-            spShader->SetPSParam(L"specularSampler", std::any(CSamplerRef(m_spSpecularSampler.p)));
-        if (m_spAmbientSampler.p)
-            spShader->SetPSParam(L"ambientSampler", std::any(CSamplerRef(m_spAmbientSampler.p)));
+        if (m_spDiffuseSampler)
+            spShader->SetPSParam(L"diffuseSampler", std::any(CSamplerRef(m_spDiffuseSampler)));
+        if (m_spSpecularSampler)
+            spShader->SetPSParam(L"specularSampler", std::any(CSamplerRef(m_spSpecularSampler)));
+        if (m_spAmbientSampler)
+            spShader->SetPSParam(L"ambientSampler", std::any(CSamplerRef(m_spAmbientSampler)));
     }
 }

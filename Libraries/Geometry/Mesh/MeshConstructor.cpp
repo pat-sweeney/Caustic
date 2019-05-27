@@ -28,7 +28,7 @@ namespace Caustic
 
     void CMeshConstructor::MeshClose(IMesh **ppMesh)
     {
-        *ppMesh = m_spMesh.p;
+        *ppMesh = m_spMesh;
         (*ppMesh)->AddRef();
         m_spMesh = nullptr;
     }
@@ -44,13 +44,13 @@ namespace Caustic
     {
         if (ppSubMesh)
         {
-            *ppSubMesh = m_spSubMesh.p;
+            *ppSubMesh = m_spSubMesh;
             (*ppSubMesh)->AddRef();
         }
-        if (m_spMesh.p)
+        if (m_spMesh)
         {
             m_spSubMesh->CheckConsistency();
-            m_spMesh->AddSubMesh(m_spSubMesh.p);
+            m_spMesh->AddSubMesh(m_spSubMesh);
         }
         m_spSubMesh = nullptr;
     }

@@ -421,8 +421,8 @@ namespace Caustic
         }
         CRefObj<ISubMesh> spSubMesh;
         CreateSubMesh(vpos, norm, uvs, faces, EVertexFlags(HasNormal | HasPosition | HasUV0), 0, &spSubMesh);
-        spMesh->AddSubMesh(spSubMesh.p);
-        *ppMesh = spMesh.p;
+        spMesh->AddSubMesh(spSubMesh);
+        *ppMesh = spMesh;
         (*ppMesh)->AddRef();
     }
 }

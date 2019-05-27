@@ -85,8 +85,8 @@ namespace Caustic
 
 		virtual void GetMaterial(IMaterialAttrib **ppMaterial) override
 		{
-			*ppMaterial = m_spMaterial.p;
-			if (m_spMaterial.p)
+			*ppMaterial = m_spMaterial;
+			if (m_spMaterial)
 				m_spMaterial->AddRef();
 		}
 

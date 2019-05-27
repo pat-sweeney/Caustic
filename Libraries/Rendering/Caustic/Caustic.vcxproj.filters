@@ -115,6 +115,12 @@
     <ClInclude Include="IRendererMarshaller.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="IRenderMesh.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderMesh.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -166,6 +172,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RendererMarshaller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

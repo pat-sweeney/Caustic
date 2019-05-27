@@ -86,7 +86,7 @@ namespace Caustic
                 CRefObj<ISubMesh> spSubMesh;
                 m_spMesh->GetSubMesh(i, &spSubMesh);
                 CRefObj<IRenderable> spRenderable;
-                Caustic::CCausticFactory::Instance()->CreateRenderable(spSubMesh.p, pSceneCtx->m_spCurrentMaterial.p, pSceneCtx->m_spCurrentPixelShader.p, &spRenderable);
+                Caustic::CCausticFactory::Instance()->CreateRenderable(spSubMesh, pSceneCtx->m_spCurrentMaterial, pSceneCtx->m_spCurrentPixelShader, &spRenderable);
                 if (spRenderable != nullptr)
                 {
                     m_renderables.push_back(spRenderable);
@@ -115,7 +115,7 @@ namespace Caustic
     {
         if (GetFlags() & ESceneElemFlags::BBoxDirty)
         {
-            if (m_spMesh.p)
+            if (m_spMesh)
                 m_spMesh->GetBBox(&m_BBox);
             SetFlags(GetFlags() & ~ESceneElemFlags::BBoxDirty);
         }
