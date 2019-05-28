@@ -42,6 +42,7 @@ namespace Caustic
 		virtual void SetIndexBuffer(ID3D12Resource *pIB) override { m_spIB = pIB; }
 		virtual CComPtr<ID3D12Resource> GetIndexBuffer() override { return m_spIB; }
 		virtual void GetBBox(BBox3 *pBBox) override { *pBBox = m_bbox; };
+		virtual void Render(IRenderer *pRenderer, IShader *pShader);
 	};
 
 	//**********************************************************************
@@ -68,6 +69,7 @@ namespace Caustic
 		virtual void SetMaterials(std::vector<CRefObj<IMaterialAttrib>> &materials) override;
 		virtual void GetMaterial(uint32 materialID, IMaterialAttrib **ppMaterial) override;
 		virtual void ComputeNormals() override {}
+		virtual void Render(IRenderer *pRenderer);
 
 		//**********************************************************************
 		// ISerialize

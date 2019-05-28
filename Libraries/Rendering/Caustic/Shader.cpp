@@ -406,7 +406,6 @@ namespace Caustic
     //**********************************************************************
     void CShader::BeginRender(IRenderer *pRenderer, DirectX::XMMATRIX *pWorld)
     {
-        //pRenderer->GetContext()->IASetInputLayout(m_spLayout);
 		pRenderer->GetCommandList()->SetPipelineState(m_spPipelineState);
         
         PushMatrices(pRenderer, pWorld);
