@@ -469,16 +469,17 @@ namespace Caustic
     // pLayout - Vertex layout
     // numLayoutElems - Length of pLayout (in elements)
     //**********************************************************************
-    void CShader::Create(
-        IRenderer *pRenderer,
-        const wchar_t *pShaderName,
-        ShaderParamDef *pPSParams, uint32 psParamsSize,
-        ShaderParamDef *pVSParams, uint32 vsParamsSize,
-		ID3DBlob *pPSBlob, ID3DBlob *pVSBlob,
-        D3D12_INPUT_ELEMENT_DESC *pLayout, uint32 numLayoutElems)
+	void CShader::Create(IRenderer *pRenderer, const wchar_t *pShaderName, IShaderInfo *pShaderInfo, ID3DBlob *pPSBlob, ID3DBlob *pVSBlob)
     {
         if (pShaderName)
             m_name = std::wstring(pShaderName);
+
+		std::vector<ShaderParamDef> &pixelShaderDefs = pShaderInfo->PixelShaderParameterDefs();
+		std::vector<ShaderParamDef> &vertexShaderDefs = pShaderInfo->VertexShaderParameterDefs();
+		std::vector<D3D12_INPUT_ELEMENT_DESC> &vertexLayout = pShaderInfo->VertexLayout();
+		D3D12_INPUT_ELEMENT_DESC *pVertexLayout = vertexLayout.data();
+
+		m_spShaderInfo = pShaderInfo;
 
 		const byte *pPSByteCodes = (const byte*)pPSBlob->GetBufferPointer();
 		uint32 psBufferLen = (uint32)pPSBlob->GetBufferSize();
@@ -490,8 +491,11 @@ namespace Caustic
 		//**********************************************************************
 		ID3D12Device *pDevice = pRenderer->GetDevice();
 		D3D12_INPUT_LAYOUT_DESC inputLayoutDesc = {};
-		inputLayoutDesc.NumElements = numLayoutElems;
-		inputLayoutDesc.pInputElementDescs = pLayout;
+		inputLayoutDesc.NumElements = (UINT)vertexLayout.size();
+		inputLayoutDesc.pInputElementDescs = &vertexLayout[0];
+
+		for (uint32 i = 0; i < inputLayoutDesc.NumElements; i++)
+			m_layout.push_back(inputLayoutDesc.pInputElementDescs[i]);
 
 		D3D12_RASTERIZER_DESC rastDesc = {};
 		rastDesc.FillMode = D3D12_FILL_MODE::D3D12_FILL_MODE_SOLID;
@@ -547,11 +551,10 @@ namespace Caustic
 		m_spVertexShader = pVSBlob;
 		m_spPixelShader = pPSBlob;
 
-        //CD3D11_SAMPLER_DESC sdesc(D3D11_DEFAULT);
-        //CT(pDevice->CreateSamplerState(&sdesc, &m_spSamplerState));
-        //CT(pDevice->CreateInputLayout(pLayout, numLayoutElems, pVSByteCodes, vsBufferLen, &m_spLayout));
-        CreateConstantBuffer(pDevice, pVSParams, vsParamsSize, m_vsParams, &m_vertexConstants);
-        CreateConstantBuffer(pDevice, pPSParams, psParamsSize, m_psParams, &m_pixelConstants);
+		CreateConstantBuffer(pDevice, pShaderInfo->VertexShaderParameterDefs().data(),
+			(uint32)pShaderInfo->VertexShaderParameterDefs().size(), m_vsParams, &m_vertexConstants);
+        CreateConstantBuffer(pDevice, pShaderInfo->PixelShaderParameterDefs().data(),
+			(uint32)pShaderInfo->PixelShaderParameterDefs().size(), m_psParams, &m_pixelConstants);
     }
     
     CShaderMgr CShaderMgr::s_ShaderMgr;

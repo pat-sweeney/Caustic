@@ -183,6 +183,8 @@ namespace Caustic
 		virtual void SetCamera(ICamera *pCamera) override { m_spCamera = pCamera; }
 		virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice) override;
 		virtual CRefObj<IShaderMgr> GetShaderMgr() override { return m_spShaderMgr; };
+		virtual void BeginFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) override;
+		virtual void EndFrame() override;
 		virtual void RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) override;
 		virtual void AddPointLight(IPointLight *pLight) override;
 		virtual void GetRenderCtx(IRenderCtx **ppCtx) override;

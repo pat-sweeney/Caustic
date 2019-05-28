@@ -40,6 +40,7 @@ namespace Caustic {
 		CCausticFactory::Instance()->CreateRenderer(m_hwnd, m_shaderFolder, &m_spRenderer);
 		while (!m_exit)
 		{
+			m_spRenderer->BeginFrame(m_renderCallback);
 			EnterCriticalSection(&m_cs);
 			while (!m_queue.empty())
 			{
@@ -47,7 +48,7 @@ namespace Caustic {
 				m_queue.pop();
 			}
 			LeaveCriticalSection(&m_cs);
-			m_spRenderer->RenderFrame(m_renderCallback);
+			m_spRenderer->EndFrame();
 		}
 	}
 
@@ -87,6 +88,7 @@ namespace Caustic {
 			}
 		);
 		WaitForSingleObject(evt, INFINITE);
+		CloseHandle(evt);
 	}
 
 	void CRendererMarshaller::LoadVideoTexture(const wchar_t *pPath, ITexture **ppTexture)
@@ -100,6 +102,7 @@ namespace Caustic {
 			}
 		);
 		WaitForSingleObject(evt, INFINITE);
+		CloseHandle(evt);
 	}
 
 	void CRendererMarshaller::SetSceneGraph(ISceneGraph *pSceneGraph)
@@ -131,7 +134,8 @@ namespace Caustic {
             }
         );
         WaitForSingleObject(evt, INFINITE);
-    }
+		CloseHandle(evt);
+	}
 
     void CRendererMarshaller::LoadScene(const wchar_t *pFilename, ISceneGraph *pSceneGraph)
     {
@@ -148,7 +152,8 @@ namespace Caustic {
             }
         );
         WaitForSingleObject(evt, INFINITE);
-    }
+		CloseHandle(evt);
+	}
 
 	DXGI_SAMPLE_DESC CRendererMarshaller::GetSampleDesc()
 	{
@@ -162,6 +167,7 @@ namespace Caustic {
 			}
 		);
 		WaitForSingleObject(evt, INFINITE);
+		CloseHandle(evt);
 		return desc;
 	}
 
@@ -177,6 +183,7 @@ namespace Caustic {
 			}
 		);
 		WaitForSingleObject(evt, INFINITE);
+		CloseHandle(evt);
 		return format;
 	}
 	
@@ -192,6 +199,7 @@ namespace Caustic {
 			}
 		);
 		WaitForSingleObject(evt, INFINITE);
+		CloseHandle(evt);
 		return spRootSignature;
 	}
 
@@ -207,6 +215,7 @@ namespace Caustic {
 			}
 		);
 		WaitForSingleObject(evt, INFINITE);
+		CloseHandle(evt);
 		return spDevice;
 	}
 
@@ -222,6 +231,7 @@ namespace Caustic {
 			}
 		);
 		WaitForSingleObject(evt, INFINITE);
+		CloseHandle(evt);
 		return spCamera;
 	}
 
@@ -237,6 +247,7 @@ namespace Caustic {
 			}
 		);
 		WaitForSingleObject(evt, INFINITE);
+		CloseHandle(evt);
 		return frameIndex;
 	}
 
@@ -252,6 +263,7 @@ namespace Caustic {
 			}
 		);
 		WaitForSingleObject(evt, INFINITE);
+		CloseHandle(evt);
 		return spCmdList;
 	}
 
@@ -289,6 +301,7 @@ namespace Caustic {
 			}
 		);
 		WaitForSingleObject(evt, INFINITE);
+		CloseHandle(evt);
 		return spShaderMgr;
 	}
 
@@ -369,4 +382,23 @@ namespace Caustic {
         );
     }
 #endif
+	void CRendererMarshaller::CallOnRenderThread(std::function<void(IRenderer *pRenderer)> func, bool wait)
+	{
+		HANDLE evt;
+		if (wait)
+			evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+		AddLambda(
+			[&]()
+			{
+				func(m_spRenderer);
+				if (wait)
+					SetEvent(evt);
+			}
+		);
+		if (wait)
+		{
+			WaitForSingleObject(evt, INFINITE);
+			CloseHandle(evt);
+		}
+	}
 }

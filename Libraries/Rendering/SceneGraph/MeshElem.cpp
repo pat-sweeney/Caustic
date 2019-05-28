@@ -122,7 +122,7 @@ namespace Caustic
         *pBBox = m_BBox;
     }
     
-    void CSceneMeshElem::SetMesh(IMesh *pMesh)
+    void CSceneMeshElem::SetMesh(IRenderMesh *pMesh)
     {
         m_spMesh = pMesh;
         SetFlags(GetFlags() | ESceneElemFlags::BBoxDirty | ESceneElemFlags::RenderableDirty);
@@ -130,13 +130,13 @@ namespace Caustic
 
     void CSceneMeshElem::Store(IStream *pStream)
     {
-        m_spMesh->Store(pStream);
+       // m_spMesh->Store(pStream);
     }
 
     void CSceneMeshElem::Load(IStream *pStream)
     {
-        CreateEmptyMesh(&m_spMesh);
-        m_spMesh->Load(pStream);
-        SetFlags(GetFlags() | ESceneElemFlags::RenderableDirty | ESceneElemFlags::BBoxDirty);
+       // CreateEmptyMesh(&m_spMesh);
+       // m_spMesh->Load(pStream);
+       // SetFlags(GetFlags() | ESceneElemFlags::RenderableDirty | ESceneElemFlags::BBoxDirty);
     }
 };

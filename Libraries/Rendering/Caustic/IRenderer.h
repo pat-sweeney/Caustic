@@ -34,6 +34,8 @@ namespace Caustic
 		virtual void SetCamera(ICamera *pCamera) = 0;
 		virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice) = 0;
 		virtual CRefObj<IShaderMgr> GetShaderMgr() = 0;
+		virtual void BeginFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) = 0;
+		virtual void EndFrame() = 0;
 		virtual void RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) = 0;
 		virtual void AddPointLight(IPointLight *pLight) = 0;
 		virtual void GetRenderCtx(IRenderCtx **ppCtx) = 0;

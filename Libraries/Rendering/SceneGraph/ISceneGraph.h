@@ -238,7 +238,7 @@ namespace Caustic
 		// Method: SetMesh
 		// Updates the mesh elements underlying mesh object
 		//**********************************************************************
-		virtual void SetMesh(IMesh *pMesh) = 0;
+		virtual void SetMesh(IRenderMesh *pMesh) = 0;
 	};
 
 	//**********************************************************************

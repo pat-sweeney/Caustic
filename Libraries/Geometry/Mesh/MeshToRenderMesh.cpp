@@ -48,29 +48,29 @@ namespace Caustic
 				byte *pVB = &pVertexBuffer[vout * vertexSize];
 				for (size_t j = 0; j < vertexLayout.size(); j++)
 				{
-					if (strcmp(vertexLayout[j].SemanticName, "POSITION") == 0 ||
-						strcmp(vertexLayout[j].SemanticName, "SV_POSITION") == 0)
+					if (_strnicmp(vertexLayout[j].SemanticName, "POSITION", 8) == 0 ||
+						_strnicmp(vertexLayout[j].SemanticName, "SV_POSITION", 11) == 0)
 					{
 						_ASSERT(vertexLayout[j].Format == DXGI_FORMAT_R32G32B32_FLOAT);
-						float *fp = (float*)&pVB;
+						float *fp = (float*)pVB;
 						fp[0] = pVertex->pos.x;
 						fp[1] = pVertex->pos.y;
 						fp[2] = pVertex->pos.z;
 						m_bbox.AddPoint(pVertex->pos);
 						pVB += sizeof(float) * 3;
 					}
-					else if (strcmp(vertexLayout[j].SemanticName, "TEXTCOORD0") == 0)
+					else if (_strnicmp(vertexLayout[j].SemanticName, "TEXCOORD", 8) == 0)
 					{
-						_ASSERT(vertexLayout[j].Format == DXGI_FORMAT_R32G32B32_FLOAT);
-						float *fp = (float*)&pVB;
+						_ASSERT(vertexLayout[j].Format == DXGI_FORMAT_R32G32_FLOAT);
+						float *fp = (float*)pVB;
 						fp[0] = pVertex->uvs[0].x;
 						fp[1] = pVertex->uvs[0].y;
 						pVB += sizeof(float) * 2;
 					}
-					else if (strcmp(vertexLayout[j].SemanticName, "NORMAL0") == 0)
+					else if (_strnicmp(vertexLayout[j].SemanticName, "NORMAL", 6) == 0)
 					{
 						_ASSERT(vertexLayout[j].Format == DXGI_FORMAT_R32G32B32_FLOAT);
-						float *fp = (float*)&pVB;
+						float *fp = (float*)pVB;
 						fp[0] = pVertex->norm.x;
 						fp[1] = pVertex->norm.y;
 						fp[2] = pVertex->norm.z;
@@ -93,7 +93,7 @@ namespace Caustic
 		// Create final buffer
 		CComPtr<ID3D12Resource> spVB;
 		CD3DX12_RESOURCE_DESC desc = CD3DX12_RESOURCE_DESC::Buffer(vbSize);
-		CD3DX12_HEAP_PROPERTIES heapdesc(D3D12_HEAP_TYPE_UPLOAD);
+		CD3DX12_HEAP_PROPERTIES heapdesc(D3D12_HEAP_TYPE_DEFAULT);
 		CT(pDevice->CreateCommittedResource(&heapdesc, D3D12_HEAP_FLAG_NONE,
 			&desc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr, __uuidof(ID3D12Resource), (void**)&spVB));
 		CT(spVB->SetName(L"spVB"));

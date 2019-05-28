@@ -11,6 +11,7 @@
 #include "Rendering/SceneGraph/SceneGraph.h"
 #include <Windows.h>
 #include <d3d12.h>
+#include <functional>
 
 namespace Caustic
 {
@@ -31,5 +32,6 @@ namespace Caustic
 		virtual void SetSceneGraph(ISceneGraph *pSceneGraph) = 0;
 		virtual void SaveScene(const wchar_t *pFilename, ISceneGraph *pSceneGraph) = 0;
 		virtual void LoadScene(const wchar_t *pFilename, ISceneGraph *pSceneGraph) = 0;
+		virtual void CallOnRenderThread(std::function<void(IRenderer *pRenderer)> func, bool wait) = 0;
 	};
 }

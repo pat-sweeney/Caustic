@@ -541,12 +541,8 @@ namespace Caustic
         }
     }
 
-    //**********************************************************************
-    // RenderFrame is typically called from the render loop to render
-    // the next frame.
-    //**********************************************************************
-    void CRenderer::RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback)
-    {
+	void CRenderer::BeginFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback)
+	{
 		m_callback = renderCallback;
 		// Reset our command list
 		CT(m_spCommandAllocator->Reset());
@@ -573,25 +569,39 @@ namespace Caustic
 		D3D12_RECT scissorRect = { 0, 0, (LONG)m_width, (LONG)m_height };
 		m_spCommandList->RSSetViewports(1, &viewport);
 		m_spCommandList->RSSetScissorRects(1, &scissorRect);
-		
-		//CD3DX12_DEPTH_STENCIL_DESC depthDesc(D3D12_DEFAULT);
-        //depthDesc.DepthEnable = true;
-        //depthDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-        //depthDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
-        //CT(m_spDevice->CreateDepthStencilState(&depthDesc, &spDepthStencilState));
-        //m_spCommandList->OMSetDepthStencilState(spDepthStencilState, 1);
 
-       // RenderScene();
+		//CD3DX12_DEPTH_STENCIL_DESC depthDesc(D3D12_DEFAULT);
+		//depthDesc.DepthEnable = true;
+		//depthDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+		//depthDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
+		//CT(m_spDevice->CreateDepthStencilState(&depthDesc, &spDepthStencilState));
+		//m_spCommandList->OMSetDepthStencilState(spDepthStencilState, 1);
+
+	}
+
+	void CRenderer::EndFrame()
+	{
 		CT(m_spCommandList->Close());
 
-		m_spCmdQueue->ExecuteCommandLists(1, (ID3D12CommandList**)&m_spCommandList);
+		m_spCmdQueue->ExecuteCommandLists(1, (ID3D12CommandList**)&m_spCommandList.p);
 
 		m_currentFrame = (++m_currentFrame == c_MaxFrames) ? 0 : m_currentFrame;
-        m_spSwapChain->Present(1, 0);
+		m_spSwapChain->Present(1, 0);
 
 		m_fenceValue++;
 		CT(m_spCmdQueue->Signal(m_spFences[m_currentFrame], m_fenceValue));
 		CT(m_spFences[m_currentFrame]->SetEventOnCompletion(m_fenceValue, m_fenceEvents[m_currentFrame]));
 		WaitForSingleObject(m_fenceEvents[m_currentFrame], INFINITE);
+	}
+
+    //**********************************************************************
+    // RenderFrame is typically called from the render loop to render
+    // the next frame.
+    //**********************************************************************
+    void CRenderer::RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback)
+    {
+		BeginFrame(renderCallback);
+		// RenderScene();
+		EndFrame();
 	}
 }

@@ -18,7 +18,7 @@ namespace Caustic
         public ISceneMeshElem,
         public CRefCount
     {
-        CRefObj<IMesh> m_spMesh;
+        CRefObj<IRenderMesh> m_spMesh;
         std::vector<CRefObj<IRenderable>> m_renderables;
     public:
 		//**********************************************************************
@@ -54,6 +54,6 @@ namespace Caustic
         //**********************************************************************
         // ISceneMeshElem
         //**********************************************************************
-        virtual void SetMesh(IMesh *pMesh) override;
+        virtual void SetMesh(IRenderMesh *pMesh) override;
     };
 };

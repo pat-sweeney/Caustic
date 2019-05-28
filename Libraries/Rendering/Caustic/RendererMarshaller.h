@@ -67,10 +67,17 @@ namespace Caustic
 		virtual void SetCamera(ICamera *pCamera) override;
 		virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice) override;
 		virtual CRefObj<IShaderMgr> GetShaderMgr() override;
+		virtual void BeginFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) override
+		{
+		}
+		virtual void EndFrame() override
+		{
+		}
 		virtual void RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) override; // Have renderer draw and present next frame
 		virtual void AddPointLight(IPointLight *pLight) override;
 		virtual void GetRenderCtx(IRenderCtx **ppCtx) override;
 		virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) override;
 		virtual void DrawMesh(IRenderMesh *pMesh) override {}
+		virtual void CallOnRenderThread(std::function<void(IRenderer *pRenderer)> func, bool wait) override;
 	};
 }

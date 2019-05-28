@@ -90,7 +90,7 @@ namespace Caustic
     class CShader : public IShader, public CRefCount
     {
         std::wstring m_name;
-		D3D12_INPUT_LAYOUT_DESC m_layout;
+		std::vector<D3D12_INPUT_ELEMENT_DESC> m_layout;
 		CComPtr<ID3D12PipelineState> m_spPipelineState;
         CComPtr<ID3DBlob> m_spPixelShader;
         CComPtr<ID3DBlob> m_spVertexShader;
@@ -108,12 +108,7 @@ namespace Caustic
         void SetParam(std::wstring paramName, std::any &value, std::vector<ShaderParamInstance> &params);
         void SetParam(std::wstring paramName, int index, std::any &value, std::vector<ShaderParamInstance> &params);
     public:
-        void Create(IRenderer *pRenderer,
-                    const wchar_t *pShaderName,
-                    ShaderParamDef *pPSParams, uint32 psParamsSize,
-                    ShaderParamDef *pVSParams, uint32 vsParamsSize,
-					ID3DBlob *pPSBlob, ID3DBlob *pVSBlob,
-					D3D12_INPUT_ELEMENT_DESC *pLayout, uint32 numLayoutElems);
+		void Create(IRenderer *pRenderer, const wchar_t *pShaderName, IShaderInfo *pShaderInfo, ID3DBlob *pPSBlob, ID3DBlob *pVSBlob);
 		void CreateConstantBuffer(ID3D12Device *pDevice, ShaderParamDef *pDefs, uint32 paramsSize, std::vector<ShaderParamInstance> &params, SConstantBuffer *pConstantBuffer);
 
         //**********************************************************************

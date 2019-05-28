@@ -204,11 +204,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                             spMesh = Caustic::MeshImport::LoadObj(fn);
                         else if (StrCmpW(ext, L".ply") == 0)
                             spMesh = Caustic::MeshImport::LoadPLY(fn);
-						auto renderer = spRenderWindow->GetRenderer();
-						auto pRenderer = static_cast<IRendererMarshaller*>(renderer.p);
-						auto pRef = static_cast<IRefCount*>(pRenderer);
-						spMesh->ToRenderMesh(static_cast<Caustic::IRenderer*>(pRenderer), nullptr, nullptr);
-                        spElem->SetMesh(spMesh);
 
                         CRefObj<ISceneMaterialElem> spMaterialElem;
                         spSceneFactory->CreateMaterialElem(&spMaterialElem);
@@ -225,7 +220,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                         CShaderMgr::Instance()->FindShader(L"Default", &spShader);
                         spMaterialElem->SetPixelShader(spShader);
 
-                        spRenderWindow->GetSceneGraph()->AddChild(spMaterialElem);
+						CRefObj<IRenderMesh> spRenderMesh;
+						spRenderWindow->GetRenderer()->CallOnRenderThread(
+							[&](IRenderer *pRenderer) {
+								spMesh->ToRenderMesh(pRenderer, spShader->GetShaderInfo(), &spRenderMesh);
+							}, true);
+						spElem->SetMesh(spRenderMesh);
+
+						spRenderWindow->GetSceneGraph()->AddChild(spMaterialElem);
                         spMaterialElem->AddChild(spElem);
                     }
                 }

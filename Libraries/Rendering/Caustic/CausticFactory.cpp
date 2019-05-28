@@ -313,17 +313,7 @@ namespace Caustic
 		IShader **ppShader)
 	{
 		std::unique_ptr<CShader> spShader(new CShader());
-		std::vector<ShaderParamDef> &pixelShaderDefs = pShaderInfo->PixelShaderParameterDefs();
-		std::vector<ShaderParamDef> &vertexShaderDefs = pShaderInfo->VertexShaderParameterDefs();
-		std::vector<D3D12_INPUT_ELEMENT_DESC> &vertexLayout = pShaderInfo->VertexLayout();
-		ShaderParamDef *pVertexDefs = vertexShaderDefs.data();
-		ShaderParamDef *pPixelDefs = pixelShaderDefs.data();
-		D3D12_INPUT_ELEMENT_DESC *pVertexLayout = vertexLayout.data();
-		spShader->Create(pRenderer, pShaderName,
-			pPixelDefs, (uint32)pixelShaderDefs.size(),
-			pVertexDefs, (uint32)vertexShaderDefs.size(),
-			pPixelShaderBlob, pVertexShaderBlob,
-			pVertexLayout, (uint32)vertexLayout.size());
+		spShader->Create(pRenderer, pShaderName, pShaderInfo, pPixelShaderBlob, pVertexShaderBlob);
 		*ppShader = spShader.release();
 		(*ppShader)->AddRef();
 	}

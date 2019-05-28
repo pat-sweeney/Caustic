@@ -177,7 +177,6 @@ namespace Caustic
 		for (auto pSubMesh : m_subMeshes)
 		{
 			CRefObj<IRenderSubMesh> spRenderSubMesh;
-			spFactory->CreateRenderSubMesh(&spRenderSubMesh);
 			pSubMesh->ToRenderSubMesh(pRenderer, pShaderInfo, &spRenderSubMesh);
 			spRenderMesh->AddSubMesh(spRenderSubMesh);
 		}
