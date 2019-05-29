@@ -150,7 +150,7 @@ namespace Caustic
 		range.End = 0;
 		BYTE *pb;
 		uint32 frameIndex = pRenderer->GetFrameIndex();
-		pBuffer->m_spBuffer[frameIndex]->Map(0, &range, (void**)&pb);
+		CT(pBuffer->m_spBuffer[frameIndex]->Map(0, &range, (void**)&pb));
         for (size_t i = 0; i < params.size(); i++)
         {
             if ( ! params[i].m_dirty)
@@ -445,8 +445,8 @@ namespace Caustic
         {
 			for (int i = 0; i < c_MaxFrames; i++)
 			{
-				CT(pDevice->CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
-					D3D12_HEAP_FLAG_NONE, &CD3DX12_RESOURCE_DESC::Buffer(s), D3D12_RESOURCE_STATE_COPY_DEST,
+				CT(pDevice->CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+					D3D12_HEAP_FLAG_NONE, &CD3DX12_RESOURCE_DESC::Buffer(s), D3D12_RESOURCE_STATE_GENERIC_READ,
 					nullptr, __uuidof(ID3D12Resource), (void**)&pConstantBuffer->m_spBuffer[i]));
 				CT(pConstantBuffer->m_spBuffer[i]->SetName(L"m_spBuffer"));
 			}

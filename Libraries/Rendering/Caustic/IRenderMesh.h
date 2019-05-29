@@ -30,7 +30,9 @@ namespace Caustic
 		virtual void SetIndexBuffer(ID3D12Resource *pIB) = 0;
 		virtual CComPtr<ID3D12Resource> GetIndexBuffer() = 0;
 		virtual void GetBBox(BBox3 *pBBox) = 0;
-		virtual void Render(IRenderer *pRenderer, IShader *pShader) = 0;
+		virtual void Render(IRenderer *pRenderer) = 0;
+		virtual void SetShader(IShader *pShader) = 0;
+		virtual CRefObj<IShader> GetShader() = 0;
 	};
 
 	//**********************************************************************

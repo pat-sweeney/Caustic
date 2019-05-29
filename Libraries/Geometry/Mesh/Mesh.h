@@ -13,6 +13,7 @@
 namespace Caustic
 {
     class CHalfEdge;
+	struct IShaderInfo;
 
     //**********************************************************************
     // CSubMesh defines a submesh object
@@ -108,7 +109,7 @@ namespace Caustic
         virtual uint32 FaceToIndex(CFace *pFace) override;
         virtual uint32 EdgeToIndex(CHalfEdge *pEdge) override;
         virtual void Triangulate(ETriangulateMethod method) override;
-		virtual void ToRenderSubMesh(IRenderer *pRenderer, IShaderInfo *pShaderInfo, IRenderSubMesh **ppRenderMesh) override;
+		virtual void ToRenderSubMesh(IRenderer *pRenderer, IShader *pShader, IRenderSubMesh **ppRenderMesh) override;
 
         //**********************************************************************
         // ISerialize
@@ -148,7 +149,7 @@ namespace Caustic
         virtual void SetMaterials(std::vector<CRefObj<IMaterialAttrib>> &materials) override;
         virtual void GetMaterial(uint32 materialID, IMaterialAttrib **ppMaterial) override;
         virtual void ComputeNormals() override;
-		virtual void ToRenderMesh(IRenderer *pRenderer, IShaderInfo *pShaderInfo, IRenderMesh **ppRenderMesh) override;
+		virtual void ToRenderMesh(IRenderer *pRenderer, IShader *pShader, IRenderMesh **ppRenderMesh) override;
 
         //**********************************************************************
         // ISerialize

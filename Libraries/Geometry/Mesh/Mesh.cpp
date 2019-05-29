@@ -7,6 +7,7 @@
 #include "Geometry\Mesh\Mesh.h"
 #include "Rendering/Caustic/Material.h"
 #include "Rendering/Caustic/Caustic.h"
+#include "Rendering/Caustic/ShaderInfo.h"
 
 namespace Caustic
 {
@@ -168,7 +169,7 @@ namespace Caustic
 	//**********************************************************************
 	// Computes normal vectors for each vertex on the mesh
 	//**********************************************************************
-	void CMesh::ToRenderMesh(IRenderer *pRenderer, IShaderInfo *pShaderInfo, IRenderMesh **ppRenderMesh)
+	void CMesh::ToRenderMesh(IRenderer *pRenderer, IShader *pShader, IRenderMesh **ppRenderMesh)
 	{
 		CRefObj<ICausticFactory> spFactory;
 		CreateCausticFactory(&spFactory);
@@ -177,7 +178,7 @@ namespace Caustic
 		for (auto pSubMesh : m_subMeshes)
 		{
 			CRefObj<IRenderSubMesh> spRenderSubMesh;
-			pSubMesh->ToRenderSubMesh(pRenderer, pShaderInfo, &spRenderSubMesh);
+			pSubMesh->ToRenderSubMesh(pRenderer, pShader, &spRenderSubMesh);
 			spRenderMesh->AddSubMesh(spRenderSubMesh);
 		}
 		*ppRenderMesh = spRenderMesh;

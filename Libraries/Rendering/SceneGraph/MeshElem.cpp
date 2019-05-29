@@ -82,17 +82,9 @@ namespace Caustic
         {
             for (uint32 i = 0; i < m_spMesh->NumberSubMeshes(); i++)
             {
-#if 0
-                CRefObj<ISubMesh> spSubMesh;
-                m_spMesh->GetSubMesh(i, &spSubMesh);
-                CRefObj<IRenderable> spRenderable;
-                Caustic::CCausticFactory::Instance()->CreateRenderable(spSubMesh, pSceneCtx->m_spCurrentMaterial, pSceneCtx->m_spCurrentPixelShader, &spRenderable);
-                if (spRenderable != nullptr)
-                {
-                    m_renderables.push_back(spRenderable);
-                    SetFlags(GetFlags() & ~ESceneElemFlags::RenderableDirty);
-                }
-#endif
+				CRefObj<IRenderSubMesh> spMesh;
+				m_spMesh->GetSubMesh(i, &spMesh);
+				spMesh->Render(pRenderer);
             }
         }
         for (uint32 i = 0; i < (uint32)m_renderables.size(); i++)

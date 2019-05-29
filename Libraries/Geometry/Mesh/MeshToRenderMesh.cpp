@@ -253,7 +253,7 @@ namespace Caustic
 	// pShaderInfo - shader info (used to access vertex layout)
 	// ppRenderSubMesh - returns the new submesh
 	//**********************************************************************
-	void CSubMesh::ToRenderSubMesh(Caustic::IRenderer *pRenderer, IShaderInfo *pShaderInfo, IRenderSubMesh **ppRenderSubMesh)
+	void CSubMesh::ToRenderSubMesh(Caustic::IRenderer *pRenderer, IShader *pShader, IRenderSubMesh **ppRenderSubMesh)
 	{
 		CRefObj<ICausticFactory> spFactory;
 		Caustic::CreateCausticFactory(&spFactory);
@@ -261,8 +261,10 @@ namespace Caustic
 		spFactory->CreateRenderSubMesh(&spRenderSubMesh);
 		std::vector<int> vertexReferenced(GetNumberVertices(), c_Vertex_Unreferenced);
 		BuildReferencedVertexList(vertexReferenced);
-		BuildVertexBuffer(spRenderSubMesh, pRenderer->GetDevice(), pRenderer->GetCommandList(), pShaderInfo, vertexReferenced);
+		CRefObj<IShaderInfo> spShaderInfo = pShader->GetShaderInfo();
+		BuildVertexBuffer(spRenderSubMesh, pRenderer->GetDevice(), pRenderer->GetCommandList(), spShaderInfo, vertexReferenced);
 		BuildIndexBuffer(spRenderSubMesh, pRenderer->GetDevice(), pRenderer->GetCommandList(), vertexReferenced);
+		spRenderSubMesh->SetShader(pShader);
 		*ppRenderSubMesh = spRenderSubMesh;
 		(*ppRenderSubMesh)->AddRef();
 	}

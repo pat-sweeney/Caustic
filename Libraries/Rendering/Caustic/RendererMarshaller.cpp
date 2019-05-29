@@ -48,6 +48,13 @@ namespace Caustic {
 				m_queue.pop();
 			}
 			LeaveCriticalSection(&m_cs);
+			if (m_spScene)
+			{
+				SceneCtx sceneCtx;
+				CRefObj<IRenderCtx> spRenderCtx;
+				m_spRenderer->GetRenderCtx(&spRenderCtx);
+				m_spScene->Render(m_spRenderer, spRenderCtx, &sceneCtx);
+			}
 			m_spRenderer->EndFrame();
 		}
 	}
@@ -107,16 +114,7 @@ namespace Caustic {
 
 	void CRendererMarshaller::SetSceneGraph(ISceneGraph *pSceneGraph)
 	{
-		if (pSceneGraph)
-			pSceneGraph->AddRef();
-		AddLambda(
-			[this, pSceneGraph]()
-			{
-//				m_spRenderer->SetSceneGraph(pSceneGraph);
-				if (pSceneGraph)
-					pSceneGraph->Release();
-			}
-		);
+		m_spScene = pSceneGraph;
 	}
 
 	void CRendererMarshaller::SaveScene(const wchar_t *pFilename, ISceneGraph *pSceneGraph)
@@ -387,10 +385,11 @@ namespace Caustic {
 		HANDLE evt;
 		if (wait)
 			evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+		std::function<void(IRenderer *pRenderer)> func2 = func;
 		AddLambda(
 			[&]()
 			{
-				func(m_spRenderer);
+				func2(m_spRenderer);
 				if (wait)
 					SetEvent(evt);
 			}

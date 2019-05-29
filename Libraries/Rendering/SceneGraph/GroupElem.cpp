@@ -23,20 +23,20 @@ namespace Caustic
         pSceneCtx->m_Transform = pSceneCtx->m_Transform * m_Transform;
 
         std::vector<CRefObj<IPointLight>> lights = pSceneCtx->m_lights;
-        for (size_t i = 0; i < m_Children.size(); i++)
-        {
-            if (m_Children[i]->GetType() == ESceneElemType::PointLight)
-            {
-                m_Children[i]->Render(pRenderer, pRenderCtx, pSceneCtx);
-            }
-        }
-        for (size_t i = 0; i < m_Children.size(); i++)
-        {
-            if (m_Children[i]->GetType() != ESceneElemType::PointLight)
-            {
-                m_Children[i]->Render(pRenderer, pRenderCtx, pSceneCtx);
-            }
-        }
+		for (size_t i = 0; i < m_Children.size(); i++)
+		{
+			if (m_Children[i]->GetType() == ESceneElemType::PointLight)
+			{
+				m_Children[i]->Render(pRenderer, pRenderCtx, pSceneCtx);
+			}
+		}
+		for (size_t i = 0; i < m_Children.size(); i++)
+		{
+			if (m_Children[i]->GetType() != ESceneElemType::PointLight)
+			{
+				m_Children[i]->Render(pRenderer, pRenderCtx, pSceneCtx);
+			}
+		}
         pSceneCtx->m_lights = lights;
         DrawSelected(pRenderer, this, pSceneCtx);
         pSceneCtx->m_Transform = old;

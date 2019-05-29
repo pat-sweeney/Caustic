@@ -16,6 +16,7 @@ namespace Caustic
 		CComPtr<ID3D12Resource> m_spIB;
 		CRefObj<IRenderMaterial> m_spFrontMaterial;
 		CRefObj<IRenderMaterial> m_spBackMaterial;
+		CRefObj<IShader> m_spShader;
 		uint32 m_numVerts;
 		uint32 m_numIndices;
 		Caustic::BBox3 m_bbox;
@@ -42,7 +43,9 @@ namespace Caustic
 		virtual void SetIndexBuffer(ID3D12Resource *pIB) override { m_spIB = pIB; }
 		virtual CComPtr<ID3D12Resource> GetIndexBuffer() override { return m_spIB; }
 		virtual void GetBBox(BBox3 *pBBox) override { *pBBox = m_bbox; };
-		virtual void Render(IRenderer *pRenderer, IShader *pShader);
+		virtual void Render(IRenderer *pRenderer) override;
+		virtual void SetShader(IShader *pShader) override { m_spShader = pShader; }
+		virtual CRefObj<IShader> GetShader() override { return m_spShader; }
 	};
 
 	//**********************************************************************

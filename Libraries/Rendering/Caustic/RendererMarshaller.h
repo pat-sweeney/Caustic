@@ -29,6 +29,7 @@ namespace Caustic
 		HWND m_hwnd;
 		std::wstring m_shaderFolder;
 		std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> m_renderCallback;
+		CRefObj<ISceneGraph> m_spScene;
 
         void AddLambda(std::function<void()> func);
     public:

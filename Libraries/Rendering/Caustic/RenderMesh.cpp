@@ -9,12 +9,12 @@
 
 namespace Caustic
 {
-	void CRenderSubMesh::Render(IRenderer *pRenderer, IShader *pShader)
+	void CRenderSubMesh::Render(IRenderer *pRenderer)
 	{
-		CComPtr<ID3D12GraphicsCommandList> spCommandList;
+		CComPtr<ID3D12GraphicsCommandList> spCommandList = pRenderer->GetCommandList();
 		spCommandList->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		pShader->BeginRender(pRenderer);
-		uint32 vertexSize = pShader->GetShaderInfo()->GetVertexSize();
+		m_spShader->BeginRender(pRenderer);
+		uint32 vertexSize = m_spShader->GetShaderInfo()->GetVertexSize();
 		uint32 numVertices = GetNumberVertices();
 		D3D12_VERTEX_BUFFER_VIEW vbView;
 		vbView.BufferLocation = m_spVB->GetGPUVirtualAddress();
@@ -22,7 +22,7 @@ namespace Caustic
 		vbView.SizeInBytes = (UINT)(numVertices * vertexSize);
 		spCommandList->IASetVertexBuffers(0, 1, &vbView);
 		spCommandList->DrawInstanced(numVertices, 1, 0, 0);
-		pShader->EndRender(pRenderer);
+		m_spShader->EndRender(pRenderer);
 	}
 
 	CRenderMesh::CRenderMesh()
@@ -74,6 +74,6 @@ namespace Caustic
 	void CRenderMesh::Render(IRenderer *pRenderer)
 	{
 		for (auto submesh : m_subMeshes)
-			submesh->Render(pRenderer, nullptr);
+			submesh->Render(pRenderer);
 	}
 }
