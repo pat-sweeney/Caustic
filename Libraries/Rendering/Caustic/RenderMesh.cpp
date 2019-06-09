@@ -21,7 +21,13 @@ namespace Caustic
 		vbView.StrideInBytes = vertexSize;
 		vbView.SizeInBytes = (UINT)(numVertices * vertexSize);
 		spCommandList->IASetVertexBuffers(0, 1, &vbView);
-		spCommandList->DrawInstanced(numVertices, 1, 0, 0);
+		D3D12_INDEX_BUFFER_VIEW ibView;
+		ibView.BufferLocation = m_spIB->GetGPUVirtualAddress();
+		ibView.Format = DXGI_FORMAT_R32_UINT;
+		uint32 numIndices = GetNumberIndices();
+		ibView.SizeInBytes = numIndices * sizeof(uint32);
+		spCommandList->IASetIndexBuffer(&ibView);
+		spCommandList->DrawIndexedInstanced(numIndices, 1, 0, 0, 0);
 		m_spShader->EndRender(pRenderer);
 	}
 

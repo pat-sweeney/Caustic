@@ -23,7 +23,11 @@ namespace Caustic
     //**********************************************************************
     class CSubMesh : public ISubMesh, public CRefCount
     {
-        std::vector<CGeomVertex*> m_vertices;
+		CComPtr<ID3D12Resource> m_spVB;
+		CComPtr<ID3D12Resource> m_spVBUpload;
+		CComPtr<ID3D12Resource> m_spIB;
+		CComPtr<ID3D12Resource> m_spIBUpload;
+		std::vector<CGeomVertex*> m_vertices;
         std::vector<CFaceVertex*> m_faceVertices;
         std::vector<CFace*> m_faces;
         std::vector<CHalfEdge*> m_edges;

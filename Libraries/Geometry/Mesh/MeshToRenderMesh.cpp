@@ -83,20 +83,19 @@ namespace Caustic
 
 		// Create our upload buffer
 		UINT vbSize = (UINT)(numVerts * vertexSize);
-		CComPtr<ID3D12Resource> spVBUpload;
 		CD3DX12_RESOURCE_DESC descUpload = CD3DX12_RESOURCE_DESC::Buffer(vbSize);
 		CD3DX12_HEAP_PROPERTIES heapdescUpload(D3D12_HEAP_TYPE_UPLOAD);
 		CT(pDevice->CreateCommittedResource(&heapdescUpload, D3D12_HEAP_FLAG_NONE,
-			&descUpload, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, __uuidof(ID3D12Resource), (void**)&spVBUpload));
-		CT(spVBUpload->SetName(L"spVBUpload"));
+			&descUpload, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, __uuidof(ID3D12Resource), (void**)&m_spVBUpload));
+		CT(m_spVBUpload->SetName(L"spVBUpload"));
 
 		// Create final buffer
 		CComPtr<ID3D12Resource> spVB;
 		CD3DX12_RESOURCE_DESC desc = CD3DX12_RESOURCE_DESC::Buffer(vbSize);
 		CD3DX12_HEAP_PROPERTIES heapdesc(D3D12_HEAP_TYPE_DEFAULT);
 		CT(pDevice->CreateCommittedResource(&heapdesc, D3D12_HEAP_FLAG_NONE,
-			&desc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr, __uuidof(ID3D12Resource), (void**)&spVB));
-		CT(spVB->SetName(L"spVB"));
+			&desc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr, __uuidof(ID3D12Resource), (void**)&m_spVB));
+		CT(m_spVB->SetName(L"m_spVB"));
 
 		// store vertex buffer in upload heap
 		D3D12_SUBRESOURCE_DATA vertexData = {};
@@ -106,15 +105,15 @@ namespace Caustic
 
 		// we are now creating a command with the command list to copy the data from
 		// the upload heap to the default heap
-		UpdateSubresources(pCommandList, spVB, spVBUpload, 0, 0, 1, &vertexData);
+		UpdateSubresources(pCommandList, m_spVB, m_spVBUpload, 0, 0, 1, &vertexData);
 
 		// transition the vertex buffer data from copy destination state to vertex buffer state
-		CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(spVB, D3D12_RESOURCE_STATE_COPY_DEST,
+		CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(m_spVB, D3D12_RESOURCE_STATE_COPY_DEST,
 			D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
 		pCommandList->ResourceBarrier(1, &barrier);
 		
 		pRenderSubMesh->SetNumberVertices(vout);
-		pRenderSubMesh->SetVertexBuffer(spVB);
+		pRenderSubMesh->SetVertexBuffer(m_spVB);
 	}
 
 	void CSubMesh::BuildIndexBuffer(IRenderSubMesh *pRenderSubMesh, ID3D12Device *pDevice, ID3D12GraphicsCommandList *pCommandList,
@@ -171,20 +170,18 @@ namespace Caustic
 		
 		// Create our upload buffer
 		UINT ibSize = (UINT)(numIndices * sizeof(uint32));
-		CComPtr<ID3D12Resource> spIBUpload;
 		CD3DX12_HEAP_PROPERTIES heapUpload(D3D12_HEAP_TYPE_UPLOAD);
 		CD3DX12_RESOURCE_DESC descUpload = CD3DX12_RESOURCE_DESC::Buffer(ibSize);
 		CT(pDevice->CreateCommittedResource(&heapUpload, D3D12_HEAP_FLAG_NONE,
-			&descUpload, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, __uuidof(ID3D12Resource), (void**)&spIBUpload));
-		CT(spIBUpload->SetName(L"spIBUpload"));
+			&descUpload, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, __uuidof(ID3D12Resource), (void**)&m_spIBUpload));
+		CT(m_spIBUpload->SetName(L"m_spIBUpload"));
 
 		// Create final buffer
-		CComPtr<ID3D12Resource> spIB;
 		CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 		CD3DX12_RESOURCE_DESC heapDesc = CD3DX12_RESOURCE_DESC::Buffer(ibSize);
 		CT(pDevice->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE,
-			&heapDesc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr, __uuidof(ID3D12Resource), (void**)&spIB));
-		CT(spIB->SetName(L"spIB"));
+			&heapDesc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr, __uuidof(ID3D12Resource), (void**)&m_spIB));
+		CT(m_spIB->SetName(L"m_spIB"));
 
 		// store vertex buffer in upload heap
 		D3D12_SUBRESOURCE_DATA vertexData = {};
@@ -194,15 +191,15 @@ namespace Caustic
 
 		// we are now creating a command with the command list to copy the data from
 		// the upload heap to the default heap
-		UpdateSubresources(pCommandList, spIB, spIBUpload, 0, 0, 1, &vertexData);
+		UpdateSubresources(pCommandList, m_spIB, m_spIBUpload, 0, 0, 1, &vertexData);
 
 		// transition the vertex buffer data from copy destination state to vertex buffer state
-		CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(spIB, D3D12_RESOURCE_STATE_COPY_DEST,
+		CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(m_spIB, D3D12_RESOURCE_STATE_COPY_DEST,
 			D3D12_RESOURCE_STATE_INDEX_BUFFER);
 		pCommandList->ResourceBarrier(1, &barrier);
 
 		pRenderSubMesh->SetNumberIndices(numIndices);
-		pRenderSubMesh->SetVertexBuffer(spIB);
+		pRenderSubMesh->SetIndexBuffer(m_spIB);
 	}
 
 	void CSubMesh::BuildReferencedVertexList(std::vector<int> &vertexReferenced)

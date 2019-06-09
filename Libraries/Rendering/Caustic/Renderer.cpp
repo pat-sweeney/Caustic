@@ -422,6 +422,7 @@ namespace Caustic
 
     void CRenderer::DrawLine(Vector3 p1, Vector3 p2, Vector4 clr)
     {
+return;
         UINT offset = 0;
 		D3D12_VERTEX_BUFFER_VIEW vbView = {};
 		vbView.BufferLocation = m_lineVB.m_spVB->GetGPUVirtualAddress();
@@ -581,6 +582,8 @@ namespace Caustic
 
 	void CRenderer::EndFrame()
 	{
+		m_spCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_spBackBuffers[m_currentFrame], D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+
 		CT(m_spCommandList->Close());
 
 		m_spCmdQueue->ExecuteCommandLists(1, (ID3D12CommandList**)&m_spCommandList.p);
