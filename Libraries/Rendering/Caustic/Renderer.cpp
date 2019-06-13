@@ -6,7 +6,7 @@
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\CausticFactory.h"
 #include "Renderer.h"
-#include "DirectX-Graphics-Samples\Libraries\D3DX12\d3dx12.h"
+#include "d3dx12.h"
 #include <vector>
 #include <any>
 #include <dxgidebug.h>
