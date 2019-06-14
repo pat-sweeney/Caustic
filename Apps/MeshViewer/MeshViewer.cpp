@@ -38,7 +38,7 @@ void InitializeCaustic(HWND hwnd)
 {
 	Caustic::CreateSceneFactory(&spSceneFactory);
 	Caustic::CreateCausticFactory(&spCausticFactory);
-	std::wstring shaderFolder(L"f:\\github\\Caustic12\\Caustic\\Release");
+    std::wstring shaderFolder(std::wstring(CAUSTIC_ROOT) + L"\\debug");
     CreateRenderWindow(hwnd, shaderFolder, &spRenderWindow);
     Vector3 lightPos(10.0f, 10.0f, 0.0f);
     AddPointLight(lightPos);

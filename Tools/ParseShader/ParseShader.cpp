@@ -206,10 +206,10 @@ void CompileShader(IXMLDOMNode *pNode, bool pixelShader, std::string &shaderFn, 
         int index = outputFn.rfind(".cso");
         std::string pdbFn = outputFn;
         pdbFn.replace(index, 4, ".pdb");
-        char buffer[_MAX_PATH];
-		sprintf_s(buffer, "/Zi /E\"%s\" /Od /Fd\"%s\" /Fo\"%s\" /T\"%s\" /nologo %s",
+        char buffer[10240];
+		sprintf_s(buffer, "\"C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.17763.0\\x86\\fxc.exe\" /Zi /E\"%s\" /Od /Fd\"%s\" /Fo\"%s\" /T\"%s\" /nologo %s",
 			(pixelShader) ? "PS" : "VS", pdbFn.c_str(), outputFn.c_str(), (pixelShader) ? "ps_5_1" : "vs_5_0", shaderFn.c_str());
-		if (CreateProcess("C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.17763.0\\x86\\fxc.exe", buffer, nullptr, nullptr, TRUE, 0, nullptr, nullptr, &info, &processInfo))
+		if (CreateProcess(nullptr, buffer, nullptr, nullptr, TRUE, 0, nullptr, nullptr, &info, &processInfo))
 		{
 			WaitForSingleObject(processInfo.hProcess, INFINITE);
 			CloseHandle(processInfo.hProcess);

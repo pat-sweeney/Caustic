@@ -40,7 +40,7 @@ namespace Caustic
     
     void CRenderWindow::MouseDown(int x, int y, uint32 button, uint32 flags)
     {
-        if (button == c_LeftButton)
+        if (button == c_LeftButton && m_spCamera.p != nullptr)
         {
             m_spCamera->GetPosition(&m_eye, &m_look, nullptr, nullptr, &m_up, nullptr);
             RECT rect;
