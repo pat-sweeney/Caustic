@@ -94,13 +94,13 @@ namespace Caustic
 		CComPtr<ID3D12PipelineState> m_spPipelineState;
         CComPtr<ID3DBlob> m_spPixelShader;
         CComPtr<ID3DBlob> m_spVertexShader;
-		CComPtr<ID3D12DescriptorHeap> m_spDescriptorHeap;
 		SConstantBuffer m_vertexConstants;
 		SConstantBuffer m_pixelConstants;
         std::vector<ShaderParamInstance> m_psParams;
         std::vector<ShaderParamInstance> m_vsParams;
 		CRefObj<IShaderInfo> m_spShaderInfo;
-	protected:
+        CComPtr<ID3D12DescriptorHeap> m_spDescriptorHeap[c_MaxFrames]; // Descriptor heap used for holding constant buffers
+    protected:
         void PushMatrix(const wchar_t *name, std::any mat);
         void PushMatrices(IRenderer *pRenderer, DirectX::XMMATRIX *pWorld);
         uint32 ComputeParamSize(ShaderParamDef *pParams, uint32 numParams, std::vector<ShaderParamInstance> &params);
