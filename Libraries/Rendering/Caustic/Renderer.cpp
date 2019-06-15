@@ -189,7 +189,7 @@ namespace Caustic
 		rootParameters[0].Constants = constants;
 		rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 
-        D3D12_DESCRIPTOR_RANGE  descriptorTableRanges[2];
+        D3D12_DESCRIPTOR_RANGE  descriptorTableRanges[1];
         descriptorTableRanges[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE::D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
         descriptorTableRanges[0].NumDescriptors = 1;
         descriptorTableRanges[0].BaseShaderRegister = 0;

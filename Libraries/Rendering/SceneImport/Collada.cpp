@@ -511,7 +511,9 @@ while(*p)//        for (int i = 0; i < pPolylist->m_count; i++)
                     spMeshConstructor->MeshOpen();
                     pGeometry->BuildMesh(spMeshConstructor);
                     spMeshConstructor->MeshClose(&spMesh);
-                    spMeshElem->SetMesh(spMesh);
+                    ///CRefObj<IRenderMesh> spRenderMesh;
+                    ///spMesh->ToRenderMesh(pRenderer, nullptr, &spRenderMesh);
+                    ///spMeshElem->SetMesh(spMesh);
 
                     spXform->AddChild(spMeshElem);
                     spSceneGraph->AddChild(spXform);

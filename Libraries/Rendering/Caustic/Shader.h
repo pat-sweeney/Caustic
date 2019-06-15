@@ -78,9 +78,10 @@ namespace Caustic
     
 	struct SConstantBuffer
 	{
-        CComPtr<ID3D12DescriptorHeap> m_spDescriptorHeap[c_MaxFrames];
 		CComPtr<ID3D12Resource> m_spBuffer[c_MaxFrames];
-	};
+        uint32 m_bufferSize;
+        uint32 m_heapSize;
+    };
 
 	//**********************************************************************
     // CShader defines a shader used to render materials on an object
@@ -100,6 +101,7 @@ namespace Caustic
         std::vector<ShaderParamInstance> m_psParams;
         std::vector<ShaderParamInstance> m_vsParams;
 		CRefObj<IShaderInfo> m_spShaderInfo;
+        CComPtr<ID3D12DescriptorHeap> m_spDescriptorHeap[c_MaxFrames];
     protected:
         void PushMatrix(const wchar_t *name, std::any mat);
         void PushMatrices(IRenderer *pRenderer, DirectX::XMMATRIX *pWorld);

@@ -414,8 +414,9 @@ namespace Caustic
         PushConstants(pRenderer, &m_pixelConstants, m_psParams);
 
         uint32 frameIndex = pRenderer->GetFrameIndex();
-        ID3D12DescriptorHeap *ppHeaps[] = { m_vertexConstants.m_spDescriptorHeap[frameIndex], m_pixelConstants.m_spDescriptorHeap[frameIndex] };
-        spCmdList->SetDescriptorHeaps(2, ppHeaps);
+
+        ID3D12DescriptorHeap *ppHeaps[] = { m_spDescriptorHeap[frameIndex] };
+        spCmdList->SetDescriptorHeaps(1, ppHeaps);
         // set constant buffer descriptor heap
         //spCmdList->SetGraphicsRootConstantBufferView(1, m_vertexConstants.m_spBuffer[frameIndex]->GetGPUVirtualAddress()); 
         //spCmdList->SetGraphicsRootConstantBufferView(2, m_pixelConstants.m_spBuffer[frameIndex]->GetGPUVirtualAddress());
@@ -445,6 +446,8 @@ namespace Caustic
     //**********************************************************************
     void CShader::CreateConstantBuffer(ID3D12Device *pDevice, ShaderParamDef *pDefs, uint32 paramsSize, std::vector<ShaderParamInstance> &params, SConstantBuffer *pConstantBuffer)
     {
+        pConstantBuffer->m_heapSize = 0;
+        pConstantBuffer->m_bufferSize = 0;
         uint32 s = ComputeParamSize(pDefs, paramsSize, params);
         if (s > 0)
         {
@@ -457,22 +460,10 @@ namespace Caustic
 					D3D12_HEAP_FLAG_NONE, &CD3DX12_RESOURCE_DESC::Buffer(heapSize), D3D12_RESOURCE_STATE_GENERIC_READ,
 					nullptr, __uuidof(ID3D12Resource), (void**)&pConstantBuffer->m_spBuffer[i]));
 				CT(pConstantBuffer->m_spBuffer[i]->SetName((i == 0) ? L"m_spBuffer[0]" : L"m_spBuffer[1]"));
-
-                D3D12_DESCRIPTOR_HEAP_DESC heapDesc;
-                heapDesc.NumDescriptors = 1;
-                heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-                heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-                heapDesc.NodeMask = 0;
-                CT(pDevice->CreateDescriptorHeap(&heapDesc, __uuidof(ID3D12DescriptorHeap), (void**)&pConstantBuffer->m_spDescriptorHeap[i]));
-
-                D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
-                cbvDesc.BufferLocation = pConstantBuffer->m_spBuffer[i]->GetGPUVirtualAddress();
-                cbvDesc.SizeInBytes = (sizeof(s) + 255) & ~255;    // CB size is required to be 256-byte aligned.
-                D3D12_CPU_DESCRIPTOR_HANDLE h = pConstantBuffer->m_spDescriptorHeap[i]->GetCPUDescriptorHandleForHeapStart();
-                UINT offset = pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-                pDevice->CreateConstantBufferView(&cbvDesc, h);
             }
-		}
+            pConstantBuffer->m_heapSize = (uint32)heapSize;
+            pConstantBuffer->m_bufferSize = (uint32)s;
+        }
     }
 
     //**********************************************************************
@@ -492,6 +483,8 @@ namespace Caustic
     //**********************************************************************
 	void CShader::Create(IRenderer *pRenderer, const wchar_t *pShaderName, IShaderInfo *pShaderInfo, ID3DBlob *pPSBlob, ID3DBlob *pVSBlob)
     {
+        auto spDevice = pRenderer->GetDevice();
+        
         if (pShaderName)
             m_name = std::wstring(pShaderName);
 
@@ -510,7 +503,6 @@ namespace Caustic
 		//**********************************************************************
 		// Create pipeline state object
 		//**********************************************************************
-		ID3D12Device *pDevice = pRenderer->GetDevice();
 		D3D12_INPUT_LAYOUT_DESC inputLayoutDesc = {};
 		inputLayoutDesc.NumElements = (UINT)vertexLayout.size();
 		inputLayoutDesc.pInputElementDescs = &vertexLayout[0];
@@ -567,15 +559,40 @@ namespace Caustic
 		psoDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK::D3D12_DEPTH_WRITE_MASK_ALL;
 		psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 
-		CT(pRenderer->GetDevice()->CreateGraphicsPipelineState(&psoDesc, __uuidof(ID3D12PipelineState), (void**)&m_spPipelineState));
+		CT(spDevice->CreateGraphicsPipelineState(&psoDesc, __uuidof(ID3D12PipelineState), (void**)&m_spPipelineState));
 		
 		m_spVertexShader = pVSBlob;
 		m_spPixelShader = pPSBlob;
 
-        CreateConstantBuffer(pDevice, pShaderInfo->VertexShaderParameterDefs().data(),
+        CreateConstantBuffer(spDevice, pShaderInfo->VertexShaderParameterDefs().data(),
 			(uint32)pShaderInfo->VertexShaderParameterDefs().size(), m_vsParams, &m_vertexConstants);
-        CreateConstantBuffer(pDevice, pShaderInfo->PixelShaderParameterDefs().data(),
+        CreateConstantBuffer(spDevice, pShaderInfo->PixelShaderParameterDefs().data(),
 			(uint32)pShaderInfo->PixelShaderParameterDefs().size(), m_psParams, &m_pixelConstants);
+
+        // Allocate heap for descriptors and create constant buffer views
+        for (int j = 0; j < c_MaxFrames; j++)
+        {
+            D3D12_DESCRIPTOR_HEAP_DESC heapDesc;
+            heapDesc.NumDescriptors = 2;
+            heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+            heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+            heapDesc.NodeMask = 0;
+            CT(spDevice->CreateDescriptorHeap(&heapDesc, __uuidof(ID3D12DescriptorHeap), (void**)&m_spDescriptorHeap[j]));
+
+            for (int i = 0; i < 2; i++)
+            {
+                SConstantBuffer *pBuffer = (i == 0) ? &m_vertexConstants : &m_pixelConstants;
+                if (pBuffer->m_bufferSize == 0)
+                    continue;
+                D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
+                cbvDesc.BufferLocation = pBuffer->m_spBuffer[j]->GetGPUVirtualAddress();
+                cbvDesc.SizeInBytes = (sizeof(pBuffer->m_bufferSize) + 255) & ~255;    // CB size is required to be 256-byte aligned.
+                D3D12_CPU_DESCRIPTOR_HANDLE h = m_spDescriptorHeap[j]->GetCPUDescriptorHandleForHeapStart();
+                UINT offset = spDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+                h.ptr += i * offset;
+                spDevice->CreateConstantBufferView(&cbvDesc, h);
+            }
+        }
     }
     
     CShaderMgr CShaderMgr::s_ShaderMgr;

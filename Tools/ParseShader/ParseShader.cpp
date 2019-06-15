@@ -203,7 +203,7 @@ void CompileShader(IXMLDOMNode *pNode, bool pixelShader, std::string &shaderFn, 
 	{
 		STARTUPINFO info = { sizeof(info), 0 };
 		PROCESS_INFORMATION processInfo;
-        int index = outputFn.rfind(".cso");
+        int index = (int)outputFn.rfind(".cso");
         std::string pdbFn = outputFn;
         pdbFn.replace(index, 4, ".pdb");
         char buffer[10240];
