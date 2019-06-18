@@ -153,8 +153,6 @@ namespace Caustic
 		CT(pBuffer->m_spBuffer[frameIndex]->Map(0, nullptr, (void**)&pb));
         for (size_t i = 0; i < params.size(); i++)
         {
-            if ( ! params[i].m_dirty)
-                continue;
             switch(params[i].m_type)
             {
             case EShaderParamType::ShaderType_Sampler:
@@ -415,15 +413,46 @@ namespace Caustic
     }
 
     //**********************************************************************
+    void CShader::PushMaterials(IRenderMaterial *pMaterial)
+    {
+        if (pMaterial == nullptr)
+            return;
+
+        //float4 transparency;
+        CRefObj<IMaterialAttrib> spMaterialAttrib;
+        pMaterial->GetMaterial(&spMaterialAttrib);
+        
+        Caustic::Vector3 ambientColor = spMaterialAttrib->GetAmbientColor();
+        Float4 vAmbient(ambientColor.x, ambientColor.y, ambientColor.z, 1.0f);
+        SetParam(L"ambientColor", std::any(vAmbient), m_psParams);
+        
+        Caustic::Vector3 diffuseColor = spMaterialAttrib->GetDiffuseColor();
+        Float4 vDiffuse(diffuseColor.x, diffuseColor.y, diffuseColor.z, 1.0f);
+        SetParam(L"diffuseColor", std::any(vDiffuse), m_psParams);
+        
+        Caustic::Vector3 specularColor = spMaterialAttrib->GetDiffuseColor();
+        Float4 vSpecularColor(specularColor.x, specularColor.y, specularColor.z, 1.0f);
+        SetParam(L"specularColor", std::any(vSpecularColor), m_psParams);
+
+        float specularExp = spMaterialAttrib->GetSpecularExp();
+        Float4 vSpecularExp(specularExp, specularExp, specularExp, 1.0f);
+        SetParam(L"specularExp", std::any(vSpecularExp), m_psParams);
+
+        Float4 vTransparency(1.0f, 1.0f, 1.0f, 1.0f);
+        SetParam(L"transparency", std::any(vTransparency), m_psParams);
+    }
+
+    //**********************************************************************
     // BeginRender is called before rendering using this shader occurs.
     // This call is responsible for setting up the pGraphics device to use the shader.
     // pGraphics D3D11 device/context to use
     //**********************************************************************
-    void CShader::BeginRender(IRenderer *pRenderer, std::vector<CRefObj<IPointLight>> &lights, DirectX::XMMATRIX *pWorld)
+    void CShader::BeginRender(IRenderer *pRenderer, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, std::vector<CRefObj<IPointLight>> &lights, DirectX::XMMATRIX *pWorld)
     {
         auto spCmdList = pRenderer->GetCommandList();
         spCmdList->SetPipelineState(m_spPipelineState);
 
+        PushMaterials(pFrontMaterial);
         PushLights(lights);
         PushMatrices(pRenderer, pWorld);
         PushConstants(pRenderer, &m_vertexConstants, m_vsParams);
@@ -601,7 +630,7 @@ namespace Caustic
                     continue;
                 D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
                 cbvDesc.BufferLocation = pBuffer->m_spBuffer[j]->GetGPUVirtualAddress();
-                cbvDesc.SizeInBytes = (sizeof(pBuffer->m_bufferSize) + 255) & ~255;    // CB size is required to be 256-byte aligned.
+                cbvDesc.SizeInBytes = ((pBuffer->m_bufferSize + 255) / 256) * 256;    // CB size is required to be 256-byte aligned.
                 D3D12_CPU_DESCRIPTOR_HANDLE h = m_spDescriptorHeap[j]->GetCPUDescriptorHandleForHeapStart();
                 UINT offset = spDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
                 h.ptr += i * offset;

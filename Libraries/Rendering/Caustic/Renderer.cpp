@@ -438,7 +438,7 @@ return;
         Float4 color(clr.x, clr.y, clr.z, clr.w);
         m_spLineShader->SetPSParam(L"color", std::any(color));
         std::vector<CRefObj<IPointLight>> lights;
-        m_spLineShader->BeginRender(this, lights);
+        m_spLineShader->BeginRender(this, nullptr, nullptr, lights);
         m_spCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 		m_spCommandList->DrawInstanced(m_lineVB.m_numVertices, 1, 0, 0);
         m_spLineShader->EndRender(this);

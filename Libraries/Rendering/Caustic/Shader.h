@@ -104,6 +104,7 @@ namespace Caustic
         void PushMatrix(const wchar_t *name, std::any mat);
         void PushMatrices(IRenderer *pRenderer, DirectX::XMMATRIX *pWorld);
         void PushLights(std::vector<CRefObj<IPointLight>> &lights);
+        void PushMaterials(IRenderMaterial *pMaterial);
         uint32 ComputeParamSize(ShaderParamDef *pParams, uint32 numParams, std::vector<ShaderParamInstance> &params);
 		void PushConstants(IRenderer *pRenderer, SConstantBuffer *pBuffer, std::vector<ShaderParamInstance> &params);
         void SetParam(std::wstring paramName, std::any &value, std::vector<ShaderParamInstance> &params);
@@ -122,7 +123,7 @@ namespace Caustic
         // IShader
         //**********************************************************************
         virtual std::wstring &Name() override { return m_name; }
-        virtual void BeginRender(IRenderer *pRenderer, std::vector<CRefObj<IPointLight>> &lights, DirectX::XMMATRIX *pWorld = nullptr) override;
+        virtual void BeginRender(IRenderer *pRenderer, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, std::vector<CRefObj<IPointLight>> &lights, DirectX::XMMATRIX *pWorld = nullptr) override;
         virtual void SetPSParam(std::wstring paramName, std::any &value) override;
         virtual void SetPSParam(std::wstring paramName, int index, std::any &value) override;
         virtual void SetVSParam(std::wstring paramName, std::any &value) override;

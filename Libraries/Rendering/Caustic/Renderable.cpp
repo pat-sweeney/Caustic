@@ -116,7 +116,7 @@ namespace Caustic
 			spCommandList->IASetIndexBuffer(&ibView);
 		}
 
-		spShader->BeginRender(pRenderer, lights, &m_xform);
+		spShader->BeginRender(pRenderer, m_spFrontMaterial, m_spBackMaterial, lights, &m_xform);
 
         //if (pRenderCtx->PassBlendable())
         //{
@@ -181,7 +181,7 @@ namespace Caustic
             v = (pRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayNormalsAsLines) ? 1.0f : 0.0f;
             spShader->SetVSParam(L"drawNormals", std::any(v));
 
-            spShader->BeginRender(pRenderer, lights);
+            spShader->BeginRender(pRenderer, m_spFrontMaterial, m_spBackMaterial, lights);
             spCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
             spCommandList->DrawInstanced(m_normalVB.m_numVertices, 1, 0, 0);
             spShader->EndRender(pRenderer);

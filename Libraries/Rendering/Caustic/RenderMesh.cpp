@@ -13,7 +13,7 @@ namespace Caustic
 	{
 		CComPtr<ID3D12GraphicsCommandList> spCommandList = pRenderer->GetCommandList();
 		spCommandList->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		m_spShader->BeginRender(pRenderer, lights);
+		m_spShader->BeginRender(pRenderer, m_spFrontMaterial, m_spBackMaterial, lights);
 		uint32 vertexSize = m_spShader->GetShaderInfo()->GetVertexSize();
 		uint32 numVertices = GetNumberVertices();
 		D3D12_VERTEX_BUFFER_VIEW vbView;
