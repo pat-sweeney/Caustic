@@ -359,7 +359,7 @@ namespace Caustic
 				CT(spAttribs->get_length(&numAttribs));
 				ShaderParamDef param;
 				param.m_offset = offset;
-                param.m_members = 0;
+                param.m_members = 1;
 				for (long j = 0; j < numAttribs; j++)
 				{
 					CComPtr<IXMLDOMNode> spAttrib;

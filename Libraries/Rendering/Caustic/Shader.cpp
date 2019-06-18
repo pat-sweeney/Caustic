@@ -30,9 +30,9 @@ namespace Caustic
         {
             if (pDefs[i].m_name.length() == 0)
                 continue;
+            ShaderParamDef &d = params[i];
+            d = pDefs[i];
             params[i].m_dirty = true;
-            params[i].m_name = pDefs[i].m_name;
-            params[i].m_type = pDefs[i].m_type;
             params[i].m_offset = s;
             if (pDefs[i].m_type == EShaderParamType::ShaderType_Float)
             {
@@ -145,12 +145,9 @@ namespace Caustic
         // Next push constants
         if (pBuffer == nullptr)
             return;
-		D3D12_RANGE range;
-		range.Begin = 0;
-		range.End = 0;
 		BYTE *pb;
 		uint32 frameIndex = pRenderer->GetFrameIndex();
-		CT(pBuffer->m_spBuffer[frameIndex]->Map(0, &range, (void**)&pb));
+		CT(pBuffer->m_spBuffer[frameIndex]->Map(0, nullptr, (void**)&pb));
         for (size_t i = 0; i < params.size(); i++)
         {
             if ( ! params[i].m_dirty)
@@ -251,7 +248,7 @@ namespace Caustic
                     Matrix m = std::any_cast<Matrix>(params[i].m_value);
                     memcpy(pb, m.x, 16 * sizeof(float));
                     pb += 16 * sizeof(float);
-            }
+                }
                 break;
             case EShaderParamType::ShaderType_Matrix_Array:
                 {
@@ -265,7 +262,7 @@ namespace Caustic
                 break;
             }
         }
-		pBuffer->m_spBuffer[frameIndex]->Unmap(0, &range);
+		pBuffer->m_spBuffer[frameIndex]->Unmap(0, nullptr);
 	}
 
     //**********************************************************************
@@ -299,8 +296,6 @@ namespace Caustic
         {
             if (params[i].m_name == paramName)
             {
-                if (index >= params[i].m_values.size())
-                    params[i].m_values.resize(index + 1);
                 params[i].m_values[index] = value;
                 params[i].m_dirty = true;
                 break;
