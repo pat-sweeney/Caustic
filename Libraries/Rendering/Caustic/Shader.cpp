@@ -126,6 +126,9 @@ namespace Caustic
     //**********************************************************************
     void CShader::PushConstants(IRenderer *pRenderer, SConstantBuffer *pBuffer, std::vector<ShaderParamInstance> &params)
     {
+        if (pBuffer->m_bufferSize == 0)
+            return;
+
         // First push samplers
         for (size_t i = 0; i < params.size(); i++)
         {
@@ -544,7 +547,7 @@ namespace Caustic
 		blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND::D3D12_BLEND_INV_SRC_ALPHA;
 		blendDesc.RenderTarget[0].LogicOp = D3D12_LOGIC_OP::D3D12_LOGIC_OP_COPY;
 		blendDesc.RenderTarget[0].LogicOpEnable = false;
-		blendDesc.RenderTarget[0].RenderTargetWriteMask = 0;
+        blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE::D3D12_COLOR_WRITE_ENABLE_ALL;
 		blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND::D3D12_BLEND_SRC_ALPHA;
 		blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND::D3D12_BLEND_SRC_ALPHA;
 
