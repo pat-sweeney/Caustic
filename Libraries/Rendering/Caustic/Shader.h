@@ -20,9 +20,6 @@ const int c_MaxFrames = 2; // Maximum number of frames being buffered
 //
 namespace Caustic
 {
-    // TODO: Need to determine size of Arrays. For now assume arrays are always 4 deep
-    const int c_ArraySize = 4;
-
     //**********************************************************************
 	// Enum: EShaderParamType 
 	// Defines the various types of parameters that can be passed to a CShader
@@ -55,6 +52,7 @@ namespace Caustic
 		EShaderParamType m_type; // Defines type of this parameter
 		std::wstring m_name;     // Name of shader parameter
 		uint32 m_offset;         // register offset
+        uint32 m_members;        // Number of elements
 	};
 
 	//**********************************************************************
@@ -105,6 +103,7 @@ namespace Caustic
     protected:
         void PushMatrix(const wchar_t *name, std::any mat);
         void PushMatrices(IRenderer *pRenderer, DirectX::XMMATRIX *pWorld);
+        void PushLights(std::vector<CRefObj<IPointLight>> &lights);
         uint32 ComputeParamSize(ShaderParamDef *pParams, uint32 numParams, std::vector<ShaderParamInstance> &params);
 		void PushConstants(IRenderer *pRenderer, SConstantBuffer *pBuffer, std::vector<ShaderParamInstance> &params);
         void SetParam(std::wstring paramName, std::any &value, std::vector<ShaderParamInstance> &params);
@@ -123,7 +122,7 @@ namespace Caustic
         // IShader
         //**********************************************************************
         virtual std::wstring &Name() override { return m_name; }
-        virtual void BeginRender(IRenderer *pRenderer, DirectX::XMMATRIX *pWorld = nullptr) override;
+        virtual void BeginRender(IRenderer *pRenderer, std::vector<CRefObj<IPointLight>> &lights, DirectX::XMMATRIX *pWorld = nullptr) override;
         virtual void SetPSParam(std::wstring paramName, std::any &value) override;
         virtual void SetPSParam(std::wstring paramName, int index, std::any &value) override;
         virtual void SetVSParam(std::wstring paramName, std::any &value) override;

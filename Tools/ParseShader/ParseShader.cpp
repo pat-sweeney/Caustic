@@ -140,7 +140,10 @@ void ParseLoop(ID3D12ShaderReflection *pReflection, HANDLE oh)
 			pType->GetDesc(&typeDesc);
 			D3D12_SHADER_VARIABLE_DESC varDesc;
 			pVar->GetDesc(&varDesc);
-			WriteStr(oh, "             <Property Name='%s' Type='%s'/>\n", varDesc.Name, typeDesc.Name);
+            if (typeDesc.Class == D3D_SHADER_VARIABLE_CLASS::D3D10_SVC_VECTOR && typeDesc.Elements > 1)
+                WriteStr(oh, "             <Property Name='%s' Type='%s[%d]'/>\n", varDesc.Name, typeDesc.Name, typeDesc.Elements);
+            else
+                WriteStr(oh, "             <Property Name='%s' Type='%s'/>\n", varDesc.Name, typeDesc.Name);
 		}
 		WriteStr(oh, "        </CBuffer>\n");
 	}

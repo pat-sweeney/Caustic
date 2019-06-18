@@ -142,10 +142,9 @@ namespace Caustic
 		HANDLE m_fenceEvents[c_NumBackBuffers];
 		UINT m_fenceValue;
 		CComPtr<ID3D12RootSignature> m_spRootSignature;
-	public:
+    public:
 
         std::vector<CRefObj<IRenderable>> m_singleObjs;             // List of individual renderable objects (outside scene graph)
-        std::vector<CRefObj<IPointLight>> m_lights;                 // List of lights in this scene
         CComPtr<ID3D12Resource> m_spObjIDTexture;                   // Texture for rendering object IDs
         CComPtr<ID3D12Resource> m_spShadowTexture[c_MaxShadowMaps]; // Texture for shadow map
 
@@ -186,8 +185,9 @@ namespace Caustic
 		virtual void BeginFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) override;
 		virtual void EndFrame() override;
 		virtual void RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) override;
-		virtual void AddPointLight(IPointLight *pLight) override;
-		virtual void GetRenderCtx(IRenderCtx **ppCtx) override;
+
+        // Should all this light state be pushed onto the RenderCtx instead??
+        virtual void GetRenderCtx(IRenderCtx **ppCtx) override;
 		virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) override;
 		virtual void DrawMesh(IRenderMesh *pMesh) override {}
 	};

@@ -359,6 +359,7 @@ namespace Caustic
 				CT(spAttribs->get_length(&numAttribs));
 				ShaderParamDef param;
 				param.m_offset = offset;
+                param.m_members = 0;
 				for (long j = 0; j < numAttribs; j++)
 				{
 					CComPtr<IXMLDOMNode> spAttrib;
@@ -382,27 +383,57 @@ namespace Caustic
 							param.m_type = ShaderType_Float;
 							offset += sizeof(float);
 						}
-						else if (wstr == L"float2")
-						{
-							param.m_type = ShaderType_Float2;
-							offset += sizeof(float) * 2;
-						}
-						else if (wstr == L"float3")
+                        else if (wstr.substr(0, 6) == L"float[")
+                        {
+                            param.m_type = ShaderType_Float_Array;
+                            param.m_members = std::stoi(wstr.substr(6).c_str());
+                            offset += sizeof(float) * param.m_members;
+                        }
+                        else if (wstr == L"float2")
+                        {
+                            param.m_type = ShaderType_Float2;
+                            offset += sizeof(float) * 2;
+                        }
+                        else if (wstr.substr(0, 7) == L"float2[")
+                        {
+                            param.m_type = ShaderType_Float2_Array;
+                            param.m_members = std::stoi(wstr.substr(7).c_str());
+                            offset += sizeof(float) * 2 * param.m_members;
+                        }
+                        else if (wstr == L"float3")
 						{
 							param.m_type = ShaderType_Float3;
 							offset += sizeof(float) * 3;
 						}
-						else if (wstr == L"float4")
+                        else if (wstr.substr(0, 7) == L"float3[")
+                        {
+                            param.m_type = ShaderType_Float3_Array;
+                            param.m_members = std::stoi(wstr.substr(7).c_str());
+                            offset += sizeof(float) * 3 * param.m_members;
+                        }
+                        else if (wstr == L"float4")
 						{
 							param.m_type = ShaderType_Float4;
 							offset += sizeof(float) * 4;
 						}
-						else if (wstr == L"int")
+                        else if (wstr.substr(0, 7) == L"float4[")
+                        {
+                            param.m_type = ShaderType_Float4_Array;
+                            param.m_members = std::stoi(wstr.substr(7).c_str());
+                            offset += sizeof(float) * 4 * param.m_members;
+                        }
+                        else if (wstr == L"int")
 						{
 							param.m_type = ShaderType_Int;
 							offset += sizeof(int);
 						}
-						else
+                        else if (wstr.substr(0, 4) == L"int[")
+                        {
+                            param.m_type = ShaderType_Int_Array;
+                            param.m_members = std::stoi(wstr.substr(4).c_str());
+                            offset += sizeof(int) * param.m_members;
+                        }
+                        else
 							param.m_type = ShaderType_Undefined;
 					}
 				}

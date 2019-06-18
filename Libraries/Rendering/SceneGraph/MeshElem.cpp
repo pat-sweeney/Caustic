@@ -84,7 +84,7 @@ namespace Caustic
             {
 				CRefObj<IRenderSubMesh> spMesh;
 				m_spMesh->GetSubMesh(i, &spMesh);
-				spMesh->Render(pRenderer);
+				spMesh->Render(pRenderer, pSceneCtx->m_lights);
             }
         }
         for (uint32 i = 0; i < (uint32)m_renderables.size(); i++)

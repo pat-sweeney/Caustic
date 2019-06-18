@@ -37,7 +37,6 @@ namespace Caustic
 		virtual void BeginFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) = 0;
 		virtual void EndFrame() = 0;
 		virtual void RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) = 0;
-		virtual void AddPointLight(IPointLight *pLight) = 0;
 		virtual void GetRenderCtx(IRenderCtx **ppCtx) = 0;
 		virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) = 0;
 		virtual void DrawMesh(IRenderMesh *pMesh) = 0;

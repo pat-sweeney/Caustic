@@ -4,7 +4,7 @@
 //**********************************************************************
 #include "defs.h"
 
-cbuffer VS_CONSTANT_BUFFER : register(b0)
+cbuffer VS_CONSTANT_BUFFER : register(b1)
 {
     float4x4 world; // Model => World
     float4x4 worldInvTranspose; // Inverse transpose of world matrix

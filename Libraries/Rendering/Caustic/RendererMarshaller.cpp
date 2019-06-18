@@ -267,9 +267,9 @@ namespace Caustic {
 
 	void CRendererMarshaller::SetCamera(ICamera *pCamera)
 	{
-		pCamera->AddRef();
+        pCamera->AddRef();
 		AddLambda(
-			[&]()
+			[this, pCamera]()
 			{
 				m_spRenderer->SetCamera(pCamera);
 				pCamera->Release();
@@ -312,20 +312,8 @@ namespace Caustic {
 			}
 		);
 	}
-
-	void CRendererMarshaller::AddPointLight(IPointLight *pLight)
-	{
-		pLight->AddRef();
-		AddLambda(
-			[&]()
-			{
-				m_spRenderer->AddPointLight(pLight);
-				pLight->Release();
-			}
-		);
-	}
-
-	void CRendererMarshaller::GetRenderCtx(IRenderCtx **ppCtx)
+    
+    void CRendererMarshaller::GetRenderCtx(IRenderCtx **ppCtx)
 	{
 		AddLambda(
 			[&]()

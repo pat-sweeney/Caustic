@@ -4,17 +4,16 @@
 //**********************************************************************
 #include "defs.h"
 
-cbuffer PS_CONSTANT_BUFFER
+cbuffer PS_CONSTANT_BUFFER : register(b2)
 {
-    float4 lightPos;
-    float4 lightColor[MAX_LIGHTS];
     float4 ambientColor;
     float4 diffuseColor;
     float4 specularColor;
     float4 specularExp;
-    float4 lightPosWS[MAX_LIGHTS];
     float4 transparency;
     matrix viewInv; // View => World
+    float4 lightColor[MAX_LIGHTS];
+    float4 lightPosWS[MAX_LIGHTS];
     int numLights;
 };
 

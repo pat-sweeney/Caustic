@@ -41,9 +41,9 @@ namespace Caustic
             }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Float_Array)
             {
-                for (size_t j = 0; j < c_ArraySize; j++)
+                for (size_t j = 0; j < params[i].m_members; j++)
                     params[i].m_values.push_back(Float(0.0f));
-                s += c_ArraySize * sizeof(float);
+                s += params[i].m_members * sizeof(float);
             }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Float2)
             {
@@ -52,9 +52,9 @@ namespace Caustic
             }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Float2_Array)
             {
-                for (size_t j = 0; j < c_ArraySize; j++)
+                for (size_t j = 0; j < params[i].m_members; j++)
                     params[i].m_values.push_back(Float2(0.0f, 0.0f));
-                s += c_ArraySize * sizeof(float) * 2;
+                s += params[i].m_members * sizeof(float) * 2;
             }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Float3)
             {
@@ -63,9 +63,9 @@ namespace Caustic
             }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Float3_Array)
             {
-                for (size_t j = 0; j < c_ArraySize; j++)
+                for (size_t j = 0; j < params[i].m_members; j++)
                     params[i].m_values.push_back(Float3(0.0f, 0.0f, 0.0f));
-                s += c_ArraySize * sizeof(float) * 3;
+                s += params[i].m_members * sizeof(float) * 3;
             }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Float4)
             {
@@ -74,9 +74,9 @@ namespace Caustic
             }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Float4_Array)
             {
-                for (size_t j = 0; j < c_ArraySize; j++)
+                for (size_t j = 0; j < params[i].m_members; j++)
                     params[i].m_values.push_back(Float4(0.0f, 0.0f, 0.0f, 0.0f));
-                s += c_ArraySize * sizeof(float) * 4;
+                s += params[i].m_members * sizeof(float) * 4;
             }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Int)
             {
@@ -85,9 +85,9 @@ namespace Caustic
             }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Int_Array)
             {
-                for (size_t j = 0; j < c_ArraySize; j++)
+                for (size_t j = 0; j < params[i].m_members; j++)
                     params[i].m_values.push_back(Int(0));
-                s += c_ArraySize * sizeof(int);
+                s += params[i].m_members * sizeof(int);
             }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Matrix)
             {
@@ -110,9 +110,9 @@ namespace Caustic
                     0.0f, 0.0f, 0.0f, 1.0f
                 };
                 Matrix m(v);
-                for (size_t j = 0; j < c_ArraySize; j++)
+                for (size_t j = 0; j < params[i].m_members; j++)
                     params[i].m_values.push_back(m);
-                s += c_ArraySize * 16 * sizeof(float);
+                s += params[i].m_members * 16 * sizeof(float);
             }
         }
         return s;
@@ -170,7 +170,7 @@ namespace Caustic
                 break;
             case EShaderParamType::ShaderType_Float_Array:
                 {
-                    for (size_t j = 0; j < c_ArraySize; j++)
+                    for (size_t j = 0; j < params[i].m_members; j++)
                     {
                         Float v = std::any_cast<Float>(params[i].m_values[j]);
                         memcpy(pb, &v, sizeof(Float));
@@ -187,7 +187,7 @@ namespace Caustic
                 break;
             case EShaderParamType::ShaderType_Float2_Array:
                 {
-                    for (size_t j = 0; j < c_ArraySize; j++)
+                    for (size_t j = 0; j < params[i].m_members; j++)
                     {
                         Float2 v = std::any_cast<Float2>(params[i].m_values[j]);
                         memcpy(pb, &v, sizeof(Float2));
@@ -204,7 +204,7 @@ namespace Caustic
                 break;
             case EShaderParamType::ShaderType_Float3_Array:
                 {
-                    for (size_t j = 0; j < c_ArraySize; j++)
+                    for (size_t j = 0; j < params[i].m_members; j++)
                     {
                         Float3 v = std::any_cast<Float3>(params[i].m_values[j]);
                         memcpy(pb, &v, sizeof(Float3));
@@ -221,7 +221,7 @@ namespace Caustic
                 break;
             case EShaderParamType::ShaderType_Float4_Array:
                 {
-                    for (size_t j = 0; j < c_ArraySize; j++)
+                    for (size_t j = 0; j < params[i].m_members; j++)
                     {
                         Float4 v = std::any_cast<Float4>(params[i].m_values[j]);
                         memcpy(pb, &v, sizeof(Float4));
@@ -238,7 +238,7 @@ namespace Caustic
                 break;
             case EShaderParamType::ShaderType_Int_Array:
                 {
-                    for (size_t j = 0; j < c_ArraySize; j++)
+                    for (size_t j = 0; j < params[i].m_members; j++)
                     {
                         Int v = std::any_cast<Int>(params[i].m_values[j]);
                         memcpy(pb, &v.x, sizeof(int));
@@ -251,11 +251,11 @@ namespace Caustic
                     Matrix m = std::any_cast<Matrix>(params[i].m_value);
                     memcpy(pb, m.x, 16 * sizeof(float));
                     pb += 16 * sizeof(float);
-                }
+            }
                 break;
             case EShaderParamType::ShaderType_Matrix_Array:
                 {
-                    for (size_t j = 0; j < c_ArraySize; j++)
+                    for (size_t j = 0; j < params[i].m_members; j++)
                     {
                         Matrix m = std::any_cast<Matrix>(params[i].m_values[j]);
                         memcpy(pb, m.x, 16 * sizeof(float));
@@ -299,6 +299,8 @@ namespace Caustic
         {
             if (params[i].m_name == paramName)
             {
+                if (index >= params[i].m_values.size())
+                    params[i].m_values.resize(index + 1);
                 params[i].m_values[index] = value;
                 params[i].m_dirty = true;
                 break;
@@ -376,6 +378,21 @@ namespace Caustic
         SetPSParam(pParamName, mat);
     }
 
+    void CShader::PushLights(std::vector<CRefObj<IPointLight>> &lights)
+    {
+        uint32 numLights = (uint32)lights.size();
+        for (uint32 i = 0; i < numLights; i++)
+        {
+            Caustic::Vector3 color = lights[i]->GetColor();
+            Float4 lightColor(color.x, color.y, color.z, 1.0f);
+            SetParam(L"lightColor", i, std::any(lightColor), m_psParams);
+            Caustic::Vector3 pos = lights[i]->GetPosition();
+            Float4 lightPos(pos.x, pos.y, pos.z, 1.0f);
+            SetParam(L"lightPosWS", i, std::any(lightPos), m_psParams);
+        }
+        SetPSParam(L"numLights", std::any((Int)numLights));
+    }
+
     void CShader::PushMatrices(IRenderer *pRenderer, DirectX::XMMATRIX *pWorld)
     {
         DirectX::XMMATRIX view = pRenderer->GetCamera()->GetView();
@@ -404,11 +421,12 @@ namespace Caustic
     // This call is responsible for setting up the pGraphics device to use the shader.
     // pGraphics D3D11 device/context to use
     //**********************************************************************
-    void CShader::BeginRender(IRenderer *pRenderer, DirectX::XMMATRIX *pWorld)
+    void CShader::BeginRender(IRenderer *pRenderer, std::vector<CRefObj<IPointLight>> &lights, DirectX::XMMATRIX *pWorld)
     {
         auto spCmdList = pRenderer->GetCommandList();
         spCmdList->SetPipelineState(m_spPipelineState);
-        
+
+        PushLights(lights);
         PushMatrices(pRenderer, pWorld);
         PushConstants(pRenderer, &m_vertexConstants, m_vsParams);
         PushConstants(pRenderer, &m_pixelConstants, m_psParams);
@@ -417,9 +435,7 @@ namespace Caustic
 
         ID3D12DescriptorHeap *ppHeaps[] = { m_spDescriptorHeap[frameIndex] };
         spCmdList->SetDescriptorHeaps(1, ppHeaps);
-        // set constant buffer descriptor heap
-        //spCmdList->SetGraphicsRootConstantBufferView(1, m_vertexConstants.m_spBuffer[frameIndex]->GetGPUVirtualAddress()); 
-        //spCmdList->SetGraphicsRootConstantBufferView(2, m_pixelConstants.m_spBuffer[frameIndex]->GetGPUVirtualAddress());
+        spCmdList->SetGraphicsRootDescriptorTable(1, m_spDescriptorHeap[frameIndex]->GetGPUDescriptorHandleForHeapStart());
     }
 
     //**********************************************************************
@@ -551,6 +567,7 @@ namespace Caustic
 		psoDesc.RasterizerState = rastDesc;
 		psoDesc.BlendState = blendDesc;
 		psoDesc.NumRenderTargets = 1;
+        psoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
 
 		psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 		psoDesc.DepthStencilState.DepthEnable = true;

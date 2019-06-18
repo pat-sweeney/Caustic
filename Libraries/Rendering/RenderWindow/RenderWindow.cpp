@@ -24,15 +24,20 @@ namespace Caustic
 		CRefObj<ICausticFactory> spFactory;
 		CreateCausticFactory(&spFactory);
 		spFactory->CreateRendererMarshaller(hwnd, shaderFolder, &m_spRenderer);
-		CRefObj<ISceneFactory> spSceneFactory;
+		
+        CRefObj<ISceneFactory> spSceneFactory;
 		CreateSceneFactory(&spSceneFactory);
 		spSceneFactory->CreateSceneGraph(&m_spSceneGraph);
+
+        spFactory->CreateCamera(true, &m_spCamera);
+
 		m_spRenderer->Initialize(hwnd, shaderFolder, [this](IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass) {
 			SceneCtx sceneCtx;
 			m_spSceneGraph->Render(pRenderer, pRenderCtx, &sceneCtx);
 			});
 
-		m_spRenderer->SetSceneGraph(m_spSceneGraph);
+        m_spRenderer->SetCamera(m_spCamera);
+        m_spRenderer->SetSceneGraph(m_spSceneGraph);
 
 		spFactory->CreateTrackball(&m_spTrackball);
         m_hwnd = hwnd;

@@ -21,7 +21,7 @@ namespace Caustic
 	struct IShader : public IRefCount
 	{
 		virtual std::wstring &Name() = 0; // Returns the name of this shader
-		virtual void BeginRender(IRenderer *pRenderer, DirectX::XMMATRIX *pWorld = nullptr) = 0; // Called before rendering. This method sets the device with the shader
+		virtual void BeginRender(IRenderer *pRenderer, std::vector<CRefObj<IPointLight>> &lights, DirectX::XMMATRIX *pWorld = nullptr) = 0; // Called before rendering. This method sets the device with the shader
 		virtual void SetPSParam(std::wstring paramName, std::any &value) = 0; // Sets a pixel shader parameter
 		virtual void SetVSParam(std::wstring paramName, std::any &value) = 0; // Sets a vertex shader parameter
 		virtual void SetPSParam(std::wstring paramName, int index, std::any &value) = 0; // Sets a pixel shader array member parameter

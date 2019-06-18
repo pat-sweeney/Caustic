@@ -189,10 +189,16 @@ namespace Caustic
 		rootParameters[0].Constants = constants;
 		rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 
-        D3D12_DESCRIPTOR_RANGE  descriptorTableRanges[1];
-        descriptorTableRanges[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE::D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-        descriptorTableRanges[0].NumDescriptors = 1;
-        descriptorTableRanges[0].BaseShaderRegister = 0;
+        D3D12_DESCRIPTOR_RANGE  descriptorTableRanges[2];
+        descriptorTableRanges[1].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE::D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+        descriptorTableRanges[1].NumDescriptors = 1;
+        descriptorTableRanges[1].BaseShaderRegister = 0;
+        descriptorTableRanges[1].RegisterSpace = 0;
+        descriptorTableRanges[1].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+        descriptorTableRanges[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE::D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
+        descriptorTableRanges[0].NumDescriptors = 2;
+        descriptorTableRanges[0].BaseShaderRegister = 1;
         descriptorTableRanges[0].RegisterSpace = 0;
         descriptorTableRanges[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
@@ -378,12 +384,6 @@ namespace Caustic
 #endif
 
     //**********************************************************************
-    void CRenderer::AddPointLight(IPointLight *pLight)
-    {
-        m_lights.push_back(CRefObj<IPointLight>(pLight));
-    }
-
-    //**********************************************************************
     void CRenderer::GetRenderCtx(IRenderCtx **ppCtx)
     {
         (*ppCtx) = m_spRenderCtx;
@@ -437,7 +437,8 @@ return;
         m_spLineShader->SetVSParam(L"endpoints", std::any(m));
         Float4 color(clr.x, clr.y, clr.z, clr.w);
         m_spLineShader->SetPSParam(L"color", std::any(color));
-        m_spLineShader->BeginRender(this);
+        std::vector<CRefObj<IPointLight>> lights;
+        m_spLineShader->BeginRender(this, lights);
         m_spCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 		m_spCommandList->DrawInstanced(m_lineVB.m_numVertices, 1, 0, 0);
         m_spLineShader->EndRender(this);
@@ -446,10 +447,11 @@ return;
 	void CRenderer::DrawSceneObjects(int pass)
     {
         // Render any single objects
+        std::vector<CRefObj<IPointLight>> lights;
         for (size_t i = 0; i < m_singleObjs.size(); i++)
         {
             if (m_singleObjs[i]->InPass(pass))
-                m_singleObjs[i]->Render(this, m_lights, m_spRenderCtx);
+                m_singleObjs[i]->Render(this, lights, m_spRenderCtx);
         }
     }
 
@@ -463,11 +465,10 @@ return;
             DrawLine(Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 10.0f), Vector4(0.0f, 0.0f, 1.0f, 1.0f));
         }
 
-		if (m_spRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayLightDir &&
-            m_lights.size() > 0)
+		if (m_spRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayLightDir)
         {
-            for (size_t i = 0; i < m_lights.size(); i++)
-                DrawLine(m_lights[i]->GetPosition(), Vector3(0.0f, 0.0f, 0.0f), Vector4(1.0f, 1.0f, 0.0f, 1.0f));
+          //  for (size_t i = 0; i < m_lights.size(); i++)
+          //      DrawLine(m_lights[i]->GetPosition(), Vector3(0.0f, 0.0f, 0.0f), Vector4(1.0f, 1.0f, 0.0f, 1.0f));
         }
 
         for (uint32 pass = c_PassFirst; pass <= c_PassLast; pass++)
@@ -563,7 +564,7 @@ return;
 		// Clear the render target
 		static float color[4] = { 1.0f, 0.4f, 0.4f, 1.0f };
 		m_spCommandList->ClearRenderTargetView(m_hBackBuffers[m_currentFrame], color, 0, nullptr);
-		m_spCommandList->ClearDepthStencilView(m_hDepthStencilBuffers[m_currentFrame], D3D12_CLEAR_FLAGS::D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+		m_spCommandList->ClearDepthStencilView(m_hDepthStencilBuffers[m_currentFrame], D3D12_CLEAR_FLAGS::D3D12_CLEAR_FLAG_DEPTH, 1000.0f, 0, 0, nullptr);
 
 		// Establish viewport
 		D3D12_VIEWPORT viewport = { 0.0f, 0.0f, (float)m_width, (float)m_height, 0.0f, 1.0f };
