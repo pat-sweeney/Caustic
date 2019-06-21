@@ -180,9 +180,9 @@ namespace Caustic
 			if (nCut > 2)
 				nCut = 0;
             if (v < pNode->m_cutPoint)
-                return FindPointRecursive(pNode->m_pLower, (CutAxis)cutAxis, vec, comparator, data);
+                return FindPointRecursive(pNode->m_pLower, (CutAxis)nCut, vec, comparator, data);
             else
-                return FindPointRecursive(pNode->m_pUpper, (CutAxis)cutAxis, vec, comparator, data);
+                return FindPointRecursive(pNode->m_pUpper, (CutAxis)nCut, vec, comparator, data);
         }
         else
         {
