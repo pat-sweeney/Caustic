@@ -107,7 +107,6 @@ namespace Caustic
         {
             CGeomVertex vert;
             vert.pos = m_Verts[vIndex[i] - 1];
-            //vert.pos.x = -vert.pos.x;
             if (m_UVs.empty() || tIndex[i] == 0)
                 vert.uvs[0] = Vector2(0.0f, 0.0f);
             else

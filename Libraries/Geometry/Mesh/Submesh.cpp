@@ -5,6 +5,7 @@
 #include "Geometry\Mesh\Mesh.h"
 #include "Geometry\Mesh\MeshConstructor.h"
 #include "Base\Core\error.h"
+#include <map>
 
 namespace Caustic
 {
@@ -160,15 +161,11 @@ namespace Caustic
         for (size_t i = 0; i < faces.size();)
         {
             meshConstructor.FaceOpen();
-            Vector3 norm(0.0f, 0.0f, 0.0f);
             uint32 vIndex = faces[i++];
-            Caustic::Vector3 n0 = verts[vIndex].norm;
             meshConstructor.VertexAdd(verts[vIndex].pos, verts[vIndex].norm, verts[vIndex].uvs[0]);
             vIndex = faces[i++];
-            Caustic::Vector3 n1 = verts[vIndex].norm;
             meshConstructor.VertexAdd(verts[vIndex].pos, verts[vIndex].norm, verts[vIndex].uvs[0]);
             vIndex = faces[i++];
-            Caustic::Vector3 n2 = verts[vIndex].norm;
             meshConstructor.VertexAdd(verts[vIndex].pos, verts[vIndex].norm, verts[vIndex].uvs[0]);
             meshConstructor.FaceClose();
             // Check if normals agree

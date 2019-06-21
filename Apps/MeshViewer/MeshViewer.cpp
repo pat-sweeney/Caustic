@@ -223,6 +223,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						CRefObj<IRenderMesh> spRenderMesh;
 						spRenderWindow->GetRenderer()->CallOnRenderThread(
 							[&](IRenderer *pRenderer) {
+                            //spMesh->ComputeNormals();
 								spMesh->ToRenderMesh(pRenderer, spShader, &spRenderMesh);
 							}, true);
 						spElem->SetMesh(spRenderMesh);

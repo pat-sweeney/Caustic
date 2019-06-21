@@ -22,13 +22,15 @@ namespace Caustic
         m_normal.z = 0.0F;
         CHalfEdge *pEdge = m_pEdge;
         CHalfEdge *pStartEdge = pEdge;
+        CGeomVertex *pCurVertex = pEdge->GetHeadVertex();
+        CGeomVertex *pPrevVertex = pEdge->GetTailVertex();
         do {
-            CGeomVertex *pCurVertex = pEdge->GetHeadVertex();
-            CGeomVertex *pPrevVertex = pEdge->GetTailVertex();
             m_normal.x += ((pPrevVertex->pos.y - pCurVertex->pos.y) * (pPrevVertex->pos.z + pCurVertex->pos.z));
             m_normal.y += ((pPrevVertex->pos.z - pCurVertex->pos.z) * (pPrevVertex->pos.x + pCurVertex->pos.x));
             m_normal.z += ((pPrevVertex->pos.x - pCurVertex->pos.x) * (pPrevVertex->pos.y + pCurVertex->pos.y));
             pEdge = pEdge->GetNextEdge();
+            pPrevVertex = pCurVertex;
+            pCurVertex = pEdge->GetHeadVertex();
         } while (pEdge != pStartEdge);
         m_normal.Normalize();
     }
