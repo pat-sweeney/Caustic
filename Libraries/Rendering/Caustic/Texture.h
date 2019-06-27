@@ -18,7 +18,11 @@ namespace Caustic
         uint32 m_Width;
         uint32 m_Height;
         DXGI_FORMAT m_Format;
+        static CComPtr<ID3D12Resource> s_spTextureUpload;
         CComPtr<ID3D12Resource> m_spTexture;
+
+        void AllocateUploadTexture(IRenderer *pRenderer);
+        friend CAUSTICAPI void LoadTexture(const wchar_t *pFilename, IRenderer *pRenderer, ITexture **ppTexture);
     public:
 		//**********************************************************************
 		// Constructor: CTexture

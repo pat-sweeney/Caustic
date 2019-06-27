@@ -214,10 +214,72 @@ namespace Caustic
     bool CKDTree::FindPoint(Caustic::Vector3 &vec, std::function<bool(void *data)> comparator, void **data)
     {
         if (m_pChildren)
-        {
             return FindPointRecursive(m_pChildren, CutAxis::XAxis, vec, comparator, data);
-        }
 		return false;
+    }
+
+    //**********************************************************************
+    void CKDTree::FindNearestRecursive(CKDTreeNode *pNode, CutAxis cutAxis, Caustic::Vector3 &vec, float radius,
+        std::function<bool(void *data)> comparator, std::vector<std::tuple<Caustic::Vector3, void*>> &points)
+    {
+        float v;
+        switch (cutAxis)
+        {
+        case CutAxis::XAxis:
+            v = vec.x;
+            break;
+        case CutAxis::YAxis:
+            v = vec.y;
+            break;
+        case CutAxis::ZAxis:
+            v = vec.z;
+            break;
+        default:
+            _ASSERT(false);
+            v = 0.0f;
+            break;
+        }
+        if (pNode->m_pUpper != nullptr)
+        {
+            int nCut = cutAxis + 1;
+            if (nCut > 2)
+                nCut = 0;
+            float cutDist = Caustic::Abs(v - (float)pNode->m_cutPoint);
+            bool searchBoth = (cutDist < radius) ? true : false;
+            if (v < pNode->m_cutPoint || searchBoth)
+                FindNearestRecursive(pNode->m_pLower, (CutAxis)nCut, vec, radius, comparator, points);
+            if (v >= pNode->m_cutPoint || searchBoth)
+                FindNearestRecursive(pNode->m_pUpper, (CutAxis)nCut, vec, radius, comparator, points);
+        }
+        else
+        {
+            size_t nPoints = pNode->m_pPoints->size();
+            for (size_t i = 0; i < nPoints; i++)
+            {
+                Vector3 curVec = std::get<0>((*pNode->m_pPoints)[i]);
+                Vector3 delta = curVec - vec;
+                if (delta.dot(delta) < radius * radius)
+                {
+                    bool match = true;
+                    if (comparator != nullptr)
+                    {
+                        match = false;
+                        if (comparator(std::get<1>((*pNode->m_pPoints)[i])))
+                            match = true;
+                    }
+                    if (match)
+                        points.push_back((*pNode->m_pPoints)[i]);
+                }
+            }
+        }
+    }
+
+    //**********************************************************************
+    void CKDTree::FindNearest(Caustic::Vector3 &vec, float radius,
+        std::function<bool(void *data)> comparator, std::vector<std::tuple<Caustic::Vector3, void*>> &points)
+    {
+        if (m_pChildren)
+            FindNearestRecursive(m_pChildren, CutAxis::XAxis, vec, radius, comparator, points);
     }
 
     //**********************************************************************

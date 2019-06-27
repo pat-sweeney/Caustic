@@ -40,5 +40,20 @@ namespace Caustic
 		// True if point is found in tree. False otherwise.
 		//**********************************************************************
 		virtual bool FindPoint(Caustic::Vector3 &vec, std::function<bool(void *data)> comparator, void **data) = 0;
+
+        //**********************************************************************
+        // Method: FindNearest
+        //
+        // Parameters
+        // vec - query point
+        // radius - radius around query point in which to search
+        // comparator - user defined comparison function
+        // points - Returns list of found points
+        //
+        // Returns:
+        // True if points are found in tree. False otherwise.
+        //**********************************************************************
+        virtual void FindNearest(Caustic::Vector3 &vec, float radius, 
+            std::function<bool(void *data)> comparator, std::vector<std::tuple<Caustic::Vector3, void*>> &points) = 0;
     };
 }

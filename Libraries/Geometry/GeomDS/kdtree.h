@@ -48,6 +48,8 @@ namespace Caustic
 
         void AddPointRecursive(CKDTreeNode *pNode, CutAxis cutAxis, Caustic::Vector3 &vec, void *data);
         bool FindPointRecursive(CKDTreeNode *pNode, CutAxis cutAxis, Caustic::Vector3 &vec, std::function<bool(void *data)> comparator, void **data);
+        void FindNearestRecursive(CKDTreeNode *pNode, CutAxis cutAxis, Caustic::Vector3 &vec, float radius,
+            std::function<bool(void *data)> comparator, std::vector<std::tuple<Caustic::Vector3, void*>> &points);
     public:
         //**********************************************************************
         CKDTree(int maxPoints) :
@@ -65,8 +67,10 @@ namespace Caustic
         //**********************************************************************
         // IKDTree
         //**********************************************************************
-        void AddPoint(Caustic::Vector3 &vec, void *data);
-        bool FindPoint(Caustic::Vector3 &vec, std::function<bool(void *data)> comparator, void **data);
+        void AddPoint(Caustic::Vector3 &vec, void *data) override;
+        bool FindPoint(Caustic::Vector3 &vec, std::function<bool(void *data)> comparator, void **data) override;
+        void FindNearest(Caustic::Vector3 &vec, float radius,
+            std::function<bool(void *data)> comparator, std::vector<std::tuple<Caustic::Vector3, void*>> &points) override;
     };
     
     CAUSTICAPI void CreateKDTree(IKDTree **ppKDTree);

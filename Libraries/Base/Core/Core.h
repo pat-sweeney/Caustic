@@ -39,6 +39,8 @@ namespace Caustic
 
     const float c_Epsilon = 0.0000001f;
 
+    inline float Abs(float x) { return (x < 0.0f) ? -x : x; }
+
 	// Function: IsZero
 	// Tests if a given value is close to zero
     inline bool IsZero(float x) { return (x >= -c_Epsilon && x <= c_Epsilon) ? true : false; }
