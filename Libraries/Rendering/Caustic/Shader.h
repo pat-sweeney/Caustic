@@ -104,7 +104,6 @@ namespace Caustic
         void PushMatrix(const wchar_t *name, std::any mat);
         void PushMatrices(IRenderer *pRenderer, DirectX::XMMATRIX *pWorld);
         void PushLights(std::vector<CRefObj<IPointLight>> &lights);
-        void PushMaterials(IRenderMaterial *pMaterial);
         uint32 ComputeParamSize(ShaderParamDef *pParams, uint32 numParams, std::vector<ShaderParamInstance> &params);
 		void PushConstants(IRenderer *pRenderer, SConstantBuffer *pBuffer, std::vector<ShaderParamInstance> &params);
         void SetParam(std::wstring paramName, std::any &value, std::vector<ShaderParamInstance> &params);

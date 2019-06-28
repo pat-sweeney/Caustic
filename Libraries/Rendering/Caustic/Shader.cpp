@@ -413,36 +413,6 @@ namespace Caustic
     }
 
     //**********************************************************************
-    void CShader::PushMaterials(IRenderMaterial *pMaterial)
-    {
-        if (pMaterial == nullptr)
-            return;
-
-        //float4 transparency;
-        CRefObj<IMaterialAttrib> spMaterialAttrib;
-        pMaterial->GetMaterial(&spMaterialAttrib);
-        
-        Caustic::Vector3 ambientColor = spMaterialAttrib->GetAmbientColor();
-        Float4 vAmbient(ambientColor.x, ambientColor.y, ambientColor.z, 1.0f);
-        SetParam(L"ambientColor", std::any(vAmbient), m_psParams);
-        
-        Caustic::Vector3 diffuseColor = spMaterialAttrib->GetDiffuseColor();
-        Float4 vDiffuse(diffuseColor.x, diffuseColor.y, diffuseColor.z, 1.0f);
-        SetParam(L"diffuseColor", std::any(vDiffuse), m_psParams);
-        
-        Caustic::Vector3 specularColor = spMaterialAttrib->GetDiffuseColor();
-        Float4 vSpecularColor(specularColor.x, specularColor.y, specularColor.z, 1.0f);
-        SetParam(L"specularColor", std::any(vSpecularColor), m_psParams);
-
-        float specularExp = spMaterialAttrib->GetSpecularExp();
-        Float4 vSpecularExp(specularExp, specularExp, specularExp, 1.0f);
-        SetParam(L"specularExp", std::any(vSpecularExp), m_psParams);
-
-        Float4 vTransparency(1.0f, 1.0f, 1.0f, 1.0f);
-        SetParam(L"transparency", std::any(vTransparency), m_psParams);
-    }
-
-    //**********************************************************************
     // BeginRender is called before rendering using this shader occurs.
     // This call is responsible for setting up the pGraphics device to use the shader.
     // pGraphics D3D11 device/context to use
@@ -451,8 +421,7 @@ namespace Caustic
     {
         auto spCmdList = pRenderer->GetCommandList();
         spCmdList->SetPipelineState(m_spPipelineState);
-
-        PushMaterials(pFrontMaterial);
+        pFrontMaterial->Render(pRenderer, lights, nullptr, this);
         PushLights(lights);
         PushMatrices(pRenderer, pWorld);
         PushConstants(pRenderer, &m_vertexConstants, m_vsParams);

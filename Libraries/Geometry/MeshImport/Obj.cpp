@@ -337,7 +337,6 @@ namespace Caustic
     {
         CRefObj<IMesh> LoadObj(const wchar_t *pFilename)
         {
-
             HANDLE h = CreateFile(pFilename, FILE_GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr);
             if (h == INVALID_HANDLE_VALUE)
                 CT(HRESULT_FROM_WIN32(GetLastError()));
