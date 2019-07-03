@@ -162,6 +162,7 @@
     <ClInclude Include="IShaderInfo.h" />
     <ClInclude Include="IShaderMgr.h" />
     <ClInclude Include="ITexture.h" />
+    <ClInclude Include="ITextureMgr.h" />
     <ClInclude Include="ITrackball.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="PointLight.h" />
@@ -177,6 +178,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureMgr.h" />
     <ClInclude Include="Trackball.h" />
     <ClInclude Include="VideoTexture.h" />
   </ItemGroup>
@@ -205,6 +207,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TextureMgr.cpp" />
     <ClCompile Include="Trackball.cpp" />
     <ClCompile Include="VideoTexture.cpp" />
   </ItemGroup>

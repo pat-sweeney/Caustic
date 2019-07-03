@@ -36,7 +36,7 @@ namespace Caustic
 		//**********************************************************************
 		// ICausticFactory
 		//**********************************************************************
-		virtual void CreateRendererMarshaller(HWND hwnd, std::wstring &shaderFolder, IRendererMarshaller **ppRenderer) override;
+        virtual void CreateRendererMarshaller(HWND hwnd, std::wstring &shaderFolder, IRendererMarshaller **ppRenderer) override;
 		virtual void CreateRenderer(HWND hwnd, std::wstring &shaderFolder, IRenderer **ppRenderer) override;
 		virtual void CreateRenderMesh(IRenderMesh **ppRenderMesh) override;
 		virtual void CreateRenderSubMesh(IRenderSubMesh **ppRenderSubMesh) override;

@@ -4,12 +4,15 @@
 //**********************************************************************
 #pragma once
 #include "Rendering\Caustic\Caustic.h"
+#include "Imaging/Image/Image.h"
 #include "Base\Core\Core.h"
 #include "Base\Core\RefCount.h"
 #include <d3d12.h>
 
 namespace Caustic
 {
+    const int c_MaxTextureSize = 2048;
+
     class CTexture :
         public ITexture,
         public CRefCount
@@ -18,13 +21,13 @@ namespace Caustic
         uint32 m_Width;
         uint32 m_Height;
         DXGI_FORMAT m_Format;
-        static CComPtr<ID3D12Resource> s_spTextureUpload;
+        CRefObj<IImage> m_data; // Data stored on CPU
         CComPtr<ID3D12Resource> m_spTexture;
-
-        void AllocateUploadTexture(IRenderer *pRenderer);
-        friend CAUSTICAPI void LoadTexture(const wchar_t *pFilename, IRenderer *pRenderer, ITexture **ppTexture);
+        CComPtr<ID3D12DescriptorHeap> m_spSRVDescriptorHeap;
     public:
-		//**********************************************************************
+        static void LoadTexture(const wchar_t *pFilename, IRenderer *pRenderer, ITexture **ppTexture);
+        
+        //**********************************************************************
 		// Constructor: CTexture
 		// Defines our texture object
 		//
@@ -50,10 +53,11 @@ namespace Caustic
         //**********************************************************************
         // ITexture
         //**********************************************************************
+        virtual CRefObj<IImage> GetImageData() override;
 		virtual uint32 GetWidth() override;
         virtual uint32 GetHeight() override;
         virtual DXGI_FORMAT GetFormat() override;
-        virtual void Update(IRenderer * /*pRenderer*/) override {}
+        virtual void Update(IRenderer *pRenderer) override;
         virtual CComPtr<ID3D12Resource> GetD3DTexture() override { return m_spTexture; }
         virtual void GenerateMips(IRenderer *pRenderer) override;
     };

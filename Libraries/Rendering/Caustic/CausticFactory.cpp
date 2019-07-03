@@ -84,7 +84,7 @@ namespace Caustic
 		(*ppRenderer)->AddRef();
 	}
 
-	void CCausticFactory::CreateRenderMesh(IRenderMesh **ppRenderMesh)
+    void CCausticFactory::CreateRenderMesh(IRenderMesh **ppRenderMesh)
 	{
 		_ASSERT(ppRenderMesh);
 		*ppRenderMesh = new CRenderMesh();
@@ -147,41 +147,38 @@ namespace Caustic
 
 	void CCausticFactory::CreateRenderMaterial(IRenderer *pRenderer, IMaterialAttrib *pMaterialAttrib, IShader *pShader, IRenderMaterial **ppRenderMaterial)
 	{
-		CRefObj<ITexture> spDiffuseTexture;
-		CRefObj<ITexture> spSpecularTexture;
-		CRefObj<ITexture> spAmbientTexture;
-		CRefObj<ISampler> spDiffuseSampler;
-		CRefObj<ISampler> spSpecularSampler;
-		CRefObj<ISampler> spAmbientSampler;
+        CRefObj<ICausticFactory> spFactory = Caustic::CCausticFactory::Instance();
+        std::unique_ptr<CRenderMaterial> spRenderMaterial(new CRenderMaterial(pMaterialAttrib, pShader));
 		if (pMaterialAttrib)
 		{
-			std::string fnDiffuse = pMaterialAttrib->GetDiffuseTexture();
+            std::string fnDiffuse = pMaterialAttrib->GetDiffuseTexture();
 			if (!fnDiffuse.empty())
 			{
-				std::wstring wfn(fnDiffuse.begin(), fnDiffuse.end());
-				Caustic::CCausticFactory::Instance()->LoadTexture(wfn.c_str(), pRenderer, &spDiffuseTexture);
-				CCausticFactory::Instance()->CreateSampler(pRenderer, spDiffuseTexture, &spDiffuseSampler);
-			}
+                CRefObj<ITexture> spDiffuseTexture;
+                std::wstring wfn(fnDiffuse.begin(), fnDiffuse.end());
+                spFactory->LoadTexture(wfn.c_str(), pRenderer, &spDiffuseTexture);
+                spRenderMaterial->SetDiffuseTexture(pRenderer, spDiffuseTexture);
+            }
 
 			std::string fnSpecular = pMaterialAttrib->GetSpecularTexture();
 			if (!fnSpecular.empty())
 			{
-				std::wstring wfn(fnSpecular.begin(), fnSpecular.end());
-				Caustic::CCausticFactory::Instance()->LoadTexture(wfn.c_str(), pRenderer, &spSpecularTexture);
-				CCausticFactory::Instance()->CreateSampler(pRenderer, spSpecularTexture, &spSpecularSampler);
-			}
+                CRefObj<ITexture> spSpecularTexture;
+                std::wstring wfn(fnSpecular.begin(), fnSpecular.end());
+				spFactory->LoadTexture(wfn.c_str(), pRenderer, &spSpecularTexture);
+                spRenderMaterial->SetSpecularTexture(pRenderer, spSpecularTexture);
+            }
 
 			std::string fnAmbient = pMaterialAttrib->GetAmbientTexture();
 			if (!fnAmbient.empty())
 			{
-				std::wstring wfn(fnAmbient.begin(), fnAmbient.end());
-				Caustic::CCausticFactory::Instance()->LoadTexture(wfn.c_str(), pRenderer, &spAmbientTexture);
-				CCausticFactory::Instance()->CreateSampler(pRenderer, spAmbientTexture, &spAmbientSampler);
-			}
-		}
-
-		std::unique_ptr<CRenderMaterial> spRenderMaterial(new CRenderMaterial(pMaterialAttrib, pShader));
-		*ppRenderMaterial = spRenderMaterial.release();
+                CRefObj<ITexture> spAmbientTexture;
+                std::wstring wfn(fnAmbient.begin(), fnAmbient.end());
+				spFactory->LoadTexture(wfn.c_str(), pRenderer, &spAmbientTexture);
+                spRenderMaterial->SetAmbientTexture(pRenderer, spAmbientTexture);
+            }
+        }
+        *ppRenderMaterial = spRenderMaterial.release();
 		(*ppRenderMaterial)->AddRef();
 	}
 
@@ -264,10 +261,9 @@ namespace Caustic
 		return s_spCheckerBoard;
 	}
 
-	CAUSTICAPI void LoadTexture(const wchar_t *pFilename, IRenderer *pRenderer, ITexture **ppTexture);
 	void CCausticFactory::LoadTexture(const wchar_t *pFilename, IRenderer *pRenderer, ITexture **ppTexture)
 	{
-		Caustic::LoadTexture(pFilename, pRenderer, ppTexture);
+		CTexture::LoadTexture(pFilename, pRenderer, ppTexture);
 	}
 
 	CAUSTICAPI void LoadVideoTexture(const wchar_t *pFilename, IRenderer *pRenderer, ITexture **ppTexture);

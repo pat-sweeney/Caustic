@@ -40,39 +40,8 @@ namespace Caustic
 #endif
     }
 
-    CComPtr<ID3D12Resource> CTexture::s_spTextureUpload;
-
-    void CTexture::AllocateUploadTexture(IRenderer *pRenderer)
+    void CTexture::Update(IRenderer *pRenderer)
     {
-        if (s_spTextureUpload == nullptr)
-        {
-            D3D12_RESOURCE_DESC texDesc = {};
-            texDesc.Dimension = D3D12_RESOURCE_DIMENSION::D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-            texDesc.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
-            texDesc.Width = 2048;
-            texDesc.Height = 2048;
-            texDesc.DepthOrArraySize = 1;
-            texDesc.MipLevels = 1;
-            texDesc.Format = DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM;
-            texDesc.SampleDesc.Count = 1;
-            texDesc.SampleDesc.Quality = 0;
-            texDesc.Layout = D3D12_TEXTURE_LAYOUT::D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-            texDesc.Flags = D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE;
-
-            UINT64 textureUploadBufferSize;
-            CComPtr<ID3D12Device> spDevice = pRenderer->GetDevice();
-            spDevice->GetCopyableFootprints(&texDesc, 0, 1, 0, nullptr, nullptr, nullptr, &textureUploadBufferSize);
-
-            // now we create an upload heap to upload our texture to the GPU
-            spDevice->CreateCommittedResource(
-                &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD), // upload heap
-                D3D12_HEAP_FLAG_NONE, // no flags
-                &CD3DX12_RESOURCE_DESC::Buffer(textureUploadBufferSize), // resource description for a buffer (storing the image data in this heap just to copy to the default heap)
-                D3D12_RESOURCE_STATE_GENERIC_READ, // We will copy the contents from this heap to the default heap above
-                nullptr,
-                IID_PPV_ARGS(&s_spTextureUpload));
-            s_spTextureUpload->SetName(L"TextureUpload");
-        }
     }
 
     //**********************************************************************
@@ -81,40 +50,17 @@ namespace Caustic
         m_Width(width),
         m_Height(height)
     {
-        AllocateUploadTexture(pRenderer);
-
-        D3D12_RESOURCE_DESC texDesc = {};
-        texDesc.Dimension = D3D12_RESOURCE_DIMENSION::D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-        texDesc.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
-        texDesc.Width = width;
-        texDesc.Height = height;
-        texDesc.DepthOrArraySize = 1;
-        texDesc.MipLevels = 1;
-        texDesc.Format = format;
-        texDesc.SampleDesc.Count = 1;
-        texDesc.SampleDesc.Quality = 0;
-        texDesc.Layout = D3D12_TEXTURE_LAYOUT::D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-        texDesc.Flags = D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE;
-
-        UINT64 textureUploadBufferSize;
-        CComPtr<ID3D12Device> spDevice = pRenderer->GetDevice();
-        spDevice->GetCopyableFootprints(&texDesc, 0, 1, 0, nullptr, nullptr, nullptr, &textureUploadBufferSize);
-
-        // now we create an upload heap to upload our texture to the GPU
-        spDevice->CreateCommittedResource(
-            &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE::D3D12_HEAP_TYPE_DEFAULT), // upload heap
-            D3D12_HEAP_FLAG_NONE, // no flags
-            &CD3DX12_RESOURCE_DESC::Buffer(textureUploadBufferSize), // resource description for a buffer (storing the image data in this heap just to copy to the default heap)
-            D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_COPY_DEST, // We will copy the contents from this heap to the default heap above
-            nullptr,
-            IID_PPV_ARGS(&m_spTexture));
-        m_spTexture->SetName(L"Texture");
     }
     
     CTexture::~CTexture()
     {
     }
     
+    CRefObj<IImage> CTexture::GetImageData()
+    {
+        return this->m_data;
+    }
+
     uint32 CTexture::GetWidth()
     {
         return m_Width;
@@ -136,7 +82,7 @@ namespace Caustic
     // pGraphics Renderer
     // \param[out] ppTexture Returns the new texture
     //**********************************************************************
-    CAUSTICAPI void LoadTexture(const wchar_t *pFilename, IRenderer *pRenderer, ITexture **ppTexture)
+    void CTexture::LoadTexture(const wchar_t *pFilename, IRenderer *pRenderer, ITexture **ppTexture)
     {
         static std::map<std::wstring, CRefObj<ITexture>> cache;
         std::map<std::wstring, CRefObj<ITexture>>::iterator it;
@@ -172,8 +118,10 @@ namespace Caustic
 
         std::unique_ptr<CTexture> pTexture(new CTexture(pRenderer, width, height, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM));
 
-        BYTE *prDst;
-        CT(pTexture->s_spTextureUpload->Map(0, nullptr, (void**)&prDst));
+        CRefObj<IImage> spImage;
+        Caustic::CreateImage(width, height, &spImage);
+
+        uint8 *pData =spImage->GetData();
         for (UINT i = 0; i < height; i++)
         {
             WICRect r;
@@ -181,10 +129,9 @@ namespace Caustic
             r.Y = i;
             r.Width = width;
             r.Height = 1;
-            CT(spConverter->CopyPixels(&r, width * 4, width * 4, prDst));
-            prDst += width * 4;
+            CT(spConverter->CopyPixels(&r, width * 4, width * 4, pData));
+            pData += spImage->GetStride();
         }
-        pTexture->s_spTextureUpload->Unmap(0, nullptr);
         
         // pTexture->spTexture->GenerateMips(pRenderer);
 

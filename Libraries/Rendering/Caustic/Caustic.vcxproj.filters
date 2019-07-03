@@ -121,6 +121,8 @@
     <ClInclude Include="RenderMesh.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="TextureMgr.h" />
+    <ClInclude Include="ITextureMgr.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -175,6 +177,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RenderMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureMgr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

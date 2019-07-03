@@ -11,14 +11,11 @@
 #include <atlbase.h>
 #include <d3d12.h>
 
-//**********************************************************************
-// This file defines the published interface for talking to the Caustic Renderer
-//**********************************************************************
-
 // Namespace: Caustic
 namespace Caustic
 {
 	struct IRenderer;
+    struct IImage;
 
 	//**********************************************************************
 	// Interface: ITexture
@@ -26,6 +23,12 @@ namespace Caustic
 	//**********************************************************************
 	struct ITexture : public IRefCount
 	{
+        //**********************************************************************
+        // Method: GetImageData
+        // Returns the texture's image data being stored on the CPU
+        //**********************************************************************
+        virtual CRefObj<IImage> GetImageData() = 0;
+
 		//**********************************************************************
 		// Method: GetWidth
 		// Returns the width of the texture in pixels

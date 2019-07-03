@@ -38,7 +38,7 @@ namespace Caustic
 	//**********************************************************************
 	struct ICausticFactory : public IRefCount
 	{
-		//**********************************************************************
+        //**********************************************************************
 		// Method: CreateRenderer 
 		// Creates our basic renderer object to be used by the client
 		//

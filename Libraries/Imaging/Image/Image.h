@@ -162,7 +162,7 @@ namespace Caustic
 // Namespace: Caustic
 namespace Caustic
 {
-		//**********************************************************************
+	//**********************************************************************
 	// Function: LoadImage
 	// Loads an image from a file
 	//

@@ -6,6 +6,7 @@
 #include "Base\Core\Core.h"
 #include "Base\Core\RefCount.h"
 #include "Rendering\Caustic\Caustic.h"
+#include "IRenderMaterial.h"
 
 namespace Caustic
 {
@@ -31,15 +32,6 @@ namespace Caustic
         friend class CRenderer;
 
 		CRenderMaterial(IMaterialAttrib *pMaterialAttrib, IShader *pShader)
-		{
-			m_spMaterial = pMaterialAttrib;
-			m_spShader = pShader;
-		}
-
-		CRenderMaterial(IMaterialAttrib *pMaterialAttrib, IShader *pShader,
-			ITexture *pAmbientTexture, ISampler *pAmbientSampler,
-			ITexture *pDiffuseTexture, ISampler *pDiffuseSampler,
-			ITexture *pSpecularTexture, ISampler *pSpecularSampler)
 		{
 			m_spMaterial = pMaterialAttrib;
 			m_spShader = pShader;

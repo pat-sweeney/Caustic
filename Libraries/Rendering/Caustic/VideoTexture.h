@@ -4,6 +4,7 @@
 //**********************************************************************
 #pragma once
 #include "Rendering\Caustic\Caustic.h"
+#include "Imaging/Image/Image.h"
 #include "Base\Core\Core.h"
 #include "Base\Core\RefCount.h"
 #include <d3d12.h>
@@ -57,6 +58,7 @@ namespace Caustic
         //**********************************************************************
         // ITexture
         //**********************************************************************
+        virtual CRefObj<IImage> GetImageData() override { return CRefObj((IImage*)nullptr); }
         virtual uint32 GetWidth() override;
         virtual uint32 GetHeight() override;
         virtual DXGI_FORMAT GetFormat() { return DXGI_FORMAT_B8G8R8A8_UNORM; }

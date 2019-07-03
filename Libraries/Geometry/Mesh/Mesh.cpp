@@ -185,8 +185,10 @@ namespace Caustic
             // Assign appropriate materials
             CRefObj<IMaterialAttrib> spMaterialAttrib;
             this->GetMaterial(pSubMesh->GetMaterialID(), &spMaterialAttrib);
+
             CRefObj<IRenderMaterial> spRenderMaterial;
             spFactory->CreateRenderMaterial(pRenderer, spMaterialAttrib, pShader, &spRenderMaterial);
+            
             spRenderSubMesh->SetFrontMaterial(spRenderMaterial);
 
             // TODO: Add support for back face materials
