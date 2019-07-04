@@ -17,6 +17,7 @@ namespace Caustic
 	struct IRenderCtx;
 	struct ICamera;
 	struct IShaderMgr;
+    struct ITextureMgr;
 
 	//**********************************************************************
 	// Interface: IRenderer
@@ -29,6 +30,7 @@ namespace Caustic
 		virtual CComPtr<ID3D12RootSignature> GetRootSignature() = 0;
 		virtual CComPtr<ID3D12Device5> GetDevice() = 0;
 		virtual CRefObj<ICamera> GetCamera() = 0;
+        virtual CRefObj<ITextureMgr> GetTextureMgr() = 0;
 		virtual uint32 GetFrameIndex() = 0;
 		virtual CComPtr<ID3D12GraphicsCommandList4> GetCommandList() = 0;
 		virtual void SetCamera(ICamera *pCamera) = 0;

@@ -31,6 +31,7 @@ namespace Caustic
 	struct IShaderInfo;
 	struct IRenderMesh;
 	struct IRenderSubMesh;
+    struct ITextureMgr;
 
 	//**********************************************************************
 	// Interface: ICausticFactory
@@ -157,18 +158,30 @@ namespace Caustic
 		virtual void CreateMaterial(Vector3 ambientColor, Vector3 diffuseColor, Vector3 specularColor, float specularExp, float alpha, IMaterialAttrib **ppMaterial) = 0;
 		virtual void CreateMaterial(IMaterialAttrib **ppMaterial) = 0;
 
-		//**********************************************************************
-		// Function: CreateCamera
-		// Creates a new camera object. This camera can then
-		// be passed to IRenderer to be used for rendering.
-		//
-		// Parameters:
-		// leftHanded - Defines whether we have a left or right handed coordinate system
-		// ppCamera - Returns the newly created camera object
-		//**********************************************************************
-		virtual void CreateCamera(bool leftHanded, ICamera **ppCamera) = 0;
+        //**********************************************************************
+        // Function: CreateCamera
+        // Creates a new camera object. This camera can then
+        // be passed to IRenderer to be used for rendering.
+        //
+        // Parameters:
+        // leftHanded - Defines whether we have a left or right handed coordinate system
+        // ppCamera - Returns the newly created camera object
+        //**********************************************************************
+        virtual void CreateCamera(bool leftHanded, ICamera **ppCamera) = 0;
 
-		//**********************************************************************
+        //**********************************************************************
+        // Function: CreateTextureMgr
+        // Creates a texture manager. This object manages all the textures currently on the GPU.
+        //
+        // Parameters:
+        // pRenderer - our renderer
+        // numTexUploads - number of textures that can be uploaded during a frame
+        // textureMemSize - size of texture space in bytes (on GPU)
+        // ppTextureMgr - Returns the newly created texture manager
+        //**********************************************************************
+        virtual void CreateTextureMgr(IRenderer *pRenderer, uint32 numTexUploads, uint64 textureMemSize, ITextureMgr **ppTextureMgr) = 0;
+
+        //**********************************************************************
 		// Method: CreateTexture
 		// Creates a new texture
 		//

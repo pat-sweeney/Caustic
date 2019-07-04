@@ -217,23 +217,39 @@ namespace Caustic {
 		return spDevice;
 	}
 
-	CRefObj<ICamera> CRendererMarshaller::GetCamera()
-	{
-		HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-		CRefObj<ICamera> spCamera;
-		AddLambda(
-			[&]()
-			{
-				spCamera = m_spRenderer->GetCamera();
-				SetEvent(evt);
-			}
-		);
-		WaitForSingleObject(evt, INFINITE);
-		CloseHandle(evt);
-		return spCamera;
-	}
+    CRefObj<ICamera> CRendererMarshaller::GetCamera()
+    {
+        HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+        CRefObj<ICamera> spCamera;
+        AddLambda(
+            [&]()
+        {
+            spCamera = m_spRenderer->GetCamera();
+            SetEvent(evt);
+        }
+        );
+        WaitForSingleObject(evt, INFINITE);
+        CloseHandle(evt);
+        return spCamera;
+    }
 
-	uint32 CRendererMarshaller::GetFrameIndex()
+    CRefObj<ITextureMgr> CRendererMarshaller::GetTextureMgr()
+    {
+        HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+        CRefObj<ITextureMgr> spTextureMgr;
+        AddLambda(
+            [&]()
+        {
+            spTextureMgr = m_spRenderer->GetTextureMgr();
+            SetEvent(evt);
+        }
+        );
+        WaitForSingleObject(evt, INFINITE);
+        CloseHandle(evt);
+        return spTextureMgr;
+    }
+
+    uint32 CRendererMarshaller::GetFrameIndex()
 	{
 		HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
 		uint32 frameIndex;

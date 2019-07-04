@@ -4,6 +4,7 @@
 //**********************************************************************
 #include "stdafx.h"
 #include "Base\Core\Error.h"
+#include "Renderer.h"
 #include "Texture.h"
 #include "CausticFactory.h"
 #include <memory>
@@ -42,6 +43,8 @@ namespace Caustic
 
     void CTexture::Update(IRenderer *pRenderer)
     {
+        if (m_spTexture == nullptr)
+            pRenderer->GetTextureMgr()->Activate(pRenderer, this, &m_spTexture);
     }
 
     //**********************************************************************
@@ -118,10 +121,9 @@ namespace Caustic
 
         std::unique_ptr<CTexture> pTexture(new CTexture(pRenderer, width, height, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM));
 
-        CRefObj<IImage> spImage;
-        Caustic::CreateImage(width, height, &spImage);
+        Caustic::CreateImage(width, height, &pTexture->m_data);
 
-        uint8 *pData =spImage->GetData();
+        uint8 *pData = pTexture->m_data->GetData();
         for (UINT i = 0; i < height; i++)
         {
             WICRect r;
@@ -130,7 +132,7 @@ namespace Caustic
             r.Width = width;
             r.Height = 1;
             CT(spConverter->CopyPixels(&r, width * 4, width * 4, pData));
-            pData += spImage->GetStride();
+            pData += pTexture->m_data->GetStride();
         }
         
         // pTexture->spTexture->GenerateMips(pRenderer);

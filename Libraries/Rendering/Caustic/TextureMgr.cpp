@@ -28,6 +28,7 @@ namespace Caustic
 
         // Determine the footprint for our upload textures
         D3D12_RESOURCE_DESC texDesc;
+        texDesc.Dimension = D3D12_RESOURCE_DIMENSION::D3D12_RESOURCE_DIMENSION_TEXTURE2D;
         texDesc.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
         texDesc.Width = c_MaxTextureSize;
         texDesc.Height = c_MaxTextureSize;
@@ -95,6 +96,7 @@ namespace Caustic
     {
         // Determine the footprint for our upload textures
         D3D12_RESOURCE_DESC texDesc;
+        texDesc.Dimension = D3D12_RESOURCE_DIMENSION::D3D12_RESOURCE_DIMENSION_TEXTURE2D;
         texDesc.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
         texDesc.Width = w;
         texDesc.Height = h;
@@ -111,7 +113,7 @@ namespace Caustic
         return textureUploadBufferSize;
     }
 
-    CComPtr<ID3D12Resource> CTextureMgr::AllocateTexture(IRenderer *pRenderer, ITexture *pTexture, bool isRenderTarget)
+    void CTextureMgr::AllocateTexture(IRenderer *pRenderer, ITexture *pTexture, bool isRenderTarget, ID3D12Resource **ppD3DTexture)
     {
         CComPtr<ID3D12Device5> spDevice = pRenderer->GetDevice();
         UINT64 textureSize = DetermineTextureSize(spDevice, pTexture->GetWidth(), pTexture->GetHeight());
@@ -135,14 +137,14 @@ namespace Caustic
         // Check if upload texture is available. If not wait.
 
         // Add texture to our map
-        std::unique_ptr<CGPUTexture> spGPUTexture(new CGPUTexture());
+        CRefObj<CGPUTexture> spGPUTexture(new CGPUTexture());
         spGPUTexture->m_spTexture = spTexResource;
         spGPUTexture->m_spUploadTexture = m_uploadTextures[m_currentUpload].m_spUploadTexture;
         m_uploadTextures[m_currentUpload].m_inUse = true;
         m_currentUpload++;
         if (m_currentUpload == m_uploadTextures.size())
             m_currentUpload = 0;
-        m_textures.insert(std::make_pair(pTexture, CRefObj<CGPUTexture>(spGPUTexture.get())));
+        m_textures.insert(std::make_pair(pTexture, spGPUTexture));
 
         // Start upload
         D3D12_SUBRESOURCE_DATA textureData = {};
@@ -174,16 +176,22 @@ namespace Caustic
         D3D12_CPU_DESCRIPTOR_HANDLE h = m_spSRVDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
         //h.ptr += 3 * spDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
         spDevice->CreateShaderResourceView(spGPUTexture->m_spTexture, &srvDesc, h);
-        return spGPUTexture->m_spTexture;
+
+        *ppD3DTexture = spGPUTexture->m_spTexture;
+        (*ppD3DTexture)->AddRef();
     }
 
-    CComPtr<ID3D12Resource> CTextureMgr::Activate(IRenderer *pRenderer, ITexture *pTexture)
+    void CTextureMgr::Activate(IRenderer *pRenderer, ITexture *pTexture, ID3D12Resource **ppD3DTexture)
     {
         // Check if texture is already uploaded to the GPU
         auto it = m_textures.find(pTexture);
         if (it == m_textures.end())
-            return AllocateTexture(pRenderer, pTexture, false);
-        return it->second->m_spTexture;
+            AllocateTexture(pRenderer, pTexture, false, ppD3DTexture);
+        else
+        {
+            *ppD3DTexture = it->second->m_spTexture;
+            (*ppD3DTexture)->AddRef();
+        }
     }
 
     void CTextureMgr::Deactivate(ITexture *pTexture)

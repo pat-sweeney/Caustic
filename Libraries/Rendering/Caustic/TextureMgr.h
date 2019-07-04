@@ -55,7 +55,7 @@ namespace Caustic
 
         UINT64 DetermineTextureSize(ID3D12Device *pDevice, int w, int h);
         void AllocateHeaps(IRenderer *pRenderer, uint32 numTexUploads, uint64 texMemSize);
-        CComPtr<ID3D12Resource> AllocateTexture(IRenderer *pRenderer, ITexture *pTexture, bool isRenderTarget);
+        void AllocateTexture(IRenderer *pRenderer, ITexture *pTexture, bool isRenderTarget, ID3D12Resource **ppD3DTexture);
     public:
         CTextureMgr(IRenderer *pRenderer, uint32 numTexUploads, uint64 texMemSize);
 
@@ -68,7 +68,7 @@ namespace Caustic
         //**********************************************************************
         // ITextureMgr
         //**********************************************************************
-        virtual CComPtr<ID3D12Resource> Activate(IRenderer *pRenderer, ITexture *pTexture) override;
+        virtual void Activate(IRenderer *pRenderer, ITexture *pTexture, ID3D12Resource **ppD3DTexture) override;
         virtual void Deactivate(ITexture *pTexture) override;
     };
 }

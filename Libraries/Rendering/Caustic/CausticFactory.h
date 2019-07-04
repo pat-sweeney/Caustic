@@ -50,6 +50,7 @@ namespace Caustic
 		virtual void CreateMaterial(Vector3 ambientColor, Vector3 diffuseColor, Vector3 specularColor, float specularExp, float alpha, IMaterialAttrib **ppMaterial) override;
 		virtual void CreateMaterial(IMaterialAttrib **ppMaterial) override;
 		virtual void CreateCamera(bool leftHanded, ICamera **ppCamera) override;
+        virtual void CreateTextureMgr(IRenderer *pRenderer, uint32 numTexUploads, uint64 textureMemSize, ITextureMgr **ppTextureMgr) override;
 		virtual void CreateTexture(IRenderer *pRenderer, uint32 width, uint32 height, DXGI_FORMAT format, ITexture **ppTexture) override;
 		virtual CRefObj<ITexture> CheckerboardTexture(IRenderer *pRenderer) override;
 		virtual void LoadTexture(const wchar_t *pFilename, IRenderer *pRenderer, ITexture **ppTexture) override;

@@ -207,14 +207,21 @@ namespace Caustic
 		(*ppSampler)->AddRef();
 	}
 
-	void CCausticFactory::CreateCamera(bool leftHanded, ICamera **ppCamera)
-	{
-		std::unique_ptr<CCamera> pCamera(new CCamera(leftHanded));
-		*ppCamera = pCamera.release();
-		(*ppCamera)->AddRef();
-	}
+    void CCausticFactory::CreateCamera(bool leftHanded, ICamera **ppCamera)
+    {
+        std::unique_ptr<CCamera> pCamera(new CCamera(leftHanded));
+        *ppCamera = pCamera.release();
+        (*ppCamera)->AddRef();
+    }
 
-	void CCausticFactory::CreateTexture(IRenderer *pRenderer, uint32 width, uint32 height, DXGI_FORMAT format, ITexture **ppTexture)
+    void CCausticFactory::CreateTextureMgr(IRenderer *pRenderer, uint32 numTexUploads, uint64 textureMemSize, ITextureMgr **ppTextureMgr)
+    {
+        std::unique_ptr<CTextureMgr> pTextureMgr(new CTextureMgr(pRenderer, numTexUploads, textureMemSize));
+        *ppTextureMgr = pTextureMgr.release();
+        (*ppTextureMgr)->AddRef();
+    }
+
+    void CCausticFactory::CreateTexture(IRenderer *pRenderer, uint32 width, uint32 height, DXGI_FORMAT format, ITexture **ppTexture)
 	{
 		std::unique_ptr<CTexture> spTexture(new CTexture(pRenderer, width, height, format));
 		*ppTexture = spTexture.release();

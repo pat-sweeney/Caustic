@@ -4,6 +4,7 @@
 //**********************************************************************
 #pragma once
 #include "Rendering\Caustic\Caustic.h"
+#include "Rendering\Caustic\TextureMgr.h"
 #include "Geometry\Mesh\Mesh.h"
 #include "Base\Core\RefCount.h"
 #include "Base\Core\CritSec.h"
@@ -150,6 +151,7 @@ namespace Caustic
 
 		CRefObj<IShaderMgr> m_spShaderMgr;
 		CRefObj<ICamera> m_spCamera;                       // Camera to use for rendering
+        CRefObj<ITextureMgr> m_spTextureMgr;
 		CRefObj<IRenderCtx> m_spRenderCtx;                 // D3D Render context
 		CVertexBuffer m_lineVB;
 		CRefObj<IShader> m_spLineShader;
@@ -177,6 +179,7 @@ namespace Caustic
 		virtual CComPtr<ID3D12RootSignature> GetRootSignature() override { return m_spRootSignature; }
 		virtual CComPtr<ID3D12Device5> GetDevice() override { return m_spDevice; }
 		virtual CRefObj<ICamera> GetCamera() override { return m_spCamera; }
+        virtual CRefObj<ITextureMgr> GetTextureMgr() override { return m_spTextureMgr; }
 		virtual uint32 GetFrameIndex() override { return m_currentFrame; }
 		virtual CComPtr<ID3D12GraphicsCommandList4> GetCommandList() override { return m_spCommandList; }
 		virtual void SetCamera(ICamera *pCamera) override { m_spCamera = pCamera; }

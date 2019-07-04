@@ -63,6 +63,7 @@ namespace Caustic
 		virtual CComPtr<ID3D12RootSignature> GetRootSignature() override;
 		virtual CComPtr<ID3D12Device5> GetDevice() override;
 		virtual CRefObj<ICamera> GetCamera() override;
+        virtual CRefObj<ITextureMgr> GetTextureMgr() override;
 		virtual uint32 GetFrameIndex() override;
 		virtual CComPtr<ID3D12GraphicsCommandList4> GetCommandList() override;
 		virtual void SetCamera(ICamera *pCamera) override;

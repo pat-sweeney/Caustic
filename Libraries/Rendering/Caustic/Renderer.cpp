@@ -349,8 +349,15 @@ namespace Caustic
     {
 		InitializeD3D(hwnd);
 	  
+        CRefObj<ICausticFactory> spFactory = CCausticFactory::Instance();
+
 	    // Create a default camera
-		CCausticFactory::Instance()->CreateCamera(false, &m_spCamera);
+		spFactory->CreateCamera(false, &m_spCamera);
+
+        // Create our texture manager
+        const uint32 c_NumTexUploads = 10;
+        const uint64 c_TextureMemSize = 4LL * 1024LL * 1024LL * 1024LL;
+        spFactory->CreateTextureMgr(this, c_NumTexUploads, c_TextureMemSize, &m_spTextureMgr);
 
 		LoadDefaultShaders(shaderFolder.c_str());
 
