@@ -45,6 +45,7 @@ namespace Caustic
     {
         if (m_spTexture == nullptr)
             pRenderer->GetTextureMgr()->Activate(pRenderer, this, &m_spTexture);
+        pRenderer->SetTexture(m_spTexture);
     }
 
     //**********************************************************************

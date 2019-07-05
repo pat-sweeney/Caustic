@@ -101,6 +101,7 @@ namespace Caustic
 
     const int c_MaxShadowMaps = 4;
 	static const int c_NumBackBuffers = 2;
+    static const int c_MaxTextures = 10; // HACK! Maximum number of textures that can be set during a single render frame
 
     //**********************************************************************
     class CRenderer :
@@ -143,6 +144,8 @@ namespace Caustic
 		HANDLE m_fenceEvents[c_NumBackBuffers];
 		UINT m_fenceValue;
 		CComPtr<ID3D12RootSignature> m_spRootSignature;
+        CComPtr<ID3D12DescriptorHeap> m_spDescriptorHeap[c_MaxFrames];
+        uint32 m_numTextures;
     public:
 
         std::vector<CRefObj<IRenderable>> m_singleObjs;             // List of individual renderable objects (outside scene graph)
@@ -161,6 +164,7 @@ namespace Caustic
 
         void RenderScene();
         void DrawSceneObjects(int pass);
+        void AllocateDescriptorHeap();
     public:
         explicit CRenderer();
         virtual ~CRenderer();
@@ -184,7 +188,9 @@ namespace Caustic
 		virtual CComPtr<ID3D12GraphicsCommandList4> GetCommandList() override { return m_spCommandList; }
 		virtual void SetCamera(ICamera *pCamera) override { m_spCamera = pCamera; }
 		virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice) override;
-		virtual CRefObj<IShaderMgr> GetShaderMgr() override { return m_spShaderMgr; };
+        virtual void SetConstantBuffers(SConstantBuffer *pVertexCB, SConstantBuffer *pPixelCB) override;
+        virtual void SetTexture(ID3D12Resource *pTexture) override;
+        virtual CRefObj<IShaderMgr> GetShaderMgr() override { return m_spShaderMgr; };
 		virtual void BeginFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) override;
 		virtual void EndFrame() override;
 		virtual void RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) override;

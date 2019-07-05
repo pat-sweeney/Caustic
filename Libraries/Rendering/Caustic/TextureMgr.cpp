@@ -20,6 +20,7 @@ namespace Caustic
     CTextureMgr::CTextureMgr(IRenderer *pRenderer, uint32 numTexUploads, uint64 texMemSize)
     {
         AllocateHeaps(pRenderer, numTexUploads, texMemSize);
+        //SetupDescriptors(pRenderer);
     }
 
     void CTextureMgr::AllocateHeaps(IRenderer *pRenderer, uint32 numTexUploads, uint64 texMemSize)
@@ -113,6 +114,43 @@ namespace Caustic
         return textureUploadBufferSize;
     }
 
+#if 0
+    void CTextureMgr::SetupDescriptors(IRenderer *pRenderer)
+    {
+        CComPtr<ID3D12Device5> spDevice = pRenderer->GetDevice();
+        
+        CDescriptors descriptor;
+        descriptor.m_maxTextures = 20;
+        descriptor.m_numTextures = 0;
+
+        D3D12_DESCRIPTOR_HEAP_DESC srvDescriptorHeap = {};
+        srvDescriptorHeap.Flags = D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+        srvDescriptorHeap.NodeMask = 0;
+        srvDescriptorHeap.NumDescriptors = descriptor.m_maxTextures;
+        srvDescriptorHeap.Type = D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+        CT(spDevice->CreateDescriptorHeap(&srvDescriptorHeap, __uuidof(ID3D12DescriptorHeap), (void**)&descriptor.m_spSRVDescriptorHeap));
+        descriptor.m_spSRVDescriptorHeap->SetName(L"m_spSRVDescriptorHeap");
+        m_descriptors.push_back(descriptor);
+    }
+
+    void CTextureMgr::AllocateShaderResourceView(IRenderer *pRenderer, ID3D12Resource *pTexture)
+    {
+        CComPtr<ID3D12Device5> spDevice = pRenderer->GetDevice();
+
+        CDescriptors &descriptor = m_descriptors[m_descriptors.size() - 1];
+        D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+        ZeroMemory(&srvDesc, sizeof(srvDesc));
+        srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+        srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+        srvDesc.Texture2D.MipLevels = 1;
+        D3D12_CPU_DESCRIPTOR_HANDLE h = descriptor.m_spSRVDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+        h.ptr += descriptor.m_numTextures * spDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+        spDevice->CreateShaderResourceView(pTexture, &srvDesc, h);
+        descriptor.m_numTextures++;
+    }
+#endif
+
     void CTextureMgr::AllocateTexture(IRenderer *pRenderer, ITexture *pTexture, bool isRenderTarget, ID3D12Resource **ppD3DTexture)
     {
         CComPtr<ID3D12Device5> spDevice = pRenderer->GetDevice();
@@ -158,24 +196,7 @@ namespace Caustic
         spCmdList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(spGPUTexture->m_spTexture, D3D12_RESOURCE_STATE_COPY_DEST,
             D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
 
-        D3D12_DESCRIPTOR_HEAP_DESC srvDescriptorHeap = {};
-        srvDescriptorHeap.Flags = D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-        srvDescriptorHeap.NodeMask = 0;
-        srvDescriptorHeap.NumDescriptors = 1;
-        srvDescriptorHeap.Type = D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-        CComPtr<ID3D12DescriptorHeap> m_spSRVDescriptorHeap;
-        CT(spDevice->CreateDescriptorHeap(&srvDescriptorHeap, __uuidof(ID3D12DescriptorHeap), (void**)&m_spSRVDescriptorHeap));
-        m_spSRVDescriptorHeap->SetName(L"m_spSRVDescriptorHeap");
-
-        D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-        ZeroMemory(&srvDesc, sizeof(srvDesc));
-        srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-        srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-        srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-        srvDesc.Texture2D.MipLevels = 1;
-        D3D12_CPU_DESCRIPTOR_HANDLE h = m_spSRVDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-        //h.ptr += 3 * spDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-        spDevice->CreateShaderResourceView(spGPUTexture->m_spTexture, &srvDesc, h);
+//        AllocateShaderResourceView(pRenderer, spGPUTexture->m_spTexture);
 
         *ppD3DTexture = spGPUTexture->m_spTexture;
         (*ppD3DTexture)->AddRef();
@@ -196,5 +217,12 @@ namespace Caustic
 
     void CTextureMgr::Deactivate(ITexture *pTexture)
     {
+    }
+
+    void CTextureMgr::GetDescriptorHeap(ID3D12DescriptorHeap **ppDescriptorHeap)
+    {
+//        *ppDescriptorHeap = m_descriptors[m_descriptors.size() - 1].m_spSRVDescriptorHeap;
+//        if (*ppDescriptorHeap)
+//            (*ppDescriptorHeap)->AddRef();
     }
 }

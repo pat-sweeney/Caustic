@@ -18,6 +18,7 @@ namespace Caustic
 	struct ICamera;
 	struct IShaderMgr;
     struct ITextureMgr;
+    struct SConstantBuffer;
 
 	//**********************************************************************
 	// Interface: IRenderer
@@ -35,7 +36,9 @@ namespace Caustic
 		virtual CComPtr<ID3D12GraphicsCommandList4> GetCommandList() = 0;
 		virtual void SetCamera(ICamera *pCamera) = 0;
 		virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice) = 0;
-		virtual CRefObj<IShaderMgr> GetShaderMgr() = 0;
+        virtual void SetConstantBuffers(SConstantBuffer *pVertexCB, SConstantBuffer *pPixelCB) = 0;
+        virtual void SetTexture(ID3D12Resource *pTexture) = 0;
+        virtual CRefObj<IShaderMgr> GetShaderMgr() = 0;
 		virtual void BeginFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) = 0;
 		virtual void EndFrame() = 0;
 		virtual void RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) = 0;

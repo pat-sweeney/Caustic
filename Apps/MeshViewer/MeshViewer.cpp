@@ -217,7 +217,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                         spMaterial->SetDiffuseColor(diffuse);
 
                         CRefObj<IShader> spShader;
-                        CShaderMgr::Instance()->FindShader(L"Default", &spShader);
+                        CShaderMgr::Instance()->FindShader(L"Textured", &spShader);
                         spMaterialElem->SetPixelShader(spShader);
 
 						CRefObj<IRenderMesh> spRenderMesh;

@@ -8,6 +8,7 @@
 #include <DirectXMath.h>
 #include <memory>
 #include "d3dx12.h"
+#include "TextureMgr.h"
 
 namespace Caustic
 {
@@ -426,12 +427,15 @@ namespace Caustic
         PushMatrices(pRenderer, pWorld);
         PushConstants(pRenderer, &m_vertexConstants, m_vsParams);
         PushConstants(pRenderer, &m_pixelConstants, m_psParams);
-
+        
         uint32 frameIndex = pRenderer->GetFrameIndex();
-
-        ID3D12DescriptorHeap *ppHeaps[] = { m_spDescriptorHeap[frameIndex] };
-        spCmdList->SetDescriptorHeaps(1, ppHeaps);
-        spCmdList->SetGraphicsRootDescriptorTable(1, m_spDescriptorHeap[frameIndex]->GetGPUDescriptorHandleForHeapStart());
+        
+        pRenderer->SetConstantBuffers(&m_vertexConstants, &m_pixelConstants);
+        //CComPtr<ID3D12DescriptorHeap> spTextureDescriptorHeap;
+        //pRenderer->GetTextureMgr()->GetDescriptorHeap(&spTextureDescriptorHeap);
+        //ID3D12DescriptorHeap *ppHeaps[] = { m_spDescriptorHeap[frameIndex], spTextureDescriptorHeap };
+        //spCmdList->SetDescriptorHeaps((spTextureDescriptorHeap) ? 2 : 1, ppHeaps);
+        //spCmdList->SetGraphicsRootDescriptorTable(1, m_spDescriptorHeap[frameIndex]->GetGPUDescriptorHandleForHeapStart());
     }
 
     //**********************************************************************
@@ -581,31 +585,6 @@ namespace Caustic
 			(uint32)pShaderInfo->VertexShaderParameterDefs().size(), m_vsParams, &m_vertexConstants);
         CreateConstantBuffer(spDevice, pShaderInfo->PixelShaderParameterDefs().data(),
 			(uint32)pShaderInfo->PixelShaderParameterDefs().size(), m_psParams, &m_pixelConstants);
-
-        // Allocate heap for descriptors and create constant buffer views
-        for (int j = 0; j < c_MaxFrames; j++)
-        {
-            D3D12_DESCRIPTOR_HEAP_DESC heapDesc;
-            heapDesc.NumDescriptors = 2;
-            heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-            heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-            heapDesc.NodeMask = 0;
-            CT(spDevice->CreateDescriptorHeap(&heapDesc, __uuidof(ID3D12DescriptorHeap), (void**)&m_spDescriptorHeap[j]));
-
-            for (int i = 0; i < 2; i++)
-            {
-                SConstantBuffer *pBuffer = (i == 0) ? &m_vertexConstants : &m_pixelConstants;
-                if (pBuffer->m_bufferSize == 0)
-                    continue;
-                D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
-                cbvDesc.BufferLocation = pBuffer->m_spBuffer[j]->GetGPUVirtualAddress();
-                cbvDesc.SizeInBytes = ((pBuffer->m_bufferSize + 255) / 256) * 256;    // CB size is required to be 256-byte aligned.
-                D3D12_CPU_DESCRIPTOR_HANDLE h = m_spDescriptorHeap[j]->GetCPUDescriptorHandleForHeapStart();
-                UINT offset = spDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-                h.ptr += i * offset;
-                spDevice->CreateConstantBufferView(&cbvDesc, h);
-            }
-        }
     }
     
     CShaderMgr CShaderMgr::s_ShaderMgr;

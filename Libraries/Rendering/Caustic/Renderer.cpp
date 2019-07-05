@@ -19,8 +19,17 @@
 namespace Caustic
 {
 	//**********************************************************************
-	CRenderer::CRenderer()
-	{
+	CRenderer::CRenderer() :
+        m_numTextures(0),
+        m_fenceValue(0),
+        m_currentFrame(0),
+        m_width(0),
+        m_height(0),
+        m_numerator(0),
+        m_denominator(0),
+        m_backBufferSize(0),
+        m_depthStencilBufferSize(0)
+    {
 	}
 
 	//**********************************************************************
@@ -359,6 +368,8 @@ namespace Caustic
         const uint64 c_TextureMemSize = 4LL * 1024LL * 1024LL * 1024LL;
         spFactory->CreateTextureMgr(this, c_NumTexUploads, c_TextureMemSize, &m_spTextureMgr);
 
+        AllocateDescriptorHeap();
+
 		LoadDefaultShaders(shaderFolder.c_str());
 
 		LoadBasicGeometry();
@@ -550,9 +561,55 @@ return;
         }
     }
 
+    void CRenderer::SetConstantBuffers(SConstantBuffer *pVertexCB, SConstantBuffer *pPixelCB)
+    {
+        for (int i = 0; i < 2; i++)
+        {
+            SConstantBuffer *pBuffer = (i == 0) ? pVertexCB : pPixelCB;
+            if (pBuffer->m_bufferSize == 0)
+                continue;
+            D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
+            cbvDesc.BufferLocation = pBuffer->m_spBuffer[m_currentFrame]->GetGPUVirtualAddress();
+            cbvDesc.SizeInBytes = ((pBuffer->m_bufferSize + 255) / 256) * 256;    // CB size is required to be 256-byte aligned.
+            D3D12_CPU_DESCRIPTOR_HANDLE h = m_spDescriptorHeap[m_currentFrame]->GetCPUDescriptorHandleForHeapStart();
+            UINT offset = m_spDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+            h.ptr += i * offset;
+            m_spDevice->CreateConstantBufferView(&cbvDesc, h);
+        }
+    }
+    
+    void CRenderer::SetTexture(ID3D12Resource *pTexture)
+    {
+        D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+        ZeroMemory(&srvDesc, sizeof(srvDesc));
+        srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+        srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+        srvDesc.Texture2D.MipLevels = 1;
+        D3D12_CPU_DESCRIPTOR_HANDLE h = m_spDescriptorHeap[m_currentFrame]->GetCPUDescriptorHandleForHeapStart();
+        h.ptr += (2 + m_numTextures) * m_spDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+        m_spDevice->CreateShaderResourceView(pTexture, &srvDesc, h);
+        m_numTextures++;
+    }
+
+    void CRenderer::AllocateDescriptorHeap()
+    {
+        // Allocate heap for descriptors and create constant buffer views
+        for (int j = 0; j < c_MaxFrames; j++)
+        {
+            D3D12_DESCRIPTOR_HEAP_DESC heapDesc;
+            heapDesc.NumDescriptors = 2 /* pixel+vertex constant buffer */ + c_MaxTextures /* hack! */;
+            heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+            heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+            heapDesc.NodeMask = 0;
+            CT(m_spDevice->CreateDescriptorHeap(&heapDesc, __uuidof(ID3D12DescriptorHeap), (void**)&m_spDescriptorHeap[j]));
+        }
+    }
+
 	void CRenderer::BeginFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback)
 	{
-		m_callback = renderCallback;
+        m_numTextures = 0;
+        m_callback = renderCallback;
 		// Reset our command list
 		CT(m_spCommandAllocator->Reset());
 		CT(m_spCommandList->Reset(m_spCommandAllocator, nullptr));
@@ -560,6 +617,10 @@ return;
 		//ID3D12DescriptorHeap *descriptorHeaps[] = { m_spBackBufferHeap, m_spDepthStencilHeap };
 		//m_spCommandList->SetDescriptorHeaps(2, descriptorHeaps);
 		//m_spCommandList->SetGraphicsRootDescriptorTable(1, m_spSRVDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+
+        ID3D12DescriptorHeap *ppHeaps[] = { m_spDescriptorHeap[m_currentFrame] };
+        m_spCommandList->SetDescriptorHeaps(1, ppHeaps);
+        m_spCommandList->SetGraphicsRootDescriptorTable(1, m_spDescriptorHeap[m_currentFrame]->GetGPUDescriptorHandleForHeapStart());
 
 		// Make sure our backbuffer is in the correct state
 		m_spCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_spBackBuffers[m_currentFrame], D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
@@ -579,7 +640,7 @@ return;
 		m_spCommandList->RSSetViewports(1, &viewport);
 		m_spCommandList->RSSetScissorRects(1, &scissorRect);
 
-		//CD3DX12_DEPTH_STENCIL_DESC depthDesc(D3D12_DEFAULT);
+        //CD3DX12_DEPTH_STENCIL_DESC depthDesc(D3D12_DEFAULT);
 		//depthDesc.DepthEnable = true;
 		//depthDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 		//depthDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS;

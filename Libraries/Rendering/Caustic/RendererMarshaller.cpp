@@ -201,7 +201,29 @@ namespace Caustic {
 		return spRootSignature;
 	}
 
-	CComPtr<ID3D12Device5> CRendererMarshaller::GetDevice()
+    void CRendererMarshaller::SetConstantBuffers(SConstantBuffer *pVertexCB, SConstantBuffer *pPixelCB)
+    {
+        AddLambda(
+            [this, pVertexCB, pPixelCB]()
+        {
+            m_spRenderer->SetConstantBuffers(pVertexCB, pPixelCB);
+        }
+        );
+    }
+    
+    void CRendererMarshaller::SetTexture(ID3D12Resource *pTexture)
+    {
+        pTexture->AddRef();
+        AddLambda(
+            [this, pTexture]()
+        {
+            m_spRenderer->SetTexture(pTexture);
+            pTexture->Release();
+        }
+        );
+    }
+
+    CComPtr<ID3D12Device5> CRendererMarshaller::GetDevice()
 	{
 		HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
 		CComPtr<ID3D12Device5> spDevice;

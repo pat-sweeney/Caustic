@@ -99,7 +99,6 @@ namespace Caustic
         std::vector<ShaderParamInstance> m_psParams;
         std::vector<ShaderParamInstance> m_vsParams;
 		CRefObj<IShaderInfo> m_spShaderInfo;
-        CComPtr<ID3D12DescriptorHeap> m_spDescriptorHeap[c_MaxFrames];
     protected:
         void PushMatrix(const wchar_t *name, std::any mat);
         void PushMatrices(IRenderer *pRenderer, DirectX::XMMATRIX *pWorld);

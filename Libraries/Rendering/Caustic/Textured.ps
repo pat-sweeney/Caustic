@@ -7,7 +7,7 @@
 Texture2D diffuseTexture : register(t0);
 SamplerState diffuseSampler : register(s0);
 
-cbuffer PS_CONSTANT_BUFFER
+cbuffer PS_CONSTANT_BUFFER : register(b2)
 {
     float4 lightPos;
     float4 lightColor[MAX_LIGHTS];
@@ -26,6 +26,7 @@ float4 PS(VSOutput p) : SV_Target
     float3 viewPosWS = mul(float4(0.0f, 0.0f, 0.0f, 1.0f), viewInv).xyz;
     float3 viewDirWS = normalize(viewPosWS - p.posWS);
     float3 color = float3(0.0f, 0.0f, 0.0f);
+    float3 albedo = diffuseTexture.Sample(diffuseSampler, p.uvs).xyz;
     for (int i = 0; i < numLights; i++)
     {
         float3 lightDirWS = normalize(lightPosWS[i].xyz - p.posWS);
@@ -33,7 +34,7 @@ float4 PS(VSOutput p) : SV_Target
         lightDirWS = reflect(lightDirWS, p.normWS);
         float specdp = saturate(dot(lightDirWS, -viewDirWS));
         float spec = pow(specdp, specularExp.x);
-        color.xyz += diffuseTexture.Sample(diffuseSampler, p.uvs).xyz * lightColor[i].xyz * dp;
+        color.xyz += albedo * lightColor[i].xyz * dp;
         color.xyz += specularColor.xyz * lightColor[i].xyz * spec;
     }
     return float4(ambientColor.xyz + color, transparency.x);

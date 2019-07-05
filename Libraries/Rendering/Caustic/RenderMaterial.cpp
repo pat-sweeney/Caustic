@@ -97,7 +97,6 @@ namespace Caustic
         spShader->SetPSParam(L"specularColor", std::any(vSpecular));
         spShader->SetPSParam(L"specularExp", std::any(vSpecularExp));
         spShader->SetPSParam(L"transparency", std::any(Float4(transparency, transparency, transparency, transparency)));
-        spShader->SetPSParam(L"numLights", std::any());
         int numLights = (int)lights.size();
         if (numLights > 4)
             numLights = 4; // TODO: Replace with constant shared with shaders

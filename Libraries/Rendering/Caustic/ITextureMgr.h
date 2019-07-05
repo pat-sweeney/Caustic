@@ -20,5 +20,6 @@ namespace Caustic
     {
         virtual void Activate(IRenderer *pRenderer, ITexture *pTexture, ID3D12Resource **ppD3DTexture) = 0;
         virtual void Deactivate(ITexture *pTexture) = 0;
+        virtual void GetDescriptorHeap(ID3D12DescriptorHeap **ppDescriptorHeap) = 0;
     };
 }
