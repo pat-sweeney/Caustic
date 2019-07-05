@@ -639,14 +639,6 @@ return;
 		D3D12_RECT scissorRect = { 0, 0, (LONG)m_width, (LONG)m_height };
 		m_spCommandList->RSSetViewports(1, &viewport);
 		m_spCommandList->RSSetScissorRects(1, &scissorRect);
-
-        //CD3DX12_DEPTH_STENCIL_DESC depthDesc(D3D12_DEFAULT);
-		//depthDesc.DepthEnable = true;
-		//depthDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-		//depthDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
-		//CT(m_spDevice->CreateDepthStencilState(&depthDesc, &spDepthStencilState));
-		//m_spCommandList->OMSetDepthStencilState(spDepthStencilState, 1);
-
 	}
 
 	void CRenderer::EndFrame()

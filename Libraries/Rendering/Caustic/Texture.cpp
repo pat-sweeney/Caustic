@@ -113,7 +113,7 @@ namespace Caustic
 
         UINT width, height;
         CT(spFrame->GetSize(&width, &height));
-
+        
         CComPtr<IWICFormatConverter> spConverter;
         CT(s_spFactory->CreateFormatConverter(&spConverter));
         CT(spConverter->Initialize(spFrame, GUID_WICPixelFormat32bppRGBA,

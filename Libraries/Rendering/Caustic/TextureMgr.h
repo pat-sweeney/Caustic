@@ -62,17 +62,10 @@ namespace Caustic
         std::vector<CUploadTexture> m_uploadTextures;
         UINT64 m_heapOffset;
         uint32 m_currentUpload;
-#if 0
-        std::vector<CDescriptors> m_descriptors;
-#endif
         
         UINT64 DetermineTextureSize(ID3D12Device *pDevice, int w, int h);
         void AllocateHeaps(IRenderer *pRenderer, uint32 numTexUploads, uint64 texMemSize);
         void AllocateTexture(IRenderer *pRenderer, ITexture *pTexture, bool isRenderTarget, ID3D12Resource **ppD3DTexture);
-#if 0
-        void SetupDescriptors(IRenderer *pRenderer);
-        void AllocateShaderResourceView(IRenderer *pRenderer, ID3D12Resource *pTexture);
-#endif
     public:
         CTextureMgr(IRenderer *pRenderer, uint32 numTexUploads, uint64 texMemSize);
 
@@ -87,6 +80,5 @@ namespace Caustic
         //**********************************************************************
         virtual void Activate(IRenderer *pRenderer, ITexture *pTexture, ID3D12Resource **ppD3DTexture) override;
         virtual void Deactivate(ITexture *pTexture) override;
-        virtual void GetDescriptorHeap(ID3D12DescriptorHeap **ppDescriptorHeap) override;
     };
 }
