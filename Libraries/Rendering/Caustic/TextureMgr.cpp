@@ -63,7 +63,7 @@ namespace Caustic
             D3D12_RESOURCE_DESC desc = {};
             desc.Dimension = D3D12_RESOURCE_DIMENSION::D3D12_RESOURCE_DIMENSION_BUFFER;
             desc.Alignment = 0;
-            desc.Width = c_MaxTextureSize * c_MaxTextureSize; // We assume that the largest texture we will upload is 2048x2048
+            desc.Width = c_MaxTextureSize * c_MaxTextureSize * 4; // We assume that the largest texture we will upload is 2048x2048
             desc.Height = 1;
             desc.DepthOrArraySize = 1;
             desc.MipLevels = 1;
@@ -134,6 +134,7 @@ namespace Caustic
         CT(spDevice->CreatePlacedResource(m_spTextureHeap, m_heapOffset, &desc,
             D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_COPY_DEST,
             nullptr, __uuidof(ID3D12Resource), (void**)&spTexResource));
+        m_heapOffset += textureSize;
 
         // Check if upload texture is available. If not wait.
 
@@ -158,8 +159,6 @@ namespace Caustic
 
         spCmdList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(spGPUTexture->m_spTexture, D3D12_RESOURCE_STATE_COPY_DEST,
             D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
-
-//        AllocateShaderResourceView(pRenderer, spGPUTexture->m_spTexture);
 
         *ppD3DTexture = spGPUTexture->m_spTexture;
         (*ppD3DTexture)->AddRef();
