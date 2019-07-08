@@ -12,7 +12,7 @@ struct VSOutput
     float4 pos : SV_POSITION;
 };
 
-cbuffer VS_CONSTANT_BUFFER : register(b0)
+cbuffer VS_CONSTANT_BUFFER : register(b1)
 {
     matrix worldViewProj;
     matrix endpoints;

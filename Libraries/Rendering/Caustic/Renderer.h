@@ -39,6 +39,7 @@ namespace Caustic
 
 	struct CVertexBuffer
 	{
+        CComPtr<ID3D12Resource> m_spUploadVB;
 		CComPtr<ID3D12Resource> m_spVB; // Our vertex buffer
 		CComPtr<ID3D12Resource> m_spIB; // Our index buffer. Maybe nullptr
 		uint32 m_vertexSize; // Size in bytes of each vertex
@@ -103,6 +104,11 @@ namespace Caustic
 	static const int c_NumBackBuffers = 2;
     static const int c_MaxTextures = 10; // HACK! Maximum number of textures that can be set during a single render frame
 
+    struct CLineVertex
+    {
+        float x, y, z;
+    };
+
     //**********************************************************************
     class CRenderer :
 		public CRefCount,
@@ -165,6 +171,7 @@ namespace Caustic
         void RenderScene();
         void DrawSceneObjects(int pass);
         void AllocateDescriptorHeap();
+        void CreateLineVB();
     public:
         explicit CRenderer();
         virtual ~CRenderer();

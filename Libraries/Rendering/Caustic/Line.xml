@@ -2,4 +2,5 @@
 <Shader>
   <PixelShader Filename="$(CausticRoot)\Libraries\Rendering\Caustic\Line.ps" Output="$(CausticRoot)\$(Configuration)\Line_PS.cso"/>
   <VertexShader Filename="$(CausticRoot)\Libraries\Rendering\Caustic\Line.vs" Output="$(CausticRoot)\$(Configuration)\Line_VS.cso"/>
+  <Topology>Line</Topology>
 </Shader>

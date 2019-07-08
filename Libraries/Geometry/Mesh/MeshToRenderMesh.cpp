@@ -36,6 +36,8 @@ namespace Caustic
 		uint32 numVerts = GetNumberVertices();
 		uint32 vertexSize = pShaderInfo->GetVertexSize();
 
+        BBox3 bbox;
+
 		// Create buffer with our vertex data
 		byte *pVertexBuffer = new byte[numVerts * vertexSize];
 		std::unique_ptr<byte> spVertBuffer(pVertexBuffer);
@@ -56,7 +58,7 @@ namespace Caustic
 						fp[0] = pVertex->pos.x;
 						fp[1] = pVertex->pos.y;
 						fp[2] = pVertex->pos.z;
-						m_bbox.AddPoint(pVertex->pos);
+						bbox.AddPoint(pVertex->pos);
 						pVB += sizeof(float) * 3;
 					}
 					else if (_strnicmp(vertexLayout[j].SemanticName, "TEXCOORD", 8) == 0)
@@ -114,6 +116,7 @@ namespace Caustic
 		
 		pRenderSubMesh->SetNumberVertices(vout);
 		pRenderSubMesh->SetVertexBuffer(m_spVB);
+        pRenderSubMesh->SetBBox(&bbox);
 	}
 
 	void CSubMesh::BuildIndexBuffer(IRenderSubMesh *pRenderSubMesh, ID3D12Device *pDevice, ID3D12GraphicsCommandList *pCommandList,

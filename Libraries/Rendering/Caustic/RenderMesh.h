@@ -38,11 +38,12 @@ namespace Caustic
 		virtual uint32 GetNumberVertices() override { return m_numVerts; }
 		virtual void SetNumberIndices(uint32 numIndices) override { m_numIndices = numIndices; }
 		virtual uint32 GetNumberIndices() override { return m_numIndices; }
-		virtual void SetVertexBuffer(ID3D12Resource *pVB) override { m_spVB = pVB; }
-		virtual CComPtr<ID3D12Resource> GetVertexBuffer() override { return m_spVB; }
+        virtual void SetVertexBuffer(ID3D12Resource *pVB) override { m_spVB = pVB; }
+        virtual CComPtr<ID3D12Resource> GetVertexBuffer() override { return m_spVB; }
 		virtual void SetIndexBuffer(ID3D12Resource *pIB) override { m_spIB = pIB; }
 		virtual CComPtr<ID3D12Resource> GetIndexBuffer() override { return m_spIB; }
-		virtual void GetBBox(BBox3 *pBBox) override { *pBBox = m_bbox; };
+        virtual void SetBBox(BBox3 *pBBox) override { m_bbox = *pBBox; }
+        virtual void GetBBox(BBox3 *pBBox) override { *pBBox = m_bbox; };
 		virtual void Render(IRenderer *pRenderer, std::vector<CRefObj<IPointLight>> &lights) override;
 		virtual void SetShader(IShader *pShader) override { m_spShader = pShader; }
 		virtual CRefObj<IShader> GetShader() override { return m_spShader; }

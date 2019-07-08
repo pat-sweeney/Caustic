@@ -200,7 +200,7 @@ namespace Caustic
 
         D3D12_DESCRIPTOR_RANGE  descriptorTableRanges[2];
         descriptorTableRanges[1].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE::D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-        descriptorTableRanges[1].NumDescriptors = 1;
+        descriptorTableRanges[1].NumDescriptors = 2;
         descriptorTableRanges[1].BaseShaderRegister = 0;
         descriptorTableRanges[1].RegisterSpace = 0;
         descriptorTableRanges[1].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
@@ -273,7 +273,6 @@ namespace Caustic
 
 		CT(m_spDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT, __uuidof(ID3D12CommandAllocator), (void**)&m_spCommandAllocator));
 		CT(m_spDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT, m_spCommandAllocator, nullptr, __uuidof(ID3D12GraphicsCommandList4), (void**)&m_spCommandList));
-		CT(m_spCommandList->Close());
 		m_spCommandAllocator->SetName(L"m_spCommandAllocator");
 		m_spCommandList->SetName(L"m_spCommandList");
 
@@ -316,7 +315,8 @@ namespace Caustic
 	//**********************************************************************
 	void CRenderer::LoadDefaultShaders(const wchar_t *pFolder)
 	{
-		WIN32_FIND_DATA findData;
+        IShaderMgr *pShaderMgr = CShaderMgr::Instance();
+        WIN32_FIND_DATA findData;
 		std::wstring fn(pFolder);
 		fn += L"\\*.shi";
 		HANDLE h = ::FindFirstFile(fn.c_str(), &findData);
@@ -337,7 +337,7 @@ namespace Caustic
 				LoadShaderBlob(std::wstring(const_cast<wchar_t*>(pFolder)) + std::wstring(L"\\") + shaderName + L"_VS.cso", &spVertexShaderBlob);
 				LoadShaderInfo(std::wstring(const_cast<wchar_t*>(pFolder)) + std::wstring(L"\\") + shaderName + L".shi", &spShaderInfo);
 				CCausticFactory::Instance()->CreateShader(this, shaderName.c_str(), spVertexShaderBlob, spPixelShaderBlob, spShaderInfo, &spShader);
-				CShaderMgr::Instance()->RegisterShader(shaderName.c_str(), spShader);
+                pShaderMgr->RegisterShader(shaderName.c_str(), spShader);
 			}
 			if (!::FindNextFile(h, &findData))
 				break;
@@ -372,35 +372,14 @@ namespace Caustic
 
 		LoadDefaultShaders(shaderFolder.c_str());
 
-		LoadBasicGeometry();
-    }
-#if 0
-    //**********************************************************************
-    // DrawMesh draws a single mesh
-    // pMesh Mesh to render
-    // pMaterial Material definition for mesh (maybe nullptr)
-    // pTexture Texture to use when rendering (maybe nullptr)
-    // pShader Shader to use when rendering (maybe nullptr)
-    // mat Transformation matrix to apply to mesh
-    //
-    // CRendererServer::DrawMesh() draws the specified mesh.
-    //**********************************************************************
-    void CRenderer::DrawMesh(ISubMesh *pSubMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat)
-    {
-        CRefObj<IRenderMaterial> spFrontMaterial;
-		CCausticFactory::Instance()->CreateRenderMaterial(this, pMaterial, pShader, &spFrontMaterial);
-        spFrontMaterial->SetDiffuseTexture(this, pTexture);
-        CRefObj<IRenderMaterial> spBackMaterial;
-        if (pSubMesh->GetMeshFlags() & EMeshFlags::TwoSided)
-        {
-			CCausticFactory::Instance()->CreateRenderMaterial(this, pMaterial, pShader, &spBackMaterial);
-            spBackMaterial->SetDiffuseTexture(this, pTexture);
-        }
-        CRenderable renderable(this, pSubMesh, spFrontMaterial, spBackMaterial, mat);
-        m_singleObjs.push_back(renderable);
-    }
-#endif
+        IShaderMgr *pShaderMgr = CShaderMgr::Instance();
+        pShaderMgr->FindShader(L"Line", &m_spLineShader);
 
+        LoadBasicGeometry();
+
+        CT(m_spCommandList->Close());
+    }
+    
     //**********************************************************************
     void CRenderer::GetRenderCtx(IRenderCtx **ppCtx)
     {
@@ -438,9 +417,54 @@ namespace Caustic
     }
 #endif
 
+    void CRenderer::CreateLineVB()
+    {
+        m_lineVB.m_numIndices = 0;
+        m_lineVB.m_numVertices = 2;
+        m_lineVB.m_vertexSize = sizeof(CLineVertex);
+        
+        // Create our upload buffer
+        UINT vbSize = (UINT)(2 * sizeof(CLineVertex));
+        CD3DX12_RESOURCE_DESC descUpload = CD3DX12_RESOURCE_DESC::Buffer(vbSize);
+        CD3DX12_HEAP_PROPERTIES heapdescUpload(D3D12_HEAP_TYPE_UPLOAD);
+        CT(m_spDevice->CreateCommittedResource(&heapdescUpload, D3D12_HEAP_FLAG_NONE,
+            &descUpload, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, __uuidof(ID3D12Resource),
+            (void**)&m_lineVB.m_spUploadVB));
+        CT(m_lineVB.m_spUploadVB->SetName(L"m_lineVB.m_spUploadVB"));
+
+        // Create final buffer
+        CD3DX12_RESOURCE_DESC desc = CD3DX12_RESOURCE_DESC::Buffer(vbSize);
+        CD3DX12_HEAP_PROPERTIES heapdesc(D3D12_HEAP_TYPE_DEFAULT);
+        CT(m_spDevice->CreateCommittedResource(&heapdesc, D3D12_HEAP_FLAG_NONE,
+            &desc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr, __uuidof(ID3D12Resource), (void**)&m_lineVB.m_spVB));
+        CT(m_lineVB.m_spVB->SetName(L"m_lineVB.m_spVB"));
+
+        CLineVertex verts[2] = {
+            { 0.0f, 0.0f, 0.0f },
+            { 1.0f, 0.0f, 0.0f },
+        };
+
+        // store vertex buffer in upload heap
+        D3D12_SUBRESOURCE_DATA vertexData = {};
+        vertexData.pData = reinterpret_cast<BYTE*>(verts);
+        vertexData.RowPitch = vbSize;
+        vertexData.SlicePitch = vbSize;
+
+        // we are now creating a command with the command list to copy the data from
+        // the upload heap to the default heap
+        UpdateSubresources(m_spCommandList, m_lineVB.m_spVB, m_lineVB.m_spUploadVB, 0, 0, 1, &vertexData);
+
+        // transition the vertex buffer data from copy destination state to vertex buffer state
+        CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(m_lineVB.m_spVB, D3D12_RESOURCE_STATE_COPY_DEST,
+            D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+        m_spCommandList->ResourceBarrier(1, &barrier);
+    }
+
     void CRenderer::DrawLine(Vector3 p1, Vector3 p2, Vector4 clr)
     {
-return;
+        if (m_lineVB.m_spVB == nullptr)
+            CreateLineVB();
+
         UINT offset = 0;
 		D3D12_VERTEX_BUFFER_VIEW vbView = {};
 		vbView.BufferLocation = m_lineVB.m_spVB->GetGPUVirtualAddress();
@@ -448,17 +472,17 @@ return;
 		vbView.StrideInBytes = m_lineVB.m_vertexSize;
 		m_spCommandList->IASetVertexBuffers(0, 1, &vbView);
         Matrix m;
-        m.x[0] = p2.x - p1.x;    m.x[4] = 0.0f;            m.x[8] = 0.0f;            m.x[12] = 0.0f;
-        m.x[1] = 0.0f;            m.x[5] = p2.y - p1.y;    m.x[9] = 0.0f;            m.x[13] = 0.0f;
+        m.x[0] = p2.x - p1.x;     m.x[4] = 0.0f;            m.x[8] = 0.0f;            m.x[12] = 0.0f;
+        m.x[1] = 0.0f;            m.x[5] = p2.y - p1.y;     m.x[9] = 0.0f;            m.x[13] = 0.0f;
         m.x[2] = 0.0f;            m.x[6] = 0.0f;            m.x[10] = p2.z - p1.z;    m.x[14] = 0.0f;
-        m.x[3] = p1.x;            m.x[7] = p1.y;            m.x[11] = p1.z;            m.x[15] = 1.0f;
+        m.x[3] = p1.x;            m.x[7] = p1.y;            m.x[11] = p1.z;           m.x[15] = 1.0f;
         m_spLineShader->SetVSParam(L"endpoints", std::any(m));
         Float4 color(clr.x, clr.y, clr.z, clr.w);
         m_spLineShader->SetPSParam(L"color", std::any(color));
         std::vector<CRefObj<IPointLight>> lights;
         m_spLineShader->BeginRender(this, nullptr, nullptr, lights);
-        m_spCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-		m_spCommandList->DrawInstanced(m_lineVB.m_numVertices, 1, 0, 0);
+        m_spCommandList->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+		m_spCommandList->DrawInstanced(2, 1, 0, 0);
         m_spLineShader->EndRender(this);
     }
 	

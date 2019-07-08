@@ -422,7 +422,8 @@ namespace Caustic
     {
         auto spCmdList = pRenderer->GetCommandList();
         spCmdList->SetPipelineState(m_spPipelineState);
-        pFrontMaterial->Render(pRenderer, lights, nullptr, this);
+        if (pFrontMaterial)
+            pFrontMaterial->Render(pRenderer, lights, nullptr, this);
         PushLights(lights);
         PushMatrices(pRenderer, pWorld);
         PushConstants(pRenderer, &m_vertexConstants, m_vsParams);
@@ -560,7 +561,7 @@ namespace Caustic
 		psoDesc.VS.pShaderBytecode = pVSByteCodes;
 		psoDesc.PS.BytecodeLength = psBufferLen;
 		psoDesc.PS.pShaderBytecode = pPSByteCodes;
-		psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		psoDesc.PrimitiveTopologyType = pShaderInfo->GetTopologyType();
 		psoDesc.RTVFormats[0] = pRenderer->GetFormat();
 		psoDesc.SampleDesc = pRenderer->GetSampleDesc();
 		psoDesc.SampleMask = 0xffffffff;

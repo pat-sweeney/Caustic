@@ -10,6 +10,11 @@
 
 namespace Caustic
 {
+    D3D12_PRIMITIVE_TOPOLOGY_TYPE CShaderInfo::GetTopologyType()
+    {
+        return m_topologyType;
+    }
+
 	//**********************************************************************
 	std::vector<ShaderParamDef> &CShaderInfo::PixelShaderParameterDefs()
 	{
@@ -480,6 +485,15 @@ namespace Caustic
 				ParseShaderEntry(spNode, false);
 			else if (bstrName == L"PixelShader")
 				ParseShaderEntry(spNode, true);
+            else if (bstrName == L"Topology")
+            {
+                CComBSTR var;
+                CT(spNode->get_text(&var));
+                if (var == L"Line")
+                    this->m_topologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+                else
+                    this->m_topologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+            }
 		}
 	}
 

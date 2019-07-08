@@ -222,7 +222,7 @@ void CompileShader(IXMLDOMNode *pNode, bool pixelShader, std::string &shaderFn, 
 }
 
 void ParseShader(IXMLDOMNode *pNode, std::string &vertexShader, std::string &vertexOuput,
-	std::string &pixelShader, std::string &pixelOuput)
+	std::string &pixelShader, std::string &pixelOuput, std::string &topology)
 {
 	CComPtr<IXMLDOMNodeList> spChildren;
 	CT(pNode->get_childNodes(&spChildren));
@@ -244,11 +244,17 @@ void ParseShader(IXMLDOMNode *pNode, std::string &vertexShader, std::string &ver
 			// <VertexShader Filename="Default.vs" Output="$(CausticRoot)\$(Configuration)\ColorNormal_VS.cso"/>
 			CompileShader(spNode, true, pixelShader, pixelOuput);
 		}
-	}
+        else if (bstrName == L"Topology")
+        {
+            CComBSTR var;
+            CT(spNode->get_text(&var));
+            topology = (var == L"Line") ? "Line" : "Triangle";
+        }
+    }
 }
 
 void LoadShaderDefinition(std::string &fn, std::string &vertexShader, std::string &vertexOuput,
-	std::string &pixelShader, std::string &pixelOuput)
+	std::string &pixelShader, std::string &pixelOuput, std::string &topology)
 {
 	CComPtr<IXMLDOMDocument> spDocument;
 	CT(CoCreateInstance(CLSID_DOMDocument60, nullptr, CLSCTX_INPROC_SERVER, IID_IXMLDOMDocument, (void**)&spDocument));
@@ -270,7 +276,7 @@ void LoadShaderDefinition(std::string &fn, std::string &vertexShader, std::strin
 		CComBSTR bstrName;
 		CT(spNode->get_nodeName(&bstrName));
 		if (bstrName == L"Shader")
-			ParseShader(spNode, vertexShader, vertexOuput, pixelShader, pixelOuput);
+			ParseShader(spNode, vertexShader, vertexOuput, pixelShader, pixelOuput, topology);
 	}
 }
 
@@ -325,7 +331,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	std::string vertexOuput;
 	std::string pixelShader;
 	std::string pixelOuput;
-	LoadShaderDefinition(infn, vertexShader, vertexOuput, pixelShader, pixelOuput);
+    std::string topology;
+	LoadShaderDefinition(infn, vertexShader, vertexOuput, pixelShader, pixelOuput, topology);
 
 	HANDLE oh = CreateFile(outfn.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, 0, nullptr);
 	if (oh == INVALID_HANDLE_VALUE)
@@ -336,6 +343,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	WriteStr(oh, "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
 	WriteStr(oh, "<ShaderDef>\n");
+    WriteStr(oh, "    <Topology>%s</Topology>\n", topology.c_str());
 	WriteStr(oh, "    <VertexShader>\n");
 	ExportShader(vertexOuput, oh);
 	WriteStr(oh, "    </VertexShader>\n");

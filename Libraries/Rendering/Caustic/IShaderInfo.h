@@ -22,6 +22,7 @@ namespace Caustic
 	//**********************************************************************
 	struct IShaderInfo : public IRefCount
 	{
+        virtual D3D12_PRIMITIVE_TOPOLOGY_TYPE GetTopologyType() = 0;
 		virtual std::vector<ShaderParamDef> &PixelShaderParameterDefs() = 0;
 		virtual std::vector<ShaderParamDef> &VertexShaderParameterDefs() = 0;
 		virtual std::vector<D3D12_INPUT_ELEMENT_DESC> &VertexLayout() = 0;

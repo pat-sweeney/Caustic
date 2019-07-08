@@ -27,6 +27,7 @@ namespace Caustic
 		std::vector<ShaderParamDef> m_pixelShaderParamDefs;
 		std::vector<ShaderParamDef> m_vertexShaderParamDefs;
 		uint32 m_vertexSize;
+        D3D12_PRIMITIVE_TOPOLOGY_TYPE m_topologyType;
 
 		void ParseShaderDef(IXMLDOMNode *pNode);
 		void ParseLayout(IXMLDOMNode *pNode);
@@ -35,6 +36,11 @@ namespace Caustic
 		uint32 FormatSize(DXGI_FORMAT format);
 		void ParseShaderEntry(IXMLDOMNode *pNode, bool isPixelShader);
 	public:
+        CShaderInfo()
+        {
+            m_topologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+        }
+
 		void LoadShaderDef(std::wstring &fn);
 
 		//**********************************************************************
@@ -46,7 +52,8 @@ namespace Caustic
 		//**********************************************************************
 		// IShaderInfo
 		//**********************************************************************
-		virtual std::vector<ShaderParamDef> &PixelShaderParameterDefs() override;
+        virtual D3D12_PRIMITIVE_TOPOLOGY_TYPE GetTopologyType() override;
+        virtual std::vector<ShaderParamDef> &PixelShaderParameterDefs() override;
 		virtual std::vector<ShaderParamDef> &VertexShaderParameterDefs() override;
 		virtual std::vector<D3D12_INPUT_ELEMENT_DESC> &VertexLayout() override;
 		virtual uint32 GetVertexSize() override;
