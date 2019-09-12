@@ -50,9 +50,9 @@ namespace Caustic
     //**********************************************************************
     struct ShaderDefs
     {
-        EShaderParamType m_type; ///< Defines type of this parameter
-        const wchar_t *m_name;   ///< Name of shader parameter
-        uint32 m_offset;         ///< register offset
+        EShaderParamType m_type; // Defines type of this parameter
+        const wchar_t *m_name;   // Name of shader parameter
+        uint32 m_offset;         // register offset
     };
 
     //**********************************************************************
@@ -153,8 +153,8 @@ namespace Caustic
     //**********************************************************************
     class CShaderMgr : public IShaderMgr, public CRefCount
     {
-        std::map<std::wstring, CRefObj<IShader>> m_shaders; ///< List of registered shaders
-        static CShaderMgr s_ShaderMgr; ///< Our shader manager singleton
+        std::map<std::wstring, CRefObj<IShader>> m_shaders; // List of registered shaders
+        static CShaderMgr s_ShaderMgr; // Our shader manager singleton
     public:
         static IShaderMgr *GetInstance() { return &s_ShaderMgr; }
         

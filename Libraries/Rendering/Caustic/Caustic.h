@@ -245,7 +245,7 @@ namespace Caustic
     };
 
 	//**********************************************************************
-	// Class: ETrackballConstrain
+	// Class: ETrackballConstraint
 	// Defines available constraints for the trackball object
 	//
 	// Constraint_None - Don't constrain rotations
@@ -253,7 +253,7 @@ namespace Caustic
 	// Constraint_YAxis - Constrain rotations to be around Y axis
 	// Constraint_ZAxis - Constrain rotations to be around Z axis
 	//**********************************************************************
-	enum ETrackballConstrain
+	enum ETrackballConstraint
 	{
 		Constraint_None,
 		Constraint_XAxis,
@@ -289,7 +289,7 @@ namespace Caustic
 		// constraint - current constraint
 		// pMatrix - Resulting trackball matrix
 		//**********************************************************************
-		virtual bool UpdateTracking(int screenX, int screenY, ETrackballConstrain constraint, DirectX::XMMATRIX *pMatrix) = 0;
+		virtual bool UpdateTracking(int screenX, int screenY, ETrackballConstraint constraint, DirectX::XMMATRIX *pMatrix) = 0;
 
 		//**********************************************************************
 		// Method: EndTracking
@@ -387,10 +387,10 @@ namespace Caustic
     struct IRenderer : public IGraphics
     {
         virtual void Setup(HWND hwnd, bool createDebugDevice) = 0;
-        virtual void DrawMesh(ISubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) = 0; ///< Draws a mesh
-        virtual void RenderLoop() = 0; ///< Renderer entry point
-        virtual void RenderFrame() = 0; ///< Have renderer draw and present next frame
-        virtual void SetCamera(ICamera *pCamera) = 0; ///< Sets camera
+        virtual void DrawMesh(ISubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) = 0; // Draws a mesh
+        virtual void RenderLoop() = 0; // Renderer entry point
+        virtual void RenderFrame() = 0; // Have renderer draw and present next frame
+        virtual void SetCamera(ICamera *pCamera) = 0; // Sets camera
         virtual void AddPointLight(IPointLight *pLight) = 0;
         virtual void GetRenderCtx(IRenderCtx **ppCtx) = 0;
         virtual void SetSceneGraph(ISceneGraph *pSceneGraph) = 0;
@@ -423,13 +423,13 @@ namespace Caustic
     //**********************************************************************
     struct IShader : public IRefCount
     {
-        virtual std::wstring &Name() = 0; ///< Returns the name of this shader
-        virtual void BeginRender(IGraphics *pGraphics, DirectX::XMMATRIX *pWorld = nullptr) = 0; ///< Called before rendering. This method sets the device with the shader
-        virtual void SetPSParam(std::wstring paramName, std::any &value) = 0; ///< Sets a pixel shader parameter
-        virtual void SetVSParam(std::wstring paramName, std::any &value) = 0; ///< Sets a vertex shader parameter
-        virtual void SetPSParam(std::wstring paramName, int index, std::any &value) = 0; ///< Sets a pixel shader array member parameter
-        virtual void SetVSParam(std::wstring paramName, int index, std::any &value) = 0; ///< Sets a vertex shader array member parameter
-        virtual void EndRender(IGraphics *pGraphics) = 0; ///< Called after the rendering using the shader has completed
+        virtual std::wstring &Name() = 0; // Returns the name of this shader
+        virtual void BeginRender(IGraphics *pGraphics, DirectX::XMMATRIX *pWorld = nullptr) = 0; // Called before rendering. This method sets the device with the shader
+        virtual void SetPSParam(std::wstring paramName, std::any &value) = 0; // Sets a pixel shader parameter
+        virtual void SetVSParam(std::wstring paramName, std::any &value) = 0; // Sets a vertex shader parameter
+        virtual void SetPSParam(std::wstring paramName, int index, std::any &value) = 0; // Sets a pixel shader array member parameter
+        virtual void SetVSParam(std::wstring paramName, int index, std::any &value) = 0; // Sets a vertex shader array member parameter
+        virtual void EndRender(IGraphics *pGraphics) = 0; // Called after the rendering using the shader has completed
     };
 
     //**********************************************************************

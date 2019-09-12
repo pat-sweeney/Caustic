@@ -68,7 +68,7 @@ namespace Caustic
     //! \param[in] screenX X position of mouse in screen coordinates
     //! \param[in] screenY Y position of mouse in screen coordinates
     //**********************************************************************
-    bool CTrackball::UpdateTracking(int screenX, int screenY, ETrackballConstrain constraint, DirectX::XMMATRIX *pMatrix)
+    bool CTrackball::UpdateTracking(int screenX, int screenY, ETrackballConstraint constraint, DirectX::XMMATRIX *pMatrix)
     {
         Vector3 pos;
         ComputeSurfacePosition(screenX, screenY, &pos);
@@ -87,16 +87,16 @@ namespace Caustic
         DirectX::XMVECTOR axis;
         switch (constraint)
         {
-        case ETrackballConstrain::Constraint_None:
+        case ETrackballConstraint::Constraint_None:
             axis = cp;
             break;
-        case ETrackballConstrain::Constraint_XAxis:
+        case ETrackballConstraint::Constraint_XAxis:
             axis = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
             break;
-        case ETrackballConstrain::Constraint_YAxis:
+        case ETrackballConstraint::Constraint_YAxis:
             axis = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
             break;
-        case ETrackballConstrain::Constraint_ZAxis:
+        case ETrackballConstraint::Constraint_ZAxis:
             axis = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
             break;
         default:

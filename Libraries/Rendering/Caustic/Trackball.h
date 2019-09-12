@@ -36,7 +36,7 @@ namespace Caustic
         // ITrackball
         //**********************************************************************
         virtual void BeginTracking(int screenX, int screenY, int screenW, int screenH) override;
-        virtual bool UpdateTracking(int screenX, int screenY, ETrackballConstrain constraint, DirectX::XMMATRIX *pMatrix) override;
+        virtual bool UpdateTracking(int screenX, int screenY, ETrackballConstraint constraint, DirectX::XMMATRIX *pMatrix) override;
         virtual void EndTracking() override;
     };
 };
