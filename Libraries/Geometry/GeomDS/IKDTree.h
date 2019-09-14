@@ -23,7 +23,9 @@ namespace Caustic
 		//
 		// Parameters:
 		// vec - point to add to tree
-		// data - user data to associate with the point
+		// data - user data to associate with the point. This data is saved in
+        // the tree along with the point. During calls to FindPoint this data
+        // will be returned to the client.
 		//**********************************************************************
 		virtual void AddPoint(Caustic::Vector3 &vec, void *data) = 0;
 
@@ -31,7 +33,7 @@ namespace Caustic
 		// Method: FindPoint
 		// Checks if the specified point is in the tree
 		//
-		// Parameters
+		// Parameters:
 		// vec - point to find
 		// comparator - user defined comparison function
 		// data - user data associated with found point

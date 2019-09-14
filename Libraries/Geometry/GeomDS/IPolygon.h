@@ -55,7 +55,8 @@ namespace Caustic
 		// Removes points from a polygon that allow the resulting
 		// polygon to still be with 'err' units from the original polygon.
 		// This function uses the Ramer-Douglas-Peucker algorithm:
-		// https://en.wikipedia.org/wiki/Ramer–Douglas–Peucker_algorithm
+        //
+		// <https://en.wikipedia.org/wiki/Ramer–Douglas–Peucker_algorithm>
 		//
 		// Parameters:
 		// err - Tolerance for deciding whether to remove a point
