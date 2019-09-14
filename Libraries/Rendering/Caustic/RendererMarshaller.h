@@ -12,8 +12,8 @@
 namespace Caustic
 {
     //**********************************************************************
-    //! \brief CRendererMarshaller marshals function calls from a user thread
-    //! to the render thread.
+    // \brief CRendererMarshaller marshals function calls from a user thread
+    // to the render thread.
     //**********************************************************************
     class CRendererMarshaller :
         public IRenderer,

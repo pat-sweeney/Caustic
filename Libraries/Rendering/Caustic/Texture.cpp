@@ -37,11 +37,11 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Ctor for our texture wrapper object
-    //! \param[in] pGraphics Graphics renderer
-    //! \param[in] width Width in pixels of image
-    //! \param[in] height Height in pixels of image
-    //! \param[in format Defines the pixel format for the image
+    // \brief Ctor for our texture wrapper object
+    // \param[in] pGraphics Graphics renderer
+    // \param[in] width Width in pixels of image
+    // \param[in] height Height in pixels of image
+    // \param[in format Defines the pixel format for the image
     //**********************************************************************
     CTexture::CTexture(IGraphics *pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, uint32 cpuFlags, uint32 bindFlags) :
         m_Format(format),
@@ -135,10 +135,10 @@ namespace Caustic
     }
     
     //**********************************************************************
-    //! \brief LoadTexture loads a texture from a file using WIC
-    //! \param[in] pFilename Name of file to load
-    //! \param[in] pGraphics Renderer
-    //! \param[out] ppTexture Returns the new texture
+    // \brief LoadTexture loads a texture from a file using WIC
+    // \param[in] pFilename Name of file to load
+    // \param[in] pGraphics Renderer
+    // \param[out] ppTexture Returns the new texture
     //**********************************************************************
     CAUSTICAPI void LoadTexture(const wchar_t *pFilename, IGraphics *pGraphics, ITexture **ppTexture)
     {

@@ -24,7 +24,7 @@ namespace Caustic
 #include "RawCopyPS.tbl"
 
     //**********************************************************************
-    //! \brief s_defaultVSLayout defines the default layout for our default vertex
+    // \brief s_defaultVSLayout defines the default layout for our default vertex
     //**********************************************************************
     D3D11_INPUT_ELEMENT_DESC s_VSLayout[] =
     {
@@ -33,13 +33,13 @@ namespace Caustic
     };
 
     //**********************************************************************
-    //! \brief Creates a new shader using the specified byte code and list
-    //! of shader parameters.
-    //! \param[in] pShaderCode Pointer to byte array containing the shader executable
-    //! \param[in] shaderCodeSize Size of pShaderCode in bytes
-    //! \param[in] pShaderParams List of parameters to set on the shader
-    //! \param[in] shaderParamSize Number of parameters in pShaderParams
-    //! \param[out] ppShader Newly created shader object
+    // \brief Creates a new shader using the specified byte code and list
+    // of shader parameters.
+    // \param[in] pShaderCode Pointer to byte array containing the shader executable
+    // \param[in] shaderCodeSize Size of pShaderCode in bytes
+    // \param[in] pShaderParams List of parameters to set on the shader
+    // \param[in] shaderParamSize Number of parameters in pShaderParams
+    // \param[out] ppShader Newly created shader object
     //**********************************************************************
     void CGPUPipeline::CreateShader(BYTE *pShaderCode, uint32 shaderCodeSize, ShaderDefs *pShaderParams, uint32 shaderParamSize, IShader **ppShader)
     {
@@ -54,10 +54,10 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Creates a source node. Source nodes read IImage and make them
-    //! available to the rest of the GPU imaging pipeline.
-    //! \param[in] pImage Image to use as source data
-    //! \param[out] ppNewNode Returns the new source node
+    // \brief Creates a source node. Source nodes read IImage and make them
+    // available to the rest of the GPU imaging pipeline.
+    // \param[in] pImage Image to use as source data
+    // \param[out] ppNewNode Returns the new source node
     //**********************************************************************
     void CGPUPipeline::CreateSourceNode(IImage *pImage, IGPUImageSourceNode **ppNewNode)
     {
@@ -69,12 +69,12 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Creates a sink node. Sink nodes are the final stage in a GPU
-    //! imaging pipeline and are responsible for converting the D3D texture
-    //! back into an IImage.
-    //! \param[in] numInputs Number of source textures that feed this node
-    //! \param[in] pShader Shader to run before returning result
-    //! \param[out] ppNewNode Returns the newly created node
+    // \brief Creates a sink node. Sink nodes are the final stage in a GPU
+    // imaging pipeline and are responsible for converting the D3D texture
+    // back into an IImage.
+    // \param[in] numInputs Number of source textures that feed this node
+    // \param[in] pShader Shader to run before returning result
+    // \param[out] ppNewNode Returns the newly created node
     //**********************************************************************
     void CGPUPipeline::CreateSinkNode(uint32 numInputs, IShader *pShader, IGPUImageSinkNode **ppNewNode)
     {
@@ -85,11 +85,11 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Creates an internal GPU pipeline node. These nodes do the bulk
-    //! of the processing.
-    //! \param[in] numInputs Number of source texture that feed this node
-    //! \param[in] pShader Pixel shader to run on this data
-    //! \param[out] ppNewNode Returns the new node
+    // \brief Creates an internal GPU pipeline node. These nodes do the bulk
+    // of the processing.
+    // \param[in] numInputs Number of source texture that feed this node
+    // \param[in] pShader Pixel shader to run on this data
+    // \param[out] ppNewNode Returns the new node
     //**********************************************************************
     void CGPUPipeline::CreateNode(uint32 numInputs, IShader *pShader, IGPUImageNode **ppNewNode)
     {
@@ -114,10 +114,10 @@ namespace Caustic
     };
 
     //**********************************************************************
-    //! \brief Creates an predefined GPU pipeline node. These nodes are
-    //! already associated with some shader (for instance a Gaussian blur filter)
-    //! \param[in] pShaderName Name of GPU graph node to create
-    //! \param[out] Returns the newly created node
+    // \brief Creates an predefined GPU pipeline node. These nodes are
+    // already associated with some shader (for instance a Gaussian blur filter)
+    // \param[in] pShaderName Name of GPU graph node to create
+    // \param[out] Returns the newly created node
     //**********************************************************************
     void CGPUPipeline::CreatePredefinedNode(wchar_t *pShaderName, IGPUImageNode **ppNewNode)
     {
@@ -139,8 +139,8 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Starts processing of a GPU graph. Data is processed using a
-    //! a pull model starting at each sink node.
+    // \brief Starts processing of a GPU graph. Data is processed using a
+    // a pull model starting at each sink node.
     //**********************************************************************
     void CGPUPipeline::Process()
     {
@@ -151,8 +151,8 @@ namespace Caustic
     }
     
     //**********************************************************************
-    //! \brief Returns the graphics device associated with this pipeline
-    //! \param[out] ppDevice Returns the IGraphics device associated with this pipeline
+    // \brief Returns the graphics device associated with this pipeline
+    // \param[out] ppDevice Returns the IGraphics device associated with this pipeline
     //**********************************************************************
     void CGPUPipeline::GetGraphics(IGraphics **ppDevice)
     {
@@ -161,7 +161,7 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Defines a vertex used by the quad rendering
+    // \brief Defines a vertex used by the quad rendering
     //**********************************************************************
     struct GPUVertex
     {
@@ -170,8 +170,8 @@ namespace Caustic
     };
 
     //**********************************************************************
-    //! \brief Setups our pipeline
-    //! \param[in] pGraphics Graphics device to use. If null then a new device is created
+    // \brief Setups our pipeline
+    // \param[in] pGraphics Graphics device to use. If null then a new device is created
     //**********************************************************************
     void CGPUPipeline::Initialize(IGraphics *pGraphics)
     {
@@ -208,9 +208,9 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Allocates a new pipeline object
-    //! \param[in] pGraphics Specifies the IGraphics object to be used. If null a new graphics device is created.
-    //! \param[out] pPipeline Returns the newly created pipeline object
+    // \brief Allocates a new pipeline object
+    // \param[in] pGraphics Specifies the IGraphics object to be used. If null a new graphics device is created.
+    // \param[out] pPipeline Returns the newly created pipeline object
     //**********************************************************************
     void CreateGPUPipeline(IGraphics *pGraphics, IGPUPipeline **ppPipeline)
     {
@@ -221,8 +221,8 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Sets the shader associated with this graph node
-    //! \param[in] pShader Specifies the shader to use for this node
+    // \brief Sets the shader associated with this graph node
+    // \param[in] pShader Specifies the shader to use for this node
     //**********************************************************************
     void CGPUImageBase::SetShader(IShader *pShader)
     {
@@ -230,8 +230,8 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Returns the shader associated with this graph node
-    //! \param[out] ppShader Returns the shader associated with this node
+    // \brief Returns the shader associated with this graph node
+    // \param[out] ppShader Returns the shader associated with this node
     //**********************************************************************
     void CGPUImageBase::GetShader(IShader **ppShader)
     {
@@ -240,9 +240,9 @@ namespace Caustic
     }
     
     //**********************************************************************
-    //! \brief Returns the node that is the Nth input into this node
-    //! \param[in] index Input slot to return
-    //! \param[out] ppNode Returns the node used as input in slot 'index'
+    // \brief Returns the node that is the Nth input into this node
+    // \param[in] index Input slot to return
+    // \param[out] ppNode Returns the node used as input in slot 'index'
     //**********************************************************************
     void CGPUImageBase::GetInput(uint32 index, IGPUImageNode **ppNode)
     {
@@ -251,9 +251,9 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Sets the Nth input node (i.e. this node gets input from the specified node)
-    //! \param[in] index Slot pNode is used as input to
-    //! \param[in] pNode Node to set as input in slot 'index'
+    // \brief Sets the Nth input node (i.e. this node gets input from the specified node)
+    // \param[in] index Slot pNode is used as input to
+    // \param[in] pNode Node to set as input in slot 'index'
     //**********************************************************************
     void CGPUImageBase::SetInput(uint32 index, IGPUImageNode *pNode)
     {
@@ -261,9 +261,9 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Retrieves the output from this node (after processing has been performed)
-    //! \param[in] pPipeline Pipeline this node is part of
-    //! \param[out] ppTexture The output texture for this node
+    // \brief Retrieves the output from this node (after processing has been performed)
+    // \param[in] pPipeline Pipeline this node is part of
+    // \param[out] ppTexture The output texture for this node
     //**********************************************************************
     void CGPUImageBase::GetOutputTexture(IGPUPipeline *pPipeline, ITexture **ppTexture)
     {
@@ -273,8 +273,8 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Renders a full screen quad on which the node's shader will be run
-    //! \param[in] pShader Renders a quad using the specified pixel shader
+    // \brief Renders a full screen quad on which the node's shader will be run
+    // \param[in] pShader Renders a quad using the specified pixel shader
     //**********************************************************************
     void CGPUPipeline::RenderQuad(IShader *pShader)
     {
@@ -299,9 +299,9 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Process first obtains the inputs for this node and then runs
-    //! the node's shader resulting in a final output texture
-    //! \param[in] pPipeline Pipeline this node is a part of
+    // \brief Process first obtains the inputs for this node and then runs
+    // the node's shader resulting in a final output texture
+    // \param[in] pPipeline Pipeline this node is a part of
     //**********************************************************************
     void CGPUImageBase::Process(IGPUPipeline *pPipeline)
     {
@@ -356,9 +356,9 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Assigns an image to be used as a source texture
-    //! \param[in] pPipeline Pipeline this node is a part of
-    //! \param[in] pSource Image to use as source data into this node
+    // \brief Assigns an image to be used as a source texture
+    // \param[in] pPipeline Pipeline this node is a part of
+    // \param[in] pSource Image to use as source data into this node
     //**********************************************************************
     void CGPUImageSourceNode::SetSource(IGPUPipeline *pPipeline, IImage *pSource)
     {
@@ -391,9 +391,9 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Retrieves the output texture
-    //! \param[in] pPipeline Pipeline this node is a part of
-    //! \param[out] ppTexture Returns the texture this node outputs
+    // \brief Retrieves the output texture
+    // \param[in] pPipeline Pipeline this node is a part of
+    // \param[out] ppTexture Returns the texture this node outputs
     //**********************************************************************
     void CGPUImageSourceNode::GetOutputTexture(IGPUPipeline *pPipeline, ITexture **ppTexture)
     {
@@ -424,9 +424,9 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Retrieves the output texture as an image
-    //! \param[in] pPipeline Pipeline this node is a part of
-    //! \param[out] ppSource Returns the output from this node as an Image (CPU based)
+    // \brief Retrieves the output texture as an image
+    // \param[in] pPipeline Pipeline this node is a part of
+    // \param[out] ppSource Returns the output from this node as an Image (CPU based)
     //**********************************************************************
     void CGPUImageSinkNode::GetOutput(IGPUPipeline *pPipeline, IImage **ppSource)
     {

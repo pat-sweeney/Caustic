@@ -16,10 +16,10 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Converts a screen coordinate into a point on our trackball surface
-    //! \param[in] screenX X position of mouse in screen coordinates
-    //! \param[in] screenY Y position of mouse in screen coordinates
-    //! \param[out] pPos Returns the position of the screen coordinate on the trackball surface
+    // \brief Converts a screen coordinate into a point on our trackball surface
+    // \param[in] screenX X position of mouse in screen coordinates
+    // \param[in] screenY Y position of mouse in screen coordinates
+    // \param[out] pPos Returns the position of the screen coordinate on the trackball surface
     //**********************************************************************
     void CTrackball::ComputeSurfacePosition(int screenX, int screenY, Vector3 *pPos)
     {
@@ -44,11 +44,11 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Called at start of mouse drag
-    //! \param[in] screenX X position of mouse in screen coordinates
-    //! \param[in] screenY Y position of mouse in screen coordinates
-    //! \param[in] screenW Width of screen in pixels
-    //! \param[in] screenH Height of screen in pixels
+    // \brief Called at start of mouse drag
+    // \param[in] screenX X position of mouse in screen coordinates
+    // \param[in] screenY Y position of mouse in screen coordinates
+    // \param[in] screenW Width of screen in pixels
+    // \param[in] screenH Height of screen in pixels
     //**********************************************************************
     void CTrackball::BeginTracking(int screenX, int screenY, int screenW, int screenH)
     {
@@ -63,10 +63,10 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Called each time mouse is moved
-    //! \param[in] constraint Constrain rotation to be about specific axis
-    //! \param[in] screenX X position of mouse in screen coordinates
-    //! \param[in] screenY Y position of mouse in screen coordinates
+    // \brief Called each time mouse is moved
+    // \param[in] constraint Constrain rotation to be about specific axis
+    // \param[in] screenX X position of mouse in screen coordinates
+    // \param[in] screenY Y position of mouse in screen coordinates
     //**********************************************************************
     bool CTrackball::UpdateTracking(int screenX, int screenY, ETrackballConstraint constraint, DirectX::XMMATRIX *pMatrix)
     {
@@ -111,7 +111,7 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Called at end of mouse drag
+    // \brief Called at end of mouse drag
     //**********************************************************************
     void CTrackball::EndTracking()
     {

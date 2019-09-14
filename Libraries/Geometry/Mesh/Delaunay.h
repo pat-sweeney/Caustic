@@ -72,8 +72,8 @@ namespace Caustic
     };
 
     //**********************************************************************
-    //! \brief CDelaunay2 defines a class for creating a Delaunay triangulation
-    //! from a set of 2D points
+    // \brief CDelaunay2 defines a class for creating a Delaunay triangulation
+    // from a set of 2D points
     //**********************************************************************
     class CDelaunay2 : public IDelaunay2, public CRefCount
     {

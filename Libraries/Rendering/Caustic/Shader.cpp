@@ -11,13 +11,13 @@
 namespace Caustic
 {
     //**********************************************************************
-    //! \brief CShader::ComputeParamSize parses the definitions of each shader
-    //! parameter that was read from the HLSL (using ParseShader.exe). For each
-    //! definition we will compute the offset of the parameter within the constant
-    //! buffer. This is used later when updating the constant buffer.
-    //! \param[in] pDefs List of shader definitions defining each parameter.
-    //! \param[in] numParams Number of parameters in params
-    //! \param[out] params Parameter list we will copy definitions into
+    // \brief CShader::ComputeParamSize parses the definitions of each shader
+    // parameter that was read from the HLSL (using ParseShader.exe). For each
+    // definition we will compute the offset of the parameter within the constant
+    // buffer. This is used later when updating the constant buffer.
+    // \param[in] pDefs List of shader definitions defining each parameter.
+    // \param[in] numParams Number of parameters in params
+    // \param[out] params Parameter list we will copy definitions into
     //**********************************************************************
     uint32 CShader::ComputeParamSize(ShaderDefs *pDefs, uint32 numParams, std::vector<ShaderParam> &params)
     {
@@ -116,10 +116,10 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief CShader::PushConstants pushes each shader parameter into the D3D11 constant buffer.
-    //! \param pGraphics D3D11 device/context to use
-    //! \param pBuffer Constant buffer to push values into
-    //! \param params List of parameters to push
+    // \brief CShader::PushConstants pushes each shader parameter into the D3D11 constant buffer.
+    // \param pGraphics D3D11 device/context to use
+    // \param pBuffer Constant buffer to push values into
+    // \param params List of parameters to push
     //**********************************************************************
     void CShader::PushConstants(IGraphics *pGraphics, ID3D11Buffer *pBuffer, std::vector<ShaderParam> &params)
     {
@@ -263,10 +263,10 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief SetParam sets shader constant, texture or sampler
-    //! \param[in] paramName Name of the parameter
-    //! \param[in] value Value of parameter
-    //! \param[in] params List of parameters to update
+    // \brief SetParam sets shader constant, texture or sampler
+    // \param[in] paramName Name of the parameter
+    // \param[in] value Value of parameter
+    // \param[in] params List of parameters to update
     //**********************************************************************
     void CShader::SetParam(std::wstring paramName, std::any &value, std::vector<ShaderParam> &params)
     {
@@ -282,10 +282,10 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief SetParam sets shader constant, texture or sampler
-    //! \param[in] paramName Name of the parameter
-    //! \param[in] value Value of parameter
-    //! \param[in] params List of parameters to update
+    // \brief SetParam sets shader constant, texture or sampler
+    // \param[in] paramName Name of the parameter
+    // \param[in] value Value of parameter
+    // \param[in] params List of parameters to update
     //**********************************************************************
     void CShader::SetParam(std::wstring paramName, int index, std::any &value, std::vector<ShaderParam> &params)
     {
@@ -301,9 +301,9 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief SetPSParam sets a pixel shader parameter
-    //! \param[in] paramName Name of parameter
-    //! \param[in] value Value of parameter
+    // \brief SetPSParam sets a pixel shader parameter
+    // \param[in] paramName Name of parameter
+    // \param[in] value Value of parameter
     //**********************************************************************
     void CShader::SetPSParam(std::wstring paramName, std::any &value)
     {
@@ -311,10 +311,10 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief SetPSParam sets a pixel shader array element parameter
-    //! \param[in] paramName Name of parameter
-    //! \param[in] index Index into array
-    //! \param[in] value Value of parameter
+    // \brief SetPSParam sets a pixel shader array element parameter
+    // \param[in] paramName Name of parameter
+    // \param[in] index Index into array
+    // \param[in] value Value of parameter
     //**********************************************************************
     void CShader::SetPSParam(std::wstring paramName, int index, std::any &value)
     {
@@ -322,9 +322,9 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief SetVSParam sets a vertex shader parameter
-    //! \param[in] paramName Name of parameter
-    //! \param[in] value Value of parameter
+    // \brief SetVSParam sets a vertex shader parameter
+    // \param[in] paramName Name of parameter
+    // \param[in] value Value of parameter
     //**********************************************************************
     void CShader::SetVSParam(std::wstring paramName, std::any &value)
     {
@@ -332,10 +332,10 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief SetPSParam sets a vertex shader array element parameter
-    //! \param[in] paramName Name of parameter
-    //! \param[in] index Index into array
-    //! \param[in] value Value of parameter
+    // \brief SetPSParam sets a vertex shader array element parameter
+    // \param[in] paramName Name of parameter
+    // \param[in] index Index into array
+    // \param[in] value Value of parameter
     //**********************************************************************
     void CShader::SetVSParam(std::wstring paramName, int index, std::any &value)
     {
@@ -394,9 +394,9 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief BeginRender is called before rendering using this shader occurs.
-    //! This call is responsible for setting up the pGraphics device to use the shader.
-    //! \param[in] pGraphics D3D11 device/context to use
+    // \brief BeginRender is called before rendering using this shader occurs.
+    // This call is responsible for setting up the pGraphics device to use the shader.
+    // \param[in] pGraphics D3D11 device/context to use
     //**********************************************************************
     void CShader::BeginRender(IGraphics *pGraphics, DirectX::XMMATRIX *pWorld)
     {
@@ -413,21 +413,21 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! EndRender is called after rendering using this shader occurs.
-    //! During this call the shader may clean up any state/memory it needed
-    //! \param[in] pGraphics D3D11 device/context to use
+    // EndRender is called after rendering using this shader occurs.
+    // During this call the shader may clean up any state/memory it needed
+    // \param[in] pGraphics D3D11 device/context to use
     //**********************************************************************
     void CShader::EndRender(IGraphics * /*pGraphics*/)
     {
     }
 
     //**********************************************************************
-    //! \brief CreateConstantBuffer creates the constant buffer (pixel or vertex shader)
-    //! \param[in] pDevice D3D device
-    //! \param[in] pDefs List of parameter definitions (parsed from HLSL)
-    //! \param[in] paramsSize Length of pDefs
-    //! \param[out] params Generated parameter list
-    //! \param[out] ppBuffer Returns the created constant buffer
+    // \brief CreateConstantBuffer creates the constant buffer (pixel or vertex shader)
+    // \param[in] pDevice D3D device
+    // \param[in] pDefs List of parameter definitions (parsed from HLSL)
+    // \param[in] paramsSize Length of pDefs
+    // \param[out] params Generated parameter list
+    // \param[out] ppBuffer Returns the created constant buffer
     //**********************************************************************
     void CShader::CreateConstantBuffer(ID3D11Device *pDevice, ShaderDefs *pDefs, uint32 paramsSize, std::vector<ShaderParam> &params, ID3D11Buffer **ppBuffer)
     {
@@ -448,19 +448,19 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Create creates a shader
-    //! \param[in] pGraphics Graphics device to use
-    //! \param[in] pShaderName Name of shader
-    //! \param[in] pPSParams List of vertex shader definitions (from ParseShader.exe)
-    //! \param[in] psParamsSize Length of pPSParams
-    //! \param[in] pVSParams List of pixel shader definitions (from ParseShader.exe)
-    //! \param[in] vsParamsSize Length of pVSParams
-    //! \param[in] pPSByteCodes Byte code for pixel shader
-    //! \param[in] psBufferLen Length of pPSByteCodes in bytes
-    //! \param[in] pVSByteCodes Byte code for vertex shader
-    //! \param[in] vsBufferLen Length of pVSByteCodes in bytes
-    //! \param[in] pLayout Vertex layout
-    //! \param[in] numLayoutElems Length of pLayout (in elements)
+    // \brief Create creates a shader
+    // \param[in] pGraphics Graphics device to use
+    // \param[in] pShaderName Name of shader
+    // \param[in] pPSParams List of vertex shader definitions (from ParseShader.exe)
+    // \param[in] psParamsSize Length of pPSParams
+    // \param[in] pVSParams List of pixel shader definitions (from ParseShader.exe)
+    // \param[in] vsParamsSize Length of pVSParams
+    // \param[in] pPSByteCodes Byte code for pixel shader
+    // \param[in] psBufferLen Length of pPSByteCodes in bytes
+    // \param[in] pVSByteCodes Byte code for vertex shader
+    // \param[in] vsBufferLen Length of pVSByteCodes in bytes
+    // \param[in] pLayout Vertex layout
+    // \param[in] numLayoutElems Length of pLayout (in elements)
     //**********************************************************************
     void CShader::Create(
         IGraphics *pGraphics,
@@ -484,20 +484,20 @@ namespace Caustic
     }
     
     //**********************************************************************
-    //! \brief CreateShader is a helper function to create a shader
-    //! \param[in] pGraphics Graphics device to use
-    //! \param[in] pShaderName Name of shader
-    //! \param[in] pPSParams List of vertex shader definitions (from ParseShader.exe)
-    //! \param[in] psParamsSize Length of pPSParams
-    //! \param[in] pVSParams List of pixel shader definitions (from ParseShader.exe)
-    //! \param[in] vsParamsSize Length of pVSParams
-    //! \param[in] pPSByteCodes Byte code for pixel shader
-    //! \param[in] psBufferLen Length of pPSByteCodes in bytes
-    //! \param[in] pVSByteCodes Byte code for vertex shader
-    //! \param[in] vsBufferLen Length of pVSByteCodes in bytes
-    //! \param[in] pLayout Vertex layout
-    //! \param[in] numLayoutElems Length of pLayout (in elements)
-    //! \param[out] ppShader Returns the created shader
+    // \brief CreateShader is a helper function to create a shader
+    // \param[in] pGraphics Graphics device to use
+    // \param[in] pShaderName Name of shader
+    // \param[in] pPSParams List of vertex shader definitions (from ParseShader.exe)
+    // \param[in] psParamsSize Length of pPSParams
+    // \param[in] pVSParams List of pixel shader definitions (from ParseShader.exe)
+    // \param[in] vsParamsSize Length of pVSParams
+    // \param[in] pPSByteCodes Byte code for pixel shader
+    // \param[in] psBufferLen Length of pPSByteCodes in bytes
+    // \param[in] pVSByteCodes Byte code for vertex shader
+    // \param[in] vsBufferLen Length of pVSByteCodes in bytes
+    // \param[in] pLayout Vertex layout
+    // \param[in] numLayoutElems Length of pLayout (in elements)
+    // \param[out] ppShader Returns the created shader
     //**********************************************************************
     CAUSTICAPI void CreateShader(IGraphics *pGraphics, 
                                  const wchar_t *pShaderName,
@@ -522,9 +522,9 @@ namespace Caustic
     CShaderMgr CShaderMgr::s_ShaderMgr;
 
     //**********************************************************************
-    //! \brief FindShader returns the requested shader
-    //! \param[in] pShaderName Name of shader to locate
-    //! \param[in] ppShader Returns the requested shader
+    // \brief FindShader returns the requested shader
+    // \param[in] pShaderName Name of shader to locate
+    // \param[in] ppShader Returns the requested shader
     //**********************************************************************
     void CShaderMgr::FindShader(const wchar_t *pShaderName, IShader **ppShader)
     {
@@ -541,9 +541,9 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief RegisterShader registers the specified shader with the shader manager
-    //! \param[in] pShaderName Name of shader
-    //! \param[in] pShader Shader to register
+    // \brief RegisterShader registers the specified shader with the shader manager
+    // \param[in] pShaderName Name of shader
+    // \param[in] pShader Shader to register
     //**********************************************************************
     void CShaderMgr::RegisterShader(const wchar_t *pShaderName, IShader *pShader)
     {

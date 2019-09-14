@@ -14,12 +14,12 @@ namespace Caustic
     const int c_Vertex_Referenced = -2;
 
     //**********************************************************************
-    //! \brief BuildVertexBufferData_V1() creates a vertex buffer for
-    //! vertex type V1 using the specified submesh.
-    //! \param[in] pMesh Submesh to use for vertex data
-    //! \param[out] pNumVerts Returns the number of vertices in the output vertex buffer
-    //! \param[out] ppVertexBuffer Returns pointer to array of vertices
-    //! \param[out] Returns the index of each referenced vertex
+    // \brief BuildVertexBufferData_V1() creates a vertex buffer for
+    // vertex type V1 using the specified submesh.
+    // \param[in] pMesh Submesh to use for vertex data
+    // \param[out] pNumVerts Returns the number of vertices in the output vertex buffer
+    // \param[out] ppVertexBuffer Returns pointer to array of vertices
+    // \param[out] Returns the index of each referenced vertex
     //**********************************************************************
     static void BuildVertexBufferData_V1(ISubMesh *pMesh, uint32 *pNumVerts, SVertex_1 **ppVertexBuffer, std::vector<int> &vertexReferenced)
     {
@@ -62,13 +62,13 @@ namespace Caustic
     }
     
     //**********************************************************************
-    //! \brief BuildVertexBuffer_V1 builds a vertex buffer using the specified mesh
-    //! \param[in] pDevice Our D3D device
-    //! \param[in] pMesh Mesh for which to build vertex buffer
-    //! \param[out] ppBuffer Returns the created vertex buffer
-    //!
-    //! This function builds a vertex buffer using the specified mesh. Each
-    //! vertex is a V1 vertex (position+UV)
+    // \brief BuildVertexBuffer_V1 builds a vertex buffer using the specified mesh
+    // \param[in] pDevice Our D3D device
+    // \param[in] pMesh Mesh for which to build vertex buffer
+    // \param[out] ppBuffer Returns the created vertex buffer
+    //
+    // This function builds a vertex buffer using the specified mesh. Each
+    // vertex is a V1 vertex (position+UV)
     //**********************************************************************
     static void BuildVertexBuffer_V1(ID3D11Device *pDevice, ISubMesh *pMesh, ID3D11Buffer **ppBuffer, uint32 *pNumVerts,
         std::vector<int> &vertexReferenced)
@@ -123,13 +123,13 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief BuildVertexBuffer_V2 builds a vertex buffer using the specified mesh
-    //! \param[in] pDevice Our D3D device
-    //! \param[in] pMesh Mesh for which to build vertex buffer
-    //! \param[out] ppBuffer Returns the created vertex buffer
-    //!
-    //! This function builds a vertex buffer using the specified mesh. Each
-    //! vertex is a V2 vertex (position+normal+UV)
+    // \brief BuildVertexBuffer_V2 builds a vertex buffer using the specified mesh
+    // \param[in] pDevice Our D3D device
+    // \param[in] pMesh Mesh for which to build vertex buffer
+    // \param[out] ppBuffer Returns the created vertex buffer
+    //
+    // This function builds a vertex buffer using the specified mesh. Each
+    // vertex is a V2 vertex (position+normal+UV)
     //**********************************************************************
     static void BuildVertexBuffer_V2(ID3D11Device *pDevice, ISubMesh *pMesh, ID3D11Buffer **ppBuffer, uint32 *pNumVerts,
         std::vector<int> &vertexReferenced)
@@ -260,13 +260,13 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief BuildIndexBuffer_V1 builds an index buffer using the specified mesh
-    //! \param[in] pDevice D3D device
-    //! \param[in] pMesh Mesh for which to create index buffer
-    //! \param[out] ppBuffer Returns the created index buffer
-    //!
-    //! This function builds an index buffer using the specified mesh. Each
-    //! index is a V1 index (trilist where each index is a uint32)
+    // \brief BuildIndexBuffer_V1 builds an index buffer using the specified mesh
+    // \param[in] pDevice D3D device
+    // \param[in] pMesh Mesh for which to create index buffer
+    // \param[out] ppBuffer Returns the created index buffer
+    //
+    // This function builds an index buffer using the specified mesh. Each
+    // index is a V1 index (trilist where each index is a uint32)
     //**********************************************************************
     static void BuildIndexBuffer_V1(ID3D11Device *pDevice, ISubMesh *pMesh, ID3D11Buffer **ppBuffer, uint32 *pNumIndices,
                                     std::vector<int> &vertexReferenced)
@@ -326,10 +326,10 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Loads the renderable data from a stream
-    //!
-    //! This function is for loading the renderable data that was stored using StoreSubMeshRenderableDataToStream().
-    //!
+    // \brief Loads the renderable data from a stream
+    //
+    // This function is for loading the renderable data that was stored using StoreSubMeshRenderableDataToStream().
+    //
     //**********************************************************************
     CAUSTICAPI void LoadSubMeshRenderableDataFromStream(IStream *pStream, ID3D11Device *pDevice, ID3D11Buffer **ppIndexBuffer, uint32 *pNumIndices, ID3D11Buffer **ppVertexBuffer, uint32 *pNumVertices, int *pVertexVersion, int *pIndexVersion)
     {
@@ -372,15 +372,15 @@ namespace Caustic
     }
 
     //**********************************************************************
-    ///! \brief MeshToD3D converts a CMesh object into a renderable form
-    ///! \param[in] pGraphics Graphics device to use
-    ///! \param[in] pMesh Mesh to convert
-    ///! \param[in] vertexVersion Version of vertex to use
-    ///! \param[out] ppVertexBuffer Returns the created vertex buffer
-    ///! \param[in] indexVersion Version of index buffer to use
-    ///! \param[out] ppIndexBuffer Returns the created index buffer
-    ///! \param[out] pBbox Returns the bounding box of the mesh
-    ///! \param[out] pVertexSize Returns the size of each vertex in bytes
+    /// \brief MeshToD3D converts a CMesh object into a renderable form
+    /// \param[in] pGraphics Graphics device to use
+    /// \param[in] pMesh Mesh to convert
+    /// \param[in] vertexVersion Version of vertex to use
+    /// \param[out] ppVertexBuffer Returns the created vertex buffer
+    /// \param[in] indexVersion Version of index buffer to use
+    /// \param[out] ppIndexBuffer Returns the created index buffer
+    /// \param[out] pBbox Returns the bounding box of the mesh
+    /// \param[out] pVertexSize Returns the size of each vertex in bytes
     //**********************************************************************
     CAUSTICAPI void MeshToD3D(IGraphics *pGraphics, ISubMesh *pMesh,
         int vertexVersion, ID3D11Buffer **ppVertexBuffer, uint32 *pNumVerts,

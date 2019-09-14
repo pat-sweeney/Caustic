@@ -10,8 +10,8 @@
 namespace Caustic
 {
     //**********************************************************************
-    //! \brief CMeshConstructor defines a constructor object used to build
-    //! meshes (i.e. links vertices and edges together)
+    // \brief CMeshConstructor defines a constructor object used to build
+    // meshes (i.e. links vertices and edges together)
     //**********************************************************************
     class CMeshConstructor : public IMeshConstructor, public CRefCount
     {

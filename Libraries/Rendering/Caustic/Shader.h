@@ -21,8 +21,8 @@ namespace Caustic
     const int c_ArraySize = 4;
 
     //**********************************************************************
-    //! EShaderParamType defines the various types of parameters that can
-    //! be passed to a CShader
+    // EShaderParamType defines the various types of parameters that can
+    // be passed to a CShader
     //**********************************************************************
     enum EShaderParamType
     {
@@ -44,9 +44,9 @@ namespace Caustic
     };
 
     //**********************************************************************
-    //! ShaderDefs defines the shader definitions that were parsed from HLSL
-    //! by ParseShader. These definitions define the variables that each
-    //! shader defines (i.e. may be set by the client)
+    // ShaderDefs defines the shader definitions that were parsed from HLSL
+    // by ParseShader. These definitions define the variables that each
+    // shader defines (i.e. may be set by the client)
     //**********************************************************************
     struct ShaderDefs
     {
@@ -56,9 +56,9 @@ namespace Caustic
     };
 
     //**********************************************************************
-    //! ShaderParam defines each parameter that a shader exposes. These parameters
-    //! are derived from the ShaderDefs above. This is servers copy of each
-    //! parameter along with its value and position in the constant buffer.
+    // ShaderParam defines each parameter that a shader exposes. These parameters
+    // are derived from the ShaderDefs above. This is servers copy of each
+    // parameter along with its value and position in the constant buffer.
     //**********************************************************************
     struct ShaderParam
     {
@@ -78,10 +78,10 @@ namespace Caustic
     struct Matrix { float x[16]; Matrix() { ZeroMemory(x, sizeof(x)); } Matrix(float _x[16]) { memcpy(x, _x, sizeof(float) * 16); } };
     
     //**********************************************************************
-    //! \brief CShader defines a shader used to render materials on an object
-    //!
-    //! A shader defines a material on a renderable. It is comprised of a pixel
-    //! shader, a vertex shader, and constants passed to those shaders.
+    // \brief CShader defines a shader used to render materials on an object
+    //
+    // A shader defines a material on a renderable. It is comprised of a pixel
+    // shader, a vertex shader, and constants passed to those shaders.
     //**********************************************************************
     class CShader : public IShader, public CRefCount
     {
@@ -148,8 +148,8 @@ namespace Caustic
                                  IShader **ppShader);
 
     //**********************************************************************
-    //! \brief CShaderMgr defines our shader manager. Each shader is registered
-    //! with this manager.
+    // \brief CShaderMgr defines our shader manager. Each shader is registered
+    // with this manager.
     //**********************************************************************
     class CShaderMgr : public IShaderMgr, public CRefCount
     {

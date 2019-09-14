@@ -164,17 +164,17 @@ namespace Caustic
     CAUSTICAPI void CreateMaterial(IMaterialAttrib **ppMaterial);
 
     //**********************************************************************
-    //! \brief CGeomVertex defines a vertex in our mesh. 
-    //!
-    //! Defines a vertex on our mesh. We have two types of vertex data:
-    //! 1) data that is specific to a vertex relative to a given face
-    //! 2) data that is relative to a vertex regardless of face
-    //! The reason for this split is so that positional information
-    //! can be shared across the mesh (useful for performing operations
-    //! on the geometry) while data that can change from face to face
-    //! is stored separately (such as normal information).
-    //! Typically most mesh data is stored in CGeomVertex. Only faces
-    //! at material boundaries or smoothing groups contain CFaceVertex data.
+    // \brief CGeomVertex defines a vertex in our mesh. 
+    //
+    // Defines a vertex on our mesh. We have two types of vertex data:
+    // 1) data that is specific to a vertex relative to a given face
+    // 2) data that is relative to a vertex regardless of face
+    // The reason for this split is so that positional information
+    // can be shared across the mesh (useful for performing operations
+    // on the geometry) while data that can change from face to face
+    // is stored separately (such as normal information).
+    // Typically most mesh data is stored in CGeomVertex. Only faces
+    // at material boundaries or smoothing groups contain CFaceVertex data.
     //**********************************************************************
     struct CGeomVertex
     {
@@ -185,8 +185,8 @@ namespace Caustic
     };
 
     //**********************************************************************
-    //! \brief CFaceVertex defines a vertex data relative to a given face.
-    //! See CGeomVertex for further information.
+    // \brief CFaceVertex defines a vertex data relative to a given face.
+    // See CGeomVertex for further information.
     //**********************************************************************
     struct CFaceVertex
     {
@@ -215,19 +215,19 @@ namespace Caustic
         friend class CSubMesh;
         friend class CMeshConstructor;
     public:
-        //! \brief Returns the next edge in our edge loop
+        // \brief Returns the next edge in our edge loop
         CHalfEdge *GetNextEdge() { return m_pNext; }
-        //! \brief Returns the previous edge in our edge loop
+        // \brief Returns the previous edge in our edge loop
         CHalfEdge *GetPrevEdge() { return m_pPrev; }
-        //! \brief Returns the half edge opposite to the current edge
+        // \brief Returns the half edge opposite to the current edge
         CHalfEdge *GetOppositeEdge() { return m_pOpposite; }
-        //! \brief Returns the vertex at the head of this edge
+        // \brief Returns the vertex at the head of this edge
         CGeomVertex *GetHeadVertex() { return m_pVertex; }
-        //! \brief Returns the vertex at the tail of this edge
+        // \brief Returns the vertex at the tail of this edge
         CGeomVertex *GetTailVertex() { return m_pPrev->m_pVertex; }
-        //! \brief Returns the face this edge is a boundary of
+        // \brief Returns the face this edge is a boundary of
         CFace *GetFace() { return m_pFace; }
-        //! \brief Returns the smoothing group this edge belongs to
+        // \brief Returns the smoothing group this edge belongs to
         uint32 GetSmoothingGroup() { return m_smoothingGroup; }
     };
 

@@ -11,15 +11,15 @@
 namespace Caustic
 {
     //**********************************************************************
-    //! \brief Creates a renderable object
-    //!
-    //! Creates a renderable. A renderable is a vertex buffer, index buffer,
-    //! and the default shader.
-    //! \param[in] pGraphics Our graphics renderer
-    //! \param[in] pSubMesh Submesh to generate index and vertex buffers from
-    //! \param[in] pMaterial Material to apply to mesh
-    //! \param[in] pTexture Texture to apply to mesh
-    //! \param[out] ppRenderable Returns the newly created IRenderable
+    // \brief Creates a renderable object
+    //
+    // Creates a renderable. A renderable is a vertex buffer, index buffer,
+    // and the default shader.
+    // \param[in] pGraphics Our graphics renderer
+    // \param[in] pSubMesh Submesh to generate index and vertex buffers from
+    // \param[in] pMaterial Material to apply to mesh
+    // \param[in] pTexture Texture to apply to mesh
+    // \param[out] ppRenderable Returns the newly created IRenderable
     //**********************************************************************
     CAUSTICAPI void CreateRenderable(IGraphics *pGraphics, ISubMesh *pSubMesh, IMaterialAttrib *pMaterial, IShader *pShader, IRenderable **ppRenderable)
     {
@@ -43,7 +43,7 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Creates a renderable object
+    // \brief Creates a renderable object
     //**********************************************************************
     CAUSTICAPI void CreateRenderable(ID3D11Buffer *pVB, uint32 numVertices,
         ID3D11Buffer *pIB, uint32 numIndices,
@@ -58,10 +58,10 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief CRenderable creates an empty renderable object
-    //!
-    //! Creates an empty renderable. This method should only be called by
-    //! the Caustic APIs (it is used during Store/Load)
+    // \brief CRenderable creates an empty renderable object
+    //
+    // Creates an empty renderable. This method should only be called by
+    // the Caustic APIs (it is used during Store/Load)
     //**********************************************************************
     CAUSTICAPI void CreateRenderable(IRenderable **ppRenderable)
     {
@@ -71,18 +71,18 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief CRenderable creates a renderable object
-    //!
-    //! Creates a renderable. A renderable is a vertex buffer, index buffer,
-    //! and the default shader. Objects are rendered in arbitrary order
-    //! (as opposed to objects in the scene graph which are rendered in order).
-    //! \param[in] pGraphics Our graphics renderer
-    //! \param[in] pVB Vertex buffer
-    //! \param[in] numVertices Number of vertices in pVB
-    //! \param[in] pIB Index buffer
-    //! \param[in] numIndices Number of indices in pIB
-    //! \param[in] pFrontMaterial Material to apply to front facing polygons
-    //! \param[in] pBackMaterial Material to apply to back facing polygons
+    // \brief CRenderable creates a renderable object
+    //
+    // Creates a renderable. A renderable is a vertex buffer, index buffer,
+    // and the default shader. Objects are rendered in arbitrary order
+    // (as opposed to objects in the scene graph which are rendered in order).
+    // \param[in] pGraphics Our graphics renderer
+    // \param[in] pVB Vertex buffer
+    // \param[in] numVertices Number of vertices in pVB
+    // \param[in] pIB Index buffer
+    // \param[in] numIndices Number of indices in pIB
+    // \param[in] pFrontMaterial Material to apply to front facing polygons
+    // \param[in] pBackMaterial Material to apply to back facing polygons
     //**********************************************************************
     CRenderable::CRenderable(ID3D11Buffer *pVB, uint32 numVertices,
                              ID3D11Buffer *pIB, uint32 numIndices,
@@ -122,12 +122,12 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Renders either the front or back faces of a mesh
-    //! \param[in] pGraphics Interface to the graphics renderer
-    //! \param[in] lights List of lights to apply
-    //! \param[in] pRenderCtx Rendering context
-    //! \param[in] pRenderMaterial Material to apply
-    //! \param[in] cullmode Culling mode to apply
+    // \brief Renders either the front or back faces of a mesh
+    // \param[in] pGraphics Interface to the graphics renderer
+    // \param[in] lights List of lights to apply
+    // \param[in] pRenderCtx Rendering context
+    // \param[in] pRenderMaterial Material to apply
+    // \param[in] cullmode Culling mode to apply
     //**********************************************************************
     void CRenderable::RenderMesh(IGraphics *pGraphics, std::vector<CRefObj<IPointLight>> &lights, IRenderCtx *pRenderCtx, IRenderMaterial *pRenderMaterial,
         D3D11_CULL_MODE cullmode)
@@ -196,8 +196,8 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Render renders the renderable object
-    //! \param[in] pGraphics Interface to the graphics renderer
+    // \brief Render renders the renderable object
+    // \param[in] pGraphics Interface to the graphics renderer
     //**********************************************************************
     void CRenderable::Render(IGraphics *pGraphics, std::vector<CRefObj<IPointLight>> &lights, IRenderCtx *pRenderCtx)
     {

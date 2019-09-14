@@ -27,7 +27,7 @@ CVideoTexture::~CVideoTexture()
 }
 
 //**********************************************************************
-//! \brief Returns the width of the texture
+// \brief Returns the width of the texture
 //**********************************************************************
 uint32 CVideoTexture::GetWidth()
 {
@@ -35,7 +35,7 @@ uint32 CVideoTexture::GetWidth()
 }
 
 //**********************************************************************
-//! \brief Returns the height of the texture
+// \brief Returns the height of the texture
 //**********************************************************************
 uint32 CVideoTexture::GetHeight()
 {
@@ -77,7 +77,7 @@ static RECT CorrectAspectRatio(const RECT& src, const MFRatio& srcPAR)
 }
 
 //**********************************************************************
-//! \brief Retrieves the current image format from the video
+// \brief Retrieves the current image format from the video
 //**********************************************************************
 void CVideoTexture::GetVideoFormat(CVideoFormat *pFormat)
 {
@@ -104,7 +104,7 @@ void CVideoTexture::GetVideoFormat(CVideoFormat *pFormat)
 }
 
 //**********************************************************************
-//! \brief Updates the underlying texture
+// \brief Updates the underlying texture
 //**********************************************************************
 void CVideoTexture::Update(IGraphics *pGraphics)
 {
@@ -191,10 +191,10 @@ void CVideoTexture::LoadFromFile(const wchar_t *pFilename, IGraphics *pGraphics)
 }
 
 //**********************************************************************
-//! \brief LoadVideoTexture loads a video and uses it as the texture source
-//! \param[in] pFilename Name of file to load
-//! \param[in] pGraphics Renderer
-//! \param[out] ppTexture Returns the new texture
+// \brief LoadVideoTexture loads a video and uses it as the texture source
+// \param[in] pFilename Name of file to load
+// \param[in] pGraphics Renderer
+// \param[out] ppTexture Returns the new texture
 //**********************************************************************
 CAUSTICAPI void LoadVideoTexture(const wchar_t *pFilename, IGraphics *pGraphics, ITexture **ppTexture)
 {

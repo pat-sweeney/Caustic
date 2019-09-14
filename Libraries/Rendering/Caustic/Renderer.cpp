@@ -54,7 +54,7 @@ namespace Caustic {
 namespace Caustic
 {
     //**********************************************************************
-    //! \brief s_defaultVSLayout defines the default layout for our default vertex
+    // \brief s_defaultVSLayout defines the default layout for our default vertex
     //**********************************************************************
     D3D11_INPUT_ELEMENT_DESC s_defaultVSLayout[] =
     {
@@ -64,7 +64,7 @@ namespace Caustic
     };
 
     //**********************************************************************
-    //! \brief s_lineVSLayout defines the default layout for our line vertex
+    // \brief s_lineVSLayout defines the default layout for our line vertex
     //**********************************************************************
     D3D11_INPUT_ELEMENT_DESC s_lineVSLayout[] =
     {
@@ -72,7 +72,7 @@ namespace Caustic
     };
 
     //**********************************************************************
-    //! \brief s_InfinitePlaneVSLayout defines the default layout for our infinite plane
+    // \brief s_InfinitePlaneVSLayout defines the default layout for our infinite plane
     //**********************************************************************
     D3D11_INPUT_ELEMENT_DESC s_InfinitePlaneVSLayout[] =
     {
@@ -80,7 +80,7 @@ namespace Caustic
     };
 
     //**********************************************************************
-    //! \brief s_drawNormalVSLayout defines the default layout for our line vertex
+    // \brief s_drawNormalVSLayout defines the default layout for our line vertex
     //**********************************************************************
     D3D11_INPUT_ELEMENT_DESC s_drawNormalVSLayout[] =
     {
@@ -89,7 +89,7 @@ namespace Caustic
     };
 
     //**********************************************************************
-    //! \brief CRenderer ctor
+    // \brief CRenderer ctor
     //**********************************************************************
     CRenderer::CRenderer() :
         m_waitForShutdown(false, true),
@@ -105,9 +105,9 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Setup is called at the start of the application to initialize
-    //! the server side of our renderer
-    //! \param[in] hwnd HWND to use for drawing
+    // \brief Setup is called at the start of the application to initialize
+    // the server side of our renderer
+    // \param[in] hwnd HWND to use for drawing
     //**********************************************************************
     void CRenderer::InitializeD3D(HWND hwnd)
     {
@@ -124,9 +124,9 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Setup is called at the start of the application to initialize
-    //! the server side of our renderer
-    //! \param[in] hwnd HWND to use for drawing
+    // \brief Setup is called at the start of the application to initialize
+    // the server side of our renderer
+    // \param[in] hwnd HWND to use for drawing
     //**********************************************************************
     void CRenderer::Setup(HWND hwnd, bool createDebugDevice)
     {
@@ -316,14 +316,14 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief DrawMesh draws a single mesh
-    //! \param[in] pMesh Mesh to render
-    //! \param[in] pMaterial Material definition for mesh (maybe nullptr)
-    //! \param[in] pTexture Texture to use when rendering (maybe nullptr)
-    //! \param[in] pShader Shader to use when rendering (maybe nullptr)
-    //! \param[in] mat Transformation matrix to apply to mesh
-    //!
-    //! CRendererServer::DrawMesh() draws the specified mesh.
+    // \brief DrawMesh draws a single mesh
+    // \param[in] pMesh Mesh to render
+    // \param[in] pMaterial Material definition for mesh (maybe nullptr)
+    // \param[in] pTexture Texture to use when rendering (maybe nullptr)
+    // \param[in] pShader Shader to use when rendering (maybe nullptr)
+    // \param[in] mat Transformation matrix to apply to mesh
+    //
+    // CRendererServer::DrawMesh() draws the specified mesh.
     //**********************************************************************
     void CRenderer::DrawMesh(ISubMesh *pSubMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat)
     {
@@ -517,8 +517,8 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief RenderFrame is typically called from the render loop to render
-    //! the next frame.
+    // \brief RenderFrame is typically called from the render loop to render
+    // the next frame.
     //**********************************************************************
     void CRenderer::RenderFrame()
     {
@@ -544,7 +544,7 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief RenderLoop is our main rendering loop
+    // \brief RenderLoop is our main rendering loop
     //**********************************************************************
     void CRenderer::RenderLoop()
     {
@@ -584,8 +584,8 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief SetCamera assigns a camera to the graphics device
-    //! \param[in] pCamera Camera for renderer to use
+    // \brief SetCamera assigns a camera to the graphics device
+    // \param[in] pCamera Camera for renderer to use
     //**********************************************************************
     void CGraphicsBase::SetCamera(ICamera *pCamera)
     {
@@ -593,9 +593,9 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Setup is called at the start of the application to initialize
-    //! the server side of our renderer
-    //! \param[in] hwnd HWND to use for drawing
+    // \brief Setup is called at the start of the application to initialize
+    // the server side of our renderer
+    // \param[in] hwnd HWND to use for drawing
     //**********************************************************************
     void CGraphicsBase::InitializeD3D(HWND hwnd)
     {
@@ -644,9 +644,9 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Setup is called at the start of the application to initialize
-    //! the server side of our renderer
-    //! \param[in] hwnd HWND to use for drawing
+    // \brief Setup is called at the start of the application to initialize
+    // the server side of our renderer
+    // \param[in] hwnd HWND to use for drawing
     //**********************************************************************
     void CGraphicsBase::Setup(HWND hwnd, bool createDebugDevice)
     {

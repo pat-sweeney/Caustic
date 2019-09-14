@@ -251,7 +251,7 @@ namespace Caustic
         Vector4() {}
         Vector4(float _x, float _y, float _z, float _w) { x = _x; y = _y; z = _z; w = _w; }
 
-        //! \brief IsEq returns whether two points are equivalent (within some tolerance)
+        // \brief IsEq returns whether two points are equivalent (within some tolerance)
         bool IsEq(Vector4 &p)
         {
             if (IsZero(p.x - x) &&
