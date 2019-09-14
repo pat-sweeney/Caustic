@@ -11,7 +11,7 @@
 
 //**********************************************************************
 // File: Camera.h
-// Contains the declaration for our <CCamera> class.
+// Contains the declaration for the <CCamera> class.
 //**********************************************************************
 
 namespace Caustic

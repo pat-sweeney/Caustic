@@ -388,6 +388,14 @@ namespace Caustic
     //**********************************************************************
     struct IRenderer : public IGraphics
     {
+        //**********************************************************************
+        // Method: Setup
+        // Initializes the renderer. Applications need to call this method at startup.
+        //
+        // Parameters:
+        // hwnd - window to bind renderer to
+        // createDebugDevice - True if application wants the debug D3D device. False otherwise.
+        //**********************************************************************
         virtual void Setup(HWND hwnd, bool createDebugDevice) = 0;
         virtual void DrawMesh(ISubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) = 0; // Draws a mesh
         virtual void RenderLoop() = 0; // Renderer entry point

@@ -4,6 +4,11 @@
 //**********************************************************************
 #pragma once
 
+//**********************************************************************
+// File: ICausticFactory.h
+// Primary interface through which clients talk to the Caustic factory.
+//**********************************************************************
+
 #include "Base\Core\Core.h"
 #include "Base\Math\Vector.h"
 #include "Geometry\Mesh\Mesh.h"
@@ -234,6 +239,10 @@ namespace Caustic
 		virtual void LoadSubMeshRenderableDataFromStream(IStream *pStream, ID3D11Device *pDevice, ID3D11Buffer **ppIndexBuffer, uint32 *pNumIndices, ID3D11Buffer **ppVertexBuffer, uint32 *pNumVertices, int *pVertexVersion, int *pIndexVersion) = 0;
 
 	};
-	
-	CAUSTICAPI void CreateCausticFactory(ICausticFactory **ppFactory);
+
+    //**********************************************************************
+    // Function: CreateCausticFactory
+    // Function used by clients to create a Caustic factory
+    //**********************************************************************
+    CAUSTICAPI void CreateCausticFactory(ICausticFactory **ppFactory);
 }

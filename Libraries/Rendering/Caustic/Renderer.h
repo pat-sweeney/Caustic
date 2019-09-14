@@ -15,14 +15,19 @@
 #include <atlbase.h>
 #include <d3d11.h>
 
+//**********************************************************************
+// File: Camera.h
+// Contains the declarations related to the CRenderer class.
+//**********************************************************************
+
 namespace Caustic
 {
     const int c_RenderCmd_DrawMesh = 0; // Command ID for rendering a mesh
     const int c_RenderCmd_SetCamera = 1; // Command ID for setting the camera
 
     //**********************************************************************
-    // \brief SVertex_1 defines a vertex in our vertex buffer that contains
-    // a position and 1 set of UVs
+    // Structure: SVertex_1
+    // Defines a vertex in our vertex buffer that contains a position and 1 set of UVs.
     //**********************************************************************
     struct SVertex_1
     {
@@ -31,7 +36,8 @@ namespace Caustic
     };
 
     //**********************************************************************
-    // \brief SVertex_2 defines the default rendering vertex
+    // Structure: SVertex_2
+    // Defines the default rendering vertex.
     //**********************************************************************
     struct SVertex_2
     {
@@ -41,7 +47,8 @@ namespace Caustic
     };
 
     //**********************************************************************
-    // \brief SVertex_3 defines the default rendering vertex
+    // Structure: SVertex_2
+    // Defines the default rendering vertex.
     //**********************************************************************
     struct SVertex_3
     {
@@ -49,7 +56,8 @@ namespace Caustic
     };
 
     //**********************************************************************
-    // \brief SVertex_4 defines the vertex used for drawing normal
+    // Structure: SVertex_4
+    // Defines the vertex used for drawing normal.
     //**********************************************************************
     struct SVertex_4
     {
@@ -57,6 +65,10 @@ namespace Caustic
         float m_dir[4]; // Direction vector to be added to the position (maybe <0.0f,0.0f,0.0f>)
     };
 
+    //**********************************************************************
+    // Structure: SVertex_5
+    // Defines the vertex used for meshes with 4 component position.
+    //**********************************************************************
     struct SVertex_5
     {
         float m_pos[4];
@@ -76,7 +88,8 @@ namespace Caustic
     struct IRenderMaterial;
 
     //**********************************************************************
-    // \brief CRenderable defines a self contained renderable object
+    // Class: CRenderable
+    // Defines a self contained renderable object
     //**********************************************************************
     class CRenderable : public IRenderable, public CRefCount
     {
@@ -125,7 +138,8 @@ namespace Caustic
     };
 
     //**********************************************************************
-    // \brief CLight defines a simple point light
+    // Class: CLight
+    // Class implementing <IPointLight>
     //**********************************************************************
     class CLight : public IPointLight, public CRefCount
     {
@@ -133,6 +147,9 @@ namespace Caustic
         void Render(IGraphics * /*pGraphics*/) {}
     };
 
+    //**********************************************************************
+    // Class: CRenderCtx
+    // Class implementing <IRenderCtx>
     //**********************************************************************
     class CRenderCtx : public IRenderCtx, public CRefCount
     {
@@ -173,8 +190,8 @@ namespace Caustic
     const int c_MaxShadowMaps = 4;
 
     //**********************************************************************
-    // \brief CGraphicsBase defines the data shared between our CGraphics
-    // and CRenderer objects
+    // Class: CGraphicsBase
+    // Defines the data shared between our CGraphics and CRenderer objects
     //**********************************************************************
     class CGraphicsBase : public CRefCount
     {
@@ -201,14 +218,14 @@ namespace Caustic
     };
 
     //**********************************************************************
-    // \brief CGraphics defines our basic rendering device
-    //
-    // CGraphics differs from CRenderer in that it is essentially just
-    // a wrapper around our underlying graphics device. It does not support
-    // things such as a scene graph, complex lighting (list of lights),
-    // or HMD support. Also, all rendering occurs on whatever thread this
-    // object is created on (versus marshalling the rendering over to a render
-    // thread). For those features, use CRenderer.
+    // Class: CGraphics
+    // Defines our basic rendering device. CGraphics differs from CRenderer
+    // in that it is essentially just a wrapper around our underlying graphics
+    // device. It does not support things such as a scene graph, complex lighting
+    // (list of lights), or HMD support. Also, all rendering occurs on whatever
+    // thread this object is created on (versus marshalling the rendering over
+    // to a render thread). For those features, use CRenderer.
+    // See <IGraphics>
     //**********************************************************************
     class CGraphics : public CGraphicsBase, public IGraphics
     {
@@ -229,10 +246,10 @@ namespace Caustic
     };
 
     //**********************************************************************
-    // \brief CRenderer defines our basic renderer
-    //
-    // CRenderer handles all rendering commands. It is generally expected that
-    // this object is running on its own thread.
+    // Class: CRenderer
+    // Defines our basic renderer. CRenderer handles all rendering commands.
+    // It is generally expected that this object is running on its own thread.
+    // See <IRenderer>
     //**********************************************************************
     class CRenderer : 
         public CGraphicsBase,
