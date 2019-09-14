@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("obb",["Struct"],[["OBBox2",,[[,,,,0,"File:Libraries/Base/Math/OBBox.h:OBBox2","CClass:OBBox2"]]],["OBBox3",,[[,,,,0,"File:Libraries/Base/Math/OBBox.h:OBBox3","CClass:OBBox3"]]]]);

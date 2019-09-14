@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("ide",["Interface"],[["IDelaunay2",,[[,,,,0,"File:Libraries/Geometry/Mesh/IDelaunay.h:IDelaunay2","CClass:IDelaunay2"]]]]);

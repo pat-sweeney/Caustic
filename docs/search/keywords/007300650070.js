@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("sep",["Variable"],[["separator",,[["PsiEditor.DispConnector",,,,0,"File:Tools/PsiEditor/DispConnector.cs:PsiEditor.DispConnector.separator","CSharpClass:PsiEditor.DispConnector:separator"]]]]);

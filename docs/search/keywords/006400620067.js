@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("dbg",["Variable"],[["DBGrid",,[["UPCdb.MainWindow",,,,0,"File:Tools/UPCdb/obj/Debug/MainWindow.g.cs:UPCdb.MainWindow.DBGrid","CSharpClass:UPCdb.MainWindow:DBGrid"]]]]);

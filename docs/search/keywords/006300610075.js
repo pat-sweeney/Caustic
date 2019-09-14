@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("cau",["Class"],[["Caustic",,[[,,,,0,"File:Libraries/Base/Core/Core.h:Caustic","CClass:Caustic"]]],["CausticException",,[[,,,,0,"File:Libraries/Base/Core/error.h:CausticException","CClass:CausticException"]]],["CAutoLock",,[[,,,,0,"File:Libraries/Base/Core/CritSec.h:CAutoLock","CClass:CAutoLock"]]]]);

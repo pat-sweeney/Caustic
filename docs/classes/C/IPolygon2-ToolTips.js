@@ -1,1 +1,0 @@
-NDContentPage.OnToolTipsLoaded({135:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines a simple vector with 2 components</div></div>",154:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines a 2D polygon</div></div>",216:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines a axis-aligned bounding box (in 2D)</div></div>"});

@@ -1,1 +1,0 @@
-NDContentPage.OnToolTipsLoaded({291:"<div class=\"NDToolTip TClass LC\"><div class=\"NDClassPrototype\" id=\"NDClassPrototype291\"><div class=\"CPEntry TClass Current\"><div class=\"CPName\">CPointLightElem</div></div></div><div class=\"TTSummary\">Defines a point light</div></div>"});

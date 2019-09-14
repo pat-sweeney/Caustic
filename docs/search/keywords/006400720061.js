@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("dra",["Function"],[["DrawCircle",,[["IImage",,,,0,"File:Libraries/Imaging/Image/Image.h:IImage.DrawCircle","CClass:IImage:DrawCircle"]]],["DrawLine",,[["IImage",,,,0,"File:Libraries/Imaging/Image/Image.h:IImage.DrawLine","CClass:IImage:DrawLine"]]]]);

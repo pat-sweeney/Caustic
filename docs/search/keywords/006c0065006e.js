@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("len",["Function"],[["Length",,[["Vector2",,,,0,"File:Libraries/Base/Math/Vector.h:Vector2.Length","CClass:Vector2:Length"]]]]);

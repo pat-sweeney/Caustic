@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("nor",["Function"],[["Normalize",,[["Vector2",,,,0,"File:Libraries/Base/Math/Vector.h:Vector2.Normalize","CClass:Vector2:Normalize"]]]]);

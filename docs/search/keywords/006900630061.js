@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("ica",["Interface"],[["ICamera",,[[,,,,0,"File:Libraries/Rendering/Caustic/Caustic.h:ICamera","CClass:ICamera"]]],["ICausticFactory",,[[,,,,0,"File:Libraries/Rendering/Caustic/ICausticFactory.h:ICausticFactory","CClass:ICausticFactory"]]]]);

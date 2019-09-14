@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("pts",["Variable"],[["pts",,[["PsiEditor.DispConnector",,,,0,"File:Tools/PsiEditor/DispConnector.cs:PsiEditor.DispConnector.pts","CSharpClass:PsiEditor.DispConnector:pts"]]]]);

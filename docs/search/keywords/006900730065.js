@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("ise",["Function","Interface"],[["IsEq",,[["Caustic",,,,0,"File:Libraries/Base/Core/Core.h:Caustic.IsEq","CClass:Caustic:IsEq"],["Vector2",,,,0,"File:Libraries/Base/Math/Vector.h:Vector2.IsEq","CClass:Vector2:IsEq"]]],["ISerialize",,[[,,,,1,"File:Libraries/Base/Core/ISerialize.h:ISerialize","CClass:ISerialize"]]]]);

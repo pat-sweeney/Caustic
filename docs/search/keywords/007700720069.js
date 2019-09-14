@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("wri",["Function"],[["WriteIndent",,[["PsiEditor.Operators",,,,0,"File:Tools/PsiEditor/MainWindow.xaml.cs:PsiEditor.Operators.WriteIndent","CSharpClass:PsiEditor.Operators:WriteIndent"]]],["WritePLY",,[["IDelaunay2",,,,0,"File:Libraries/Geometry/Mesh/IDelaunay.h:IDelaunay2.WritePLY","CClass:IDelaunay2:WritePLY"]]]]);

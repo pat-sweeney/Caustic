@@ -1,1 +1,0 @@
-NDFramePage.OnPageTitleLoaded("CClass:ISceneGraph","ISceneGraph");NDSummary.OnSummaryLoaded("CClass:ISceneGraph",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Interfaces","Interface"]],[[349,0,2,"ISceneGraph"],[350,0,1,"Functions","Functions"],[351,0,0,"Merge","Merge"],[352,0,0,"Lock","Lock"],[353,0,0,"Unlock","Unlock"]]);

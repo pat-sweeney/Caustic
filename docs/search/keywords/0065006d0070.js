@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("emp",["Function"],[["Empty",,[["BBox2",,,,0,"File:Libraries/Base/Math/BBox.h:BBox2.Empty","CClass:BBox2:Empty"],["BBox3",,,,0,"File:Libraries/Base/Math/BBox.h:BBox3.Empty","CClass:BBox3:Empty"]]]]);

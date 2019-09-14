@@ -1,1 +1,0 @@
-NDSummary.OnToolTipsLoaded("CClass:CHalfEdge",{811:"<div class=\"NDToolTip TClass LC\"><div class=\"NDClassPrototype\" id=\"NDClassPrototype811\"><div class=\"CPEntry TClass Current\"><div class=\"CPName\">CHalfEdge</div></div></div><div class=\"TTSummary\">Defines a single half edge on our graph</div></div>"});

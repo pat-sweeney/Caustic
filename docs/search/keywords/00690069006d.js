@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("iim",["Interface"],[["IImage",,[[,,,,0,"File:Libraries/Imaging/Image/Image.h:IImage","CClass:IImage"]]],["IImageBase",,[[,,,,0,"File:Libraries/Imaging/Image/Image.h:IImageBase","CClass:IImageBase"]]]]);

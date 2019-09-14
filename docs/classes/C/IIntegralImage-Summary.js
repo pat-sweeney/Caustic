@@ -1,1 +1,0 @@
-NDFramePage.OnPageTitleLoaded("CClass:IIntegralImage","IIntegralImage");NDSummary.OnSummaryLoaded("CClass:IIntegralImage",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Interfaces","Interface"]],[[836,0,2,"IIntegralImage"],[837,0,1,"Functions","Functions"],[838,0,0,"GetSum","GetSum"],[839,0,0,"BoxBlur","BoxBlur"]]);
