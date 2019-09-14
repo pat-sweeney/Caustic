@@ -15,11 +15,11 @@ namespace Caustic
     //**********************************************************************
     class CMeshConstructor : public IMeshConstructor, public CRefCount
     {
-        CRefObj<IMesh> m_spMesh;        //!< Current mesh being constructed
-        CRefObj<CSubMesh> m_spSubMesh;  //!< Current submesh being constructed
-        CFace *m_pCurFace;              //!< Current face being constructed
-        CHalfEdge *m_pPrevEdge;         //!< Previous edge
-        CGeomVertex *m_pPrevVertex;     //!< Previous vertex
+        CRefObj<IMesh> m_spMesh;        // Current mesh being constructed
+        CRefObj<CSubMesh> m_spSubMesh;  // Current submesh being constructed
+        CFace *m_pCurFace;              // Current face being constructed
+        CHalfEdge *m_pPrevEdge;         // Previous edge
+        CGeomVertex *m_pPrevVertex;     // Previous vertex
     public:
         CMeshConstructor();
         

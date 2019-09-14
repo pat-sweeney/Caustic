@@ -178,10 +178,10 @@ namespace Caustic
     //**********************************************************************
     struct CGeomVertex
     {
-        Vector3 pos;        //!< Defines the position
-        Vector3 norm;       //!< Defines the normal
-        Vector2 uvs[4];     //!< Defines UV coordinates
-        int index;          //!< Index (used for serialization)
+        Vector3 pos;        // Defines the position
+        Vector3 norm;       // Defines the normal
+        Vector2 uvs[4];     // Defines UV coordinates
+        int index;          // Index (used for serialization)
     };
 
     //**********************************************************************
@@ -190,9 +190,9 @@ namespace Caustic
     //**********************************************************************
     struct CFaceVertex
     {
-        Vector3 norm;       //!< Defines the normal
-        Vector2 uvs[4];     //!< Defines UV coordinates
-        int index;          //!< Index (used for serialization)
+        Vector3 norm;       // Defines the normal
+        Vector2 uvs[4];     // Defines UV coordinates
+        int index;          // Index (used for serialization)
     };
 
     class CFace;
@@ -203,12 +203,12 @@ namespace Caustic
     //**********************************************************************
     class CHalfEdge
     {
-        CHalfEdge *m_pNext;            //!< Next half edge in edge loop
-        CHalfEdge *m_pPrev;            //!< Previous half edge in edge loop
-        CHalfEdge *m_pOpposite;        //!< Opposite half edge
-        CGeomVertex *m_pVertex;        //!< Vertex at head of edge
-        CFace *m_pFace;                //!< Face to the left of edge
-        uint32 m_smoothingGroup;       //!< Smoothing group this edge belongs to
+        CHalfEdge *m_pNext;            // Next half edge in edge loop
+        CHalfEdge *m_pPrev;            // Previous half edge in edge loop
+        CHalfEdge *m_pOpposite;        // Opposite half edge
+        CGeomVertex *m_pVertex;        // Vertex at head of edge
+        CFace *m_pFace;                // Face to the left of edge
+        uint32 m_smoothingGroup;       // Smoothing group this edge belongs to
         int index;
 
         friend class CFace;
@@ -237,11 +237,11 @@ namespace Caustic
     //**********************************************************************
     class CFace
     {
-        Vector3 m_normal;                      //!< Face's normal vector
-        Vector3 m_center;                      //!< Center position of face
-        CHalfEdge *m_pEdge;                    //!< First edge in this face
+        Vector3 m_normal;                      // Face's normal vector
+        Vector3 m_center;                      // Center position of face
+        CHalfEdge *m_pEdge;                    // First edge in this face
         std::vector<CGeomVertex*> m_vertices;
-        std::vector<CFaceVertex> m_vertexData; //!< Data at each vertex specific to this face
+        std::vector<CFaceVertex> m_vertexData; // Data at each vertex specific to this face
         int index;
         
         friend class CHalfEdge;
@@ -264,12 +264,12 @@ namespace Caustic
     //**********************************************************************
     enum EVertexFlags
     {
-        HasPosition = 0x01,    //!< Vertex's 'pos' field is valid
-        HasNormal = 0x02,    //!< Vertex's 'norm' field is valid
-        HasUV0 = 0x04,        //!< Vertex's 'uv[0]' field is valid
-        HasUV1 = 0x08,        //!< Vertex's 'uv[1]' field is valid
-        HasUV2 = 0x10,        //!< Vertex's 'uv[2]' field is valid
-        HasUV3 = 0x20,        //!< Vertex's 'uv[3]' field is valid
+        HasPosition = 0x01,    // Vertex's 'pos' field is valid
+        HasNormal = 0x02,    // Vertex's 'norm' field is valid
+        HasUV0 = 0x04,        // Vertex's 'uv[0]' field is valid
+        HasUV1 = 0x08,        // Vertex's 'uv[1]' field is valid
+        HasUV2 = 0x10,        // Vertex's 'uv[2]' field is valid
+        HasUV3 = 0x20,        // Vertex's 'uv[3]' field is valid
     };
 
     //**********************************************************************
@@ -278,8 +278,8 @@ namespace Caustic
     //**********************************************************************
     enum ETriangulateMethod
     {
-        EarClipping,   //!< Use "Ear-clipping" method (clip triangle off polygon, repeat)
-        PointInsertion //!< Use "Point-Insertion" method (insert new vertices to form triangles)
+        EarClipping,   // Use "Ear-clipping" method (clip triangle off polygon, repeat)
+        PointInsertion // Use "Point-Insertion" method (insert new vertices to form triangles)
     };
 
     const uint32 c_InvalidIndex = 0xffffffff;
@@ -290,7 +290,7 @@ namespace Caustic
     //**********************************************************************
     enum EMeshFlags
     {
-        TwoSided = 0x1, //!< Mesh is considered to be two sided
+        TwoSided = 0x1, // Mesh is considered to be two sided
     };
 
     //**********************************************************************

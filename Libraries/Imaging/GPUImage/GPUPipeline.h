@@ -51,9 +51,9 @@ namespace Caustic
     };
 
     // Define list of predefined filter names
-    static const wchar_t *g_GaussianVerticalFilter = L"GaussianVertical"; //!< Name of GPU node that performs a gaussian blur in the vertical direction
-    static const wchar_t *g_GaussianHorizontalFilter = L"GaussianHorizontal"; //!< Name of GPU node that performs a gaussian blur in the horizontal direction
-    static const wchar_t *g_RawCopyFilter = L"RawCopy"; //!< Name of GPU node that performs a raw copy of the data
+    static const wchar_t *g_GaussianVerticalFilter = L"GaussianVertical"; // Name of GPU node that performs a gaussian blur in the vertical direction
+    static const wchar_t *g_GaussianHorizontalFilter = L"GaussianHorizontal"; // Name of GPU node that performs a gaussian blur in the horizontal direction
+    static const wchar_t *g_RawCopyFilter = L"RawCopy"; // Name of GPU node that performs a raw copy of the data
 
     struct IGPUPipeline : public IRefCount
     {

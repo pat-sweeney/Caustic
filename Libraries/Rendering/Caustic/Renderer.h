@@ -17,8 +17,8 @@
 
 namespace Caustic
 {
-    const int c_RenderCmd_DrawMesh = 0; //!< Command ID for rendering a mesh
-    const int c_RenderCmd_SetCamera = 1; //!< Command ID for setting the camera
+    const int c_RenderCmd_DrawMesh = 0; // Command ID for rendering a mesh
+    const int c_RenderCmd_SetCamera = 1; // Command ID for setting the camera
 
     //**********************************************************************
     //! \brief SVertex_1 defines a vertex in our vertex buffer that contains
@@ -26,8 +26,8 @@ namespace Caustic
     //**********************************************************************
     struct SVertex_1
     {
-        float m_pos[3]; //!< Defines the world coordinate position for this vertex
-        float m_uvs[2]; //!< Defines the UV coordinates
+        float m_pos[3]; // Defines the world coordinate position for this vertex
+        float m_uvs[2]; // Defines the UV coordinates
     };
 
     //**********************************************************************
@@ -35,9 +35,9 @@ namespace Caustic
     //**********************************************************************
     struct SVertex_2
     {
-        float m_pos[3]; //!< Defines the world coordinate position for this vertex
-        float m_norm[3]; //!< Defines the vertex normal
-        float m_uvs[2]; //!< Defines the UV coordinates
+        float m_pos[3]; // Defines the world coordinate position for this vertex
+        float m_norm[3]; // Defines the vertex normal
+        float m_uvs[2]; // Defines the UV coordinates
     };
 
     //**********************************************************************
@@ -45,7 +45,7 @@ namespace Caustic
     //**********************************************************************
     struct SVertex_3
     {
-        float m_pos[3]; //!< Defines the world coordinate position for this vertex
+        float m_pos[3]; // Defines the world coordinate position for this vertex
     };
 
     //**********************************************************************
@@ -53,8 +53,8 @@ namespace Caustic
     //**********************************************************************
     struct SVertex_4
     {
-        float m_pos[3]; //!< Defines the world coordinate position for this vertex
-        float m_dir[4]; //!< Direction vector to be added to the position (maybe <0.0f,0.0f,0.0f>)
+        float m_pos[3]; // Defines the world coordinate position for this vertex
+        float m_dir[4]; // Direction vector to be added to the position (maybe <0.0f,0.0f,0.0f>)
     };
 
     struct SVertex_5
@@ -62,7 +62,7 @@ namespace Caustic
         float m_pos[4];
     };
 
-    const int c_DefaultVertexVerion = 1; //!< Defines the default vertex version
+    const int c_DefaultVertexVerion = 1; // Defines the default vertex version
 
     const int c_PassFirst = 0;
     const int c_PassObjID = 0;
@@ -81,14 +81,14 @@ namespace Caustic
     class CRenderable : public IRenderable, public CRefCount
     {
     protected:
-        CComPtr<ID3D11Buffer> m_spVB; //!< Defines the vertex buffer
-        CComPtr<ID3D11Buffer> m_spIB; //!< Defines the index buffer
+        CComPtr<ID3D11Buffer> m_spVB; // Defines the vertex buffer
+        CComPtr<ID3D11Buffer> m_spIB; // Defines the index buffer
         CRefObj<IRenderMaterial> m_spFrontMaterial;
         CRefObj<IRenderMaterial> m_spBackMaterial;
-        uint32 m_numIndices; //!< Number of indices in m_spIB
-        uint32 m_numVerts; //!< Number of vertices in m_spVB
-        uint32 m_passes; //!< List of passes to render this object in
-        DirectX::XMMATRIX m_xform; //!< Current transform to apply to object
+        uint32 m_numIndices; // Number of indices in m_spIB
+        uint32 m_numVerts; // Number of vertices in m_spVB
+        uint32 m_passes; // List of passes to render this object in
+        DirectX::XMMATRIX m_xform; // Current transform to apply to object
 
         CComPtr<ID3D11Buffer> m_spNormalVB;
         uint32 m_numNormalVerts;
@@ -179,16 +179,16 @@ namespace Caustic
     class CGraphicsBase : public CRefCount
     {
     protected:
-        CComPtr<ID3D11Device> m_spDevice;                   //!< D3D Device
-        CComPtr<ID3D11DeviceContext> m_spContext;           //!< D3D Device context
-        CComPtr<IDXGISwapChain> m_spSwapChain;              //!< D3D Swap chain
-        D3D_FEATURE_LEVEL m_featureLevel;                   //!< D3D feature level
-        CRefObj<ICamera> m_spCamera;                        //!< Camera to use for rendering
-        CRefObj<IRenderCtx> m_spRenderCtx;                  //!< D3D Render context
-        CComPtr<ID3D11RenderTargetView> m_spRTView;         //!< Render target view
-        CComPtr<ID3D11DepthStencilView> m_spStencilView;    //!< Stencil view
-        CComPtr<ID3D11Texture2D> m_spDepthStencilBuffer;    //!< Our depth map
-        D3D11_TEXTURE2D_DESC m_BBDesc;                      //!< Description of our back buffer
+        CComPtr<ID3D11Device> m_spDevice;                   // D3D Device
+        CComPtr<ID3D11DeviceContext> m_spContext;           // D3D Device context
+        CComPtr<IDXGISwapChain> m_spSwapChain;              // D3D Swap chain
+        D3D_FEATURE_LEVEL m_featureLevel;                   // D3D feature level
+        CRefObj<ICamera> m_spCamera;                        // Camera to use for rendering
+        CRefObj<IRenderCtx> m_spRenderCtx;                  // D3D Render context
+        CComPtr<ID3D11RenderTargetView> m_spRTView;         // Render target view
+        CComPtr<ID3D11DepthStencilView> m_spStencilView;    // Stencil view
+        CComPtr<ID3D11Texture2D> m_spDepthStencilBuffer;    // Our depth map
+        D3D11_TEXTURE2D_DESC m_BBDesc;                      // Description of our back buffer
 
         friend CAUSTICAPI void CreateGraphics(HWND hwnd, IGraphics **ppGraphics);
 
@@ -239,24 +239,24 @@ namespace Caustic
         public IRenderer
     {
         CRefObj<ISceneGraph> m_spSceneGraph;
-        std::vector<CRenderable> m_singleObjs;                              //!< List of individual renderable objects (outside scene graph)
-        std::vector<CRefObj<IPointLight>> m_lights;                         //!< List of lights in this scene
-        CComPtr<ID3D11Texture2D> m_spObjIDTexture;                          //!< Texture for rendering object IDs
-        CComPtr<ID3D11RenderTargetView> m_spObjIDRTView;                    //!< Render target view for m_spObjIDTexture
-        CComPtr<ID3D11Texture2D> m_spShadowTexture[c_MaxShadowMaps];        //!< Texture for shadow map
-        CComPtr<ID3D11RenderTargetView> m_spShadowRTView[c_MaxShadowMaps];  //!< Render target view for m_spShadowTexture
+        std::vector<CRenderable> m_singleObjs;                              // List of individual renderable objects (outside scene graph)
+        std::vector<CRefObj<IPointLight>> m_lights;                         // List of lights in this scene
+        CComPtr<ID3D11Texture2D> m_spObjIDTexture;                          // Texture for rendering object IDs
+        CComPtr<ID3D11RenderTargetView> m_spObjIDRTView;                    // Render target view for m_spObjIDTexture
+        CComPtr<ID3D11Texture2D> m_spShadowTexture[c_MaxShadowMaps];        // Texture for shadow map
+        CComPtr<ID3D11RenderTargetView> m_spShadowRTView[c_MaxShadowMaps];  // Render target view for m_spShadowTexture
 
-        CEvent m_waitForShutdown;                       //!< Event to control shutdown (waits for render thread to exit)
-        bool m_exitThread;                              //!< Controls whether we are exiting the render thread
-        CComPtr<ID3D11Buffer> m_spLineVB;               //!< Vertex buffer used to draw lines
-        CRefObj<IShader> m_spLineShader;                //!< Shader used to draw lines
-        CComPtr<ID3D11Buffer> m_spInfinitePlaneVB;      //!< Vertex buffer used to draw ground plane
-        CComPtr<ID3D11Buffer> m_spInfinitePlaneIB;      //!< Index buffer used to draw ground plane
-        CRefObj<IShader> m_spInfinitePlaneShader;       //!< Shader used to draw ground plane
+        CEvent m_waitForShutdown;                       // Event to control shutdown (waits for render thread to exit)
+        bool m_exitThread;                              // Controls whether we are exiting the render thread
+        CComPtr<ID3D11Buffer> m_spLineVB;               // Vertex buffer used to draw lines
+        CRefObj<IShader> m_spLineShader;                // Shader used to draw lines
+        CComPtr<ID3D11Buffer> m_spInfinitePlaneVB;      // Vertex buffer used to draw ground plane
+        CComPtr<ID3D11Buffer> m_spInfinitePlaneIB;      // Index buffer used to draw ground plane
+        CRefObj<IShader> m_spInfinitePlaneShader;       // Shader used to draw ground plane
 #ifdef SUPPORT_FULLQUAD
-        CComPtr<ID3D11Buffer> m_spFullQuadVB;           //!< Vertex buffer used for drawing full screen quad
-        CComPtr<ID3D11Buffer> m_spFullQuadIB;           //!< Index buffer used for drawing full screen quad
-        CRefObj<IShader> m_spFullQuadShader;            //!< Shader used for drawing full screen quad
+        CComPtr<ID3D11Buffer> m_spFullQuadVB;           // Vertex buffer used for drawing full screen quad
+        CComPtr<ID3D11Buffer> m_spFullQuadIB;           // Index buffer used for drawing full screen quad
+        CRefObj<IShader> m_spFullQuadShader;            // Shader used for drawing full screen quad
 #endif // SUPPORT_FULLQUAD
 
         void RenderScene();

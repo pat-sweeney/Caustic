@@ -20,7 +20,7 @@ namespace Caustic
     class CSceneElem
     {
     protected:
-        std::wstring m_Name; //!< User provided name for this element
+        std::wstring m_Name; // User provided name for this element
         uint32 m_Flags;
         BBox3 m_BBox;
 

@@ -31,9 +31,9 @@ namespace Caustic
         template <typename T>
         struct CBlock
         {
-            std::vector<CItem<T>> m_items;  //!< List of items
-            int m_itemsFree;                //!< Number of items in the list that are free
-            int m_nextFree;                 //!< Next item that is free. If unsure of next item, this will be -1
+            std::vector<CItem<T>> m_items;  // List of items
+            int m_itemsFree;                // Number of items in the list that are free
+            int m_nextFree;                 // Next item that is free. If unsure of next item, this will be -1
 
             CBlock(int blockSize)
             {
@@ -48,9 +48,9 @@ namespace Caustic
             }
         };
 
-        std::vector<CBlock<T>*> m_blocks;   //!< List of blocks
-        int m_defaultBlockSize;             //!< Size of each item
-        CBlock<T> *m_curBlock;              //!< Current block to allocate items from
+        std::vector<CBlock<T>*> m_blocks;   // List of blocks
+        int m_defaultBlockSize;             // Size of each item
+        CBlock<T> *m_curBlock;              // Current block to allocate items from
     public:
 		//**********************************************************************
 		// Constructor: CBlockAllocator

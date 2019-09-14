@@ -44,7 +44,7 @@ namespace Caustic
 		// Method: GetFormat
 		// Returns the pixel format of the texture
 		//**********************************************************************
-		virtual DXGI_FORMAT GetFormat() = 0; //!< Returns the DirectX format of the texture
+		virtual DXGI_FORMAT GetFormat() = 0; // Returns the DirectX format of the texture
 
 		//**********************************************************************
 		// Method: Update
@@ -54,7 +54,7 @@ namespace Caustic
 		// Parameters:
 		// pGraphics - graphics device
 		//**********************************************************************
-		virtual void Update(IGraphics *pGraphics) = 0; //!< Called to update texture
+		virtual void Update(IGraphics *pGraphics) = 0; // Called to update texture
 
 		//**********************************************************************
 		// Method: GetD3DTexture

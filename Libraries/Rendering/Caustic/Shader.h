@@ -62,12 +62,12 @@ namespace Caustic
     //**********************************************************************
     struct ShaderParam
     {
-        EShaderParamType m_type; //!< Defines type of this parameter
-        uint32 m_offset;         //!< Offset into our constant buffer where this parameter resides
-        std::wstring m_name;     //!< name of this parameter
-        std::any m_value;      //!< Value assigned to this parameter
+        EShaderParamType m_type; // Defines type of this parameter
+        uint32 m_offset;         // Offset into our constant buffer where this parameter resides
+        std::wstring m_name;     // name of this parameter
+        std::any m_value;      // Value assigned to this parameter
         std::vector<std::any> m_values;
-        bool m_dirty;            //!< Is parameter dirty and needs to be pushed to constant buffer
+        bool m_dirty;            // Is parameter dirty and needs to be pushed to constant buffer
     };
 
     struct Float { float x; Float(float _x) { x = _x; } };

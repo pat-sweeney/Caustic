@@ -111,7 +111,7 @@ namespace Caustic
     }
 
     //**********************************************************************
-    //! \brief Called at end of mouse drage
+    //! \brief Called at end of mouse drag
     //**********************************************************************
     void CTrackball::EndTracking()
     {
