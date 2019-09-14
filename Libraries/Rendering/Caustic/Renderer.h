@@ -16,7 +16,7 @@
 #include <d3d11.h>
 
 //**********************************************************************
-// File: Camera.h
+// File: Renderer.h
 // Contains the declarations related to the CRenderer class.
 //**********************************************************************
 

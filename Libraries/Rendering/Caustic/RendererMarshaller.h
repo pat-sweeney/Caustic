@@ -9,11 +9,23 @@
 #include <queue>
 #include <type_traits>
 
+//**********************************************************************
+// File: RendererMarshaller.h
+// Contains the declaration for the <CRendererMarshaller> class.
+//**********************************************************************
+
 namespace Caustic
 {
     //**********************************************************************
-    // \brief CRendererMarshaller marshals function calls from a user thread
-    // to the render thread.
+    // Class: CRendererMarshaller
+    // Implements <IRendererMarshaller>
+    //
+    // Members:
+    // m_cs - Critical section used to control access to the render queue
+    // m_spRenderer - Server side renderer
+    // m_queue - Queue of client side renderer requests
+    // m_exit - Flag to indicate whether the renderer is exiting
+    // m_thread - Handle to the renderer thread
     //**********************************************************************
     class CRendererMarshaller :
         public IRenderer,
