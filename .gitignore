@@ -54,3 +54,8 @@ Documentation/**
 
 /packages
 /External/sqlite3.def
+docs/
+!docs/Comments.txt
+!docs/Languages.txt
+!docs/Project.txt
+!docs/README
