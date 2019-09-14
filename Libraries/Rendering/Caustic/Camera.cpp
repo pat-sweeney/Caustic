@@ -10,8 +10,23 @@
 #include <math.h>
 #include <DirectXMath.h>
 
+//**********************************************************************
+// File: Camera.cpp
+// Contains the methods used to implement the <CCamera> object.
+//**********************************************************************
+
 namespace Caustic
 {
+    //**********************************************************************
+    // Function: CreateCamera
+    // Global function for creating a camera. This method should generally
+    // not be called. Use the ICausticFactory to create new Caustic objects.
+    //
+    // Parameters:
+    // leftHanded - indicates whether we are creating a left handed coordinate system
+    //    or a right handed coordinates system.
+    // ppCamera - Returns the newly created camera.
+    //**********************************************************************
     CAUSTICAPI void CreateCamera(bool leftHanded, ICamera **ppCamera)
     {
         std::unique_ptr<CCamera> pCamera(new CCamera(leftHanded));
@@ -19,6 +34,13 @@ namespace Caustic
         (*ppCamera)->AddRef();
     }
 
+    //**********************************************************************
+    // Method: CCamera
+    // Defines the implementation of <ICamera>
+    //
+    // Parameters:
+    // leftHanded - indicates we should create a camera using Left handed coordinates
+    //      instead of right handed coordinates.
     //**********************************************************************
     CCamera::CCamera(bool leftHanded) :
         m_leftHanded(leftHanded)
@@ -32,10 +54,16 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Method: ~CCamera
+    // Implements the dtor for CCamera
+    //**********************************************************************
     CCamera::~CCamera()
     {
     }
 
+    //**********************************************************************
+    // Method: GetProjection
+    // See <ICamera::GetProjection>
     //**********************************************************************
     DirectX::XMMATRIX CCamera::GetProjection()
     {
@@ -43,12 +71,18 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Method: GetView
+    // See <ICamera::GetView>
+    //**********************************************************************
     DirectX::XMMATRIX CCamera::GetView()
     {
         return m_View;
     }
 
 	//**********************************************************************
+    // Method: GetUVN
+    // See <ICamera::GetUVN>
+    //**********************************************************************
     void CCamera::GetUVN(Vector3 *u, Vector3 *v, Vector3 *n)
     {
         if (u)
@@ -75,17 +109,26 @@ namespace Caustic
     }
 
 	//**********************************************************************
+    // Method: SetOffset
+    // See <ICamera::SetOffset>
+    //**********************************************************************
     void CCamera::SetOffset(Vector3 &offset)
     {
         m_offset = offset;
     }
 
 	//**********************************************************************
-	void CCamera::GetOffset(Vector3 &offset)
+    // Method: GetOffset
+    // See <ICamera::GetOffset>
+    //**********************************************************************
+    void CCamera::GetOffset(Vector3 &offset)
     {
         offset = m_offset;
     }
 
+    //**********************************************************************
+    // Method: SetParams
+    // See <ICamera::SetParams>
     //**********************************************************************
     void CCamera::SetParams(float fov, float aspectRatio, float nearZ, float farZ)
     {
@@ -99,6 +142,9 @@ namespace Caustic
             m_Pers = DirectX::XMMatrixPerspectiveFovRH(m_FOV, m_AspectRatio, m_NearZ, m_FarZ);
     }
 
+    //**********************************************************************
+    // Method: SetPosition
+    // See <ICamera::SetPosition>
     //**********************************************************************
     void CCamera::SetPosition(Vector3 &eye, Vector3 &look, Vector3 &up)
     {
@@ -116,6 +162,9 @@ namespace Caustic
             m_View = DirectX::XMMatrixLookAtRH(vEye, vLook, vUp);
     }
 
+    //**********************************************************************
+    // Method: GetPosition
+    // See <ICamera::GetPosition>
     //**********************************************************************
     void CCamera::GetPosition(Vector3 *pEye, Vector3 *pLook, Vector3 *pUp, Vector3 *pU, Vector3 *pV, Vector3 *pN)
     {
@@ -146,7 +195,10 @@ namespace Caustic
     }
 
 	//**********************************************************************
-	void CCamera::Load(IStream *pStream)
+    // Method: Load
+    // See <ISerialize::Load>
+    //**********************************************************************
+    void CCamera::Load(IStream *pStream)
     {
         ULONG bytesRead;
         CT(pStream->Read(&m_leftHanded, sizeof(m_leftHanded), &bytesRead));
@@ -161,7 +213,10 @@ namespace Caustic
     }
 
 	//**********************************************************************
-	void CCamera::Store(IStream *pStream)
+    // Method: Store
+    // See <ISerialize::Store>
+    //**********************************************************************
+    void CCamera::Store(IStream *pStream)
     {
         ULONG bytesWritten;
         CT(pStream->Write(&m_leftHanded, sizeof(m_leftHanded), &bytesWritten));

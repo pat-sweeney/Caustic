@@ -9,8 +9,29 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 
+//**********************************************************************
+// File: Camera.h
+// Contains the declaration for our <CCamera> class.
+//**********************************************************************
+
 namespace Caustic
 {
+    //**********************************************************************
+    // Class: CCamera
+    // Implements <ICamera>
+    //
+    // Members:
+    // m_leftHanded - Indicates if camera uses left or right handed coordinates
+    // m_FOV - Field of view in radians
+    // m_AspectRation - Aspect ratio of the output camera
+    // m_NearZ - Near clipping plane in meters
+    // m_FarZ - Far clipping plane in meters
+    // m_Eye - Position of camera in world coordinates (in meters)
+    // m_Look - Point camera is looking at in world coordinates (in meters)
+    // m_Up - Up vector
+    // m_offset - Additional offset added to camera's position (in meters)
+    // m_Pers - Current perspective matrix
+    // m_View - Current view matrix (world to camera transform)
     //**********************************************************************
     _declspec(align(16)) class CCamera : public ICamera, public CRefCount
     {

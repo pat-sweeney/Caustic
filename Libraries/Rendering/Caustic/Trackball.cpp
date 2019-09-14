@@ -6,8 +6,21 @@
 #include "Trackball.h"
 #include <algorithm>
 
+//**********************************************************************
+// File: Trackball.cpp
+// Contains the methods used to implement the CTrackball object.
+//**********************************************************************
+
 namespace Caustic
 {
+    //**********************************************************************
+    // Function: CreateTrackball
+    // Global function for creating a track ball. This method should generally
+    // not be called. Use the ICausticFactory to create new Caustic objects.
+    //
+    // Parameters:
+    // ppTrackball - Returns the newly created trackball.
+    //**********************************************************************
     CAUSTICAPI void CreateTrackball(ITrackball **ppTrackball)
     {
         std::unique_ptr<CTrackball> spTrackball(new CTrackball());
@@ -16,10 +29,13 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Converts a screen coordinate into a point on our trackball surface
-    // \param[in] screenX X position of mouse in screen coordinates
-    // \param[in] screenY Y position of mouse in screen coordinates
-    // \param[out] pPos Returns the position of the screen coordinate on the trackball surface
+    // Method: ComputeSurfacePosition
+    // Converts a screen coordinate into a point on our trackball surface
+    //
+    // Parameters:
+    // screenX - X position of mouse in screen coordinates
+    // screenY - Y position of mouse in screen coordinates
+    // pPos - Returns the position of the screen coordinate on the trackball surface
     //**********************************************************************
     void CTrackball::ComputeSurfacePosition(int screenX, int screenY, Vector3 *pPos)
     {
@@ -44,11 +60,14 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Called at start of mouse drag
-    // \param[in] screenX X position of mouse in screen coordinates
-    // \param[in] screenY Y position of mouse in screen coordinates
-    // \param[in] screenW Width of screen in pixels
-    // \param[in] screenH Height of screen in pixels
+    // Method: BeginTracking
+    // Called at start of mouse drag
+    //
+    // Parameters:
+    // screenX - X position of mouse in screen coordinates
+    // screenY - Y position of mouse in screen coordinates
+    // screenW - Width of screen in pixels
+    // screenH - Height of screen in pixels
     //**********************************************************************
     void CTrackball::BeginTracking(int screenX, int screenY, int screenW, int screenH)
     {
@@ -63,10 +82,13 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Called each time mouse is moved
-    // \param[in] constraint Constrain rotation to be about specific axis
-    // \param[in] screenX X position of mouse in screen coordinates
-    // \param[in] screenY Y position of mouse in screen coordinates
+    // Method: UpdateTracking
+    // Called each time mouse is moved
+    //
+    // Parameters:
+    // constraint - Constrain rotation to be about specific axis
+    // screenX - X position of mouse in screen coordinates
+    // screenY - Y position of mouse in screen coordinates
     //**********************************************************************
     bool CTrackball::UpdateTracking(int screenX, int screenY, ETrackballConstraint constraint, DirectX::XMMATRIX *pMatrix)
     {
@@ -111,7 +133,8 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Called at end of mouse drag
+    // Method: EndTracking
+    // Called at end of mouse drag
     //**********************************************************************
     void CTrackball::EndTracking()
     {

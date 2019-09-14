@@ -9,16 +9,32 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 
+//**********************************************************************
+// File: CausticFactory.h
+// Contains the declaration for our <CCausticFactory> class.
+//**********************************************************************
+
 namespace Caustic
 {
-	class CCausticFactory : public ICausticFactory, public CRefCount
+    //**********************************************************************
+    // Class: CCausticFactory
+    // Implements <ICausticFactory>
+    //
+    // Members:
+    // factory - The CausticFactory singleton
+    //**********************************************************************
+    class CCausticFactory : public ICausticFactory, public CRefCount
 	{
 		static CRefObj<ICausticFactory> factory;
 	public:
 		CCausticFactory();
 		~CCausticFactory();
 
-		static CRefObj<ICausticFactory> Instance()
+        //**********************************************************************
+        // Method: Instance()
+        // Returns the CCausticFactory singleton.
+        //**********************************************************************
+        static CRefObj<ICausticFactory> Instance()
 		{
 			if (factory.p == nullptr)
 			{

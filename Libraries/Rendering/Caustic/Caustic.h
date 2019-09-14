@@ -16,7 +16,9 @@
 #include <any>
 
 //**********************************************************************
-// This file defines the published interface for talking to the Caustic Renderer
+// File: Caustic.h
+// This file defines the published interface for talking to the Caustic Renderer.
+// This include is usually the top level include that clients will use.
 //**********************************************************************
 
 // Namespace: Caustic
