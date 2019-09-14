@@ -1,0 +1,13 @@
+This folder contains the configuration files and output from NaturalDocs.
+There are 3 configuration files:
+      Comments.txt
+      Languages.txt
+      Project.txt
+These were created by running the command line (from our $CausticRoot folder)
+	"C:\Program Files (x86)\Natural Docs\NaturalDocs.exe" docs
+We then hand edited the generated Project.txt file.
+
+For more details see the NaturalDocs documentation at:
+	https://www.naturaldocs.org/whats_new_in_2.0/configuring_and_running/
+
+NOTE: Only this README and the 3 files listed above are checked into github. The generated documentation is not checked in.
