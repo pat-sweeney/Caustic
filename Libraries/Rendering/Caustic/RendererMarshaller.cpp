@@ -61,6 +61,7 @@ namespace Caustic {
             }
         );
         WaitForSingleObject(evt, INFINITE);
+        CloseHandle(evt);
     }
 
     void CRendererMarshaller::LoadScene(const wchar_t *pFilename, ISceneGraph *pSceneGraph)
@@ -78,6 +79,7 @@ namespace Caustic {
             }
         );
         WaitForSingleObject(evt, INFINITE);
+        CloseHandle(evt);
     }
     
     void CRendererMarshaller::LoadTexture(const wchar_t *pPath, ITexture **ppTexture)
@@ -91,6 +93,7 @@ namespace Caustic {
             }
         );
         WaitForSingleObject(evt, INFINITE);
+        CloseHandle(evt);
     }
 
     void CRendererMarshaller::LoadVideoTexture(const wchar_t *pPath, ITexture **ppTexture)
@@ -104,6 +107,7 @@ namespace Caustic {
             }
         );
         WaitForSingleObject(evt, INFINITE);
+        CloseHandle(evt);
     }
 
     void CRendererMarshaller::SetSceneGraph(ISceneGraph *pSceneGraph)
