@@ -12,7 +12,7 @@
 #include "Base\Core\Core.h"
 #include "Base\Math\Vector.h"
 #include "Geometry\Mesh\Mesh.h"
-#include "Rendering\Caustic\Graphics.h"
+#include "Rendering\Caustic\IGraphics.h"
 #include "Rendering\Caustic\Texture.h"
 #include <Windows.h>
 #include <atlbase.h>

@@ -7,7 +7,8 @@
 #include "Base\Core\Core.h"
 #include "Base\Math\Vector.h"
 #include "Geometry\Mesh\Mesh.h"
-#include "Rendering\Caustic\Graphics.h"
+#include "Rendering\Caustic\IGraphics.h"
+#include "Rendering\Caustic\ITexture.h"
 #include <Windows.h>
 #include <atlbase.h>
 #include <d3d11.h>
@@ -24,62 +25,6 @@
 // Namespace: Caustic
 namespace Caustic
 {
-    //**********************************************************************
-    // Interface: ITexture
-    // Defines how clients interact with textures
-    //**********************************************************************
-    struct ITexture : public IRefCount
-    {
-		//**********************************************************************
-		// Method: GetWidth
-		// Returns the width of the texture in pixels
-		//**********************************************************************
-		virtual uint32 GetWidth() = 0;
-
-		//**********************************************************************
-		// Method: GetHeight
-		// Returns the height of the texture in pixels
-		//**********************************************************************
-		virtual uint32 GetHeight() = 0;
-
-		//**********************************************************************
-		// Method: GetFormat
-		// Returns the pixel format of the texture
-		//**********************************************************************
-		virtual DXGI_FORMAT GetFormat() = 0; // Returns the DirectX format of the texture
-
-		//**********************************************************************
-		// Method: Update
-		// Updates the underlying graphics card texture. Primarily used for
-		// video textures.
-		//
-		// Parameters:
-		// pGraphics - graphics device
-		//**********************************************************************
-		virtual void Update(IGraphics *pGraphics) = 0; // Called to update texture
-
-		//**********************************************************************
-		// Method: GetD3DTexture
-		// Returns the underlying D3D texture
-		//**********************************************************************
-		virtual CComPtr<ID3D11Texture2D> GetD3DTexture() = 0;
-
-		//**********************************************************************
-		// Method: GetD3DTextureRV
-		// Returns the underlying D3D shader resource view associated with the texture
-		//**********************************************************************
-		virtual CComPtr<ID3D11ShaderResourceView> GetD3DTextureRV() = 0;
-
-		//**********************************************************************
-		// Method: GenerateMips
-		// Generates a set of mipmaps for the texture
-		//
-		// Parameters:
-		// pGraphics - graphics device
-		//**********************************************************************
-		virtual void GenerateMips(IGraphics *pGraphics) = 0;
-    };
-
 	//**********************************************************************
 	// Interface: ISampler
 	// Defines a sampler. Samplers define how the underlying texture is accessed by shaders.

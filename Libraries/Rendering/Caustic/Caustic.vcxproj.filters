@@ -8,6 +8,9 @@
     <Filter Include="Source Files\Shaders">
       <UniqueIdentifier>{18894de1-d61c-43a4-9c99-af34fc4cc7c2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Interfaces">
+      <UniqueIdentifier>{415652dd-7fcc-4ee7-89a5-381c7e85db2a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -83,6 +86,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="ICausticFactory.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ITexture.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

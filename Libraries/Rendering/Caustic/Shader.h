@@ -6,7 +6,7 @@
 #include "Base\Core\Core.h"
 #include "Base\Core\error.h"
 #include "Base\Core\RefCount.h"
-#include "Rendering\Caustic\Graphics.h"
+#include "Rendering\Caustic\IGraphics.h"
 #include "Rendering\Caustic\Caustic.h"
 #include <string>
 #include <atlbase.h>

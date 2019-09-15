@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -210,12 +210,13 @@
     <ClInclude Include="Caustic.h" />
     <ClInclude Include="CausticFactory.h" />
     <ClInclude Include="ICausticFactory.h" />
+    <ClInclude Include="ITexture.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="RendererMarshaller.h" />
     <ClInclude Include="DefaultPS.h" />
     <ClInclude Include="DefaultVS.h" />
     <ClInclude Include="defs.h" />
-    <ClInclude Include="Graphics.h" />
+    <ClInclude Include="IGraphics.h" />
     <ClInclude Include="LinePS.h" />
     <ClInclude Include="LineVS.h" />
     <ClInclude Include="Renderer.h" />
