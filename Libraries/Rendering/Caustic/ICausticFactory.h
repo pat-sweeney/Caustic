@@ -14,6 +14,7 @@
 #include "Geometry\Mesh\Mesh.h"
 #include "Rendering\Caustic\IGraphics.h"
 #include "Rendering\Caustic\Texture.h"
+#include "Rendering\Caustic\ISampler.h"
 #include <Windows.h>
 #include <atlbase.h>
 #include <d3d11.h>
