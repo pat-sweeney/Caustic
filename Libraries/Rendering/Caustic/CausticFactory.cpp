@@ -8,6 +8,7 @@
 #include "Base\Core\Core.h"
 #include "Base\Core\error.h"
 #include "Base\Core\RefCount.h"
+#include "ShaderInfo.h"
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include "Renderer.h"
@@ -269,4 +270,23 @@ namespace Caustic
 	{
 		Caustic::LoadSubMeshRenderableDataFromStream(pStream, pDevice, ppIndexBuffer, pNumIndices, ppVertexBuffer, pNumVertices, pVertexVersion, pIndexVersion);
 	}
+
+    void CCausticFactory::CreateShader(IRenderer *pRenderer, const wchar_t *pShaderName,
+        ID3DBlob *pVertexShaderBlob, ID3DBlob *pPixelShaderBlob, IShaderInfo *pShaderInfo,
+        IShader **ppShader)
+    {
+        std::unique_ptr<CShader> spShader(new CShader());
+        spShader->Create(pRenderer, pShaderName, pShaderInfo, pPixelShaderBlob, pVertexShaderBlob);
+        *ppShader = spShader.release();
+        (*ppShader)->AddRef();
+    }
+
+    void CCausticFactory::CreateShaderInfo(const wchar_t *pFilename, IShaderInfo **ppShaderInfo)
+    {
+        CShaderInfo *pShaderInfo = new CShaderInfo();
+        std::wstring fn(pFilename);
+        pShaderInfo->LoadShaderDef(fn);
+        *ppShaderInfo = pShaderInfo;
+        (*ppShaderInfo)->AddRef();
+    }
 };

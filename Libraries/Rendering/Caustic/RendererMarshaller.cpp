@@ -247,12 +247,13 @@ namespace Caustic
     // Method: Setup
     // See <IRenderer::Setup>
     //**********************************************************************
-    void CRendererMarshaller::Setup(HWND hwnd, bool createDebugDevice)
+    void CRendererMarshaller::Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice)
     {
         AddLambda(
-            [this, hwnd, createDebugDevice]()
+            [this, hwnd, shaderFolder, createDebugDevice]()
             {
-                m_spRenderer->Setup(hwnd, createDebugDevice);
+                std::wstring sh = shaderFolder;
+                m_spRenderer->Setup(hwnd, sh, createDebugDevice);
             }
         );
     }

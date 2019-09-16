@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Shader>
+  <PixelShader Filename="$(CausticRoot)\Libraries\Rendering\Caustic\ShadowMap.ps" Output="$(CausticRoot)\$(Configuration)\ShadowMap_PS.cso"/>
+  <VertexShader Filename="$(CausticRoot)\Libraries\Rendering\Caustic\ShadowMap.vs" Output="$(CausticRoot)\$(Configuration)\ShadowMap_VS.cso"/>
+</Shader>

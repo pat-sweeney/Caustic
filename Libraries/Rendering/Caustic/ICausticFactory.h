@@ -239,7 +239,11 @@ namespace Caustic
 		virtual void StoreSubMeshRenderableDataToStream(IStream *pStream, ISubMesh *pMesh, int vertexVersion, int indexVersion) = 0;
 		virtual void LoadSubMeshRenderableDataFromStream(IStream *pStream, ID3D11Device *pDevice, ID3D11Buffer **ppIndexBuffer, uint32 *pNumIndices, ID3D11Buffer **ppVertexBuffer, uint32 *pNumVertices, int *pVertexVersion, int *pIndexVersion) = 0;
 
-	};
+        virtual void CreateShader(IRenderer *pRenderer, const wchar_t *pShaderName,
+            ID3DBlob *pVertexShaderBlob, ID3DBlob *pPixelShaderBlob, IShaderInfo *pShaderInfo,
+            IShader **ppShader) = 0;
+        virtual void CreateShaderInfo(const wchar_t *pFilename, IShaderInfo **ppShaderInfo) = 0;
+    };
 
     //**********************************************************************
     // Function: CreateCausticFactory

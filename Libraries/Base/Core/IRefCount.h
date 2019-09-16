@@ -81,6 +81,7 @@ namespace Caustic
                 p->Release();
         }
 
+		operator T*() { return p; }
         T *operator*() { return p; }
         T **operator&() { return &p; }
         T *operator->() { return p; }

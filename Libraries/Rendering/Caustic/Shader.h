@@ -15,11 +15,12 @@
 #include <any>
 #include <map>
 
+const int c_MaxFrames = 2; // Maximum number of frames being buffered
+
+// A shader is a object that manages the vertex and pixel shader
+//
 namespace Caustic
 {
-    // TODO: Need to determine size of Arrays. For now assume arrays are always 4 deep
-    const int c_ArraySize = 4;
-
     //**********************************************************************
     // EShaderParamType defines the various types of parameters that can
     // be passed to a CShader
@@ -44,27 +45,27 @@ namespace Caustic
     };
 
     //**********************************************************************
-    // ShaderDefs defines the shader definitions that were parsed from HLSL
+    // Struct: ShaderParamDef
+    // ShaderParamDef defines the shader definitions that were parsed from HLSL
     // by ParseShader. These definitions define the variables that each
     // shader defines (i.e. may be set by the client)
     //**********************************************************************
-    struct ShaderDefs
+    struct ShaderParamDef
     {
         EShaderParamType m_type; // Defines type of this parameter
-        const wchar_t *m_name;   // Name of shader parameter
+        std::wstring m_name;     // Name of shader parameter
         uint32 m_offset;         // register offset
+        uint32 m_members;        // Number of elements
     };
 
     //**********************************************************************
-    // ShaderParam defines each parameter that a shader exposes. These parameters
+    // Struct: ShaderParamInstance
+    // ShaderParamInstance defines each parameter that a shader exposes. These parameters
     // are derived from the ShaderDefs above. This is servers copy of each
     // parameter along with its value and position in the constant buffer.
     //**********************************************************************
-    struct ShaderParam
+    struct ShaderParamInstance : public ShaderParamDef
     {
-        EShaderParamType m_type; // Defines type of this parameter
-        uint32 m_offset;         // Offset into our constant buffer where this parameter resides
-        std::wstring m_name;     // name of this parameter
         std::any m_value;      // Value assigned to this parameter
         std::vector<std::any> m_values;
         bool m_dirty;            // Is parameter dirty and needs to be pushed to constant buffer
@@ -77,8 +78,16 @@ namespace Caustic
     struct Float4 { float x; float y; float z; float w; Float4(float _x, float _y, float _z, float _w) { x = _x; y = _y; z = _z; w = _w; } };
     struct Matrix { float x[16]; Matrix() { ZeroMemory(x, sizeof(x)); } Matrix(float _x[16]) { memcpy(x, _x, sizeof(float) * 16); } };
     
+    struct SConstantBuffer
+    {
+        CComPtr<ID3D11Buffer> m_spBuffer;
+        uint32 m_bufferSize;
+        uint32 m_heapSize;
+    };
+
     //**********************************************************************
-    // \brief CShader defines a shader used to render materials on an object
+    // Class: CShader
+    // Defines a shader used to render materials on an object
     //
     // A shader defines a material on a renderable. It is comprised of a pixel
     // shader, a vertex shader, and constants passed to those shaders.
@@ -86,40 +95,28 @@ namespace Caustic
     class CShader : public IShader, public CRefCount
     {
         std::wstring m_name;
+        std::vector<D3D11_INPUT_ELEMENT_DESC> m_layout;
         CComPtr<ID3D11SamplerState> m_spSamplerState;
         CComPtr<ID3D11InputLayout> m_spLayout;
         CComPtr<ID3D11PixelShader> m_spPixelShader;
         CComPtr<ID3D11VertexShader> m_spVertexShader;
-        CComPtr<ID3D11Buffer> m_spVertexConstants;
-        CComPtr<ID3D11Buffer> m_spPixelConstants;
-        std::vector<ShaderParam> m_psParams;
-        std::vector<ShaderParam> m_vsParams;
+        SConstantBuffer m_vertexConstants;
+        SConstantBuffer m_pixelConstants;
+        std::vector<ShaderParamInstance> m_psParams;
+        std::vector<ShaderParamInstance> m_vsParams;
+		CRefObj<IShaderInfo> m_spShaderInfo;
     protected:
         void PushMatrix(const wchar_t *name, std::any mat);
+        void PushLights(std::vector<CRefObj<IPointLight>> &lights);
         void PushMatrices(IGraphics *pGraphics, DirectX::XMMATRIX *pWorld);
-        uint32 ComputeParamSize(ShaderDefs *pParams, uint32 numParams, std::vector<ShaderParam> &params);
-        void PushConstants(IGraphics *pGraphics, ID3D11Buffer *pBuffer, std::vector<ShaderParam> &params);
-        void SetParam(std::wstring paramName, std::any &value, std::vector<ShaderParam> &params);
-        void SetParam(std::wstring paramName, int index, std::any &value, std::vector<ShaderParam> &params);
+        uint32 ComputeParamSize(ShaderParamDef *pParams, uint32 numParams, std::vector<ShaderParamInstance> &params);
+        void PushConstants(IGraphics *pGraphics, SConstantBuffer *pBuffer, std::vector<ShaderParamInstance> &params);
+        void SetParam(std::wstring paramName, std::any &value, std::vector<ShaderParamInstance> &params);
+        void SetParam(std::wstring paramName, int index, std::any &value, std::vector<ShaderParamInstance> &params);
     public:
-        friend CAUSTICAPI void CreateShader(IGraphics *pGraphics, 
-                                            const wchar_t *pShaderName,
-                                            ShaderDefs *pPSParams, uint32 psParamsSize,
-                                            ShaderDefs *pVSParams, uint32 vsParamsSize,
-                                            const byte *pPSByteCodes, uint32 psBufferLen, 
-                                            const byte *pVSByteCodes, uint32 vsBufferLen,
-                                            D3D11_INPUT_ELEMENT_DESC *pLayout, uint32 numLayoutElems,
-                                            IShader **ppShader);
-        
-        void Create(IGraphics *pGraphics, 
-                    const wchar_t *pShaderName,
-                    ShaderDefs *pPSParams, uint32 psParamsSize,
-                    ShaderDefs *pVSParams, uint32 vsParamsSize,
-                    const byte *pVSByteCodes, uint32 vsBufferLen,
-                    const byte *pPSByteCodes, uint32 psBufferLen, 
-                    D3D11_INPUT_ELEMENT_DESC *pLayout, uint32 numLayoutElems);
-        void CreateConstantBuffer(ID3D11Device *pDevice, ShaderDefs *pParams, uint32 paramsSize, std::vector<ShaderParam> &params, ID3D11Buffer **ppBuffer);
-        
+        void Create(IGraphics *pGraphics, const wchar_t *pShaderName, IShaderInfo *pShaderInfo, ID3DBlob *pPSBlob, ID3DBlob *pVSBlob);
+        void CreateConstantBuffer(ID3D11Device *pDevice, ShaderParamDef *pDefs, uint32 paramsSize, std::vector<ShaderParamInstance> &params, SConstantBuffer *pConstantBuffer);
+
         //**********************************************************************
         // IRefCount
         //**********************************************************************
@@ -130,33 +127,25 @@ namespace Caustic
         // IShader
         //**********************************************************************
         virtual std::wstring &Name() override { return m_name; }
-        virtual void BeginRender(IGraphics *pGraphics, DirectX::XMMATRIX *pWorld = nullptr) override;
+        virtual void BeginRender(IGraphics *pGraphics, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, std::vector<CRefObj<IPointLight>> &lights, DirectX::XMMATRIX *pWorld) override;
         virtual void SetPSParam(std::wstring paramName, std::any &value) override;
         virtual void SetPSParam(std::wstring paramName, int index, std::any &value) override;
         virtual void SetVSParam(std::wstring paramName, std::any &value) override;
         virtual void SetVSParam(std::wstring paramName, int index, std::any &value) override;
         virtual void EndRender(IGraphics *pGraphics) override;
+        virtual CRefObj<IShaderInfo> GetShaderInfo() override;
     };
 
-    CAUSTICAPI void CreateShader(IGraphics *pGraphics, 
-                                 const wchar_t *pShaderName,
-                                 ShaderParam *pPSParams, uint32 psParamsSize,
-                                 ShaderParam *pVSParams, uint32 vsParamsSize,
-                                 const byte *pPSByteCodes, uint32 psBufferLen, 
-                                 const byte *pVSByteCodes, uint32 vsBufferLen,
-                                 D3D11_INPUT_ELEMENT_DESC *pLayout, uint32 numLayoutElems,
-                                 IShader **ppShader);
-
     //**********************************************************************
-    // \brief CShaderMgr defines our shader manager. Each shader is registered
-    // with this manager.
+    // Class: CShaderMgr
+    // Defines our shader manager. Each shader is registered with this manager.
     //**********************************************************************
     class CShaderMgr : public IShaderMgr, public CRefCount
     {
         std::map<std::wstring, CRefObj<IShader>> m_shaders; // List of registered shaders
         static CShaderMgr s_ShaderMgr; // Our shader manager singleton
     public:
-        static IShaderMgr *GetInstance() { return &s_ShaderMgr; }
+        static IShaderMgr *Instance() { return &s_ShaderMgr; }
         
         //**********************************************************************
         // IRefCount

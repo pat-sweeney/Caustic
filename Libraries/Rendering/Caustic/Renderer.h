@@ -276,6 +276,9 @@ namespace Caustic
         CRefObj<IShader> m_spFullQuadShader;            // Shader used for drawing full screen quad
 #endif // SUPPORT_FULLQUAD
 
+        void LoadDefaultShaders(const wchar_t *pFolder);
+        void LoadShaderBlob(std::wstring &filename, ID3DBlob **ppBlob);
+        void LoadShaderInfo(std::wstring &filename, IShaderInfo **ppShaderInfo);
         void RenderScene();
         void DrawSceneObjects(int pass);
     public:
@@ -302,7 +305,7 @@ namespace Caustic
         //**********************************************************************
         // IRenderer
         //**********************************************************************
-        virtual void Setup(HWND hwnd, bool createDebugDevice) override;
+        virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice) override;
         virtual void DrawMesh(ISubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) override;
         virtual void AddPointLight(IPointLight *pLight) override;
         virtual void GetRenderCtx(IRenderCtx **ppCtx) override;

@@ -148,11 +148,11 @@ namespace Caustic
         CRefObj<IShader> spShader;
         if (pRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayNormalsAsColors)
         {
-            CShaderMgr::GetInstance()->FindShader(L"ColorNormal", &spShader);
+            CShaderMgr::Instance()->FindShader(L"ColorNormal", &spShader);
         }
         else if (pRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayUVsAsColors)
         {
-            CShaderMgr::GetInstance()->FindShader(L"ColorUVs", &spShader);
+            CShaderMgr::Instance()->FindShader(L"ColorUVs", &spShader);
         }
         else
             pRenderMaterial->GetShader(&spShader);
@@ -169,7 +169,7 @@ namespace Caustic
         UINT vertexSize = sizeof(SVertex_2);
         pContext->IASetVertexBuffers(0, 1, &m_spVB.p, &vertexSize, &offset);
         pContext->IASetIndexBuffer(m_spIB, DXGI_FORMAT_R32_UINT, 0);
-        spShader->BeginRender(pGraphics, &m_xform);
+        spShader->BeginRender(pGraphics, pRenderMaterial, pRenderMaterial, lights, &m_xform);
 
         if (pRenderCtx->PassBlendable())
         {
@@ -216,7 +216,7 @@ namespace Caustic
             (pRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayFaceNormals))
         {
             CRefObj<IShader> spShader;
-            CShaderMgr::GetInstance()->FindShader(L"DrawNormal", &spShader);
+            CShaderMgr::Instance()->FindShader(L"DrawNormal", &spShader);
             UINT offset = 0;
             UINT vertexSize = sizeof(SVertex_4);
             ID3D11DeviceContext *pContext = pGraphics->GetContext();
@@ -227,7 +227,7 @@ namespace Caustic
             v = (pRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayNormalsAsLines) ? 1.0f : 0.0f;
             spShader->SetVSParam(L"drawNormals", std::any(v));
 
-            spShader->BeginRender(pGraphics);
+            spShader->BeginRender(pGraphics, m_spFrontMaterial.p, m_spBackMaterial.p, lights, nullptr);
             pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
             pContext->Draw(m_numNormalVerts, 0);
             spShader->EndRender(pGraphics);

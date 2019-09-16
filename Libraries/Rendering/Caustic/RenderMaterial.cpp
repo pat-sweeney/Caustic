@@ -79,9 +79,9 @@ namespace Caustic
         if (m_spShader == nullptr)
         {
             if (m_spDiffuseTexture.p == nullptr)
-                CShaderMgr::GetInstance()->FindShader(L"Default", &m_spShader);
+                CShaderMgr::Instance()->FindShader(L"Default", &m_spShader);
             else
-                CShaderMgr::GetInstance()->FindShader(L"Textured", &m_spShader);
+                CShaderMgr::Instance()->FindShader(L"Textured", &m_spShader);
         }
         *ppShader = m_spShader.p;
         if (m_spShader.p)

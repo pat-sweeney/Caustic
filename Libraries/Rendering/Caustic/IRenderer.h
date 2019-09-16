@@ -34,9 +34,10 @@ namespace Caustic
         //
         // Parameters:
         // hwnd - window to bind renderer to
+        // shaderFolder - path to shader folder
         // createDebugDevice - True if application wants the debug D3D device. False otherwise.
         //**********************************************************************
-        virtual void Setup(HWND hwnd, bool createDebugDevice) = 0;
+        virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice) = 0;
         virtual void DrawMesh(ISubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) = 0; // Draws a mesh
         virtual void RenderLoop() = 0; // Renderer entry point
         virtual void RenderFrame() = 0; // Have renderer draw and present next frame

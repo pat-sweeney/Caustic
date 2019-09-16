@@ -8,266 +8,354 @@
 #include <vector>
 #include <iostream>
 #include <cstring>
+#include <varargs.h>
+#include <map>
+#include <dxgi1_6.h>
+#include <d3d11shader.h>
+#include <d3dcompiler.h>
+#include <atlbase.h>
+#include "Base/Core/Core.h"
+#include "Base/Core/error.h"
+#include <MsXml6.h>
+#include <stdlib.h>
+#include <map>
 
+std::map<std::string, std::string> variables;
 void Usage()
 {
-	fprintf(stderr, "Usage: ParseShader -i <shaderFN> -o <paramFN> -v <varName>\n");
-	fprintf(stderr, "where:\n");
-	fprintf(stderr, "		<shaderFN> : name of vertex or pixel shader filename\n");
-	fprintf(stderr, "		<paramFN>  : name of output filename to write parameter usage to\n");
-	fprintf(stderr, "		<varName>  : name of variable table\n");
-	exit(0);
+    fprintf(stderr, "Usage: ParseShader -i <shaderFN> -o <paramFN>\n");
+    fprintf(stderr, "where:\n");
+    fprintf(stderr, "		<shaderFN> : name of vertex or pixel shader filename\n");
+    fprintf(stderr, "		<paramFN>  : name of output filename to write parameter usage to\n");
+    exit(0);
 }
 
-class CReader
+void WriteStr(HANDLE oh, const char *pFormat, ...)
 {
-	std::vector<char> buffer;
-	int offset;
-public:
-	CReader(const char *pFn);
-	std::string GetLine();
+    DWORD dw;
+    char buffer[1024];
+    va_list arglist;
+    va_start(arglist, pFormat);
+    vsprintf_s(buffer, pFormat, arglist);
+    va_end(arglist);
+    if (!WriteFile(oh, buffer, (DWORD)strlen(buffer), &dw, nullptr))
+    {
+        fprintf(stderr, "Unable to write parameter file\n");
+        exit(1);
+    }
 };
 
-CReader::CReader(const char *pFN)
+void GetDXGIFormat(D3D11_SIGNATURE_PARAMETER_DESC &pd, std::string &format)
 {
-	offset = 0;
-	HANDLE h = CreateFile(pFN, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr);
-	if (h == INVALID_HANDLE_VALUE)
-	{
-		fprintf(stderr, "Failed to read shader\n");
-		exit(1);
-	}
-	buffer.resize(GetFileSize(h, nullptr) + 1);
-	DWORD bytesRead;
-	if (!ReadFile(h, buffer.data(), (DWORD)buffer.size()-1, &bytesRead, nullptr))
-	{
-		fprintf(stderr, "Failed to read shader\n");
-		exit(1);
-	}
-	buffer[bytesRead]='\0';
-	CloseHandle(h);
+    int numFields = 0;
+    while (pd.Mask)
+    {
+        if (pd.Mask & 0x01)
+            numFields++;
+        pd.Mask = pd.Mask >> 1;
+    }
+    if (pd.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32)
+    {
+        switch (numFields)
+        {
+        case 1: format = "DXGI_FORMAT_R32_FLOAT"; break;
+        case 2: format = "DXGI_FORMAT_R32G32_FLOAT"; break;
+        case 3: format = "DXGI_FORMAT_R32G32B32_FLOAT"; break;
+        case 4: format = "DXGI_FORMAT_R32G32B32A32_FLOAT"; break;
+        }
+    }
+    else if (pd.ComponentType == D3D_REGISTER_COMPONENT_SINT32)
+    {
+        switch (numFields)
+        {
+        case 1: format = "DXGI_FORMAT_R32_SINT"; break;
+        case 2: format = "DXGI_FORMAT_R32G32_SINT"; break;
+        case 3: format = "DXGI_FORMAT_R32G32B32_SINT"; break;
+        case 4: format = "DXGI_FORMAT_R32G32B32A32_SINT"; break;
+        }
+    }
+    else if (pd.ComponentType == D3D_REGISTER_COMPONENT_UINT32)
+    {
+        switch (numFields)
+        {
+        case 1: format = "DXGI_FORMAT_R32_UINT"; break;
+        case 2: format = "DXGI_FORMAT_R32G32_UINT"; break;
+        case 3: format = "DXGI_FORMAT_R32G32B32_UINT"; break;
+        case 4: format = "DXGI_FORMAT_R32G32B32A32_UINT"; break;
+        }
+    }
 }
 
-std::string CReader::GetLine()
+void ParseLoop(ID3D11ShaderReflection *pReflection, HANDLE oh)
 {
-	std::string str;
-	while (buffer[offset] != '\0' && buffer[offset] != '\r' && buffer[offset] != '\n')
-		str += buffer[offset++];
-	while(buffer[offset] != '\0' && (buffer[offset] == '\r' || buffer[offset] == '\n'))
-		offset++;
-	return str;
+    D3D11_SHADER_DESC shaderDesc;
+    CT(pReflection->GetDesc(&shaderDesc));
+
+    // Determine our vertex format
+    WriteStr(oh, "        <VertexLayout>\n");
+    for (UINT i = 0; i < shaderDesc.InputParameters; i++)
+    {
+        D3D11_SIGNATURE_PARAMETER_DESC paramDesc;
+        CT(pReflection->GetInputParameterDesc(i, &paramDesc));
+        std::string format;
+        GetDXGIFormat(paramDesc, format);
+        WriteStr(oh, "            <Field Name='%s' Semantic='%s' SemanticIndex='%d' Format='%s'/>\n",
+            paramDesc.SemanticName, paramDesc.SemanticName, (int)paramDesc.SemanticIndex, format.c_str());
+    }
+    WriteStr(oh, "        </VertexLayout>\n");
+
+    // Parse samplers
+    WriteStr(oh, "        <Textures>\n");
+    for (UINT i = 0; i < shaderDesc.BoundResources; i++)
+    {
+        D3D11_SHADER_INPUT_BIND_DESC bindDesc;
+        pReflection->GetResourceBindingDesc(i, &bindDesc);
+        if (bindDesc.Type == D3D_SIT_TEXTURE)
+            WriteStr(oh, "            <Texture Name='%s' Register='%d'/>\n", bindDesc.Name, (int)bindDesc.BindPoint);
+    }
+    WriteStr(oh, "        </Textures>\n");
+
+    WriteStr(oh, "        <Samplers>\n");
+    for (UINT i = 0; i < shaderDesc.BoundResources; i++)
+    {
+        D3D11_SHADER_INPUT_BIND_DESC bindDesc;
+        pReflection->GetResourceBindingDesc(i, &bindDesc);
+        if (bindDesc.Type == D3D_SIT_SAMPLER)
+            WriteStr(oh, "            <SamplerState Name='%s' Register='%d'/>\n", bindDesc.Name, (int)bindDesc.BindPoint);
+    }
+    WriteStr(oh, "        </Samplers>\n");
+
+    // Get constant buffer names
+    for (UINT i = 0; i < shaderDesc.ConstantBuffers; i++)
+    {
+        ID3D11ShaderReflectionConstantBuffer *pCB = pReflection->GetConstantBufferByIndex(i);
+        D3D11_SHADER_BUFFER_DESC cbDesc;
+        pCB->GetDesc(&cbDesc);
+        WriteStr(oh, "        <CBuffer>\n");
+        for (UINT j = 0; j < cbDesc.Variables; j++)
+        {
+            ID3D11ShaderReflectionVariable *pVar = pCB->GetVariableByIndex(j);
+            ID3D11ShaderReflectionType *pType = pVar->GetType();
+            D3D11_SHADER_TYPE_DESC typeDesc;
+            pType->GetDesc(&typeDesc);
+            D3D11_SHADER_VARIABLE_DESC varDesc;
+            pVar->GetDesc(&varDesc);
+            if (typeDesc.Class == D3D_SHADER_VARIABLE_CLASS::D3D10_SVC_VECTOR && typeDesc.Elements > 1)
+                WriteStr(oh, "             <Property Name='%s' Type='%s[%d]'/>\n", varDesc.Name, typeDesc.Name, typeDesc.Elements);
+            else
+                WriteStr(oh, "             <Property Name='%s' Type='%s'/>\n", varDesc.Name, typeDesc.Name);
+        }
+        WriteStr(oh, "        </CBuffer>\n");
+    }
+}
+
+void ExpandEnvironmentVariables(std::string &outputFn)
+{
+    std::string expanded;
+    int len = (int)outputFn.length();
+    for (int i = 0; i < len; i++)
+    {
+        if (outputFn[i] == '$')
+        {
+            i += 2; // skip $(
+            std::string envName;
+            while (outputFn[i] != ')')
+                envName += outputFn[i++];
+            std::string envVal = variables[envName.c_str()];
+            int j = 0;
+            while (envVal[j])
+                expanded += envVal[j++];
+        }
+        else
+            expanded += outputFn[i];
+    }
+    outputFn = expanded;
+}
+
+void CompileShader(IXMLDOMNode *pNode, bool pixelShader, std::string &shaderFn, std::string &outputFn)
+{
+    CComPtr<IXMLDOMNamedNodeMap> spAttribs;
+    CT(pNode->get_attributes(&spAttribs));
+    long numAttribs;
+    CT(spAttribs->get_length(&numAttribs));
+    for (long j = 0; j < numAttribs; j++)
+    {
+        CComPtr<IXMLDOMNode> spAttrib;
+        CT(spAttribs->get_item(j, &spAttrib));
+        CComBSTR attribName;
+        CT(spAttrib->get_nodeName(&attribName));
+        CComVariant attribVal;
+        CT(spAttrib->get_nodeValue(&attribVal));
+        if (attribName == L"Filename")
+        {
+            std::wstring fn(attribVal.bstrVal);
+            shaderFn = std::string(fn.begin(), fn.end());
+        }
+        else if (attribName == L"Output")
+        {
+            std::wstring fn(attribVal.bstrVal);
+            outputFn = std::string(fn.begin(), fn.end());
+        }
+    }
+
+    ExpandEnvironmentVariables(shaderFn);
+    ExpandEnvironmentVariables(outputFn);
+
+    // Compile our shader
+    if (shaderFn.length() > 0 && outputFn.length() > 0)
+    {
+        STARTUPINFO info = { sizeof(info), 0 };
+        PROCESS_INFORMATION processInfo;
+        int index = (int)outputFn.rfind(".cso");
+        std::string pdbFn = outputFn;
+        pdbFn.replace(index, 4, ".pdb");
+        char buffer[10240];
+        sprintf_s(buffer, "\"C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.17763.0\\x86\\fxc.exe\" /Zi /E\"%s\" /Od /Fd\"%s\" /Fo\"%s\" /T\"%s\" /nologo %s",
+            (pixelShader) ? "PS" : "VS", pdbFn.c_str(), outputFn.c_str(), (pixelShader) ? "ps_5_1" : "vs_5_0", shaderFn.c_str());
+        if (CreateProcess(nullptr, buffer, nullptr, nullptr, TRUE, 0, nullptr, nullptr, &info, &processInfo))
+        {
+            WaitForSingleObject(processInfo.hProcess, INFINITE);
+            CloseHandle(processInfo.hProcess);
+            CloseHandle(processInfo.hThread);
+        }
+    }
+}
+
+void ParseShader(IXMLDOMNode *pNode, std::string &vertexShader, std::string &vertexOuput,
+    std::string &pixelShader, std::string &pixelOuput, std::string &topology)
+{
+    CComPtr<IXMLDOMNodeList> spChildren;
+    CT(pNode->get_childNodes(&spChildren));
+    long len;
+    CT(spChildren->get_length(&len));
+    for (long i = 0; i < len; i++)
+    {
+        CComPtr<IXMLDOMNode> spNode;
+        CT(spChildren->get_item(i, &spNode));
+        CComBSTR bstrName;
+        CT(spNode->get_nodeName(&bstrName));
+        if (bstrName == L"VertexShader")
+        {
+            // <PixelShader Filename="ColorNormal.ps" Output="$(CausticRoot)\$(Configuration)\ColorNormal_PS.cso"/>
+            CompileShader(spNode, false, vertexShader, vertexOuput);
+        }
+        else if (bstrName == L"PixelShader")
+        {
+            // <VertexShader Filename="Default.vs" Output="$(CausticRoot)\$(Configuration)\ColorNormal_VS.cso"/>
+            CompileShader(spNode, true, pixelShader, pixelOuput);
+        }
+        else if (bstrName == L"Topology")
+        {
+            CComBSTR var;
+            CT(spNode->get_text(&var));
+            topology = (var == L"Line") ? "Line" : "Triangle";
+        }
+    }
+}
+
+void LoadShaderDefinition(std::string &fn, std::string &vertexShader, std::string &vertexOuput,
+    std::string &pixelShader, std::string &pixelOuput, std::string &topology)
+{
+    CComPtr<IXMLDOMDocument> spDocument;
+    CT(CoCreateInstance(CLSID_DOMDocument60, nullptr, CLSCTX_INPROC_SERVER, IID_IXMLDOMDocument, (void**)&spDocument));
+    VARIANT_BOOL success;
+    VARIANT xmlSrc;
+    CComBSTR bstr(fn.c_str());
+    xmlSrc.bstrVal = bstr;
+    xmlSrc.vt = VT_BSTR;
+    CT(spDocument->load(xmlSrc, &success));
+
+    CComPtr<IXMLDOMNodeList> spChildren;
+    CT(spDocument->get_childNodes(&spChildren));
+    long len;
+    CT(spChildren->get_length(&len));
+    for (long i = 0; i < len; i++)
+    {
+        CComPtr<IXMLDOMNode> spNode;
+        CT(spChildren->get_item(i, &spNode));
+        CComBSTR bstrName;
+        CT(spNode->get_nodeName(&bstrName));
+        if (bstrName == L"Shader")
+            ParseShader(spNode, vertexShader, vertexOuput, pixelShader, pixelOuput, topology);
+    }
+}
+
+void ExportShader(std::string &compiledVS, HANDLE oh)
+{
+    // Load the shader
+    HANDLE h = ::CreateFile(compiledVS.c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr);
+    if (h == INVALID_HANDLE_VALUE)
+        CT(E_FAIL);
+    DWORD bytesRead;
+    DWORD dwBytesToRead = ::GetFileSize(h, nullptr);
+    byte *buffer = new byte[dwBytesToRead];
+    CT(::ReadFile(h, buffer, dwBytesToRead, &bytesRead, nullptr) ? S_OK : E_FAIL);
+    CloseHandle(h);
+
+    CComPtr<ID3D11ShaderReflection> spReflection;
+    CT(D3DReflect(buffer, bytesRead, __uuidof(ID3D11ShaderReflection), (void**)&spReflection));
+
+    int numParams = 0;
+    ParseLoop(spReflection, oh);
 }
 
 // Parses a shader (vertex or pixel shader) to determine the name of the parameters
 // referenced by a shader so that the rendering engine can build the proper constant buffer
 int _tmain(int argc, _TCHAR* argv[])
 {
-	std::string infn;
-	std::string outfn;
-	std::string var;
-	for (int i = 1; i < argc; i++)
-	{
-		if (argv[i][0] == '-')
-		{
-			switch(argv[i][1])
-			{
-			case '?': Usage(); break;
-			case 'd': DebugBreak(); break;
-			case 'i': infn = argv[i+1]; i++; break; 
-			case 'o': outfn = argv[i+1]; i++; break; 
-			case 'v': var = argv[i+1]; i++; break; 
-			}
-		}
-	}
-	CReader reader(infn.c_str());
-	HANDLE oh = CreateFile(outfn.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, 0, nullptr);
-	if (oh == INVALID_HANDLE_VALUE)
-	{
-		fprintf(stderr, "Unable to write parameter file\n");
-		exit(1);
-	}
-	auto WriteStr = [&](const char *p)
-	{
-		DWORD dw;
-		if (!WriteFile(oh, p, (DWORD)strlen(p), &dw, nullptr))
-		{
-			fprintf(stderr, "Unable to write parameter file\n");
-			exit(1);
-		}
-	};
-	auto WritePropertyType = [&](const char *proptype, const char *propname)
-	{
-		WriteStr("    { ");
-		WriteStr(proptype);
-		WriteStr(", L\"");
-		WriteStr(propname);
-		WriteStr("\", 0 },\n");
-	};
-
-	WriteStr("ShaderDefs ");
-	WriteStr(var.c_str());
-	WriteStr("[] = {\n");
-	int numParams = 0;
-	bool in_cbuffer = false;
-	while (true)
-	{
-		std::string str = reader.GetLine();
-		if (str == "")
-			break;
-		if (str == "};")
-		{
-			in_cbuffer = false;
-			continue;
-		}
-
-        // Really wish boost::tokenizer was part of std::
-        // (originally that is how I wrote this, but since removing
-        // the boost dependency I had to do this the old school way. Yuck).
-        const char *p = str.c_str();
-        auto NextToken = [&]() -> std::string {
-            std::string token;
-            while (*p && !isalnum(*p))
+    std::string infn;
+    std::string outfn;
+    for (int i = 1; i < argc; i++)
+    {
+        if (argv[i][0] == '-')
+        {
+            switch (argv[i][1])
             {
-                if (*p == '[' || *p == ']' || *p == ';')
-                {
-                    token.push_back(*p);
-                    p++;
-                    return token;
-                }
-                p++;
-            }
-            while (*p && isalnum(*p))
+            case '?': Usage(); break;
+            case 'd': DebugBreak(); break;
+            case 'i': infn = argv[i + 1]; i++; break;
+            case 'o': outfn = argv[i + 1]; i++; break;
+            case 'v':
             {
-                token.push_back(*p);
-                p++;
+                std::string varName = argv[i + 1];
+                std::string varValue = argv[i + 2];
+                variables.insert(std::make_pair(varName, varValue));
             }
-            return token;
-        };
-        auto token = NextToken();
-        if (token.length() == 0)
-            continue;
-		if (token == "Texture2D")
-		{
-            token = NextToken();
-			WriteStr("    { ShaderType_Texture, L\"");
-			WriteStr(token.c_str()); // Name
-			WriteStr("\", ");
-            token = NextToken();
-            if (token == "register")
-			{
-                token = NextToken();
-                WriteStr(&(token.c_str())[1]);
-				WriteStr(" },\n");
-			}
-			else
-			{
-				WriteStr("0 },\n");
-			}
-		}
-		else if (token == "SamplerState")
-		{
-            token = NextToken();
-            WriteStr("    { ShaderType_Sampler, L\"");
-			WriteStr(token.c_str()); // Name
-			WriteStr("\", ");
-            token = NextToken();
-            if (token == "register")
-			{
-                token = NextToken();
-                WriteStr(&(token.c_str())[1]);
-				WriteStr(" },\n");
-			}
-			else
-			{
-				WriteStr("0 },\n");
-			}
-		}
-		else if (token == "cbuffer")
-		{
-			in_cbuffer = true;
-		}
-		else if (in_cbuffer && (token == "matrix" || token == "float4x4"))
-		{
-            token = NextToken(); // skip type
-			std::string propName = token;
-            token = NextToken(); // Skip name
-			if (token == "[")
-			{
-                token = NextToken(); // Skip '['
-				WritePropertyType("ShaderType_Matrix_Array", propName.c_str());
-			}
-			else
-				WritePropertyType("ShaderType_Matrix", propName.c_str());
-		}
-		else if (in_cbuffer && token == "float4")
-		{
-            token = NextToken(); // skip type
-            std::string propName = token;
-            token = NextToken(); // Skip name
-            if (token == "[")
-			{
-                token = NextToken(); // Skip '['
-                WritePropertyType("ShaderType_Float4_Array", propName.c_str());
-			}
-			else
-				WritePropertyType("ShaderType_Float4", propName.c_str());
-		}
-		else if (in_cbuffer && token == "float3")
-		{
-            token = NextToken(); // skip type
-            std::string propName = token;
-            token = NextToken(); // Skip name
-            if (token == "[")
-			{
-                token = NextToken(); // Skip '['
-                WritePropertyType("ShaderType_Float3_Array", propName.c_str());
-			}
-			else
-				WritePropertyType("ShaderType_Float3", propName.c_str());
-		}
-		else if (in_cbuffer && token == "float2")
-		{
-            token = NextToken(); // skip type
-            std::string propName = token;
-            token = NextToken(); // Skip name
-            if (token == "[")
-			{
-                token = NextToken(); // Skip '['
-                WritePropertyType("ShaderType_Float2_Array", propName.c_str());
-			}
-			else
-				WritePropertyType("ShaderType_Float2", propName.c_str());
-		}
-		else if (in_cbuffer && (token == "float1" || token == "float"))
-		{
-            token = NextToken(); // skip type
-            std::string propName = token;
-            token = NextToken(); // Skip name
-            if (token == "[")
-			{
-                token = NextToken(); // Skip '['
-                WritePropertyType("ShaderType_Float_Array", propName.c_str());
-			}
-			else
-				WritePropertyType("ShaderType_Float", propName.c_str());
-		}
-		else if (in_cbuffer && token == "int")
-		{
-            token = NextToken(); // skip type
-            std::string propName = token;
-            token = NextToken(); // Skip name
-            if (token == "[")
-			{
-                token = NextToken(); // Skip '['
-                WritePropertyType("ShaderType_Int_Array", propName.c_str());
-			}
-			else
-				WritePropertyType("ShaderType_Int", propName.c_str());
-		}
-	}
-	WriteStr("    { ShaderType_Undefined, L\"\", 0 }\n");
-	WriteStr("};\n");
-	CloseHandle(oh);
-	return 0;
+            break;
+            }
+        }
+    }
+    if (infn.empty() || outfn.empty())
+        Usage();
+
+    CoInitialize(nullptr);
+    std::string vertexShader;
+    std::string vertexOuput;
+    std::string pixelShader;
+    std::string pixelOuput;
+    std::string topology;
+    LoadShaderDefinition(infn, vertexShader, vertexOuput, pixelShader, pixelOuput, topology);
+
+    HANDLE oh = CreateFile(outfn.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, 0, nullptr);
+    if (oh == INVALID_HANDLE_VALUE)
+    {
+        fprintf(stderr, "Unable to write parameter file\n");
+        exit(1);
+    }
+
+    WriteStr(oh, "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
+    WriteStr(oh, "<ShaderDef>\n");
+    WriteStr(oh, "    <Topology>%s</Topology>\n", topology.c_str());
+    WriteStr(oh, "    <VertexShader>\n");
+    ExportShader(vertexOuput, oh);
+    WriteStr(oh, "    </VertexShader>\n");
+    WriteStr(oh, "    <PixelShader>\n");
+    ExportShader(pixelOuput, oh);
+    WriteStr(oh, "    </PixelShader>\n");
+    WriteStr(oh, "</ShaderDef>\n");
+    CloseHandle(oh);
+
+    CoUninitialize();
+    exit(0);
+    return 0;
 }
-

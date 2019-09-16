@@ -6,48 +6,13 @@
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\CausticFactory.h"
 #include "Renderer.h"
+#include "ShaderInfo.h"
 #include <vector>
 #include <any>
 #include "Base\Core\CritSec.h"
 #include <d3d11.h>
-namespace Caustic {
-#include "DefaultVS.h"
-#include "DefaultVS.tbl"
-#include "DrawNormalPS.h"
-#include "DrawNormalPS.tbl"
-#include "DrawNormalVS.h"
-#include "DrawNormalVS.tbl"
-#include "ColorNormalPS.h"
-#include "ColorNormalPS.tbl"
-#include "ColorUVsPS.h"
-#include "ColorUVsPS.tbl"
-#include "DefaultPS.h"
-#include "DefaultPS.tbl"
-#include "TexturedPS.h"
-#include "TexturedPS.tbl"
-#include "LineVS.h"
-#include "LineVS.tbl"
-#include "LinePS.h"
-#include "LinePS.tbl"
-#ifdef SUPPORT_SHADOW_MAPPING
-#include "ShadowMapPS.h"
-#include "ShadowMapPS.tbl"
-#include "ShadowMapVS.h"
-#include "ShadowMapVS.tbl"
-#endif // SUPPORT_SHADOW_MAPPING
-    //#include "InfinitePlaneVS.h"
-//#include "InfinitePlaneVS.tbl"
-//#include "InfinitePlanePS.h"
-//#include "InfinitePlanePS.tbl"
-#ifdef SUPPORT_FULLQUAD
-#include "FullQuadVS.h"
-#include "FullQuadVS.tbl"
-#include "FullQuadPS.h"
-#include "FullQuadPS.tbl"
-#endif // SUPPORT_FULLQUAD
-#include "NormalPS.h"
-#include "NormalPS.tbl"
-}
+#include <d3dcommon.h>
+#include <d3dcompiler.h>
 #include "Rendering\SceneGraph\SceneGraph.h"
 #include <algorithm>
 
@@ -58,45 +23,6 @@ namespace Caustic {
 
 namespace Caustic
 {
-    //**********************************************************************
-    // Variable: s_defaultVSLayout
-    // Defines the default layout for our default vertex
-    //**********************************************************************
-    D3D11_INPUT_ELEMENT_DESC s_defaultVSLayout[] =
-    {
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-    };
-
-    //**********************************************************************
-    // Variable: s_lineVSLayout
-    // Defines the default layout for our line vertex
-    //**********************************************************************
-    D3D11_INPUT_ELEMENT_DESC s_lineVSLayout[] =
-    {
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-    };
-
-    //**********************************************************************
-    // Variable: s_InfinitePlaneVSLayout
-    // Defines the default layout for our infinite plane
-    //**********************************************************************
-    D3D11_INPUT_ELEMENT_DESC s_InfinitePlaneVSLayout[] =
-    {
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-    };
-
-    //**********************************************************************
-    // Variable: s_drawNormalVSLayout
-    // Defines the default layout for our line vertex
-    //**********************************************************************
-    D3D11_INPUT_ELEMENT_DESC s_drawNormalVSLayout[] =
-    {
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "TEXCOORD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-    };
-
     //**********************************************************************
     // Method: CRenderer
     // Constructor
@@ -142,75 +68,14 @@ namespace Caustic
     // Method: Setup
     // See <IRenderer::Setup>.
     //**********************************************************************
-    void CRenderer::Setup(HWND hwnd, bool createDebugDevice)
+    void CRenderer::Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice)
     {
         CGraphicsBase::Setup(hwnd, createDebugDevice);
 
-        // Create our default shaders
-        CRefObj<IShader> spShader;
-        CreateShader(this, L"Default",
-            g_DefaultPS_ParamTable, _countof(g_DefaultPS_ParamTable),
-            g_DefaultVS_ParamTable, _countof(g_DefaultVS_ParamTable),
-            g_DefaultPS, sizeof(g_DefaultPS),
-            g_DefaultVS, sizeof(g_DefaultVS),
-            s_defaultVSLayout, _countof(s_defaultVSLayout), &spShader);
-        CShaderMgr::GetInstance()->RegisterShader(L"Default", spShader.p);
+        LoadDefaultShaders(shaderFolder.c_str());
 
-#ifdef SUPPORT_SHADOW_MAPPING
-        spShader = nullptr;
-        CreateShader(this, L"ShadowMap",
-            g_ShadowMapPS_ParamTable, _countof(g_ShadowMapPS_ParamTable),
-            g_ShadowMapVS_ParamTable, _countof(g_ShadowMapVS_ParamTable),
-            g_ShadowMapPS, sizeof(g_ShadowMapPS),
-            g_ShadowMapVS, sizeof(g_ShadowMapVS),
-            s_ShadowMapVSLayout, _countof(s_ShadowMapVSLayout), &spShader);
-        CShaderMgr::GetInstance()->RegisterShader(L"ShadowMap", spShader.p);
-#endif // SUPPORT_SHADOW_MAPPING
-
-        spShader = nullptr;
-        CreateShader(this, L"DrawNormal",
-            g_DrawNormalPS_ParamTable, _countof(g_DrawNormalPS_ParamTable),
-            g_DrawNormalVS_ParamTable, _countof(g_DrawNormalVS_ParamTable),
-            g_DrawNormalPS, sizeof(g_DrawNormalPS),
-            g_DrawNormalVS, sizeof(g_DrawNormalVS),
-            s_drawNormalVSLayout, _countof(s_drawNormalVSLayout), &spShader);
-        CShaderMgr::GetInstance()->RegisterShader(L"DrawNormal", spShader.p);
-
-        spShader = nullptr;
-        CreateShader(this, L"ColorNormal",
-            g_ColorNormalPS_ParamTable, _countof(g_ColorNormalPS_ParamTable),
-            g_DefaultVS_ParamTable, _countof(g_DefaultVS_ParamTable),
-            g_ColorNormalPS, sizeof(g_ColorNormalPS),
-            g_DefaultVS, sizeof(g_DefaultVS),
-            s_defaultVSLayout, _countof(s_defaultVSLayout), &spShader);
-        CShaderMgr::GetInstance()->RegisterShader(L"ColorNormal", spShader.p);
-
-        spShader = nullptr;
-        CreateShader(this, L"ColorUVs",
-            g_ColorUVsPS_ParamTable, _countof(g_ColorUVsPS_ParamTable),
-            g_DefaultVS_ParamTable, _countof(g_DefaultVS_ParamTable),
-            g_ColorUVsPS, sizeof(g_ColorUVsPS),
-            g_DefaultVS, sizeof(g_DefaultVS),
-            s_defaultVSLayout, _countof(s_defaultVSLayout), &spShader);
-        CShaderMgr::GetInstance()->RegisterShader(L"ColorUVs", spShader.p);
-
-        spShader = nullptr;
-        CreateShader(this, L"Textured",
-            g_TexturedPS_ParamTable, _countof(g_TexturedPS_ParamTable),
-            g_DefaultVS_ParamTable, _countof(g_DefaultVS_ParamTable),
-            g_TexturedPS, sizeof(g_TexturedPS),
-            g_DefaultVS, sizeof(g_DefaultVS),
-            s_defaultVSLayout, _countof(s_defaultVSLayout), &spShader);
-        CShaderMgr::GetInstance()->RegisterShader(L"Textured", spShader.p);
-
-        spShader = nullptr;
-        CreateShader(this, L"Normal",
-            g_NormalPS_ParamTable, _countof(g_NormalPS_ParamTable),
-            g_DefaultVS_ParamTable, _countof(g_DefaultVS_ParamTable),
-            g_NormalPS, sizeof(g_NormalPS),
-            g_DefaultVS, sizeof(g_DefaultVS),
-            s_defaultVSLayout, _countof(s_defaultVSLayout), &spShader);
-        CShaderMgr::GetInstance()->RegisterShader(L"Normal", spShader.p);
+        IShaderMgr *pShaderMgr = CShaderMgr::Instance();
+        pShaderMgr->FindShader(L"Line", &m_spLineShader);
 
         //**********************************************************************
         // Create vertex buffer used to draw lines
@@ -230,15 +95,6 @@ namespace Caustic
             data.SysMemSlicePitch = 0;
             CT(m_spDevice->CreateBuffer(&bufdesc, &data, &m_spLineVB));
         }
-
-        // Get Shader for lines
-        CreateShader(this, L"Line",
-            g_LinePS_ParamTable, _countof(g_LinePS_ParamTable),
-            g_LineVS_ParamTable, _countof(g_LineVS_ParamTable),
-            g_LinePS, sizeof(g_LinePS),
-            g_LineVS, sizeof(g_LineVS),
-            s_lineVSLayout, _countof(s_lineVSLayout), &m_spLineShader);
-        CShaderMgr::GetInstance()->RegisterShader(L"Line", m_spLineShader.p);
 
         //**********************************************************************
         // Create vertex buffer used to draw infinite plane
@@ -277,15 +133,6 @@ namespace Caustic
             CT(m_spDevice->CreateBuffer(&bufdesc, &data, &m_spInfinitePlaneIB));
         }
 
-        // Get Shader for plane
-//        CreateShader(this, L"Plane",
-//            g_InfinitePlanePS_ParamTable, _countof(g_InfinitePlanePS_ParamTable),
-//            g_InfinitePlaneVS_ParamTable, _countof(g_InfinitePlaneVS_ParamTable),
-//            g_InfinitePlanePS, sizeof(g_InfinitePlanePS),
-//            g_InfinitePlaneVS, sizeof(g_InfinitePlaneVS),
-//            s_InfinitePlaneVSLayout, _countof(s_InfinitePlaneVSLayout), &m_spInfinitePlaneShader);
-//        CShaderMgr::GetInstance()->RegisterShader(L"Plane", m_spInfinitePlaneShader.p);
-
 #ifdef SUPPORT_FULLQUAD
         //**********************************************************************
         // Create vertex buffer used to draw fullscreen quad
@@ -316,17 +163,80 @@ namespace Caustic
             data.SysMemPitch = 0;
             data.SysMemSlicePitch = 0;
             CT(m_spDevice->CreateBuffer(&ibdesc, &data, &m_spFullQuadIB));
-
-            // Get Shader for plane
-            CreateShader(this, L"FullQuad",
-                g_FullQuadPS_ParamTable, _countof(g_FullQuadPS_ParamTable),
-                g_FullQuadVS_ParamTable, _countof(g_FullQuadVS_ParamTable),
-                g_FullQuadPS, sizeof(g_FullQuadPS),
-                g_FullQuadVS, sizeof(g_FullQuadVS),
-                s_InfinitePlaneVSLayout, _countof(s_InfinitePlaneVSLayout), &m_spFullQuadShader);
-            CShaderMgr::GetInstance()->RegisterShader(L"FullQuad", m_spFullQuadShader.p);
         }
 #endif // SUPPORT_FULLQUAD
+    }
+
+    //**********************************************************************
+    // Method: LoadShaderBlob
+    // Loads the shader into a blob from the specified file.
+    //
+    // Parameters:
+    // filename - Name of file to load from
+    // ppBlob - Returns the created shader blob
+    //**********************************************************************
+    void CRenderer::LoadShaderBlob(std::wstring &filename, ID3DBlob **ppBlob)
+    {
+        HANDLE f = ::CreateFile(filename.c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr);
+        if (f != INVALID_HANDLE_VALUE)
+        {
+            DWORD dwSize = GetFileSize(f, nullptr);
+            CT(D3DCreateBlob(dwSize, ppBlob));
+            DWORD bytesRead;
+            ReadFile(f, (*ppBlob)->GetBufferPointer(), dwSize, &bytesRead, nullptr);
+            CloseHandle(f);
+        }
+    }
+
+    //**********************************************************************
+    // Method: LoadShaderInfo
+    // Loads the shader info (*.shi) file (describes the layout and parameters of a given shader)
+    //
+    // Parameters:
+    // filename - Name of shader info file (*.shi)
+    // ppShaderInfo - Returns the new shader info object
+    //**********************************************************************
+    void CRenderer::LoadShaderInfo(std::wstring &filename, IShaderInfo **ppShaderInfo)
+    {
+        CCausticFactory::Instance()->CreateShaderInfo(filename.c_str(), ppShaderInfo);
+    }
+
+    //**********************************************************************
+    // Method: LoadDefaultShaders
+    // Loads all the shaders found in the specified folder.
+    //
+    // Parameters:
+    // pFolder - path to shaders to load
+    //**********************************************************************
+    void CRenderer::LoadDefaultShaders(const wchar_t *pFolder)
+    {
+        IShaderMgr *pShaderMgr = CShaderMgr::Instance();
+        WIN32_FIND_DATA findData;
+        std::wstring fn(pFolder);
+        fn += L"\\*.shi";
+        HANDLE h = ::FindFirstFile(fn.c_str(), &findData);
+        if (h == INVALID_HANDLE_VALUE)
+            CT(E_FAIL);
+        while (true)
+        {
+            std::wstring fn(findData.cFileName);
+            std::size_t found = fn.rfind(L".shi");
+            if (found != std::wstring::npos)
+            {
+                CComPtr<ID3DBlob> spPixelShaderBlob;
+                CComPtr<ID3DBlob> spVertexShaderBlob;
+                CRefObj<IShaderInfo> spShaderInfo;
+                CRefObj<IShader> spShader;
+                std::wstring shaderName(fn.substr(0, found));
+                LoadShaderBlob(std::wstring(const_cast<wchar_t*>(pFolder)) + std::wstring(L"\\") + shaderName + L"_PS.cso", &spPixelShaderBlob);
+                LoadShaderBlob(std::wstring(const_cast<wchar_t*>(pFolder)) + std::wstring(L"\\") + shaderName + L"_VS.cso", &spVertexShaderBlob);
+                LoadShaderInfo(std::wstring(const_cast<wchar_t*>(pFolder)) + std::wstring(L"\\") + shaderName + L".shi", &spShaderInfo);
+                CCausticFactory::Instance()->CreateShader(this, shaderName.c_str(), spVertexShaderBlob, spPixelShaderBlob, spShaderInfo, &spShader);
+                pShaderMgr->RegisterShader(shaderName.c_str(), spShader);
+            }
+            if (!::FindNextFile(h, &findData))
+                break;
+        }
     }
 
     //**********************************************************************
@@ -410,7 +320,8 @@ namespace Caustic
         m_spLineShader->SetVSParam(L"endpoints", std::any(m));
         Float4 color(clr.x, clr.y, clr.z, clr.w);
         m_spLineShader->SetPSParam(L"color", std::any(color));
-        m_spLineShader->BeginRender(this);
+        std::vector<CRefObj<IPointLight>> lights;
+        m_spLineShader->BeginRender(this, nullptr, nullptr, lights, nullptr);
         pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
         pContext->Draw(2, 0);
         m_spLineShader->EndRender(this);
@@ -589,7 +500,8 @@ namespace Caustic
     {
         _ASSERT(ppRenderer);
         std::unique_ptr<CRenderer> spRenderer(new CRenderer());
-        spRenderer->Setup(hwnd, true);
+        std::wstring shaderFolder(L"");
+        spRenderer->Setup(hwnd, shaderFolder, true);
 
         CRefObj<ICamera> spCamera;
 		CCausticFactory::Instance()->CreateCamera(true, &spCamera);
