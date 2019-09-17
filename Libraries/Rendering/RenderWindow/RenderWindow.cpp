@@ -12,17 +12,17 @@
 
 namespace Caustic
 {
-    CAUSTICAPI void CreateRenderWindow(HWND hwnd, IRenderWindow **ppRenderWindow)
+    CAUSTICAPI void CreateRenderWindow(HWND hwnd, std::wstring &shaderFolder, IRenderWindow **ppRenderWindow)
     {
-        std::unique_ptr<CRenderWindow> spRenderWindow(new CRenderWindow(hwnd));
+        std::unique_ptr<CRenderWindow> spRenderWindow(new CRenderWindow(hwnd, shaderFolder));
         *ppRenderWindow = spRenderWindow.release();
         (*ppRenderWindow)->AddRef();
     }
 
-    CRenderWindow::CRenderWindow(HWND hwnd)
+    CRenderWindow::CRenderWindow(HWND hwnd, std::wstring &shaderFolder)
     {
         Caustic::CCausticFactory::Instance()->CreateRendererMarshaller(&m_spMarshaller);
-        m_spMarshaller->Initialize(hwnd);
+        m_spMarshaller->Initialize(hwnd, shaderFolder);
 		CSceneFactory::Instance()->CreateSceneGraph(&m_spSceneGraph);
         m_spMarshaller->SetSceneGraph(m_spSceneGraph.p);
 		Caustic::CCausticFactory::Instance()->CreateCamera(true, &m_spCamera);

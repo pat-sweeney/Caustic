@@ -26,7 +26,7 @@
 // Namespace: Caustic
 namespace Caustic
 {
-    CAUSTICAPI void CreateRenderer(HWND hwnd, IRenderer **ppRenderer);
+    CAUSTICAPI void CreateRenderer(HWND hwnd, std::wstring &shaderFolder, IRenderer **ppRenderer);
     CAUSTICAPI void CreateGraphics(HWND hwnd, IGraphics **ppGraphics);
     CAUSTICAPI void CreatePointLight(Vector3 &pos, IPointLight **ppLight);
     CAUSTICAPI void CreateTrackball(ITrackball **ppTrackball);
@@ -99,9 +99,9 @@ namespace Caustic
     // Method: CreateRenderer
     // See <ICausticFactory::CreateRenderer>
     //**********************************************************************
-    void CCausticFactory::CreateRenderer(HWND hwnd, IRenderer **ppRenderer)
+    void CCausticFactory::CreateRenderer(HWND hwnd, std::wstring &shaderFolder, IRenderer **ppRenderer)
 	{
-		Caustic::CreateRenderer(hwnd, ppRenderer);
+		Caustic::CreateRenderer(hwnd, shaderFolder, ppRenderer);
 	}
 	
     //**********************************************************************

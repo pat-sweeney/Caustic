@@ -29,7 +29,7 @@ namespace Caustic
     //**********************************************************************
     struct IRendererMarshaller : public IRefCount
     {
-        virtual void Initialize(HWND hwnd) = 0;
+        virtual void Initialize(HWND hwnd, std::wstring &shaderFolder) = 0;
         virtual void Shutdown() = 0;
         virtual void SetMaxCmdLength() = 0;
         virtual void GetRenderer(IRenderer **ppRenderer) = 0;

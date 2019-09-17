@@ -63,9 +63,9 @@ namespace Caustic
     // Method: Initialize
     // See <IRenderer::Initialize>
     //**********************************************************************
-    void CRendererMarshaller::Initialize(HWND hwnd)
+    void CRendererMarshaller::Initialize(HWND hwnd, std::wstring &shaderFolder)
     {
-		CCausticFactory::Instance()->CreateRenderer(hwnd, &m_spRenderer);
+		CCausticFactory::Instance()->CreateRenderer(hwnd, shaderFolder, &m_spRenderer);
         InitializeCriticalSection(&m_cs);
         m_thread = CreateThread(nullptr, 0, RenderThreadProc, this, 0, nullptr);
     }

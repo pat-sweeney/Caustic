@@ -496,11 +496,10 @@ namespace Caustic
         (*ppGraphics)->AddRef();
     }
 
-    CAUSTICAPI void CreateRenderer(HWND hwnd, IRenderer **ppRenderer)
+    CAUSTICAPI void CreateRenderer(HWND hwnd, std::wstring &shaderFolder, IRenderer **ppRenderer)
     {
         _ASSERT(ppRenderer);
         std::unique_ptr<CRenderer> spRenderer(new CRenderer());
-        std::wstring shaderFolder(L"");
         spRenderer->Setup(hwnd, shaderFolder, true);
 
         CRefObj<ICamera> spCamera;

@@ -52,7 +52,7 @@ namespace Caustic
         //**********************************************************************
         // IRendererMarshaller methods
         //**********************************************************************
-        virtual void Initialize(HWND hwnd) override;
+        virtual void Initialize(HWND hwnd, std::wstring &shaderFolder) override;
         virtual void Shutdown() override;
         virtual void SetMaxCmdLength() override {}
         virtual void GetRenderer(IRenderer **ppRenderer)

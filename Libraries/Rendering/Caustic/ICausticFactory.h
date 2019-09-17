@@ -43,7 +43,7 @@ namespace Caustic
 		// talk to the renderer. This object runs on the clients thread and acts
 		// only as a proxy for marshalling commands+data over to the renderer thread.
 		//**********************************************************************
-		virtual void CreateRenderer(HWND hwnd, IRenderer **ppRenderer) = 0;
+		virtual void CreateRenderer(HWND hwnd, std::wstring &shaderFolder, IRenderer **ppRenderer) = 0;
 
 		//**********************************************************************
 		// Method: CreateGraphics

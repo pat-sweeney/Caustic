@@ -27,7 +27,7 @@ namespace Caustic
         int m_startx, m_starty;
         int m_winwidth, m_winheight;
     public:
-        CRenderWindow(HWND hwnd);
+        CRenderWindow(HWND hwnd, std::wstring &shaderFolder);
         
         //**********************************************************************
         // IRefCount

@@ -477,8 +477,12 @@ namespace Caustic
     {
     }
 
-    //**********************************************************************
-    // Method: CreateConstantBuffer
+	CRefObj<IShaderInfo> CShader::GetShaderInfo()
+	{
+		return m_spShaderInfo;
+	}
+	
+	//**********************************************************************
     // CreateConstantBuffer creates the constant buffer (pixel or vertex shader)
     //
     // Parameters:
@@ -545,8 +549,8 @@ namespace Caustic
         CreateConstantBuffer(pDevice, pShaderInfo->PixelShaderParameterDefs().data(),
             (uint32)pShaderInfo->PixelShaderParameterDefs().size(), m_psParams, &m_pixelConstants);
 
-        CT(pDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), nullptr, &m_spVertexShader));
-        CT(pDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), nullptr, &m_spPixelShader));
+        CT(pDevice->CreateVertexShader(pVSByteCodes, vsBufferLen, nullptr, &m_spVertexShader));
+        CT(pDevice->CreatePixelShader(pPSByteCodes, psBufferLen, nullptr, &m_spPixelShader));
 
         CD3D11_SAMPLER_DESC sdesc(D3D11_DEFAULT);
         CT(pDevice->CreateSamplerState(&sdesc, &m_spSamplerState));
