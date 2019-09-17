@@ -8,9 +8,9 @@
 #include "Base\Core\IRefCount.h"
 #include <string>
 #include <any>
-#include "Rendering\Caustic\IGraphics.h"
 #include <d3d11.h>
 #include <DirectXMath.h>
+#include <vector>
 
 //**********************************************************************
 // File: Caustic.h

@@ -10,6 +10,7 @@
 #include "Rendering\Caustic\ITexture.h"
 #include "Rendering\Caustic\IRenderCtx.h"
 #include "Rendering\Caustic\IPointLight.h"
+#include "Rendering\Caustic\IShader.h"
 
 //**********************************************************************
 // File: Caustic.h
@@ -21,6 +22,7 @@
 namespace Caustic
 {
     struct ISceneGraph;
+    struct IRenderSubMesh;
 
     //**********************************************************************
     // Interface: IRenderer 
@@ -38,7 +40,7 @@ namespace Caustic
         // createDebugDevice - True if application wants the debug D3D device. False otherwise.
         //**********************************************************************
         virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice) = 0;
-        virtual void DrawMesh(ISubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) = 0; // Draws a mesh
+        virtual void DrawMesh(IRenderSubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) = 0; // Draws a mesh
         virtual void RenderLoop() = 0; // Renderer entry point
         virtual void RenderFrame() = 0; // Have renderer draw and present next frame
         virtual void SetCamera(ICamera *pCamera) = 0; // Sets camera

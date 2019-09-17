@@ -8,6 +8,7 @@
 #include "Base\Core\Core.h"
 #include "Base\Core\error.h"
 #include "Base\Core\RefCount.h"
+#include "RenderMesh.h"
 #include "ShaderInfo.h"
 #include <d3d11.h>
 #include <DirectXMath.h>
@@ -41,13 +42,6 @@ namespace Caustic
     CAUSTICAPI CRefObj<ITexture> CheckerboardTexture(IGraphics *pGraphics);
     CAUSTICAPI void LoadTexture(const wchar_t *pFilename, IGraphics *pGraphics, ITexture **ppTexture);
     CAUSTICAPI void LoadVideoTexture(const wchar_t *pFilename, IGraphics *pGraphics, ITexture **ppTexture);
-    CAUSTICAPI void MeshToD3D(IGraphics *pGraphics, ISubMesh *pMesh,
-        int vertexVersion, ID3D11Buffer **ppVertexBuffer, uint32 *pNumVerts,
-        int indexVersion, ID3D11Buffer **ppIndexBuffer, uint32 *pNumIndices,
-        BBox3 * /*pBbox*/, uint32 *pVertexSize);
-    CAUSTICAPI void MeshToNormals(IGraphics *pGraphics, ISubMesh *pSubMesh, ID3D11Buffer **ppVB, uint32 *pNumVerts);
-    CAUSTICAPI void StoreSubMeshRenderableDataToStream(IStream *pStream, ISubMesh *pMesh, int vertexVersion, int indexVersion);
-    CAUSTICAPI void LoadSubMeshRenderableDataFromStream(IStream *pStream, ID3D11Device *pDevice, ID3D11Buffer **ppIndexBuffer, uint32 *pNumIndices, ID3D11Buffer **ppVertexBuffer, uint32 *pNumVertices, int *pVertexVersion, int *pIndexVersion);
     
     CRefObj<ICausticFactory> CCausticFactory::factory;
 
@@ -111,6 +105,28 @@ namespace Caustic
     void CCausticFactory::CreateGraphics(HWND hwnd, IGraphics **ppGraphics)
 	{
 		Caustic::CreateGraphics(hwnd, ppGraphics);
+	}
+
+    //**********************************************************************
+    // Method: CreateRenderMesh
+    // See <ICausticFactory::CreateRenderMesh>
+    //**********************************************************************
+    void CCausticFactory::CreateRenderMesh(IRenderMesh **ppRenderMesh)
+	{
+		_ASSERT(ppRenderMesh);
+		*ppRenderMesh = new CRenderMesh();
+		(*ppRenderMesh)->AddRef();
+	}
+
+    //**********************************************************************
+    // Method: CreateRenderSubMesh
+    // See <ICausticFactory::CreateRenderSubMesh>
+    //**********************************************************************
+    void CCausticFactory::CreateRenderSubMesh(IRenderSubMesh **ppRenderSubMesh)
+	{
+		_ASSERT(ppRenderSubMesh);
+		*ppRenderSubMesh = new CRenderSubMesh();
+		(*ppRenderSubMesh)->AddRef();
 	}
 
     //**********************************************************************

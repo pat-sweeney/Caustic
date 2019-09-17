@@ -54,14 +54,14 @@ namespace Caustic
 		//**********************************************************************
 		virtual void CreateRenderer(HWND hwnd, std::wstring &shaderFolder, IRenderer **ppRenderer) override;
 		virtual void CreateGraphics(HWND hwnd, IGraphics **ppGraphics) override;
+		virtual void CreateRenderMesh(IRenderMesh **ppRenderMesh) override;
+		virtual void CreateRenderSubMesh(IRenderSubMesh **ppRenderSubMesh) override;
 		virtual void CreatePointLight(Vector3 &pos, IPointLight **ppLight) override;
 		virtual void CreateTrackball(ITrackball **ppTrackball) override;
 		virtual void CreateRendererMarshaller(IRendererMarshaller **ppMarshaller) override;
 		virtual void CreateRenderMaterial(IGraphics *pGraphics, IMaterialAttrib *pMaterialAttrib, IShader *pShader, IRenderMaterial **ppRenderMaterial) override;
-		virtual void CreateRenderable(IGraphics *pGraphics, ISubMesh *pSubMesh, IMaterialAttrib *pMaterial, IShader *pShader, IRenderable **ppRenderable) override;
-		virtual void CreateRenderable(IRenderable **ppRenderable) override;
-		virtual void CreateRenderable(ID3D11Buffer *pVB, uint32 numVertices, ID3D11Buffer *pIB, uint32 numIndices, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat, IRenderable **ppRenderable) override;
-		virtual void CreateSampler(IGraphics *pGraphics, ITexture *pTexture, ISampler **ppSampler) override;
+        virtual void CreateRenderable(IRenderSubMesh *pSubMesh, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat, IRenderable **ppRenderable) override;
+        virtual void CreateSampler(IGraphics *pGraphics, ITexture *pTexture, ISampler **ppSampler) override;
 		virtual void CreateCamera(bool leftHanded, ICamera **ppCamera) override;
 		virtual void CreateTexture(IGraphics *pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, uint32 cpuFlags, uint32 bindFlags, ITexture **ppTexture) override;
 		virtual CRefObj<ITexture> CheckerboardTexture(IGraphics *pGraphics) override;

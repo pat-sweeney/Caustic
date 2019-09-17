@@ -7,6 +7,7 @@
 #include "Geometry\GeomDS\kdtree.h"
 #include "Base\Core\RefCount.h"
 #include "Base\Core\BlockAllocator.h"
+#include "Rendering\Caustic\Caustic.h"
 #include <vector>
 #include <map>
 
@@ -48,6 +49,10 @@ namespace Caustic
         void LinkEdges(CHalfEdge *pPrev, CHalfEdge *pCur);
         void TriangulateViaEarClipping();
         void TriangulateViaPointInsertion();
+        void BuildVertexBuffer(IGraphics *pGraphics, IShaderInfo *pShaderInfo, std::vector<int> &vertexReferenced, MeshData *pMeshData);
+        void BuildIndexBuffer(IGraphics *pGraphics, std::vector<int> &vertexReferenced, MeshData *pMeshData);
+        void BuildReferencedVertexList(std::vector<int> &vertexReferenced);
+        void ToRenderSubMesh(IGraphics *pGraphics, IShader *pShader, IRenderSubMesh **ppRenderSubMesh);
     public:
         friend class CMeshConstructor;
 

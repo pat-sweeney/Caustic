@@ -276,7 +276,7 @@ namespace Caustic
     // Method: DrawMesh
     // See <IRenderer::DrawMesh>
     //**********************************************************************
-    void CRendererMarshaller::DrawMesh(ISubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat)
+    void CRendererMarshaller::DrawMesh(IRenderSubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat)
     {
         if (pMesh)
             pMesh->AddRef();

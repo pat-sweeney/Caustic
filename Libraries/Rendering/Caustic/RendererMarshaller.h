@@ -77,7 +77,7 @@ namespace Caustic
         // IRenderer methods
         //**********************************************************************
         virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice) override;
-        virtual void DrawMesh(ISubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) override; // Draws a mesh
+        virtual void DrawMesh(IRenderSubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) override; // Draws a mesh
         virtual void RenderLoop() override; // Renderer entry point
         virtual void RenderFrame() override; // Have renderer draw and present next frame
         virtual void SetCamera(ICamera *pCamera) override; // Sets camera

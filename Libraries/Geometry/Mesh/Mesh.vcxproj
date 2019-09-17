@@ -49,6 +49,7 @@
       <AdditionalIncludeDirectories>$(CausticRoot)\Libraries</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>$(CPPDefines);CAUSTIC_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -63,6 +64,7 @@
       <PreprocessorDefinitions>$(CPPDefines);CAUSTIC_EXPORT;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(CausticRoot)\Libraries</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -86,6 +88,7 @@
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshConstructor.cpp" />
+    <ClCompile Include="MeshToRenderMesh.cpp" />
     <ClCompile Include="Submesh.cpp" />
     <ClCompile Include="UnitTest.cpp" />
   </ItemGroup>

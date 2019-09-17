@@ -12,9 +12,7 @@
 #include "Base\Core\Core.h"
 #include "Base\Math\Vector.h"
 #include "Geometry\Mesh\Mesh.h"
-#include "Rendering\Caustic\IGraphics.h"
-#include "Rendering\Caustic\Texture.h"
-#include "Rendering\Caustic\ISampler.h"
+#include "Rendering\Caustic\Caustic.h"
 #include <Windows.h>
 #include <atlbase.h>
 #include <d3d11.h>
@@ -54,6 +52,24 @@ namespace Caustic
 		// ppGraphics - Returns the graphics device
 		//**********************************************************************
 		virtual void CreateGraphics(HWND hwnd, IGraphics **ppGraphics) = 0;
+
+        //**********************************************************************
+		// Method: CreateRenderMesh
+		// Creates a render mesh object
+		//
+		// Parameters:
+		// ppRenderMesh - Returns the created render mesh
+		//**********************************************************************
+		virtual void CreateRenderMesh(IRenderMesh **ppRenderMesh) = 0;
+
+		//**********************************************************************
+		// Method: CreateRenderSubMesh
+		// Creates a render submesh object
+		//
+		// Parameters:
+		// ppRenderSubMesh - Returns the created render submesh
+		//**********************************************************************
+		virtual void CreateRenderSubMesh(IRenderSubMesh **ppRenderSubMesh) = 0;
 
 		//**********************************************************************
 		// Method: CreatePointLight
@@ -101,38 +117,13 @@ namespace Caustic
 		// Creates a renderable object. A Renderable is a mesh+material+shader.
 		//
 		// Parameters:
-		// pGraphics - Graphics device
 		// pSubMesh - mesh object
-		// pMaterial - Material definition
-		// pShader - Vertex+Pixel shader
-		// ppRenderable - Returns the created Renderable object
+        // pFrontMaterial - Material for front faces
+        // pBackMaterial - Material for back faces
+        // mat - Matrix to apply
+        // ppRenderable - Returns the created Renderable object
 		//**********************************************************************
-		virtual void CreateRenderable(IGraphics *pGraphics, ISubMesh *pSubMesh, IMaterialAttrib *pMaterial, IShader *pShader, IRenderable **ppRenderable) = 0;
-
-		//**********************************************************************
-		// Method: CreateRenderable
-		// Creates a renderable object. A Renderable is a mesh+material+shader.
-		//
-		// Parameters:
-		// ppRenderable - Returns the created Renderable object
-		//**********************************************************************
-		virtual void CreateRenderable(IRenderable **ppRenderable) = 0;
-
-		//**********************************************************************
-		// Method: CreateRenderable
-		// Creates a renderable object. A Renderable is a mesh+material+shader.
-		//
-		// Parameters:
-		// pVB - vertex buffer
-		// numVertices - number of vertices in vertex buffer
-		// pIB - index buffer
-		// numIndices - number of indices in index buffer
-		// pFrontMaterial - Material to apply to front polygons
-		// pBackMaterial - Material to apply to back polygons
-		// mat - matrix to apply to mesh
-		// ppRenderable - Returns the created Renderable object
-		//**********************************************************************
-		virtual void CreateRenderable(ID3D11Buffer *pVB, uint32 numVertices, ID3D11Buffer *pIB, uint32 numIndices, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat, IRenderable **ppRenderable) = 0;
+        virtual void CreateRenderable(IRenderSubMesh *pSubMesh, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat, IRenderable **ppRenderable) = 0;
 
 		//**********************************************************************
 		// Method: CreateSampler

@@ -6,7 +6,6 @@
 
 #include "Base\Core\Core.h"
 #include "Base\Math\Vector.h"
-#include "Geometry\Mesh\Mesh.h"
 #include "Rendering\Caustic\IGraphics.h"
 #include "Rendering\Caustic\ITexture.h"
 #include "Rendering\Caustic\ISampler.h"
@@ -19,6 +18,7 @@
 #include "Rendering\Caustic\IPointLight.h"
 #include "Rendering\Caustic\IRenderMaterial.h"
 #include "Rendering\Caustic\IRendererMarshaller.h"
+#include "Rendering\Caustic\IRenderMesh.h"
 #include "Rendering\Caustic\IRenderable.h"
 #include "Rendering\Caustic\ICausticFactory.h"
 

@@ -197,6 +197,7 @@
     <ClInclude Include="IRenderer.h" />
     <ClInclude Include="IRendererMarshaller.h" />
     <ClInclude Include="IRenderMaterial.h" />
+    <ClInclude Include="IRenderMesh.h" />
     <ClInclude Include="ISampler.h" />
     <ClInclude Include="IShader.h" />
     <ClInclude Include="IShaderInfo.h" />
@@ -204,6 +205,7 @@
     <ClInclude Include="ITexture.h" />
     <ClInclude Include="ITrackball.h" />
     <ClInclude Include="PointLight.h" />
+    <ClInclude Include="Renderable.h" />
     <ClInclude Include="RendererMarshaller.h" />
     <ClInclude Include="DefaultPS.h" />
     <ClInclude Include="DefaultVS.h" />
@@ -213,6 +215,7 @@
     <ClInclude Include="LineVS.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderMaterial.h" />
+    <ClInclude Include="RenderMesh.h" />
     <ClInclude Include="Sampler.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderInfo.h" />
@@ -231,6 +234,7 @@
     <ClCompile Include="Renderable.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderMaterial.cpp" />
+    <ClCompile Include="RenderMesh.cpp" />
     <ClCompile Include="Sampler.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderInfo.cpp" />

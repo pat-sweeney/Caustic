@@ -54,5 +54,8 @@
     <ClCompile Include="Delaunay.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MeshToRenderMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

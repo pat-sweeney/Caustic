@@ -133,6 +133,13 @@
     <ClInclude Include="IShaderInfo.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="IRenderMesh.h">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderMesh.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderable.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -178,6 +185,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ShaderInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -6,6 +6,7 @@
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\CausticFactory.h"
 #include "Renderer.h"
+#include "Renderable.h"
 #include "ShaderInfo.h"
 #include <vector>
 #include <any>
@@ -81,14 +82,14 @@ namespace Caustic
         // Create vertex buffer used to draw lines
         //**********************************************************************
         {
-            CD3D11_BUFFER_DESC bufdesc(sizeof(SVertex_3) * 2, D3D11_BIND_VERTEX_BUFFER);
-            SVertex_3 *pVertexBuffer = new SVertex_3[2];
-            pVertexBuffer[0].m_pos[0] = 0.0f;
-            pVertexBuffer[0].m_pos[1] = 0.0f;
-            pVertexBuffer[0].m_pos[2] = 0.0f;
-            pVertexBuffer[1].m_pos[0] = 1.0f;
-            pVertexBuffer[1].m_pos[1] = 1.0f;
-            pVertexBuffer[1].m_pos[2] = 1.0f;
+            CD3D11_BUFFER_DESC bufdesc(sizeof(CLineVertex) * 2, D3D11_BIND_VERTEX_BUFFER);
+            CLineVertex *pVertexBuffer = new CLineVertex[2];
+            pVertexBuffer[0].x = 0.0f;
+            pVertexBuffer[0].y = 0.0f;
+            pVertexBuffer[0].z = 0.0f;
+            pVertexBuffer[1].x = 1.0f;
+            pVertexBuffer[1].y = 1.0f;
+            pVertexBuffer[1].z = 1.0f;
             D3D11_SUBRESOURCE_DATA data;
             data.pSysMem = pVertexBuffer;
             data.SysMemPitch = 0;
@@ -100,13 +101,13 @@ namespace Caustic
         // Create vertex buffer used to draw infinite plane
         //**********************************************************************
         {
-            CD3D11_BUFFER_DESC bufdesc(sizeof(SVertex_5) * 5, D3D11_BIND_VERTEX_BUFFER);
-            SVertex_5 planePts[5] = {
-                { 0.0f, 0.0f, 0.0f, 1.0f },
-                { 1.0f, 0.0f, 0.0f, 0.0f },
-                { 0.0f, 0.0f, 1.0f, 0.0f },
-                { -1.0f, 0.0f, 0.0f, 0.0f },
-                { 0.0f, 0.0f, -1.0f, 0.0f },
+            CD3D11_BUFFER_DESC bufdesc(sizeof(CLineVertex) * 5, D3D11_BIND_VERTEX_BUFFER);
+            CLineVertex planePts[5] = {
+                { 0.0f, 0.0f, 0.0f },
+                { 1.0f, 0.0f, 0.0f },
+                { 0.0f, 0.0f, 1.0f },
+                { -1.0f, 0.0f, 0.0f },
+                { 0.0f, 0.0f, -1.0f },
             };
             D3D11_SUBRESOURCE_DATA data;
             data.pSysMem = planePts;
@@ -250,7 +251,7 @@ namespace Caustic
     // pShader - Shader to use when rendering (maybe nullptr)
     // mat - Transformation matrix to apply to mesh
     //**********************************************************************
-    void CRenderer::DrawMesh(ISubMesh *pSubMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat)
+    void CRenderer::DrawMesh(IRenderSubMesh *pSubMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat)
     {
         CRefObj<IRenderMaterial> spFrontMaterial;
 		CCausticFactory::Instance()->CreateRenderMaterial(this, pMaterial, pShader, &spFrontMaterial);
@@ -261,7 +262,7 @@ namespace Caustic
 			CCausticFactory::Instance()->CreateRenderMaterial(this, pMaterial, pShader, &spBackMaterial);
             spBackMaterial->SetDiffuseTexture(this, pTexture);
         }
-        CRenderable renderable(this, pSubMesh, spFrontMaterial.p, spBackMaterial.p, mat);
+        CRenderable renderable(pSubMesh, spFrontMaterial.p, spBackMaterial.p, mat);
         m_singleObjs.push_back(renderable);
     }
 
@@ -309,7 +310,7 @@ namespace Caustic
     void CRenderer::DrawLine(Vector3 p1, Vector3 p2, Vector4 clr)
     {
         UINT offset = 0;
-        UINT vertexSize = sizeof(SVertex_3);
+        UINT vertexSize = sizeof(CLineVertex);
         ID3D11DeviceContext *pContext = GetContext();
         pContext->IASetVertexBuffers(0, 1, &m_spLineVB.p, &vertexSize, &offset);
         Matrix m;
