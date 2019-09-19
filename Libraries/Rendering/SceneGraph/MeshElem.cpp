@@ -31,8 +31,6 @@ namespace Caustic
             pElem->GetBBox(&bbox);
             Vector4 minPt = bbox.minPt * pSceneCtx->m_Transform;
             Vector4 maxPt = bbox.maxPt * pSceneCtx->m_Transform;
-            CRefObj<IGraphics> spDevice;
-            pRenderer->GetGraphics(&spDevice);
             pRenderer->DrawLine(
                 Vector3(minPt.x, minPt.y, minPt.z),
                 Vector3(maxPt.x, minPt.y, minPt.z),
@@ -90,40 +88,28 @@ namespace Caustic
         pRenderer->GetGraphics(&spGraphics);
         if (GetFlags() & ESceneElemFlags::RenderableDirty)
         {
-            for (uint32 i = 0; i < m_spMesh->NumberSubMeshes(); i++)
-            {
-                CRefObj<ISubMesh> spSubMesh;
-                m_spMesh->GetSubMesh(i, &spSubMesh);
-                CRefObj<IRenderable> spRenderable;
-                Caustic::CCausticFactory::Instance()->CreateRenderable(spGraphics.p, spSubMesh.p, pSceneCtx->m_spCurrentMaterial.p, pSceneCtx->m_spCurrentPixelShader.p, &spRenderable);
-                if (spRenderable != nullptr)
-                {
-                    m_renderables.push_back(spRenderable);
-                    SetFlags(GetFlags() & ~ESceneElemFlags::RenderableDirty);
-                }
-            }
+            m_spMesh->ToRenderMesh(pRenderer, pSceneCtx->m_spCurrentShader, &m_spRenderMesh);
+            SetFlags(GetFlags() | ESceneElemFlags::RenderableDirty);
         }
-        for (uint32 i = 0; i < (uint32)m_renderables.size(); i++)
-        {
-            if (m_renderables[i]->InPass(pSceneCtx->m_CurrentPass))
-            {
-                DirectX::XMMATRIX dxmat(
-                    pSceneCtx->m_Transform.v[0][0], pSceneCtx->m_Transform.v[0][1], pSceneCtx->m_Transform.v[0][2], pSceneCtx->m_Transform.v[0][3],
-                    pSceneCtx->m_Transform.v[1][0], pSceneCtx->m_Transform.v[1][1], pSceneCtx->m_Transform.v[1][2], pSceneCtx->m_Transform.v[1][3],
-                    pSceneCtx->m_Transform.v[2][0], pSceneCtx->m_Transform.v[2][1], pSceneCtx->m_Transform.v[2][2], pSceneCtx->m_Transform.v[2][3],
-                    pSceneCtx->m_Transform.v[3][0], pSceneCtx->m_Transform.v[3][1], pSceneCtx->m_Transform.v[3][2], pSceneCtx->m_Transform.v[3][3]);
-                m_renderables[i]->SetTransform(dxmat);
-                m_renderables[i]->Render(spGraphics.p, pSceneCtx->m_lights, pRenderCtx);
-                DrawSelected(pRenderer, this, pSceneCtx);
-            }
-        }
+        m_spRenderMesh->Render(pRenderer, pSceneCtx->m_lights);
+        //if (m_renderables[i]->InPass(pSceneCtx->m_CurrentPass))
+        //{
+        //    DirectX::XMMATRIX dxmat(
+        //        pSceneCtx->m_Transform.v[0][0], pSceneCtx->m_Transform.v[0][1], pSceneCtx->m_Transform.v[0][2], pSceneCtx->m_Transform.v[0][3],
+        //        pSceneCtx->m_Transform.v[1][0], pSceneCtx->m_Transform.v[1][1], pSceneCtx->m_Transform.v[1][2], pSceneCtx->m_Transform.v[1][3],
+        //        pSceneCtx->m_Transform.v[2][0], pSceneCtx->m_Transform.v[2][1], pSceneCtx->m_Transform.v[2][2], pSceneCtx->m_Transform.v[2][3],
+        //        pSceneCtx->m_Transform.v[3][0], pSceneCtx->m_Transform.v[3][1], pSceneCtx->m_Transform.v[3][2], pSceneCtx->m_Transform.v[3][3]);
+        //    m_renderables[i]->SetTransform(dxmat);
+        //    m_renderables[i]->Render(spGraphics, pSceneCtx->m_lights, pRenderCtx);
+        //    DrawSelected(pRenderer, this, pSceneCtx);
+        //}
     }
 
     void CSceneMeshElem::GetBBox(BBox3 *pBBox)
     {
         if (GetFlags() & ESceneElemFlags::BBoxDirty)
         {
-            if (m_spMesh.p)
+            if (m_spMesh)
                 m_spMesh->GetBBox(&m_BBox);
             SetFlags(GetFlags() & ~ESceneElemFlags::BBoxDirty);
         }

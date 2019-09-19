@@ -11,6 +11,9 @@
     <Filter Include="Source Files\Interfaces">
       <UniqueIdentifier>{415652dd-7fcc-4ee7-89a5-381c7e85db2a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Shaders\Definitions">
+      <UniqueIdentifier>{15cbc33f-da0a-4cbf-ab56-84dc503f014a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -124,6 +127,19 @@
     <ClInclude Include="ITrackball.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderInfo.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IShaderInfo.h">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="IRenderMesh.h">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderMesh.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderable.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -168,35 +184,14 @@
     <ClCompile Include="CausticFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ShaderInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="Default.ps">
-      <Filter>Source Files\Shaders</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Default.vs">
-      <Filter>Source Files\Shaders</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Line.vs">
-      <Filter>Source Files\Shaders</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Line.ps">
-      <Filter>Source Files\Shaders</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Textured.ps">
-      <Filter>Source Files\Shaders</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Normal.ps">
-      <Filter>Source Files\Shaders</Filter>
-    </CustomBuild>
-    <CustomBuild Include="DrawNormal.vs">
-      <Filter>Source Files\Shaders</Filter>
-    </CustomBuild>
-    <CustomBuild Include="ColorNormal.ps">
-      <Filter>Source Files\Shaders</Filter>
-    </CustomBuild>
-    <CustomBuild Include="ColorUVs.ps">
-      <Filter>Source Files\Shaders</Filter>
-    </CustomBuild>
     <CustomBuild Include="DrawNormal.ps">
       <Filter>Source Files\Shaders</Filter>
     </CustomBuild>
@@ -220,6 +215,39 @@
     </CustomBuild>
     <CustomBuild Include="ObjID.ps">
       <Filter>Source Files\Shaders</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Textured.xml">
+      <Filter>Source Files\Shaders\Definitions</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ColorNormal.xml">
+      <Filter>Source Files\Shaders\Definitions</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ColorUVs.xml">
+      <Filter>Source Files\Shaders\Definitions</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Default.xml">
+      <Filter>Source Files\Shaders\Definitions</Filter>
+    </CustomBuild>
+    <CustomBuild Include="DrawNormal.xml">
+      <Filter>Source Files\Shaders\Definitions</Filter>
+    </CustomBuild>
+    <CustomBuild Include="FullQuad.xml">
+      <Filter>Source Files\Shaders\Definitions</Filter>
+    </CustomBuild>
+    <CustomBuild Include="InfinitePlane.xml">
+      <Filter>Source Files\Shaders\Definitions</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Line.xml">
+      <Filter>Source Files\Shaders\Definitions</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Normal.xml">
+      <Filter>Source Files\Shaders\Definitions</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ObjID.xml">
+      <Filter>Source Files\Shaders\Definitions</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ShadowMap.xml">
+      <Filter>Source Files\Shaders\Definitions</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

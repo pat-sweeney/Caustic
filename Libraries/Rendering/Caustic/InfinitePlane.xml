@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Shader>
+  <PixelShader Filename="$(CausticRoot)\Libraries\Rendering\Caustic\InfinitePlane.ps" Output="$(CausticRoot)\$(Configuration)\InfinitePlane_PS.cso"/>
+  <VertexShader Filename="$(CausticRoot)\Libraries\Rendering\Caustic\InfinitePlane.vs" Output="$(CausticRoot)\$(Configuration)\InfinitePlane_VS.cso"/>
+</Shader>

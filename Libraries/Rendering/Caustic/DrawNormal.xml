@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Shader>
+  <PixelShader Filename="$(CausticRoot)\Libraries\Rendering\Caustic\DrawNormal.ps" Output="$(CausticRoot)\$(Configuration)\DrawNormal_PS.cso"/>
+  <VertexShader Filename="$(CausticRoot)\Libraries\Rendering\Caustic\DrawNormal.vs" Output="$(CausticRoot)\$(Configuration)\DrawNormal_VS.cso"/>
+</Shader>

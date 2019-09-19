@@ -16,7 +16,7 @@ namespace Caustic
         std::unique_ptr<CSceneMaterialElem> spMeshObj(new CSceneMaterialElem());
 		CRefObj<IMaterialAttrib> spMaterial;
         Caustic::CreateMaterial(&spMaterial);
-		spMeshObj->SetMaterial(spMaterial.p);
+		spMeshObj->SetMaterial(spMaterial);
         *ppElem = spMeshObj.release();
         (*ppElem)->AddRef();
     }
@@ -29,15 +29,12 @@ namespace Caustic
     void CSceneMaterialElem::Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx)
     {
         CRefObj<IMaterialAttrib> spOldMaterial = pSceneCtx->m_spCurrentMaterial;
-        CRefObj<IShader> spOldVertexShader = pSceneCtx->m_spCurrentVertexShader;
-        CRefObj<IShader> spOldPixelShader = pSceneCtx->m_spCurrentPixelShader;
+        CRefObj<IShader> spOldShader = pSceneCtx->m_spCurrentShader;
         pSceneCtx->m_spCurrentMaterial = m_spMaterial;
-        pSceneCtx->m_spCurrentVertexShader = m_spVertexShader;
-        pSceneCtx->m_spCurrentPixelShader = m_spPixelShader;
+        pSceneCtx->m_spCurrentShader = m_spShader;
         CSceneGroupElem::Render(pRenderer, pRenderCtx, pSceneCtx);
         pSceneCtx->m_spCurrentMaterial = spOldMaterial;
-        pSceneCtx->m_spCurrentVertexShader = spOldVertexShader;
-        pSceneCtx->m_spCurrentPixelShader = spOldPixelShader;
+        pSceneCtx->m_spCurrentShader = spOldShader;
     }
 
     void CSceneMaterialElem::Store(IStream *pStream)

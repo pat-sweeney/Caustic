@@ -240,24 +240,25 @@ namespace Caustic
         }
         wchar_t fn[1024];
         swprintf_s(fn, L"d:\\images\\frame-%d.png", frame++);
-        StoreImage(fn, spImage.p);
+        StoreImage(fn, spImage);
     }
 #endif
 
     //**********************************************************************
-    /// \brief Adds a new edge to our mesh
-    ///
-    /// Adds a new edge to our mesh. Each edge is directed from v0=>v1.
-    /// Each face is oriented so that edges go in counter-clockwise order.
-    ///
-    ///        v0
-    ///        +-------------+
-    ///        |           /
-    ///      t1|t0      /
-    ///        |     /
-    ///        |  /
-    ///        +
-    ///        v1
+    // Method: FindOrAddEdge
+    // Adds a new edge to our mesh
+    //
+    // Adds a new edge to our mesh. Each edge is directed from v0=>v1.
+    // Each face is oriented so that edges go in counter-clockwise order.
+    //
+    //        v0
+    //        +-------------+
+    //        |           /
+    //      t1|t0      /
+    //        |     /
+    //        |  /
+    //        +
+    //        v1
     //**********************************************************************
     int CDelaunay2::FindOrAddEdge(int v0, int v1, int tri, bool isBoundaryEdge)
     {
@@ -284,7 +285,8 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Adds a new point to our current Delaunay triangulation using
+    // Method: AddPoint
+    // Adds a new point to our current Delaunay triangulation using
     // the Bowyer-Watson algorithm.
     //**********************************************************************
     void CDelaunay2::AddPoint(Vector2 &pt, Vector2 &uv, bool isBoundary)
@@ -293,7 +295,8 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Pre-allocates all the edges that form our meshes boundary.
+    // Method: CreateBoundaryEdges
+    // Pre-allocates all the edges that form our meshes boundary.
     // We assume that boundary edges are added in counter-clockwise order
     // around the mesh.
     //**********************************************************************
@@ -317,7 +320,8 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Computes the Delaunay triangulation of our mesh. We first compute
+    // Method: ComputeTriangulation
+    // Computes the Delaunay triangulation of our mesh. We first compute
     // a triangulation based on the boundary vertices. We then remove the exterior
     // triangles (super triangles) and then add the interior vertices.
     //**********************************************************************
@@ -330,7 +334,8 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Adds the set of vertex points that match the specified vertex
+    // Method: TriangulePoints
+    // Adds the set of vertex points that match the specified vertex
     // flag to the current triangulation.
     //**********************************************************************
     void CDelaunay2::TriangulatePoints(uint8 flag)
@@ -469,6 +474,10 @@ namespace Caustic
         }
     }
 
+    //**********************************************************************
+    // Method: RemoveExteriorTriangles
+    // Removes the exterior triangles (ones connected to the super triangle vertices)
+    //**********************************************************************
     void CDelaunay2::RemoveExteriorTriangles()
     {
         std::stack<int> exteriorTriangles;
@@ -524,6 +533,11 @@ namespace Caustic
         }
     }
 
+    //**********************************************************************
+    // Method: Close
+    // Performs the triangulation step after the points have all been added
+    // to the mesh.
+    //**********************************************************************
     void CDelaunay2::Close()
     {
         ComputeTriangulation();
@@ -544,6 +558,10 @@ namespace Caustic
         m_numTriangles = (uint32)m_triangles.size();
     }
 
+    //**********************************************************************
+    // Method: WriteString
+    // Writes a string to the specified stream using vsprintf_s()
+    //**********************************************************************
     static void WriteString(HANDLE h, const char *pData, ...)
     {
         va_list args;
@@ -589,6 +607,10 @@ namespace Caustic
         CloseHandle(h);
     }
 
+    //**********************************************************************
+    // Method: CreateDelaunay2
+    // Creates a Delaunay triangulation
+    //**********************************************************************
     CAUSTICAPI void CreateDelaunay2(IDelaunay2 **ppDelaunay, BBox2 &bb)
     {
         std::unique_ptr<CDelaunay2> spDelaunay(new CDelaunay2(bb));

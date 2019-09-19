@@ -167,7 +167,7 @@ namespace Caustic
             CreateEmptyMesh(&spMesh);
             CRefObj<Caustic::ISubMesh> spSubMesh;
             CreateSubMesh(parser.m_Verts, parser.m_Faces, 0, &spSubMesh);
-            spMesh->AddSubMesh(spSubMesh.p);
+            spMesh->AddSubMesh(spSubMesh);
             return spMesh;
         }
     };

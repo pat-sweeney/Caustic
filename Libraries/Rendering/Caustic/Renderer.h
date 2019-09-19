@@ -25,57 +25,6 @@ namespace Caustic
     const int c_RenderCmd_DrawMesh = 0; // Command ID for rendering a mesh
     const int c_RenderCmd_SetCamera = 1; // Command ID for setting the camera
 
-    //**********************************************************************
-    // Structure: SVertex_1
-    // Defines a vertex in our vertex buffer that contains a position and 1 set of UVs.
-    //**********************************************************************
-    struct SVertex_1
-    {
-        float m_pos[3]; // Defines the world coordinate position for this vertex
-        float m_uvs[2]; // Defines the UV coordinates
-    };
-
-    //**********************************************************************
-    // Structure: SVertex_2
-    // Defines the default rendering vertex.
-    //**********************************************************************
-    struct SVertex_2
-    {
-        float m_pos[3]; // Defines the world coordinate position for this vertex
-        float m_norm[3]; // Defines the vertex normal
-        float m_uvs[2]; // Defines the UV coordinates
-    };
-
-    //**********************************************************************
-    // Structure: SVertex_2
-    // Defines the default rendering vertex.
-    //**********************************************************************
-    struct SVertex_3
-    {
-        float m_pos[3]; // Defines the world coordinate position for this vertex
-    };
-
-    //**********************************************************************
-    // Structure: SVertex_4
-    // Defines the vertex used for drawing normal.
-    //**********************************************************************
-    struct SVertex_4
-    {
-        float m_pos[3]; // Defines the world coordinate position for this vertex
-        float m_dir[4]; // Direction vector to be added to the position (maybe <0.0f,0.0f,0.0f>)
-    };
-
-    //**********************************************************************
-    // Structure: SVertex_5
-    // Defines the vertex used for meshes with 4 component position.
-    //**********************************************************************
-    struct SVertex_5
-    {
-        float m_pos[4];
-    };
-
-    const int c_DefaultVertexVerion = 1; // Defines the default vertex version
-
     const int c_PassFirst = 0;
     const int c_PassObjID = 0;
     const int c_PassShadow = 1;
@@ -88,53 +37,12 @@ namespace Caustic
     struct IRenderMaterial;
 
     //**********************************************************************
-    // Class: CRenderable
-    // Defines a self contained renderable object
+    // Class: CLineVertex
+    // Vertex structure for drawing lines
     //**********************************************************************
-    class CRenderable : public IRenderable, public CRefCount
+    struct CLineVertex
     {
-    protected:
-        CComPtr<ID3D11Buffer> m_spVB; // Defines the vertex buffer
-        CComPtr<ID3D11Buffer> m_spIB; // Defines the index buffer
-        CRefObj<IRenderMaterial> m_spFrontMaterial;
-        CRefObj<IRenderMaterial> m_spBackMaterial;
-        uint32 m_numIndices; // Number of indices in m_spIB
-        uint32 m_numVerts; // Number of vertices in m_spVB
-        uint32 m_passes; // List of passes to render this object in
-        DirectX::XMMATRIX m_xform; // Current transform to apply to object
-
-        CComPtr<ID3D11Buffer> m_spNormalVB;
-        uint32 m_numNormalVerts;
-
-        void RenderMesh(IGraphics *pGraphics, std::vector<CRefObj<IPointLight>> &lights, IRenderCtx *pRenderCtx, IRenderMaterial *pRenderMaterial,
-            D3D11_CULL_MODE cullmode);
-    public:
-        explicit CRenderable(
-            ID3D11Buffer *pVB, uint32 numVertices,
-            ID3D11Buffer *pIB, uint32 numIndices,
-            ID3D11Buffer *pNormalVB, uint32 numNormalVertices,
-            IRenderMaterial *pFrontMaterial,
-            IRenderMaterial *pBackMaterial,
-            DirectX::XMMATRIX &mat);
-        explicit CRenderable(IGraphics *pGraphics, ISubMesh *pMesh, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat);
-        CRenderable() {}
-        explicit CRenderable(ID3D11Buffer *pIndexBuffer, uint32 numIndices, ID3D11Buffer *pVertexBuffer, uint32 numVertices, IRenderable **ppRenderable);
-        friend class CRenderer;
-
-        //**********************************************************************
-        // IRefCount
-        //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
-
-        //**********************************************************************
-        // IRenderable
-        //**********************************************************************
-        virtual Vector3 GetPos() override { return Vector3(DirectX::XMVectorGetX(m_xform.r[3]), DirectX::XMVectorGetY(m_xform.r[3]), DirectX::XMVectorGetZ(m_xform.r[3])); }
-        virtual void Render(IGraphics *pGraphics, std::vector<CRefObj<IPointLight>> &lights, IRenderCtx *pRenderCtx);
-        virtual void SetTransform(DirectX::XMMATRIX &mat) override { m_xform = mat; }
-        virtual DirectX::XMMATRIX &GetTransform() override { return m_xform; }
-        virtual bool InPass(int pass) { return ((m_passes | (1 << Caustic::c_PassObjID)) & (1 << pass)) ? true : false; }
+        float x, y, z;
     };
 
     //**********************************************************************
@@ -276,6 +184,9 @@ namespace Caustic
         CRefObj<IShader> m_spFullQuadShader;            // Shader used for drawing full screen quad
 #endif // SUPPORT_FULLQUAD
 
+        void LoadDefaultShaders(const wchar_t *pFolder);
+        void LoadShaderBlob(std::wstring &filename, ID3DBlob **ppBlob);
+        void LoadShaderInfo(std::wstring &filename, IShaderInfo **ppShaderInfo);
         void RenderScene();
         void DrawSceneObjects(int pass);
     public:
@@ -302,8 +213,8 @@ namespace Caustic
         //**********************************************************************
         // IRenderer
         //**********************************************************************
-        virtual void Setup(HWND hwnd, bool createDebugDevice) override;
-        virtual void DrawMesh(ISubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) override;
+        virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice) override;
+        virtual void DrawMesh(IRenderSubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) override;
         virtual void AddPointLight(IPointLight *pLight) override;
         virtual void GetRenderCtx(IRenderCtx **ppCtx) override;
         virtual void SetSceneGraph(ISceneGraph *pSceneGraph) override;

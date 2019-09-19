@@ -19,7 +19,7 @@ namespace Caustic
         public CRefCount
     {
         CRefObj<IMesh> m_spMesh;
-        std::vector<CRefObj<IRenderable>> m_renderables;
+        CRefObj<IRenderMesh> m_spRenderMesh;
     public:
 		//**********************************************************************
 		// Constructor: CSceneMeshElem

@@ -12,9 +12,7 @@
 #include "Base\Core\Core.h"
 #include "Base\Math\Vector.h"
 #include "Geometry\Mesh\Mesh.h"
-#include "Rendering\Caustic\IGraphics.h"
-#include "Rendering\Caustic\Texture.h"
-#include "Rendering\Caustic\ISampler.h"
+#include "Rendering\Caustic\Caustic.h"
 #include <Windows.h>
 #include <atlbase.h>
 #include <d3d11.h>
@@ -43,7 +41,7 @@ namespace Caustic
 		// talk to the renderer. This object runs on the clients thread and acts
 		// only as a proxy for marshalling commands+data over to the renderer thread.
 		//**********************************************************************
-		virtual void CreateRenderer(HWND hwnd, IRenderer **ppRenderer) = 0;
+		virtual void CreateRenderer(HWND hwnd, std::wstring &shaderFolder, IRenderer **ppRenderer) = 0;
 
 		//**********************************************************************
 		// Method: CreateGraphics
@@ -54,6 +52,24 @@ namespace Caustic
 		// ppGraphics - Returns the graphics device
 		//**********************************************************************
 		virtual void CreateGraphics(HWND hwnd, IGraphics **ppGraphics) = 0;
+
+        //**********************************************************************
+		// Method: CreateRenderMesh
+		// Creates a render mesh object
+		//
+		// Parameters:
+		// ppRenderMesh - Returns the created render mesh
+		//**********************************************************************
+		virtual void CreateRenderMesh(IRenderMesh **ppRenderMesh) = 0;
+
+		//**********************************************************************
+		// Method: CreateRenderSubMesh
+		// Creates a render submesh object
+		//
+		// Parameters:
+		// ppRenderSubMesh - Returns the created render submesh
+		//**********************************************************************
+		virtual void CreateRenderSubMesh(IRenderSubMesh **ppRenderSubMesh) = 0;
 
 		//**********************************************************************
 		// Method: CreatePointLight
@@ -101,38 +117,13 @@ namespace Caustic
 		// Creates a renderable object. A Renderable is a mesh+material+shader.
 		//
 		// Parameters:
-		// pGraphics - Graphics device
 		// pSubMesh - mesh object
-		// pMaterial - Material definition
-		// pShader - Vertex+Pixel shader
-		// ppRenderable - Returns the created Renderable object
+        // pFrontMaterial - Material for front faces
+        // pBackMaterial - Material for back faces
+        // mat - Matrix to apply
+        // ppRenderable - Returns the created Renderable object
 		//**********************************************************************
-		virtual void CreateRenderable(IGraphics *pGraphics, ISubMesh *pSubMesh, IMaterialAttrib *pMaterial, IShader *pShader, IRenderable **ppRenderable) = 0;
-
-		//**********************************************************************
-		// Method: CreateRenderable
-		// Creates a renderable object. A Renderable is a mesh+material+shader.
-		//
-		// Parameters:
-		// ppRenderable - Returns the created Renderable object
-		//**********************************************************************
-		virtual void CreateRenderable(IRenderable **ppRenderable) = 0;
-
-		//**********************************************************************
-		// Method: CreateRenderable
-		// Creates a renderable object. A Renderable is a mesh+material+shader.
-		//
-		// Parameters:
-		// pVB - vertex buffer
-		// numVertices - number of vertices in vertex buffer
-		// pIB - index buffer
-		// numIndices - number of indices in index buffer
-		// pFrontMaterial - Material to apply to front polygons
-		// pBackMaterial - Material to apply to back polygons
-		// mat - matrix to apply to mesh
-		// ppRenderable - Returns the created Renderable object
-		//**********************************************************************
-		virtual void CreateRenderable(ID3D11Buffer *pVB, uint32 numVertices, ID3D11Buffer *pIB, uint32 numIndices, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat, IRenderable **ppRenderable) = 0;
+        virtual void CreateRenderable(IRenderSubMesh *pSubMesh, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat, IRenderable **ppRenderable) = 0;
 
 		//**********************************************************************
 		// Method: CreateSampler
@@ -202,44 +193,11 @@ namespace Caustic
 		//**********************************************************************
 		virtual void LoadVideoTexture(const wchar_t *pFilename, IGraphics *pGraphics, ITexture **ppTexture) = 0;
 
-		//**********************************************************************
-		// Method: MeshToD3D
-		// Converts an IMesh into a renderable form
-		//
-		// Parameters:
-		// pGraphics - Graphics device to use
-		// pMesh - Mesh to convert
-		// vertexVersion - Version of vertex to use
-		// ppVertexBuffer - Returns the created vertex buffer
-		// indexVersion - Version of index buffer to use
-		// ppIndexBuffer - Returns the created index buffer
-		// pBbox - Returns the bounding box of the mesh
-		// pVertexSize - Returns the size of each vertex in bytes
-		//**********************************************************************
-		virtual void MeshToD3D(IGraphics *pGraphics, ISubMesh *pMesh,
-			int vertexVersion, ID3D11Buffer **ppVertexBuffer, uint32 *pNumVerts,
-			int indexVersion, ID3D11Buffer **ppIndexBuffer, uint32 *pNumIndices,
-			BBox3 *pBbox, uint32 *pVertexSize) = 0;
-		
-		virtual void MeshToNormals(IGraphics *pGraphics, ISubMesh *pSubMesh,
-			ID3D11Buffer **ppVB, uint32 *pNumVerts) = 0;
-
-		//**********************************************************************
-		// Method: StoreSubMeshRenderableDataToStream
-		// This function converts an ISubMesh into data that can later be converted into
-		// an IRenderable object. This data is then saved to the specified stream. Later
-		// the data can be loaded via this function's complementary function (LoadSubMeshRenderableDataFromStream())
-		// and then pass the data to BuildIndexBufferGPU/BuildVertexBufferGPU to create an ID3D11Buffer object
-		// from which an IRenderable object can be created from.
-		//
-		// Parameters:
-		// pStream - stream to save to
-		// pMesh - mesh to store
-		//**********************************************************************
-		virtual void StoreSubMeshRenderableDataToStream(IStream *pStream, ISubMesh *pMesh, int vertexVersion, int indexVersion) = 0;
-		virtual void LoadSubMeshRenderableDataFromStream(IStream *pStream, ID3D11Device *pDevice, ID3D11Buffer **ppIndexBuffer, uint32 *pNumIndices, ID3D11Buffer **ppVertexBuffer, uint32 *pNumVertices, int *pVertexVersion, int *pIndexVersion) = 0;
-
-	};
+        virtual void CreateShader(IRenderer *pRenderer, const wchar_t *pShaderName,
+            ID3DBlob *pVertexShaderBlob, ID3DBlob *pPixelShaderBlob, IShaderInfo *pShaderInfo,
+            IShader **ppShader) = 0;
+        virtual void CreateShaderInfo(const wchar_t *pFilename, IShaderInfo **ppShaderInfo) = 0;
+    };
 
     //**********************************************************************
     // Function: CreateCausticFactory

@@ -63,9 +63,9 @@ namespace Caustic
     // Method: Initialize
     // See <IRenderer::Initialize>
     //**********************************************************************
-    void CRendererMarshaller::Initialize(HWND hwnd)
+    void CRendererMarshaller::Initialize(HWND hwnd, std::wstring &shaderFolder)
     {
-		CCausticFactory::Instance()->CreateRenderer(hwnd, &m_spRenderer);
+		CCausticFactory::Instance()->CreateRenderer(hwnd, shaderFolder, &m_spRenderer);
         InitializeCriticalSection(&m_cs);
         m_thread = CreateThread(nullptr, 0, RenderThreadProc, this, 0, nullptr);
     }
@@ -142,7 +142,7 @@ namespace Caustic
         AddLambda(
             [this, pPath, evt, ppTexture]()
             {
-                Caustic::CCausticFactory::Instance()->LoadTexture(pPath, m_spRenderer.p, ppTexture);
+                Caustic::CCausticFactory::Instance()->LoadTexture(pPath, m_spRenderer, ppTexture);
                 SetEvent(evt);
             }
         );
@@ -160,7 +160,7 @@ namespace Caustic
         AddLambda(
             [this, pPath, evt, ppTexture]()
             {
-				Caustic::CCausticFactory::Instance()->LoadVideoTexture(pPath, m_spRenderer.p, ppTexture);
+				Caustic::CCausticFactory::Instance()->LoadVideoTexture(pPath, m_spRenderer, ppTexture);
                 SetEvent(evt);
             }
         );
@@ -247,12 +247,13 @@ namespace Caustic
     // Method: Setup
     // See <IRenderer::Setup>
     //**********************************************************************
-    void CRendererMarshaller::Setup(HWND hwnd, bool createDebugDevice)
+    void CRendererMarshaller::Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice)
     {
         AddLambda(
-            [this, hwnd, createDebugDevice]()
+            [this, hwnd, shaderFolder, createDebugDevice]()
             {
-                m_spRenderer->Setup(hwnd, createDebugDevice);
+                std::wstring sh = shaderFolder;
+                m_spRenderer->Setup(hwnd, sh, createDebugDevice);
             }
         );
     }
@@ -275,7 +276,7 @@ namespace Caustic
     // Method: DrawMesh
     // See <IRenderer::DrawMesh>
     //**********************************************************************
-    void CRendererMarshaller::DrawMesh(ISubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat)
+    void CRendererMarshaller::DrawMesh(IRenderSubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat)
     {
         if (pMesh)
             pMesh->AddRef();

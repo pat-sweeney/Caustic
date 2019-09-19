@@ -9,8 +9,8 @@
 namespace Caustic
 {
     //**********************************************************************
-    // \brief IMeshConstructor defines the public interface used to create new meshes
-    //
+    // Interface: IMeshConstructor
+    // Defines the public interface used to create new meshes
     // IMeshConstructor works on building a mesh up face by face (via FaceOpen/FaceClose).
     //**********************************************************************
     struct IMeshConstructor : public IRefCount

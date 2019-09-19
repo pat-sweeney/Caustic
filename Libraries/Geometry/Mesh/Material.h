@@ -9,10 +9,8 @@
 namespace Caustic
 {
     //**********************************************************************
-    // \brief CMaterial defines the basic material for a mesh
-    //
-    // Ideally this would not be part of the Mesh, but requires more thought.
-    // For now this works.
+    // Structure: CMaterial
+    // Defines the basic material for a mesh
     //**********************************************************************
     struct CMaterial : public IMaterialAttrib, public CRefCount
     {

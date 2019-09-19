@@ -11,14 +11,17 @@
 namespace Caustic
 {
     //**********************************************************************
-    // \brief CreateSurfaceRevolution is used to generate a solid by revolving the specified
+    // Function: CreateSurfaceRevolution
+    // Generates a solid by revolving the specified
     // polygon around the Y axis. All points are assumed to be relative to the world coordinate
     // origin (thus the point specifies the point's normal vector).
-    // @param[in] pts List of points (should be increasing Y value)
-    // @param[in] npts Number of points in 'pts'
-    // @param[in] subdivisions Number of subdivisions to generate around the Y axis
-    // @param[in] maxAngle Maximum number of degrees to rotate around Y axis
-    // @param[out] ppMesh Newly generated mesh
+    //
+    // Parameters:
+    // pts - List of points (should be increasing Y value)
+    // npts - Number of points in 'pts'
+    // subdivisions - Number of subdivisions to generate around the Y axis
+    // maxAngle - Maximum number of degrees to rotate around Y axis
+    // ppMesh - Newly generated mesh
     //**********************************************************************
     CAUSTICAPI void CreateSurfaceRevolution(std::vector<Vector3> &pts, uint32 npts, uint32 subdivisions, float maxAngle, IMesh **ppMesh)
     {
@@ -185,11 +188,12 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Generates a sphere mesh.
-    //
+    // Function: CreateSphere
     // Creates a mesh in the shape of a sphere. 
-    // \param[in] subdivisions  Number of divisions along azimuth and elevation
-    // \param[out] ppMesh Returns the created mesh
+    //
+    // Parameters:
+    // subdivisions - Number of divisions along azimuth and elevation
+    // ppMesh - Returns the created mesh
     //**********************************************************************
     CAUSTICAPI void CreateSphere(uint32 subdivisions, IMesh **ppMesh)
     {
@@ -208,10 +212,11 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Generates a tetrahedron mesh.
+    // Function: CreateTetrahedron
+    // Creates a mesh in the shape of a tetrahedron 
     //
-    // Creates a mesh in the shape of a tetrahedro. 
-    // \param[out] ppMesh Returns the created mesh
+    // Parameters:
+    // ppMesh - Returns the created mesh
     //**********************************************************************
     CAUSTICAPI void CreateTetrahedron(IMesh **ppMesh)
     {
@@ -250,12 +255,13 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Generates a grid mesh
-    //
+    // Function: CreateGrid
     // Generates a grid mesh of size -1..+1,-1..+1 with texture coordinates
     // spanning the entire mesh from 0..1
-    // \param[in] subdivisions Number of times to subdivide the grid
-    // \param[out] ppMesh Returns the created mesh
+    //
+    // Parameters:
+    // subdivisions - Number of times to subdivide the grid
+    // ppMesh - Returns the created mesh
     //**********************************************************************
     CAUSTICAPI void CreateGrid(uint32 subdivisions, IMesh **ppMesh)
     {
@@ -303,8 +309,11 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Returns a cube mesh
-    // @param [out] ppMesh Returns the newly created mesh object
+    // Function: CreateCube
+    // Returns a cube mesh
+    //
+    // Parameters:
+    // ppMesh - Returns the newly created mesh object
     //**********************************************************************
     CAUSTICAPI void CreateCube(IMesh **ppMesh)
     {
@@ -312,100 +321,100 @@ namespace Caustic
         {
             // Front face
             { -1.0f, -1.0f, -1.0f },
-        { -1.0f, +1.0f, -1.0f },
-        { +1.0f, +1.0f, -1.0f },
-        { +1.0f, -1.0f, -1.0f },
-        // Top face
-        { -1.0f, +1.0f, -1.0f },
-        { -1.0f, +1.0f, +1.0f },
-        { +1.0f, +1.0f, +1.0f },
-        { +1.0f, +1.0f, -1.0f },
-        // Bottom face
-        { -1.0f, -1.0f, +1.0f },
-        { -1.0f, -1.0f, -1.0f },
-        { +1.0f, -1.0f, -1.0f },
-        { +1.0f, -1.0f, +1.0f },
-        // Left face
-        { -1.0f, -1.0f, +1.0f },
-        { -1.0f, +1.0f, +1.0f },
-        { -1.0f, +1.0f, -1.0f },
-        { -1.0f, -1.0f, -1.0f },
-        // Right face
-        { +1.0f, -1.0f, -1.0f },
-        { +1.0f, +1.0f, -1.0f },
-        { +1.0f, +1.0f, +1.0f },
-        { +1.0f, -1.0f, +1.0f },
-        // Back face
-        { +1.0f, -1.0f, +1.0f },
-        { +1.0f, +1.0f, +1.0f },
-        { -1.0f, +1.0f, +1.0f },
-        { -1.0f, -1.0f, +1.0f }
+            { -1.0f, +1.0f, -1.0f },
+            { +1.0f, +1.0f, -1.0f },
+            { +1.0f, -1.0f, -1.0f },
+            // Top face
+            { -1.0f, +1.0f, -1.0f },
+            { -1.0f, +1.0f, +1.0f },
+            { +1.0f, +1.0f, +1.0f },
+            { +1.0f, +1.0f, -1.0f },
+            // Bottom face
+            { -1.0f, -1.0f, +1.0f },
+            { -1.0f, -1.0f, -1.0f },
+            { +1.0f, -1.0f, -1.0f },
+            { +1.0f, -1.0f, +1.0f },
+            // Left face
+            { -1.0f, -1.0f, +1.0f },
+            { -1.0f, +1.0f, +1.0f },
+            { -1.0f, +1.0f, -1.0f },
+            { -1.0f, -1.0f, -1.0f },
+            // Right face
+            { +1.0f, -1.0f, -1.0f },
+            { +1.0f, +1.0f, -1.0f },
+            { +1.0f, +1.0f, +1.0f },
+            { +1.0f, -1.0f, +1.0f },
+            // Back face
+            { +1.0f, -1.0f, +1.0f },
+            { +1.0f, +1.0f, +1.0f },
+            { -1.0f, +1.0f, +1.0f },
+            { -1.0f, -1.0f, +1.0f }
         };
         std::vector<Vector2> uvs =
         {
             // Front face
             { 0.0f, 0.0f },
-        { 0.0f, 1.0f },
-        { 1.0f, 1.0f },
-        { 1.0f, 0.0f },
-        // Top face
-        { 0.0f, 0.0f },
-        { 0.0f, 1.0f },
-        { 1.0f, 1.0f },
-        { 1.0f, 0.0f },
-        // Bottom face
-        { 0.0f, 0.0f },
-        { 0.0f, 1.0f },
-        { 1.0f, 1.0f },
-        { 1.0f, 0.0f },
-        // Left face
-        { 0.0f, 0.0f },
-        { 0.0f, 1.0f },
-        { 1.0f, 1.0f },
-        { 1.0f, 0.0f },
-        // Right face
-        { 0.0f, 0.0f },
-        { 0.0f, 1.0f },
-        { 1.0f, 1.0f },
-        { 1.0f, 0.0f },
-        // Back face
-        { 0.0f, 0.0f },
-        { 0.0f, 1.0f },
-        { 1.0f, 1.0f },
-        { 1.0f, 0.0f },
+            { 0.0f, 1.0f },
+            { 1.0f, 1.0f },
+            { 1.0f, 0.0f },
+            // Top face
+            { 0.0f, 0.0f },
+            { 0.0f, 1.0f },
+            { 1.0f, 1.0f },
+            { 1.0f, 0.0f },
+            // Bottom face
+            { 0.0f, 0.0f },
+            { 0.0f, 1.0f },
+            { 1.0f, 1.0f },
+            { 1.0f, 0.0f },
+            // Left face
+            { 0.0f, 0.0f },
+            { 0.0f, 1.0f },
+            { 1.0f, 1.0f },
+            { 1.0f, 0.0f },
+            // Right face
+            { 0.0f, 0.0f },
+            { 0.0f, 1.0f },
+            { 1.0f, 1.0f },
+            { 1.0f, 0.0f },
+            // Back face
+            { 0.0f, 0.0f },
+            { 0.0f, 1.0f },
+            { 1.0f, 1.0f },
+            { 1.0f, 0.0f },
         };
         std::vector<Vector3> norm =
         {
             // Front face
             { 0.0f, 0.0f, -1.0f },
-        { 0.0f, 0.0f, -1.0f },
-        { 0.0f, 0.0f, -1.0f },
-        { 0.0f, 0.0f, -1.0f },
-        // Top face
-        { 0.0f, +1.0f, 0.0f },
-        { 0.0f, +1.0f, 0.0f },
-        { 0.0f, +1.0f, 0.0f },
-        { 0.0f, +1.0f, 0.0f },
-        // Bottom face
-        { 0.0f, -1.0f, 0.0f },
-        { 0.0f, -1.0f, 0.0f },
-        { 0.0f, -1.0f, 0.0f },
-        { 0.0f, -1.0f, 0.0f },
-        // Left face
-        { -1.0f, 0.0f, 0.0f },
-        { -1.0f, 0.0f, 0.0f },
-        { -1.0f, 0.0f, 0.0f },
-        { -1.0f, 0.0f, 0.0f },
-        // Right face
-        { +1.0f, 0.0f, 0.0f },
-        { +1.0f, 0.0f, 0.0f },
-        { +1.0f, 0.0f, 0.0f },
-        { +1.0f, 0.0f, 0.0f },
-        // Back face
-        { 0.0f, 0.0f, +1.0f },
-        { 0.0f, 0.0f, +1.0f },
-        { 0.0f, 0.0f, +1.0f },
-        { 0.0f, 0.0f, +1.0f }
+            { 0.0f, 0.0f, -1.0f },
+            { 0.0f, 0.0f, -1.0f },
+            { 0.0f, 0.0f, -1.0f },
+            // Top face
+            { 0.0f, +1.0f, 0.0f },
+            { 0.0f, +1.0f, 0.0f },
+            { 0.0f, +1.0f, 0.0f },
+            { 0.0f, +1.0f, 0.0f },
+            // Bottom face
+            { 0.0f, -1.0f, 0.0f },
+            { 0.0f, -1.0f, 0.0f },
+            { 0.0f, -1.0f, 0.0f },
+            { 0.0f, -1.0f, 0.0f },
+            // Left face
+            { -1.0f, 0.0f, 0.0f },
+            { -1.0f, 0.0f, 0.0f },
+            { -1.0f, 0.0f, 0.0f },
+            { -1.0f, 0.0f, 0.0f },
+            // Right face
+            { +1.0f, 0.0f, 0.0f },
+            { +1.0f, 0.0f, 0.0f },
+            { +1.0f, 0.0f, 0.0f },
+            { +1.0f, 0.0f, 0.0f },
+            // Back face
+            { 0.0f, 0.0f, +1.0f },
+            { 0.0f, 0.0f, +1.0f },
+            { 0.0f, 0.0f, +1.0f },
+            { 0.0f, 0.0f, +1.0f }
         };
         CRefObj<IMesh> spMesh;
         CreateEmptyMesh(&spMesh);
@@ -421,8 +430,8 @@ namespace Caustic
         }
         CRefObj<ISubMesh> spSubMesh;
         CreateSubMesh(vpos, norm, uvs, faces, EVertexFlags(HasNormal | HasPosition | HasUV0), 0, &spSubMesh);
-        spMesh->AddSubMesh(spSubMesh.p);
-        *ppMesh = spMesh.p;
+        spMesh->AddSubMesh(spSubMesh);
+        *ppMesh = spMesh;
         (*ppMesh)->AddRef();
     }
 }
