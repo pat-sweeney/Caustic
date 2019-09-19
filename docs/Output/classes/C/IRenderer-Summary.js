@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:IRenderer","IRenderer");NDSummary.OnSummaryLoaded("CClass:IRenderer",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Interfaces","Interface"]],[[464,0,2,"IRenderer"],[465,0,1,"Functions","Functions"],[466,0,0,"Setup","Setup"]]);

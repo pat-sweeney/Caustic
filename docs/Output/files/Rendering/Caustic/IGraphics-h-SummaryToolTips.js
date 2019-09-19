@@ -1,0 +1,1 @@
+NDSummary.OnToolTipsLoaded("File:Rendering/Caustic/IGraphics.h",{493:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines class for holding mesh data (i.e. vertices and indices)</div></div>",494:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines a simple wrapper around our D3D renderer</div></div>"});

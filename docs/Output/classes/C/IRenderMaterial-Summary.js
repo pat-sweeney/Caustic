@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:IRenderMaterial","IRenderMaterial");NDSummary.OnSummaryLoaded("CClass:IRenderMaterial",[["C/C++","C"]],[["Interfaces","Interface"]],[[469,0,0,"IRenderMaterial"]]);

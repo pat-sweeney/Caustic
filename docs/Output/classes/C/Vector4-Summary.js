@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:Vector4","Vector4");NDSummary.OnSummaryLoaded("CClass:Vector4",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Structs","Struct"]],[[76,0,2,"Vector4"],[77,0,1,"Functions","Functions"],[78,0,0,"IsEq","IsEq"]]);

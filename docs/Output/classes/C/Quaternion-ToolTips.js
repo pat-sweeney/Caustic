@@ -1,0 +1,1 @@
+NDContentPage.OnToolTipsLoaded({81:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines a quaternion</div></div>",94:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">3-dimensional affine matrix</div></div>",95:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">A 4x4 matrix</div></div>"});

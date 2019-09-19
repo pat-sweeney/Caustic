@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("m_t",["Property"],[["m_Transform",,[["SceneCtx",,,,0,"File:Rendering/SceneGraph/SceneGraph.h:SceneCtx.m_Transform","CClass:SceneCtx:m_Transform"]]]]);

@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("cma",["Struct"],[["CMaterial",,[[,,,,0,"File:Geometry/Mesh/Material.h:CMaterial","CClass:CMaterial"]]]]);

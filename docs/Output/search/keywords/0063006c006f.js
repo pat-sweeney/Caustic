@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("clo",["Function"],[["Clone",,[["IImage",,,,0,"File:Imaging/Image/Image.h:IImage.Clone","CClass:IImage:Clone"]]],["Close",,[[,,,,0,"File:Geometry/Mesh/Delaunay.cpp:Close"],["IDelaunay2",,,,0,"File:Geometry/Mesh/IDelaunay.h:IDelaunay2.Close","CClass:IDelaunay2:Close"]]]]);

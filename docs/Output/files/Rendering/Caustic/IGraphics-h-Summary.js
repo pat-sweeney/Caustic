@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/IGraphics.h","IGraphics.h");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/IGraphics.h",[["C/C++","C"]],[["Interfaces","Interface"],["Structs","Struct"]],[[493,0,1,"MeshData","MeshData"],[494,0,0,"IGraphics","IGraphics"]]);

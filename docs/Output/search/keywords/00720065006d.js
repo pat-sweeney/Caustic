@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("rem",["Function"],[["RemoveExteriorTriangles",,[[,,,,0,"File:Geometry/Mesh/Delaunay.cpp:RemoveExteriorTriangles"]]]]);

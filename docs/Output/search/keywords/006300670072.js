@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("cgr",["Class"],[["CGraphics",,[[,,,,0,"File:Rendering/Caustic/Renderer.h:CGraphics","CClass:CGraphics"]]],["CGraphicsBase",,[[,,,,0,"File:Rendering/Caustic/Renderer.h:CGraphicsBase","CClass:CGraphicsBase"]]]]);

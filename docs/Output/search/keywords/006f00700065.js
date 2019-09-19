@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("ope",["Function"],[["Open",,[["IDelaunay2",,,,0,"File:Geometry/Mesh/IDelaunay.h:IDelaunay2.Open","CClass:IDelaunay2:Open"]]],["operator*",,[["Quaternion",,,,0,"File:Base/Math/Quaternion.h:Quaternion.operator*","CClass:Quaternion:operator*"]]]]);

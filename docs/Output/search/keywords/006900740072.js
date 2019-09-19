@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("itr",["Interface"],[["ITrackball",,[[,,,,0,"File:Rendering/Caustic/ITrackball.h:ITrackball","CClass:ITrackball"]]]]);

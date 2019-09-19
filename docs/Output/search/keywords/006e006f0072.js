@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("nor",["Function"],[["Normalize",,[[,,,,0,"File:Geometry/Mesh/Mesh.cpp:Normalize"],["Vector2",,,,0,"File:Base/Math/Vector.h:Vector2.Normalize","CClass:Vector2:Normalize"]]]]);

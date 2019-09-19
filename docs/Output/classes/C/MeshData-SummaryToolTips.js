@@ -1,0 +1,1 @@
+NDSummary.OnToolTipsLoaded("CClass:MeshData",{493:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines class for holding mesh data (i.e. vertices and indices)</div></div>"});

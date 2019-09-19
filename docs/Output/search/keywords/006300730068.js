@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("csh",["Class"],[["CShader",,[[,,,,0,"File:Rendering/Caustic/Shader.h:CShader","CClass:CShader"]]],["CShaderInfo",,[[,,,,0,"File:Rendering/Caustic/ShaderInfo.h:CShaderInfo","CClass:CShaderInfo"]]],["CShaderMgr",,[[,,,,0,"File:Rendering/Caustic/Shader.h:CShaderMgr","CClass:CShaderMgr"]]]]);

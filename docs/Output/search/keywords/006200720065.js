@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("bre",["Class"],[["Bresenham",,[[,,,,0,"File:Geometry/Rast/Bresenham.h:Bresenham","CClass:Bresenham"]]],["BresenhamCircle",,[[,,,,0,"File:Geometry/Rast/BresenhamCircle.h:BresenhamCircle","CClass:BresenhamCircle"]]]]);

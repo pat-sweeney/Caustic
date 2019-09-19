@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/ShaderInfo.cpp","ShaderInfo.cpp");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/ShaderInfo.cpp",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"]],[[325,0,1,"Functions","Functions"],[326,0,0,"StringToFormat","StringToFormat"],[327,0,0,"FormatSize","FormatSize"]]);

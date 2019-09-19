@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("ipo",["Interface"],[["IPointLight",,[[,,,,0,"File:Rendering/Caustic/IPointLight.h:IPointLight","CClass:IPointLight"]]],["IPolygon2",,[[,,,,0,"File:Geometry/GeomDS/IPolygon.h:IPolygon2","CClass:IPolygon2"]]]]);

@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("fre",["Function"],[["Free",,[["CBlockAllocator",,,,0,"File:Base/Core/BlockAllocator.h:CBlockAllocator.Free","CClass:CBlockAllocator:Free"]]]]);

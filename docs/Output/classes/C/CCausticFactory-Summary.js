@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:CCausticFactory","CCausticFactory");NDSummary.OnSummaryLoaded("CClass:CCausticFactory",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[531,0,0,"CCausticFactory"],[532,0,2,"Functions","Functions"],[533,0,1,"Instance()","Instance"]]);

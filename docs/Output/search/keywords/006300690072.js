@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("cir",["Function"],[["CircumCircle",,[[,,,,0,"File:Base/Math/Helper.cpp:CircumCircle"],["Caustic",,,,0,"File:Base/Math/Helper.h:Caustic.CircumCircle","CClass:Caustic:CircumCircle"]]]]);

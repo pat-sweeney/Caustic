@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("cha",["Class"],[["CHalfEdge",,[[,,,,0,"File:Geometry/Mesh/IMesh.h:CHalfEdge","CClass:CHalfEdge"]]]]);

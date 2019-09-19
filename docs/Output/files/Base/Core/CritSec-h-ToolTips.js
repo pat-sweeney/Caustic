@@ -1,0 +1,1 @@
+NDContentPage.OnToolTipsLoaded({18:"<div class=\"NDToolTip TClass LC\"><div class=\"NDClassPrototype\" id=\"NDClassPrototype18\"><div class=\"CPEntry TClass Current\"><div class=\"CPName\">CCritSec</div></div></div><div class=\"TTSummary\">Defines a smart object for managing a critical section</div></div>"});

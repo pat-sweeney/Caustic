@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("str",["Function"],[["StringToFormat",,[[,,,,0,"File:Rendering/Caustic/ShaderInfo.cpp:StringToFormat"]]]]);

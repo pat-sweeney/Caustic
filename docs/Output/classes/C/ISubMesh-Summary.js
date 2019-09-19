@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:ISubMesh","ISubMesh");NDSummary.OnSummaryLoaded("CClass:ISubMesh",[["C/C++","C"]],[["Interfaces","Interface"]],[[260,0,0,"ISubMesh"]]);

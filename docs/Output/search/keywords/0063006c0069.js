@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("cli",["Class"],[["CLight",,[[,,,,0,"File:Rendering/Caustic/Renderer.h:CLight","CClass:CLight"]]],["CLineVertex",,[[,,,,0,"File:Rendering/Caustic/Renderer.h:CLineVertex","CClass:CLineVertex"]]]]);

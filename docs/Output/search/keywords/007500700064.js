@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("upd",["Function"],[["Update",,[["ITexture",,,,0,"File:Rendering/Caustic/ITexture.h:ITexture.Update","CClass:ITexture:Update"]]],["UpdateTracking",,[[,,,,0,"File:Rendering/Caustic/Trackball.cpp:UpdateTracking"],["ITrackball",,,,0,"File:Rendering/Caustic/ITrackball.h:ITrackball.UpdateTracking","CClass:ITrackball:UpdateTracking"]]]]);

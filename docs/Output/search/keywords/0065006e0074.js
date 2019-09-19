@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("ent",["Function"],[["Enter",,[["CCritSec",,,,0,"File:Base/Core/CritSec.h:CCritSec.Enter","CClass:CCritSec:Enter"]]]]);

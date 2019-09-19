@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("ini",["Function"],[["Initialize",,[[,,,,0,"File:Rendering/Caustic/RendererMarshaller.cpp:Initialize"]]],["InitializeD3D",,[[,,,,0,"File:Rendering/Caustic/Renderer.cpp:InitializeD3D"]]]]);

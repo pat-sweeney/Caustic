@@ -1,0 +1,1 @@
+NDContentPage.OnToolTipsLoaded({68:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines a simple vector with 3 components</div></div>",224:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">IMaterial is used for manipulating the materials assigned to a mesh.&nbsp; Each ISubMesh may have a single material assigned to it.</div></div>"});

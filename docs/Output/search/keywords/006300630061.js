@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("cca",["Class","Function"],[["CCamera",,[[,,,,0,"File:Rendering/Caustic/Camera.h:CCamera","CClass:CCamera"]]],["CCausticFactory",,[[,,,,0,"File:Rendering/Caustic/CausticFactory.h:CCausticFactory","CClass:CCausticFactory"],["Caustic",,,,1,"File:Rendering/Caustic/CausticFactory.cpp:Caustic.CCausticFactory","CClass:Caustic:CCausticFactory"]]]]);

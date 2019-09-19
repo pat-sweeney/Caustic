@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("num",["Function"],[["NumberChildren",,[["ISceneGroupElem",,,,0,"File:Rendering/SceneGraph/SceneGraph.h:ISceneGroupElem.NumberChildren","CClass:ISceneGroupElem:NumberChildren"]]]]);

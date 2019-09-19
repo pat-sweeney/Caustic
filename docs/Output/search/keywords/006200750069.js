@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("bui",["Function"],[["BuildIndexBuffer",,[[,,,,0,"File:Geometry/Mesh/MeshToRenderMesh.cpp:BuildIndexBuffer"]]],["BuildVertexBuffer",,[[,,,,0,"File:Geometry/Mesh/MeshToRenderMesh.cpp:BuildVertexBuffer"]]]]);

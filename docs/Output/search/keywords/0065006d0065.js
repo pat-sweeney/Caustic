@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("eme",["Enumeration"],[["EMeshFlags",,[["CFace",,,,0,"File:Geometry/Mesh/IMesh.h:CFace.EMeshFlags","CClass:CFace:EMeshFlags"]]]]);

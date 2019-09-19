@@ -1,0 +1,1 @@
+NDSummary.OnToolTipsLoaded("CClass:CDelaunay2",{205:"<div class=\"NDToolTip TClass LC\"><div class=\"NDClassPrototype\" id=\"NDClassPrototype205\"><div class=\"CPEntry TClass Current\"><div class=\"CPName\">CDelaunay2</div></div></div><div class=\"TTSummary\">Defines a class for creating a Delaunay triangulation from a set of 2D points</div></div>"});

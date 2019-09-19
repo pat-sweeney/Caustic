@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/Renderable.cpp","Renderable.cpp");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/Renderable.cpp",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"]],[[385,0,1,"Functions","Functions"],[386,0,0,"Render","Render"]]);

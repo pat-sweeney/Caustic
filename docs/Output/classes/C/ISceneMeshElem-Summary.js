@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:ISceneMeshElem","ISceneMeshElem");NDSummary.OnSummaryLoaded("CClass:ISceneMeshElem",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Interfaces","Interface"]],[[636,0,2,"ISceneMeshElem"],[637,0,1,"Functions","Functions"],[638,0,0,"SetMesh","SetMesh"]]);

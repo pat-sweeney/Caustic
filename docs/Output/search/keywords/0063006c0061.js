@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("cla",["Function"],[["Clamp",,[["Caustic",,,,0,"File:Base/Core/Core.h:Caustic.Clamp","CClass:Caustic:Clamp"]]]]);

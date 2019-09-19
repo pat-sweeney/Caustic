@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("cam",["File"],[["Camera",,[[,"Camera.cpp",,,0,"File:Rendering/Caustic/Camera.cpp:Camera.cpp"],[,"Camera.h",,,0,"File:Rendering/Caustic/Camera.h:Camera.h"]]]]);

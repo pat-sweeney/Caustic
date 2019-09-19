@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("cde",["Class"],[["CDelaunay2",,[[,,,,0,"File:Geometry/Mesh/Delaunay.h:CDelaunay2","CClass:CDelaunay2"]]]]);

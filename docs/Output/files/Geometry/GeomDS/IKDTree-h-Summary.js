@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("File:Geometry/GeomDS/IKDTree.h","IKDTree.h");NDSummary.OnSummaryLoaded("File:Geometry/GeomDS/IKDTree.h",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Interfaces","Interface"]],[[151,0,2,"IKDTree","IKDTree"],[152,0,1,"Functions","IKDTree.Functions"],[153,0,0,"AddPoint","IKDTree.AddPoint"],[154,0,0,"FindPoint","IKDTree.FindPoint"]]);

@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("cro",["Function"],[["Cross",,[["Vector3","cross",,,0,"File:Base/Math/Vector.h:Vector3.cross","CClass:Vector3:cross"],["Vector2",,,,0,"File:Base/Math/Vector.h:Vector2.Cross","CClass:Vector2:Cross"]]]]);

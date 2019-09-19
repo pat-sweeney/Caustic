@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("iin",["Interface"],[["IIntegralImage",,[[,,,,0,"File:Imaging/Image/Image.h:IIntegralImage","CClass:IIntegralImage"]]]]);

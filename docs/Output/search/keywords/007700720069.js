@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("wri",["Function"],[["WritePLY",,[["IDelaunay2",,,,0,"File:Geometry/Mesh/IDelaunay.h:IDelaunay2.WritePLY","CClass:IDelaunay2:WritePLY"]]],["WriteString",,[[,,,,0,"File:Geometry/Mesh/Delaunay.cpp:WriteString"]]]]);

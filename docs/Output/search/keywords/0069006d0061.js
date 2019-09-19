@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("ima",["Interface"],[["IMaterialAttrib",,[[,,,,0,"File:Geometry/Mesh/IMesh.h:IMaterialAttrib","CClass:IMaterialAttrib"]]]]);

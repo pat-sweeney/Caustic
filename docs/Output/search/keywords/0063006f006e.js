@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("con",["Function"],[["Conjugate",,[["Quaternion",,,,0,"File:Base/Math/Quaternion.h:Quaternion.Conjugate","CClass:Quaternion:Conjugate"]]],["ContainsPoint",,[["IPolygon2",,,,0,"File:Geometry/GeomDS/IPolygon.h:IPolygon2.ContainsPoint","CClass:IPolygon2:ContainsPoint"]]]]);
