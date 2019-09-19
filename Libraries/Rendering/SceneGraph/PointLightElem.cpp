@@ -14,7 +14,7 @@ namespace Caustic
     {
 		CRefObj<IPointLight> spPointLight;
 		Caustic::CCausticFactory::Instance()->CreatePointLight(Vector3(0.0f, 0.0f, 0.0f), &spPointLight);
-		std::unique_ptr<CPointLightElem> spPointLightObj(new CPointLightElem(spPointLight.p));
+		std::unique_ptr<CPointLightElem> spPointLightObj(new CPointLightElem(spPointLight));
         *ppElem = spPointLightObj.release();
         (*ppElem)->AddRef();
     }

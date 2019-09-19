@@ -45,8 +45,8 @@ namespace Caustic
         virtual void SetMaterial(IMaterialAttrib *pMaterial) override { m_spMaterial = pMaterial; }
         virtual void GetMaterial(IMaterialAttrib **ppMaterial) override
         {
-            *ppMaterial = m_spMaterial.p;
-            if (m_spMaterial.p)
+            *ppMaterial = m_spMaterial;
+            if (m_spMaterial)
                 (*ppMaterial)->AddRef();
         }
         virtual void SetDiffuseTexture(IGraphics *pGraphics, ITexture *pTexture) override;

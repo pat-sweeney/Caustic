@@ -185,11 +185,12 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Generates a sphere mesh.
-    //
+    // Function: CreateSphere
     // Creates a mesh in the shape of a sphere. 
-    // \param[in] subdivisions  Number of divisions along azimuth and elevation
-    // \param[out] ppMesh Returns the created mesh
+    //
+    // Parameters:
+    // subdivisions - Number of divisions along azimuth and elevation
+    // ppMesh - Returns the created mesh
     //**********************************************************************
     CAUSTICAPI void CreateSphere(uint32 subdivisions, IMesh **ppMesh)
     {
@@ -208,10 +209,11 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Generates a tetrahedron mesh.
+    // Function: CreateTetrahedron
+    // Creates a mesh in the shape of a tetrahedron 
     //
-    // Creates a mesh in the shape of a tetrahedro. 
-    // \param[out] ppMesh Returns the created mesh
+    // Parameters:
+    // ppMesh - Returns the created mesh
     //**********************************************************************
     CAUSTICAPI void CreateTetrahedron(IMesh **ppMesh)
     {
@@ -250,12 +252,13 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Generates a grid mesh
-    //
+    // Function: CreateGrid
     // Generates a grid mesh of size -1..+1,-1..+1 with texture coordinates
     // spanning the entire mesh from 0..1
-    // \param[in] subdivisions Number of times to subdivide the grid
-    // \param[out] ppMesh Returns the created mesh
+    //
+    // Parameters:
+    // subdivisions - Number of times to subdivide the grid
+    // ppMesh - Returns the created mesh
     //**********************************************************************
     CAUSTICAPI void CreateGrid(uint32 subdivisions, IMesh **ppMesh)
     {
@@ -303,8 +306,11 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Returns a cube mesh
-    // @param [out] ppMesh Returns the newly created mesh object
+    // Function: CreateCube
+    // Returns a cube mesh
+    //
+    // Parameters:
+    // ppMesh - Returns the newly created mesh object
     //**********************************************************************
     CAUSTICAPI void CreateCube(IMesh **ppMesh)
     {
@@ -421,8 +427,8 @@ namespace Caustic
         }
         CRefObj<ISubMesh> spSubMesh;
         CreateSubMesh(vpos, norm, uvs, faces, EVertexFlags(HasNormal | HasPosition | HasUV0), 0, &spSubMesh);
-        spMesh->AddSubMesh(spSubMesh.p);
-        *ppMesh = spMesh.p;
+        spMesh->AddSubMesh(spSubMesh);
+        *ppMesh = spMesh;
         (*ppMesh)->AddRef();
     }
 }

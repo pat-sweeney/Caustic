@@ -101,7 +101,7 @@ namespace Caustic
         int start = 0;
         int end = (int)m_pts.size() - 1;
         spPolygon->AddPoint(m_pts[start]);
-        SimplifyRecursive(spPolygon.p, start, end, err, maxLen);
+        SimplifyRecursive(spPolygon, start, end, err, maxLen);
         spPolygon->AddPoint(m_pts[end]);
         *ppResult = spPolygon.Detach();
     }

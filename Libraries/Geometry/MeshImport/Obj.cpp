@@ -273,7 +273,7 @@ namespace Caustic
                 CRefObj<ISubMesh> spSubMesh;
                 int materialID = (m_matmap.find(m_materialName) == m_matmap.end()) ? 0 : m_matmap[m_materialName]->GetMaterialID();
                 Caustic::CreateSubMesh(m_Vertices, m_FaceVertIndices, materialID, &spSubMesh);
-                m_spMesh->AddSubMesh(spSubMesh.p);
+                m_spMesh->AddSubMesh(spSubMesh);
                 m_Vertices.clear();
                 m_FaceVertIndices.clear();
                 foundFace = false;

@@ -68,16 +68,10 @@ namespace Caustic
 		CRefObj<IMaterialAttrib> m_spCurrentMaterial;
 
 		//**********************************************************************
-		// Property: m_spCurrentVertexShader
-		// Defines the current vertex shader
+		// Property: m_spCurrentShader
+		// Defines the current shader
 		//**********************************************************************
-		CRefObj<Caustic::IShader> m_spCurrentVertexShader;
-
-		//**********************************************************************
-		// Property: m_spCurrentPixelShader
-		// Defines the current pixel shader
-		//**********************************************************************
-		CRefObj<Caustic::IShader> m_spCurrentPixelShader;
+		CRefObj<Caustic::IShader> m_spCurrentShader;
 
 		//**********************************************************************
 		// Property: m_spGraphics
@@ -194,16 +188,10 @@ namespace Caustic
 	struct ISceneMaterialElem : public ISceneGroupElem
 	{
 		//**********************************************************************
-		// Method: SetPixelShader
-		// Sets our pixel shader
+		// Method: SetShader
+		// Sets our shader
 		//**********************************************************************
-		virtual void SetPixelShader(IShader *pShader) = 0;
-
-		//**********************************************************************
-		// Method: SetVertexShader
-		// Sets our vertex shader
-		//**********************************************************************
-		virtual void SetVertexShader(IShader *pShader) = 0;
+		virtual void SetShader(IShader *pShader) = 0;
 
 		//**********************************************************************
 		// Method: GetMaterial

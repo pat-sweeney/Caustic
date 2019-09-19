@@ -16,6 +16,11 @@
 
 namespace Caustic
 {
+    struct IRenderer;
+    struct IShader;
+    struct IRenderSubMesh;
+    struct IRenderMesh;
+
     //**********************************************************************
     // Interface: IMaterialAttrib
     // IMaterial is used for manipulating the materials assigned to a mesh.
@@ -164,7 +169,8 @@ namespace Caustic
     CAUSTICAPI void CreateMaterial(IMaterialAttrib **ppMaterial);
 
     //**********************************************************************
-    // \brief CGeomVertex defines a vertex in our mesh. 
+    // Struct: CGeomVertex
+    // Defines a vertex in our mesh. 
     //
     // Defines a vertex on our mesh. We have two types of vertex data:
     // 1) data that is specific to a vertex relative to a given face
@@ -185,8 +191,9 @@ namespace Caustic
     };
 
     //**********************************************************************
-    // \brief CFaceVertex defines a vertex data relative to a given face.
-    // See CGeomVertex for further information.
+    // Struct: CFaceVertex
+    // Defines a vertex data relative to a given face.
+    // See <CGeomVertex> for further information.
     //**********************************************************************
     struct CFaceVertex
     {
@@ -215,19 +222,52 @@ namespace Caustic
         friend class CSubMesh;
         friend class CMeshConstructor;
     public:
-        // \brief Returns the next edge in our edge loop
+        //**********************************************************************
+        // Method: GetNextEdge
+        // Returns the next edge in our edge loop
+        //**********************************************************************
         CHalfEdge *GetNextEdge() { return m_pNext; }
-        // \brief Returns the previous edge in our edge loop
+
+        //**********************************************************************
+        // Method: GetPrevEdge
+        // Returns the previous edge in our edge loop
+        //**********************************************************************
         CHalfEdge *GetPrevEdge() { return m_pPrev; }
-        // \brief Returns the half edge opposite to the current edge
+
+        //**********************************************************************
+        // Method: GetOppositeEdge
+        // Returns the half edge opposite to the current edge
+        //**********************************************************************
         CHalfEdge *GetOppositeEdge() { return m_pOpposite; }
-        // \brief Returns the vertex at the head of this edge
+
+        //**********************************************************************
+        // Method: GetHeadVertex
+        // Returns the vertex at the head of this edge
+        //**********************************************************************
         CGeomVertex *GetHeadVertex() { return m_pVertex; }
-        // \brief Returns the vertex at the tail of this edge
+
+        //**********************************************************************
+        // Method: GetTailVertex
+        // Returns the vertex at the tail of this edge
+        //**********************************************************************
         CGeomVertex *GetTailVertex() { return m_pPrev->m_pVertex; }
-        // \brief Returns the face this edge is a boundary of
+
+        //**********************************************************************
+        // Method: GetFace
+        // Returns the face this edge is a boundary of
+        //
+        // Returns:
+        // Pointer to the current face
+        //**********************************************************************
         CFace *GetFace() { return m_pFace; }
-        // \brief Returns the smoothing group this edge belongs to
+
+        //**********************************************************************
+        // Method: GetSmoothingGroup
+        // Returns the smoothing group this edge belongs to
+        //
+        // Returns:
+        // ID of the smoothing group this edge belongs to
+        //**********************************************************************
         uint32 GetSmoothingGroup() { return m_smoothingGroup; }
     };
 
@@ -320,6 +360,7 @@ namespace Caustic
         virtual uint32 FaceToIndex(CFace *pFace) = 0;
         virtual uint32 EdgeToIndex(CHalfEdge *pEdge) = 0;
         virtual void Triangulate(ETriangulateMethod method) = 0;
+        virtual void ToRenderSubMesh(IRenderer *pRenderer, IShader *pShader, IRenderSubMesh **ppRenderMesh) = 0;
     };
 
     //**********************************************************************
@@ -339,6 +380,7 @@ namespace Caustic
         virtual void SetMaterials(std::vector<CRefObj<IMaterialAttrib>> &materials) = 0;
         virtual void GetMaterial(uint32 materialID, IMaterialAttrib **ppMaterial) = 0;
         virtual void ComputeNormals() = 0;
+		virtual void ToRenderMesh(IRenderer *pRenderer, IShader *pShader, IRenderMesh **ppRenderMesh) = 0;
     };
     
 

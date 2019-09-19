@@ -7,10 +7,16 @@
 #include "Geometry\Mesh\Mesh.h"
 #include "Geometry\Mesh\Material.h"
 
+//**********************************************************************
+// File: Mesh.cpp
+// Contains the methods used to implement the CMesh object.
+//**********************************************************************
+
 namespace Caustic
 {
     //**********************************************************************
-    // \brief Computes the normal for a face using Newell's method (so convex
+    // Method: ComputeFaceNormal
+    // Computes the normal for a face using Newell's method (so convex
     // polygons are handled correctly)
     //**********************************************************************
     void CFace::ComputeFaceNormal()
@@ -20,19 +26,22 @@ namespace Caustic
         m_normal.z = 0.0F;
         CHalfEdge *pEdge = m_pEdge;
         CHalfEdge *pStartEdge = pEdge;
+        CGeomVertex *pCurVertex = pEdge->GetHeadVertex();
+        CGeomVertex *pPrevVertex = pEdge->GetTailVertex();
         do {
-            CGeomVertex *pCurVertex = pEdge->GetHeadVertex();
-            CGeomVertex *pPrevVertex = pEdge->GetTailVertex();
             m_normal.x += ((pPrevVertex->pos.y - pCurVertex->pos.y) * (pPrevVertex->pos.z + pCurVertex->pos.z));
             m_normal.y += ((pPrevVertex->pos.z - pCurVertex->pos.z) * (pPrevVertex->pos.x + pCurVertex->pos.x));
             m_normal.z += ((pPrevVertex->pos.x - pCurVertex->pos.x) * (pPrevVertex->pos.y + pCurVertex->pos.y));
             pEdge = pEdge->GetNextEdge();
+            pPrevVertex = pCurVertex;
+            pCurVertex = pEdge->GetHeadVertex();
         } while (pEdge != pStartEdge);
         m_normal.Normalize();
     }
 
     //**********************************************************************
-    // \brief Returns whether the face is degenerate (based on the normal vector)
+    // Method: IsDegenerate
+    // Returns whether the face is degenerate (based on the normal vector)
     //**********************************************************************
     bool CFace::IsDegenerate()
     {
@@ -40,7 +49,8 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Default ctor for our mesh object. A mesh is simply a collection
+    // Constructor: CMesh
+    // Default ctor for our mesh object. A mesh is simply a collection
     // of submeshes (submeshes define geometry and material attributes)
     //**********************************************************************
     CMesh::CMesh()
@@ -48,19 +58,25 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Returns the Nth submesh
-    // @param [in] index Index of submesh to retrieve
-    // @param [out] ppSubMesh Returns the Nth submesh
+    // Method: GetSubMesh
+    // Returns the Nth submesh
+    //
+    // Parameters:
+    // index - Index of submesh to retrieve
+    // ppSubMesh - Returns the Nth submesh
     //**********************************************************************
     void CMesh::GetSubMesh(uint32 index, ISubMesh **ppSubMesh)
     {
-        *ppSubMesh = m_subMeshes[index].p;
+        *ppSubMesh = m_subMeshes[index];
         (*ppSubMesh)->AddRef();
     }
 
     //**********************************************************************
-    // \brief Adds a submesh to the mesh
-    // @param [in] pSubMesh Adds the specified submesh to our mesh
+    // Method: AddSubMesh
+    // Adds a submesh to the mesh
+    //
+    // Parameters:
+    // pSubMesh - Adds the specified submesh to our mesh
     //**********************************************************************
     void CMesh::AddSubMesh(ISubMesh *pSubMesh)
     {
@@ -68,8 +84,11 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Returns the bounding box for the mesh
-    // @param [in] pBBox Returns the bounding box of the mesh
+    // Method: GetBBox
+    // Returns the bounding box for the mesh
+    //
+    // Parameters:
+    // pBBox - Returns the bounding box of the mesh
     //**********************************************************************
     void CMesh::GetBBox(BBox3 *pBBox)
     {
@@ -84,7 +103,8 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Rescales a mesh so that it has unit size
+    // Method: Normalize
+    // Rescales a mesh so that it has unit size
     //**********************************************************************
     void CMesh::Normalize()
     {
@@ -95,8 +115,11 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Sets the mesh's material list
-    // @param [in] materials Assigns the mesh the specified list of materials
+    // Method: SetMaterials
+    // Sets the mesh's material list
+    //
+    // Parameters:
+    // materials - Assigns the mesh the specified list of materials
     //**********************************************************************
     void CMesh::SetMaterials(std::vector<CRefObj<IMaterialAttrib>> &materials)
     {
@@ -106,15 +129,18 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Returns the Nth material
-    // @param [in] materialID Index of material to retrieve
-    // @param [out] ppMaterial Returns the Nth material
+    // Method: GetMaterial
+    // Returns the Nth material
+    //
+    // Parameters:
+    // materialID - Index of material to retrieve
+    // ppMaterial - Returns the Nth material
     //**********************************************************************
     void CMesh::GetMaterial(uint32 materialID, IMaterialAttrib **ppMaterial)
     {
         if (materialID < m_materials.size())
         {
-            (*ppMaterial) = m_materials[materialID].p;
+            (*ppMaterial) = m_materials[materialID];
             (*ppMaterial)->AddRef();
         }
         else
@@ -122,8 +148,11 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Loads a previously save Mesh
-    // @param [in] pStream Loads the material from the specified stream
+    // Method: Load
+    // Loads a previously save Mesh
+    //
+    // Parameters:
+    // pStream - Loads the material from the specified stream
     //**********************************************************************
     void CMesh::Load(IStream *pStream)
     {
@@ -134,13 +163,16 @@ namespace Caustic
         {
             CRefObj<ISubMesh> spSubMesh(new CSubMesh());
             spSubMesh->Load(pStream);
-            m_subMeshes.push_back(spSubMesh.p);
+            m_subMeshes.push_back(spSubMesh);
         }
     }
 
     //**********************************************************************
-    // \brief Stores a mesh to a stream
-    // @param [in] pStream Stores the material to the specified stream
+    // Method: Store
+    // Stores a mesh to a stream
+    //
+    // Parameters:
+    // pStream - Stores the material to the specified stream
     //**********************************************************************
     void CMesh::Store(IStream *pStream)
     {
@@ -156,7 +188,8 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Computes normal vectors for each vertex on the mesh
+    // Method: ComputeNormals
+    // Computes normal vectors for each vertex on the mesh
     //**********************************************************************
     void CMesh::ComputeNormals()
     {
@@ -165,8 +198,11 @@ namespace Caustic
     }
     
     //**********************************************************************
-    // \brief Returns an empty mesh
-    // @param [out] ppMesh Returns the newly created mesh object
+    // Function: CreateEmptyMesh
+    // Returns an empty mesh
+    //
+    // Parameters:
+    // ppMesh - Returns the newly created mesh object
     //**********************************************************************
     CAUSTICAPI void CreateEmptyMesh(IMesh **ppMesh)
     {

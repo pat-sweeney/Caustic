@@ -52,7 +52,6 @@ namespace Caustic
         void BuildVertexBuffer(IGraphics *pGraphics, IShaderInfo *pShaderInfo, std::vector<int> &vertexReferenced, MeshData *pMeshData);
         void BuildIndexBuffer(IGraphics *pGraphics, std::vector<int> &vertexReferenced, MeshData *pMeshData);
         void BuildReferencedVertexList(std::vector<int> &vertexReferenced);
-        void ToRenderSubMesh(IGraphics *pGraphics, IShader *pShader, IRenderSubMesh **ppRenderSubMesh);
     public:
         friend class CMeshConstructor;
 
@@ -64,8 +63,6 @@ namespace Caustic
             CreateKDTree(&m_spKDTree);
         }
 
-//#pragma warning(disable:4100)
-//#pragma warning(disable:4189)
         CSubMesh(int approxNumVertices, int approxNumEdges, int approxNumFaces)
         {
             if (!s_allocatorInitialized)
@@ -108,6 +105,7 @@ namespace Caustic
         virtual uint32 FaceToIndex(CFace *pFace) override;
         virtual uint32 EdgeToIndex(CHalfEdge *pEdge) override;
         virtual void Triangulate(ETriangulateMethod method) override;
+        virtual void ToRenderSubMesh(IRenderer *pRenderer, IShader *pShader, IRenderSubMesh **ppRenderSubMesh) override;
 
         //**********************************************************************
         // ISerialize
@@ -117,11 +115,12 @@ namespace Caustic
     };
 
     //**********************************************************************
-    // \brief CMesh defines a mesh object
+    // Class: CMesh
+    // CMesh defines a mesh object
     // 
     // CMesh defines a mesh. A mesh object is simply a collection of submesh
     // objects (ISubMesh). To convert this mesh into a renderable form the client
-    // should call \ref MeshToD3D .
+    // should call <MeshToD3D>.
     //**********************************************************************
     class CMesh : public IMesh, public CRefCount
     {
@@ -147,6 +146,7 @@ namespace Caustic
         virtual void SetMaterials(std::vector<CRefObj<IMaterialAttrib>> &materials) override;
         virtual void GetMaterial(uint32 materialID, IMaterialAttrib **ppMaterial) override;
         virtual void ComputeNormals() override;
+        virtual void ToRenderMesh(IRenderer *pRenderer, IShader *pShader, IRenderMesh **ppRenderMesh) override;
 
         //**********************************************************************
         // ISerialize

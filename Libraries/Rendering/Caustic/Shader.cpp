@@ -596,7 +596,7 @@ namespace Caustic
         }
         else
         {
-            *ppShader = it->second.p;
+            *ppShader = it->second;
             (*ppShader)->AddRef();
         }
     }

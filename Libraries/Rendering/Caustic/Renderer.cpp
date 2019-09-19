@@ -262,7 +262,7 @@ namespace Caustic
 			CCausticFactory::Instance()->CreateRenderMaterial(this, pMaterial, pShader, &spBackMaterial);
             spBackMaterial->SetDiffuseTexture(this, pTexture);
         }
-        CRenderable renderable(pSubMesh, spFrontMaterial.p, spBackMaterial.p, mat);
+        CRenderable renderable(pSubMesh, spFrontMaterial, spBackMaterial, mat);
         m_singleObjs.push_back(renderable);
     }
 
@@ -275,8 +275,8 @@ namespace Caustic
     //**********************************************************************
     void CRenderer::GetRenderCtx(IRenderCtx **ppCtx)
     {
-        (*ppCtx) = m_spRenderCtx.p;
-        if (m_spRenderCtx.p)
+        (*ppCtx) = m_spRenderCtx;
+        if (m_spRenderCtx)
             (*ppCtx)->AddRef();
     }
 
@@ -294,8 +294,8 @@ namespace Caustic
         rasDesc.FillMode = D3D11_FILL_SOLID;
         m_spDevice->CreateRasterizerState(&rasDesc, &spRasterState);
         pContext->RSSetState(spRasterState);
-        pContext->IASetVertexBuffers(0, 1, &m_spFullQuadVB.p, &vertexSize, &offset);
-        pContext->IASetIndexBuffer(m_spFullQuadIB.p, DXGI_FORMAT_R32_UINT, 0);
+        pContext->IASetVertexBuffers(0, 1, &m_spFullQuadVB, &vertexSize, &offset);
+        pContext->IASetIndexBuffer(m_spFullQuadIB, DXGI_FORMAT_R32_UINT, 0);
         Vector3 eye;
         GetCamera()->GetPosition(&eye, nullptr, nullptr, nullptr, nullptr, nullptr);
         Float3 vEye(eye.x, eye.y, eye.z);
@@ -341,18 +341,18 @@ namespace Caustic
 
     void CRenderer::DrawSceneObjects(int pass)
     {
-        if (m_spSceneGraph.p)
+        if (m_spSceneGraph)
         {
             SceneCtx sceneCtx;
             sceneCtx.m_CurrentPass = pass;
-            m_spSceneGraph->Render(this, m_spRenderCtx.p, &sceneCtx);
+            m_spSceneGraph->Render(this, m_spRenderCtx, &sceneCtx);
         }
 
         // Render any single objects
         for (size_t i = 0; i < m_singleObjs.size(); i++)
         {
             if (m_singleObjs[i].m_passes & (1 << pass))
-                m_singleObjs[i].Render(this, m_lights, m_spRenderCtx.p);
+                m_singleObjs[i].Render(this, m_lights, m_spRenderCtx);
         }
     }
 
@@ -376,14 +376,14 @@ namespace Caustic
         for (uint32 pass = c_PassFirst; pass <= c_PassLast; pass++)
         {
 #ifdef SUPPORT_OBJID
-            CRenderCtx *pCtx = (CRenderCtx*)m_spRenderCtx.p;
+            CRenderCtx *pCtx = (CRenderCtx*)m_spRenderCtx;
             pCtx->m_currentPass = pass;
             pCtx->m_passBlendable = true;
             if (pass == c_PassObjID)
             {
                 pCtx->m_passBlendable = false;
                 // Setup render target
-                m_spContext->OMSetRenderTargets(1, &m_spObjIDRTView.p, m_spStencilView);
+                m_spContext->OMSetRenderTargets(1, &m_spObjIDRTView, m_spStencilView);
                 FLOAT bgClr[4] = { 0.4f, 0.4f, 0.4f, 1.0f };
                 m_spContext->ClearRenderTargetView(m_spObjIDRTView, bgClr);
                 m_spContext->ClearDepthStencilView(m_spStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -395,7 +395,7 @@ namespace Caustic
                 int numShadowPasses = (m_lights.size() < c_MaxShadowMaps) ? m_lights.size() : c_MaxShadowMaps;
                 for (int i = 0; i < numShadowPasses; i++)
                 {
-                    m_spContext->OMSetRenderTargets(1, &m_spShadowRTView[i].p, m_spStencilView);
+                    m_spContext->OMSetRenderTargets(1, &m_spShadowRTView[i], m_spStencilView);
                     FLOAT bgClr[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
                     m_spContext->ClearRenderTargetView(m_spShadowRTView[i], bgClr);
                     m_spContext->ClearDepthStencilView(m_spStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -403,10 +403,10 @@ namespace Caustic
                     CRefObj<ICamera> spCamera;
                     CreateCamera(true, &spCamera);
                     spCamera->SetPosition(m_lights[i]->GetPosition(), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f));
-                    this->SetCamera(spCamera.p);
+                    this->SetCamera(spCamera);
                     DrawSceneObjects(pass);
                     // Restore default render targets
-                    m_spContext->OMSetRenderTargets(1, &m_spRTView.p, m_spStencilView);
+                    m_spContext->OMSetRenderTargets(1, &m_spRTView, m_spStencilView);
                 }
             }
             else
@@ -434,7 +434,7 @@ namespace Caustic
             if (pass == c_PassObjID)
             {
                 // Restore default render targets
-                m_spContext->OMSetRenderTargets(1, &m_spRTView.p, m_spStencilView);
+                m_spContext->OMSetRenderTargets(1, &m_spRTView, m_spStencilView);
                 FLOAT bgClr[4] = { 0.4f, 0.4f, 0.4f, 1.0f };
                 m_spContext->ClearRenderTargetView(m_spObjIDRTView, bgClr);
                 m_spContext->ClearDepthStencilView(m_spStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -491,7 +491,7 @@ namespace Caustic
 
         CRefObj<ICamera> spCamera;
         CCausticFactory::Instance()->CreateCamera(true, &spCamera);
-        spGraphics->SetCamera(spCamera.p);
+        spGraphics->SetCamera(spCamera);
 
         *ppGraphics = spGraphics.release();
         (*ppGraphics)->AddRef();
@@ -505,7 +505,7 @@ namespace Caustic
 
         CRefObj<ICamera> spCamera;
 		CCausticFactory::Instance()->CreateCamera(true, &spCamera);
-        spRenderer->SetCamera(spCamera.p);
+        spRenderer->SetCamera(spCamera);
 
         *ppRenderer = spRenderer.release();
         (*ppRenderer)->AddRef();

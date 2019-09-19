@@ -13,7 +13,7 @@ namespace Caustic
     {
 		CRefObj<ISceneGroupElem> spGroup;
 		CSceneFactory::Instance()->CreateGroupElem(&spGroup);
-		std::unique_ptr<CSceneGraph> spGraphObj(new CSceneGraph(spGroup.p));
+		std::unique_ptr<CSceneGraph> spGraphObj(new CSceneGraph(spGroup));
         *ppGraph = spGraphObj.release();
         (*ppGraph)->AddRef();
     }
@@ -43,7 +43,7 @@ namespace Caustic
     void CSceneGraph::Merge(ISceneGraph *pSceneGraph)
     {
         CSceneGraph *pGraph = (CSceneGraph*)pSceneGraph;
-        AddChild(pGraph->m_spRoot.p);
+        AddChild(pGraph->m_spRoot);
         pGraph->m_spRoot = nullptr;
     }
 

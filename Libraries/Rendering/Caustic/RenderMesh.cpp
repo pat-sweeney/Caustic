@@ -22,7 +22,8 @@ namespace Caustic
 		m_spShader->BeginRender(pRenderer, m_spFrontMaterial, m_spBackMaterial, lights, nullptr);
 		uint32 vertexSize = m_spShader->GetShaderInfo()->GetVertexSize();
 		uint32 numVertices = m_VB.m_numVertices;
-        pContext->IASetVertexBuffers(0, 1, &m_VB.m_spVB.p, &vertexSize, nullptr);
+        UINT offset = 0;
+        pContext->IASetVertexBuffers(0, 1, &m_VB.m_spVB.p, &vertexSize, &offset);
         pContext->IASetIndexBuffer(m_VB.m_spIB, DXGI_FORMAT::DXGI_FORMAT_R32_UINT, 0);
         pContext->DrawIndexed(m_VB.m_numIndices, 0, 0);
 		m_spShader->EndRender(pRenderer);

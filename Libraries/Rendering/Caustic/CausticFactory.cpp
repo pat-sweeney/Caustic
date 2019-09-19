@@ -33,9 +33,7 @@ namespace Caustic
     CAUSTICAPI void CreateTrackball(ITrackball **ppTrackball);
     CAUSTICAPI void CreateRendererMarshaller(IRendererMarshaller **ppClientServer);
     CAUSTICAPI void CreateRenderMaterial(IGraphics *pGraphics, IMaterialAttrib *pMaterialAttrib, IShader *pShader, IRenderMaterial **ppRenderMaterial);
-    CAUSTICAPI void CreateRenderable(IGraphics *pGraphics, ISubMesh *pSubMesh, IMaterialAttrib *pMaterial, IShader *pShader, IRenderable **ppRenderable);
-    CAUSTICAPI void CreateRenderable(IRenderable **ppRenderable);
-    CAUSTICAPI void CreateRenderable(ID3D11Buffer *pVB, uint32 numVertices, ID3D11Buffer *pIB, uint32 numIndices, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat, IRenderable **ppRenderable);
+    CAUSTICAPI void CreateRenderable(IRenderSubMesh *pSubMesh, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat, IRenderable **ppRenderable);
     CAUSTICAPI void CreateSampler(IGraphics *pGraphics, ITexture *pTexture, ISampler **ppSampler);
     CAUSTICAPI void CreateCamera(bool leftHanded, ICamera **ppCamera);
     CAUSTICAPI void CreateTexture(IGraphics *pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, uint32 cpuFlags, uint32 bindFlags, ITexture **ppTexture);
@@ -169,29 +167,11 @@ namespace Caustic
     // Method: CreateRenderable
     // See <ICausticFactory::CreateRenderable>
     //**********************************************************************
-    void CCausticFactory::CreateRenderable(IGraphics *pGraphics, ISubMesh *pSubMesh, IMaterialAttrib *pMaterial, IShader *pShader, IRenderable **ppRenderable)
+    void CCausticFactory::CreateRenderable(IRenderSubMesh *pSubMesh, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat, IRenderable **ppRenderable)
 	{
-		Caustic::CreateRenderable(pGraphics, pSubMesh, pMaterial, pShader, ppRenderable);
+        Caustic::CreateRenderable(pSubMesh, pFrontMaterial, pBackMaterial, mat, ppRenderable);
 	}
-
-    //**********************************************************************
-    // Method: CreateRenderable
-    // See <ICausticFactory::CreateRenderable>
-    //**********************************************************************
-    void CCausticFactory::CreateRenderable(IRenderable **ppRenderable)
-	{
-		Caustic::CreateRenderable(ppRenderable);
-	}
-
-    //**********************************************************************
-    // Method: CreateRenderable
-    // See <ICausticFactory::CreateRenderable>
-    //**********************************************************************
-    void CCausticFactory::CreateRenderable(ID3D11Buffer *pVB, uint32 numVertices, ID3D11Buffer *pIB, uint32 numIndices, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat, IRenderable **ppRenderable)
-	{
-		Caustic::CreateRenderable(pVB, numVertices, pIB, numIndices, pFrontMaterial, pBackMaterial, mat, ppRenderable);
-	}
-
+    
     //**********************************************************************
     // Method: CreateSampler
     // See <ICausticFactory::CreateSampler>
@@ -244,47 +224,6 @@ namespace Caustic
     void CCausticFactory::LoadVideoTexture(const wchar_t *pFilename, IGraphics *pGraphics, ITexture **ppTexture)
 	{
 		Caustic::LoadVideoTexture(pFilename, pGraphics, ppTexture);
-	}
-
-    //**********************************************************************
-    // Method: MeshToD3D
-    // See <ICausticFactory::MeshToD3D>
-    //**********************************************************************
-    void CCausticFactory::MeshToD3D(IGraphics *pGraphics, ISubMesh *pMesh,
-		int vertexVersion, ID3D11Buffer **ppVertexBuffer, uint32 *pNumVerts,
-		int indexVersion, ID3D11Buffer **ppIndexBuffer, uint32 *pNumIndices,
-		BBox3 *pBbox, uint32 *pVertexSize)
-	{
-		Caustic::MeshToD3D(pGraphics, pMesh, vertexVersion, ppVertexBuffer, pNumVerts,
-			indexVersion, ppIndexBuffer, pNumIndices, pBbox, pVertexSize);
-	}
-
-    //**********************************************************************
-    // Method: MeshToNormals
-    // See <ICausticFactory::MeshToNormals>
-    //**********************************************************************
-    void CCausticFactory::MeshToNormals(IGraphics *pGraphics, ISubMesh *pSubMesh,
-		ID3D11Buffer **ppVB, uint32 *pNumVerts)
-	{
-		Caustic::MeshToNormals(pGraphics, pSubMesh, ppVB, pNumVerts);
-	}
-
-    //**********************************************************************
-    // Method: StoreSubMeshRenderableDataToStream
-    // See <ICausticFactory::StoreSubMeshRenderableDataToStream>
-    //**********************************************************************
-    void CCausticFactory::StoreSubMeshRenderableDataToStream(IStream *pStream, ISubMesh *pMesh, int vertexVersion, int indexVersion)
-	{
-		Caustic::StoreSubMeshRenderableDataToStream(pStream, pMesh, vertexVersion, indexVersion);
-	}
-
-    //**********************************************************************
-    // Method: LoadSubMeshRenderableDataFromStream
-    // See <ICausticFactory::LoadSubMeshRenderableDataFromStream>
-    //**********************************************************************
-    void CCausticFactory::LoadSubMeshRenderableDataFromStream(IStream *pStream, ID3D11Device *pDevice, ID3D11Buffer **ppIndexBuffer, uint32 *pNumIndices, ID3D11Buffer **ppVertexBuffer, uint32 *pNumVertices, int *pVertexVersion, int *pIndexVersion)
-	{
-		Caustic::LoadSubMeshRenderableDataFromStream(pStream, pDevice, ppIndexBuffer, pNumIndices, ppVertexBuffer, pNumVertices, pVertexVersion, pIndexVersion);
 	}
 
     void CCausticFactory::CreateShader(IRenderer *pRenderer, const wchar_t *pShaderName,

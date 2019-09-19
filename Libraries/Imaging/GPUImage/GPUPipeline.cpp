@@ -44,7 +44,7 @@ namespace Caustic
     void CGPUPipeline::CreateShader(BYTE *pShaderCode, uint32 shaderCodeSize, ShaderDefs *pShaderParams, uint32 shaderParamSize, IShader **ppShader)
     {
         CRefObj<IShader> spShader;
-        Caustic::CreateShader(m_spGraphics.p, nullptr,
+        Caustic::CreateShader(m_spGraphics, nullptr,
             pShaderParams, shaderParamSize,
             g_QuadVS_ParamTable, _countof(g_QuadVS_ParamTable),
             pShaderCode, shaderCodeSize,
@@ -129,7 +129,7 @@ namespace Caustic
                 std::unique_ptr<CGPUImageNode> spNode(new CGPUImageNode(1));
                 CRefObj<IShader> spShader;
                 CreateShader(pNode.m_pShaderCode, pNode.m_shaderSize, pNode.m_pParams, pNode.m_paramSize, &spShader);
-                spNode->SetShader(spShader.p);
+                spNode->SetShader(spShader);
                 m_nodes.push_back(CRefObj<IGPUImageNode>(spNode.get()));
                 *ppNewNode = spNode.release();
                 (*ppNewNode)->AddRef();
@@ -156,7 +156,7 @@ namespace Caustic
     //**********************************************************************
     void CGPUPipeline::GetGraphics(IGraphics **ppDevice)
     {
-        *ppDevice = m_spGraphics.p;
+        *ppDevice = m_spGraphics;
         (*ppDevice)->AddRef();
     }
 
@@ -235,7 +235,7 @@ namespace Caustic
     //**********************************************************************
     void CGPUImageBase::GetShader(IShader **ppShader)
     {
-        *ppShader = m_spShader.p;
+        *ppShader = m_spShader;
         (*ppShader)->AddRef();
     }
     
@@ -290,12 +290,12 @@ namespace Caustic
         CComPtr<ID3D11DeviceContext> spCtx = m_spGraphics->GetContext();
         spDevice->CreateRasterizerState(&rasDesc, &spRasterState);
         spCtx->RSSetState(spRasterState);
-        spCtx->IASetVertexBuffers(0, 1, &m_spFullQuadVB.p, &vertexSize, &offset);
-        spCtx->IASetIndexBuffer(m_spFullQuadIB.p, DXGI_FORMAT_R32_UINT, 0);
-        pShader->BeginRender(m_spGraphics.p);
+        spCtx->IASetVertexBuffers(0, 1, &m_spFullQuadVB, &vertexSize, &offset);
+        spCtx->IASetIndexBuffer(m_spFullQuadIB, DXGI_FORMAT_R32_UINT, 0);
+        pShader->BeginRender(m_spGraphics);
         spCtx->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         spCtx->DrawIndexed(6, 0, 0);
-        pShader->EndRender(m_spGraphics.p);
+        pShader->EndRender(m_spGraphics);
     }
 
     //**********************************************************************
@@ -319,11 +319,11 @@ namespace Caustic
             m_sourceNodes[i]->GetOutputTexture(pPipeline, &spTexture);
             textures.push_back(spTexture);
             CRefObj<ISampler> spSampler;
-			Caustic::CCausticFactory::Instance()->CreateSampler(spGraphics.p, spTexture.p, &spSampler);
-            samplers.push_back(CSamplerRef(spSampler.p));
+			Caustic::CCausticFactory::Instance()->CreateSampler(spGraphics, spTexture, &spSampler);
+            samplers.push_back(CSamplerRef(spSampler));
         }
 
-        if (m_spShader.p)
+        if (m_spShader)
         {
             // Set the input from earlier nodes as our source textures in our shader
             for (int i = 0; i < textures.size(); i++)
@@ -341,17 +341,17 @@ namespace Caustic
                 m_width = textures[0]->GetWidth();
                 m_height = textures[0]->GetHeight();
             }
-			Caustic::CCausticFactory::Instance()->CreateTexture(spGraphics.p, m_width, m_height, DXGI_FORMAT_R8G8B8A8_UNORM, m_cpuFlags, m_bindFlags, &m_spOutputTexture);
+			Caustic::CCausticFactory::Instance()->CreateTexture(spGraphics, m_width, m_height, DXGI_FORMAT_R8G8B8A8_UNORM, m_cpuFlags, m_bindFlags, &m_spOutputTexture);
             CComPtr<ID3D11RenderTargetView> spRTView;
             CT(spDevice->CreateRenderTargetView(m_spOutputTexture->GetD3DTexture(), nullptr, &spRTView));
 
             // Setup render target
-            spCtx->OMSetRenderTargets(1, &spRTView.p, nullptr);
+            spCtx->OMSetRenderTargets(1, &spRTView, nullptr);
             FLOAT bgClr[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
             spCtx->ClearRenderTargetView(spRTView, bgClr);
 
             // Draw full screen quad using shader
-            pPipeline->RenderQuad(m_spShader.p);
+            pPipeline->RenderQuad(m_spShader);
         }
     }
 
@@ -364,7 +364,7 @@ namespace Caustic
     {
         CRefObj<IGraphics> spGraphics;
         pPipeline->GetGraphics(&spGraphics);
-		Caustic::CCausticFactory::Instance()->CreateTexture(spGraphics.p, pSource->GetWidth(), pSource->GetHeight(), DXGI_FORMAT_R8G8B8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE, &m_spOutputTexture);
+		Caustic::CCausticFactory::Instance()->CreateTexture(spGraphics, pSource->GetWidth(), pSource->GetHeight(), DXGI_FORMAT_R8G8B8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE, &m_spOutputTexture);
         CComPtr<ID3D11DeviceContext> spCtx = spGraphics->GetContext();
         CComPtr<ID3D11Texture2D> spTexture = m_spOutputTexture->GetD3DTexture();
         D3D11_MAPPED_SUBRESOURCE mapinfo;
@@ -399,7 +399,7 @@ namespace Caustic
     {
         if (ppTexture)
         {
-            *ppTexture = m_spOutputTexture.p;
+            *ppTexture = m_spOutputTexture;
             (*ppTexture)->AddRef();
         }
     }
@@ -419,7 +419,7 @@ namespace Caustic
             m_width = spTexture->GetWidth();
             m_height = spTexture->GetHeight();
         }
-		Caustic::CCausticFactory::Instance()->CreateTexture(spGraphics.p, m_width, m_height, DXGI_FORMAT_R8G8B8A8_UNORM, m_cpuFlags, m_bindFlags, &m_spOutputTexture);
+		Caustic::CCausticFactory::Instance()->CreateTexture(spGraphics, m_width, m_height, DXGI_FORMAT_R8G8B8A8_UNORM, m_cpuFlags, m_bindFlags, &m_spOutputTexture);
         spCtx->CopyResource(m_spOutputTexture->GetD3DTexture(), spTexture->GetD3DTexture());
     }
 

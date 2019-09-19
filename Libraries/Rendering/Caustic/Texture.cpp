@@ -21,7 +21,7 @@ namespace Caustic
         desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
         desc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
         CComPtr<ID3D11Texture2D> spTexture;
-        CT(pGraphics->GetDevice()->CreateTexture2D(&desc, nullptr, &spTexture.p));
+        CT(pGraphics->GetDevice()->CreateTexture2D(&desc, nullptr, &spTexture));
 
         pGraphics->GetContext()->CopySubresourceRegion(spTexture, 0, 0, 0, 0, m_spTexture, 0, NULL);
 
@@ -58,7 +58,7 @@ namespace Caustic
         desc.CPUAccessFlags = cpuFlags;
         desc.MipLevels = 1;
         desc.BindFlags = bindFlags;
-        CT(pGraphics->GetDevice()->CreateTexture2D(&desc, nullptr, &m_spTexture.p));
+        CT(pGraphics->GetDevice()->CreateTexture2D(&desc, nullptr, &m_spTexture));
 
         if (desc.Usage == D3D11_USAGE_DYNAMIC || desc.Usage == D3D11_USAGE_DEFAULT)
         {
@@ -146,7 +146,7 @@ namespace Caustic
         std::map<std::wstring, CRefObj<ITexture>>::iterator it;
         if ((it = cache.find(pFilename)) != cache.end())
         {
-            *ppTexture = it->second.p;
+            *ppTexture = it->second;
             if (*ppTexture)
                 (*ppTexture)->AddRef();
             return;
@@ -169,7 +169,7 @@ namespace Caustic
         if (s_spFactory == nullptr)
         {
             CT(CoInitialize(nullptr));
-            CT(CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, __uuidof(IWICImagingFactory), (void**)&s_spFactory.p));
+            CT(CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, __uuidof(IWICImagingFactory), (void**)&s_spFactory));
         }
         
         CComPtr<IWICBitmapDecoder> spDecoder;

@@ -193,43 +193,6 @@ namespace Caustic
 		//**********************************************************************
 		virtual void LoadVideoTexture(const wchar_t *pFilename, IGraphics *pGraphics, ITexture **ppTexture) = 0;
 
-		//**********************************************************************
-		// Method: MeshToD3D
-		// Converts an IMesh into a renderable form
-		//
-		// Parameters:
-		// pGraphics - Graphics device to use
-		// pMesh - Mesh to convert
-		// vertexVersion - Version of vertex to use
-		// ppVertexBuffer - Returns the created vertex buffer
-		// indexVersion - Version of index buffer to use
-		// ppIndexBuffer - Returns the created index buffer
-		// pBbox - Returns the bounding box of the mesh
-		// pVertexSize - Returns the size of each vertex in bytes
-		//**********************************************************************
-		virtual void MeshToD3D(IGraphics *pGraphics, ISubMesh *pMesh,
-			int vertexVersion, ID3D11Buffer **ppVertexBuffer, uint32 *pNumVerts,
-			int indexVersion, ID3D11Buffer **ppIndexBuffer, uint32 *pNumIndices,
-			BBox3 *pBbox, uint32 *pVertexSize) = 0;
-		
-		virtual void MeshToNormals(IGraphics *pGraphics, ISubMesh *pSubMesh,
-			ID3D11Buffer **ppVB, uint32 *pNumVerts) = 0;
-
-		//**********************************************************************
-		// Method: StoreSubMeshRenderableDataToStream
-		// This function converts an ISubMesh into data that can later be converted into
-		// an IRenderable object. This data is then saved to the specified stream. Later
-		// the data can be loaded via this function's complementary function (LoadSubMeshRenderableDataFromStream())
-		// and then pass the data to BuildIndexBufferGPU/BuildVertexBufferGPU to create an ID3D11Buffer object
-		// from which an IRenderable object can be created from.
-		//
-		// Parameters:
-		// pStream - stream to save to
-		// pMesh - mesh to store
-		//**********************************************************************
-		virtual void StoreSubMeshRenderableDataToStream(IStream *pStream, ISubMesh *pMesh, int vertexVersion, int indexVersion) = 0;
-		virtual void LoadSubMeshRenderableDataFromStream(IStream *pStream, ID3D11Device *pDevice, ID3D11Buffer **ppIndexBuffer, uint32 *pNumIndices, ID3D11Buffer **ppVertexBuffer, uint32 *pNumVertices, int *pVertexVersion, int *pIndexVersion) = 0;
-
         virtual void CreateShader(IRenderer *pRenderer, const wchar_t *pShaderName,
             ID3DBlob *pVertexShaderBlob, ID3DBlob *pPixelShaderBlob, IShaderInfo *pShaderInfo,
             IShader **ppShader) = 0;

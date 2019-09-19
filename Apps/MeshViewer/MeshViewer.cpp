@@ -29,7 +29,7 @@ void AddPointLight(Vector3 &lightPos)
     spLightElem->SetPosition(lightPos);
     Vector3 lightColor(1.0f, 1.0f, 1.0f);
     spLightElem->SetColor(lightColor);
-    spRenderWindow->GetSceneGraph()->AddChild(spLightElem.p);
+    spRenderWindow->GetSceneGraph()->AddChild(spLightElem);
 }
 
 void InitializeCaustic(HWND hwnd)
@@ -200,7 +200,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                             spMesh = Caustic::MeshImport::LoadObj(fn);
                         else if (StrCmpW(ext, L".ply") == 0)
                             spMesh = Caustic::MeshImport::LoadPLY(fn);
-                        spElem->SetMesh(spMesh.p);
+                        spElem->SetMesh(spMesh);
 
                         CRefObj<ISceneMaterialElem> spMaterialElem;
                         spSceneFactory->CreateMaterialElem(&spMaterialElem);
@@ -215,10 +215,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
                         CRefObj<IShader> spShader;
                         CShaderMgr::Instance()->FindShader(L"Default", &spShader);
-                        spMaterialElem->SetPixelShader(spShader.p);
+                        spMaterialElem->SetShader(spShader);
 
-                        spRenderWindow->GetSceneGraph()->AddChild(spMaterialElem.p);
-                        spMaterialElem->AddChild(spElem.p);
+                        spRenderWindow->GetSceneGraph()->AddChild(spMaterialElem);
+                        spMaterialElem->AddChild(spElem);
                     }
                 }
                 break;

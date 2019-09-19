@@ -490,8 +490,8 @@ while(*p)//        for (int i = 0; i < pPolylist->m_count; i++)
                     spXform->SetTransform(pNode->m_mat);
                     CRefObj<Caustic::IScenePointLightElem> spLight;
 					Caustic::CSceneFactory::Instance()->CreatePointLightElem(&spLight);
-                    spXform->AddChild(spLight.p);
-                    spSceneGraph->AddChild(spXform.p);
+                    spXform->AddChild(spLight);
+                    spSceneGraph->AddChild(spXform);
                 }
                 break;
             case Collada::c_NodeType_Geometry:
@@ -508,19 +508,19 @@ while(*p)//        for (int i = 0; i < pPolylist->m_count; i++)
                     CRefObj<IMeshConstructor> spMeshConstructor;
                     CreateMeshConstructor(&spMeshConstructor);
                     spMeshConstructor->MeshOpen();
-                    pGeometry->BuildMesh(spMeshConstructor.p);
+                    pGeometry->BuildMesh(spMeshConstructor);
                     spMeshConstructor->MeshClose(&spMesh);
-                    spMeshElem->SetMesh(spMesh.p);
+                    spMeshElem->SetMesh(spMesh);
 
-                    spXform->AddChild(spMeshElem.p);
-                    spSceneGraph->AddChild(spXform.p);
+                    spXform->AddChild(spMeshElem);
+                    spSceneGraph->AddChild(spXform);
                 }
                 break;
             }
             it++;
         }
 
-        *ppSceneGraph = spSceneGraph.p;
+        *ppSceneGraph = spSceneGraph;
         (*ppSceneGraph)->AddRef();
     }
 

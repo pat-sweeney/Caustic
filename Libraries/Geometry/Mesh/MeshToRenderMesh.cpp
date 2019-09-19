@@ -240,14 +240,19 @@ namespace Caustic
 	}
 
 	//**********************************************************************
-	// ToRenderSubMesh converts a CSubMesh object into a renderable form
+    // Method: ToRenderSubMesh
+	// Converts a CSubMesh object into a renderable form
+    //
+    // Parameters:
 	// pRenderer - Renderer
-	// pShaderInfo - shader info (used to access vertex layout)
+	// pShader - shader
 	// ppRenderSubMesh - returns the new submesh
 	//**********************************************************************
-	void CSubMesh::ToRenderSubMesh(IGraphics *pGraphics, IShader *pShader, IRenderSubMesh **ppRenderSubMesh)
+	void CSubMesh::ToRenderSubMesh(IRenderer *pRenderer, IShader *pShader, IRenderSubMesh **ppRenderSubMesh)
 	{
-		CRefObj<ICausticFactory> spFactory;
+        CRefObj<IGraphics> spGraphics;
+        pRenderer->GetGraphics(&spGraphics);
+        CRefObj<ICausticFactory> spFactory;
 		Caustic::CreateCausticFactory(&spFactory);
 		CRefObj<IRenderSubMesh> spRenderSubMesh;
 		spFactory->CreateRenderSubMesh(&spRenderSubMesh);
@@ -255,11 +260,51 @@ namespace Caustic
 		BuildReferencedVertexList(vertexReferenced);
 		CRefObj<IShaderInfo> spShaderInfo = pShader->GetShaderInfo();
         MeshData md;
-		BuildVertexBuffer(pGraphics, spShaderInfo, vertexReferenced, &md);
-		BuildIndexBuffer(pGraphics, vertexReferenced, &md);
+		BuildVertexBuffer(spGraphics, spShaderInfo, vertexReferenced, &md);
+		BuildIndexBuffer(spGraphics, vertexReferenced, &md);
         spRenderSubMesh->SetMeshData(md);
 		spRenderSubMesh->SetShader(pShader);
 		*ppRenderSubMesh = spRenderSubMesh;
 		(*ppRenderSubMesh)->AddRef();
 	}
+
+    //**********************************************************************
+    // Method: ToRenderMesh
+    // Converts a CMesh object into a renderable form
+    //
+    // Parameters:
+    // pRenderer - Renderer
+    // pShader - shader
+    // ppRenderMesh - returns the new mesh
+    //**********************************************************************
+    void CMesh::ToRenderMesh(IRenderer *pRenderer, IShader *pShader, IRenderMesh **ppRenderMesh)
+    {
+        CRefObj<ICausticFactory> spFactory;
+        CreateCausticFactory(&spFactory);
+        CRefObj<IRenderMesh> spRenderMesh;
+        spFactory->CreateRenderMesh(&spRenderMesh);
+        for (auto pSubMesh : m_subMeshes)
+        {
+            CRefObj<IRenderSubMesh> spRenderSubMesh;
+            pSubMesh->ToRenderSubMesh(pRenderer, pShader, &spRenderSubMesh);
+
+            // Assign appropriate materials
+            CRefObj<IMaterialAttrib> spMaterialAttrib;
+            this->GetMaterial(pSubMesh->GetMaterialID(), &spMaterialAttrib);
+
+            CRefObj<IRenderMaterial> spRenderMaterial;
+            spFactory->CreateRenderMaterial(pRenderer, spMaterialAttrib, pShader, &spRenderMaterial);
+
+            spRenderSubMesh->SetFrontMaterial(spRenderMaterial);
+
+            // TODO: Add support for back face materials (for now just use same
+            // material as front faces)
+            spRenderSubMesh->SetBackMaterial(spRenderMaterial);
+
+            spRenderMesh->AddSubMesh(spRenderSubMesh);
+        }
+        *ppRenderMesh = spRenderMesh;
+        (*ppRenderMesh)->AddRef();
+    }
+
 };
