@@ -16,9 +16,8 @@ namespace Caustic
     class CHalfEdge;
 
     //**********************************************************************
-    // \brief CSubMesh defines a submesh object
-    // 
-    // CSubMesh defines a submesh. A submesh is a child of a mesh object
+    // Class: CSubeMesh
+    // Defines a submesh. A submesh is a child of a mesh object
     // and contains the actual mesh data (collection of vertices and edges). 
     //**********************************************************************
     class CSubMesh : public ISubMesh, public CRefCount
@@ -116,9 +115,7 @@ namespace Caustic
 
     //**********************************************************************
     // Class: CMesh
-    // CMesh defines a mesh object
-    // 
-    // CMesh defines a mesh. A mesh object is simply a collection of submesh
+    // Defines a mesh. A mesh object is simply a collection of submesh
     // objects (ISubMesh). To convert this mesh into a renderable form the client
     // should call <MeshToD3D>.
     //**********************************************************************

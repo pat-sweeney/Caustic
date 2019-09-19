@@ -9,13 +9,16 @@
 namespace Caustic
 {
     //**********************************************************************
-    // \brief Creates a new IMaterialAttrib object
-    // @param [in] ambientColor Normalized [0..1] ambient color value
-    // @param [in] diffuseColor Normalized [0..1] diffse color value
-    // @param [in] specularColor Normalized [0..1] specular color value
-    // @param [in] specularExp Specular power value
-    // @param [in] alpha Alpha value
-    // @param [out] ppMaterial Returns the created material object
+    // Function: CreateMaterial
+    // Creates a new IMaterialAttrib object
+    //
+    // Parameters:
+    // ambientColor - Normalized [0..1] ambient color value
+    // diffuseColor - Normalized [0..1] diffse color value
+    // specularColor - Normalized [0..1] specular color value
+    // specularExp - Specular power value
+    // alpha - Alpha value
+    // ppMaterial - Returns the created material object
     //**********************************************************************
     CAUSTICAPI void CreateMaterial(Vector3 ambientColor, Vector3 diffuseColor, Vector3 specularColor, float specularExp, float alpha, IMaterialAttrib **ppMaterial)
     {
@@ -30,8 +33,11 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Creates a new empty IMaterial object
-    // @param [out] ppMaterial Returns the created material object
+    // Function: CreateMaterial
+    // Creates a new empty IMaterial object
+    //
+    // Parameters:
+    // ppMaterial - Returns the created material object
     //**********************************************************************
     CAUSTICAPI void CreateMaterial(IMaterialAttrib **ppMaterial)
     {
@@ -41,8 +47,11 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Loads an IMaterial object from the specified stream
-    // @param [in] pStream Stream to load from
+    // Method: Load
+    // Loads an IMaterial object from the specified stream
+    //
+    // Parameters:
+    // pStream - Stream to load from
     //**********************************************************************
     void CMaterial::Load(IStream *pStream)
     {
@@ -72,8 +81,11 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Stores an IMaterial object to the specified stream
-    // @param [in] pStream Stream to store to
+    // Method: Store
+    // Stores an IMaterial object to the specified stream
+    //
+    // Parameters:
+    // pStream - Stream to store to
     //**********************************************************************
     void CMaterial::Store(IStream *pStream)
     {
