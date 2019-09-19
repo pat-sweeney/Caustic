@@ -1,1 +1,0 @@
-NDFramePage.OnPageTitleLoaded("CClass:IRenderSubMesh","IRenderSubMesh");NDSummary.OnSummaryLoaded("CClass:IRenderSubMesh",[["C/C++","C"]],[["Interfaces","Interface"]],[[457,0,0,"IRenderSubMesh"]]);

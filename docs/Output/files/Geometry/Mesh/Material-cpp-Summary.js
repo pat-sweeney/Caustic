@@ -1,1 +1,0 @@
-NDFramePage.OnPageTitleLoaded("File:Geometry/Mesh/Material.cpp","Material.cpp");NDSummary.OnSummaryLoaded("File:Geometry/Mesh/Material.cpp",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"]],[[196,0,1,"Functions","Functions"],[197,0,0,"CreateMaterial","CreateMaterial"],[198,0,0,"CreateMaterial","CreateMaterial(2)"],[199,0,0,"Load","Load"],[200,0,0,"Store","Store"]]);

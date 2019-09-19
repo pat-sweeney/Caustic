@@ -1,0 +1,1 @@
+NDSummary.OnToolTipsLoaded("CClass:IShader",{478:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines the public interface for using CShader</div></div>"});

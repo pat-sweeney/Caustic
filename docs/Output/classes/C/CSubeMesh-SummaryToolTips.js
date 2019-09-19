@@ -1,1 +1,0 @@
-NDSummary.OnToolTipsLoaded("CClass:CSubeMesh",{203:"<div class=\"NDToolTip TClass LC\"><div class=\"TTSummary\">Defines a submesh. A submesh is a child of a mesh object and contains the actual mesh data (collection of vertices and edges).</div></div>"});

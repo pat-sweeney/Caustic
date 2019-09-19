@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:IShaderMgr","IShaderMgr");NDSummary.OnSummaryLoaded("CClass:IShaderMgr",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Interfaces","Interface"]],[[453,0,2,"IShaderMgr"],[454,0,1,"Functions","Functions"],[455,0,0,"FindShader","FindShader"],[456,0,0,"RegisterShader","RegisterShader"]]);

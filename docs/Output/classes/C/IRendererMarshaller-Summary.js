@@ -1,1 +1,0 @@
-NDFramePage.OnPageTitleLoaded("CClass:IRendererMarshaller","IRendererMarshaller");NDSummary.OnSummaryLoaded("CClass:IRendererMarshaller",[["C/C++","C"]],[["Interfaces","Interface"]],[[461,0,0,"IRendererMarshaller"]]);

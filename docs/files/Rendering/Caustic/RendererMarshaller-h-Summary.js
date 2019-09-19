@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/RendererMarshaller.h","RendererMarshaller.h");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/RendererMarshaller.h",[["C/C++","C"]],[["Classes","Class"],["Files","File"]],[[341,0,1,"RendererMarshaller.h","RendererMarshaller.h"],[342,0,0,"CRendererMarshaller","CRendererMarshaller"]]);

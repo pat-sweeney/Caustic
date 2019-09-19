@@ -83,7 +83,7 @@ Source Folder: ..\Libraries
 # Generated Documentation
 # ------------------------------------------------------------------------
 
-HTML Output Folder: Output
+HTML Output Folder: .
 
 
 # This is where you specify what kind of documentation you want Natural Docs

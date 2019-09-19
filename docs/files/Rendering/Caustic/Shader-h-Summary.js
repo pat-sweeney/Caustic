@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/Shader.h","Shader.h");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/Shader.h",[["C/C++","C"]],[["Classes","Class"],["Structs","Struct"]],[[337,0,1,"ShaderParamDef","ShaderParamDef"],[338,0,1,"ShaderParamInstance","ShaderParamInstance"],[339,0,0,"CShader","CShader"],[340,0,0,"CShaderMgr","CShaderMgr"]]);

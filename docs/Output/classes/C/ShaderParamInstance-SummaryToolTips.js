@@ -1,1 +1,0 @@
-NDSummary.OnToolTipsLoaded("CClass:ShaderParamInstance",{329:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">ShaderParamInstance defines each parameter that a shader exposes. These parameters are derived from the ShaderDefs above. This is servers copy of each parameter along with its value and position in the constant buffer.</div></div>"});

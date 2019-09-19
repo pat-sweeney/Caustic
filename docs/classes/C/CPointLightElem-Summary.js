@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:CPointLightElem","CPointLightElem");NDSummary.OnSummaryLoaded("CClass:CPointLightElem",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[586,0,0,"CPointLightElem"],[587,0,2,"Functions","Functions"],[588,0,1,"CPointLightElem","CPointLightElem"]]);

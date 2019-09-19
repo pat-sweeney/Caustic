@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/IRenderMesh.h","IRenderMesh.h");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/IRenderMesh.h",[["C/C++","C"]],[["Interfaces","Interface"]],[[491,0,0,"IRenderSubMesh","IRenderSubMesh"],[492,0,0,"IRenderMesh","IRenderMesh"]]);

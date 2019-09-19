@@ -1,1 +1,0 @@
-NDFramePage.OnPageTitleLoaded("CClass:IShader","IShader");NDSummary.OnSummaryLoaded("CClass:IShader",[["C/C++","C"]],[["Interfaces","Interface"]],[[433,0,0,"IShader"]]);

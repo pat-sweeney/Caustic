@@ -1,1 +1,0 @@
-NDSummary.OnToolTipsLoaded("CClass:CRenderable",{369:"<div class=\"NDToolTip TClass LC\"><div class=\"NDClassPrototype\" id=\"NDClassPrototype369\"><div class=\"CPEntry TClass Current\"><div class=\"CPName\">CRenderable</div></div></div><div class=\"TTSummary\">Implements IRenderable</div></div>"});

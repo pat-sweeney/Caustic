@@ -1,1 +1,0 @@
-NDFramePage.OnPageTitleLoaded("CClass:CBlockAllocator","CBlockAllocator");NDSummary.OnSummaryLoaded("CClass:CBlockAllocator",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[50,0,0,"CBlockAllocator"],[51,0,2,"Functions","Functions"],[52,0,1,"CBlockAllocator","CBlockAllocator"],[53,0,1,"Allocate","Allocate"],[54,0,1,"Free","Free"]]);

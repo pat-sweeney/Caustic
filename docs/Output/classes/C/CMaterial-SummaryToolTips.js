@@ -1,1 +1,0 @@
-NDSummary.OnToolTipsLoaded("CClass:CMaterial",{202:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines the basic material for a mesh</div></div>"});

@@ -1,0 +1,1 @@
+NDSummary.OnToolTipsLoaded("CClass:ISubMesh",{266:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">ISubMesh is used by clients for manipulating a submesh. A submesh contains actual mesh data. This is different from a mesh object which is just a collection of submesh objects.</div></div>"});

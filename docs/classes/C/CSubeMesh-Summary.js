@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:CSubeMesh","CSubeMesh");NDSummary.OnSummaryLoaded("CClass:CSubeMesh",[["C/C++","C"]],[["Classes","Class"]],[[207,0,0,"CSubeMesh"]]);

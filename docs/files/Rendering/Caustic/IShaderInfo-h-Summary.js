@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/IShaderInfo.h","IShaderInfo.h");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/IShaderInfo.h",[["C/C++","C"]],[["Interfaces","Interface"]],[[399,0,0,"IShaderInfo","IShaderInfo"]]);
