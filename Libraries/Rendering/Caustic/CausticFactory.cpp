@@ -24,7 +24,6 @@
 // Contains the methods used to implement the CCausticFactory object.
 //**********************************************************************
 
-// Namespace: Caustic
 namespace Caustic
 {
     CAUSTICAPI void CreateRenderer(HWND hwnd, std::wstring &shaderFolder, IRenderer **ppRenderer);
@@ -74,7 +73,7 @@ namespace Caustic
 
     //**********************************************************************
     // Method: ~CCausticFactory
-    // Implements the dtor for CCausticFactory
+    // Implements the dtor for <CCausticFactory>
     //**********************************************************************
     CCausticFactory::~CCausticFactory()
 	{
@@ -226,6 +225,10 @@ namespace Caustic
 		Caustic::LoadVideoTexture(pFilename, pGraphics, ppTexture);
 	}
 
+    //**********************************************************************
+    // Method: CreateShader
+    // See <ICausticFactory::CreateShader>
+    //**********************************************************************
     void CCausticFactory::CreateShader(IRenderer *pRenderer, const wchar_t *pShaderName,
         ID3DBlob *pVertexShaderBlob, ID3DBlob *pPixelShaderBlob, IShaderInfo *pShaderInfo,
         IShader **ppShader)
@@ -236,6 +239,10 @@ namespace Caustic
         (*ppShader)->AddRef();
     }
 
+    //**********************************************************************
+    // Method: CreateShaderInfo
+    // See <ICausticFactory::CreateShaderInfo>
+    //**********************************************************************
     void CCausticFactory::CreateShaderInfo(const wchar_t *pFilename, IShaderInfo **ppShaderInfo)
     {
         CShaderInfo *pShaderInfo = new CShaderInfo();

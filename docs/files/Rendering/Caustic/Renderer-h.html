@@ -8,9 +8,19 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="Renderer.h"></a><a name="Topic358"></a><div class="CTopic TFile LC first">
+<a name="Renderer.h"></a><a name="Topic382"></a><div class="CTopic TFile LC first">
  <div class="CTitle">Renderer.h</div>
- <div class="CBody"><p>Contains the declarations related to the CRenderer class.</p></div>
+ <div class="CBody"><p>Contains the declarations related to the CRenderer class which implements <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,494);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer</a></p></div>
+</div>
+
+<a name="Constants"></a><a name="Topic383"></a><div class="CTopic TGroup LC">
+ <div class="CTitle">Constants</div>
+ <div class="CBody"><table class="CDefinitionList"><tr><td class="CDLEntry">c_RenderCmd_DrawMesh</td><td class="CDLDefinition"><p>Command ID for rendering a mesh</p></td></tr><tr><td class="CDLEntry">c_RenderCmd_SetCamera</td><td class="CDLDefinition"><p>Command ID for setting the camera</p></td></tr></table></div>
+</div>
+
+<a name="Pass_Flags"></a><a name="Topic570"></a><div class="CTopic TGroup LC">
+ <div class="CTitle">Pass Flags</div>
+ <div class="CBody"><table class="CDefinitionList"><tr><td class="CDLEntry">c_PassFirst</td><td class="CDLDefinition"><p>first pass</p></td></tr><tr><td class="CDLEntry">c_PassObjID</td><td class="CDLDefinition"><p>renders pass writing object IDs to output texture</p></td></tr><tr><td class="CDLEntry">c_PassShadow</td><td class="CDLDefinition"><p>pass that renders shadow maps</p></td></tr><tr><td class="CDLEntry">c_PassOpaque</td><td class="CDLDefinition"><p>pass rendering the opaque objects</p></td></tr><tr><td class="CDLEntry">c_PassTransparent</td><td class="CDLDefinition"><p>pass rendering transparent objects</p></td></tr><tr><td class="CDLEntry">c_PassEnvironment</td><td class="CDLDefinition"><p>pass rendering environment maps</p></td></tr><tr><td class="CDLEntry">c_PassLast</td><td class="CDLDefinition"><p>last pass</p></td></tr><tr><td class="CDLEntry">c_PassAllPasses</td><td class="CDLDefinition"><p>combination of all the pass flags</p></td></tr></table></div>
 </div>
 
 <a name="CLineVertex"></a><a name="Topic359"></a><div class="CTopic TClass LC">
@@ -33,20 +43,20 @@
 
 <a name="CGraphicsBase"></a><a name="Topic362"></a><div class="CTopic TClass LC">
  <div class="CTitle">CGraphicsBase</div>
- <div class="NDClassPrototype HasParents HasChildren" id="NDClassPrototype362"><a class="CPEntry Parent TClass" href="../../../index.html#File:Base/Core/RefCount.h:CRefCount" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPModifiers"><span class="SHKeyword">public</span></div><div class="CPName">CRefCount</div></a><div class="CPEntry TClass Current"><div class="CPName">CGraphicsBase</div></div><a class="CPEntry Child TClass" href="../../../index.html#File:Rendering/Caustic/Renderer.h:CGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,363);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPName">CGraphics</div></a><a class="CPEntry Child TClass" href="../../../index.html#File:Rendering/Caustic/Renderer.h:CRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,364);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPName">CRenderer</div></a></div>
+ <div class="NDClassPrototype HasParents HasChildren" id="NDClassPrototype362"><a class="CPEntry Parent TClass" href="../../../index.html#File:Base/Core/RefCount.h:CRefCount" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPModifiers"><span class="SHKeyword">public</span></div><div class="CPName">CRefCount</div></a><div class="CPEntry TClass Current"><div class="CPName">CGraphicsBase</div></div><a class="CPEntry Child TClass" href="../../../index.html#File:Rendering/Caustic/Renderer.h:CGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,473);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPName">CGraphics</div></a><a class="CPEntry Child TClass" href="../../../index.html#File:Rendering/Caustic/Renderer.h:CRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,571);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPName">CRenderer</div></a></div>
  <div class="CBody"><p>Defines the data shared between our CGraphics and CRenderer objects</p></div>
 </div>
 
-<a name="CGraphics"></a><a name="Topic363"></a><div class="CTopic TClass LC">
+<a name="CGraphics"></a><a name="Topic473"></a><div class="CTopic TClass LC">
  <div class="CTitle">CGraphics</div>
- <div class="NDClassPrototype HasParents" id="NDClassPrototype363"><a class="CPEntry Parent TClass" href="../../../index.html#File:Rendering/Caustic/Renderer.h:CGraphicsBase" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,362);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPModifiers"><span class="SHKeyword">public</span></div><div class="CPName">CGraphicsBase</div></a><a class="CPEntry Parent TInterface" href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,494);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPModifiers"><span class="SHKeyword">public</span></div><div class="CPName">IGraphics</div></a><div class="CPEntry TClass Current"><div class="CPName">CGraphics</div></div></div>
- <div class="CBody"><p>Defines our basic rendering device. CGraphics differs from CRenderer in that it is essentially just a wrapper around our underlying graphics device. It does not support things such as a scene graph, complex lighting (list of lights), or HMD support. Also, all rendering occurs on whatever thread this object is created on (versus marshalling the rendering over to a render thread). For those features, use CRenderer.&nbsp; See <a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,494);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a></p></div>
+ <div class="NDClassPrototype HasParents" id="NDClassPrototype473"><a class="CPEntry Parent TClass" href="../../../index.html#File:Rendering/Caustic/Renderer.h:CGraphicsBase" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,362);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPModifiers"><span class="SHKeyword">public</span></div><div class="CPName">CGraphicsBase</div></a><a class="CPEntry Parent TInterface" href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,363);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPModifiers"><span class="SHKeyword">public</span></div><div class="CPName">IGraphics</div></a><div class="CPEntry TClass Current"><div class="CPName">CGraphics</div></div></div>
+ <div class="CBody"><p>See <a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,363);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a></p></div>
 </div>
 
-<a name="CRenderer"></a><a name="Topic364"></a><div class="CTopic TClass LC last">
+<a name="CRenderer"></a><a name="Topic571"></a><div class="CTopic TClass LC last">
  <div class="CTitle">CRenderer</div>
- <div class="NDClassPrototype HasParents" id="NDClassPrototype364"><a class="CPEntry Parent TClass" href="../../../index.html#File:Rendering/Caustic/Renderer.h:CGraphicsBase" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,362);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPModifiers"><span class="SHKeyword">public</span></div><div class="CPName">CGraphicsBase</div></a><a class="CPEntry Parent TInterface" href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,473);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPModifiers"><span class="SHKeyword">public</span></div><div class="CPName">IRenderer</div></a><div class="CPEntry TClass Current"><div class="CPName">CRenderer</div></div></div>
- <div class="CBody"><p>Defines our basic renderer. CRenderer handles all rendering commands.&nbsp; It is generally expected that this object is running on its own thread.&nbsp; See <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,473);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer</a></p></div>
+ <div class="NDClassPrototype HasParents" id="NDClassPrototype571"><a class="CPEntry Parent TClass" href="../../../index.html#File:Rendering/Caustic/Renderer.h:CGraphicsBase" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,362);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPModifiers"><span class="SHKeyword">public</span></div><div class="CPName">CGraphicsBase</div></a><a class="CPEntry Parent TInterface" href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,494);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPModifiers"><span class="SHKeyword">public</span></div><div class="CPName">IRenderer</div></a><div class="CPEntry TClass Current"><div class="CPName">CRenderer</div></div></div>
+ <div class="CBody"><p>See <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,494);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer</a></p></div>
 </div>
 
 </body></html>

@@ -4,11 +4,6 @@
 //**********************************************************************
 #pragma once
 
-//**********************************************************************
-// File: ICausticFactory.h
-// Primary interface through which clients talk to the Caustic factory.
-//**********************************************************************
-
 #include "Base\Core\Core.h"
 #include "Base\Math\Vector.h"
 #include "Geometry\Mesh\Mesh.h"
@@ -20,7 +15,11 @@
 #include <vector>
 #include <any>
 
-// Namespace: Caustic
+//**********************************************************************
+// File: ICausticFactory.h
+// Primary interface through which clients talk to the Caustic factory.
+//**********************************************************************
+
 namespace Caustic
 {
 	//**********************************************************************
@@ -193,9 +192,30 @@ namespace Caustic
 		//**********************************************************************
 		virtual void LoadVideoTexture(const wchar_t *pFilename, IGraphics *pGraphics, ITexture **ppTexture) = 0;
 
+        //**********************************************************************
+        // Method: CreateShader
+        // Creates a shader
+        //
+        // Parameters:
+        // pRenderer - renderer
+        // pShaderName - name of shader
+        // pVertexShaderBlob - blob containing the compiled vertex shader
+        // pPixelShaderBlob - blob containing the compiled pixel shader
+        // pShaderInfo - info about the shader (from the .shi file produced by ParseShader)
+        // ppShader - Returns the created shader
+        //**********************************************************************
         virtual void CreateShader(IRenderer *pRenderer, const wchar_t *pShaderName,
             ID3DBlob *pVertexShaderBlob, ID3DBlob *pPixelShaderBlob, IShaderInfo *pShaderInfo,
             IShader **ppShader) = 0;
+
+        //**********************************************************************
+        // Method: CreateShaderInfo
+        // Loads the shader info associated with a shader
+        //
+        // Parameters:
+        // pFilename - path to .shi file
+        // ppShaderInfo - Returns the loaded shader info
+        //**********************************************************************
         virtual void CreateShaderInfo(const wchar_t *pFilename, IShaderInfo **ppShaderInfo) = 0;
     };
 

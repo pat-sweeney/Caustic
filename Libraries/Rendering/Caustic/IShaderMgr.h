@@ -9,12 +9,11 @@
 #include "Rendering\Caustic\IShader.h"
 
 //**********************************************************************
-// File: Caustic.h
-// This file defines the published interface for talking to the Caustic Renderer.
-// This include is usually the top level include that clients will use.
+// File: IShaderMgr.h
+// This file defines the published interface for shader manager.
+// Each shader in use by the system is registered with this manager.
 //**********************************************************************
 
-// Namespace: Caustic
 namespace Caustic
 {
     //**********************************************************************

@@ -8,9 +8,14 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="IMaterialAttrib"></a><a name="Topic230"></a><div class="CTopic TInterface LC first">
+<a name="IMesh.h"></a><a name="Topic230"></a><div class="CTopic TFile LC first">
+ <div class="CTitle">IMesh.h</div>
+ <div class="CBody"><p>Defines interface for mesh.</p></div>
+</div>
+
+<a name="IMaterialAttrib"></a><a name="Topic468"></a><div class="CTopic TInterface LC">
  <div class="CTitle">IMaterialAttrib</div>
- <div class="CBody"><p>IMaterial is used for manipulating the materials assigned to a mesh.&nbsp; Each ISubMesh may have a single material assigned to it.</p></div>
+ <div class="CBody"><p>Used for manipulating the materials assigned to a mesh.</p></div>
 </div>
 
 <a name="IMaterialAttrib.Functions"></a><a name="Topic231"></a><div class="CTopic TGroup LC">
@@ -135,10 +140,10 @@
  <div class="CBody"><p>Defines a vertex data relative to a given face.&nbsp; See <a href="../../../index.html#File:Geometry/Mesh/IMesh.h:CGeomVertex" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,250);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CGeomVertex</a> for further information.</p></div>
 </div>
 
-<a name="CHalfEdge"></a><a name="Topic252"></a><div class="CTopic TClass LC">
+<a name="CHalfEdge"></a><a name="Topic707"></a><div class="CTopic TClass LC">
  <div class="CTitle">CHalfEdge</div>
- <div class="NDClassPrototype" id="NDClassPrototype252"><div class="CPEntry TClass Current"><div class="CPName">CHalfEdge</div></div></div>
- <div class="CBody"><p>Defines a single half edge on our graph</p></div>
+ <div class="NDClassPrototype" id="NDClassPrototype707"><div class="CPEntry TClass Current"><div class="CPName">CHalfEdge</div></div></div>
+ <div class="CBody"><p>Defines a single half edge on our graph</p><div class="CHeading">Members</div><table class="CDefinitionList"><tr><td class="CDLEntry">m_pNext</td><td class="CDLDefinition"><p>Next half edge in edge loop</p></td></tr><tr><td class="CDLEntry">m_pPrev</td><td class="CDLDefinition"><p>Previous half edge in edge loop</p></td></tr><tr><td class="CDLEntry">m_pOpposite</td><td class="CDLDefinition"><p>Opposite half edge</p></td></tr><tr><td class="CDLEntry">m_pVertex</td><td class="CDLDefinition"><p>Vertex at head of edge</p></td></tr><tr><td class="CDLEntry">m_pFace</td><td class="CDLDefinition"><p>Face to the left of edge</p></td></tr><tr><td class="CDLEntry">m_smoothingGroup</td><td class="CDLDefinition"><p>Smoothing group this edge belongs to index -</p></td></tr></table></div>
 </div>
 
 <a name="CHalfEdge.Functions"></a><a name="Topic253"></a><div class="CTopic TGroup LC">
@@ -147,19 +152,19 @@
 
 <a name="CHalfEdge.GetNextEdge"></a><a name="Topic254"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetNextEdge</div>
- <div id="NDPrototype254" class="NDPrototype NoParameterForm"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:CHalfEdge" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,252);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CHalfEdge</a> *GetNextEdge()</div>
+ <div id="NDPrototype254" class="NDPrototype NoParameterForm"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:CHalfEdge" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,707);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CHalfEdge</a> *GetNextEdge()</div>
  <div class="CBody"><p>Returns the next edge in our edge loop</p></div>
 </div>
 
 <a name="CHalfEdge.GetPrevEdge"></a><a name="Topic255"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetPrevEdge</div>
- <div id="NDPrototype255" class="NDPrototype NoParameterForm"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:CHalfEdge" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,252);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CHalfEdge</a> *GetPrevEdge()</div>
+ <div id="NDPrototype255" class="NDPrototype NoParameterForm"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:CHalfEdge" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,707);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CHalfEdge</a> *GetPrevEdge()</div>
  <div class="CBody"><p>Returns the previous edge in our edge loop</p></div>
 </div>
 
 <a name="CHalfEdge.GetOppositeEdge"></a><a name="Topic256"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetOppositeEdge</div>
- <div id="NDPrototype256" class="NDPrototype NoParameterForm"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:CHalfEdge" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,252);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CHalfEdge</a> *GetOppositeEdge()</div>
+ <div id="NDPrototype256" class="NDPrototype NoParameterForm"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:CHalfEdge" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,707);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CHalfEdge</a> *GetOppositeEdge()</div>
  <div class="CBody"><p>Returns the half edge opposite to the current edge</p></div>
 </div>
 
@@ -193,7 +198,7 @@
  <div class="CBody"><p>Defines a face in our CMesh</p></div>
 </div>
 
-<a name="CFace.Types"></a><a name="Topic262"></a><div class="CTopic TGroup LC">
+<a name="CFace.Types"></a><a name="Topic265"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Types</div>
 </div>
 
@@ -207,14 +212,25 @@
  <div class="CBody"><p>Defines the method used for converting a polygonal mesh into a trianglar mesh.</p></div>
 </div>
 
-<a name="CFace.EMeshFlags"></a><a name="Topic265"></a><div class="CTopic TEnumeration LC">
+<a name="EMeshFlags"></a><a name="Topic262"></a><div class="CTopic TClass LC">
  <div class="CTitle">EMeshFlags</div>
- <div class="CBody"><p>Defines various flags associated with an ISubMesh</p></div>
+ <div class="NDClassPrototype" id="NDClassPrototype262"><div class="CPEntry TClass Current"><div class="CPModifiers"><span class="SHKeyword">enum</span> </div><div class="CPName">EMeshFlags</div></div></div>
+ <div class="CBody"><p>Defines various flags associated with an ISubMesh</p><table class="CDefinitionList"><tr><td class="CDLEntry">TwoSided</td><td class="CDLDefinition"><p>Mesh is considered to be two sided</p></td></tr></table></div>
 </div>
 
-<a name="ISubMesh"></a><a name="Topic266"></a><div class="CTopic TInterface LC">
+<a name="ISubMesh"></a><a name="Topic677"></a><div class="CTopic TInterface LC">
  <div class="CTitle">ISubMesh</div>
  <div class="CBody"><p>ISubMesh is used by clients for manipulating a submesh. A submesh contains actual mesh data. This is different from a mesh object which is just a collection of submesh objects.</p></div>
+</div>
+
+<a name="ISubMesh.Functions"></a><a name="Topic678"></a><div class="CTopic TGroup LC">
+ <div class="CTitle">Functions</div>
+</div>
+
+<a name="ISubMesh.Normalize"></a><a name="Topic681"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">Normalize</div>
+ <div id="NDPrototype681" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> Normalize(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><a href="../../../index.html#File:Base/Math/BBox.h:BBox3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,142);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >BBox3</a>&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">bbox</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Rescales a mesh so fits inside a -0.5..+0.5 bounding box</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">bbox<div class="CDLParameterType"><span class="SHKeyword">const</span> <a href="../../../index.html#File:Base/Math/BBox.h:BBox3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,142);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >BBox3</a>&amp;</div></td><td class="CDLDefinition"><p>Bounding box of the mesh</p></td></tr></table></div>
 </div>
 
 <a name="IMesh"></a><a name="Topic267"></a><div class="CTopic TInterface LC last">

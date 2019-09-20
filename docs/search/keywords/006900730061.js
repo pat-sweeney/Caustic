@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("isa",["Interface"],[["ISampler",,[[,,,,0,"File:Rendering/Caustic/ISampler.h:ISampler","CClass:ISampler"]]]]);
+NDSearch.OnPrefixDataLoaded("isa",["Interface","File"],[["ISampler",,[[,,,,0,"File:Rendering/Caustic/ISampler.h:ISampler","CClass:ISampler"],[,"ISampler.h",,,1,"File:Rendering/Caustic/ISampler.h:ISampler.h"]]]]);

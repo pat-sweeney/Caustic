@@ -16,7 +16,7 @@ namespace Caustic
     class CHalfEdge;
 
     //**********************************************************************
-    // Class: CSubeMesh
+    // Class: CSubMesh
     // Defines a submesh. A submesh is a child of a mesh object
     // and contains the actual mesh data (collection of vertices and edges). 
     //**********************************************************************
@@ -98,11 +98,26 @@ namespace Caustic
         virtual uint32 GetMaterialID() override { return m_materialID; }
         virtual void SetMaterialID(uint32 materialID) override { m_materialID = materialID; }
         virtual const BBox3 &GetBBox() override { return m_bbox; }
+
+        //**********************************************************************
+        // Method: Normalize
+        // See <ISubMesh::Normalize>
+        //**********************************************************************
         virtual void Normalize(const BBox3 &bbox) override;
+
         virtual void ComputeNormals() override;
         virtual uint32 VertexToIndex(CGeomVertex *pVertex) override;
         virtual uint32 FaceToIndex(CFace *pFace) override;
         virtual uint32 EdgeToIndex(CHalfEdge *pEdge) override;
+
+        //**********************************************************************
+        // Method: Triangulate
+        // Converts a mesh from arbitrary polygons into
+        // a triangulated mesh.
+        //
+        // Parameters:
+        // method - method to use for triangulation
+        //**********************************************************************
         virtual void Triangulate(ETriangulateMethod method) override;
         virtual void ToRenderSubMesh(IRenderer *pRenderer, IShader *pShader, IRenderSubMesh **ppRenderSubMesh) override;
 

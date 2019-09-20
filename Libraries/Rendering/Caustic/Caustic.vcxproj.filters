@@ -139,16 +139,15 @@
     <ClInclude Include="RenderMesh.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Renderable.h" />
+    <ClInclude Include="Renderable.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MeshToVB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Shader.cpp">

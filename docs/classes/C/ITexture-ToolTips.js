@@ -1,1 +1,1 @@
-NDContentPage.OnToolTipsLoaded({494:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines a simple wrapper around our D3D renderer</div></div>"});
+NDContentPage.OnToolTipsLoaded({363:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines our basic rendering device.</div></div>"});

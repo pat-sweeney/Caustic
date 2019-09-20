@@ -8,8 +8,21 @@
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\PointLight.h"
 
+//**********************************************************************
+// File: PointLight.cpp
+// Contains implementation of <IPointLight>
+//**********************************************************************
+
 namespace Caustic
 {
+    //**********************************************************************
+    // Function: CreatePointLight
+    // Creates a point light
+    //
+    // Parameters:
+    // pos - position in world coordinates for the light
+    // ppLight - Returns the created point light
+    //**********************************************************************
     CAUSTICAPI void CreatePointLight(Vector3 &pos, IPointLight **ppLight)
     {
         std::unique_ptr<CPointLight> spPointLight(new CPointLight());

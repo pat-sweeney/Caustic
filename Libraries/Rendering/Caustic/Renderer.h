@@ -17,11 +17,27 @@
 
 //**********************************************************************
 // File: Renderer.h
-// Contains the declarations related to the CRenderer class.
+// Contains the declarations related to the CRenderer class which implements <IRenderer>
 //**********************************************************************
 
 namespace Caustic
 {
+    //**********************************************************************
+    // Group: Constants
+    // c_RenderCmd_DrawMesh - Command ID for rendering a mesh
+    // c_RenderCmd_SetCamera  - Command ID for setting the camera
+    //
+    // Group: Pass Flags
+    // c_PassFirst - first pass
+    // c_PassObjID - renders pass writing object IDs to output texture
+    // c_PassShadow - pass that renders shadow maps
+    // c_PassOpaque - pass rendering the opaque objects
+    // c_PassTransparent - pass rendering transparent objects
+    // c_PassEnvironment - pass rendering environment maps
+    // c_PassLast - last pass
+    // c_PassAllPasses - combination of all the pass flags
+    //**********************************************************************
+
     const int c_RenderCmd_DrawMesh = 0; // Command ID for rendering a mesh
     const int c_RenderCmd_SetCamera = 1; // Command ID for setting the camera
 
@@ -127,12 +143,6 @@ namespace Caustic
 
     //**********************************************************************
     // Class: CGraphics
-    // Defines our basic rendering device. CGraphics differs from CRenderer
-    // in that it is essentially just a wrapper around our underlying graphics
-    // device. It does not support things such as a scene graph, complex lighting
-    // (list of lights), or HMD support. Also, all rendering occurs on whatever
-    // thread this object is created on (versus marshalling the rendering over
-    // to a render thread). For those features, use CRenderer.
     // See <IGraphics>
     //**********************************************************************
     class CGraphics : public CGraphicsBase, public IGraphics
@@ -155,8 +165,6 @@ namespace Caustic
 
     //**********************************************************************
     // Class: CRenderer
-    // Defines our basic renderer. CRenderer handles all rendering commands.
-    // It is generally expected that this object is running on its own thread.
     // See <IRenderer>
     //**********************************************************************
     class CRenderer : 

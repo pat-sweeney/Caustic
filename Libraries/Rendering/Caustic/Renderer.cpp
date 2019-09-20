@@ -25,8 +25,7 @@
 namespace Caustic
 {
     //**********************************************************************
-    // Method: CRenderer
-    // Constructor
+    // Constructor: CRenderer
     //**********************************************************************
     CRenderer::CRenderer() :
         m_waitForShutdown(false, true),
@@ -35,8 +34,7 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // Method: ~CRenderer
-    // Destructor
+    // Destructor: ~CRenderer
     //**********************************************************************
     CRenderer::~CRenderer()
     {
@@ -48,6 +46,7 @@ namespace Caustic
     // Method: InitializeD3D
     // Initializes the server side renderer. Clients should call this method indirectly (via <IRenderer::Setup>)
     // at application startup.
+    //
     // Parameters:
     // hwnd - HWND to use for drawing
     //**********************************************************************
@@ -242,14 +241,7 @@ namespace Caustic
 
     //**********************************************************************
     // Method: DrawMesh
-    // Draws the specified mesh.
-    //
-    // Parameters:
-    // pMesh - Mesh to render
-    // pMaterial - Material definition for mesh (maybe nullptr)
-    // pTexture - Texture to use when rendering (maybe nullptr)
-    // pShader - Shader to use when rendering (maybe nullptr)
-    // mat - Transformation matrix to apply to mesh
+    // See <IRenderer::DrawMesh>
     //**********************************************************************
     void CRenderer::DrawMesh(IRenderSubMesh *pSubMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat)
     {
@@ -267,11 +259,17 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Method: AddPointLight
+    // See <IRenderer::AddPointLight>
+    //**********************************************************************
     void CRenderer::AddPointLight(IPointLight *pLight)
     {
         m_lights.push_back(CRefObj<IPointLight>(pLight));
     }
 
+    //**********************************************************************
+    // Method: GetRenderCtx
+    // See <IRenderer::GetRenderCtx>
     //**********************************************************************
     void CRenderer::GetRenderCtx(IRenderCtx **ppCtx)
     {
@@ -280,6 +278,10 @@ namespace Caustic
             (*ppCtx)->AddRef();
     }
 
+    //**********************************************************************
+    // Method: DrawInfinitePlane
+    // See <IRenderer::DrawInfinitePlane>
+    //**********************************************************************
     void CRenderer::DrawInfinitePlane()
     {
 #ifdef SUPPORT_FULLQUAD
@@ -307,6 +309,10 @@ namespace Caustic
 #endif // SUPPORT_FULLQUAD
     }
 
+    //**********************************************************************
+    // Method: DrawLine
+    // See <IRenderer::DrawLine>
+    //**********************************************************************
     void CRenderer::DrawLine(Vector3 p1, Vector3 p2, Vector4 clr)
     {
         UINT offset = 0;
@@ -328,17 +334,34 @@ namespace Caustic
         m_spLineShader->EndRender(this);
     }
 
+    //**********************************************************************
+    // Method: SetSceneGraph
+    // See <IRenderer::SetSceneGraph>
+    //**********************************************************************
     void CRenderer::SetSceneGraph(ISceneGraph *pSceneGraph)
     {
         m_spSceneGraph = pSceneGraph;
     }
 
+    //**********************************************************************
+    // Method: GetGraphics
+    // See <IRenderer::GetGraphics>
+    //**********************************************************************
     void CRenderer::GetGraphics(IGraphics **ppGraphics)
     {
         *ppGraphics = this;
         (*ppGraphics)->AddRef();
     }
 
+    //**********************************************************************
+    // Method: DrawSceneObjects
+    // Renders the scene graph currently set on the renderer.
+    //
+    // TODO: This method is obsolete and will be going away.
+    //
+    // Parameters:
+    // pass - which pass are we rendering
+    //**********************************************************************
     void CRenderer::DrawSceneObjects(int pass)
     {
         if (m_spSceneGraph)
@@ -356,6 +379,11 @@ namespace Caustic
         }
     }
 
+    //**********************************************************************
+    // Method: RenderScene
+    // Renders current scene (both scene graph and any renderables currently
+    // attached to the renderer)
+    //**********************************************************************
     void CRenderer::RenderScene()
     {
         DrawInfinitePlane();
@@ -445,7 +473,7 @@ namespace Caustic
 
     //**********************************************************************
     // Method: RenderFrame
-    // Typically called from the render loop to render the next frame.
+    // See <IRenderer::RenderFrame>
     //**********************************************************************
     void CRenderer::RenderFrame()
     {
@@ -472,7 +500,7 @@ namespace Caustic
 
     //**********************************************************************
     // Method: RenderLoop
-    // Main rendering loop
+    // See <IRenderer::RenderLoop>
     //**********************************************************************
     void CRenderer::RenderLoop()
     {
@@ -483,6 +511,14 @@ namespace Caustic
         m_waitForShutdown.Set();
     }
 
+    //**********************************************************************
+    // Function: CreateGraphics
+    // Creates a graphics device bound to the specified window
+    //
+    // Parameters:
+    // hwnd - window to attach renderer to
+    // ppGraphics - Returns the created device
+    //**********************************************************************
     CAUSTICAPI void CreateGraphics(HWND hwnd, IGraphics **ppGraphics)
     {
         _ASSERT(ppGraphics);
@@ -497,6 +533,15 @@ namespace Caustic
         (*ppGraphics)->AddRef();
     }
 
+    //**********************************************************************
+    // Function: CreateRenderer
+    // Creates a renderer
+    //
+    // Parameters:
+    // hwnd - window to attach renderer to
+    // shaderFolder - path to directory containing shaders
+    // ppRenderer - Returns the created renderer
+    //**********************************************************************
     CAUSTICAPI void CreateRenderer(HWND hwnd, std::wstring &shaderFolder, IRenderer **ppRenderer)
     {
         _ASSERT(ppRenderer);

@@ -12,12 +12,15 @@
 #include <vector>
 
 //**********************************************************************
-// File: Caustic.h
-// This file defines the published interface for talking to the Caustic Renderer.
-// This include is usually the top level include that clients will use.
+// File: IRenderable.h
+// This file defines the published interface for renderables.
+// A Renderable is an mesh, front and back materials, and a shader. The renderer
+// keeps a simple list of these objects which are rendered at each call
+// to <IRenderer::RenderFrame>. The purpose of this object is to allow
+// the renderer to render a set of objects without forcing the client
+// to maintain an entire scene graph.
 //**********************************************************************
 
-// Namespace: Caustic
 namespace Caustic
 {
     struct IGraphics;

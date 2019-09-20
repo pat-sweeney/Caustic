@@ -8,9 +8,61 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="Topic478"></a><div class="CTopic TInterface LC first">
+<a name="Topic727"></a><div class="CTopic TInterface LC first">
  <div class="CTitle">IShader</div>
- <div class="CBody"><p>Defines the public interface for using CShader</p></div>
+ <div class="CBody"><p>Defines the public interface for using <a href="../../index.html#CClass:CShader" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,339);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CShader</a></p></div>
+</div>
+
+<a name="Functions"></a><a name="Topic419"></a><div class="CTopic TGroup LC">
+ <div class="CTitle">Functions</div>
+</div>
+
+<a name="Name"></a><a name="Topic422"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">Name</div>
+ <div id="NDPrototype422" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> std::wstring &amp;Name() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><div class="CHeading">Returns</div><p>Name of shader</p></div>
+</div>
+
+<a name="BeginRender"></a><a name="Topic516"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">BeginRender</div>
+ <div id="NDPrototype516" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> BeginRender(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="first"></td><td class="PType"><a href="../../index.html#CClass:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,363);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pGraphics,</td></tr><tr><td class="first"></td><td class="PType"><a href="../../index.html#CClass:IRenderMaterial" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,470);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderMaterial</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pFrontMaterial,</td></tr><tr><td class="first"></td><td class="PType"><a href="../../index.html#CClass:IRenderMaterial" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,470);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderMaterial</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pBackMaterial,</td></tr><tr><td class="PModifierQualifier first">std::</td><td class="PType">vector&lt;<a href="../../index.html#CClass:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,38);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../index.html#CClass:IPointLight" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,481);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IPointLight</a>&gt;&gt;&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">lights,</td></tr><tr><td class="PModifierQualifier first">DirectX::</td><td class="PType">XMMATRIX&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pWorld</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Starts rendering.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pGraphics<div class="CDLParameterType"><a href="../../index.html#CClass:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,363);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>*</div></td><td class="CDLDefinition"><p>graphics device</p></td></tr><tr><td class="CDLEntry">pFrontMaterial<div class="CDLParameterType"><a href="../../index.html#CClass:IRenderMaterial" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,470);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderMaterial</a>*</div></td><td class="CDLDefinition"><p>material to use for front faces</p></td></tr><tr><td class="CDLEntry">pBackMaterial<div class="CDLParameterType"><a href="../../index.html#CClass:IRenderMaterial" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,470);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderMaterial</a>*</div></td><td class="CDLDefinition"><p>material to use for back faces</p></td></tr><tr><td class="CDLEntry">lights<div class="CDLParameterType">std::vector&lt;<a href="../../index.html#CClass:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,38);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../index.html#CClass:IPointLight" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,481);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IPointLight</a>&gt;&gt;&amp;</div></td><td class="CDLDefinition"><p>list of lights to use</p></td></tr><tr><td class="CDLEntry">pWorld<div class="CDLParameterType">DirectX::XMMATRIX*</div></td><td class="CDLDefinition"><p>matrix to apply</p></td></tr></table></div>
+</div>
+
+<a name="SetPSParam"></a><a name="Topic696"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">SetPSParam</div>
+ <div id="NDPrototype696" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetPSParam(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first">std::</td><td class="PType">wstring&nbsp;</td><td></td><td class="PName last">paramName,</td></tr><tr><td class="PModifierQualifier first">std::</td><td class="PType">any&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">value</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Sets a pixel shader parameter</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">paramName<div class="CDLParameterType">std::wstring</div></td><td class="CDLDefinition"><p>name of parameter</p></td></tr><tr><td class="CDLEntry">value<div class="CDLParameterType">std::any&amp;</div></td><td class="CDLDefinition"><p>value to set</p></td></tr></table></div>
+</div>
+
+<a name="SetVSParam"></a><a name="Topic698"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">SetVSParam</div>
+ <div id="NDPrototype698" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetVSParam(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first">std::</td><td class="PType">wstring&nbsp;</td><td></td><td class="PName last">paramName,</td></tr><tr><td class="PModifierQualifier first">std::</td><td class="PType">any&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">value</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Sets a vertex shader parameter</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">paramName<div class="CDLParameterType">std::wstring</div></td><td class="CDLDefinition"><p>name of parameter</p></td></tr><tr><td class="CDLEntry">value<div class="CDLParameterType">std::any&amp;</div></td><td class="CDLDefinition"><p>value to set</p></td></tr></table></div>
+</div>
+
+<a name="SetPSParam(2)"></a><a name="Topic716"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">SetPSParam</div>
+ <div id="NDPrototype716" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetPSParam(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first">std::</td><td class="PType">wstring&nbsp;</td><td></td><td class="PName last">paramName,</td></tr><tr><td class="first"></td><td class="PType"><span class="SHKeyword">int</span>&nbsp;</td><td></td><td class="PName last">index,</td></tr><tr><td class="PModifierQualifier first">std::</td><td class="PType">any&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">value</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Sets a pixel shader parameter that is part of an array</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">paramName<div class="CDLParameterType">std::wstring</div></td><td class="CDLDefinition"><p>name of parameter</p></td></tr><tr><td class="CDLEntry">index<div class="CDLParameterType"><span class="SHKeyword">int</span></div></td><td class="CDLDefinition"><p>array index to set</p></td></tr><tr><td class="CDLEntry">value<div class="CDLParameterType">std::any&amp;</div></td><td class="CDLDefinition"><p>value to set</p></td></tr></table></div>
+</div>
+
+<a name="SetVSParam(2)"></a><a name="Topic717"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">SetVSParam</div>
+ <div id="NDPrototype717" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetVSParam(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first">std::</td><td class="PType">wstring&nbsp;</td><td></td><td class="PName last">paramName,</td></tr><tr><td class="first"></td><td class="PType"><span class="SHKeyword">int</span>&nbsp;</td><td></td><td class="PName last">index,</td></tr><tr><td class="PModifierQualifier first">std::</td><td class="PType">any&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">value</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Sets a vertex shader parameter that is part of an array</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">paramName<div class="CDLParameterType">std::wstring</div></td><td class="CDLDefinition"><p>name of parameter</p></td></tr><tr><td class="CDLEntry">index<div class="CDLParameterType"><span class="SHKeyword">int</span></div></td><td class="CDLDefinition"><p>array index to set</p></td></tr><tr><td class="CDLEntry">value<div class="CDLParameterType">std::any&amp;</div></td><td class="CDLDefinition"><p>value to set</p></td></tr></table></div>
+</div>
+
+<a name="EndRender"></a><a name="Topic718"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">EndRender</div>
+ <div id="NDPrototype718" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> EndRender(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,363);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pGraphics</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Ends rendering. Called after the rendering using the shader has completed.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pGraphics<div class="CDLParameterType"><a href="../../index.html#CClass:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,363);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>*</div></td><td class="CDLDefinition"><p>graphics device</p></td></tr></table></div>
+</div>
+
+<a name="GetShaderInfo"></a><a name="Topic719"></a><div class="CTopic TFunction LC last">
+ <div class="CTitle">GetShaderInfo</div>
+ <div id="NDPrototype719" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <a href="../../index.html#CClass:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,38);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../index.html#CClass:IShaderInfo" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,399);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IShaderInfo</a>&gt; GetShaderInfo() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><div class="CHeading">Returns</div><p>Returns the shader info associated with the shader</p></div>
 </div>
 
 </body></html>

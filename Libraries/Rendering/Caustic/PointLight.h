@@ -7,6 +7,11 @@
 #include "Rendering\Caustic\Caustic.h"
 #include "Base\Core\RefCount.h"
 
+//**********************************************************************
+// File: PointLight.h
+// Contains declaration for CPointLight
+//**********************************************************************
+
 namespace Caustic
 {
     class CPointLight : public IPointLight, public CRefCount

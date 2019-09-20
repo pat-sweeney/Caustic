@@ -3,11 +3,17 @@
 // All Rights Reserved
 //**********************************************************************
 #pragma once
+
 #include <d3d11.h>
 #include <atlbase.h>
 #include "Base\Core\Core.h"
 #include "Base\Core\IRefCount.h"
 #include "Base\Math\BBox.h"
+
+//**********************************************************************
+// File: IGraphics.h
+// Primary interface for talking to the graphics device
+//**********************************************************************
 
 namespace Caustic
 {
@@ -43,13 +49,45 @@ namespace Caustic
 
     //**********************************************************************
     // Interface: IGraphics
-	// Defines a simple wrapper around our D3D renderer
+    // Defines our basic rendering device.
+    //
+    // <IGraphics> differs from <IRenderer>
+    // in that it is essentially just a wrapper around our underlying graphics
+    // device. It does not support things such as a scene graph, complex lighting
+    // (list of lights), or HMD support. Also, all rendering occurs on whatever
+    // thread this object is created on (versus marshalling the rendering over
+    // to a render thread). For those features, use <IRenderer>.
     //**********************************************************************
     struct IGraphics : public IRefCount
     {
+        //**********************************************************************
+        // Method: GetDevice
+        // Returns:
+        // The underlying D3D11 device
+        //**********************************************************************
         virtual CComPtr<ID3D11Device> GetDevice() = 0;
+
+        //**********************************************************************
+        // Method: GetContext
+        // Returns:
+        // The underlying D3D11 device context
+        //**********************************************************************
         virtual CComPtr<ID3D11DeviceContext> GetContext() = 0;
+
+        //**********************************************************************
+        // Method: GetCamera
+        // Returns:
+        // The camera associated with this device
+        //**********************************************************************
         virtual CRefObj<ICamera> GetCamera() = 0;
+
+        //**********************************************************************
+        // Method: SetCamera
+        // Sets the camera associated with this device
+        //
+        // Parameters:
+        // pCamera - camera
+        //**********************************************************************
         virtual void SetCamera(ICamera *pCamera) = 0;
     };
 };

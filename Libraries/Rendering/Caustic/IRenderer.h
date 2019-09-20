@@ -13,12 +13,10 @@
 #include "Rendering\Caustic\IShader.h"
 
 //**********************************************************************
-// File: Caustic.h
-// This file defines the published interface for talking to the Caustic Renderer.
-// This include is usually the top level include that clients will use.
+// File: IRenderer.h
+// This file defines the published interface for the renderer.
 //**********************************************************************
 
-// Namespace: Caustic
 namespace Caustic
 {
     struct ISceneGraph;
@@ -26,7 +24,8 @@ namespace Caustic
 
     //**********************************************************************
     // Interface: IRenderer 
-    // Defines the interface clients use to talk to the renderer
+    // Defines our basic renderer. IRenderer handles all rendering commands.
+    // It is generally expected that this object is running on its own thread.
     //**********************************************************************
     struct IRenderer : public IGraphics
     {
@@ -40,14 +39,94 @@ namespace Caustic
         // createDebugDevice - True if application wants the debug D3D device. False otherwise.
         //**********************************************************************
         virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice) = 0;
-        virtual void DrawMesh(IRenderSubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) = 0; // Draws a mesh
-        virtual void RenderLoop() = 0; // Renderer entry point
-        virtual void RenderFrame() = 0; // Have renderer draw and present next frame
-        virtual void SetCamera(ICamera *pCamera) = 0; // Sets camera
+
+        //**********************************************************************
+        // Method: DrawMesh
+        // Renders a mesh by adding it to the Renderable list that is drawn each time a frame is rendered
+        //
+        // TODO: This method needs to be refactored. There is no point in sending in both a pMaterial
+        // and a pTexture (the material already should define the diffuse texture). Also, we should pass
+        // in both a front and back face material
+        //
+        // Parameters:
+        // pMesh - mesh to render
+        // pMaterial - material for front faces
+        // pTexture - texture for diffuse component
+        // pShader - shader to use to draw mesh
+        // mat - matrix to transform mesh by
+        //**********************************************************************
+        virtual void DrawMesh(IRenderSubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) = 0;
+
+        //**********************************************************************
+        // Method: RenderLoop
+        // Defines the main entry point for our renderer
+        //**********************************************************************
+        virtual void RenderLoop() = 0;
+
+        //**********************************************************************
+        // Method: RenderFrame
+        // Renders the next frame
+        //**********************************************************************
+        virtual void RenderFrame() = 0;
+
+        //**********************************************************************
+        // Method: SetCamera
+        // Assigns a camera to the renderer
+        //
+        // Parameters:
+        // pCamera - camera to use when rendering
+        //**********************************************************************
+        virtual void SetCamera(ICamera *pCamera) = 0;
+
+        //**********************************************************************
+        // Method: AddPointLight
+        // Adds a point light which the renderer uses
+        //
+        // Parameters:
+        // pLight - light to render meshes with
+        //**********************************************************************
         virtual void AddPointLight(IPointLight *pLight) = 0;
+
+        //**********************************************************************
+        // Method: GetRenderCtx
+        // Returns the current render context
+        //
+        // Parameters:
+        // ppCtx - Returns the current render context
+        //**********************************************************************
         virtual void GetRenderCtx(IRenderCtx **ppCtx) = 0;
+
+        //**********************************************************************
+        // Method: SetSceneGraph
+        // Assigns a scene graph to the renderer.
+        //
+        // TODO: This is an obsolete function. Ultimately I am going to move handling
+        // of scene traversal into a callback so the scene graph itself manages
+        // the rendering.
+        //
+        // Parameters:
+        // pSceneGraph - scene graph
+        //**********************************************************************
         virtual void SetSceneGraph(ISceneGraph *pSceneGraph) = 0;
+
+        //**********************************************************************
+        // Method: DrawLine
+        // Renders a line
+        //
+        // Parameters:
+        // p1 - starting point of line
+        // p2 - ending point of line
+        // clr - color to use while rendering line
+        //**********************************************************************
         virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) = 0;
+
+        //**********************************************************************
+        // Method: GetGraphics
+        // Returns the current graphics device the renderer is using
+        //
+        // Parameters:
+        // ppGraphics - returns the current graphics device
+        //**********************************************************************
         virtual void GetGraphics(IGraphics **ppGraphics) = 0;
     };
 }

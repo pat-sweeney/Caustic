@@ -8,14 +8,9 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="Caustic.h"></a><a name="Topic411"></a><div class="CTopic TFile LC first">
- <div class="CTitle">Caustic.h</div>
- <div class="CBody"><p>This file defines the published interface for talking to the Caustic Renderer.&nbsp; This include is usually the top level include that clients will use.</p></div>
-</div>
-
-<a name="Caustic"></a><a name="Topic412"></a><div class="CTopic TClass LC">
- <div class="CTitle">Caustic</div>
- <div class="NDClassPrototype" id="NDClassPrototype412"><div class="CPEntry TClass Current"><div class="CPModifiers"><span class="SHKeyword">namespace</span> </div><div class="CPName">Caustic</div></div></div>
+<a name="ISampler.h"></a><a name="Topic405"></a><div class="CTopic TFile LC first">
+ <div class="CTitle">ISampler.h</div>
+ <div class="CBody"><p>This file defines the published interface for samplers</p></div>
 </div>
 
 <a name="ISampler"></a><a name="Topic413"></a><div class="CTopic TInterface LC">
@@ -27,10 +22,10 @@
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="ISampler.GetFilter"></a><a name="Topic415"></a><div class="CTopic TFunction LC">
+<a name="ISampler.GetFilter"></a><a name="Topic406"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetFilter</div>
- <div id="NDPrototype415" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> D3D11_FILTER GetFilter() = <span class="SHNumber">0</span></div>
- <div class="CBody"><p>Returns the current filter state</p></div>
+ <div id="NDPrototype406" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> D3D11_FILTER GetFilter() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><div class="CHeading">Returns</div><p>Returns the current filter state</p></div>
 </div>
 
 <a name="ISampler.SetFilter"></a><a name="Topic416"></a><div class="CTopic TFunction LC">
@@ -39,10 +34,10 @@
  <div class="CBody"><p>Set the current filter state</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">filter<div class="CDLParameterType">D3D11_FILTER</div></td><td class="CDLDefinition"><p>filter state to set</p></td></tr></table></div>
 </div>
 
-<a name="ISampler.GetAddressU"></a><a name="Topic417"></a><div class="CTopic TFunction LC">
+<a name="ISampler.GetAddressU"></a><a name="Topic408"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetAddressU</div>
- <div id="NDPrototype417" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> D3D11_TEXTURE_ADDRESS_MODE GetAddressU() = <span class="SHNumber">0</span></div>
- <div class="CBody"><p>Returns the current addressing mode in the U direction</p></div>
+ <div id="NDPrototype408" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> D3D11_TEXTURE_ADDRESS_MODE GetAddressU() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><div class="CHeading">Returns</div><p>Returns the current addressing mode in the U direction</p></div>
 </div>
 
 <a name="ISampler.SetAddressU"></a><a name="Topic418"></a><div class="CTopic TFunction LC">
@@ -51,10 +46,10 @@
  <div class="CBody"><p>Set the current addressing mode in the U direction</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">mode<div class="CDLParameterType">D3D11_TEXTURE_ADDRESS_MODE</div></td><td class="CDLDefinition"><p>addressing mode to set</p></td></tr></table></div>
 </div>
 
-<a name="ISampler.GetAddressV"></a><a name="Topic419"></a><div class="CTopic TFunction LC">
+<a name="ISampler.GetAddressV"></a><a name="Topic409"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetAddressV</div>
- <div id="NDPrototype419" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> D3D11_TEXTURE_ADDRESS_MODE GetAddressV() = <span class="SHNumber">0</span></div>
- <div class="CBody"><p>Returns the current addressing mode in the V direction</p></div>
+ <div id="NDPrototype409" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> D3D11_TEXTURE_ADDRESS_MODE GetAddressV() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><div class="CHeading">Returns</div><p>Returns the current addressing mode in the V direction</p></div>
 </div>
 
 <a name="ISampler.SetAddressU(2)"></a><a name="Topic420"></a><div class="CTopic TFunction LC">
@@ -64,14 +59,14 @@
 
 <a name="ISampler.Render"></a><a name="Topic421"></a><div class="CTopic TFunction LC">
  <div class="CTitle">Render</div>
- <div id="NDPrototype421" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> Render(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,494);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pGraphics,</td></tr><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td></td><td class="PName last">slot</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
- <div class="CBody"><p>Sets up the sampler for the current rendering</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pGraphics<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,494);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>*</div></td><td class="CDLDefinition"><p>graphics device</p></td></tr><tr><td class="CDLEntry">slot<div class="CDLParameterType"><span class="SHKeyword">int</span></div></td><td class="CDLDefinition"><p>texture slot to which this sampler should be assigned</p></td></tr></table></div>
+ <div id="NDPrototype421" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> Render(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,363);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pGraphics,</td></tr><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td></td><td class="PName last">slot</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Sets up the sampler for the current rendering</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pGraphics<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,363);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>*</div></td><td class="CDLDefinition"><p>graphics device</p></td></tr><tr><td class="CDLEntry">slot<div class="CDLParameterType"><span class="SHKeyword">int</span></div></td><td class="CDLDefinition"><p>texture slot to which this sampler should be assigned</p></td></tr></table></div>
 </div>
 
-<a name="ISampler.GetTexture"></a><a name="Topic422"></a><div class="CTopic TFunction LC last">
+<a name="ISampler.GetTexture"></a><a name="Topic715"></a><div class="CTopic TFunction LC last">
  <div class="CTitle">GetTexture</div>
- <div id="NDPrototype422" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> GetTexture(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/ITexture.h:ITexture" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,402);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ITexture</a>&nbsp;</td><td class="PNamePrefix">**</td><td class="PName last">ppTexture</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
- <div class="CBody"><p>Returns the texture associated with this sampler</p></div>
+ <div id="NDPrototype715" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> GetTexture(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/ITexture.h:ITexture" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,402);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ITexture</a>&nbsp;</td><td class="PNamePrefix">**</td><td class="PName last">ppTexture</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Returns the texture associated with this sampler</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">ppTexture<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/Caustic/ITexture.h:ITexture" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,402);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ITexture</a>**</div></td><td class="CDLDefinition"><p>Returns the texture</p></td></tr></table></div>
 </div>
 
 </body></html>

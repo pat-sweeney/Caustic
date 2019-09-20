@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:CSubMesh","CSubMesh");NDSummary.OnSummaryLoaded("CClass:CSubMesh",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[674,0,0,"CSubMesh"],[675,0,2,"Functions","Functions"],[679,0,1,"Normalize","Normalize"],[172,0,1,"Triangulate","Triangulate"]]);

@@ -11,12 +11,10 @@
 #include <DirectXMath.h>
 
 //**********************************************************************
-// File: Caustic.h
-// This file defines the published interface for talking to the Caustic Renderer.
-// This include is usually the top level include that clients will use.
+// File: ICamera.h
+// This file defines the published interface camera objects
 //**********************************************************************
 
-// Namespace: Caustic
 namespace Caustic
 {
     //**********************************************************************

@@ -13,4 +13,56 @@
  <div class="CBody"><p>IRenderMesh is simply a collection of submesh objects (IRenderSubMesh).</p></div>
 </div>
 
+<a name="Functions"></a><a name="Topic697"></a><div class="CTopic TGroup LC">
+ <div class="CTitle">Functions</div>
+</div>
+
+<a name="NumberSubMeshes"></a><a name="Topic415"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">NumberSubMeshes</div>
+ <div id="NDPrototype415" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> NumberSubMeshes() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><div class="CHeading">Returns</div><p>Number of submeshes for this mesh</p></div>
+</div>
+
+<a name="GetSubMesh"></a><a name="Topic699"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetSubMesh</div>
+ <div id="NDPrototype699" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> GetSubMesh(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td></td><td class="PName last">index,</td></tr><tr><td class="PType first"><a href="../../index.html#CClass:IRenderSubMesh" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,491);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderSubMesh</a>&nbsp;</td><td class="PNamePrefix">**</td><td class="PName last">ppSubMesh</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Retrieves the Nth submesh</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">index<div class="CDLParameterType"><span class="SHKeyword">uint32</span></div></td><td class="CDLDefinition"><p>index of submesh to retrieve</p></td></tr><tr><td class="CDLEntry">ppSubMesh<div class="CDLParameterType"><a href="../../index.html#CClass:IRenderSubMesh" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,491);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderSubMesh</a>**</div></td><td class="CDLDefinition"><p>Returns the Nth submesh</p></td></tr></table></div>
+</div>
+
+<a name="AddSubMesh"></a><a name="Topic700"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">AddSubMesh</div>
+ <div id="NDPrototype700" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> AddSubMesh(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:IRenderSubMesh" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,491);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderSubMesh</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pSubMesh</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Adds a submesh to the mesh</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pSubMesh<div class="CDLParameterType"><a href="../../index.html#CClass:IRenderSubMesh" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,491);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderSubMesh</a>*</div></td><td class="CDLDefinition"><p>Submesh to add</p></td></tr></table></div>
+</div>
+
+<a name="GetBBox"></a><a name="Topic701"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetBBox</div>
+ <div id="NDPrototype701" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> GetBBox(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:BBox3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,142);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >BBox3</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pBBox</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Gets the mesh's bounding box</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pBBox<div class="CDLParameterType"><a href="../../index.html#CClass:BBox3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,142);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >BBox3</a>*</div></td><td class="CDLDefinition"><p>Returns the mesh's bounding box</p></td></tr></table></div>
+</div>
+
+<a name="SetMaterials"></a><a name="Topic702"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">SetMaterials</div>
+ <div id="NDPrototype702" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetMaterials(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first">std::</td><td class="PType">vector&lt;<a href="../../index.html#CClass:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,38);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../index.html#CClass:IMaterialAttrib" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,468);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMaterialAttrib</a>&gt;&gt;&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">materials</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Assigns list of materials that submesh's use</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">materials<div class="CDLParameterType">std::vector&lt;<a href="../../index.html#CClass:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,38);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../index.html#CClass:IMaterialAttrib" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,468);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMaterialAttrib</a>&gt;&gt;&amp;</div></td><td class="CDLDefinition"><p>list of materials</p></td></tr></table></div>
+</div>
+
+<a name="GetMaterial"></a><a name="Topic703"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetMaterial</div>
+ <div id="NDPrototype703" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> GetMaterial(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td></td><td class="PName last">materialID,</td></tr><tr><td class="PType first"><a href="../../index.html#CClass:IMaterialAttrib" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,468);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMaterialAttrib</a>&nbsp;</td><td class="PNamePrefix">**</td><td class="PName last">ppMaterial</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Retrieves a material</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">materialID<div class="CDLParameterType"><span class="SHKeyword">uint32</span></div></td><td class="CDLDefinition"><p>ID of which material to retrieve</p></td></tr><tr><td class="CDLEntry">ppMaterial<div class="CDLParameterType"><a href="../../index.html#CClass:IMaterialAttrib" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,468);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMaterialAttrib</a>**</div></td><td class="CDLDefinition"><p>returns the associated material</p></td></tr></table></div>
+</div>
+
+<a name="ComputeNormals"></a><a name="Topic704"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">ComputeNormals</div>
+ <div id="NDPrototype704" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> ComputeNormals() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><p>Computes the normals for the mesh</p></div>
+</div>
+
+<a name="Render"></a><a name="Topic705"></a><div class="CTopic TFunction LC last">
+ <div class="CTitle">Render</div>
+ <div id="NDPrototype705" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> Render(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="first"></td><td class="PType"><a href="../../index.html#CClass:IRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,494);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pRenderer,</td></tr><tr><td class="PModifierQualifier first">std::</td><td class="PType">vector&lt;<a href="../../index.html#CClass:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,38);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../index.html#CClass:IPointLight" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,481);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IPointLight</a>&gt;&gt;&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">lights</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Renders the mesh</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pRenderer<div class="CDLParameterType"><a href="../../index.html#CClass:IRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,494);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer</a>*</div></td><td class="CDLDefinition"><p>renderer to use</p></td></tr><tr><td class="CDLEntry">lights<div class="CDLParameterType">std::vector&lt;<a href="../../index.html#CClass:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,38);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../index.html#CClass:IPointLight" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,481);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IPointLight</a>&gt;&gt;&amp;</div></td><td class="CDLDefinition"><p>list of lights to use</p></td></tr></table></div>
+</div>
+
 </body></html>

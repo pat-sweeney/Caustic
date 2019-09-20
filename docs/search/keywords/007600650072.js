@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("ver",["Function"],[["VertexLayout",,[["IShaderInfo",,,,0,"File:Rendering/Caustic/IShaderInfo.h:IShaderInfo.VertexLayout","CClass:IShaderInfo:VertexLayout"]]],["VertexShaderParameterDefs",,[["IShaderInfo",,,,0,"File:Rendering/Caustic/IShaderInfo.h:IShaderInfo.VertexShaderParameterDefs","CClass:IShaderInfo:VertexShaderParameterDefs"]]]]);

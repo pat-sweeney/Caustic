@@ -230,7 +230,6 @@
     <ClCompile Include="CausticFactory.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="RendererMarshaller.cpp" />
-    <ClCompile Include="MeshToVB.cpp" />
     <ClCompile Include="Renderable.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderMaterial.cpp" />

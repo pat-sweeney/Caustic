@@ -9,12 +9,10 @@
 #include "Base\Math\Vector.h"
 
 //**********************************************************************
-// File: Caustic.h
-// This file defines the published interface for talking to the Caustic Renderer.
-// This include is usually the top level include that clients will use.
+// File: IPointLight.h
+// This file defines the published interface for dealing with point lights
 //**********************************************************************
 
-// Namespace: Caustic
 namespace Caustic
 {
     //**********************************************************************

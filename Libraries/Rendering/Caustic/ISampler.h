@@ -9,12 +9,10 @@
 #include "Rendering\Caustic\ITexture.h"
 
 //**********************************************************************
-// File: Caustic.h
-// This file defines the published interface for talking to the Caustic Renderer.
-// This include is usually the top level include that clients will use.
+// File: ISampler.h
+// This file defines the published interface for samplers
 //**********************************************************************
 
-// Namespace: Caustic
 namespace Caustic
 {
     //**********************************************************************
@@ -25,6 +23,7 @@ namespace Caustic
     {
         //**********************************************************************
         // Method: GetFilter
+        // Returns:
         // Returns the current filter state
         //**********************************************************************
         virtual D3D11_FILTER GetFilter() = 0;
@@ -40,6 +39,7 @@ namespace Caustic
 
         //**********************************************************************
         // Method: GetAddressU
+        // Returns:
         // Returns the current addressing mode in the U direction
         //**********************************************************************
         virtual D3D11_TEXTURE_ADDRESS_MODE GetAddressU() = 0;
@@ -55,6 +55,7 @@ namespace Caustic
 
         //**********************************************************************
         // Method: GetAddressV
+        // Returns:
         // Returns the current addressing mode in the V direction
         //**********************************************************************
         virtual D3D11_TEXTURE_ADDRESS_MODE GetAddressV() = 0;
@@ -81,6 +82,9 @@ namespace Caustic
         //**********************************************************************
         // Method: GetTexture
         // Returns the texture associated with this sampler
+        //
+        // Parameters:
+        // ppTexture - Returns the texture
         //**********************************************************************
         virtual void GetTexture(ITexture **ppTexture) = 0;
     };

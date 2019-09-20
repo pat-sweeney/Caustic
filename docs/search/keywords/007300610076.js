@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("sav",["Function"],[["SaveScene",,[[,,,,0,"File:Rendering/Caustic/RendererMarshaller.cpp:SaveScene"]]]]);
+NDSearch.OnPrefixDataLoaded("sav",["Function"],[["SaveScene",,[[,,,,0,"File:Rendering/Caustic/RendererMarshaller.cpp:SaveScene"],["IRendererMarshaller",,,,0,"File:Rendering/Caustic/IRendererMarshaller.h:IRendererMarshaller.SaveScene","CClass:IRendererMarshaller:SaveScene"]]]]);

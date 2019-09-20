@@ -8,9 +8,48 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="IShaderInfo"></a><a name="Topic399"></a><div class="CTopic TInterface LC first">
+<a name="IShaderInfo.h"></a><a name="Topic401"></a><div class="CTopic TFile LC first">
+ <div class="CTitle">IShaderInfo.h</div>
+ <div class="CBody"><p>This file defines the published interface for IShaderInfo.&nbsp; Each shader has an associated IShaderInfo that defines which parameters and vertex formats the shader uses.</p></div>
+</div>
+
+<a name="IShaderInfo"></a><a name="Topic399"></a><div class="CTopic TInterface LC">
  <div class="CTitle">IShaderInfo</div>
  <div class="CBody"><p>Defines primary interface used for getting information about pre-compiled shaders. This isn't the shader itself. It is simply the data that we load from disk to create a shader (i.e. data from .shi file)</p></div>
+</div>
+
+<a name="IShaderInfo.Functions"></a><a name="Topic404"></a><div class="CTopic TGroup LC">
+ <div class="CTitle">Functions</div>
+</div>
+
+<a name="IShaderInfo.GetTopologyType"></a><a name="Topic451"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetTopologyType</div>
+ <div id="NDPrototype451" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> D3D11_PRIMITIVE_TOPOLOGY GetTopologyType() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><div class="CHeading">Returns</div><p>Returns the type of mesh this shader renders (triangles/points/lines/etc)</p></div>
+</div>
+
+<a name="IShaderInfo.PixelShaderParameterDefs"></a><a name="Topic452"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">PixelShaderParameterDefs</div>
+ <div id="NDPrototype452" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> std::vector&lt;<a href="../../../index.html#File:Rendering/Caustic/Shader.h:ShaderParamDef" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,337);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ShaderParamDef</a>&gt; &amp;PixelShaderParameterDefs() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><div class="CHeading">Returns</div><p>Returns list of pixel parameter definitions that the shader uses</p></div>
+</div>
+
+<a name="IShaderInfo.VertexShaderParameterDefs"></a><a name="Topic708"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">VertexShaderParameterDefs</div>
+ <div id="NDPrototype708" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> std::vector&lt;<a href="../../../index.html#File:Rendering/Caustic/Shader.h:ShaderParamDef" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,337);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ShaderParamDef</a>&gt; &amp;VertexShaderParameterDefs() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><div class="CHeading">Returns</div><p>Returns list of vertex parameter definitions that the shader uses</p></div>
+</div>
+
+<a name="IShaderInfo.VertexLayout"></a><a name="Topic709"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">VertexLayout</div>
+ <div id="NDPrototype709" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> std::vector&lt;D3D11_INPUT_ELEMENT_DESC&gt; &amp;VertexLayout() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><div class="CHeading">Returns</div><p>Returns the vertex format for the shader</p></div>
+</div>
+
+<a name="IShaderInfo.GetVertexSize"></a><a name="Topic710"></a><div class="CTopic TFunction LC last">
+ <div class="CTitle">GetVertexSize</div>
+ <div id="NDPrototype710" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetVertexSize() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><div class="CHeading">Returns</div><p>Returns the size of each vertex in bytes</p></div>
 </div>
 
 </body></html>

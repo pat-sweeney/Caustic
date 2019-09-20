@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("ite",["Interface"],[["ITexture",,[[,,,,0,"File:Rendering/Caustic/ITexture.h:ITexture","CClass:ITexture"]]]]);
+NDSearch.OnPrefixDataLoaded("ite",["Interface","File"],[["ITexture",,[[,,,,0,"File:Rendering/Caustic/ITexture.h:ITexture","CClass:ITexture"],[,"ITexture.h",,,1,"File:Rendering/Caustic/ITexture.h:ITexture.h"]]]]);

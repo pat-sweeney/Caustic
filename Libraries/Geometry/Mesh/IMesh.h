@@ -14,6 +14,11 @@
 #include <vector>
 #include <d3d11.h>
 
+//**********************************************************************
+// File: IMesh.h
+// Defines interface for mesh.
+//**********************************************************************
+
 namespace Caustic
 {
     struct IRenderer;
@@ -23,8 +28,7 @@ namespace Caustic
 
     //**********************************************************************
     // Interface: IMaterialAttrib
-    // IMaterial is used for manipulating the materials assigned to a mesh.
-    // Each ISubMesh may have a single material assigned to it.
+    // Used for manipulating the materials assigned to a mesh.
     //**********************************************************************
     struct IMaterialAttrib : public ISerialize
     {
@@ -207,6 +211,15 @@ namespace Caustic
     //**********************************************************************
     // Class: CHalfEdge
 	// Defines a single half edge on our graph
+    //
+    // Members:
+    // m_pNext - Next half edge in edge loop
+    // m_pPrev - Previous half edge in edge loop
+    // m_pOpposite - Opposite half edge
+    // m_pVertex - Vertex at head of edge
+    // m_pFace - Face to the left of edge
+    // m_smoothingGroup - Smoothing group this edge belongs to
+    // index - 
     //**********************************************************************
     class CHalfEdge
     {
@@ -325,12 +338,14 @@ namespace Caustic
     const uint32 c_InvalidIndex = 0xffffffff;
 
     //**********************************************************************
-    // Enum: EMeshFlags
+    // Class: EMeshFlags
 	// Defines various flags associated with an ISubMesh
+    //
+    // TwoSided - Mesh is considered to be two sided
     //**********************************************************************
     enum EMeshFlags
     {
-        TwoSided = 0x1, // Mesh is considered to be two sided
+        TwoSided = 0x1,
     };
 
     //**********************************************************************
@@ -354,6 +369,14 @@ namespace Caustic
         virtual uint32 GetMaterialID() = 0;
         virtual void SetMaterialID(uint32 materialID) = 0;
         virtual const BBox3 &GetBBox() = 0;
+
+        //**********************************************************************
+        // Method: Normalize
+        // Rescales a mesh so fits inside a -0.5..+0.5 bounding box
+        //
+        // Parameters:
+        // bbox - Bounding box of the mesh
+        //**********************************************************************
         virtual void Normalize(const BBox3 &bbox) = 0;
         virtual void ComputeNormals() = 0;
         virtual uint32 VertexToIndex(CGeomVertex *pVertex) = 0;

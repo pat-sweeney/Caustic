@@ -10,17 +10,23 @@
 #include "Renderable.h"
 #include <d3d11.h>
 
+//**********************************************************************
+// File: Renderable.cpp
+// Contains implementation for CRenderable
+//**********************************************************************
+
 namespace Caustic
 {
     //**********************************************************************
-    // CRenderable creates a renderable object
-    //
+    // Constructor: CRenderable
     // Creates a renderable object. A Renderable is a IRenderSubMesh
     // paired with a set of materials and a shader.
-    //     pSubMesh - Render submesh
-    //     pFrontMaterial Material to apply to front facing polygons
-    //     pBackMaterial Material to apply to back facing polygons
-    //	   mat - world matrix to apply
+    //
+    // Parameters:
+    // pSubMesh - Render submesh
+    // pFrontMaterial Material to apply to front facing polygons
+    // pBackMaterial Material to apply to back facing polygons
+    // mat - world matrix to apply
     //**********************************************************************
     CRenderable::CRenderable(IRenderSubMesh *pSubMesh,
         IRenderMaterial *pFrontMaterial,
@@ -35,12 +41,15 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Method: RenderMesh
     // Renders either the front or back faces of a mesh
-    //		pRenderer - rendering device
-    //		lights - List of lights to apply
-    //		pRenderCtx - Rendering context
-    //		pRenderMaterial - Material to apply
-    //		cullmode - Culling mode to apply
+    //
+    // Parameters:
+    // pGraphics - graphics device
+    // lights - List of lights to apply
+    // pRenderCtx - Rendering context
+    // pRenderMaterial - Material to apply
+    // cullmode - Culling mode to apply
     //**********************************************************************
     void CRenderable::RenderMesh(IGraphics *pGraphics, std::vector<CRefObj<IPointLight>> &lights,
         IRenderCtx *pRenderCtx, IRenderMaterial *pRenderMaterial, D3D11_CULL_MODE cullmode)
@@ -155,6 +164,17 @@ namespace Caustic
         }
     }
 
+    //**********************************************************************
+    // Function: CreateRenderable
+    // Creates a renderable object
+    //
+    // Parameters:
+    // pSubMesh - Submesh to create renderable for
+    // pFrontMaterial - material for front faces
+    // pBackMaterial - material for back faces
+    // mat - transform to apply
+    // ppRenderable - Returns the created renderable
+    //**********************************************************************
     CAUSTICAPI void CreateRenderable(IRenderSubMesh *pSubMesh, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat, IRenderable **ppRenderable)
     {
         CRenderable *pRenderable = new CRenderable(pSubMesh, pFrontMaterial, pBackMaterial, mat);

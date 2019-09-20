@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("tri",["Function"],[["Triangulate",,[[,,,,0,"File:Geometry/Mesh/Submesh.cpp:Triangulate"]]],["TriangulePoints",,[[,,,,0,"File:Geometry/Mesh/Delaunay.cpp:TriangulePoints"]]]]);
+NDSearch.OnPrefixDataLoaded("tri",["Function"],[["Triangulate",,[[,,,,0,"File:Geometry/Mesh/Submesh.cpp:Triangulate"],["CSubMesh",,,,0,"File:Geometry/Mesh/Mesh.h:CSubMesh.Triangulate","CClass:CSubMesh:Triangulate"]]],["TriangulePoints",,[[,,,,0,"File:Geometry/Mesh/Delaunay.cpp:TriangulePoints"]]]]);

@@ -31,7 +31,8 @@ namespace Caustic
 		~CCausticFactory();
 
         //**********************************************************************
-        // Method: Instance()
+        // Method: Instance
+        // Returns:
         // Returns the CCausticFactory singleton.
         //**********************************************************************
         static CRefObj<ICausticFactory> Instance()

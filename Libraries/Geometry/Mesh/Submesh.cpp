@@ -6,6 +6,11 @@
 #include "Geometry\Mesh\MeshConstructor.h"
 #include "Base\Core\error.h"
 
+//**********************************************************************
+// File: SubMesh.cpp
+// Contains the methods used to implement the CSubMesh object.
+//**********************************************************************
+
 namespace Caustic
 {
     bool CSubMesh::s_allocatorInitialized = false;
@@ -16,10 +21,7 @@ namespace Caustic
 
     //**********************************************************************
     // Method: Normalize
-    // Rescales a mesh so fits inside a -0.5..+0.5 bounding box
-    //
-    // Parameters:
-    // bbox - Bounding box of the mesh
+    // See <ISubMesh::Normalize>
     //**********************************************************************
     void CSubMesh::Normalize(const BBox3 &bbox)
     {
@@ -434,7 +436,7 @@ namespace Caustic
     // HalfEdge's, while the dotted lines represent their m_pPrev/m_pNext
     // links. We are trying to add newEdge and link it to oldEdge (an existing
     // edge)
-    // --- Text
+    // === Text
     //            ^|
     //        ...>|| <.......
     //        v   |V        .
@@ -454,7 +456,7 @@ namespace Caustic
     //  ---------> O pTail  .
     //  <---------          .
     //         ^.............
-    // --
+    // ===
     //
     // Parameters:
     // pPrev - previous edge
