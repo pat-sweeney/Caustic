@@ -3,7 +3,7 @@
 // All Rights Reserved
 //**********************************************************************
 #pragma once
-#include "SceneGraphImpl.h"
+#include "SceneGraph.h"
 #include <d3d11.h>
 #include <atlbase.h>
 

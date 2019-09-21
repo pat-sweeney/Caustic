@@ -5,7 +5,7 @@
 #pragma once
 #include "Base\Core\Core.h"
 #include "Base\Core\IRefCount.h"
-#include "Rendering\SceneGraph\SceneGraph.h"
+#include "Rendering\SceneGraph\ISceneGraph.h"
 #include <Windows.h>
 
 namespace Caustic

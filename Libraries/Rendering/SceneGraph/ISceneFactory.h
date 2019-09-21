@@ -7,7 +7,7 @@
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\Shader.h"
 #include "Base\Math\Matrix.h"
-#include "SceneGraph.h"
+#include "ISceneGraph.h"
 #include "ISceneFactory.h"
 
 namespace Caustic

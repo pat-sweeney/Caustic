@@ -8,7 +8,7 @@
 #include "Base\Core\IRefCount.h"
 #include "Rendering\RenderWindow\IRenderWindow.h"
 #include "Rendering\Caustic\ICausticFactory.h"
-#include "Rendering\SceneGraph\SceneGraph.h"
+#include "Rendering\SceneGraph\ISceneGraph.h"
 #include "Rendering\SceneGraph\ISceneFactory.h"
 #include "Geometry\MeshImport\MeshImport.h"
 #include <Windows.h>

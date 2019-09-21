@@ -3,7 +3,7 @@
 // All Rights Reserved
 //**********************************************************************
 #include "stdafx.h"
-#include "Rendering\SceneGraph\SceneGraph.h"
+#include "Rendering\SceneGraph\ISceneGraph.h"
 #include "Geometry\Mesh\Mesh.h"
 #include "Geometry\Mesh\Material.h"
 #include "MaterialElem.h"

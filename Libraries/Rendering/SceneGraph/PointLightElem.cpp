@@ -3,7 +3,7 @@
 // All Rights Reserved
 //**********************************************************************
 #include "stdafx.h"
-#include "Rendering\SceneGraph\SceneGraph.h"
+#include "Rendering\SceneGraph\ISceneGraph.h"
 #include "PointLightElem.h"
 #include "Rendering\Caustic\CausticFactory.h"
 #include <string>

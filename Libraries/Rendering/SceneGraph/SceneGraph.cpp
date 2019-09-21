@@ -3,8 +3,8 @@
 // All Rights Reserved
 //**********************************************************************
 #include "stdafx.h"
-#include "Rendering\SceneGraph\SceneGraph.h"
-#include "SceneGraphImpl.h"
+#include "Rendering\SceneGraph\ISceneGraph.h"
+#include "SceneGraph.h"
 #include "SceneFactory.h"
 
 namespace Caustic

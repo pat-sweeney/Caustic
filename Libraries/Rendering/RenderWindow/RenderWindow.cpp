@@ -5,7 +5,7 @@
 #include "stdafx.h"
 #include "Base\Core\Core.h"
 #include "Rendering\RenderWindow\RenderWindow.h"
-#include "Rendering\SceneGraph\SceneGraph.h"
+#include "Rendering\SceneGraph\ISceneGraph.h"
 #include "Rendering\SceneGraph\SceneFactory.h"
 #include "Rendering\Caustic\CausticFactory.h"
 #include <Windows.h>

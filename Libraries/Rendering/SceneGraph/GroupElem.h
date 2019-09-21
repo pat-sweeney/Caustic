@@ -3,7 +3,7 @@
 // All Rights Reserved
 //**********************************************************************
 #pragma once
-#include "SceneGraphImpl.h"
+#include "SceneGraph.h"
 #include <functional>
 
 namespace Caustic
