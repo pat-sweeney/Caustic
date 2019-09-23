@@ -1,6 +1,7 @@
 //**********************************************************************
 // Copyright Patrick Sweeney 2015-2017
-// All Rights Reserved
+// Licensed under the MIT license.
+// See file LICENSE for details.
 //**********************************************************************
 #define MAX_LIGHTS 4
 

@@ -1,7 +1,8 @@
 #pragma once
 //**********************************************************************
 // Copyright Patrick Sweeney 2015-2019
-// All Rights Reserved
+// Licensed under the MIT license.
+// See file LICENSE for details.
 //**********************************************************************
 #include "stdafx.h"
 #include "Rendering\Caustic\Caustic.h"

@@ -15,11 +15,7 @@ namespace PsiEditor
         public List<DispConnector> outputs;
         public string Name { get; set; }
 
-        // Define node state
-        private bool modified;
-
         // Define visual attributes associated with node
-        private Canvas canvas;
         private Rectangle rect;
         private Rectangle selectRect;
         public double NodeWidth { get; set; }

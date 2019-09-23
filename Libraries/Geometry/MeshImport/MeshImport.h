@@ -1,6 +1,7 @@
 //**********************************************************************
 // Copyright Patrick Sweeney 2015-2019
-// All Rights Reserved
+// Licensed under the MIT license.
+// See file LICENSE for details.
 //**********************************************************************
 #pragma once
 #include <atlbase.h>

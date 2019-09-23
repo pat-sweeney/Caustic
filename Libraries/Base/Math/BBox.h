@@ -1,6 +1,7 @@
 //**********************************************************************
 // Copyright Patrick Sweeney 2015-2019
-// All Rights Reserved
+// Licensed under the MIT license.
+// See file LICENSE for details.
 //**********************************************************************
 #pragma once
 #include "Base\Core\Core.h"
@@ -18,75 +19,75 @@ namespace Caustic
         Vector2 minPt; // Minimum point defining one corner of the bbox
         Vector2 maxPt; // Maximum point defining one corner of the bbox
 
-	//**********************************************************************
-	// Constructor: BBox2
-	// Default constructor
-	//**********************************************************************
+        //**********************************************************************
+        // Constructor: BBox2
+        // Default constructor
+        //**********************************************************************
         BBox2();
-      
-	//**********************************************************************
-	// Constructor: BBox2
-	// Constructor
-	//
-	// Parameters:
-	// topLeft - top left corner for bbox
-	// bottomRight - bottom right corner for bbox
-	//**********************************************************************
+
+        //**********************************************************************
+        // Constructor: BBox2
+        // Constructor
+        //
+        // Parameters:
+        // topLeft - top left corner for bbox
+        // bottomRight - bottom right corner for bbox
+        //**********************************************************************
         BBox2(Vector2 &topLeft, Vector2 &bottomRight);
-      
-	//**********************************************************************
-	// Method: Empty
-	// Determines if bbox is empty
-	//
-	// Returns:
-	// Returns true if bbox is empty. False otherwise.
-	//**********************************************************************
+
+        //**********************************************************************
+        // Method: Empty
+        // Determines if bbox is empty
+        //
+        // Returns:
+        // Returns true if bbox is empty. False otherwise.
+        //**********************************************************************
         bool Empty();
-      
-	//**********************************************************************
-	// Method: AddPoint
-	// Adds the specified point to the bounding box. If the point is outside
-	// the bbox then the bbox's dimensions are expanded to include the point.
-	//
-	// Parameters:
-	// x - x coordinate for point
-	// y - y coordinate for point
-	//**********************************************************************
+
+        //**********************************************************************
+        // Method: AddPoint
+        // Adds the specified point to the bounding box. If the point is outside
+        // the bbox then the bbox's dimensions are expanded to include the point.
+        //
+        // Parameters:
+        // x - x coordinate for point
+        // y - y coordinate for point
+        //**********************************************************************
         void AddPoint(float x, float y);
-      
-	//**********************************************************************
-	// Method: AddPoint
-	// Adds the specified point to the bounding box. If the point is outside
-	// the bbox then the bbox's dimensions are expanded to include the point.
-	//
-	// Parameters:
-	// pt - point to add
-	//**********************************************************************
+
+        //**********************************************************************
+        // Method: AddPoint
+        // Adds the specified point to the bounding box. If the point is outside
+        // the bbox then the bbox's dimensions are expanded to include the point.
+        //
+        // Parameters:
+        // pt - point to add
+        //**********************************************************************
         void AddPoint(Vector2 &pt);
-      
-	//**********************************************************************
-	// Method: PointInside
-	// Determines if the specified point is inside the bounding box
-	//
-	// Parameters:
-	// p - point to test
-	//
-	// Returns:
-	// Returns true if point is inside bbox. False otherwise.
-	//**********************************************************************
+
+        //**********************************************************************
+        // Method: PointInside
+        // Determines if the specified point is inside the bounding box
+        //
+        // Parameters:
+        // p - point to test
+        //
+        // Returns:
+        // Returns true if point is inside bbox. False otherwise.
+        //**********************************************************************
         bool PointInside(const Vector2 &p);
-      
-	//**********************************************************************
-	// Method: PointInside
-	// Determines if the specified point, given some tolerance, is inside the bounding box
-	//
-	// Parameters:
-	// p - point to test
-	// tolerance - tolerance to use when testing point
-	//
-	// Returns:
-	// Returns true if point is inside bbox. False otherwise.
-	//**********************************************************************
+
+        //**********************************************************************
+        // Method: PointInside
+        // Determines if the specified point, given some tolerance, is inside the bounding box
+        //
+        // Parameters:
+        // p - point to test
+        // tolerance - tolerance to use when testing point
+        //
+        // Returns:
+        // Returns true if point is inside bbox. False otherwise.
+        //**********************************************************************
         bool PointInside(const Vector2 &p, float tolerance);
     };
 
