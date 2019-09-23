@@ -89,20 +89,9 @@ namespace Caustic
         if (GetFlags() & ESceneElemFlags::RenderableDirty)
         {
             m_spMesh->ToRenderMesh(pRenderer, pSceneCtx->m_spCurrentShader, &m_spRenderMesh);
-            SetFlags(GetFlags() | ESceneElemFlags::RenderableDirty);
+            SetFlags(GetFlags() & ~ESceneElemFlags::RenderableDirty);
         }
         m_spRenderMesh->Render(pRenderer, pSceneCtx->m_lights);
-        //if (m_renderables[i]->InPass(pSceneCtx->m_CurrentPass))
-        //{
-        //    DirectX::XMMATRIX dxmat(
-        //        pSceneCtx->m_Transform.v[0][0], pSceneCtx->m_Transform.v[0][1], pSceneCtx->m_Transform.v[0][2], pSceneCtx->m_Transform.v[0][3],
-        //        pSceneCtx->m_Transform.v[1][0], pSceneCtx->m_Transform.v[1][1], pSceneCtx->m_Transform.v[1][2], pSceneCtx->m_Transform.v[1][3],
-        //        pSceneCtx->m_Transform.v[2][0], pSceneCtx->m_Transform.v[2][1], pSceneCtx->m_Transform.v[2][2], pSceneCtx->m_Transform.v[2][3],
-        //        pSceneCtx->m_Transform.v[3][0], pSceneCtx->m_Transform.v[3][1], pSceneCtx->m_Transform.v[3][2], pSceneCtx->m_Transform.v[3][3]);
-        //    m_renderables[i]->SetTransform(dxmat);
-        //    m_renderables[i]->Render(spGraphics, pSceneCtx->m_lights, pRenderCtx);
-        //    DrawSelected(pRenderer, this, pSceneCtx);
-        //}
     }
 
     void CSceneMeshElem::GetBBox(BBox3 *pBBox)

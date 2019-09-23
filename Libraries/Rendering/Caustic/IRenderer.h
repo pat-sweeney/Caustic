@@ -11,6 +11,7 @@
 #include "Rendering\Caustic\IRenderCtx.h"
 #include "Rendering\Caustic\IPointLight.h"
 #include "Rendering\Caustic\IShader.h"
+#include <functional>
 
 //**********************************************************************
 // File: IRenderer.h
@@ -60,14 +61,20 @@ namespace Caustic
         //**********************************************************************
         // Method: RenderLoop
         // Defines the main entry point for our renderer
+        //
+        // Parameters:
+        // renderCallback - render callback
         //**********************************************************************
-        virtual void RenderLoop() = 0;
+        virtual void RenderLoop(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) = 0;
 
         //**********************************************************************
         // Method: RenderFrame
         // Renders the next frame
+        //
+        // Parameters:
+        // renderCallback - callback for rendering custom objects
         //**********************************************************************
-        virtual void RenderFrame() = 0;
+        virtual void RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) = 0;
 
         //**********************************************************************
         // Method: SetCamera
@@ -95,19 +102,6 @@ namespace Caustic
         // ppCtx - Returns the current render context
         //**********************************************************************
         virtual void GetRenderCtx(IRenderCtx **ppCtx) = 0;
-
-        //**********************************************************************
-        // Method: SetSceneGraph
-        // Assigns a scene graph to the renderer.
-        //
-        // TODO: This is an obsolete function. Ultimately I am going to move handling
-        // of scene traversal into a callback so the scene graph itself manages
-        // the rendering.
-        //
-        // Parameters:
-        // pSceneGraph - scene graph
-        //**********************************************************************
-        virtual void SetSceneGraph(ISceneGraph *pSceneGraph) = 0;
 
         //**********************************************************************
         // Method: DrawLine

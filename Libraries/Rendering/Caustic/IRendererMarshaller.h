@@ -7,6 +7,7 @@
 #include "Base\Core\Core.h"
 #include "Base\Core\IRefCount.h"
 #include <Windows.h>
+#include <functional>
 
 //**********************************************************************
 // File: IRendererMarshaller.h
@@ -36,8 +37,9 @@ namespace Caustic
         // Parameters:
         // hwnd - Window associated with the renderer
         // shaderFolder - path to directory containing shaders
+        // renderCallback - callback function that is called each time a new frame is rendered
         //**********************************************************************
-        virtual void Initialize(HWND hwnd, std::wstring &shaderFolder) = 0;
+        virtual void Initialize(HWND hwnd, std::wstring &shaderFolder, std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) = 0;
 
         //**********************************************************************
         // Method: Shutdown
@@ -73,17 +75,6 @@ namespace Caustic
         // pPTexture - Returns the created texture
         //**********************************************************************
         virtual void LoadVideoTexture(const wchar_t *pPath, ITexture **ppTexture) = 0;
-
-        //**********************************************************************
-        // Method: SetSceneGraph
-        // Sets the scene graph to render each frame
-        //
-        // TODO: This method is obsolete and will be removed
-        //
-        // Parameters:
-        // pSceneGraph - scene graph to render each frame
-        //**********************************************************************
-        virtual void SetSceneGraph(ISceneGraph *pSceneGraph) = 0;
 
         //**********************************************************************
         // Method: SaveScene

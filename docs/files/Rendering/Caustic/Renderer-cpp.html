@@ -24,7 +24,7 @@
 
 <a name="~CRenderer"></a><a name="Topic559"></a><div class="CTopic TFunction LC">
  <div class="CTitle">~CRenderer</div>
- <div id="NDPrototype559" class="NDPrototype NoParameterForm"><a href="../../../index.html#File:Rendering/Caustic/Renderer.h:CRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,571);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRenderer::</a>~CRenderer()</div>
+ <div id="NDPrototype559" class="NDPrototype NoParameterForm"><a href="../../../index.html#File:Rendering/Caustic/Renderer.h:CRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,562);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRenderer::</a>~CRenderer()</div>
 </div>
 
 <a name="InitializeD3D"></a><a name="Topic375"></a><div class="CTopic TFunction LC">
@@ -87,40 +87,34 @@
  <div class="CBody"><p>See <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer.DrawLine" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,685);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer::DrawLine</a></p></div>
 </div>
 
-<a name="SetSceneGraph"></a><a name="Topic562"></a><div class="CTopic TFunction LC">
- <div class="CTitle">SetSceneGraph</div>
- <div id="NDPrototype562" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CRenderer::SetSceneGraph(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Rendering/SceneGraph/SceneGraph.h:ISceneGraph" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,639);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ISceneGraph</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pSceneGraph</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
- <div class="CBody"><p>See <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer.SetSceneGraph" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,496);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer::SetSceneGraph</a></p></div>
-</div>
-
 <a name="GetGraphics"></a><a name="Topic563"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetGraphics</div>
  <div id="NDPrototype563" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CRenderer::GetGraphics(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,363);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>&nbsp;</td><td class="PNamePrefix">**</td><td class="PName last">ppGraphics</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
  <div class="CBody"><p>See <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer.GetGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,686);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer::GetGraphics</a></p></div>
 </div>
 
-<a name="DrawSceneObjects"></a><a name="Topic564"></a><div class="CTopic TFunction LC">
+<a name="DrawSceneObjects"></a><a name="Topic571"></a><div class="CTopic TFunction LC">
  <div class="CTitle">DrawSceneObjects</div>
- <div id="NDPrototype564" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CRenderer::DrawSceneObjects(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td class="PName last">pass</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
- <div class="CBody"><p>Renders the scene graph currently set on the renderer.</p><p>TODO: This method is obsolete and will be going away.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pass<div class="CDLParameterType"><span class="SHKeyword">int</span></div></td><td class="CDLDefinition"><p>which pass are we rendering</p></td></tr></table></div>
+ <div id="NDPrototype571" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CRenderer::DrawSceneObjects(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="first"></td><td class="PType"><span class="SHKeyword">int</span>&nbsp;</td><td class="PName last">pass,</td></tr><tr><td class="PModifierQualifier first">std::</td><td class="PType"><span class="SHKeyword">function</span>&lt;<span class="SHKeyword">void</span>(IRenderer *pRenderer, IRenderCtx *pRenderCtx, <span class="SHKeyword">int</span> pass)&gt;&nbsp;</td><td class="PName last">renderCallback</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div class="CBody"><p>First calls the renderCallback provided. Then renders each Renderable.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pass<div class="CDLParameterType"><span class="SHKeyword">int</span></div></td><td class="CDLDefinition"><p>which pass are we rendering</p></td></tr><tr><td class="CDLEntry">renderCallback<div class="CDLParameterType">std::<span class="SHKeyword">function</span>&lt;<span class="SHKeyword">void</span>(IRenderer *pRenderer, IRenderCtx *pRenderCtx, <span class="SHKeyword">int</span> pass)&gt;</div></td><td class="CDLDefinition"><p>Render callback</p></td></tr></table></div>
 </div>
 
-<a name="RenderScene"></a><a name="Topic565"></a><div class="CTopic TFunction LC">
+<a name="RenderScene"></a><a name="Topic761"></a><div class="CTopic TFunction LC">
  <div class="CTitle">RenderScene</div>
- <div id="NDPrototype565" class="NDPrototype NoParameterForm"><span class="SHKeyword">void</span> CRenderer::RenderScene()</div>
+ <div id="NDPrototype761" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CRenderer::RenderScene(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first">std::</td><td class="PType"><span class="SHKeyword">function</span>&lt;<span class="SHKeyword">void</span>(IRenderer *pRenderer, IRenderCtx *pRenderCtx, <span class="SHKeyword">int</span> pass)&gt;&nbsp;</td><td class="PName last">renderCallback</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
  <div class="CBody"><p>Renders current scene (both scene graph and any renderables currently attached to the renderer)</p></div>
 </div>
 
-<a name="RenderFrame"></a><a name="Topic566"></a><div class="CTopic TFunction LC">
+<a name="RenderFrame"></a><a name="Topic762"></a><div class="CTopic TFunction LC">
  <div class="CTitle">RenderFrame</div>
- <div id="NDPrototype566" class="NDPrototype NoParameterForm"><span class="SHKeyword">void</span> CRenderer::RenderFrame()</div>
- <div class="CBody"><p>See <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer.RenderFrame" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,480);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer::RenderFrame</a></p></div>
+ <div id="NDPrototype762" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CRenderer::RenderFrame(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first">std::</td><td class="PType"><span class="SHKeyword">function</span>&lt;<span class="SHKeyword">void</span>(IRenderer *pRenderer, IRenderCtx *pRenderCtx, <span class="SHKeyword">int</span> pass)&gt;&nbsp;</td><td class="PName last">renderCallback</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div class="CBody"><p>See <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer.RenderFrame" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,434);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer::RenderFrame</a></p></div>
 </div>
 
-<a name="RenderLoop"></a><a name="Topic567"></a><div class="CTopic TFunction LC">
+<a name="RenderLoop"></a><a name="Topic763"></a><div class="CTopic TFunction LC">
  <div class="CTitle">RenderLoop</div>
- <div id="NDPrototype567" class="NDPrototype NoParameterForm"><span class="SHKeyword">void</span> CRenderer::RenderLoop()</div>
- <div class="CBody"><p>See <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer.RenderLoop" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,173);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer::RenderLoop</a></p></div>
+ <div id="NDPrototype763" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CRenderer::RenderLoop(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first">std::</td><td class="PType"><span class="SHKeyword">function</span>&lt;<span class="SHKeyword">void</span>(IRenderer *pRenderer, IRenderCtx *pRenderCtx, <span class="SHKeyword">int</span> pass)&gt;&nbsp;</td><td class="PName last">renderCallback</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div class="CBody"><p>See <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer.RenderLoop" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,428);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer::RenderLoop</a></p></div>
 </div>
 
 <a name="CreateGraphics"></a><a name="Topic568"></a><div class="CTopic TFunction LC">

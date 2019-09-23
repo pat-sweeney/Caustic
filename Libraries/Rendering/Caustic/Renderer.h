@@ -166,19 +166,35 @@ namespace Caustic
     //**********************************************************************
     // Class: CRenderer
     // See <IRenderer>
+    //
+    // Members:
+    // m_singleObjs - List of individual renderable objects (outside scene graph)
+    // m_lights - List of lights in this scene
+    // m_spObjIDTexture - Texture for rendering object IDs
+    // m_spObjIDRTView - Render target view for m_spObjIDTexture
+    // m_spShadowTexture[c_MaxShadowMaps] - Texture for shadow map
+    // m_spShadowRTView[c_MaxShadowMaps] - Render target view for m_spShadowTexture
+    // m_waitForShutdown - Event to control shutdown (waits for render thread to exit)
+    // m_exitThread - Controls whether we are exiting the render thread
+    // m_spLineVB - Vertex buffer used to draw lines
+    // m_spLineShader - Shader used to draw lines
+    // m_spInfinitePlaneVB - Vertex buffer used to draw ground plane
+    // m_spInfinitePlaneIB - Index buffer used to draw ground plane
+    // m_spInfinitePlaneShader - Shader used to draw ground plane
+    // m_spFullQuadVB - Vertex buffer used for drawing full screen quad
+    // m_spFullQuadIB - Index buffer used for drawing full screen quad
+    // m_spFullQuadShader - Shader used for drawing full screen quad
     //**********************************************************************
     class CRenderer : 
         public CGraphicsBase,
         public IRenderer
     {
-        CRefObj<ISceneGraph> m_spSceneGraph;
         std::vector<CRenderable> m_singleObjs;                              // List of individual renderable objects (outside scene graph)
         std::vector<CRefObj<IPointLight>> m_lights;                         // List of lights in this scene
         CComPtr<ID3D11Texture2D> m_spObjIDTexture;                          // Texture for rendering object IDs
         CComPtr<ID3D11RenderTargetView> m_spObjIDRTView;                    // Render target view for m_spObjIDTexture
         CComPtr<ID3D11Texture2D> m_spShadowTexture[c_MaxShadowMaps];        // Texture for shadow map
         CComPtr<ID3D11RenderTargetView> m_spShadowRTView[c_MaxShadowMaps];  // Render target view for m_spShadowTexture
-
         CEvent m_waitForShutdown;                       // Event to control shutdown (waits for render thread to exit)
         bool m_exitThread;                              // Controls whether we are exiting the render thread
         CComPtr<ID3D11Buffer> m_spLineVB;               // Vertex buffer used to draw lines
@@ -195,13 +211,13 @@ namespace Caustic
         void LoadDefaultShaders(const wchar_t *pFolder);
         void LoadShaderBlob(std::wstring &filename, ID3DBlob **ppBlob);
         void LoadShaderInfo(std::wstring &filename, IShaderInfo **ppShaderInfo);
-        void RenderScene();
-        void DrawSceneObjects(int pass);
+        void RenderScene(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback);
+        void DrawSceneObjects(int pass, std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback);
     public:
         explicit CRenderer();
         virtual ~CRenderer();
-        void RenderLoop();
-        void RenderFrame();
+        void RenderLoop(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback);
+        void RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback);
         void InitializeD3D(HWND hwnd);
         
         //**********************************************************************
@@ -225,7 +241,6 @@ namespace Caustic
         virtual void DrawMesh(IRenderSubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) override;
         virtual void AddPointLight(IPointLight *pLight) override;
         virtual void GetRenderCtx(IRenderCtx **ppCtx) override;
-        virtual void SetSceneGraph(ISceneGraph *pSceneGraph) override;
         virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) override;
         virtual void GetGraphics(IGraphics **ppGraphics) override;
         void DrawInfinitePlane();

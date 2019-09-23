@@ -22,9 +22,13 @@ namespace Caustic
     CRenderWindow::CRenderWindow(HWND hwnd, std::wstring &shaderFolder)
     {
         Caustic::CCausticFactory::Instance()->CreateRendererMarshaller(&m_spMarshaller);
-        m_spMarshaller->Initialize(hwnd, shaderFolder);
-		CSceneFactory::Instance()->CreateSceneGraph(&m_spSceneGraph);
-        m_spMarshaller->SetSceneGraph(m_spSceneGraph);
+        CSceneFactory::Instance()->CreateSceneGraph(&m_spSceneGraph);
+        m_spMarshaller->Initialize(hwnd, shaderFolder,
+            [this](IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass) {
+                SceneCtx sceneCtx;
+                sceneCtx.m_CurrentPass = pass;
+                m_spSceneGraph->Render(pRenderer, pRenderCtx, &sceneCtx);
+        });
 		Caustic::CCausticFactory::Instance()->CreateCamera(true, &m_spCamera);
         CRefObj<IRenderer> spRenderer;
         m_spMarshaller->GetRenderer(&spRenderer);

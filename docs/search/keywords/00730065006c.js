@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("sel",["Constant"],[["Selected",,[["SceneCtx",,,,0,"File:Rendering/SceneGraph/SceneGraph.h:SceneCtx.Selected","CClass:SceneCtx:Selected"]]]]);
+NDSearch.OnPrefixDataLoaded("sel",["Constant"],[["Selected",,[["SceneCtx",,,,0,"File:Rendering/SceneGraph/ISceneGraph.h:SceneCtx.Selected","CClass:SceneCtx:Selected"]]]]);

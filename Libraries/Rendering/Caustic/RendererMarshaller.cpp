@@ -63,11 +63,12 @@ namespace Caustic
     // Method: Initialize
     // See <IRenderer::Initialize>
     //**********************************************************************
-    void CRendererMarshaller::Initialize(HWND hwnd, std::wstring &shaderFolder)
+    void CRendererMarshaller::Initialize(HWND hwnd, std::wstring &shaderFolder, std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback)
     {
 		CCausticFactory::Instance()->CreateRenderer(hwnd, shaderFolder, &m_spRenderer);
         InitializeCriticalSection(&m_cs);
         m_thread = CreateThread(nullptr, 0, RenderThreadProc, this, 0, nullptr);
+        m_renderCallback = renderCallback;
     }
 
     //**********************************************************************
@@ -169,24 +170,6 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // Method: SetSceneGraph
-    // See <IRenderer::SetSceneGraph>
-    //**********************************************************************
-    void CRendererMarshaller::SetSceneGraph(ISceneGraph *pSceneGraph)
-    {
-        if (pSceneGraph)
-            pSceneGraph->AddRef();
-        AddLambda(
-            [this, pSceneGraph]()
-            {
-                m_spRenderer->SetSceneGraph(pSceneGraph);
-                if (pSceneGraph)
-                    pSceneGraph->Release();
-            }
-        );
-    }
-
-    //**********************************************************************
     // Method: MainLoop
     // See <IRenderer::MainLoop>
     //**********************************************************************
@@ -201,7 +184,7 @@ namespace Caustic
                 m_queue.pop();
             }
             LeaveCriticalSection(&m_cs);
-            m_spRenderer->RenderFrame();
+            m_spRenderer->RenderFrame(m_renderCallback);
         }
     }
 
@@ -341,7 +324,7 @@ namespace Caustic
     // Method: RenderLoop
     // See <IRenderer::RenderLoop>. It is not valid for the client to call this method.
     //**********************************************************************
-    void CRendererMarshaller::RenderLoop()
+    void CRendererMarshaller::RenderLoop(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback)
     {
         throw new CausticException(E_FAIL, __FILE__, __LINE__); // Don't allow client to start render loop
     }
@@ -350,12 +333,13 @@ namespace Caustic
     // Method: RenderFrame
     // See <IRenderer::RenderFrame>
     //**********************************************************************
-    void CRendererMarshaller::RenderFrame()
+    void CRendererMarshaller::RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback)
     {
+        std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> callback = renderCallback;
         AddLambda(
-            [this]()
+            [this, callback]()
             {
-                m_spRenderer->RenderFrame();
+                m_spRenderer->RenderFrame(callback);
             }
         );
     }

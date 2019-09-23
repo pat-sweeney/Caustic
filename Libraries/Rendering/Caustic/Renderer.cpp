@@ -335,15 +335,6 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // Method: SetSceneGraph
-    // See <IRenderer::SetSceneGraph>
-    //**********************************************************************
-    void CRenderer::SetSceneGraph(ISceneGraph *pSceneGraph)
-    {
-        m_spSceneGraph = pSceneGraph;
-    }
-
-    //**********************************************************************
     // Method: GetGraphics
     // See <IRenderer::GetGraphics>
     //**********************************************************************
@@ -355,21 +346,16 @@ namespace Caustic
 
     //**********************************************************************
     // Method: DrawSceneObjects
-    // Renders the scene graph currently set on the renderer.
-    //
-    // TODO: This method is obsolete and will be going away.
+    // First calls the renderCallback provided. Then renders each Renderable.
     //
     // Parameters:
     // pass - which pass are we rendering
+    // renderCallback - Render callback
     //**********************************************************************
-    void CRenderer::DrawSceneObjects(int pass)
+    void CRenderer::DrawSceneObjects(int pass, std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback)
     {
-        if (m_spSceneGraph)
-        {
-            SceneCtx sceneCtx;
-            sceneCtx.m_CurrentPass = pass;
-            m_spSceneGraph->Render(this, m_spRenderCtx, &sceneCtx);
-        }
+        if (renderCallback)
+            (renderCallback)(this, m_spRenderCtx, pass);
 
         // Render any single objects
         for (size_t i = 0; i < m_singleObjs.size(); i++)
@@ -384,7 +370,7 @@ namespace Caustic
     // Renders current scene (both scene graph and any renderables currently
     // attached to the renderer)
     //**********************************************************************
-    void CRenderer::RenderScene()
+    void CRenderer::RenderScene(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback)
     {
         DrawInfinitePlane();
         if (m_spRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayWorldAxis)
@@ -403,11 +389,13 @@ namespace Caustic
 
         for (uint32 pass = c_PassFirst; pass <= c_PassLast; pass++)
         {
-#ifdef SUPPORT_OBJID
-            CRenderCtx *pCtx = (CRenderCtx*)m_spRenderCtx;
+            CRenderCtx *pCtx = (CRenderCtx*)m_spRenderCtx.p;
             pCtx->m_currentPass = pass;
             pCtx->m_passBlendable = true;
-            if (pass == c_PassObjID)
+            if (pass == c_PassOpaque)
+                DrawSceneObjects(pass, renderCallback);
+#ifdef SUPPORT_OBJID
+            else if (pass == c_PassObjID)
             {
                 pCtx->m_passBlendable = false;
                 // Setup render target
@@ -418,7 +406,7 @@ namespace Caustic
             }
 #endif // SUPPORT_OBJID
 #ifdef SUPPORT_SHADOW_MAPPING
-            if (pass == c_PassShadow)
+            else if (pass == c_PassShadow)
             {
                 int numShadowPasses = (m_lights.size() < c_MaxShadowMaps) ? m_lights.size() : c_MaxShadowMaps;
                 for (int i = 0; i < numShadowPasses; i++)
@@ -432,14 +420,13 @@ namespace Caustic
                     CreateCamera(true, &spCamera);
                     spCamera->SetPosition(m_lights[i]->GetPosition(), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f));
                     this->SetCamera(spCamera);
-                    DrawSceneObjects(pass);
+                    DrawSceneObjects(pass, renderCallback);
                     // Restore default render targets
                     m_spContext->OMSetRenderTargets(1, &m_spRTView, m_spStencilView);
                 }
             }
-            else
 #endif // SUPPORT_SHADOW_MAPPING
-            if (pass == c_PassTransparent)
+            else if (pass == c_PassTransparent)
             {
                 std::vector<int> order;
                 order.resize(m_singleObjs.size());
@@ -455,7 +442,7 @@ namespace Caustic
                         return false;
                     }
                 );
-                DrawSceneObjects(pass);
+                DrawSceneObjects(pass, renderCallback);
             }
 
 #ifdef SUPPORT_OBJID
@@ -475,7 +462,7 @@ namespace Caustic
     // Method: RenderFrame
     // See <IRenderer::RenderFrame>
     //**********************************************************************
-    void CRenderer::RenderFrame()
+    void CRenderer::RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback)
     {
         ID3D11RenderTargetView *pView = m_spRTView;
         m_spContext->OMSetRenderTargets(1, &pView, nullptr);
@@ -494,7 +481,7 @@ namespace Caustic
 
         m_spContext->OMSetRenderTargets(1, &pView, m_spStencilView);
 
-        RenderScene();
+        RenderScene(renderCallback);
         m_spSwapChain->Present(1, 0);
     }
 
@@ -502,11 +489,11 @@ namespace Caustic
     // Method: RenderLoop
     // See <IRenderer::RenderLoop>
     //**********************************************************************
-    void CRenderer::RenderLoop()
+    void CRenderer::RenderLoop(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback)
     {
         while (!m_exitThread)
         {
-            RenderFrame();
+            RenderFrame(renderCallback);
         }
         m_waitForShutdown.Set();
     }

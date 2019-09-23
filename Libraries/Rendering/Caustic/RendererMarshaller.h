@@ -37,6 +37,7 @@ namespace Caustic
         std::queue<std::function<void()> > m_queue;
         bool m_exit;
         HANDLE m_thread;
+        std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> m_renderCallback;
 
         void AddLambda(std::function<void()> func);
     public:
@@ -52,7 +53,7 @@ namespace Caustic
         //**********************************************************************
         // IRendererMarshaller methods
         //**********************************************************************
-        virtual void Initialize(HWND hwnd, std::wstring &shaderFolder) override;
+        virtual void Initialize(HWND hwnd, std::wstring &shaderFolder, std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) override;
         virtual void Shutdown() override;
         virtual void GetRenderer(IRenderer **ppRenderer)
         {
@@ -61,7 +62,6 @@ namespace Caustic
         }
         virtual void LoadTexture(const wchar_t *pPath, ITexture **ppTexture) override;
         virtual void LoadVideoTexture(const wchar_t *pPath, ITexture **ppTexture) override;
-        virtual void SetSceneGraph(ISceneGraph *pSceneGraph) override;
         virtual void SaveScene(const wchar_t *pFilename, ISceneGraph *pSceneGraph) override;
         virtual void LoadScene(const wchar_t *pFilename, ISceneGraph *pSceneGraph) override;
 
@@ -77,8 +77,8 @@ namespace Caustic
         //**********************************************************************
         virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice) override;
         virtual void DrawMesh(IRenderSubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) override; // Draws a mesh
-        virtual void RenderLoop() override; // Renderer entry point
-        virtual void RenderFrame() override; // Have renderer draw and present next frame
+        virtual void RenderLoop(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) override; // Renderer entry point
+        virtual void RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) override; // Have renderer draw and present next frame
         virtual void SetCamera(ICamera *pCamera) override; // Sets camera
         virtual void AddPointLight(IPointLight *pLight) override;
         virtual void GetRenderCtx(IRenderCtx **ppCtx) override;
