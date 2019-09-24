@@ -15,6 +15,7 @@ namespace Caustic
     {
         CRefObj<IRendererMarshaller> m_spMarshaller;
         CRefObj<ISceneGraph> m_spSceneGraph;
+        CRefObj<IScenePointLightElem> m_spScenePointLight; // Light that moves with camera
         CRefObj<ICamera> m_spCamera;
         CRefObj<ITrackball> m_spTrackball;
         bool m_tracking;

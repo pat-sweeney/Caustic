@@ -33,18 +33,19 @@ namespace Caustic
 
     void CSampler::Render(IGraphics *pGraphics, int slot)
     {
-        pGraphics->GetContext()->PSSetSamplers(slot, 1, &m_spSamplerState);
+        auto ctx = pGraphics->GetContext();
+        ctx->PSSetSamplers(slot, 1, &m_spSamplerState.p);
         if (m_spTexture != nullptr)
         {
             CComPtr<ID3D11ShaderResourceView> spResource = m_spTexture->GetD3DTextureRV();
-            pGraphics->GetContext()->PSSetShaderResources(slot, 1, &spResource);
+            ctx->PSSetShaderResources(slot, 1, &spResource.p);
         }
         else
         {
             // No valid texture?! Checkerboard it
             CRefObj<ITexture> spTexture = CCausticFactory::Instance()->CheckerboardTexture(pGraphics);
             CComPtr<ID3D11ShaderResourceView> spResource = spTexture->GetD3DTextureRV();
-            pGraphics->GetContext()->PSSetShaderResources(slot, 1, &spResource);
+            ctx->PSSetShaderResources(slot, 1, &spResource.p);
         }
     }
 

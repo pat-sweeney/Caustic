@@ -451,7 +451,51 @@ namespace Caustic
 		}
 	}
 
-	void CShaderInfo::ParseShaderEntry(IXMLDOMNode *pNode, bool isPixelShader)
+    void CShaderInfo::ParseSamplersOrTextures(IXMLDOMNode *pNode, bool isPixelShader)
+    {
+        CComPtr<IXMLDOMNodeList> spChildren;
+        CT(pNode->get_childNodes(&spChildren));
+        long len;
+        int offset = 0;
+        CT(spChildren->get_length(&len));
+        for (long i = 0; i < len; i++)
+        {
+            CComPtr<IXMLDOMNode> spNode;
+            CT(spChildren->get_item(i, &spNode));
+            CComBSTR bstrName;
+            CT(spNode->get_nodeName(&bstrName));
+            if (bstrName == L"SamplerState" || bstrName == L"Texture")
+            {
+                // <SamplerState Name='diffuseSampler' Register='0'/>
+                CComPtr<IXMLDOMNamedNodeMap> spAttribs;
+                CT(spNode->get_attributes(&spAttribs));
+                long numAttribs;
+                CT(spAttribs->get_length(&numAttribs));
+                ShaderParamDef param;
+                param.m_type = (bstrName == L"SamplerState") ? ShaderType_Sampler : ShaderType_Texture;
+                param.m_members = 1;
+                for (long j = 0; j < numAttribs; j++)
+                {
+                    CComPtr<IXMLDOMNode> spAttrib;
+                    CT(spAttribs->get_item(j, &spAttrib));
+                    CComBSTR attribName;
+                    CT(spAttrib->get_nodeName(&attribName));
+                    CComVariant attribVal;
+                    CT(spAttrib->get_nodeValue(&attribVal));
+                    if (attribName == "Name")
+                        param.m_name = attribVal.bstrVal;
+                    else if (attribName == "Register")
+                        param.m_offset = _wtoi(attribVal.bstrVal);
+                }
+                if (isPixelShader)
+                    m_pixelShaderParamDefs.push_back(param);
+                else
+                    m_vertexShaderParamDefs.push_back(param);
+            }
+        }
+    }
+
+    void CShaderInfo::ParseShaderEntry(IXMLDOMNode *pNode, bool isPixelShader)
 	{
 		CComPtr<IXMLDOMNodeList> spChildren;
 		CT(pNode->get_childNodes(&spChildren));
@@ -463,11 +507,15 @@ namespace Caustic
 			CT(spChildren->get_item(i, &spNode));
 			CComBSTR bstrName;
 			CT(spNode->get_nodeName(&bstrName));
-			if (bstrName == L"VertexLayout" && !isPixelShader)
-				ParseLayout(spNode);
-			else if (bstrName == L"CBuffer")
-				ParseCBuffer(spNode, isPixelShader);
-		}
+            if (bstrName == L"VertexLayout" && !isPixelShader)
+                ParseLayout(spNode);
+            else if (bstrName == L"CBuffer")
+                ParseCBuffer(spNode, isPixelShader);
+            else if (bstrName == L"Textures")
+                ParseSamplersOrTextures(spNode, isPixelShader);
+            else if (bstrName == L"Samplers")
+                ParseSamplersOrTextures(spNode, isPixelShader);
+        }
 	}
 
 	void CShaderInfo::ParseShaderDef(IXMLDOMNode *pNode)

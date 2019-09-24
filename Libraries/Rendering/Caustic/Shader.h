@@ -50,19 +50,25 @@ namespace Caustic
     // ShaderParamDef defines the shader definitions that were parsed from HLSL
     // by ParseShader. These definitions define the variables that each
     // shader defines (i.e. may be set by the client)
+    //
+    // Parameters:
+    // m_type - Defines type of this parameter 
+    // m_name - Name of shader parameter
+    // m_offset - Register offset
+    // m_members - Number of elements (i.e. some parameters can be arrays) 
     //**********************************************************************
     struct ShaderParamDef
     {
         EShaderParamType m_type; // Defines type of this parameter
         std::wstring m_name;     // Name of shader parameter
         uint32 m_offset;         // register offset
-        uint32 m_members;        // Number of elements
+        uint32 m_members;        // Number of elements (i.e. some parameters can be arrays)
     };
 
     //**********************************************************************
     // Struct: ShaderParamInstance
     // ShaderParamInstance defines each parameter that a shader exposes. These parameters
-    // are derived from the ShaderDefs above. This is servers copy of each
+    // are derived from the ShaderParamDefs above. This is servers copy of each
     // parameter along with its value and position in the constant buffer.
     //**********************************************************************
     struct ShaderParamInstance : public ShaderParamDef

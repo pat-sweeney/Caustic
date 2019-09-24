@@ -26,7 +26,8 @@ namespace Caustic
         D3D10_PRIMITIVE_TOPOLOGY m_topologyType;
 
 		void ParseShaderDef(IXMLDOMNode *pNode);
-		void ParseLayout(IXMLDOMNode *pNode);
+        void ParseSamplersOrTextures(IXMLDOMNode *pNode, bool isPixelShader);
+        void ParseLayout(IXMLDOMNode *pNode);
 		void ParseCBuffer(IXMLDOMNode *pNode, bool isPixelShader);
 		DXGI_FORMAT StringToFormat(BSTR bstrStr);
 		uint32 FormatSize(DXGI_FORMAT format);

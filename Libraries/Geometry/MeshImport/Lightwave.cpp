@@ -151,8 +151,19 @@ namespace Caustic
         }
     }
 
+    // Namespace: MeshImport
     namespace MeshImport
     {
+        //**********************************************************************
+        // Function: LoadLightwave
+        // Loads a mesh from a .iff file
+        //
+        // Parameters:
+        // pFilename - path to .iff file
+        //
+        // Returns:
+        // IMesh object
+        //**********************************************************************
         CRefObj<IMesh> LoadLightwave(const wchar_t *pFilename)
         {
             HANDLE h = CreateFile(pFilename, FILE_GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr);

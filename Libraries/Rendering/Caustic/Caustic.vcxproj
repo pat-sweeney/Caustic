@@ -207,12 +207,7 @@
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Renderable.h" />
     <ClInclude Include="RendererMarshaller.h" />
-    <ClInclude Include="DefaultPS.h" />
-    <ClInclude Include="DefaultVS.h" />
-    <ClInclude Include="defs.h" />
     <ClInclude Include="IGraphics.h" />
-    <ClInclude Include="LinePS.h" />
-    <ClInclude Include="LineVS.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderMaterial.h" />
     <ClInclude Include="RenderMesh.h" />
@@ -244,20 +239,6 @@
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Trackball.cpp" />
     <ClCompile Include="VideoTexture.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="DefaultPS.tbl">
-      <FileType>Document</FileType>
-    </ClInclude>
-    <ClInclude Include="DefaultVS.tbl">
-      <FileType>Document</FileType>
-    </ClInclude>
-    <ClInclude Include="LinePS.tbl">
-      <FileType>Document</FileType>
-    </ClInclude>
-    <ClInclude Include="LineVS.tbl">
-      <FileType>Document</FileType>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="DrawNormal.ps">
@@ -328,6 +309,17 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ColorNormal.ps" />
+    <None Include="ColorUVs.ps" />
+    <None Include="Default.ps" />
+    <None Include="Default.vs" />
+    <None Include="DrawNormal.vs" />
+    <None Include="Line.ps" />
+    <None Include="Line.vs" />
+    <None Include="Normal.ps" />
+    <None Include="Textured.ps" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

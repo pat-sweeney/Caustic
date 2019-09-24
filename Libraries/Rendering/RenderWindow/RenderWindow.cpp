@@ -30,6 +30,14 @@ namespace Caustic
                 sceneCtx.m_CurrentPass = pass;
                 m_spSceneGraph->Render(pRenderer, pRenderCtx, &sceneCtx);
         });
+
+        Caustic::CSceneFactory::Instance()->CreatePointLightElem(&m_spScenePointLight);
+        Caustic::Vector3 clr(1.0f, 1.0f, 1.0f);
+        m_spScenePointLight->SetColor(clr);
+        Caustic::Vector3 pos(0.0f, 0.0f, 0.0f);
+        m_spScenePointLight->SetPosition(pos);
+        m_spSceneGraph->AddChild(m_spScenePointLight);
+
 		Caustic::CCausticFactory::Instance()->CreateCamera(true, &m_spCamera);
         CRefObj<IRenderer> spRenderer;
         m_spMarshaller->GetRenderer(&spRenderer);
@@ -117,6 +125,7 @@ namespace Caustic
                     nup = nup - neye;
                     nup.Normalize();
                     m_spCamera->SetPosition(neye, m_look, nup);
+                    m_spScenePointLight->SetPosition(neye);
                 }
             }
         }

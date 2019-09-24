@@ -124,6 +124,16 @@ namespace Caustic
 
     namespace MeshImport
     {
+        //**********************************************************************
+        // Function: LoadPLY
+        // Loads a mesh from a .ply file
+        //
+        // Parameters:
+        // pFilename - path to .ply file
+        //
+        // Returns:
+        // IMesh object
+        //**********************************************************************
         CRefObj<IMesh> LoadPLY(const wchar_t *pFilename)
         {
             HANDLE h = CreateFile(pFilename, FILE_GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr);

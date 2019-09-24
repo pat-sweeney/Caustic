@@ -335,6 +335,16 @@ namespace Caustic
     }
     namespace MeshImport
     {
+        //**********************************************************************
+        // Function: LoadObj
+        // Loads a mesh from a .obj file
+        //
+        // Parameters:
+        // pFilename - path to .obj file
+        //
+        // Returns:
+        // IMesh object
+        //**********************************************************************
         CRefObj<IMesh> LoadObj(const wchar_t *pFilename)
         {
 

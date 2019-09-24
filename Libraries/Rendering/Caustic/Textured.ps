@@ -29,7 +29,7 @@ float4 PS(VSOutput p) : SV_Target
     for (int i = 0; i < numLights; i++)
     {
         float3 lightDirWS = normalize(lightPosWS[i].xyz - p.posWS);
-        float dp = dot(normalize(p.normWS), lightDirWS);
+        float dp = saturate(dot(normalize(p.normWS), lightDirWS));
         lightDirWS = reflect(lightDirWS, p.normWS);
         float specdp = saturate(dot(lightDirWS, -viewDirWS));
         float spec = pow(specdp, specularExp.x);
