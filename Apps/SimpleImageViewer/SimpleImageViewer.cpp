@@ -9,12 +9,15 @@
 #include "Base\Core\Core.h"
 #include "Base\Core\IRefCount.h"
 #include "Imaging\Image\Image.h"
+#include "Cameras\AzureKinect\IAzureKinect.h"
 
 #define MAX_LOADSTRING 100
 
 // Global Variables:
 HINSTANCE hInst;                                // current instance
+HWND hWnd;
 HBITMAP imgbitmap = nullptr;
+Caustic::CRefObj<Caustic::IAzureKinect> spAzure;
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 
@@ -23,6 +26,22 @@ ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+
+void DrawImage(HDC hdc)
+{
+    if (imgbitmap != nullptr)
+    {
+        HDC hdcMem = CreateCompatibleDC(hdc);
+        HGDIOBJ oldBitmap = SelectObject(hdcMem, imgbitmap);
+        BITMAP bitmap;
+        GetObject(imgbitmap, sizeof(bitmap), &bitmap);
+        RECT rect;
+        GetClientRect(hWnd, &rect);
+        StretchBlt(hdc, 0, 0, rect.right - rect.left, rect.bottom - rect.top, hdcMem, 0, 0, bitmap.bmWidth, bitmap.bmHeight, SRCCOPY);
+        SelectObject(hdcMem, oldBitmap);
+        DeleteObject(hdcMem);
+    }
+}
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -50,12 +69,24 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg;
 
     // Main message loop:
-    while (GetMessage(&msg, nullptr, 0, 0))
+    while (true)
     {
-        if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
         {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
+            if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+            {
+                TranslateMessage(&msg);
+                DispatchMessage(&msg);
+            }
+        }
+        if (spAzure != nullptr)
+        {
+            Caustic::CRefObj<Caustic::IImage> spColorImage;
+            spAzure->NextFrame(&spColorImage, nullptr, nullptr);
+            if (imgbitmap != nullptr)
+                DeleteObject(imgbitmap);
+            imgbitmap = CreateBitmap(spColorImage->GetWidth(), spColorImage->GetHeight(), 1, 32, spColorImage->GetData());
+            DrawImage(GetDC(hWnd));
         }
     }
 
@@ -104,7 +135,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // Store instance handle in our global variable
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+   hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
       CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
@@ -144,6 +175,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             case IDM_EXIT:
                 DestroyWindow(hWnd);
                 break;
+            case ID_FILE_LIVECAMERA:
+                Caustic::AzureKinect::CreateAzureKinect(0, Caustic::AzureKinect::Color1080p, Caustic::AzureKinect::DepthOff, Caustic::AzureKinect::FPS30, &spAzure);
+                break;
             case ID_FILE_LOADIMAGE:
                 {
                     OPENFILENAME ofn;
@@ -179,17 +213,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
-            if (imgbitmap != nullptr)
-            {
-                HDC hdcMem = CreateCompatibleDC(hdc);
-                HGDIOBJ oldBitmap = SelectObject(hdcMem, imgbitmap);
-                BITMAP bitmap;
-                GetObject(imgbitmap, sizeof(bitmap), &bitmap);
-                RECT rect;
-                GetClientRect(hWnd, &rect);
-                StretchBlt(hdc, 0, 0, rect.right - rect.left, rect.bottom - rect.top, hdcMem, 0, 0, bitmap.bmWidth, bitmap.bmHeight, SRCCOPY);
-                SelectObject(hdcMem, oldBitmap);
-            }
+            DrawImage(hdc);
             EndPaint(hWnd, &ps);
         }
         break;

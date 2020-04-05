@@ -58,7 +58,7 @@
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(CausticRoot)\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(AzureKinectSDKDir)\sdk\include;$(CausticRoot)\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -77,7 +77,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(CausticRoot)\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(AzureKinectSDKDir)\sdk\include;$(CausticRoot)\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -107,6 +107,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\Base\Core\Core.vcxproj">
       <Project>{aacfe62f-5400-4a81-87ad-b37573a1f5c9}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Cameras\AzureKinect\AzureKinect.vcxproj">
+      <Project>{cacc2b4b-984d-49b1-8f5b-aa5b48a9d686}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Imaging\Image\Image.vcxproj">
       <Project>{f7bef797-220c-4585-a489-f06df155ea60}</Project>

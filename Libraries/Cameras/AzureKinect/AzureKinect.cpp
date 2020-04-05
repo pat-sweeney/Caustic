@@ -132,7 +132,7 @@ namespace Caustic
         m_config.color_resolution = ak_colorMode;
         m_config.depth_mode = ak_depthMode;
         m_config.camera_fps = ak_fps;
-        m_config.synchronized_images_only = true;
+        m_config.synchronized_images_only = false;
         m_config.depth_delay_off_color_usec = 0;
         m_config.wired_sync_mode = K4A_WIRED_SYNC_MODE_STANDALONE;
         m_config.subordinate_delay_off_master_usec = 0;
@@ -164,7 +164,6 @@ namespace Caustic
                         CreateImage(w, h, 32, &spImage);
                         memcpy(spImage->GetData(), buffer, spImage->GetHeight() * spImage->GetStride());
                         *ppColorImage = spImage.Detach();
-                        (*ppColorImage)->AddRef();
                     }
                     k4a_image_release(colorimage);
                 }
@@ -184,7 +183,6 @@ namespace Caustic
                         CreateImage(w, h, 16, &spImage);
                         memcpy(spImage->GetData(), buffer, spImage->GetHeight() * spImage->GetStride());
                         *ppDepthImage = spImage.Detach();
-                        (*ppDepthImage)->AddRef();
                     }
                     k4a_image_release(depthimage);
                 }

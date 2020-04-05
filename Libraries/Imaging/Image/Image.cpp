@@ -334,7 +334,6 @@ namespace Caustic
         else
             spFrame->CopyPixels(nullptr, stride, numbytes, spImage->GetData());
         *ppImage = spImage.Detach();
-        (*ppImage)->AddRef();
     }
 
     void StoreImage(const wchar_t *pFilename, IImage *pImage)
