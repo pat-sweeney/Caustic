@@ -21,7 +21,7 @@ namespace Caustic
 
         friend void LoadImage(const wchar_t *pFilename, IImage **ppImage);
         friend void StoreImage(const wchar_t *pFilename, IImage *pImage);
-        friend void CreateImage(uint32 width, uint32 height, IImage **ppImage);
+        friend void CreateImage(uint32 width, uint32 height, uint32 bpp, IImage **ppImage);
     public:
         CImage()
         {
@@ -47,6 +47,7 @@ namespace Caustic
         virtual uint8 *GetData() override { return m_spData.get(); }
         virtual uint32 GetWidth() override { return m_width; }
         virtual uint32 GetHeight() override { return m_height; }
+        virtual uint32 GetBPP() override { return m_bytesPerPixel * 8; }
         virtual uint32 GetBytesPerPixel() override { return m_bytesPerPixel; }
         virtual uint32 GetStride() override { return m_width * GetBytesPerPixel(); }
         virtual void Clear() override;
@@ -56,6 +57,8 @@ namespace Caustic
         virtual void DrawCircle(Vector2 &center, uint32 radius, uint8 color[4]) override;
         virtual void DrawLine(Vector2 &v0, Vector2 &v1, uint8 color[4]) override;
         virtual void SetPixel(uint32 x, uint32 y, uint8 color[4]) override;
+        virtual void SetPixel(uint32 x, uint32 y, uint8 gray) override;
+        virtual void SetPixel(uint32 x, uint32 y, uint16 v) override;
     };
 
     class CIntegralImage : public IIntegralImage, public CRefCount
@@ -92,6 +95,7 @@ namespace Caustic
         virtual uint32 GetBytesPerPixel() override { return sizeof(uint32) * 3; }
         virtual uint32 GetWidth() override { return m_width; }
         virtual uint32 GetHeight() override { return m_height; }
+        virtual uint32 GetBPP() override { return 24; }
 
         //**********************************************************************
         // IIntegralImage

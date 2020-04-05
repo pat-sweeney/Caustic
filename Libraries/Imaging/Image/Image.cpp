@@ -203,12 +203,12 @@ namespace Caustic
         (*ppImage)->AddRef();
     }
 
-    void CreateImage(uint32 width, uint32 height, IImage **ppImage)
+    void CreateImage(uint32 width, uint32 height, uint32 bpp, IImage **ppImage)
     {
         std::unique_ptr<CImage> spImage(new CImage());
         spImage->m_width = width;
         spImage->m_height = height;
-        spImage->m_bytesPerPixel = 4;
+        spImage->m_bytesPerPixel = bpp / 8;
         uint32 stride = width * spImage->m_bytesPerPixel;
         uint32 numbytes = stride * height;
         spImage->m_spData.reset(new BYTE[numbytes]);
@@ -219,7 +219,7 @@ namespace Caustic
     void CImage::Clone(IImage **ppImage)
     {
         CRefObj<IImage> spImage;
-        CreateImage(GetWidth(), GetHeight(), &spImage);
+        CreateImage(GetWidth(), GetHeight(), GetBPP(), &spImage);
         memcpy(spImage->GetData(), GetData(), GetStride() * GetHeight());
         *ppImage = spImage.Detach();
     }
@@ -233,15 +233,33 @@ namespace Caustic
     {
         if (x >= GetWidth() || y >= GetHeight())
             return;
-        BYTE *pData = GetData() + y * this->GetStride() + x * m_bytesPerPixel;
+        BYTE* pData = GetData() + y * this->GetStride() + x * m_bytesPerPixel;
         pData[0] = color[2];
         pData[1] = color[1];
         pData[2] = color[0];
         pData[3] = color[3];
     }
 
+    void CImage::SetPixel(uint32 x, uint32 y, uint8 gray)
+    {
+        if (x >= GetWidth() || y >= GetHeight())
+            return;
+        BYTE* pData = GetData() + y * this->GetStride() + x * m_bytesPerPixel;
+        pData[0] = gray;
+    }
+
+    void CImage::SetPixel(uint32 x, uint32 y, uint16 v)
+    {
+        if (x >= GetWidth() || y >= GetHeight())
+            return;
+        uint16* pData = (uint16*)(GetData() + y * this->GetStride() + x * m_bytesPerPixel);
+        pData[0] = v;
+    }
+
     void CImage::DrawCircle(Vector2 &center, uint32 radius, uint8 color[4])
     {
+        if (m_bytesPerPixel != 4)
+            CT(E_UNEXPECTED);
         BresenhamCircle circle(radius);
         while (!circle.end())
         {
@@ -273,6 +291,8 @@ namespace Caustic
 
     void CImage::DrawLine(Vector2 &v0, Vector2 &v1, uint8 color[4])
     {
+        if (m_bytesPerPixel != 4)
+            CT(E_UNEXPECTED);
         Bresenham b((int32)v0.x, (int32)v0.y, (int32)v1.x, (int32)v1.y);
         while (!b.eol())
         {
@@ -291,7 +311,6 @@ namespace Caustic
 #undef LoadImage
     void LoadImage(const wchar_t *pFilename, IImage **ppImage)
     {
-        std::unique_ptr<CImage> spImage(new CImage());
         CComPtr<IWICBitmapDecoder> spDecoder;
         CT(s_wic.m_spFactory->CreateDecoderFromFilename(pFilename, NULL, GENERIC_READ, WICDecodeMetadataCacheOnDemand, &spDecoder));
         CComPtr<IWICBitmapFrameDecode> spFrame;
@@ -302,21 +321,19 @@ namespace Caustic
         WICPixelFormatGUID guid;
         CT(spFrame->GetPixelFormat(&guid));
 
-        spImage->m_width = (uint32)w;
-        spImage->m_height = (uint32)h;
-        spImage->m_bytesPerPixel = 4;
-        uint32 stride = w * spImage->m_bytesPerPixel;
+        CRefObj<IImage> spImage;
+        CreateImage(w, h, 32, &spImage);
+        uint32 stride = spImage->GetStride();
         uint32 numbytes = stride * h;
-        spImage->m_spData.reset(new BYTE[numbytes]);
         if (guid != GUID_WICPixelFormat32bppBGRA)
         {
             CComPtr<IWICBitmapSource> spNewFrame;
             WICConvertBitmapSource(GUID_WICPixelFormat32bppBGRA, spFrame, &spNewFrame);
-            spNewFrame->CopyPixels(nullptr, stride, numbytes, spImage->m_spData.get());
+            CT(spNewFrame->CopyPixels(nullptr, stride, numbytes, spImage->GetData()));
         }
         else
-            spFrame->CopyPixels(nullptr, stride, numbytes, spImage->m_spData.get());
-        *ppImage = spImage.release();
+            spFrame->CopyPixels(nullptr, stride, numbytes, spImage->GetData());
+        *ppImage = spImage.Detach();
         (*ppImage)->AddRef();
     }
 

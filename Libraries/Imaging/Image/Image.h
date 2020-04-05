@@ -36,6 +36,12 @@ namespace Caustic
 		virtual uint32 GetHeight() = 0;
 
 		//**********************************************************************
+		// Method: GetBPP
+		// Returns the image's bites per pixel
+		//**********************************************************************
+		virtual uint32 GetBPP() = 0;
+
+		//**********************************************************************
 		// Method: GetStride
 		// Returns the image's stride (bytes/scanline)
 		//**********************************************************************
@@ -114,7 +120,8 @@ namespace Caustic
 
 		//**********************************************************************
 		// Method: SetPixel
-		// Sets a pixel in the image
+		// Sets a pixel in the image. This method assumes the underlying image
+		// is BGRA.
 		//
 		// Parameters:
 		// x - pixel's X coordinate
@@ -122,9 +129,33 @@ namespace Caustic
 		// color - color to set pixel to
 		//**********************************************************************
 		virtual void SetPixel(uint32 x, uint32 y, uint8 color[4]) = 0;
+
+		//**********************************************************************
+		// Method: SetPixel
+		// Sets a pixel in the image. This method assumes the underlying image
+		// is gray scale.
+		//
+		// Parameters:
+		// x - pixel's X coordinate
+		// y - pixel's Y coordinate
+		// gray - color to set pixel to
+		//**********************************************************************
+		virtual void SetPixel(uint32 x, uint32 y, uint8 gray) = 0;
+
+		//**********************************************************************
+		// Method: SetPixel
+		// Sets a pixel in the image. This method assumes the underlying image
+		// is 16b grayscale.
+		//
+		// Parameters:
+		// x - pixel's X coordinate
+		// y - pixel's Y coordinate
+		// v - color to set pixel to
+		//**********************************************************************
+		virtual void SetPixel(uint32 x, uint32 y, uint16 v) = 0;
 	};
 
-	extern void CreateImage(uint32 width, uint32 height, IImage **ppImage);
+	extern void CreateImage(uint32 width, uint32 height, uint32 bpp, IImage **ppImage);
 
 	//**********************************************************************
 	// Interface: IIntegralImage
@@ -163,7 +194,7 @@ namespace Caustic
 // Namespace: Caustic
 namespace Caustic
 {
-		//**********************************************************************
+	//**********************************************************************
 	// Function: LoadImage
 	// Loads an image from a file
 	//

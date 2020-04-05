@@ -14,7 +14,7 @@ namespace Caustic
 {
     void CImage::ShowAlpha(int boxSize, IImage **ppResult)
     {
-        CreateImage(GetWidth(), GetHeight(), ppResult);
+        CreateImage(GetWidth(), GetHeight(), GetBPP(), ppResult);
         BYTE *rowSrc = GetData();
         BYTE *rowDst = (*ppResult)->GetData();
         uint32 bytesPerPixel = GetBytesPerPixel();
