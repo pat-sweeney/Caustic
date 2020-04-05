@@ -14,6 +14,7 @@
 #include <atlbase.h>
 #include <vector>
 #include <d3d11.h>
+#include <string>
 
 //**********************************************************************
 // File: IMesh.h

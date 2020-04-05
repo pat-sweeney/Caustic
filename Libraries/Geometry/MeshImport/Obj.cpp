@@ -6,6 +6,7 @@
 #include "stdafx.h"
 #include "Base\Core\Core.h"
 #include "Base\Core\error.h"
+#include "Base\Core\convertStr.h"
 #include "Rendering\Caustic\Caustic.h"
 #include <atlbase.h>
 #include <map>
@@ -264,7 +265,7 @@ namespace Caustic
         wfn[len] = L'\\';
         wfn[len+1] = L'\0';
         std::wstring ws(wfn);
-        m_Folder = std::string(ws.begin(), ws.end());
+        m_Folder = Caustic::wstr2str(ws);
 
         bool foundFace = false;
         auto FlushSubMesh = [&]()

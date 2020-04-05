@@ -35,7 +35,7 @@ namespace Caustic
             area = -area;
         float dx = p1.x - p0.x;
         float dy = p1.y - p0.y;
-        float dist = area / sqrt(dx * dx + dy * dy);
+        float dist = area / sqrtf(dx * dx + dy * dy);
         return dist;
     }
 

@@ -6,6 +6,7 @@
 #pragma once
 #include "stdafx.h"
 #include "Base\Core\Core.h"
+#include "Base/Core/convertStr.h"
 #include "ShaderInfo.h"
 #include <MsXml6.h>
 
@@ -313,8 +314,7 @@ namespace Caustic
 					CT(spAttrib->get_nodeValue(&attribVal));
 					if (attribName == L"Semantic")
 					{
-						std::wstring wstr(attribVal.bstrVal);
-						std::string str(wstr.begin(), wstr.end());
+						std::string str = Caustic::wstr2str(attribVal.bstrVal);
 						for (auto name : s_SemanticNames)
 						{
 							if (name == str)
@@ -327,8 +327,8 @@ namespace Caustic
 					}
 					else if (attribName == L"SemanticIndex")
 					{
-						std::wstring wstr(attribVal.bstrVal);
-						desc.SemanticIndex = std::stoi(std::string(wstr.begin(), wstr.end()));
+						std::string str = Caustic::wstr2str(attribVal.bstrVal);
+						desc.SemanticIndex = std::stoi(str);
 					}
 					else if (attribName == L"Format")
 						desc.Format = StringToFormat(attribVal.bstrVal);

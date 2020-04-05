@@ -35,14 +35,14 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="Quad.vs">
+    <None Include="Gaussian.ps">
       <Filter>Source Files\Shaders</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Gaussian.ps">
+    </None>
+    <None Include="Quad.vs">
       <Filter>Source Files\Shaders</Filter>
-    </CustomBuild>
-    <CustomBuild Include="RawCopy.ps">
+    </None>
+    <None Include="RawCopy.ps">
       <Filter>Source Files\Shaders</Filter>
-    </CustomBuild>
+    </None>
   </ItemGroup>
 </Project>

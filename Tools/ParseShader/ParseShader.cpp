@@ -17,6 +17,7 @@
 #include <atlbase.h>
 #include "Base/Core/Core.h"
 #include "Base/Core/error.h"
+#include "Base/Core/convertStr.h"
 #include <MsXml6.h>
 #include <stdlib.h>
 #include <map>
@@ -188,15 +189,9 @@ void CompileShader(IXMLDOMNode *pNode, bool pixelShader, std::string &shaderFn, 
         CComVariant attribVal;
         CT(spAttrib->get_nodeValue(&attribVal));
         if (attribName == L"Filename")
-        {
-            std::wstring fn(attribVal.bstrVal);
-            shaderFn = std::string(fn.begin(), fn.end());
-        }
+            shaderFn = Caustic::wstr2str(attribVal.bstrVal);
         else if (attribName == L"Output")
-        {
-            std::wstring fn(attribVal.bstrVal);
-            outputFn = std::string(fn.begin(), fn.end());
-        }
+            outputFn = Caustic::wstr2str(attribVal.bstrVal);
     }
 
     ExpandEnvironmentVariables(shaderFn);
@@ -211,7 +206,14 @@ void CompileShader(IXMLDOMNode *pNode, bool pixelShader, std::string &shaderFn, 
         std::string pdbFn = outputFn;
         pdbFn.replace(index, 4, ".pdb");
         char buffer[10240];
-        sprintf_s(buffer, "\"C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.17763.0\\x86\\fxc.exe\" /Zi /E\"%s\" /Od /Fd\"%s\" /Fo\"%s\" /T\"%s\" /nologo %s",
+        char fxcpath[_MAX_PATH];
+        DWORD dwResult = GetEnvironmentVariable("CausticFXCPath", fxcpath, sizeof(fxcpath));
+        if (dwResult == 0)
+        {
+            ::MessageBox(nullptr, "Path to fxc not found. Define path to fxc.exe in $(CausticFXCPath)", "Undefined path", MB_OK);
+            exit(1);
+        }
+        sprintf_s(buffer, "\"%s\" /Zi /E\"%s\" /Od /Fd\"%s\" /Fo\"%s\" /T\"%s\" /nologo %s", fxcpath,
             (pixelShader) ? "PS" : "VS", pdbFn.c_str(), outputFn.c_str(), (pixelShader) ? "ps_5_0" : "vs_5_0", shaderFn.c_str());
         if (CreateProcess(nullptr, buffer, nullptr, nullptr, TRUE, 0, nullptr, nullptr, &info, &processInfo))
         {

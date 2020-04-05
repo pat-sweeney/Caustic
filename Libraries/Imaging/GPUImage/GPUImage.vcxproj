@@ -14,19 +14,19 @@
     <ProjectGuid>{DA295723-0117-49D6-B2E1-372592BB1851}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>GPUImage</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -94,31 +94,31 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="Quad.vs">
+    <None Include="Quad.vs">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS Quad</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS Quad</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">QuadVS.h;QuadVS.tbl</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">QuadVS.h;QuadVS.tbl</Outputs>
-    </CustomBuild>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="Gaussian.ps">
+    <None Include="Gaussian.ps">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS Gaussian</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS Gaussian</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">GaussianPS.h;GaussianPS.tbl</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">GaussianPS.h;GaussianPS.tbl</Outputs>
-    </CustomBuild>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="RawCopy.ps">
+    <None Include="RawCopy.ps">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS RawCopy</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS RawCopy</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">RawCopyPS.h;RawCopyPS.tbl</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">RawCopyPS.h;RawCopyPS.tbl</Outputs>
-    </CustomBuild>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

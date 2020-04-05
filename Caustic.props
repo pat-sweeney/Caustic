@@ -2,7 +2,8 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
-    <CausticRoot>f:\github\Caustic3\Caustic</CausticRoot>
+    <CausticRoot>g:\github\Caustic</CausticRoot>
+    <CausticFXCPath>C:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x64\fxc.exe</CausticRoot>
   </PropertyGroup>
   <PropertyGroup />
   <ItemDefinitionGroup />

@@ -164,30 +164,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="DrawNormal.ps">
-      <Filter>Source Files\Shaders</Filter>
-    </CustomBuild>
-    <CustomBuild Include="InfinitePlane.ps">
-      <Filter>Source Files\Shaders</Filter>
-    </CustomBuild>
-    <CustomBuild Include="FullQuad.ps">
-      <Filter>Source Files\Shaders</Filter>
-    </CustomBuild>
-    <CustomBuild Include="FullQuad.vs">
-      <Filter>Source Files\Shaders</Filter>
-    </CustomBuild>
-    <CustomBuild Include="InfinitePlane.vs">
-      <Filter>Source Files\Shaders</Filter>
-    </CustomBuild>
-    <CustomBuild Include="ShadowMap.ps">
-      <Filter>Source Files\Shaders</Filter>
-    </CustomBuild>
-    <CustomBuild Include="ShadowMap.vs">
-      <Filter>Source Files\Shaders</Filter>
-    </CustomBuild>
-    <CustomBuild Include="ObjID.ps">
-      <Filter>Source Files\Shaders</Filter>
-    </CustomBuild>
     <CustomBuild Include="Textured.xml">
       <Filter>Source Files\Shaders\Definitions</Filter>
     </CustomBuild>
@@ -248,6 +224,30 @@
       <Filter>Source Files\Shaders</Filter>
     </None>
     <None Include="Textured.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="DrawNormal.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="FullQuad.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="FullQuad.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="InfinitePlane.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="InfinitePlane.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="ObjID.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="ShadowMap.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="ShadowMap.vs">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>
