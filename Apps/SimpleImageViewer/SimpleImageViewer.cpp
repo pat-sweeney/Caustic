@@ -9,6 +9,7 @@
 #include "Base\Core\Core.h"
 #include "Base\Core\IRefCount.h"
 #include "Imaging\Image\Image.h"
+#include "Imaging\Image\ImageFilter.h"
 #include "Cameras\AzureKinect\IAzureKinect.h"
 
 #define MAX_LOADSTRING 100
@@ -17,6 +18,7 @@
 HINSTANCE hInst;                                // current instance
 HWND hWnd;
 HBITMAP imgbitmap = nullptr;
+bool g_ShowDepth = false;
 Caustic::CRefObj<Caustic::IAzureKinect> spAzure;
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
@@ -26,6 +28,8 @@ ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+
+using namespace Caustic;
 
 void DrawImage(HDC hdc)
 {
@@ -81,16 +85,25 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
         if (spAzure != nullptr)
         {
-            Caustic::CRefObj<Caustic::IImage> spColorImage;
-            Caustic::CRefObj<Caustic::IImage> spDepthImage;
+            CRefObj<IImage> spColorImage;
+            CRefObj<IImage> spDepthImage;
             spAzure->NextFrame(&spColorImage, &spDepthImage, nullptr);
-            if (spDepthImage != nullptr)
+            if ((spDepthImage != nullptr && g_ShowDepth) || (spColorImage != nullptr && !g_ShowDepth))
             {
                 if (imgbitmap != nullptr)
                     DeleteObject(imgbitmap);
-                Caustic::CRefObj<Caustic::IImage> spColoredDepthImage;
-                spDepthImage->Colorize(&spColoredDepthImage);
-                imgbitmap = CreateBitmap(spColoredDepthImage->GetWidth(), spColoredDepthImage->GetHeight(), 1, 32, spColoredDepthImage->GetData());
+                if (g_ShowDepth)
+                {
+                    CRefObj<IImage> spColoredDepthImage;
+                    CRefObj<IImageFilter> spFilter;
+                    CreateColorize(&spFilter);
+                    spFilter->Apply(spDepthImage, &spColoredDepthImage);
+                    imgbitmap = CreateBitmap(spColoredDepthImage->GetWidth(), spColoredDepthImage->GetHeight(), 1, 32, spColoredDepthImage->GetData());
+                }
+                else
+                {
+                    imgbitmap = CreateBitmap(spColorImage->GetWidth(), spColorImage->GetHeight(), 1, 32, spColorImage->GetData());
+                }
                 DrawImage(GetDC(hWnd));
             }
         }
@@ -183,6 +196,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 break;
             case ID_FILE_LIVECAMERA:
                 Caustic::AzureKinect::CreateAzureKinect(0, Caustic::AzureKinect::Color1080p, Caustic::AzureKinect::Depth512x512, Caustic::AzureKinect::FPS30, &spAzure);
+                break;
+            case ID_VIEW_SHOWDEPTH:
+                g_ShowDepth = !g_ShowDepth;
                 break;
             case ID_FILE_LOADIMAGE:
                 {

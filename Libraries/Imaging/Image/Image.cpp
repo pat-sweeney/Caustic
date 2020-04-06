@@ -133,75 +133,6 @@ namespace Caustic
         (*ppImage)->AddRef();
     }
 
-    void CImage::GaussianBlur(float sigma, IImage **ppImage)
-    {
-        // First compute kernel
-        // A normal distribution is defined by:
-        //
-        //    f(x|u,s^2) = e^(-(x-u)^2/(2*s*s)) / sqrt(2*s*s*PI)
-        // u = average, which is zero since we are centered at 0
-        // s = sigma
-        // We also know that 255*e^-5.541 ~= 1. Thus we can solve for s such that whatever is our maximum
-        // x (i.e. the width of our kernel) will result in a value of 1 in our kernel weight.
-        float magic = 5.541f;
-        int kw = (int)(sqrt(magic * 2 * sigma * sigma));
-        int kernelWidth = kw * 2 + 1;
-        int *kernelWeights = new int[kernelWidth];
-        double *weights = new double[kernelWidth];
-        for (int i = -kw; i <= kw; i++)
-        {
-            double x = (double)i;
-            double e = exp(-(x*x) / (2 * sigma*sigma));
-            double weight = e / sqrt(2 * sigma * sigma * 3.1415926535f);
-            weights[i+kw] = weight;
-            // FIXX! Need to add other side of kernel to weights
-            kernelWeights[i+kw] = (int)(255.0f * weight);
-        }
-
-        auto BlurPass = [&](CImage *pSrc, CImage *pDst, uint32 h, uint32 w, uint32 rowOffset, uint32 colOffset)
-        {
-            BYTE *rowSrc = pSrc->GetData();
-            BYTE *rowDst = pDst->GetData();
-            for (uint32 y = 0; y < h; y++)
-            {
-                BYTE *colSrc = rowSrc;
-                BYTE *colDst = rowDst;
-                for (uint32 x = 0; x < w; x++)
-                {
-                    int offset = -kw;
-                    float sum[3] = { 0.0f , 0.0f , 0.0f };
-                    for (int i = -kw; i <= kw; i++)
-                    {
-                        int xoffset = (int)x + i;
-                        if (xoffset < 0)
-                            xoffset = 0;
-                        else if (xoffset >= (int)w)
-                            xoffset = (int)w - 1;
-                        sum[0] += float(weights[i + kw] * float(rowSrc[colOffset * xoffset + 0]) / 255.0f);
-                        sum[1] += float(weights[i + kw] * float(rowSrc[colOffset * xoffset + 1]) / 255.0f);
-                        sum[2] += float(weights[i + kw] * float(rowSrc[colOffset * xoffset + 2]) / 255.0f);
-                    }
-                    colDst[0] = (int)(255.0f * sum[0]);
-                    colDst[1] = (int)(255.0f * sum[1]);
-                    colDst[2] = (int)(255.0f * sum[2]);
-                    colDst[3] = colSrc[3];
-                    colSrc += colOffset;
-                    colDst += colOffset;
-                }
-                rowSrc += rowOffset;
-                rowDst += rowOffset;
-            }
-        };
-        uint32 bytesPerPixel = GetBytesPerPixel();
-        uint32 stride = GetStride();
-        std::unique_ptr<CImage> spImage(new CImage(GetWidth(), GetHeight()));
-        BlurPass(this, spImage.get(), GetHeight(), GetWidth(), stride, bytesPerPixel);
-        std::unique_ptr<CImage> spImage2(new CImage(GetWidth(), GetHeight()));
-        BlurPass(spImage.get(), spImage2.get(), GetWidth(), GetHeight(), bytesPerPixel, stride);
-
-        *ppImage = spImage2.release();
-        (*ppImage)->AddRef();
-    }
 
     void CreateImage(uint32 width, uint32 height, uint32 bpp, IImage **ppImage)
     {
@@ -211,7 +142,7 @@ namespace Caustic
         spImage->m_bytesPerPixel = bpp / 8;
         uint32 stride = width * spImage->m_bytesPerPixel;
         uint32 numbytes = stride * height;
-        spImage->m_spData.reset(new BYTE[numbytes]);
+        spImage->m_pData = new BYTE[numbytes];
         *ppImage = spImage.release();
         (*ppImage)->AddRef();
     }

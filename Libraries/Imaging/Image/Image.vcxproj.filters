@@ -19,6 +19,12 @@
     <ClInclude Include="targetver.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="ImageIter.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageFilter.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -30,10 +36,10 @@
     <ClCompile Include="SuperPixel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ShowAlpha.cpp">
+    <ClCompile Include="Coloriize.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Coloriize.cpp">
+    <ClCompile Include="GaussianBlur.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

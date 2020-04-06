@@ -6,13 +6,53 @@
 #include "stdafx.h"
 #include "Base\Core\Core.h"
 #include "Base\Core\error.h"
+#include "Base\Core\RefCount.h"
 #include "Image.h"
-#include "ImageImpl.h"
+#include "ImageFilter.h"
+#include "ImageIter.h"
+#include <memory>
 
 namespace Caustic
 {
-    void CImage::Colorize(IImage **ppImage, int maxDepth /* = 8000 */)
+    class CColorize : public IImageFilter, public CRefCount
     {
+        int m_maxDepth;
+    public:
+        CColorize(int maxDepth) :
+            m_maxDepth(maxDepth)
+        {
+        }
+
+        //**********************************************************************
+        // IAddRef
+        //**********************************************************************
+        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32 Release() override { return CRefCount::Release(); }
+
+        //**********************************************************************
+        // IImageFilter
+        //**********************************************************************
+        virtual void Apply(IImage* pImage, IImage** ppResult) override;
+        virtual bool ApplyInPlace(IImage* pImage) override;
+    };
+
+    void CreateColorize(IImageFilter** ppFilter)
+    {
+        CreateColorize(8000, ppFilter);
+    }
+    
+    void CreateColorize(int maxDepth, IImageFilter** ppFilter)
+    {
+        std::unique_ptr<CColorize> spFilter(new CColorize(maxDepth));
+        *ppFilter = spFilter.release();
+        (*ppFilter)->AddRef();
+    }
+
+    void CColorize::Apply(IImage* pImage, IImage** ppResult)
+    {
+        if (pImage->GetBPP() != 16)
+            CT(E_UNEXPECTED);
+        
         auto Saturate = [](int value) -> int
         {
             if (value < 0)
@@ -27,33 +67,37 @@ namespace Caustic
                 return -v;
             return v;
         };
+
+        CRefObj<IImage> spImage;
+        Caustic::CreateImage(pImage->GetWidth(), pImage->GetHeight(), 32, &spImage);
+
         unsigned short maxDepthVal = 0xFFFF;
         unsigned short minDepthVal = 0;
-        int bufSize = m_width * m_height * 4;
-        uint8* data = new uint8[bufSize];
-        unsigned short* pSrcRow = (unsigned short*)m_spData.get();
-        uint8* pDstRow = data;
-        for (int iy = 0; iy < m_height; iy++)
+        CImageIter16 srcRow(pImage, 0, 0);
+        CImageIter32 dstRow(spImage, 0, 0);
+        for (int iy = 0; iy < (int)pImage->GetHeight(); iy++)
         {
-            unsigned short* pSrcCol = pSrcRow;
-            uint8* pDstCol = pDstRow;
-            for (int ix = 0; ix < m_width; ix++)
+            CImageIter16 srcCol = srcRow;
+            CImageIter32 dstCol = dstRow;
+            for (int ix = 0; ix < (int)pImage->GetWidth(); ix++)
             {
-                int depth = pSrcCol[0];
-                int normalizedDepth = (depth >= minDepthVal && depth <= maxDepthVal) ? (depth * 1024 / maxDepth) : 0;
-                pDstCol[0] = (uint8)Saturate(384 - (int)Abs(normalizedDepth - 256));
-                pDstCol[1] = (uint8)Saturate(384 - (int)Abs(normalizedDepth - 512));
-                pDstCol[2] = (uint8)Saturate(384 - (int)Abs(normalizedDepth - 768));
-                pDstCol[3] = 255;
-                pSrcCol++;
-                pDstCol += 4;
+                uint16 depth = srcCol.GetGray();
+                int normalizedDepth = (depth >= minDepthVal && depth <= maxDepthVal) ? (depth * 1024 / m_maxDepth) : 0;
+                dstCol.SetRed((uint8)Saturate(384 - (int)Abs(normalizedDepth - 256)));
+                dstCol.SetGreen((uint8)Saturate(384 - (int)Abs(normalizedDepth - 512)));
+                dstCol.SetBlue((uint8)Saturate(384 - (int)Abs(normalizedDepth - 768)));
+                dstCol.SetAlpha(255);
+                srcCol.Step(CImageIter::Right);
+                dstCol.Step(CImageIter::Right);
             }
-            pSrcRow += m_width;
-            pDstRow += m_width * 4;
+            srcRow.Step(CImageIter::Down);
+            dstRow.Step(CImageIter::Down);
         }
-        CRefObj<IImage> spImage;
-        Caustic::CreateImage(m_width, m_height, 32, &spImage);
-        memcpy(spImage->GetData(), data, m_width * m_height * 4);
-        *ppImage = spImage.Detach();
+        *ppResult = spImage.Detach();
+    }
+    
+    bool CColorize::ApplyInPlace(IImage* pImage)
+    {
+        return false; // Not supported
     }
 }
