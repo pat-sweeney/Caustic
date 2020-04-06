@@ -1,0 +1,1 @@
+NDSummary.OnToolTipsLoaded("File:Base/Core/convertStr.h",{763:"<div class=\"NDToolTip TClass LC\"><div class=\"NDClassPrototype\" id=\"NDClassPrototype763\"><div class=\"CPEntry TClass Current\"><div class=\"CPModifiers\"><span class=\"SHKeyword\">namespace</span> </div><div class=\"CPName\">Caustic</div></div></div></div>"});

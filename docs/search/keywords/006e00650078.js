@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("nex",["Function"],[["NextFrame",,[["IAzureKinect",,,,0,"File:Cameras/AzureKinect/IAzureKinect.h:IAzureKinect.NextFrame","CClass:IAzureKinect:NextFrame"],["ICamera",,,,0,"File:Cameras/CameraBase/ICamera.h:ICamera.NextFrame","CClass:ICamera:NextFrame"]]]]);

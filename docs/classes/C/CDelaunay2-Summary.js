@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:CDelaunay2","CDelaunay2");NDSummary.OnSummaryLoaded("CClass:CDelaunay2",[["C/C++","C"]],[["Classes","Class"]],[[206,0,0,"CDelaunay2"]]);
+NDFramePage.OnPageTitleLoaded("CClass:CDelaunay2","CDelaunay2");NDSummary.OnSummaryLoaded("CClass:CDelaunay2",[["C/C++","C"]],[["Classes","Class"]],[[204,0,0,"CDelaunay2"]]);

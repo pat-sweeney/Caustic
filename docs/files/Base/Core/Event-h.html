@@ -8,43 +8,43 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="CEvent"></a><a name="Topic22"></a><div class="CTopic TClass LC first">
+<a name="CEvent"></a><a name="Topic16"></a><div class="CTopic TClass LC first">
  <div class="CTitle">CEvent</div>
- <div class="NDClassPrototype" id="NDClassPrototype22"><div class="CPEntry TClass Current"><div class="CPName">CEvent</div></div></div>
+ <div class="NDClassPrototype" id="NDClassPrototype16"><div class="CPEntry TClass Current"><div class="CPName">CEvent</div></div></div>
  <div class="CBody"><p>Defines a smart wrapper for handling events</p></div>
 </div>
 
-<a name="CEvent.Functions"></a><a name="Topic23"></a><div class="CTopic TGroup LC">
+<a name="CEvent.Functions"></a><a name="Topic17"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="CEvent.CEvent"></a><a name="Topic24"></a><div class="CTopic TFunction LC">
+<a name="CEvent.CEvent"></a><a name="Topic18"></a><div class="CTopic TFunction LC">
  <div class="CTitle">CEvent</div>
- <div id="NDPrototype24" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">explicit</span> CEvent(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">bool</span>&nbsp;</td><td class="PName last">defaultState,</td></tr><tr><td class="PType first"><span class="SHKeyword">bool</span>&nbsp;</td><td class="PName last">manualReset</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div id="NDPrototype18" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">explicit</span> CEvent(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">bool</span>&nbsp;</td><td class="PName last">defaultState,</td></tr><tr><td class="PType first"><span class="SHKeyword">bool</span>&nbsp;</td><td class="PName last">manualReset</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
  <div class="CBody"><p>Defines the constructor for an event</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">defaultState<div class="CDLParameterType"><span class="SHKeyword">bool</span></div></td><td class="CDLDefinition"><p>Sets the initial state of the event</p></td></tr><tr><td class="CDLEntry">manualReset<div class="CDLParameterType"><span class="SHKeyword">bool</span></div></td><td class="CDLDefinition"><p>Specifies whether event needs to be manually reset</p></td></tr></table></div>
 </div>
 
-<a name="CEvent.~CEvent"></a><a name="Topic25"></a><div class="CTopic TFunction LC">
+<a name="CEvent.~CEvent"></a><a name="Topic19"></a><div class="CTopic TFunction LC">
  <div class="CTitle">~CEvent</div>
- <div id="NDPrototype25" class="NDPrototype NoParameterForm">~CEvent()</div>
+ <div id="NDPrototype19" class="NDPrototype NoParameterForm">~CEvent()</div>
  <div class="CBody"><p>Default destructor</p></div>
 </div>
 
-<a name="CEvent.Set"></a><a name="Topic26"></a><div class="CTopic TFunction LC">
+<a name="CEvent.Set"></a><a name="Topic20"></a><div class="CTopic TFunction LC">
  <div class="CTitle">Set</div>
- <div id="NDPrototype26" class="NDPrototype NoParameterForm"><span class="SHKeyword">bool</span> Set()</div>
+ <div id="NDPrototype20" class="NDPrototype NoParameterForm"><span class="SHKeyword">bool</span> Set()</div>
  <div class="CBody"><p>Sets the event</p><div class="CHeading">Returns</div><p>Returns true if event was successfully set. Otherwise returns false.</p></div>
 </div>
 
-<a name="CEvent.Clear"></a><a name="Topic27"></a><div class="CTopic TFunction LC">
+<a name="CEvent.Clear"></a><a name="Topic21"></a><div class="CTopic TFunction LC">
  <div class="CTitle">Clear</div>
- <div id="NDPrototype27" class="NDPrototype NoParameterForm"><span class="SHKeyword">bool</span> Clear()</div>
+ <div id="NDPrototype21" class="NDPrototype NoParameterForm"><span class="SHKeyword">bool</span> Clear()</div>
  <div class="CBody"><p>Clears the event</p><div class="CHeading">Returns</div><p>Returns true if event was successfully reset. Otherwise returns false.</p></div>
 </div>
 
-<a name="CEvent.Wait"></a><a name="Topic28"></a><div class="CTopic TFunction LC last">
+<a name="CEvent.Wait"></a><a name="Topic22"></a><div class="CTopic TFunction LC last">
  <div class="CTitle">Wait</div>
- <div id="NDPrototype28" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">DWORD Wait(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first">DWORD&nbsp;</td><td class="PName last">dwTimeout</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div id="NDPrototype22" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters">DWORD Wait(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first">DWORD&nbsp;</td><td class="PName last">dwTimeout</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
  <div class="CBody"><p>Waits till the event is signaled or times out</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">dwTimeout<div class="CDLParameterType">DWORD</div></td><td class="CDLDefinition"><p>time in milliseconds to wait before timing out</p></td></tr></table><div class="CHeading">Returns</div><p>Returns true if event was successfully reset. Otherwise returns false.</p></div>
 </div>
 

@@ -8,59 +8,59 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="IRenderCtx.h"></a><a name="Topic706"></a><div class="CTopic TFile LC first">
+<a name="IRenderCtx.h"></a><a name="Topic563"></a><div class="CTopic TFile LC first">
  <div class="CTitle">IRenderCtx.h</div>
  <div class="CBody"><p>This file defines the published interface the Render context.&nbsp; The render context defines top level states that are relevant to the entire frame.</p></div>
 </div>
 
-<a name="RenderCtxFlags"></a><a name="Topic472"></a><div class="CTopic TClass LC">
+<a name="RenderCtxFlags"></a><a name="Topic564"></a><div class="CTopic TClass LC">
  <div class="CTitle">RenderCtxFlags</div>
- <div class="NDClassPrototype" id="NDClassPrototype472"><div class="CPEntry TClass Current"><div class="CPModifiers"><span class="SHKeyword">namespace</span> </div><div class="CPName">RenderCtxFlags</div></div></div>
+ <div class="NDClassPrototype" id="NDClassPrototype564"><div class="CPEntry TClass Current"><div class="CPModifiers"><span class="SHKeyword">namespace</span> </div><div class="CPName">RenderCtxFlags</div></div></div>
  <div class="CBody"><p>Defines flags for setting various render modes</p><table class="CDefinitionList"><tr><td class="CDLEntry">c_DisplayNormalsAsColors</td><td class="CDLDefinition"><p>Render mesh using the normal vector as a color</p></td></tr><tr><td class="CDLEntry">c_DisplayNormalsAsLines</td><td class="CDLDefinition"><p>Render the mesh and display normal vectors as lines emanating from the mesh</p></td></tr><tr><td class="CDLEntry">c_DisplayFaceNormals</td><td class="CDLDefinition"><p>Render the normals at each</p></td></tr><tr><td class="CDLEntry">c_DisplayWireframe</td><td class="CDLDefinition"><p>Render the mesh as a wireframe</p></td></tr><tr><td class="CDLEntry">c_DisplayWorldAxis</td><td class="CDLDefinition"><p>Draw a set of world coordinate axis at the origin</p></td></tr><tr><td class="CDLEntry">c_DisplayUVsAsColors</td><td class="CDLDefinition"><p>Render the mesh using UV texture coordinates as the mesh surface color</p></td></tr><tr><td class="CDLEntry">c_DisplayLightDir</td><td class="CDLDefinition"><p>Render geometry to indicate the light direction</p></td></tr><tr><td class="CDLEntry">c_DisplayGrid</td><td class="CDLDefinition"><p>Render an XY grid plane at the origin</p></td></tr></table></div>
 </div>
 
-<a name="IRenderCtx"></a><a name="Topic460"></a><div class="CTopic TInterface LC">
+<a name="IRenderCtx"></a><a name="Topic565"></a><div class="CTopic TInterface LC">
  <div class="CTitle">IRenderCtx</div>
  <div class="CBody"><p>Defines the main interface for setting various features in the renderer</p></div>
 </div>
 
-<a name="IRenderCtx.Functions"></a><a name="Topic461"></a><div class="CTopic TGroup LC">
+<a name="IRenderCtx.Functions"></a><a name="Topic566"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="IRenderCtx.SetDebugFlags"></a><a name="Topic462"></a><div class="CTopic TFunction LC">
+<a name="IRenderCtx.SetDebugFlags"></a><a name="Topic567"></a><div class="CTopic TFunction LC">
  <div class="CTitle">SetDebugFlags</div>
- <div id="NDPrototype462" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetDebugFlags(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">flags</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div id="NDPrototype567" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetDebugFlags(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">flags</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
  <div class="CBody"><p>Sets debug flags used for rendering</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">flags<div class="CDLParameterType"><span class="SHKeyword">uint32</span></div></td><td class="CDLDefinition"><p>new debug flags</p></td></tr></table></div>
 </div>
 
-<a name="IRenderCtx.GetDebugFlags"></a><a name="Topic463"></a><div class="CTopic TFunction LC">
+<a name="IRenderCtx.GetDebugFlags"></a><a name="Topic568"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetDebugFlags</div>
- <div id="NDPrototype463" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetDebugFlags() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype568" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetDebugFlags() = <span class="SHNumber">0</span></div>
  <div class="CBody"><p>Returns the current debug flags used for rendering</p></div>
 </div>
 
-<a name="IRenderCtx.SetNormalScale"></a><a name="Topic464"></a><div class="CTopic TFunction LC">
+<a name="IRenderCtx.SetNormalScale"></a><a name="Topic569"></a><div class="CTopic TFunction LC">
  <div class="CTitle">SetNormalScale</div>
- <div id="NDPrototype464" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetNormalScale(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">float</span>&nbsp;</td><td class="PName last">normalScale</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div id="NDPrototype569" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetNormalScale(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">float</span>&nbsp;</td><td class="PName last">normalScale</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
  <div class="CBody"><p>Sets the scale used to determine how large debug normal vectors are drawn</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">normalScale<div class="CDLParameterType"><span class="SHKeyword">float</span></div></td><td class="CDLDefinition"><p>sets the scale factor for drawing debug normal vectors</p></td></tr></table></div>
 </div>
 
-<a name="IRenderCtx.GetNormalScale"></a><a name="Topic465"></a><div class="CTopic TFunction LC">
+<a name="IRenderCtx.GetNormalScale"></a><a name="Topic570"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetNormalScale</div>
- <div id="NDPrototype465" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">float</span> GetNormalScale() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype570" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">float</span> GetNormalScale() = <span class="SHNumber">0</span></div>
  <div class="CBody"><p>Returns the scale used for determining how large debug normal vectors are drawn</p></div>
 </div>
 
-<a name="IRenderCtx.GetCurrentPass"></a><a name="Topic466"></a><div class="CTopic TFunction LC">
+<a name="IRenderCtx.GetCurrentPass"></a><a name="Topic571"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetCurrentPass</div>
- <div id="NDPrototype466" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetCurrentPass() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype571" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetCurrentPass() = <span class="SHNumber">0</span></div>
  <div class="CBody"><p>Returns the current render pass</p></div>
 </div>
 
-<a name="IRenderCtx.PassBlendable"></a><a name="Topic467"></a><div class="CTopic TFunction LC last">
+<a name="IRenderCtx.PassBlendable"></a><a name="Topic572"></a><div class="CTopic TFunction LC last">
  <div class="CTitle">PassBlendable</div>
- <div id="NDPrototype467" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">bool</span> PassBlendable() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype572" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">bool</span> PassBlendable() = <span class="SHNumber">0</span></div>
  <div class="CBody"><p>Returns whether the current render pass supports alpha blending</p></div>
 </div>
 

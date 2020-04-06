@@ -22,6 +22,7 @@ namespace Caustic
         //**********************************************************************
         // Method: NextFrame
         // Retrieves the next color/depth/ir image from the camera
+        //
         // Parameters:
         // ppColorImage - returns the next color image retrieved from the camera. Maybe nullptr.
         // ppDepthImage - returns the next depth image retrieved from the camera. Maybe nullptr.
@@ -57,6 +58,20 @@ namespace Caustic
             FPS15,
             FPS30
         };
+
+        //**********************************************************************
+        // Function: CreateAzureKinect
+        // Creates a new instance of the Azure Kinect.
+        //
+        // Parameters:
+        // deviceId - index of device to use
+        // colorMode - color mode for the device
+        // depthMode - depth mode for the device
+        // fpsMode - frames per second mode
+        //
+        // Returns:
+        // ppCamera - Returns the newly created camera
+        //**********************************************************************
         extern void CreateAzureKinect(int deviceId, ColorMode colorMode, DepthMode depthMode, FPSMode fpsMode, IAzureKinect** ppCamera);
     }
 }

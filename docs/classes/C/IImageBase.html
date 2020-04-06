@@ -8,42 +8,48 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="Topic293"></a><div class="CTopic TInterface LC first">
+<a name="Topic307"></a><div class="CTopic TInterface LC first">
  <div class="CTitle">IImageBase</div>
  <div class="CBody"><p>Base interface shared across all image types</p></div>
 </div>
 
-<a name="Functions"></a><a name="Topic294"></a><div class="CTopic TGroup LC">
+<a name="Functions"></a><a name="Topic308"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="GetData"></a><a name="Topic295"></a><div class="CTopic TFunction LC">
+<a name="GetData"></a><a name="Topic309"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetData</div>
- <div id="NDPrototype295" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint8</span> *GetData() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype309" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint8</span> *GetData() = <span class="SHNumber">0</span></div>
  <div class="CBody"><p>Returns a pointer to the image data</p></div>
 </div>
 
-<a name="GetWidth"></a><a name="Topic296"></a><div class="CTopic TFunction LC">
+<a name="GetWidth"></a><a name="Topic310"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetWidth</div>
- <div id="NDPrototype296" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetWidth() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype310" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetWidth() = <span class="SHNumber">0</span></div>
  <div class="CBody"><p>Returns the image's width in pixels</p></div>
 </div>
 
-<a name="GetHeight"></a><a name="Topic297"></a><div class="CTopic TFunction LC">
+<a name="GetHeight"></a><a name="Topic311"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetHeight</div>
- <div id="NDPrototype297" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetHeight() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype311" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetHeight() = <span class="SHNumber">0</span></div>
  <div class="CBody"><p>Returns the image's height in pixels</p></div>
 </div>
 
-<a name="GetStride"></a><a name="Topic298"></a><div class="CTopic TFunction LC">
+<a name="GetBPP"></a><a name="Topic774"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetBPP</div>
+ <div id="NDPrototype774" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetBPP() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><p>Returns the image's bites per pixel</p></div>
+</div>
+
+<a name="GetStride"></a><a name="Topic312"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetStride</div>
- <div id="NDPrototype298" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetStride() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype312" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetStride() = <span class="SHNumber">0</span></div>
  <div class="CBody"><p>Returns the image's stride (bytes/scanline)</p></div>
 </div>
 
-<a name="GetBytesPerPixel"></a><a name="Topic299"></a><div class="CTopic TFunction LC last">
+<a name="GetBytesPerPixel"></a><a name="Topic313"></a><div class="CTopic TFunction LC last">
  <div class="CTitle">GetBytesPerPixel</div>
- <div id="NDPrototype299" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetBytesPerPixel() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype313" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetBytesPerPixel() = <span class="SHNumber">0</span></div>
  <div class="CBody"><p>Returns the number of bytes in each pixel</p></div>
 </div>
 

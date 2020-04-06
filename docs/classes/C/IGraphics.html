@@ -8,37 +8,37 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="Topic363"></a><div class="CTopic TInterface LC first">
+<a name="Topic577"></a><div class="CTopic TInterface LC first">
  <div class="CTitle">IGraphics</div>
- <div class="CBody"><p>Defines our basic rendering device.</p><p><a href="../../index.html#CClass:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,363);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a> differs from <a href="../../index.html#CClass:IRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,494);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer</a> in that it is essentially just a wrapper around our underlying graphics device. It does not support things such as a scene graph, complex lighting (list of lights), or HMD support. Also, all rendering occurs on whatever thread this object is created on (versus marshalling the rendering over to a render thread). For those features, use <a href="../../index.html#CClass:IRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,494);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer</a>.</p></div>
+ <div class="CBody"><p>Defines our basic rendering device.</p><p><a href="../../index.html#CClass:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,577);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a> differs from <a href="../../index.html#CClass:IRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,552);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer</a> in that it is essentially just a wrapper around our underlying graphics device. It does not support things such as a scene graph, complex lighting (list of lights), or HMD support. Also, all rendering occurs on whatever thread this object is created on (versus marshalling the rendering over to a render thread). For those features, use <a href="../../index.html#CClass:IRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,552);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer</a>.</p></div>
 </div>
 
-<a name="Functions"></a><a name="Topic358"></a><div class="CTopic TGroup LC">
+<a name="Functions"></a><a name="Topic578"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="GetDevice"></a><a name="Topic364"></a><div class="CTopic TFunction LC">
+<a name="GetDevice"></a><a name="Topic579"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetDevice</div>
- <div id="NDPrototype364" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> CComPtr&lt;ID3D11Device&gt; GetDevice() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype579" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> CComPtr&lt;ID3D11Device&gt; GetDevice() = <span class="SHNumber">0</span></div>
  <div class="CBody"><div class="CHeading">Returns</div><p>The underlying D3D11 device</p></div>
 </div>
 
-<a name="GetContext"></a><a name="Topic748"></a><div class="CTopic TFunction LC">
+<a name="GetContext"></a><a name="Topic580"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetContext</div>
- <div id="NDPrototype748" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> CComPtr&lt;ID3D11DeviceContext&gt; GetContext() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype580" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> CComPtr&lt;ID3D11DeviceContext&gt; GetContext() = <span class="SHNumber">0</span></div>
  <div class="CBody"><div class="CHeading">Returns</div><p>The underlying D3D11 device context</p></div>
 </div>
 
-<a name="GetCamera"></a><a name="Topic749"></a><div class="CTopic TFunction LC">
+<a name="GetCamera"></a><a name="Topic581"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetCamera</div>
- <div id="NDPrototype749" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <a href="../../index.html#CClass:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,38);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../index.html#CClass:ICamera" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,517);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ICamera</a>&gt; GetCamera() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype581" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <a href="../../index.html#CClass:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,6);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../index.html#CClass:ICamera" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,584);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ICamera</a>&gt; GetCamera() = <span class="SHNumber">0</span></div>
  <div class="CBody"><div class="CHeading">Returns</div><p>The camera associated with this device</p></div>
 </div>
 
-<a name="SetCamera"></a><a name="Topic750"></a><div class="CTopic TFunction LC last">
+<a name="SetCamera"></a><a name="Topic582"></a><div class="CTopic TFunction LC last">
  <div class="CTitle">SetCamera</div>
- <div id="NDPrototype750" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetCamera(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:ICamera" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,517);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ICamera</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pCamera</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
- <div class="CBody"><p>Sets the camera associated with this device</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pCamera<div class="CDLParameterType"><a href="../../index.html#CClass:ICamera" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,517);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ICamera</a>*</div></td><td class="CDLDefinition"><p>camera</p></td></tr></table></div>
+ <div id="NDPrototype582" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetCamera(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:ICamera" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,584);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ICamera</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pCamera</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Sets the camera associated with this device</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pCamera<div class="CDLParameterType"><a href="../../index.html#CClass:ICamera" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,584);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ICamera</a>*</div></td><td class="CDLDefinition"><p>camera</p></td></tr></table></div>
 </div>
 
 </body></html>

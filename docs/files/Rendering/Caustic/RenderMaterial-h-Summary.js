@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/RenderMaterial.h","RenderMaterial.h");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/RenderMaterial.h",[["C/C++","C"]],[["Classes","Class"]],[[369,0,0,"CRenderMaterial","CRenderMaterial"]]);
+NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/RenderMaterial.h","RenderMaterial.h");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/RenderMaterial.h",[["C/C++","C"]],[["Classes","Class"]],[[357,0,0,"CRenderMaterial","CRenderMaterial"]]);

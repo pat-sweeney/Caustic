@@ -1,1 +1,1 @@
-NDSummary.OnToolTipsLoaded("CClass:CGeomVertex",{250:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines a vertex in our mesh.</div></div>"});
+NDSummary.OnToolTipsLoaded("CClass:CGeomVertex",{239:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines a vertex in our mesh.</div></div>"});

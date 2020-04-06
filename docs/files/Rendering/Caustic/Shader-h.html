@@ -8,25 +8,25 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="ShaderParamDef"></a><a name="Topic337"></a><div class="CTopic TStruct LC first">
+<a name="ShaderParamDef"></a><a name="Topic342"></a><div class="CTopic TStruct LC first">
  <div class="CTitle">ShaderParamDef</div>
- <div class="CBody"><p>ShaderParamDef defines the shader definitions that were parsed from HLSL by ParseShader. These definitions define the variables that each shader defines (i.e. may be set by the client)</p></div>
+ <div class="CBody"><p>ShaderParamDef defines the shader definitions that were parsed from HLSL by ParseShader. These definitions define the variables that each shader defines (i.e. may be set by the client)</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">m_type</td><td class="CDLDefinition"><p>Defines type of this parameter</p></td></tr><tr><td class="CDLEntry">m_name</td><td class="CDLDefinition"><p>Name of shader parameter</p></td></tr><tr><td class="CDLEntry">m_offset</td><td class="CDLDefinition"><p>Register offset</p></td></tr><tr><td class="CDLEntry">m_members</td><td class="CDLDefinition"><p>Number of elements (i.e. some parameters can be arrays)</p></td></tr></table></div>
 </div>
 
-<a name="ShaderParamInstance"></a><a name="Topic338"></a><div class="CTopic TStruct LC">
+<a name="ShaderParamInstance"></a><a name="Topic343"></a><div class="CTopic TStruct LC">
  <div class="CTitle">ShaderParamInstance</div>
- <div class="CBody"><p>ShaderParamInstance defines each parameter that a shader exposes. These parameters are derived from the ShaderDefs above. This is servers copy of each parameter along with its value and position in the constant buffer.</p></div>
+ <div class="CBody"><p>ShaderParamInstance defines each parameter that a shader exposes. These parameters are derived from the ShaderParamDefs above. This is servers copy of each parameter along with its value and position in the constant buffer.</p></div>
 </div>
 
-<a name="CShader"></a><a name="Topic339"></a><div class="CTopic TClass LC">
+<a name="CShader"></a><a name="Topic344"></a><div class="CTopic TClass LC">
  <div class="CTitle">CShader</div>
- <div class="NDClassPrototype HasParents" id="NDClassPrototype339"><a class="CPEntry Parent TInterface" href="../../../index.html#File:Rendering/Caustic/IShader.h:IShader" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,727);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPModifiers"><span class="SHKeyword">public</span></div><div class="CPName">IShader</div></a><a class="CPEntry Parent TClass" href="../../../index.html#File:Base/Core/RefCount.h:CRefCount" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPModifiers"><span class="SHKeyword">public</span></div><div class="CPName">CRefCount</div></a><div class="CPEntry TClass Current"><div class="CPName">CShader</div></div></div>
+ <div class="NDClassPrototype HasParents" id="NDClassPrototype344"><a class="CPEntry Parent TInterface" href="../../../index.html#File:Rendering/Caustic/IShader.h:IShader" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,486);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPModifiers"><span class="SHKeyword">public</span></div><div class="CPName">IShader</div></a><a class="CPEntry Parent TClass" href="../../../index.html#File:Base/Core/RefCount.h:CRefCount" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPModifiers"><span class="SHKeyword">public</span></div><div class="CPName">CRefCount</div></a><div class="CPEntry TClass Current"><div class="CPName">CShader</div></div></div>
  <div class="CBody"><p>Defines a shader used to render materials on an object</p><p>A shader defines a material on a renderable. It is comprised of a pixel shader, a vertex shader, and constants passed to those shaders.</p></div>
 </div>
 
-<a name="CShaderMgr"></a><a name="Topic340"></a><div class="CTopic TClass LC last">
+<a name="CShaderMgr"></a><a name="Topic345"></a><div class="CTopic TClass LC last">
  <div class="CTitle">CShaderMgr</div>
- <div class="NDClassPrototype HasParents" id="NDClassPrototype340"><a class="CPEntry Parent TInterface" href="../../../index.html#File:Rendering/Caustic/IShaderMgr.h:IShaderMgr" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,453);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPModifiers"><span class="SHKeyword">public</span></div><div class="CPName">IShaderMgr</div></a><a class="CPEntry Parent TClass" href="../../../index.html#File:Base/Core/RefCount.h:CRefCount" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPModifiers"><span class="SHKeyword">public</span></div><div class="CPName">CRefCount</div></a><div class="CPEntry TClass Current"><div class="CPName">CShaderMgr</div></div></div>
+ <div class="NDClassPrototype HasParents" id="NDClassPrototype345"><a class="CPEntry Parent TInterface" href="../../../index.html#File:Rendering/Caustic/IShaderMgr.h:IShaderMgr" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,462);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPModifiers"><span class="SHKeyword">public</span></div><div class="CPName">IShaderMgr</div></a><a class="CPEntry Parent TClass" href="../../../index.html#File:Base/Core/RefCount.h:CRefCount" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPModifiers"><span class="SHKeyword">public</span></div><div class="CPName">CRefCount</div></a><div class="CPEntry TClass Current"><div class="CPName">CShaderMgr</div></div></div>
  <div class="CBody"><p>Defines our shader manager. Each shader is registered with this manager.</p></div>
 </div>
 

@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:IAzureKinect","IAzureKinect");NDSummary.OnSummaryLoaded("CClass:IAzureKinect",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Interfaces","Interface"]],[[771,0,2,"IAzureKinect"],[772,0,1,"Functions","Functions"],[322,0,0,"NextFrame","NextFrame"],[778,0,0,"CreateAzureKinect","CreateAzureKinect"]]);

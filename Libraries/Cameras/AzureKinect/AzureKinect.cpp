@@ -25,14 +25,14 @@ namespace Caustic
         //**********************************************************************
         void CreateAzureKinect(int deviceId, ColorMode colorMode, DepthMode depthMode, FPSMode fpsMode, IAzureKinect** ppCamera)
         {
-            std::unique_ptr<AzureKinectDevice> pCamera(new AzureKinectDevice());
+            std::unique_ptr<CAzureKinectDevice> pCamera(new CAzureKinectDevice());
             pCamera->Startup(deviceId, colorMode, depthMode, fpsMode);
             *ppCamera = pCamera.release();
             (*ppCamera)->AddRef();
         }
     }
 
-    AzureKinectDevice::AzureKinectDevice() :
+    CAzureKinectDevice::CAzureKinectDevice() :
         m_deviceIndex(0),
         m_device(nullptr),
         m_colorImage(nullptr),
@@ -46,7 +46,7 @@ namespace Caustic
         m_config.camera_fps = K4A_FRAMES_PER_SECOND_30;
     }
 
-    AzureKinectDevice::~AzureKinectDevice()
+    CAzureKinectDevice::~CAzureKinectDevice()
     {
         if (m_cameraStarted)
             k4a_device_stop_cameras(m_device);
@@ -54,7 +54,7 @@ namespace Caustic
             k4a_device_close(m_device);
     }
 
-    void AzureKinectDevice::Startup(int deviceId, AzureKinect::ColorMode colorMode, AzureKinect::DepthMode depthMode, AzureKinect::FPSMode fpsMode)
+    void CAzureKinectDevice::Startup(int deviceId, AzureKinect::ColorMode colorMode, AzureKinect::DepthMode depthMode, AzureKinect::FPSMode fpsMode)
     {
         if (deviceId >= (int)k4a_device_get_installed_count())
             CT(E_FAIL);
@@ -145,7 +145,7 @@ namespace Caustic
         m_cameraStarted = true;
     }
     
-    void AzureKinectDevice::NextFrame(IImage** ppColorImage, IImage** ppDepthImage, IImage** ppIRImage)
+    void CAzureKinectDevice::NextFrame(IImage** ppColorImage, IImage** ppDepthImage, IImage** ppIRImage)
     {
         if (k4a_device_get_capture(m_device, &m_capture, 3000) == K4A_RESULT_SUCCEEDED)
         {

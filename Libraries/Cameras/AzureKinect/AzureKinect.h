@@ -13,7 +13,11 @@
 // Namespace: Caustic
 namespace Caustic
 {
-    class AzureKinectDevice : public IAzureKinect, public CRefCount
+    //**********************************************************************
+    // Class: CAzureKinectDevice
+    // Defines the implementation for the Azure Kinect.
+    //**********************************************************************
+    class CAzureKinectDevice : public IAzureKinect, public CRefCount
     {
         int m_deviceIndex;
         k4a_device_t m_device;
@@ -24,8 +28,8 @@ namespace Caustic
         k4a_capture_t m_capture;
         bool m_cameraStarted;
     public:
-        AzureKinectDevice();
-        ~AzureKinectDevice();
+        CAzureKinectDevice();
+        ~CAzureKinectDevice();
 
         void Startup(int deviceId, AzureKinect::ColorMode colorMode, AzureKinect::DepthMode depthMode, AzureKinect::FPSMode fpsMode);
 

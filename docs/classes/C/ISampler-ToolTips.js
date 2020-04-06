@@ -1,1 +1,1 @@
-NDContentPage.OnToolTipsLoaded({363:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines our basic rendering device.</div></div>",402:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines how clients interact with textures</div></div>"});
+NDContentPage.OnToolTipsLoaded({452:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines how clients interact with textures</div></div>",577:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines our basic rendering device.</div></div>"});

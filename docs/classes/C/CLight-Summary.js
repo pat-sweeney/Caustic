@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:CLight","CLight");NDSummary.OnSummaryLoaded("CClass:CLight",[["C/C++","C"]],[["Classes","Class"]],[[360,0,0,"CLight"]]);
+NDFramePage.OnPageTitleLoaded("CClass:CLight","CLight");NDSummary.OnSummaryLoaded("CClass:CLight",[["C/C++","C"]],[["Classes","Class"]],[[430,0,0,"CLight"]]);

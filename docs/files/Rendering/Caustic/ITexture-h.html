@@ -8,60 +8,60 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="ITexture.h"></a><a name="Topic391"></a><div class="CTopic TFile LC first">
+<a name="ITexture.h"></a><a name="Topic451"></a><div class="CTopic TFile LC first">
  <div class="CTitle">ITexture.h</div>
  <div class="CBody"><p>This file defines the published interface for textures.</p></div>
 </div>
 
-<a name="ITexture"></a><a name="Topic402"></a><div class="CTopic TInterface LC">
+<a name="ITexture"></a><a name="Topic452"></a><div class="CTopic TInterface LC">
  <div class="CTitle">ITexture</div>
  <div class="CBody"><p>Defines how clients interact with textures</p></div>
 </div>
 
-<a name="ITexture.Functions"></a><a name="Topic403"></a><div class="CTopic TGroup LC">
+<a name="ITexture.Functions"></a><a name="Topic453"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="ITexture.GetWidth"></a><a name="Topic392"></a><div class="CTopic TFunction LC">
+<a name="ITexture.GetWidth"></a><a name="Topic454"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetWidth</div>
- <div id="NDPrototype392" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetWidth() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype454" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetWidth() = <span class="SHNumber">0</span></div>
  <div class="CBody"><div class="CHeading">Returns</div><p>Returns the width of the texture in pixels</p></div>
 </div>
 
-<a name="ITexture.GetHeight"></a><a name="Topic711"></a><div class="CTopic TFunction LC">
+<a name="ITexture.GetHeight"></a><a name="Topic455"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetHeight</div>
- <div id="NDPrototype711" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetHeight() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype455" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetHeight() = <span class="SHNumber">0</span></div>
  <div class="CBody"><div class="CHeading">Returns</div><p>Returns the height of the texture in pixels</p></div>
 </div>
 
-<a name="ITexture.GetFormat"></a><a name="Topic712"></a><div class="CTopic TFunction LC">
+<a name="ITexture.GetFormat"></a><a name="Topic456"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetFormat</div>
- <div id="NDPrototype712" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> DXGI_FORMAT GetFormat() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype456" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> DXGI_FORMAT GetFormat() = <span class="SHNumber">0</span></div>
  <div class="CBody"><div class="CHeading">Returns</div><p>Returns the pixel format of the texture</p></div>
 </div>
 
-<a name="ITexture.Update"></a><a name="Topic407"></a><div class="CTopic TFunction LC">
+<a name="ITexture.Update"></a><a name="Topic457"></a><div class="CTopic TFunction LC">
  <div class="CTitle">Update</div>
- <div id="NDPrototype407" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> Update(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,363);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pGraphics</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
- <div class="CBody"><p>Updates the underlying graphics card texture. Primarily used for video textures.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pGraphics<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,363);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>*</div></td><td class="CDLDefinition"><p>graphics device</p></td></tr></table></div>
+ <div id="NDPrototype457" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> Update(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,577);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pGraphics</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Updates the underlying graphics card texture. Primarily used for video textures.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pGraphics<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,577);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>*</div></td><td class="CDLDefinition"><p>graphics device</p></td></tr></table></div>
 </div>
 
-<a name="ITexture.GetD3DTexture"></a><a name="Topic713"></a><div class="CTopic TFunction LC">
+<a name="ITexture.GetD3DTexture"></a><a name="Topic458"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetD3DTexture</div>
- <div id="NDPrototype713" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> CComPtr&lt;ID3D11Texture2D&gt; GetD3DTexture() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype458" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> CComPtr&lt;ID3D11Texture2D&gt; GetD3DTexture() = <span class="SHNumber">0</span></div>
  <div class="CBody"><div class="CHeading">Returns</div><p>Returns the underlying D3D texture</p></div>
 </div>
 
-<a name="ITexture.GetD3DTextureRV"></a><a name="Topic714"></a><div class="CTopic TFunction LC">
+<a name="ITexture.GetD3DTextureRV"></a><a name="Topic459"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetD3DTextureRV</div>
- <div id="NDPrototype714" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> CComPtr&lt;ID3D11ShaderResourceView&gt; GetD3DTextureRV() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype459" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> CComPtr&lt;ID3D11ShaderResourceView&gt; GetD3DTextureRV() = <span class="SHNumber">0</span></div>
  <div class="CBody"><div class="CHeading">Returns</div><p>Returns the underlying D3D shader resource view associated with the texture</p></div>
 </div>
 
-<a name="ITexture.GenerateMips"></a><a name="Topic410"></a><div class="CTopic TFunction LC last">
+<a name="ITexture.GenerateMips"></a><a name="Topic460"></a><div class="CTopic TFunction LC last">
  <div class="CTitle">GenerateMips</div>
- <div id="NDPrototype410" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> GenerateMips(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,363);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pGraphics</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
- <div class="CBody"><p>Generates a set of mipmaps for the texture</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pGraphics<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,363);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>*</div></td><td class="CDLDefinition"><p>graphics device</p></td></tr></table></div>
+ <div id="NDPrototype460" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> GenerateMips(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,577);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pGraphics</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Generates a set of mipmaps for the texture</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pGraphics<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,577);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>*</div></td><td class="CDLDefinition"><p>graphics device</p></td></tr></table></div>
 </div>
 
 </body></html>
