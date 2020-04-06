@@ -168,6 +168,11 @@ namespace Caustic
                     k4a_image_release(colorimage);
                 }
             }
+            k4a_capture_release(m_capture);
+            m_capture = nullptr;
+        }
+        if (k4a_device_get_capture(m_device, &m_capture, 3000) == K4A_RESULT_SUCCEEDED)
+        {
             if (ppDepthImage != nullptr)
             {
                 auto depthimage = k4a_capture_get_depth_image(m_capture);

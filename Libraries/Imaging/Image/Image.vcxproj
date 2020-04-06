@@ -84,6 +84,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Coloriize.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="ShowAlpha.cpp" />
     <ClCompile Include="stdafx.cpp">

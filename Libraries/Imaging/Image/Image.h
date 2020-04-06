@@ -79,7 +79,20 @@ namespace Caustic
 		// boxSize - size of checkerboard square
 		// ppResult - Image with alpha applied
 		//**********************************************************************
-		virtual void ShowAlpha(int boxSize, IImage **ppResult) = 0;
+		virtual void ShowAlpha(int boxSize, IImage** ppResult) = 0;
+
+		//**********************************************************************
+		// Method: Colorize
+		// Converts a 16b gray scale image into a false color image. This is useful
+		// for converting depth data into a viewable form.
+		//
+		// Parameters:
+		// maxDepth - maximum depth map value
+		//
+		// Returns:
+		// ppResult - returns the new colorized image
+		//**********************************************************************
+		virtual void Colorize(IImage** ppResult, int maxDepth = 8000) = 0;
 
 		//**********************************************************************
 		// Method: Clone

@@ -82,11 +82,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         if (spAzure != nullptr)
         {
             Caustic::CRefObj<Caustic::IImage> spColorImage;
-            spAzure->NextFrame(&spColorImage, nullptr, nullptr);
-            if (imgbitmap != nullptr)
-                DeleteObject(imgbitmap);
-            imgbitmap = CreateBitmap(spColorImage->GetWidth(), spColorImage->GetHeight(), 1, 32, spColorImage->GetData());
-            DrawImage(GetDC(hWnd));
+            Caustic::CRefObj<Caustic::IImage> spDepthImage;
+            spAzure->NextFrame(&spColorImage, &spDepthImage, nullptr);
+            if (spDepthImage != nullptr)
+            {
+                if (imgbitmap != nullptr)
+                    DeleteObject(imgbitmap);
+                Caustic::CRefObj<Caustic::IImage> spColoredDepthImage;
+                spDepthImage->Colorize(&spColoredDepthImage);
+                imgbitmap = CreateBitmap(spColoredDepthImage->GetWidth(), spColoredDepthImage->GetHeight(), 1, 32, spColoredDepthImage->GetData());
+                DrawImage(GetDC(hWnd));
+            }
         }
     }
 
@@ -176,7 +182,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 DestroyWindow(hWnd);
                 break;
             case ID_FILE_LIVECAMERA:
-                Caustic::AzureKinect::CreateAzureKinect(0, Caustic::AzureKinect::Color1080p, Caustic::AzureKinect::DepthOff, Caustic::AzureKinect::FPS30, &spAzure);
+                Caustic::AzureKinect::CreateAzureKinect(0, Caustic::AzureKinect::Color1080p, Caustic::AzureKinect::Depth512x512, Caustic::AzureKinect::FPS30, &spAzure);
                 break;
             case ID_FILE_LOADIMAGE:
                 {

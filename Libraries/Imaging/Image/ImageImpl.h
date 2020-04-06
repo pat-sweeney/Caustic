@@ -59,6 +59,7 @@ namespace Caustic
         virtual void SetPixel(uint32 x, uint32 y, uint8 color[4]) override;
         virtual void SetPixel(uint32 x, uint32 y, uint8 gray) override;
         virtual void SetPixel(uint32 x, uint32 y, uint16 v) override;
+        virtual void Colorize(IImage** ppResult, int maxDepth = 8000) override;
     };
 
     class CIntegralImage : public IIntegralImage, public CRefCount
