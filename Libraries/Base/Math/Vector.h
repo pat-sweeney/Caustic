@@ -11,6 +11,10 @@ namespace Caustic
     //**********************************************************************
     // Structure: Vector2
     // Defines a simple vector with 2 components
+    //
+    // Members:
+    // float x - x component
+    // float y - y component
     //**********************************************************************
     struct Vector2
     {
@@ -111,6 +115,11 @@ namespace Caustic
     //**********************************************************************
     // Structure: Vector3
     // Defines a simple vector with 3 components
+    //
+    // Members:
+    // float x - x component
+    // float y - y component
+    // float z - z component
     //**********************************************************************
     struct Vector3
     {
@@ -244,6 +253,12 @@ namespace Caustic
     //**********************************************************************
     // Structure: Vector4
     // Defines a simple vector with 4 components
+    //
+    // Members:
+    // float x - x component
+    // float y - y component
+    // float z - z component
+    // float w - w component
     //**********************************************************************
     struct Vector4
     {

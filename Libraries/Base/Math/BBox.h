@@ -13,6 +13,10 @@ namespace Caustic
     //**********************************************************************
     // Struct: BBox2
     // Defines a axis-aligned bounding box (in 2D)
+    //
+    // Members:
+    // <Vector2> minPt - Minimum point defining one coroner of the bbox
+    // <Vector2> maxPt - Maximum point defining one coroner of the bbox
     //**********************************************************************
     struct BBox2
     {
@@ -116,6 +120,10 @@ namespace Caustic
     //
     // This code also assumes that the bounding volume
     // is aligned with the coordinate system axis.
+    //
+    // Members:
+    // <Vector3> minPt - Minimum point defining one coroner of the bbox
+    // <Vector3> maxPt - Maximum point defining one coroner of the bbox
     //**********************************************************************
     struct BBox3
     {

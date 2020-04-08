@@ -19,6 +19,16 @@
 // Namespace: Caustic
 namespace Caustic
 {
+    //**********************************************************************
+    // Function: str2wstr
+    // Converts a UTF8 string into a UTF16 string
+    //
+    // Parameters:
+    // str - String to convert
+    //
+    // Returns:
+    // Returns the converted string
+    //**********************************************************************
     std::wstring str2wstr(const std::string& str)
     {
         int numWideChars = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, nullptr, 0);
@@ -30,6 +40,16 @@ namespace Caustic
         return std::wstring(pConvertedStr.get());
     }
 
+    //**********************************************************************
+    // Function: wstr2str
+    // Converts a UTF16 string into a UTF8 string
+    //
+    // Parameters:
+    // str - String to convert
+    //
+    // Returns:
+    // Returns the converted string
+    //**********************************************************************
     std::string wstr2str(const std::wstring& wstr)
     {
         int numMultibyteChars = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);

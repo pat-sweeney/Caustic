@@ -13,6 +13,12 @@ namespace Caustic
     //**********************************************************************
     // Structure: RayIntersect2
     // Defines results of a 2D ray intersection
+    //
+    // Members:
+    // float hitTime - Value of 't' on line equation where ray intersects line
+    // <Vector2> hitPt - Point on line where ray intersects
+    // float hitTimeRay - Value of 'u' on ray equation where ray intersects line
+    // <Vector2> hitPtRay - Point on ray where line intersects
     //**********************************************************************
     struct RayIntersect2
     {
@@ -25,6 +31,10 @@ namespace Caustic
     //**********************************************************************
     // Structure: Ray2
     // Defines a 2 dimensional ray
+    //
+    // Members:
+    // <Vector2> pos - Starting point of the ray
+    // <Vector2> dir - Direction of the ray
     //**********************************************************************
     struct Ray2
     {
@@ -78,6 +88,11 @@ namespace Caustic
     //**********************************************************************
     // Structure: RayIntersect3
     // Defines results of a 3D ray intersection
+    //
+    // Members:
+    // float hitTime - Value of 't' where ray intersects surface
+    // <Vector2> hitPt - Point on ray where ray intersects surface
+    // <Vector2> hitNorm - Normal vector where ray intersects surface
     //**********************************************************************
     struct RayIntersect3
     {
@@ -89,6 +104,10 @@ namespace Caustic
     //**********************************************************************
     // Structure: Ray3
     // Defines a 3 dimensional ray
+    //
+    // Members:
+    // <Vector3> pos - starting position of ray
+    // <Vector3> dir - ray direction
     //**********************************************************************
     struct Ray3
     {

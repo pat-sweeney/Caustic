@@ -19,6 +19,15 @@
 // Namespace: Caustic
 namespace Caustic
 {
+    //**********************************************************************
+    // Function: str2wstr
+    // See <str2wstr>
+    //**********************************************************************
     extern std::wstring str2wstr(const std::string& str);
+
+    //**********************************************************************
+    // Function: wstr2str
+    // See <wstr2str>
+    //**********************************************************************
     extern std::string wstr2str(const std::wstring& wstr);
 }

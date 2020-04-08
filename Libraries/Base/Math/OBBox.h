@@ -16,6 +16,13 @@ namespace Caustic
     //**********************************************************************
 	// Structure: OBBox2
     // Defines a oriented bounding box (in 2D)
+    //
+    // Members:
+    // <Vector2> origin - center of the bbox
+    // <Vector2> u - X axis of the bbox
+    // <Vector2> v - Y axis of the bbox
+    // <Vector2> normu - Normalized version of the u azis
+    // <Vector2> normv - Normalized version of the v azis
     //**********************************************************************
     struct OBBox2
     {
@@ -39,6 +46,15 @@ namespace Caustic
 	//**********************************************************************
 	// Structure: OBBox3
     // Defines a oriented bounding box (in 3D)
+    //
+    // Members:
+    // <Vector3> origin - center of the bbox
+    // <Vector3> u - X axis of the bbox
+    // <Vector3> v - Y axis of the bbox
+    // <Vector3> n - Z axis of the bbox
+    // <Vector3> normu - Normalized version of the u azis
+    // <Vector3> normv - Normalized version of the v azis
+    // <Vector3> normn - Normalized version of the n azis
     //**********************************************************************
     struct OBBox3
     {

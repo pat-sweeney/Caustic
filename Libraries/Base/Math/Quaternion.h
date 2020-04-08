@@ -16,6 +16,12 @@ namespace Caustic
 	//**********************************************************************
 	// Structure: Quaternion
 	// Defines a quaternion
+	//
+	// Members:
+	// float x - X component
+	// float y - Y component
+	// float z - Z component
+	// float w - W component
 	//**********************************************************************
 	struct Quaternion
     {
