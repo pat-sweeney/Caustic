@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2019
+// Copyright Patrick Sweeney 2015-2020
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -13,12 +13,24 @@
 
 namespace Caustic
 {
+    //**********************************************************************
+    // Class: CImage
+    // Members:
+    // <CRefObj> < <CImage> > m_spParent - parent image if image is a subimage
+    // <uint32 at Caustic::uint32> m_subx - X offset into parent image
+    // <uint32 at Caustic::uint32> m_suby - Y offset into parent image
+    // <uint8 at Caustic::uint8>* m_pData - pointer to image data
+    // bool m_ownData - Did this object allocate m_pData?
+    // <uint32 at Caustic::uint32> m_width - width of image in pixels
+    // <uint32 at Caustic::uint32> m_height - height of image in pixels
+    // <uint32 at Caustic::uint32> m_bytesPerPixel - width of each pixel in bytes
+    //**********************************************************************
     class CImage : public IImage, public CRefCount
     {
         CRefObj<CImage> m_spParent;     // parent image if image is a subimage
         uint32 m_subx;                  // X offset into parent image
         uint32 m_suby;                  // Y offset into parent image
-        uint8 *m_pData;                // pointer to image data
+        uint8 *m_pData;                 // pointer to image data
         bool m_ownData;                 // Did this object allocate m_pData?
         uint32 m_width;                 // width of image in pixels
         uint32 m_height;                // height of image in pixels
