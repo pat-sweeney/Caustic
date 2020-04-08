@@ -41,7 +41,13 @@ namespace Caustic
 		// Method: CreateMeshElem
 		// Creates a mesh element
 		//**********************************************************************
-		virtual void CreateMeshElem(ISceneMeshElem **ppMesh) = 0;
+		virtual void CreateMeshElem(ISceneMeshElem** ppMesh) = 0;
+
+		//**********************************************************************
+		// Method: CreateCustomRenderElem
+		// Create a element that will use a callback for rendering
+		//**********************************************************************
+		virtual void CreateCustomRenderElem(std::function<void(IRenderer *pRenderer, IRenderCtx	 *pCtx, SceneCtx * pSceneCtx)> clientCallback, ISceneCustomRenderElem** ppMesh) = 0;
 
 		//**********************************************************************
 		// Method: CreateSceneGraph

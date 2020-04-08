@@ -6,6 +6,8 @@
 #include "stdafx.h"
 #include "AzureKinect.h"
 #include "Base\Core\error.h"
+#include "Base\Math\BBox.h"
+#include "Imaging\Image\ImageIter.h"
 #include <k4a/k4a.h>
 #include <memory>
 
@@ -145,8 +147,14 @@ namespace Caustic
         m_cameraStarted = true;
     }
     
-    void CAzureKinectDevice::NextFrame(IImage** ppColorImage, IImage** ppDepthImage, IImage** ppIRImage)
+    bool  CAzureKinectDevice::NextFrame(IImage** ppColorImage)
     {
+        return NextFrame(ppColorImage, nullptr, nullptr);
+    }
+    
+    bool CAzureKinectDevice::NextFrame(IImage** ppColorImage, IImage** ppDepthImage, IImage** ppIRImage)
+    {
+        bool captured = false;
         if (k4a_device_get_capture(m_device, &m_capture, 3000) == K4A_RESULT_SUCCEEDED)
         {
             if (ppColorImage != nullptr)
@@ -164,6 +172,7 @@ namespace Caustic
                         CreateImage(w, h, 32, &spImage);
                         memcpy(spImage->GetData(), buffer, spImage->GetHeight() * spImage->GetStride());
                         *ppColorImage = spImage.Detach();
+                        captured = true;
                     }
                     k4a_image_release(colorimage);
                 }
@@ -188,6 +197,7 @@ namespace Caustic
                         CreateImage(w, h, 16, &spImage);
                         memcpy(spImage->GetData(), buffer, spImage->GetHeight() * spImage->GetStride());
                         *ppDepthImage = spImage.Detach();
+                        captured = true;
                     }
                     k4a_image_release(depthimage);
                 }
@@ -195,5 +205,88 @@ namespace Caustic
             k4a_capture_release(m_capture);
             m_capture = nullptr;
         }
+        return captured;
+    }
+    
+    bool CAzureKinectDevice::NextFrame(IImage** ppColorImage, std::vector<Vector3>& pts, std::vector<Vector3>& normals, BBox3 &bbox)
+    {
+        CRefObj<IImage> spDepthImage;
+        if (NextFrame(ppColorImage, &spDepthImage, nullptr))
+        {
+            pts.resize(spDepthImage->GetWidth() * spDepthImage->GetHeight());
+            normals.resize(spDepthImage->GetWidth() * spDepthImage->GetHeight());
+            int ptIndex = 0;
+            int normIndex = 0;
+            CImageIter16 srcRow(spDepthImage, 0, 0);
+            int w = (int)spDepthImage->GetWidth();
+            int h = (int)spDepthImage->GetHeight();
+            for (int iy = 0; iy < h; iy++)
+            {
+                CImageIter16 srcCol = srcRow;
+                for (int ix = 0; ix < w; ix++)
+                {
+                    uint16 depth = srcCol.GetGray();
+                    if (depth == 0)
+                    {
+                        srcCol.Step(CImageIter::Right);
+                        continue;
+                    }
+                    unsigned short neighborLeft = depth;
+                    unsigned short neighborRight = depth;
+                    unsigned short neighborUp = depth;
+                    unsigned short neighborDown = depth;
+                    if (ix > 0)
+                    {
+                        srcCol.Step(CImageIter::Left);
+                        neighborLeft = srcCol.GetGray();
+                        srcCol.Step(CImageIter::Right);
+                    }
+                    if (ix < (int)spDepthImage->GetWidth())
+                    {
+                        srcCol.Step(CImageIter::Right);
+                        neighborRight = srcCol.GetGray();
+                        srcCol.Step(CImageIter::Left);
+                    }
+                    if (iy > 0)
+                    {
+                        srcCol.Step(CImageIter::Up);
+                        neighborUp = srcCol.GetGray();
+                        srcCol.Step(CImageIter::Down);
+                    }
+                    if (iy < (int)spDepthImage->GetWidth())
+                    {
+                        srcCol.Step(CImageIter::Down);
+                        neighborDown = srcCol.GetGray();
+                        srcCol.Step(CImageIter::Up);
+                    }
+                    float dddx = (neighborRight - neighborLeft) / (2.0f * 8000.0f);
+                    float dddy = (neighborDown - neighborUp) / (2.0f * 8000.0f);
+                    srcCol.Step(CImageIter::Right);
+
+                    // Convert pixel coords+depth to 3D point
+                    k4a_float2_t pt;
+                    pt.xy.x = float(ix);
+                    pt.xy.y = float(iy);
+                    k4a_float3_t result;
+                    int valid;
+                    k4a_result_t err = k4a_calibration_2d_to_3d(&m_calibration, &pt, (float)depth, k4a_calibration_type_t::K4A_CALIBRATION_TYPE_DEPTH,
+                        k4a_calibration_type_t::K4A_CALIBRATION_TYPE_DEPTH, &result, &valid);
+                    if (err == K4A_RESULT_SUCCEEDED && valid)
+                    {
+                        Vector3 pos(result.xyz.x, result.xyz.y, result.xyz.z);
+                        pts[ptIndex++] = pos;
+                        Vector3 norm(dddx, dddy, -1.0f);
+                        norm.Normalize();
+                        normals[normIndex] = norm;
+                        bbox.AddPoint(pos);
+                    }
+                }
+                srcRow.Step(CImageIter::Down);
+            }
+            pts.resize(ptIndex);
+            normals.resize(normIndex);
+            return true;
+        }
+        return false;
     }
 }

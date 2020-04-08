@@ -42,10 +42,10 @@ namespace Caustic
 	// Returns:
 	// True if points are equivalent. False otherwise.
 	//**********************************************************************
-	bool IsEq(Vector2 &p)
+	bool IsEq(const Vector2 &p)
 	{
 	    if (IsZero(p.x - x) && IsZero(p.y - y))
-		return true;
+		    return true;
 	    return false;
 	}
 
@@ -56,7 +56,7 @@ namespace Caustic
 	// Returns:
 	// Length of vector
 	//**********************************************************************
-	float Length() { return (float)sqrt(x * x + y * y); }
+	float Length() { return (float)sqrtf(x * x + y * y); }
 
 	//**********************************************************************
 	// Method: Normalize
@@ -70,8 +70,8 @@ namespace Caustic
 	    float len = Length();
 	    if (!IsZero(len))
 	    {
-		x /= len;
-		y /= len;
+		    x /= len;
+		    y /= len;
 	    }
 	    return Vector2(x, y);
 	}
@@ -83,7 +83,7 @@ namespace Caustic
 	// Returns:
 	// Cross product vector
 	//**********************************************************************
-	float Cross(Vector2 &v)
+	float Cross(const Vector2 &v)
 	{
 	    return x * v.y - y * v.x;
 	}
@@ -95,7 +95,7 @@ namespace Caustic
 	// Returns:
 	// Dot product
 	//**********************************************************************
-	float Dot(Vector2 &v)
+	float Dot(const Vector2 &v)
 	{
 	    return x * v.x + y * v.y;
 	}
@@ -131,7 +131,7 @@ namespace Caustic
 		// _y - Y coordinate
 		// _z - Z coordinate
 		//**********************************************************************
-        Vector3(float _x, float _y, float _z) { x = _x; y = _y; z = _z; }
+        Vector3(const float _x, const float _y, const float _z) { x = _x; y = _y; z = _z; }
 
 		//**********************************************************************
 		// Method: Sign
@@ -155,7 +155,7 @@ namespace Caustic
 		// Returns:
 		// True if points are considered equivalent. False otherwise.
 		//**********************************************************************
-        bool IsEq(Vector3 &p)
+        bool IsEq(const Vector3 &p)
         {
             if (IsZero(p.x - x) &&
                 IsZero(p.y - y) &&
@@ -194,34 +194,34 @@ namespace Caustic
 		// Returns:
 		// The dot product
 		//**********************************************************************
-        float dot(Vector3 &v)
+        float dot(const Vector3 &v)
         {
             return x * v.x + y * v.y + z * v.z;
         }
       
-        bool operator==(Vector3 &rhs) { return this->IsEq(rhs); }
-        bool operator!=(Vector3 &rhs) { return !this->IsEq(rhs); }
-        Vector3 operator-(Vector3 &rhs) { return Vector3(x - rhs.x, y - rhs.y, z - rhs.z); }
-        Vector3 operator-=(Vector3 &rhs)
+        bool operator==(const Vector3 &rhs) { return this->IsEq(rhs); }
+        bool operator!=(const Vector3 &rhs) { return !this->IsEq(rhs); }
+        Vector3 operator-(const Vector3 &rhs) { return Vector3(x - rhs.x, y - rhs.y, z - rhs.z); }
+        Vector3 operator-=(const Vector3 &rhs)
         {
             x -= rhs.x;
             y -= rhs.y;
             z -= rhs.z;
             return *this;
         }
-        Vector3 operator+(Vector3 &rhs) { return Vector3(x + rhs.x, y + rhs.y, z + rhs.z); }
-        Vector3 operator+=(Vector3 &rhs)
+        Vector3 operator+(const Vector3 &rhs) { return Vector3(x + rhs.x, y + rhs.y, z + rhs.z); }
+        Vector3 operator+=(const Vector3 &rhs)
         {
             x += rhs.x;
             y += rhs.y;
             z += rhs.z;
             return *this;
         }
-        Vector3 operator*(float s) { return Vector3(x * s, y * s, z * s); }
-        Vector3 operator/(float s) { return Vector3(x / s, y / s, z / s); }
+        Vector3 operator*(const float s) { return Vector3(x * s, y * s, z * s); }
+        Vector3 operator/(const float s) { return Vector3(x / s, y / s, z / s); }
         float Length()
         {
-            return (float)sqrt(x * x + y * y + z * z);
+            return (float)sqrtf(x * x + y * y + z * z);
         }
 
         Vector3 Normalize()
@@ -238,7 +238,7 @@ namespace Caustic
     };
 #pragma warning(push)
 #pragma warning(disable : 4505)
-    static Vector3 operator*(float s, Vector3 &v) { return Vector3(v.x * s, v.y * s, v.z * s); }
+    static Vector3 operator*(const float s, const Vector3 &v) { return Vector3(v.x * s, v.y * s, v.z * s); }
 #pragma warning(pop)
 
     //**********************************************************************
@@ -250,7 +250,7 @@ namespace Caustic
         float x, y, z, w;
 
         Vector4() {}
-        Vector4(float _x, float _y, float _z, float _w) { x = _x; y = _y; z = _z; w = _w; }
+        Vector4(const float _x, const float _y, const float _z, const float _w) { x = _x; y = _y; z = _z; w = _w; }
 
         //**********************************************************************
         // Method: IsEq
@@ -259,7 +259,7 @@ namespace Caustic
         // Parameters:
         // p - Point to test against
         //**********************************************************************
-        bool IsEq(Vector4 &p)
+        bool IsEq(const Vector4 &p)
         {
             if (IsZero(p.x - x) &&
                 IsZero(p.y - y) &&
@@ -269,14 +269,14 @@ namespace Caustic
             return false;
         }
 
-        Vector4 operator-(Vector4 &rhs) { return Vector4(x - rhs.x, y - rhs.y, z - rhs.z, w - rhs.w); }
-        Vector4 operator+(Vector4 &rhs) { return Vector4(x + rhs.x, y + rhs.y, z + rhs.z, w + rhs.w); }
-        Vector4 operator*(float s) { return Vector4(x * s, y * s, z * s, w * s); }
-        bool operator==(Vector4 &rhs) { return this->IsEq(rhs); }
-        bool operator!=(Vector4 &rhs) { return !this->IsEq(rhs); }
+        Vector4 operator-(const Vector4 &rhs) { return Vector4(x - rhs.x, y - rhs.y, z - rhs.z, w - rhs.w); }
+        Vector4 operator+(const Vector4 &rhs) { return Vector4(x + rhs.x, y + rhs.y, z + rhs.z, w + rhs.w); }
+        Vector4 operator*(const float s) { return Vector4(x * s, y * s, z * s, w * s); }
+        bool operator==(const Vector4 &rhs) { return this->IsEq(rhs); }
+        bool operator!=(const Vector4 &rhs) { return !this->IsEq(rhs); }
         float Length()
         {
-            return (float)sqrt(x * x + y * y + z * z + w * w);
+            return (float)sqrtf(x * x + y * y + z * z + w * w);
         }
         void Normalize()
         {
@@ -289,6 +289,6 @@ namespace Caustic
     };
 #pragma warning(push)
 #pragma warning(disable : 4505)
-    static Vector4 operator*(float s, Vector4 &v) { return Vector4(v.x * s, v.y * s, v.z * s, v.w * s); }
+    static Vector4 operator*(const float s, const Vector4 &v) { return Vector4(v.x * s, v.y * s, v.z * s, v.w * s); }
 #pragma warning(pop)
 }

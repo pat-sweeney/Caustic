@@ -7,8 +7,10 @@
 #include "Base\Core\Core.h"
 #include "Base\Core\IRefCount.h"
 #include "Base\Math\Vector.h"
+#include "Base\Math\BBox.h"
 #include "Cameras\CameraBase\ICamera.h"
 #include <k4a/k4a.h>
+#include <vector>
 
 // Namespace: Caustic
 namespace Caustic
@@ -17,18 +19,18 @@ namespace Caustic
     // Interface: IAzureKinect
     // Base interface shared across all image types
     //**********************************************************************
-    struct IAzureKinect : public ICamera
+    struct IAzureKinect : public ICameraDevice
     {
         //**********************************************************************
         // Method: NextFrame
         // Retrieves the next color/depth/ir image from the camera
-        //
         // Parameters:
         // ppColorImage - returns the next color image retrieved from the camera. Maybe nullptr.
         // ppDepthImage - returns the next depth image retrieved from the camera. Maybe nullptr.
         // ppIRImage - returns the next infrared image retrieved from the camera. Maybe nullptr.
         //**********************************************************************
-        virtual void NextFrame(IImage** ppColorImage, IImage** ppDepthImage, IImage** ppIRImage) = 0;
+        virtual bool NextFrame(IImage** ppColorImage, IImage** ppDepthImage, IImage** ppIRImage) = 0;
+        virtual bool NextFrame(IImage** ppColorImage, std::vector<Vector3>& pts, std::vector<Vector3>& normals, BBox3 &bbox) = 0;
     };
 
     namespace AzureKinect

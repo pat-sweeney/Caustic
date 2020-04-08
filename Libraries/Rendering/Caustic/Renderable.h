@@ -64,5 +64,11 @@ namespace Caustic
 		virtual void SetTransform(DirectX::XMMATRIX &mat) override { m_xform = mat; }
 		virtual DirectX::XMMATRIX &GetTransform() override { return m_xform; }
 		virtual bool InPass(int pass) { return ((m_passes | (1 << Caustic::c_PassObjID)) & (1 << pass)) ? true : false; }
+		virtual void SetSubMesh(IRenderSubMesh* pSubMesh) override { m_spSubMesh = pSubMesh; }
+		virtual CRefObj<IRenderSubMesh> GetSubMesh() override { return m_spSubMesh; }
+		virtual void SetFrontMaterial(IRenderMaterial* pMaterial) override { m_spFrontMaterial = pMaterial; }
+		virtual CRefObj<IRenderMaterial> GetFrontMaterial() override { return m_spFrontMaterial; }
+		virtual void SetBackMaterial(IRenderMaterial* pMaterial) override { m_spBackMaterial = pMaterial; }
+		virtual CRefObj<IRenderMaterial> GetBackMaterial() override { return m_spBackMaterial; }
 	};
 }

@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("File:Imaging/Image/ImageFilter.h","ImageFilter.h");NDSummary.OnSummaryLoaded("File:Imaging/Image/ImageFilter.h",[["C/C++","C"]],[["Classes","Class"]],[[773,0,0,"Caustic","Caustic"]]);

@@ -6,11 +6,19 @@
 #include "stdafx.h"
 #include "Renderer.h"
 #include "RenderMaterial.h"
+#include "MaterialAttrib.h"
 #include "CausticFactory.h"
 #include "Sampler.h"
 
 namespace Caustic
 {
+    CAUSTICAPI void CreateMaterialAttrib(IMaterialAttrib** ppMaterialAttrib)
+    {
+        std::unique_ptr<CMaterialAttrib> spMaterialAttrib(new CMaterialAttrib());
+        *ppMaterialAttrib = spMaterialAttrib.release();
+        (*ppMaterialAttrib)->AddRef();
+    }
+
     CAUSTICAPI void CreateRenderMaterial(IGraphics *pGraphics, IMaterialAttrib *pMaterialAttrib, IShader *pShader, IRenderMaterial **ppRenderMaterial)
     {
         std::unique_ptr<CRenderMaterial> spRenderMaterial(new CRenderMaterial());

@@ -6,6 +6,7 @@
 #include "Base\Core\Core.h"
 #include "Base\Core\error.h"
 #include "Geometry\Mesh\Mesh.h"
+#include "Rendering\Caustic\RenderTypes.h"
 #include "Rendering\Caustic\IRenderer.h"
 #include "Rendering\Caustic\IRenderMesh.h"
 #include "Rendering\Caustic\IShaderInfo.h"
@@ -35,43 +36,43 @@ namespace Caustic
 		return IsZero(u.cross(v).Length());
 	}
 
-	//**********************************************************************
-    // Method: BuildVertexBuffer
+    //**********************************************************************
+	// Method: BuildVertexBuffer
 	// Creates a vertex buffer using the specified submesh.
-    //
-    // Parameters:
-    // pGraphics - Graphics device
-    // pShaderInfo - Information about the shader
-    // vertexReferenced - List of vertices that are referenced
-    // MeshData - place to store created vertex buffer
+	//
+	// Parameters:
+	// pGraphics - Graphics device
+	// pShaderInfo - Information about the shader
+	// vertexReferenced - List of vertices that are referenced
+	// MeshData - place to store created vertex buffer
 	//**********************************************************************
-	void CSubMesh::BuildVertexBuffer(IGraphics *pGraphics,
-		IShaderInfo *pShaderInfo, std::vector<int> &vertexReferenced, MeshData *pMeshData)
+	void CSubMesh::BuildVertexBuffer(IGraphics* pGraphics,
+		IShaderInfo* pShaderInfo, std::vector<int>& vertexReferenced, MeshData* pMeshData)
 	{
-        CComPtr<ID3D11Device> spDevice = pGraphics->GetDevice();
+		CComPtr<ID3D11Device> spDevice = pGraphics->GetDevice();
 		std::vector<D3D11_INPUT_ELEMENT_DESC> vertexLayout = pShaderInfo->VertexLayout();
 		uint32 numVerts = GetNumberVertices();
 		uint32 vertexSize = pShaderInfo->GetVertexSize();
 
-        BBox3 bbox;
+		BBox3 bbox;
 
 		// Create buffer with our vertex data
-		byte *pVertexBuffer = new byte[numVerts * vertexSize];
+		byte* pVertexBuffer = new byte[numVerts * vertexSize];
 		std::unique_ptr<byte> spVertBuffer(pVertexBuffer);
 		uint32 vout = 0;
 		for (uint32 i = 0; i < numVerts; i++)
 		{
 			if (vertexReferenced[i] == c_Vertex_Referenced)
 			{
-				CGeomVertex *pVertex = GetVertex(i);
-				byte *pVB = &pVertexBuffer[vout * vertexSize];
+				CGeomVertex* pVertex = GetVertex(i);
+				byte* pVB = &pVertexBuffer[vout * vertexSize];
 				for (size_t j = 0; j < vertexLayout.size(); j++)
 				{
 					if (_strnicmp(vertexLayout[j].SemanticName, "POSITION", 8) == 0 ||
 						_strnicmp(vertexLayout[j].SemanticName, "SV_POSITION", 11) == 0)
 					{
 						_ASSERT(vertexLayout[j].Format == DXGI_FORMAT_R32G32B32_FLOAT);
-						float *fp = (float*)pVB;
+						float* fp = (float*)pVB;
 						fp[0] = pVertex->pos.x;
 						fp[1] = pVertex->pos.y;
 						fp[2] = pVertex->pos.z;
@@ -81,7 +82,7 @@ namespace Caustic
 					else if (_strnicmp(vertexLayout[j].SemanticName, "TEXCOORD", 8) == 0)
 					{
 						_ASSERT(vertexLayout[j].Format == DXGI_FORMAT_R32G32_FLOAT);
-						float *fp = (float*)pVB;
+						float* fp = (float*)pVB;
 						fp[0] = pVertex->uvs[0].x;
 						fp[1] = pVertex->uvs[0].y;
 						pVB += sizeof(float) * 2;
@@ -89,7 +90,7 @@ namespace Caustic
 					else if (_strnicmp(vertexLayout[j].SemanticName, "NORMAL", 6) == 0)
 					{
 						_ASSERT(vertexLayout[j].Format == DXGI_FORMAT_R32G32B32_FLOAT);
-						float *fp = (float*)pVB;
+						float* fp = (float*)pVB;
 						fp[0] = pVertex->norm.x;
 						fp[1] = pVertex->norm.y;
 						fp[2] = pVertex->norm.z;
@@ -101,26 +102,27 @@ namespace Caustic
 		}
 
 		UINT vbSize = (UINT)(numVerts * vertexSize);
-        D3D11_BUFFER_DESC desc = { 0 };
-        desc.ByteWidth = vbSize;
-        desc.Usage = D3D11_USAGE_DEFAULT;
-        desc.CPUAccessFlags = 0;
-        desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-        desc.MiscFlags = 0;
-        desc.StructureByteStride = vertexSize;
-        D3D11_SUBRESOURCE_DATA data;
-        data.pSysMem = pVertexBuffer;
-        data.SysMemPitch = 0;
-        data.SysMemSlicePitch = 0;
-        CComPtr<ID3D11Buffer> spVB;
-        CT(spDevice->CreateBuffer(&desc, &data, &spVB));
-        pMeshData->m_numVertices = vout;
-        pMeshData->m_spVB = spVB;
-        pMeshData->m_bbox = bbox;
+		D3D11_BUFFER_DESC desc = { 0 };
+		desc.ByteWidth = vbSize;
+		desc.Usage = D3D11_USAGE_DEFAULT;
+		desc.CPUAccessFlags = 0;
+		desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		desc.MiscFlags = 0;
+		desc.StructureByteStride = vertexSize;
+		D3D11_SUBRESOURCE_DATA data;
+		data.pSysMem = pVertexBuffer;
+		data.SysMemPitch = 0;
+		data.SysMemSlicePitch = 0;
+		CComPtr<ID3D11Buffer> spVB;
+		CT(spDevice->CreateBuffer(&desc, &data, &spVB));
+		pMeshData->m_numVertices = vout;
+		pMeshData->m_vertexSize = vertexSize;
+		pMeshData->m_spVB = spVB;
+		pMeshData->m_bbox = bbox;
 	}
 
-    //**********************************************************************
-    // Method: BuildIndexBuffer
+	//**********************************************************************
+	// Method: BuildIndexBuffer
     // Creates a index buffer using the specified submesh.
     //
     // Parameters:
@@ -307,5 +309,4 @@ namespace Caustic
         *ppRenderMesh = spRenderMesh;
         (*ppRenderMesh)->AddRef();
     }
-
 };

@@ -32,6 +32,7 @@ namespace Caustic
     CAUSTICAPI void CreatePointLight(Vector3 &pos, IPointLight **ppLight);
     CAUSTICAPI void CreateTrackball(ITrackball **ppTrackball);
     CAUSTICAPI void CreateRendererMarshaller(IRendererMarshaller **ppClientServer);
+    CAUSTICAPI void CreateMaterialAttrib(IMaterialAttrib** ppMaterialAttib);
     CAUSTICAPI void CreateRenderMaterial(IGraphics *pGraphics, IMaterialAttrib *pMaterialAttrib, IShader *pShader, IRenderMaterial **ppRenderMaterial);
     CAUSTICAPI void CreateRenderable(IRenderSubMesh *pSubMesh, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat, IRenderable **ppRenderable);
     CAUSTICAPI void CreateSampler(IGraphics *pGraphics, ITexture *pTexture, ISampler **ppSampler);
@@ -153,6 +154,15 @@ namespace Caustic
 	{
 		Caustic::CreateRendererMarshaller(ppMarshaller);
 	}
+
+    //**********************************************************************
+    // Method: CreateMaterialAttrib
+    // See <ICausticFactory::CreateMaterialAttrib>
+    //**********************************************************************
+    void CCausticFactory::CreateMaterialAttrib(IMaterialAttrib** ppMaterialAttrib)
+    {
+        Caustic::CreateMaterialAttrib(ppMaterialAttrib);
+    }
 
     //**********************************************************************
     // Method: CreateRenderMaterial

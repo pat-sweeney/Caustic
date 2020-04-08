@@ -12,19 +12,17 @@
 namespace Caustic
 {
 	//**********************************************************************
-	// Interface: ICamera
+	// Interface: ICameraDevice
 	// Base interface shared across all camera types
 	//**********************************************************************
-	struct ICamera : public IRefCount
+	struct ICameraDevice : public IRefCount
 	{
 		//**********************************************************************
 		// Method: NextFrame
 		// Retrieves the next color/depth/ir image from the camera
 		// Parameters:
 		// ppColorImage - returns the next color image retrieved from the camera. Maybe nullptr.
-		// ppDepthImage - returns the next depth image retrieved from the camera. Maybe nullptr.
-		// ppIRImage - returns the next infrared image retrieved from the camera. Maybe nullptr.
 		//**********************************************************************
-		virtual void NextFrame(IImage** ppColorImage, IImage** ppDepthImage, IImage** ppIRImage) = 0;
+		virtual bool NextFrame(IImage** ppColorImage) = 0;
 	};
 }

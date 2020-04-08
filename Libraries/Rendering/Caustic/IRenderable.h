@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2019
+// Copyright Patrick Sweeney 2015-2020
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -62,13 +62,58 @@ namespace Caustic
         // Parameters:
         // mat - transform to set
         //**********************************************************************
-        virtual void SetTransform(DirectX::XMMATRIX &mat) = 0;
+        virtual void SetTransform(DirectX::XMMATRIX& mat) = 0;
 
         //**********************************************************************
         // Method: GetTransform
         // Returns the transforms associated with the object
         //**********************************************************************
-        virtual DirectX::XMMATRIX &GetTransform() = 0;
+        virtual DirectX::XMMATRIX& GetTransform() = 0;
+
+        //**********************************************************************
+        // Method: SetSubMesh
+        // Sets the submesh
+        //
+        // Parameters:
+        // pSubMesh - new mesh
+        //**********************************************************************
+        virtual void SetSubMesh(IRenderSubMesh* pSubMesh) = 0;
+
+        //**********************************************************************
+        // Method: GetSubMesh
+        // Returns the submesh associated with this oject
+        //**********************************************************************
+        virtual CRefObj<IRenderSubMesh> GetSubMesh() = 0;
+
+        //**********************************************************************
+        // Method: SetFrontMaterial
+        // Sets the front face material
+        //
+        // Parameters:
+        // pMaterial - material
+        //**********************************************************************
+        virtual void SetFrontMaterial(IRenderMaterial* pMaterial) = 0;
+
+        //**********************************************************************
+        // Method: GetFrontMaterial
+        // Returns the front face material associated with this oject
+        //**********************************************************************
+        virtual CRefObj<IRenderMaterial> GetFrontMaterial() = 0;
+
+        //**********************************************************************
+        // Method: SetBackMaterial
+        // Sets the back face material
+        //
+        // Parameters:
+        // pMaterial - material
+        //**********************************************************************
+        virtual void SetBackMaterial(IRenderMaterial* pMaterial) = 0;
+
+        //**********************************************************************
+        // Method: GetBackMaterial
+        // Returns the back face material associated with this oject
+        //**********************************************************************
+        virtual CRefObj<IRenderMaterial> GetBackMaterial() = 0;
 
         //**********************************************************************
         // Method: InPass

@@ -101,6 +101,15 @@ namespace Caustic
 		virtual void CreateRendererMarshaller(IRendererMarshaller **ppMarshaller) = 0;
 
 		//**********************************************************************
+		// Method: CreateMaterialAttrib
+		// Creates a MaterialAttrib object.
+		//
+		// Parameters:
+		// ppMaterialAttrib - Returns the created MaterialAttrib object
+		//**********************************************************************
+		virtual void CreateMaterialAttrib(IMaterialAttrib** ppMaterialAttrib) = 0;
+
+		//**********************************************************************
 		// Method: CreateRenderMaterial
 		// Creates a RenderMaterial object.
 		//

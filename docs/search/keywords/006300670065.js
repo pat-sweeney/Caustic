@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("cge",["Struct"],[["CGeomVertex",,[[,,,,0,"File:Geometry/Mesh/IMesh.h:CGeomVertex","CClass:CGeomVertex"]]]]);
+NDSearch.OnPrefixDataLoaded("cge",["Struct"],[["CGeomVertex",,[[,,,,0,"File:Rendering/Caustic/RenderTypes.h:CGeomVertex","CClass:CGeomVertex"]]]]);

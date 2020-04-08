@@ -189,8 +189,10 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Caustic.h" />
     <ClInclude Include="CausticFactory.h" />
+    <ClInclude Include="ConstructBuffers.h" />
     <ClInclude Include="ICamera.h" />
     <ClInclude Include="ICausticFactory.h" />
+    <ClInclude Include="IMaterialAttrib.h" />
     <ClInclude Include="IPointLight.h" />
     <ClInclude Include="IRenderable.h" />
     <ClInclude Include="IRenderCtx.h" />
@@ -204,6 +206,7 @@
     <ClInclude Include="IShaderMgr.h" />
     <ClInclude Include="ITexture.h" />
     <ClInclude Include="ITrackball.h" />
+    <ClInclude Include="MaterialAttrib.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Renderable.h" />
     <ClInclude Include="RendererMarshaller.h" />
@@ -211,6 +214,7 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderMaterial.h" />
     <ClInclude Include="RenderMesh.h" />
+    <ClInclude Include="RenderTypes.h" />
     <ClInclude Include="Sampler.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderInfo.h" />
@@ -223,6 +227,8 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CausticFactory.cpp" />
+    <ClCompile Include="ConstructBuffers.cpp" />
+    <ClCompile Include="MaterialAttrib.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="RendererMarshaller.cpp" />
     <ClCompile Include="Renderable.cpp" />

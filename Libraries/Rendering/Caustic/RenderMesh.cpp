@@ -5,6 +5,7 @@
 //**********************************************************************
 #include "stdafx.h"
 #include "Rendering\Caustic\Caustic.h"
+#include "ConstructBuffers.h"
 #include "RenderMesh.h"
 #include "ShaderInfo.h"
 #include <d3d12.h>
@@ -109,4 +110,62 @@ namespace Caustic
 		for (auto submesh : m_subMeshes)
 			submesh->Render(pRenderer, lights);
 	}
+
+    CAUSTICAPI void CreatePointCloudSubMesh(IRenderer *pRenderer, IShader *pShader, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, std::vector<CGeomVertex>& verts, IRenderSubMesh** ppSubMesh)
+    {
+        if (verts.size() == 0)
+            return;
+        std::vector<CGeomVertex> triangles;
+        std::vector<uint32> faces;
+        for (size_t i = 0; i < verts.size(); i++)
+        {
+            Vector3 pos = verts[i].pos;
+            Vector3 v(0.0f, 1.0f, 0.0f);
+            Vector3 u = verts[i].norm.cross(v);
+            u.Normalize();
+            v = u.cross(verts[i].norm);
+            v.Normalize();
+            const float stepSize = 0.01f;
+            CGeomVertex p0, p1, p2, p3;
+            p0.pos = pos + u * stepSize + v * stepSize;
+            p1.pos = pos - u * stepSize + v * stepSize;
+            p2.pos = pos - u * stepSize - v * stepSize;
+            p3.pos = pos + u * stepSize - v * stepSize;
+            p0.uvs[0] = Vector2(1.0f, 1.0f);
+            p1.uvs[0] = Vector2(0.0f, 1.0f);
+            p2.uvs[0] = Vector2(0.0f, 0.0f);
+            p3.uvs[0] = Vector2(1.0f, 0.0f);
+            p0.norm = verts[i].norm;
+            p1.norm = verts[i].norm;
+            p2.norm = verts[i].norm;
+            p3.norm = verts[i].norm;
+            triangles.push_back(p0);
+            triangles.push_back(p1);
+            triangles.push_back(p2);
+            triangles.push_back(p0);
+            triangles.push_back(p2);
+            triangles.push_back(p3);
+            faces.push_back(int(6 * i + 0));
+            faces.push_back(int(6 * i + 1));
+            faces.push_back(int(6 * i + 2));
+            faces.push_back(int(6 * i + 3));
+            faces.push_back(int(6 * i + 4));
+            faces.push_back(int(6 * i + 5));
+        }
+        
+        CRefObj<ICausticFactory> spFactory;
+        CreateCausticFactory(&spFactory);
+        CRefObj<IRenderSubMesh> spSubMesh;
+        spFactory->CreateRenderSubMesh(&spSubMesh);
+        spSubMesh->SetBackMaterial(pBackMaterial);
+        spSubMesh->SetFrontMaterial(pFrontMaterial);
+        spSubMesh->SetShader(pShader);
+        CComPtr<ID3D11Device> spDevice = pRenderer->GetDevice();
+        CRefObj<IShaderInfo> spShaderInfo = pShader->GetShaderInfo();
+        MeshData meshData;
+        BuildVertexBuffer(pRenderer, spShaderInfo, triangles, &meshData);
+        BuildIndexBuffer(pRenderer, faces, &meshData);
+        spSubMesh->SetMeshData(meshData);
+        *ppSubMesh = spSubMesh.Detach();
+    }
 }

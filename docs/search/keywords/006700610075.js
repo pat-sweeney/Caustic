@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("gau",["Function"],[["GaussianBlur",,[["IImage",,,,0,"File:Imaging/Image/Image.h:IImage.GaussianBlur","CClass:IImage:GaussianBlur"]]]]);

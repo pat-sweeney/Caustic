@@ -44,6 +44,7 @@ namespace Caustic
 		virtual void CreateMaterialElem(ISceneMaterialElem **ppElem) override;
 		virtual void CreatePointLightElem(IScenePointLightElem **ppLight) override;
 		virtual void CreateGroupElem(ISceneGroupElem **ppGroup) override;
-		virtual void CreateMeshElem(ISceneMeshElem **ppMesh) override;
+		virtual void CreateMeshElem(ISceneMeshElem** ppMesh) override;
+		virtual void CreateCustomRenderElem(std::function<void(IRenderer *pRender, IRenderCtx *pCtx, SceneCtx * pSceneCtx)> clientCallback, ISceneCustomRenderElem** ppRenderElem) override;
 	};
 };

@@ -19,6 +19,27 @@ namespace Caustic
 	// CImageIter defines the base class. Clients need to used one of the derived
 	// classes (CImageIter1, CImageIter8, CImageIter16, CImageIter24, or CImageIter32)
 	// to walk across an image.
+	//
+	// Example:
+	// --- Code
+	//  CImageIter24 rowSrc(pSrcImage, 0, 0);
+	//  CImageIter24 rowDst(pDestImage, 0, 0);
+	//  for (int y = 0; y < pSrcImage->GetHeight(); y++)
+	//  {
+	//      CImageIter24 colSrc = rowSrc;
+	//      CImageIter24 colDst = rowDst;
+	//		for (int x = 0; x < pSrcImage->GetWidth(); x++)
+	//      {
+	//          colDst.SetRed(colSrc.GetRed() - 10);
+	//          colDst.SetGreen(colSrc.GetGreen() - 10);
+	//          colDst.SetBlue(colSrc.GetBlue() - 10);
+	//          colSrc.Step(CImageIter::Right);
+	//          colDst.Step(CImageIter::Right);
+	//      }
+	//      rowSrc.Step(CImageIter::Down);
+	//      rowDst.Step(CImageIter::Down);
+	//  }
+	// ---
 	//**********************************************************************
 	class CImageIter
 	{

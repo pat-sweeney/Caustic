@@ -7,8 +7,10 @@
 #include "Base\Core\Core.h"
 #include "Base\Core\RefCount.h"
 #include "Base\Math\Vector.h"
+#include "Base\Math\BBox.h"
 #include "Imaging\Image\Image.h"
 #include "Cameras\AzureKinect\IAzureKinect.h"
+#include <vector>
 
 // Namespace: Caustic
 namespace Caustic
@@ -40,8 +42,14 @@ namespace Caustic
         virtual uint32 Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
-        // ICamera
+        // ICameraDevice
         //**********************************************************************
-        void NextFrame(IImage** ppColorImage, IImage** ppDepthImage, IImage** ppIRImage);
+        virtual bool NextFrame(IImage** ppColorImage) override;
+
+        //**********************************************************************
+        // IAzureKinect
+        //**********************************************************************
+        virtual bool NextFrame(IImage** ppColorImage, IImage** ppDepthImage, IImage** ppIRImage) override;
+        virtual bool NextFrame(IImage** ppColorImage, std::vector<Vector3>& pts, std::vector<Vector3>& normals, BBox3 &bbox) override;
     };
 }

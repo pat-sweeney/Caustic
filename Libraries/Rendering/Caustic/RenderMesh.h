@@ -17,7 +17,7 @@
 
 namespace Caustic
 {
-    //**********************************************************************
+	//**********************************************************************
     // Class: CRenderSubMesh
     // Implements <IRenderSubMesh>
     //
@@ -39,6 +39,11 @@ namespace Caustic
 		CRefObj<IShader> m_spShader;
         uint32 m_flags;
 	public:
+		CRenderSubMesh() :
+			m_flags(0)
+		{
+		}
+
 		//**********************************************************************
 		// IRefCount
 		//**********************************************************************
@@ -87,7 +92,7 @@ namespace Caustic
 		virtual void SetMaterials(std::vector<CRefObj<IMaterialAttrib>> &materials) override;
 		virtual void GetMaterial(uint32 materialID, IMaterialAttrib **ppMaterial) override;
 		virtual void ComputeNormals() override {}
-		virtual void Render(IRenderer *pRenderer, std::vector<CRefObj<IPointLight>> &lights);
+		virtual void Render(IRenderer *pRenderer, std::vector<CRefObj<IPointLight>> &lights) override;
 
 		//**********************************************************************
 		// ISerialize

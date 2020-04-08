@@ -29,16 +29,52 @@
  <div class="CBody"><p>Called by the renderer to render this object</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pGraphics<div class="CDLParameterType"><a href="../../index.html#CClass:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,577);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>*</div></td><td class="CDLDefinition"><p>Graphics device</p></td></tr><tr><td class="CDLEntry">lights<div class="CDLParameterType">std::vector&lt;<a href="../../index.html#CClass:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,6);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../index.html#CClass:IPointLight" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,574);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IPointLight</a>&gt;&gt;&amp;</div></td><td class="CDLDefinition"><p>List of current lights effecting this object</p></td></tr><tr><td class="CDLEntry">pRenderCtx<div class="CDLParameterType"><a href="../../index.html#CClass:IRenderCtx" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,565);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderCtx</a>*</div></td><td class="CDLDefinition"><p>Current render context</p></td></tr></table></div>
 </div>
 
-<a name="SetTransform"></a><a name="Topic548"></a><div class="CTopic TFunction LC">
+<a name="SetTransform"></a><a name="Topic219"></a><div class="CTopic TFunction LC">
  <div class="CTitle">SetTransform</div>
- <div id="NDPrototype548" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetTransform(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first">DirectX::</td><td class="PType">XMMATRIX&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">mat</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div id="NDPrototype219" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetTransform(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first">DirectX::</td><td class="PType">XMMATRIX&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">mat</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
  <div class="CBody"><p>Sets the transform on the object</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">mat<div class="CDLParameterType">DirectX::XMMATRIX&amp;</div></td><td class="CDLDefinition"><p>transform to set</p></td></tr></table></div>
 </div>
 
-<a name="GetTransform"></a><a name="Topic549"></a><div class="CTopic TFunction LC">
+<a name="GetTransform"></a><a name="Topic220"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetTransform</div>
- <div id="NDPrototype549" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> DirectX::XMMATRIX &amp;GetTransform() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype220" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> DirectX::XMMATRIX&amp; GetTransform() = <span class="SHNumber">0</span></div>
  <div class="CBody"><p>Returns the transforms associated with the object</p></div>
+</div>
+
+<a name="SetSubMesh"></a><a name="Topic221"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">SetSubMesh</div>
+ <div id="NDPrototype221" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetSubMesh(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:IRenderSubMesh" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,508);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderSubMesh</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pSubMesh</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Sets the submesh</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pSubMesh<div class="CDLParameterType"><a href="../../index.html#CClass:IRenderSubMesh" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,508);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderSubMesh</a>*</div></td><td class="CDLDefinition"><p>new mesh</p></td></tr></table></div>
+</div>
+
+<a name="GetSubMesh"></a><a name="Topic222"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetSubMesh</div>
+ <div id="NDPrototype222" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <a href="../../index.html#CClass:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,6);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../index.html#CClass:IRenderSubMesh" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,508);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderSubMesh</a>&gt; GetSubMesh() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><p>Returns the submesh associated with this oject</p></div>
+</div>
+
+<a name="SetFrontMaterial"></a><a name="Topic223"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">SetFrontMaterial</div>
+ <div id="NDPrototype223" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetFrontMaterial(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:IRenderMaterial" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,497);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderMaterial</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pMaterial</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Sets the front face material</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pMaterial<div class="CDLParameterType"><a href="../../index.html#CClass:IRenderMaterial" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,497);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderMaterial</a>*</div></td><td class="CDLDefinition"><p>material</p></td></tr></table></div>
+</div>
+
+<a name="GetFrontMaterial"></a><a name="Topic224"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetFrontMaterial</div>
+ <div id="NDPrototype224" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <a href="../../index.html#CClass:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,6);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../index.html#CClass:IRenderMaterial" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,497);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderMaterial</a>&gt; GetFrontMaterial() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><p>Returns the front face material associated with this oject</p></div>
+</div>
+
+<a name="SetBackMaterial"></a><a name="Topic225"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">SetBackMaterial</div>
+ <div id="NDPrototype225" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetBackMaterial(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:IRenderMaterial" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,497);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderMaterial</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pMaterial</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Sets the back face material</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pMaterial<div class="CDLParameterType"><a href="../../index.html#CClass:IRenderMaterial" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,497);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderMaterial</a>*</div></td><td class="CDLDefinition"><p>material</p></td></tr></table></div>
+</div>
+
+<a name="GetBackMaterial"></a><a name="Topic226"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetBackMaterial</div>
+ <div id="NDPrototype226" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <a href="../../index.html#CClass:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,6);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../index.html#CClass:IRenderMaterial" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,497);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderMaterial</a>&gt; GetBackMaterial() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><p>Returns the back face material associated with this oject</p></div>
 </div>
 
 <a name="InPass"></a><a name="Topic550"></a><div class="CTopic TFunction LC last">

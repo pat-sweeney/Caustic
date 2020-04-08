@@ -61,6 +61,7 @@ namespace Caustic
 		virtual void CreatePointLight(Vector3 &pos, IPointLight **ppLight) override;
 		virtual void CreateTrackball(ITrackball **ppTrackball) override;
 		virtual void CreateRendererMarshaller(IRendererMarshaller **ppMarshaller) override;
+		virtual void CreateMaterialAttrib(IMaterialAttrib** ppMaterialAttrib) override;
 		virtual void CreateRenderMaterial(IGraphics *pGraphics, IMaterialAttrib *pMaterialAttrib, IShader *pShader, IRenderMaterial **ppRenderMaterial) override;
         virtual void CreateRenderable(IRenderSubMesh *pSubMesh, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat, IRenderable **ppRenderable) override;
         virtual void CreateSampler(IGraphics *pGraphics, ITexture *pTexture, ISampler **ppSampler) override;

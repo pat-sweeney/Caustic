@@ -25,6 +25,7 @@ namespace Caustic
 	{
 		SceneGraph,
 		Mesh,
+		CustomRenderElem,
 		Group,
 		Renderable,
 		PointLight,
@@ -238,7 +239,20 @@ namespace Caustic
 		// Method: SetMesh
 		// Updates the mesh elements underlying mesh object
 		//**********************************************************************
-		virtual void SetMesh(IMesh *pMesh) = 0;
+		virtual void SetMesh(IMesh* pMesh) = 0;
+	};
+
+	//**********************************************************************
+	// Interface: ISceneCustomRenderElem
+	// Defines a custom render element in our scene
+	//**********************************************************************
+	struct ISceneCustomRenderElem : public ISceneElem
+	{
+		//**********************************************************************
+		// Method: SetCallback
+		// Updates the callback function associated with the custom render element
+		//**********************************************************************
+		virtual void SetCallback(std::function<void(IRenderer *pRenderer, IRenderCtx *pCtx, SceneCtx *pSceneCtx)> clientCallback) = 0;
 	};
 
 	//**********************************************************************

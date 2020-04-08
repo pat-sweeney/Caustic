@@ -47,9 +47,15 @@ namespace Caustic
 		Caustic::CreateGroupElem(ppGroup);
 	}
 
-	CAUSTICAPI void CreateMeshElem(ISceneMeshElem **ppMesh);
-	void CSceneFactory::CreateMeshElem(ISceneMeshElem **ppMesh)
+	CAUSTICAPI void CreateMeshElem(ISceneMeshElem** ppMesh);
+	void CSceneFactory::CreateMeshElem(ISceneMeshElem** ppMesh)
 	{
 		Caustic::CreateMeshElem(ppMesh);
+	}
+
+	CAUSTICAPI void CreateCustomRenderElem(std::function<void(IRenderer *pRenderer, IRenderCtx *pCtx, SceneCtx * pSceneCtx)> clientCallback, ISceneCustomRenderElem** ppRenderElem);
+	void CSceneFactory::CreateCustomRenderElem(std::function<void(IRenderer * pRenderer, IRenderCtx * pCtx, SceneCtx * pSceneCtx)> clientCallback, ISceneCustomRenderElem** ppRenderElem)
+	{
+		Caustic::CreateCustomRenderElem(clientCallback, ppRenderElem);
 	}
 };
