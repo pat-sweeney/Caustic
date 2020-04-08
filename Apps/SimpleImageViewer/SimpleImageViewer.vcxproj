@@ -108,6 +108,9 @@
     <ProjectReference Include="..\..\Libraries\Base\Core\Core.vcxproj">
       <Project>{aacfe62f-5400-4a81-87ad-b37573a1f5c9}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Base\Math\Math.vcxproj">
+      <Project>{a82bd627-0746-4f67-856f-396335084fee}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Cameras\AzureKinect\AzureKinect.vcxproj">
       <Project>{cacc2b4b-984d-49b1-8f5b-aa5b48a9d686}</Project>
     </ProjectReference>

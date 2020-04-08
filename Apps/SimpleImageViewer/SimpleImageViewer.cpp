@@ -97,7 +97,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                     CRefObj<IImage> spColoredDepthImage;
                     CRefObj<IImageFilter> spFilter;
                     CreateColorize(&spFilter);
-                    spFilter->Apply(spDepthImage, &spColoredDepthImage);
+                    spFilter->Apply(spDepthImage, nullptr, &spColoredDepthImage);
                     imgbitmap = CreateBitmap(spColoredDepthImage->GetWidth(), spColoredDepthImage->GetHeight(), 1, 32, spColoredDepthImage->GetData());
                 }
                 else

@@ -14,11 +14,12 @@ namespace Caustic
 {
 	struct IImageFilter : public IRefCount
 	{
-		virtual void Apply(IImage* pImage, IImage** ppResult) = 0;
-		virtual bool ApplyInPlace(IImage* pImage) = 0;
+		virtual void Apply(IImage* pImage, IImage *pMask, IImage** ppResult) = 0;
+		virtual bool ApplyInPlace(IImage* pImage, IImage* pMask) = 0;
 	};
 
 	extern void CreateGaussianBlur(float sigma, IImageFilter** ppFilter);
 	extern void CreateColorize(IImageFilter** ppFilter);
 	extern void CreateColorize(int maxDepth, IImageFilter** ppFilter);
+	extern void CreateMedian(IImageFilter** ppFilter);
 }

@@ -32,10 +32,17 @@ namespace Caustic
         //**********************************************************************
         // IImageFilter
         //**********************************************************************
-        virtual void Apply(IImage* pImage, IImage** ppResult) override;
-        virtual bool ApplyInPlace(IImage* pImage) override;
+        virtual void Apply(IImage* pImage, IImage* pMask, IImage** ppResult) override;
+        virtual bool ApplyInPlace(IImage* pImage, IImage* pMask) override;
     };
 
+    //**********************************************************************
+    // Function: CreateColorize
+    // Creates a filter that converts depth values to a false color image.
+    //
+    // Parameters:
+    // ppFilter - returns the newly created filter.
+    //**********************************************************************
     void CreateColorize(IImageFilter** ppFilter)
     {
         CreateColorize(8000, ppFilter);
@@ -48,7 +55,7 @@ namespace Caustic
         (*ppFilter)->AddRef();
     }
 
-    void CColorize::Apply(IImage* pImage, IImage** ppResult)
+    void CColorize::Apply(IImage* pImage, IImage* pMask, IImage** ppResult)
     {
         if (pImage->GetBPP() != 16)
             CT(E_UNEXPECTED);
@@ -96,7 +103,7 @@ namespace Caustic
         *ppResult = spImage.Detach();
     }
     
-    bool CColorize::ApplyInPlace(IImage* pImage)
+    bool CColorize::ApplyInPlace(IImage* pImage, IImage* pMask)
     {
         return false; // Not supported
     }
