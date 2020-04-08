@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("File:Imaging/Image/Coloriize.cpp","Coloriize.cpp");NDSummary.OnSummaryLoaded("File:Imaging/Image/Coloriize.cpp",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"]],[[767,0,1,"Functions","Functions"],[768,0,0,"CreateColorize","CreateColorize"]]);

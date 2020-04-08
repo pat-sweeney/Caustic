@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("str",["Function"],[["StringToFormat",,[[,,,,0,"File:Rendering/Caustic/ShaderInfo.cpp:StringToFormat"]]]]);
+NDSearch.OnPrefixDataLoaded("str",["Function"],[["str2wstr",,[["Caustic",,,,0,"File:Base/Core/convertStr.cpp:Caustic.str2wstr","CClass:Caustic:str2wstr"]]],["StringToFormat",,[[,,,,0,"File:Rendering/Caustic/ShaderInfo.cpp:StringToFormat"]]]]);

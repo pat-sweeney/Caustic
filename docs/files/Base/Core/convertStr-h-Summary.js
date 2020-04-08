@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("File:Base/Core/convertStr.h","convertStr.h");NDSummary.OnSummaryLoaded("File:Base/Core/convertStr.h",[["C/C++","C"]],[["Classes","Class"]],[[763,0,0,"Caustic","Caustic"]]);
+NDFramePage.OnPageTitleLoaded("File:Base/Core/convertStr.h","convertStr.h");NDSummary.OnSummaryLoaded("File:Base/Core/convertStr.h",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[763,0,0,"Caustic","Caustic"],[110,0,2,"Functions","Caustic.Functions"],[549,0,1,"str2wstr","Caustic.str2wstr"],[688,0,1,"wstr2str","Caustic.wstr2str"]]);

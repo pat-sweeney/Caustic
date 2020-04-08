@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("yiq",["Class"],[["YIQColor",,[[,,,,0,"File:Imaging/Color/Color.h:YIQColor","CClass:YIQColor"]]]]);

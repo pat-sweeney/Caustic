@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("cga",["Class"],[["CGaussianBlur",,[[,,,,0,"File:Imaging/Image/GaussianBlur.cpp:CGaussianBlur","CClass:CGaussianBlur"]]]]);

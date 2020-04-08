@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("wst",["Function"],[["wstr2str",,[["Caustic",,,,0,"File:Base/Core/convertStr.cpp:Caustic.wstr2str","CClass:Caustic:wstr2str"]]]]);

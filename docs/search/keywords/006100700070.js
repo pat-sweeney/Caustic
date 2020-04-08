@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("app",["Function"],[["Apply",,[["CGaussianBlur",,,,0,"File:Imaging/Image/GaussianBlur.cpp:CGaussianBlur.Apply","CClass:CGaussianBlur:Apply"],["CMedianFilter",,,,0,"File:Imaging/Image/MedianFilter.cpp:CMedianFilter.Apply","CClass:CMedianFilter:Apply"]]]]);
