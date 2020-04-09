@@ -6,7 +6,7 @@
 #include "Base\Core\Core.h"
 #include "Base\Core\error.h"
 #include "Geometry\Mesh\Mesh.h"
-#include "Geometry\Mesh\Material.h"
+#include "Rendering\Caustic\MaterialAttrib.h"
 
 //**********************************************************************
 // File: Mesh.cpp

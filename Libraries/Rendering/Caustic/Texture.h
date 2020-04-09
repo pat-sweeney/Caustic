@@ -22,7 +22,7 @@ namespace Caustic
         CComPtr<ID3D11Texture2D> m_spTexture;
         CComPtr<ID3D11ShaderResourceView> m_spTextureRV;
     public:
-        CTexture(IGraphics *pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, uint32 cpuFlags, uint32 bindFlags);
+        CTexture(IGraphics *pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags);
         ~CTexture();
 
         //**********************************************************************

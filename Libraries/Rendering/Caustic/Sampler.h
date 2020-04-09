@@ -12,9 +12,12 @@
 
 namespace Caustic
 {
-    // \brief CSamplerRef only exists because I was having trouble
+    //**********************************************************************
+    // Struct: CSamplerRef
+    // CSamplerRef only exists because I was having trouble
     // adding CRefObj<ISampler> to std::any(). This seemed like
     // the simpliest fix
+    //**********************************************************************
     struct CSamplerRef
     {
         CRefObj<ISampler> m_spSampler;
@@ -25,6 +28,9 @@ namespace Caustic
         }
     };
 
+    //**********************************************************************
+    // Class: CSampler
+    // Implementation of <ISampler>
     //**********************************************************************
     class CSampler : public ISampler, public CRefCount
     {

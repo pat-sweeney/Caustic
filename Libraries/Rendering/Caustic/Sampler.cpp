@@ -10,7 +10,7 @@
 namespace Caustic
 {
     CSampler::CSampler(IGraphics *pGraphics, ITexture *pTexture) :
-        m_Filter(D3D11_FILTER::D3D11_FILTER_ANISOTROPIC),
+        m_Filter(D3D11_FILTER::D3D11_FILTER_MIN_MAG_MIP_LINEAR),
         m_AddressU(D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_WRAP),
         m_AddressV(D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_WRAP)
     {

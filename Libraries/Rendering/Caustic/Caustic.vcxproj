@@ -297,6 +297,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Pointcloud.vs" />
     <None Include="ShadowMap.ps">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS ShadowMap</Command>

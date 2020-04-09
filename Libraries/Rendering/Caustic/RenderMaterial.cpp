@@ -27,28 +27,52 @@ namespace Caustic
 
         if (pMaterialAttrib)
         {
-            std::string fnDiffuse = pMaterialAttrib->GetDiffuseTexture();
-            if (!fnDiffuse.empty())
+            if (pMaterialAttrib->GetDiffuseTexture() == nullptr)
             {
-                std::wstring wfn(fnDiffuse.begin(), fnDiffuse.end());
-                Caustic::CCausticFactory::Instance()->LoadTexture(wfn.c_str(), pGraphics, &spRenderMaterial->m_spDiffuseTexture);
-				CCausticFactory::Instance()->CreateSampler(pGraphics, spRenderMaterial->m_spDiffuseTexture, &spRenderMaterial->m_spDiffuseSampler);
+                std::string fnDiffuse = pMaterialAttrib->GetDiffuseTextureFN();
+                if (!fnDiffuse.empty())
+                {
+                    std::wstring wfn(fnDiffuse.begin(), fnDiffuse.end());
+                    Caustic::CCausticFactory::Instance()->LoadTexture(wfn.c_str(), pGraphics, &spRenderMaterial->m_spDiffuseTexture);
+                    CCausticFactory::Instance()->CreateSampler(pGraphics, spRenderMaterial->m_spDiffuseTexture, &spRenderMaterial->m_spDiffuseSampler);
+                }
+            }
+            else
+            {
+                Caustic::CCausticFactory::Instance()->CreateTexture(pGraphics, pMaterialAttrib->GetDiffuseTexture(), D3D11_CPU_ACCESS_WRITE, D3D11_BIND_SHADER_RESOURCE, &spRenderMaterial->m_spDiffuseTexture);
+                CCausticFactory::Instance()->CreateSampler(pGraphics, spRenderMaterial->m_spDiffuseTexture, &spRenderMaterial->m_spDiffuseSampler);
             }
 
-            std::string fnSpecular = pMaterialAttrib->GetSpecularTexture();
-            if (!fnSpecular.empty())
+            if (pMaterialAttrib->GetSpecularTexture() == nullptr)
             {
-                std::wstring wfn(fnSpecular.begin(), fnSpecular.end());
-                Caustic::CCausticFactory::Instance()->LoadTexture(wfn.c_str(), pGraphics, &spRenderMaterial->m_spSpecularTexture);
-				CCausticFactory::Instance()->CreateSampler(pGraphics, spRenderMaterial->m_spSpecularTexture, &spRenderMaterial->m_spSpecularSampler);
+                std::string fnSpecular = pMaterialAttrib->GetSpecularTextureFN();
+                if (!fnSpecular.empty())
+                {
+                    std::wstring wfn(fnSpecular.begin(), fnSpecular.end());
+                    Caustic::CCausticFactory::Instance()->LoadTexture(wfn.c_str(), pGraphics, &spRenderMaterial->m_spSpecularTexture);
+				    CCausticFactory::Instance()->CreateSampler(pGraphics, spRenderMaterial->m_spSpecularTexture, &spRenderMaterial->m_spSpecularSampler);
+                }
+            }
+            else
+            {
+                Caustic::CCausticFactory::Instance()->CreateTexture(pGraphics, pMaterialAttrib->GetSpecularTexture(), D3D11_CPU_ACCESS_WRITE, D3D11_BIND_SHADER_RESOURCE, &spRenderMaterial->m_spSpecularTexture);
+                CCausticFactory::Instance()->CreateSampler(pGraphics, spRenderMaterial->m_spSpecularTexture, &spRenderMaterial->m_spSpecularSampler);
             }
 
-            std::string fnAmbient = pMaterialAttrib->GetAmbientTexture();
-            if (!fnAmbient.empty())
+            if (pMaterialAttrib->GetAmbientTexture() == nullptr)
             {
-                std::wstring wfn(fnAmbient.begin(), fnAmbient.end());
-				Caustic::CCausticFactory::Instance()->LoadTexture(wfn.c_str(), pGraphics, &spRenderMaterial->m_spAmbientTexture);
-				CCausticFactory::Instance()->CreateSampler(pGraphics, spRenderMaterial->m_spAmbientTexture, &spRenderMaterial->m_spAmbientSampler);
+                std::string fnAmbient = pMaterialAttrib->GetAmbientTextureFN();
+                if (!fnAmbient.empty())
+                {
+                    std::wstring wfn(fnAmbient.begin(), fnAmbient.end());
+				    Caustic::CCausticFactory::Instance()->LoadTexture(wfn.c_str(), pGraphics, &spRenderMaterial->m_spAmbientTexture);
+				    CCausticFactory::Instance()->CreateSampler(pGraphics, spRenderMaterial->m_spAmbientTexture, &spRenderMaterial->m_spAmbientSampler);
+                }
+            }
+            else
+            {
+                Caustic::CCausticFactory::Instance()->CreateTexture(pGraphics, pMaterialAttrib->GetAmbientTexture(), D3D11_CPU_ACCESS_WRITE, D3D11_BIND_SHADER_RESOURCE, &spRenderMaterial->m_spAmbientTexture);
+                CCausticFactory::Instance()->CreateSampler(pGraphics, spRenderMaterial->m_spAmbientTexture, &spRenderMaterial->m_spAmbientSampler);
             }
         }
 

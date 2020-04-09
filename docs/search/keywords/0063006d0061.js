@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("cma",["Struct"],[["CMaterial",,[[,,,,0,"File:Geometry/Mesh/Material.h:CMaterial","CClass:CMaterial"]]],["CMaterialAttrib",,[[,,,,0,"File:Rendering/Caustic/MaterialAttrib.h:CMaterialAttrib","CClass:CMaterialAttrib"]]]]);
+NDSearch.OnPrefixDataLoaded("cma",["Struct"],[["CMaterialAttrib",,[[,,,,0,"File:Rendering/Caustic/MaterialAttrib.h:CMaterialAttrib","CClass:CMaterialAttrib"]]]]);

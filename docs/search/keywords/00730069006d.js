@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("sim",["Function"],[["Simplify",,[["IPolygon2",,,,0,"File:Geometry/GeomDS/IPolygon.h:IPolygon2.Simplify","CClass:IPolygon2:Simplify"]]]]);
+NDSearch.OnPrefixDataLoaded("sim",["Function"],[["Simplify",,[[,,,,0,"File:Geometry/GeomDS/Polygon.cpp:Simplify"],["IPolygon2",,,,0,"File:Geometry/GeomDS/IPolygon.h:IPolygon2.Simplify","CClass:IPolygon2:Simplify"]]],["SimplifyRecursive",,[[,,,,0,"File:Geometry/GeomDS/Polygon.cpp:SimplifyRecursive"]]]]);

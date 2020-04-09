@@ -8,6 +8,7 @@
 #include "Base\Core\Core.h"
 #include "Base\Math\Vector.h"
 #include "Geometry\Mesh\Mesh.h"
+#include "Imaging\Image\Image.h"
 #include "Rendering\Caustic\Caustic.h"
 #include <Windows.h>
 #include <atlbase.h>
@@ -169,7 +170,20 @@ namespace Caustic
 		// bindFlags - DirectX bind flags
 		// ppTexture - returns the newly created texture
 		//**********************************************************************
-		virtual void CreateTexture(IGraphics *pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, uint32 cpuFlags, uint32 bindFlags, ITexture **ppTexture) = 0;
+		virtual void CreateTexture(IGraphics* pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags, ITexture** ppTexture) = 0;
+
+		//**********************************************************************
+		// Method: CreateTexture
+		// Creates a new texture
+		//
+		// Parameters:
+		// pGraphics - graphics device
+		// pImage - image data to set texture to
+		// cpuFlags - DirectX cpu flags
+		// bindFlags - DirectX bind flags
+		// ppTexture - returns the newly created texture
+		//**********************************************************************
+		virtual void CreateTexture(IGraphics* pGraphics, IImage *pImage, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags, ITexture** ppTexture) = 0;
 
 		//**********************************************************************
 		// Method: CheckerboardTexture

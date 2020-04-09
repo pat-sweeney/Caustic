@@ -271,7 +271,32 @@ namespace Caustic
 		(*ppRenderSubMesh)->AddRef();
 	}
 
-    //**********************************************************************
+	void CMesh::ToRenderMaterials(IRenderer* pRenderer, IShader* pShader, IRenderMesh* pRenderMesh)
+	{
+		CRefObj<ICausticFactory> spFactory;
+		CreateCausticFactory(&spFactory);
+		for (int i = 0; i < m_subMeshes.size(); i++)
+		{
+			ISubMesh* pSubMesh = m_subMeshes[i];
+			CRefObj<IRenderSubMesh> spRenderSubMesh;
+			pRenderMesh->GetSubMesh(i, &spRenderSubMesh);
+			
+			// Assign appropriate materials
+			CRefObj<IMaterialAttrib> spMaterialAttrib;
+			this->GetMaterial(pSubMesh->GetMaterialID(), &spMaterialAttrib);
+
+			CRefObj<IRenderMaterial> spRenderMaterial;
+			spFactory->CreateRenderMaterial(pRenderer, spMaterialAttrib, pShader, &spRenderMaterial);
+
+			spRenderSubMesh->SetFrontMaterial(spRenderMaterial);
+
+			// TODO: Add support for back face materials (for now just use same
+			// material as front faces)
+			spRenderSubMesh->SetBackMaterial(spRenderMaterial);
+		}
+	}
+
+	//**********************************************************************
     // Method: ToRenderMesh
     // Converts a CMesh object into a renderable form
     //
@@ -290,20 +315,6 @@ namespace Caustic
         {
             CRefObj<IRenderSubMesh> spRenderSubMesh;
             pSubMesh->ToRenderSubMesh(pRenderer, pShader, &spRenderSubMesh);
-
-            // Assign appropriate materials
-            CRefObj<IMaterialAttrib> spMaterialAttrib;
-            this->GetMaterial(pSubMesh->GetMaterialID(), &spMaterialAttrib);
-
-            CRefObj<IRenderMaterial> spRenderMaterial;
-            spFactory->CreateRenderMaterial(pRenderer, spMaterialAttrib, pShader, &spRenderMaterial);
-
-            spRenderSubMesh->SetFrontMaterial(spRenderMaterial);
-
-            // TODO: Add support for back face materials (for now just use same
-            // material as front faces)
-            spRenderSubMesh->SetBackMaterial(spRenderMaterial);
-
             spRenderMesh->AddSubMesh(spRenderSubMesh);
         }
         *ppRenderMesh = spRenderMesh;

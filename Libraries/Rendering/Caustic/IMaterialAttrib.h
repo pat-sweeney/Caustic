@@ -9,6 +9,7 @@
 #include "Base\Core\IRefCount.h"
 #include "Base\Math\Vector.h"
 #include "Base\Core\ISerialize.h"
+#include "Imaging\Image\Image.h"
 #include <vector>
 #include <string>
 
@@ -20,9 +21,9 @@
 namespace Caustic
 {
 	//**********************************************************************
-// Interface: IMaterialAttrib
-// Used for manipulating the materials assigned to a mesh.
-//**********************************************************************
+	// Interface: IMaterialAttrib
+	// Used for manipulating the materials assigned to a mesh.
+	//**********************************************************************
 	struct IMaterialAttrib : public ISerialize
 	{
 		//**********************************************************************
@@ -120,45 +121,90 @@ namespace Caustic
 		// Sets the ambient texture
 		//
 		// Parameters:
-		// v - Path to ambient texture file
+		// pImage - image to use for texture
 		//**********************************************************************
-		virtual void SetAmbientTexture(std::string p) = 0;
+		virtual void SetAmbientTexture(IImage *pImage) = 0;
 
 		//**********************************************************************
 		// Method: SetDiffuseTexture
 		// Sets the diffuse texture
 		//
 		// Parameters:
-		// v - Path to diffuse texture file
+		// pImage - image to use for texture
 		//**********************************************************************
-		virtual void SetDiffuseTexture(std::string p) = 0;
+		virtual void SetDiffuseTexture(IImage* pImage) = 0;
 
 		//**********************************************************************
 		// Method: SetSpecularTexture
 		// Sets the specular texture
 		//
 		// Parameters:
+		// pImage - image to use for texture
+		//**********************************************************************
+		virtual void SetSpecularTexture(IImage* pImage) = 0;
+
+		//**********************************************************************
+		// Method: SetAmbientTextureFN
+		// Sets the ambient texture filename
+		//
+		// Parameters:
+		// v - Path to ambient texture file
+		//**********************************************************************
+		virtual void SetAmbientTextureFN(std::string p) = 0;
+
+		//**********************************************************************
+		// Method: SetDiffuseTextureFN
+		// Sets the diffuse texture filename
+		//
+		// Parameters:
+		// v - Path to diffuse texture file
+		//**********************************************************************
+		virtual void SetDiffuseTextureFN(std::string p) = 0;
+
+		//**********************************************************************
+		// Method: SetSpecularTextureFN
+		// Sets the specular texture filename
+		//
+		// Parameters:
 		// v - Path to specular texture file
 		//**********************************************************************
-		virtual void SetSpecularTexture(std::string p) = 0;
+		virtual void SetSpecularTextureFN(std::string p) = 0;
 
 		//**********************************************************************
 		// Method: GetAmbientTexture
-		// Returns the ambient texture filename
+		// Returns the ambient texture
 		//**********************************************************************
-		virtual std::string GetAmbientTexture() = 0;
+		virtual CRefObj<IImage> GetAmbientTexture() = 0;
 
 		//**********************************************************************
 		// Method: GetDiffuseTexture
-		// Returns the diffuse texture filename
+		// Returns the diffuse texture
 		//**********************************************************************
-		virtual std::string GetDiffuseTexture() = 0;
+		virtual CRefObj<IImage> GetDiffuseTexture() = 0;
 
 		//**********************************************************************
 		// Method: GetSpecularTexture
+		// Returns the specular texture
+		//**********************************************************************
+		virtual CRefObj<IImage> GetSpecularTexture() = 0;
+
+		//**********************************************************************
+		// Method: GetAmbientTextureFN
+		// Returns the ambient texture filename
+		//**********************************************************************
+		virtual std::string GetAmbientTextureFN() = 0;
+
+		//**********************************************************************
+		// Method: GetDiffuseTextureFN
+		// Returns the diffuse texture filename
+		//**********************************************************************
+		virtual std::string GetDiffuseTextureFN() = 0;
+
+		//**********************************************************************
+		// Method: GetSpecularTextureFN
 		// Returns the specular texture filename
 		//**********************************************************************
-		virtual std::string GetSpecularTexture() = 0;
+		virtual std::string GetSpecularTextureFN() = 0;
 	};
 
 	CAUSTICAPI void CreateMaterial(Vector3 ambientColor, Vector3 diffuseColor,

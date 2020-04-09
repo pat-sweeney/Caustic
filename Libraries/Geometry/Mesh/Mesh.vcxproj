@@ -76,7 +76,6 @@
     <ClInclude Include="Delaunay.h" />
     <ClInclude Include="IDelaunay.h" />
     <ClInclude Include="IMeshConstructor.h" />
-    <ClInclude Include="Material.h" />
     <ClInclude Include="IMesh.h" />
     <ClInclude Include="MeshConstructor.h" />
     <ClInclude Include="Mesh.h" />
@@ -85,7 +84,6 @@
   <ItemGroup>
     <ClCompile Include="CommonShapes.cpp" />
     <ClCompile Include="Delaunay.cpp" />
-    <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshConstructor.cpp" />
     <ClCompile Include="MeshToRenderMesh.cpp" />

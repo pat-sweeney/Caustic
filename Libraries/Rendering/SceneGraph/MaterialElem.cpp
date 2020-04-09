@@ -6,7 +6,7 @@
 #include "stdafx.h"
 #include "Rendering\SceneGraph\ISceneGraph.h"
 #include "Geometry\Mesh\Mesh.h"
-#include "Geometry\Mesh\Material.h"
+#include "Rendering\Caustic\MaterialAttrib.h"
 #include "MaterialElem.h"
 #include <string>
 

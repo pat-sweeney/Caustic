@@ -268,5 +268,8 @@
     <None Include="ShadowMap.vs">
       <Filter>Source Files\Shaders</Filter>
     </None>
+    <None Include="Pointcloud.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

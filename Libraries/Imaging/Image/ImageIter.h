@@ -8,6 +8,7 @@
 #include "Base\Core\IRefCount.h"
 #include "Base\Math\Vector.h"
 #include "Imaging\Image\Image.h"
+#include "Imaging\Color\Color.h"
 #include <assert.h>
 
 // Namespace: Caustic
@@ -465,6 +466,29 @@ namespace Caustic
 			case 16: return (m_iter16.GetGray() > 0x7fff) ? 255 : 0;
 			case 24: return 255;
 			case 32: return m_iter32.GetAlpha();
+			}
+			return 0;
+		}
+
+		int GetGray()
+		{
+			switch (m_bpp)
+			{
+			case 1: return m_iter1.GetBit() ? 255 : 0;
+			case 8: return (int)m_iter8.GetGray();
+			case 16: return (int)m_iter16.GetGray();
+			case 24:
+				{
+					RGBColor rgb(m_iter24.GetRed(), m_iter24.GetRed(), m_iter24.GetRed());
+					YIQColor yiq(rgb);
+					return (int)yiq.y;
+				}
+			case 32:
+				{
+					RGBColor rgb(m_iter32.GetRed(), m_iter32.GetRed(), m_iter32.GetRed());
+					YIQColor yiq(rgb);
+					return (int)yiq.y;
+				}
 			}
 			return 0;
 		}

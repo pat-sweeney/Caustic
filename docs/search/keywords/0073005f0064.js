@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("s_d",["Variable"],[["s_defaultVSLayout",,[["Caustic",,,,0,"File:Imaging/GPUImage/GPUPipeline.cpp:Caustic.s_defaultVSLayout","CClass:Caustic:s_defaultVSLayout"]]]]);

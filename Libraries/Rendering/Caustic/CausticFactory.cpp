@@ -9,6 +9,7 @@
 #include "Base\Core\Core.h"
 #include "Base\Core\error.h"
 #include "Base\Core\RefCount.h"
+#include "Imaging\Image\Image.h"
 #include "RenderMesh.h"
 #include "ShaderInfo.h"
 #include <d3d11.h>
@@ -37,7 +38,8 @@ namespace Caustic
     CAUSTICAPI void CreateRenderable(IRenderSubMesh *pSubMesh, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat, IRenderable **ppRenderable);
     CAUSTICAPI void CreateSampler(IGraphics *pGraphics, ITexture *pTexture, ISampler **ppSampler);
     CAUSTICAPI void CreateCamera(bool leftHanded, ICamera **ppCamera);
-    CAUSTICAPI void CreateTexture(IGraphics *pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, uint32 cpuFlags, uint32 bindFlags, ITexture **ppTexture);
+    CAUSTICAPI void CreateTexture(IGraphics* pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags, ITexture** ppTexture);
+    CAUSTICAPI void CreateTexture(IGraphics* pGraphics, IImage *pImage, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags, ITexture** ppTexture);
     CAUSTICAPI CRefObj<ITexture> CheckerboardTexture(IGraphics *pGraphics);
     CAUSTICAPI void LoadTexture(const wchar_t *pFilename, IGraphics *pGraphics, ITexture **ppTexture);
     CAUSTICAPI void LoadVideoTexture(const wchar_t *pFilename, IGraphics *pGraphics, ITexture **ppTexture);
@@ -204,10 +206,19 @@ namespace Caustic
     // Method: CreateTexture
     // See <ICausticFactory::CreateTexture>
     //**********************************************************************
-    void CCausticFactory::CreateTexture(IGraphics *pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, uint32 cpuFlags, uint32 bindFlags, ITexture **ppTexture)
-	{
-		Caustic::CreateTexture(pGraphics, width, height, format, cpuFlags, bindFlags, ppTexture);
-	}
+    void CCausticFactory::CreateTexture(IGraphics* pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags, ITexture** ppTexture)
+    {
+        Caustic::CreateTexture(pGraphics, width, height, format, cpuFlags, bindFlags, ppTexture);
+    }
+
+    //**********************************************************************
+    // Method: CreateTexture
+    // See <ICausticFactory::CreateTexture>
+    //**********************************************************************
+    void CCausticFactory::CreateTexture(IGraphics* pGraphics, IImage* pImage, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags, ITexture** ppTexture)
+    {
+        Caustic::CreateTexture(pGraphics, pImage, cpuFlags, bindFlags, ppTexture);
+    }
 
     //**********************************************************************
     // Method: CheckerboardTexture

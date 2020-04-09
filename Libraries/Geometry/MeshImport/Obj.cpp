@@ -187,7 +187,7 @@ namespace Caustic
                     while (isspace(*p))
                         p++;
                     std::string fn = m_Folder + std::string(p);
-                    spMaterial->SetAmbientTexture(fn.c_str());
+                    spMaterial->SetAmbientTextureFN(fn.c_str());
                 }
                 else if (_strnicmp(p, "map_Kd", 6) == 0)
                 {
@@ -195,7 +195,7 @@ namespace Caustic
                     while (isspace(*p))
                         p++;
                     std::string fn = m_Folder + std::string(p);
-                    spMaterial->SetDiffuseTexture(fn.c_str());
+                    spMaterial->SetDiffuseTextureFN(fn.c_str());
                 }
                 else if (_strnicmp(p, "map_Ks", 6) == 0)
                 {
@@ -203,7 +203,7 @@ namespace Caustic
                      while (isspace(*p))
                         p++;
                     std::string fn = m_Folder + std::string(p);
-                    spMaterial->SetSpecularTexture(fn.c_str());
+                    spMaterial->SetSpecularTextureFN(fn.c_str());
                 }
                 else if (*p == 'N' && p[1] == 's')
                     spMaterial->SetSpecularExp((float)atof(p + 3));

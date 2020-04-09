@@ -50,7 +50,9 @@ namespace Caustic
         }
         if (m_spMesh)
         {
+#ifdef CHECK_CONSISTENCY
             m_spSubMesh->CheckConsistency();
+#endif // CHECK_CONSISTENCY
             m_spMesh->AddSubMesh(m_spSubMesh);
         }
         m_spSubMesh = nullptr;

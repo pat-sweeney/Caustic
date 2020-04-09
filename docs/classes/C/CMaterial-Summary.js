@@ -1,1 +1,0 @@
-NDFramePage.OnPageTitleLoaded("CClass:CMaterial","CMaterial");NDSummary.OnSummaryLoaded("CClass:CMaterial",[["C/C++","C"]],[["Structs","Struct"]],[[185,0,0,"CMaterial"]]);

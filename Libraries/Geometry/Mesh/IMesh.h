@@ -240,6 +240,7 @@ namespace Caustic
         virtual void GetMaterial(uint32 materialID, IMaterialAttrib **ppMaterial) = 0;
         virtual void ComputeNormals() = 0;
 		virtual void ToRenderMesh(IRenderer *pRenderer, IShader *pShader, IRenderMesh **ppRenderMesh) = 0;
+        virtual void ToRenderMaterials(IRenderer* pRenderer, IShader* pShader, IRenderMesh* pRenderMesh) = 0;
     };
     
 

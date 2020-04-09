@@ -29,25 +29,15 @@ namespace Caustic
         {
         }
 
-	//======================================================================
-	// IUnknown
-	//======================================================================
-
 		//**********************************************************************
-		// Method: AddRef
-		// Increments the reference count
+		// IRefCount
 		//**********************************************************************
 		virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-
-		//**********************************************************************
-		// Method: Release
-		// Decrements the reference count
-		//**********************************************************************
 		virtual uint32 Release() override { return CRefCount::Release(); }
 
-	//======================================================================
-	// ISceneElem
-	//======================================================================
+		//**********************************************************************
+		// ISceneElem
+		//**********************************************************************
 		virtual ESceneElemType GetType() { return ESceneElemType::Material; }
         virtual std::wstring &Name() override;
         virtual void Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx) override;
@@ -55,24 +45,24 @@ namespace Caustic
         virtual uint32 GetFlags() override { return m_Flags; }
         virtual void SetFlags(uint32 flags) override { m_Flags = flags; }
         
-	//======================================================================
-	// ISerialize
-	//======================================================================
-        virtual void Load(IStream *pStream) override;
+		//**********************************************************************
+		// ISerialize
+		//**********************************************************************
+		virtual void Load(IStream *pStream) override;
         virtual void Store(IStream *pStream) override;
 
-	//======================================================================
-	// ISceneGroupElem
-	//======================================================================
+		//**********************************************************************
+		// ISceneGroupElem
+		//**********************************************************************
 		virtual uint32 NumberChildren() override { return CSceneGroupElem::NumberChildren(); }
         virtual CRefObj<ISceneElem> GetChild(uint32 index) override { return CSceneGroupElem::GetChild(index); }
         virtual void AddChild(ISceneElem *pElem) override { CSceneGroupElem::AddChild(pElem); }
         virtual void InsertChild(ISceneElem *pElem, uint32 index) override { CSceneGroupElem::InsertChild(pElem, index); }
         virtual void SetTransform(Matrix4x4 &transform) override { m_Transform = transform; }
 
-	//======================================================================
-	// ISceneMaterialElem
-	//======================================================================
+		//**********************************************************************
+		// ISceneMaterialElem
+		//**********************************************************************
 		virtual void SetShader(IShader *pShader) override
         {
             m_spShader = pShader;

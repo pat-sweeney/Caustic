@@ -1,1 +1,1 @@
-NDContentPage.OnToolTipsLoaded({577:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines our basic rendering device.</div></div>"});
+NDContentPage.OnToolTipsLoaded({577:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines our basic rendering device.</div></div>",861:"<div class=\"NDToolTip TClass LC\"><div class=\"NDClassPrototype\" id=\"NDClassPrototype861\"><div class=\"CPEntry TClass Current\"><div class=\"CPName\">CVideoTexture</div></div></div><div class=\"TTSummary\">Defines class for a video as a texture</div></div>"});

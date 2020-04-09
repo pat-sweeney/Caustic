@@ -4,6 +4,7 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "stdafx.h"
+#if 0
 #include "Base\Core\error.h"
 #include "Rendering\Caustic\Shader.h"
 #include "Rendering\Caustic\Caustic.h"
@@ -14,7 +15,7 @@
 #include "GPUPipelineImpl.h"
 #include <any>
 
-
+// Namespace: Caustic
 namespace Caustic
 {
 #include "QuadVS.h"
@@ -25,7 +26,8 @@ namespace Caustic
 #include "RawCopyPS.tbl"
 
     //**********************************************************************
-    // \brief s_defaultVSLayout defines the default layout for our default vertex
+    // Variable: s_defaultVSLayout
+    // s_defaultVSLayout defines the default layout for our default vertex
     //**********************************************************************
     D3D11_INPUT_ELEMENT_DESC s_VSLayout[] =
     {
@@ -34,13 +36,16 @@ namespace Caustic
     };
 
     //**********************************************************************
-    // \brief Creates a new shader using the specified byte code and list
+    // Method: CreateShader
+    // Creates a new shader using the specified byte code and list
     // of shader parameters.
-    // \param[in] pShaderCode Pointer to byte array containing the shader executable
-    // \param[in] shaderCodeSize Size of pShaderCode in bytes
-    // \param[in] pShaderParams List of parameters to set on the shader
-    // \param[in] shaderParamSize Number of parameters in pShaderParams
-    // \param[out] ppShader Newly created shader object
+    //
+    // Parameters:
+    // pShaderCode - Pointer to byte array containing the shader executable
+    // shaderCodeSize - Size of pShaderCode in bytes
+    // pShaderParams - List of parameters to set on the shader
+    // shaderParamSize - Number of parameters in pShaderParams
+    // ppShader - Returns the newly created shader object
     //**********************************************************************
     void CGPUPipeline::CreateShader(BYTE *pShaderCode, uint32 shaderCodeSize, ShaderDefs *pShaderParams, uint32 shaderParamSize, IShader **ppShader)
     {
@@ -463,3 +468,4 @@ namespace Caustic
         *ppSource = spImage.Detach();
     }
 }
+#endif

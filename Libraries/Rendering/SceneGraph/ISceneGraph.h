@@ -97,7 +97,8 @@ namespace Caustic
 		// List of private flags.
 		// TODO: Move this to private header
 		BBoxDirty = 0x04,
-		RenderableDirty = 0x08
+		RenderableDirty = 0x08,
+		MaterialDirty = 0x10
 	};
 
 	//**********************************************************************

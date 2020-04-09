@@ -159,7 +159,8 @@ namespace Caustic
         virtual void SetMaterials(std::vector<CRefObj<IMaterialAttrib>> &materials) override;
         virtual void GetMaterial(uint32 materialID, IMaterialAttrib **ppMaterial) override;
         virtual void ComputeNormals() override;
-        virtual void ToRenderMesh(IRenderer *pRenderer, IShader *pShader, IRenderMesh **ppRenderMesh) override;
+        virtual void ToRenderMesh(IRenderer* pRenderer, IShader* pShader, IRenderMesh** ppRenderMesh) override;
+        virtual void ToRenderMaterials(IRenderer* pRenderer, IShader* pShader, IRenderMesh* pRenderMesh) override;
 
         //**********************************************************************
         // ISerialize

@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("cte",["Function"],[["CTexture",,[[,,,,0,"File:Rendering/Caustic/Texture.cpp:CTexture"]]]]);

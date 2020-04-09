@@ -31,6 +31,10 @@ namespace Caustic
         }
     };
 
+    //**********************************************************************
+    // Class: CVideoTexture
+    // Defines class for a video as a texture
+    //**********************************************************************
     class CVideoTexture :
         public ITexture,
         public CRefCount

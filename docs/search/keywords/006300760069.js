@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("cvi",["Class"],[["CVideoTexture",,[[,,,,0,"File:Rendering/Caustic/VideoTexture.h:CVideoTexture","CClass:CVideoTexture"]]]]);

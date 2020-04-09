@@ -92,6 +92,11 @@ namespace Caustic
             m_spMesh->ToRenderMesh(pRenderer, pSceneCtx->m_spCurrentShader, &m_spRenderMesh);
             SetFlags(GetFlags() & ~ESceneElemFlags::RenderableDirty);
         }
+        if (GetFlags() & ESceneElemFlags::MaterialDirty)
+        {
+            m_spMesh->ToRenderMaterials(pRenderer, pSceneCtx->m_spCurrentShader, m_spRenderMesh);
+            SetFlags(GetFlags() & ~ESceneElemFlags::MaterialDirty);
+        }
         m_spRenderMesh->Render(pRenderer, pSceneCtx->m_lights);
     }
 
@@ -109,7 +114,7 @@ namespace Caustic
     void CSceneMeshElem::SetMesh(IMesh *pMesh)
     {
         m_spMesh = pMesh;
-        SetFlags(GetFlags() | ESceneElemFlags::BBoxDirty | ESceneElemFlags::RenderableDirty);
+        SetFlags(GetFlags() | ESceneElemFlags::BBoxDirty | ESceneElemFlags::RenderableDirty | ESceneElemFlags::MaterialDirty);
     }
 
     void CSceneMeshElem::Store(IStream *pStream)
@@ -121,6 +126,6 @@ namespace Caustic
     {
         CreateEmptyMesh(&m_spMesh);
         m_spMesh->Load(pStream);
-        SetFlags(GetFlags() | ESceneElemFlags::RenderableDirty | ESceneElemFlags::BBoxDirty);
+        SetFlags(GetFlags() | ESceneElemFlags::RenderableDirty | ESceneElemFlags::BBoxDirty | ESceneElemFlags::MaterialDirty);
     }
 };
