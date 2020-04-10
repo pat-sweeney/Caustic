@@ -208,6 +208,42 @@ namespace Caustic
         return captured;
     }
     
+    void CAzureKinectDevice::BuildRayMap(uint32 w, uint32 h, IImage **ppImage)
+    {
+        CreateImage(w, h, 128, ppImage);
+        CImageIter128 row(*ppImage, 0, 0);
+        int index = 0;
+        for (uint32 iy = 0; iy < h; iy++)
+        {
+            CImageIter128 col = row;
+            for (uint32 ix = 0; ix < w; ix++)
+            {
+                // Convert pixel coords+depth to 3D point
+                k4a_float2_t pt;
+                pt.xy.x = float(ix);
+                pt.xy.y = float(iy);
+                k4a_float3_t result;
+                int valid;
+                k4a_result_t err = k4a_calibration_2d_to_3d(&m_calibration, &pt, 1000.0f, k4a_calibration_type_t::K4A_CALIBRATION_TYPE_DEPTH,
+                    k4a_calibration_type_t::K4A_CALIBRATION_TYPE_DEPTH, &result, &valid);
+                if (err == K4A_RESULT_SUCCEEDED && valid)
+                {
+                    col.SetRed(result.xyz.x);
+                    col.SetGreen(result.xyz.y);
+                    col.SetBlue(result.xyz.z);
+                }
+                else
+                {
+                    col.SetRed(0.0f);
+                    col.SetGreen(0.0f);
+                    col.SetBlue(0.0f);
+                }
+                col.Step(CImageIter::Right);
+            }
+            row.Step(CImageIter::Down);
+        }
+    }
+    
     bool CAzureKinectDevice::NextFrame(IImage** ppColorImage, std::vector<Vector3>& pts, std::vector<Vector3>& normals, BBox3 &bbox)
     {
         CRefObj<IImage> spDepthImage;

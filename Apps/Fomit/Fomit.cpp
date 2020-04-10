@@ -31,6 +31,7 @@ CRefObj<IRenderMaterial> spBackMaterial;
 CRefObj<IShader> spShader;
 CRefObj<IMaterialAttrib> spMatAttrib;
 CRefObj<IRenderMaterial> spRenderMaterial;
+CRefObj<IImage> spRayMap;
 DirectX::XMMATRIX xm;
 CRITICAL_SECTION cs;
 std::vector<CGeomVertex> verts;
@@ -158,6 +159,7 @@ void InitializeCaustic(HWND hwnd)
                     //spFilter->Apply(spDepthImage, nullptr, &spColoredDepthImage);
 
                     spMaterial->SetTexture(L"depthTexture", spDepthImage, EShaderAccess::VertexShader);
+                    spMaterial->SetTexture(L"rayTexture", spRayMap, EShaderAccess::VertexShader);
                     pMeshElem->SetFlags(pMeshElem->GetFlags() | ESceneElemFlags::MaterialDirty);
                 }
             }
@@ -165,6 +167,7 @@ void InitializeCaustic(HWND hwnd)
     spRenderWindow->GetSceneGraph()->AddChild(spCustomElem);
 
     CreateAzureKinect(0, AzureKinect::ColorMode::Color1080p, AzureKinect::Depth512x512, AzureKinect::FPS30, &spCamera);
+    spCamera->BuildRayMap(512, 512, &spRayMap);
 }
 
 #define MAX_LOADSTRING 100

@@ -84,6 +84,10 @@ namespace Caustic
             format = DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM;
             fastCopy = true;
             break;
+        case 128: // Image with 4 floats per pixel
+            format = DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT;
+            fastCopy = true;
+            break;
         }
         CRefObj<ITexture> spTexture;
         CreateTexture(pGraphics, pImage->GetWidth(), pImage->GetHeight(), format, cpuFlags, bindFlags, &spTexture);
@@ -126,6 +130,8 @@ namespace Caustic
                         pc[2] = srcCol.GetBlue();
                         pc[3] = srcCol.GetAlpha();
                         pc += 4;
+                        break;
+                    case DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT:
                         break;
                     }
                     srcCol.Step(CImageIter::Right);

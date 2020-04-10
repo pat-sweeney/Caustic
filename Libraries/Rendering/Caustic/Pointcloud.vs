@@ -4,6 +4,7 @@
 //**********************************************************************
 
 Texture2D<uint> depthTexture : register(t0);
+Texture2D<float4> rayTexture : register(t1);
 SamplerState depthSampler : register(s0);
 
 #define MAX_LIGHTS 4
@@ -39,10 +40,13 @@ VSOutput VS(VSInput p)
 
     int3 pc = int3(p.uvs.x * 512, p.uvs.y * 512, 0);
     v.depth = depthTexture.Load(pc);
+    float4 ray = rayTexture.Load(pc);
+    float4 pos = float4(ray.xyz * float(v.depth) / 1000.0, 1.0);
+    // convert depth to point
     // Transform our vertex normal from object space to world space
     v.normWS = normalize(mul(float4(p.normOS,1.0f), worldInvTranspose).xyz);
-    v.posWS = mul(float4(p.posOS, 1.0f), world).xyz;
-    v.posPS = mul(float4(p.posOS, 1.0f), worldViewProj);
+    v.posWS = mul(pos, world).xyz;
+    v.posPS = mul(pos, worldViewProj);
     v.uvs = p.uvs;
     return v;
 }

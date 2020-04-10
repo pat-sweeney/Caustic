@@ -306,7 +306,56 @@ namespace Caustic
 		void SetBlue(uint8 v) { m_bp[2] = v; }
 		void SetAlpha(uint8 v) { m_bp[3] = v; }
 	};
-	
+
+	//**********************************************************************
+	// Class: CImageIter128
+	// Defines an iterator for walking across the pixels in an image where
+	// each pixel is 128 bits in width (i.e. single float per channel)
+	//**********************************************************************
+	class CImageIter128 : public CImageIter
+	{
+	public:
+		CImageIter128()
+		{
+		}
+
+		CImageIter128(IImage* pImage, uint32 x, uint32 y)
+		{
+			assert(pImage->GetBPP() == 128);
+			m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * pImage->GetStride() + (pImage->GetSubX() + x) * 4];
+			m_bpl = pImage->GetStride();
+		}
+
+		void Step(CImageIter::EStepDirection dir)
+		{
+			switch (dir)
+			{
+			case CImageIter::Left:
+				m_bp -= 16;
+				break;
+			case CImageIter::Right:
+				m_bp += 16;
+				break;
+			case CImageIter::Up:
+				m_bp -= m_bpl;
+				break;
+			case CImageIter::Down:
+				m_bp += m_bpl;
+				break;
+			}
+			return;
+		}
+
+		float GetRed() { return ((float*)m_bp)[0]; }
+		float GetGreen() { return ((float*)m_bp)[1]; }
+		float GetBlue() { return ((float*)m_bp)[2]; }
+		float GetAlpha() { return ((float*)m_bp)[3]; }
+		void SetRed(float v) { ((float*)m_bp)[0] = v; }
+		void SetGreen(float v) { ((float*)m_bp)[1] = v; }
+		void SetBlue(float v) { ((float*)m_bp)[2] = v; }
+		void SetAlpha(float v) { ((float*)m_bp)[3] = v; }
+	};
+
 	//**********************************************************************
 	// Class: CImageIterGeneric
 	// Defines an iterator for walking across the pixels in an image of
@@ -320,6 +369,7 @@ namespace Caustic
 		CImageIter16 m_iter16;
 		CImageIter24 m_iter24;
 		CImageIter32 m_iter32;
+		CImageIter128 m_iter128;
 		int m_bpp;
 		int m_x;
 		int m_y;
@@ -367,6 +417,9 @@ namespace Caustic
 			case 32:
 				m_iter32 = CImageIter32(pImage, x, y);
 				break;
+			case 129:
+				m_iter128 = CImageIter128(pImage, x, y);
+				break;
 			}
 		}
 
@@ -379,6 +432,7 @@ namespace Caustic
 			case 16: m_iter16.Step(dir); break;
 			case 24: m_iter24.Step(dir); break;
 			case 32: m_iter32.Step(dir); break;
+			case 128: m_iter128.Step(dir); break;
 			}
 		}
 
@@ -414,6 +468,7 @@ namespace Caustic
 			case 16: m_iter16.Step(dir); break;
 			case 24: m_iter24.Step(dir); break;
 			case 32: m_iter32.Step(dir); break;
+			case 128: m_iter32.Step(dir); break;
 			}
 			return true;
 		}
@@ -427,6 +482,7 @@ namespace Caustic
 			case 16: return (m_iter16.GetGray() > 0x7fff) ? 255 : 0;
 			case 24: return m_iter24.GetRed();
 			case 32: return m_iter32.GetRed();
+			case 128: return uint8(255.0f * m_iter128.GetRed());
 			}
 			return 0;
 		}
@@ -440,6 +496,7 @@ namespace Caustic
 			case 16: return (m_iter16.GetGray() > 0x7fff) ? 255 : 0;
 			case 24: return m_iter24.GetGreen();
 			case 32: return m_iter32.GetGreen();
+			case 128: return uint8(255.0f * m_iter128.GetGreen());
 			}
 			return 0;
 		}
@@ -453,6 +510,7 @@ namespace Caustic
 			case 16: return (m_iter16.GetGray() > 0x7fff) ? 255 : 0;
 			case 24: return m_iter24.GetBlue();
 			case 32: return m_iter32.GetBlue();
+			case 128: return uint8(255.0f * m_iter128.GetBlue());
 			}
 			return 0;
 		}
@@ -466,6 +524,7 @@ namespace Caustic
 			case 16: return (m_iter16.GetGray() > 0x7fff) ? 255 : 0;
 			case 24: return 255;
 			case 32: return m_iter32.GetAlpha();
+			case 128: return uint8(255.0f * m_iter128.GetAlpha());
 			}
 			return 0;
 		}
@@ -479,13 +538,22 @@ namespace Caustic
 			case 16: return (int)m_iter16.GetGray();
 			case 24:
 				{
-					RGBColor rgb(m_iter24.GetRed(), m_iter24.GetRed(), m_iter24.GetRed());
+					RGBColor rgb(m_iter32.GetRed(), m_iter32.GetGreen(), m_iter32.GetBlue());
 					YIQColor yiq(rgb);
 					return (int)yiq.y;
 				}
 			case 32:
 				{
-					RGBColor rgb(m_iter32.GetRed(), m_iter32.GetRed(), m_iter32.GetRed());
+					RGBColor rgb(m_iter32.GetRed(), m_iter32.GetGreen(), m_iter32.GetBlue());
+					YIQColor yiq(rgb);
+					return (int)yiq.y;
+				}
+			case 128:
+				{
+					RGBColor rgb(
+						uint8(255.0f * m_iter128.GetRed()),
+						uint8(255.0f * m_iter128.GetGreen()),
+						uint8(255.0f * m_iter128.GetBlue()));
 					YIQColor yiq(rgb);
 					return (int)yiq.y;
 				}
@@ -502,6 +570,7 @@ namespace Caustic
 			case 16: m_iter16.SetGray(uint16(r)<<8); break;
 			case 24: m_iter24.SetRed(r); break;
 			case 32: m_iter32.SetRed(r); break;
+			case 128: m_iter128.SetRed(r / 255.0f); break;
 			}
 		}
 
@@ -514,6 +583,7 @@ namespace Caustic
 			case 16: m_iter16.SetGray(uint16(g) << 8); break;
 			case 24: m_iter24.SetGreen(g); break;
 			case 32: m_iter32.SetGreen(g); break;
+			case 128: m_iter128.SetGreen(g / 255.0f); break;
 			}
 		}
 
@@ -526,6 +596,7 @@ namespace Caustic
 			case 16: m_iter16.SetGray(uint16(b) << 8); break;
 			case 24: m_iter24.SetBlue(b); break;
 			case 32: m_iter32.SetBlue(b); break;
+			case 128: m_iter128.SetBlue(b / 255.0f); break;
 			}
 		}
 
@@ -538,6 +609,7 @@ namespace Caustic
 			case 16: m_iter16.SetGray(uint16(a) << 8); break;
 			case 24: break;
 			case 32: m_iter32.SetAlpha(a); break;
+			case 128: m_iter128.SetAlpha(a / 255.0f); break;
 			}
 		}
 	};

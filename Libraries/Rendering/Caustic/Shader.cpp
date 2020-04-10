@@ -39,7 +39,7 @@ namespace Caustic
             ShaderParamDef &d = params[i];
             d = pDefs[i];
             params[i].m_dirty = true;
-            params[i].m_offset = s;
+            params[i].m_offset = (pDefs[i].m_type == EShaderParamType::ShaderType_Texture) ? pDefs[i].m_offset : s;
             if (pDefs[i].m_type == EShaderParamType::ShaderType_Float)
             {
                 params[i].m_value = std::any(0.0f);
@@ -542,8 +542,6 @@ namespace Caustic
         if (pShaderName)
             m_name = std::wstring(pShaderName);
         
-        std::vector<ShaderParamDef> &pixelShaderDefs = pShaderInfo->PixelShaderParameterDefs();
-        std::vector<ShaderParamDef> &vertexShaderDefs = pShaderInfo->VertexShaderParameterDefs();
         std::vector<D3D11_INPUT_ELEMENT_DESC> &vertexLayout = pShaderInfo->VertexLayout();
         D3D11_INPUT_ELEMENT_DESC *pVertexLayout = vertexLayout.data();
 
