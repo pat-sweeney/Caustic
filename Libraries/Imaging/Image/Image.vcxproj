@@ -87,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Coloriize.cpp" />
+    <ClCompile Include="CustomFilter.cpp" />
     <ClCompile Include="GaussianBlur.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="MedianFilter.cpp" />

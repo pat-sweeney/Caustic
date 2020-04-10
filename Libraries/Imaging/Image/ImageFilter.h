@@ -22,4 +22,5 @@ namespace Caustic
 	extern void CreateColorize(IImageFilter** ppFilter);
 	extern void CreateColorize(int maxDepth, IImageFilter** ppFilter);
 	extern void CreateMedian(IImageFilter** ppFilter);
+	extern void CreateCustomFilter(int kernelWidth, int kernelHeight, float* kernelWeights, IImageFilter** ppFilter);
 }

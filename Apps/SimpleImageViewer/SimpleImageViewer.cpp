@@ -102,7 +102,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 }
                 else
                 {
-                    imgbitmap = CreateBitmap(spColorImage->GetWidth(), spColorImage->GetHeight(), 1, 32, spColorImage->GetData());
+                    CRefObj<IImageFilter> spFilter;
+                    float weights[] = {
+                        1.0f, 1.0f, 1.0f,
+                        0.0f, 0.0f, 0.0f,
+                        -1.0f, -1.0f, -1.0f
+                    };
+                    CreateCustomFilter(3, 3, weights, &spFilter);
+                    CRefObj<IImage> spFiltered;
+                    spFilter->Apply(spColorImage, nullptr, &spFiltered);
+                    imgbitmap = CreateBitmap(spFiltered->GetWidth(), spFiltered->GetHeight(), 1, 32, spFiltered->GetData());
                 }
                 DrawImage(GetDC(hWnd));
             }
