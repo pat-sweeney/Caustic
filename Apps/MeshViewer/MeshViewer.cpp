@@ -14,6 +14,7 @@
 #include "Geometry\MeshImport\MeshImport.h"
 #include <Windows.h>
 #include <commdlg.h>
+#include <string>
 
 #define MAX_LOADSTRING 100
 
@@ -211,8 +212,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
                         Vector3 ambient(0.2f, 0.2f, 0.2f);
                         Vector3 diffuse(0.4f, 0.4f, 0.4f);
-                        spMaterial->SetAmbientColor(ambient);
-                        spMaterial->SetDiffuseColor(diffuse);
+                        spMaterial->SetColor(L"ambientColor", ambient);
+                        spMaterial->SetColor(L"diffuseColor", diffuse);
 
                         CRefObj<IShader> spShader;
                         CShaderMgr::Instance()->FindShader(L"Textured", &spShader);

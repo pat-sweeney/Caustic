@@ -187,7 +187,8 @@ namespace Caustic
                     while (isspace(*p))
                         p++;
                     std::string fn = m_Folder + std::string(p);
-                    spMaterial->SetAmbientTextureFN(fn.c_str());
+                    std::wstring wfn = str2wstr(fn);
+                    spMaterial->SetTextureViaFilename(L"ambientTexture", wfn);
                 }
                 else if (_strnicmp(p, "map_Kd", 6) == 0)
                 {
@@ -195,7 +196,8 @@ namespace Caustic
                     while (isspace(*p))
                         p++;
                     std::string fn = m_Folder + std::string(p);
-                    spMaterial->SetDiffuseTextureFN(fn.c_str());
+                    std::wstring wfn = str2wstr(fn);
+                    spMaterial->SetTextureViaFilename(L"diffuseTexture", wfn);
                 }
                 else if (_strnicmp(p, "map_Ks", 6) == 0)
                 {
@@ -203,10 +205,11 @@ namespace Caustic
                      while (isspace(*p))
                         p++;
                     std::string fn = m_Folder + std::string(p);
-                    spMaterial->SetSpecularTextureFN(fn.c_str());
+                    std::wstring wfn = str2wstr(fn);
+                    spMaterial->SetTextureViaFilename(L"specularTexture", wfn);
                 }
                 else if (*p == 'N' && p[1] == 's')
-                    spMaterial->SetSpecularExp((float)atof(p + 3));
+                    spMaterial->SetScalar(L"specularExp", (float)atof(p + 3));
                 else if (*p == 'K' && p[1] == 'a')
                 {
                     Vector3 v;
@@ -218,7 +221,7 @@ namespace Caustic
                     while (*p && !isspace(*p))
                         p++;
                     v.z = (float)atof(p);
-                    spMaterial->SetAmbientColor(v);
+                    spMaterial->SetColor(L"ambientColor", v);
                 }
                 else if (*p == 'K' && p[1] == 's')
                 {
@@ -231,7 +234,7 @@ namespace Caustic
                     while (*p && !isspace(*p))
                         p++;
                     v.z = (float)atof(p);
-                    spMaterial->SetSpecularColor(v);
+                    spMaterial->SetColor(L"specularColor", v);
                 }
                 else if (*p == 'K' && p[1] == 'd')
                 {
@@ -244,13 +247,13 @@ namespace Caustic
                     while (*p && !isspace(*p))
                         p++;
                     v.z = (float)atof(p);
-                    spMaterial->SetDiffuseColor(v);
+                    spMaterial->SetColor(L"diffuseColor", v);
                 }
                 else if (*p == 'd')
                 {
                     p += 2;
                     float transparency = (float)atof(p);
-                    spMaterial->SetAlpha(transparency);
+                    spMaterial->SetScalar(L"alpha", transparency);
                 }
             }
         }

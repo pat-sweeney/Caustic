@@ -113,7 +113,7 @@ namespace CausticTestSuite
         Vector3 diffuse(0.0f, 0.0f, 0.0f);
         Vector3 specular(0.0f, 0.0f, 0.0f);
         CRefObj<IMaterialAttrib> spMaterial;
-        CreateMaterial(ambient, diffuse, specular, 1.0f, 1.0f, &spMaterial);
+        CreateStandardMaterial(ambient, diffuse, specular, 1.0f, 1.0f, &spMaterial);
         return true;
     }
 
@@ -123,7 +123,7 @@ namespace CausticTestSuite
         Vector3 diffuse(0.0f, 0.0f, 0.0f);
         Vector3 specular(0.0f, 0.0f, 0.0f);
         CRefObj<IMaterialAttrib> spMaterial;
-        CreateMaterial(ambient, diffuse, specular, 1.0f, 1.0f, &spMaterial);
+        CreateStandardMaterial(ambient, diffuse, specular, 1.0f, 1.0f, &spMaterial);
         wchar_t fn[MAX_PATH + 1];
         wchar_t dir[MAX_PATH + 1];
         GetTempPath(MAX_PATH, dir);

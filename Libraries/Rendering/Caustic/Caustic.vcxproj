@@ -101,6 +101,15 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\Default.shi</Outputs>
       <SubType>Designer</SubType>
     </CustomBuild>
+    <CustomBuild Include="PointCloud.xml">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\PointCloud.xml -o $(CausticRoot)\$(Configuration)\PointCloud.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\PointCloud.xml -o $(CausticRoot)\$(Configuration)\PointCloud.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\PointCloud.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\PointCloud.shi</Outputs>
+      <SubType>Designer</SubType>
+    </CustomBuild>
     <CustomBuild Include="ColorUVs.xml">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -247,81 +256,12 @@
     <ClCompile Include="VideoTexture.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="DrawNormal.ps">
-      <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS DrawNormal</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">DrawNormalPS.h;DrawNormalPS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS DrawNormal</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">DrawNormalPS.h;DrawNormalPS.tbl</Outputs>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ObjID.ps">
-      <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS ObjID</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ObjIDPS.h;ObjIDPS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS ObjID</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ObjIDPS.h;ObjIDPS.tbl</Outputs>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="InfinitePlane.ps">
-      <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS InfinitePlane</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS InfinitePlane</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">InfinitePlanePS.h;InfinitePlanePS.tbl</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">InfinitePlanePS.h;InfinitePlanePS.tbl</Outputs>
-    </None>
-    <None Include="InfinitePlane.vs">
-      <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS InfinitePlane</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS InfinitePlane</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">InfinitePlaneVS.h;InfinitePlaneVS.tbl</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">InfinitePlaneVS.h;InfinitePlaneVS.tbl</Outputs>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="FullQuad.ps">
-      <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS FullQuad</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">FullQuadPS.h;FullQuadPS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS FullQuad</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">FullQuadPS.h;FullQuadPS.tbl</Outputs>
-    </None>
-    <None Include="FullQuad.vs">
-      <FileType>CSharpFile</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS FullQuad</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS FullQuad</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">FullQuadVS.h;FullQuadVS.tbl</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">FullQuadVS.h;FullQuadVS.tbl</Outputs>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Pointcloud.vs" />
-    <None Include="ShadowMap.ps">
-      <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS ShadowMap</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ShadowMapPS.h;ShadowMapPS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS ShadowMap</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ShadowMapPS.h;ShadowMapPS.tbl</Outputs>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </None>
-    <None Include="ShadowMap.vs">
-      <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS ShadowMap</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ShadowMapVS.h;ShadowMapVS.tbl</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS ShadowMap</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ShadowMapVS.h;ShadowMapVS.tbl</Outputs>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="ColorNormal.ps" />
     <None Include="ColorUVs.ps" />
     <None Include="Default.ps" />
     <None Include="Default.vs" />
+    <None Include="PointCloud.ps" />
+    <None Include="PointCloud.vs" />
     <None Include="DrawNormal.vs" />
     <None Include="Line.ps" />
     <None Include="Line.vs" />

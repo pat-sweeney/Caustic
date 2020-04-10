@@ -248,12 +248,12 @@ namespace Caustic
     {
         CRefObj<IRenderMaterial> spFrontMaterial;
 		CCausticFactory::Instance()->CreateRenderMaterial(this, pMaterial, pShader, &spFrontMaterial);
-        spFrontMaterial->SetDiffuseTexture(this, pTexture);
+        spFrontMaterial->SetTexture(this, L"diffuseTexture", pTexture, EShaderAccess::PixelShader);
         CRefObj<IRenderMaterial> spBackMaterial;
         if (pSubMesh->GetMeshFlags() & EMeshFlags::TwoSided)
         {
 			CCausticFactory::Instance()->CreateRenderMaterial(this, pMaterial, pShader, &spBackMaterial);
-            spBackMaterial->SetDiffuseTexture(this, pTexture);
+            spBackMaterial->SetTexture(this, L"diffuseTexture", pTexture, EShaderAccess::PixelShader);
         }
         CRenderable renderable(pSubMesh, spFrontMaterial, spBackMaterial, mat);
         m_singleObjs.push_back(renderable);

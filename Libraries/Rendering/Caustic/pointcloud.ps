@@ -2,10 +2,23 @@
 // Copyright Patrick Sweeney 2015-2020
 // All Rights Reserved
 //**********************************************************************
-#include "defs.h"
+#define MAX_LIGHTS 4
 
-Texture2D diffuseTexture : register(t0);
-SamplerState diffuseSampler : register(s0);
+struct VSInput
+{
+    float3 posOS : POSITION; // Vertex position in object coordinates
+    float3 normOS : NORMAL; // Vertex normal in object coordinates
+    float2 uvs : TEXCOORD0; // Texture coordinates
+};
+
+struct VSOutput
+{
+    float4 posPS : SV_POSITION; // Position of vertex in projected coordinates
+    float3 posWS : TEXCOORD0;
+    float3 normWS : TEXCOORD1; // Normal vector in world coordinates
+    float2 uvs : TEXCOORD2; // UV coordinates
+    float depth : TEXCOORD3;
+};
 
 cbuffer PS_CONSTANT_BUFFER
 {
@@ -23,17 +36,18 @@ cbuffer PS_CONSTANT_BUFFER
 
 float4 PS(VSOutput p) : SV_Target
 {
+return float4(p.depth,p.depth,p.depth,1.0);
     float3 viewPosWS = mul(float4(0.0f, 0.0f, 0.0f, 1.0f), viewInv).xyz;
     float3 viewDirWS = normalize(viewPosWS - p.posWS);
     float3 color = float3(0.0f, 0.0f, 0.0f);
     for (int i = 0; i < numLights; i++)
     {
         float3 lightDirWS = normalize(lightPosWS[i].xyz - p.posWS);
-        float dp = saturate(dot(normalize(p.normWS), lightDirWS));
+        float dp = dot(normalize(p.normWS), lightDirWS);
         lightDirWS = reflect(lightDirWS, p.normWS);
         float specdp = saturate(dot(lightDirWS, -viewDirWS));
         float spec = pow(specdp, specularExp.x);
-        return float4(diffuseTexture.Sample(diffuseSampler, p.uvs).zyx * lightColor[i].xyz,1.0);
+        color.xyz += diffuseColor.xyz * lightColor[i].xyz * dp;
         color.xyz += specularColor.xyz * lightColor[i].xyz * spec;
     }
     return float4(ambientColor.xyz + color, transparency.x);

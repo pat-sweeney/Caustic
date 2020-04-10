@@ -7,9 +7,17 @@
 #include "Base\Core\Core.h"
 #include "Base\Core\RefCount.h"
 #include "Rendering\Caustic\Caustic.h"
+#include <map>
 
 namespace Caustic
 {
+    struct CRenderTexture
+    {
+        EShaderAccess m_access;
+        CRefObj<ITexture> m_spTexture;
+        CRefObj<ISampler> m_spSampler;
+    };
+
     //**********************************************************************
     // Class: CRenderMaterial
 	// Defines a render material (material attributes, shaders, and textures).
@@ -22,12 +30,7 @@ namespace Caustic
     protected:
         CRefObj<IMaterialAttrib> m_spMaterial;
         CRefObj<IShader> m_spShader;
-        CRefObj<ITexture> m_spAmbientTexture;
-        CRefObj<ISampler> m_spAmbientSampler;
-        CRefObj<ITexture> m_spDiffuseTexture;
-        CRefObj<ISampler> m_spDiffuseSampler;
-        CRefObj<ITexture> m_spSpecularTexture;
-        CRefObj<ISampler> m_spSpecularSampler;
+        std::map<std::wstring, CRenderTexture> m_textures;
     public:
         friend class CRenderer;
         friend CAUSTICAPI void CreateRenderMaterial(IGraphics *pGraphics, IMaterialAttrib *pMaterialAttrib, IShader *pShader, IRenderMaterial **ppRenderMaterial);
@@ -50,9 +53,7 @@ namespace Caustic
             if (m_spMaterial)
                 (*ppMaterial)->AddRef();
         }
-        virtual void SetDiffuseTexture(IGraphics *pGraphics, ITexture *pTexture) override;
-        virtual void SetSpecularTexture(IGraphics *pGraphics, ITexture *pTexture) override;
-        virtual void SetAmbientTexture(IGraphics *pGraphics, ITexture *pTexture) override;
+        virtual void SetTexture(IGraphics* pGraphics, const wchar_t *pName, ITexture* pTexture, EShaderAccess access) override;
         virtual void Render(IGraphics *pGraphics, std::vector<CRefObj<IPointLight>> &lights, IRenderCtx *pRenderCtx, IShader *pOverrideShader) override;
     };
 }

@@ -194,6 +194,9 @@
     <CustomBuild Include="Default.xml">
       <Filter>Source Files\Shaders\Definitions</Filter>
     </CustomBuild>
+    <CustomBuild Include="PointCloud.xml">
+      <Filter>Source Files\Shaders\Definitions</Filter>
+    </CustomBuild>
     <CustomBuild Include="DrawNormal.xml">
       <Filter>Source Files\Shaders\Definitions</Filter>
     </CustomBuild>
@@ -244,31 +247,10 @@
     <None Include="Textured.ps">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="DrawNormal.ps">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="FullQuad.ps">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="FullQuad.vs">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="InfinitePlane.ps">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="InfinitePlane.vs">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="ObjID.ps">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="ShadowMap.ps">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="ShadowMap.vs">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
     <None Include="Pointcloud.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="PointCloud.ps">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>

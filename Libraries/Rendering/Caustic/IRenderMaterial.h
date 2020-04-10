@@ -23,6 +23,13 @@ namespace Caustic
     struct IPointLight;
     struct IRenderCtx;
 
+    enum EShaderAccess
+    {
+        PixelShader,
+        VertexShader,
+        Both
+    };
+
     //**********************************************************************
     // Interface: IRenderMaterial
     // Defines a material that has its associated
@@ -68,34 +75,15 @@ namespace Caustic
         virtual void GetMaterial(IMaterialAttrib **ppMaterial) = 0;
 
         //**********************************************************************
-        // Method: SetDiffuseTexture
-        // Sets the diffuse texture
+        // Method: SetTexture
+        // Sets a texture
         //
         // Parameters:
         // pGraphics - graphics device
+        // name - name of texture (as referenced by the shader)
         // pTexture - texture
         //**********************************************************************
-        virtual void SetDiffuseTexture(IGraphics *pGraphics, ITexture *pTexture) = 0;
-
-        //**********************************************************************
-        // Method: SetSpecularTexture
-        // Sets the specular texture
-        //
-        // Parameters:
-        // pGraphics - graphics device
-        // pTexture - texture
-        //**********************************************************************
-        virtual void SetSpecularTexture(IGraphics *pGraphics, ITexture *pTexture) = 0;
-
-        //**********************************************************************
-        // Method: SetAmbientTexture
-        // Sets the ambient texture
-        //
-        // Parameters:
-        // pGraphics - graphics device
-        // pTexture - texture
-        //**********************************************************************
-        virtual void SetAmbientTexture(IGraphics *pGraphics, ITexture *pTexture) = 0;
+        virtual void SetTexture(IGraphics* pGraphics, const wchar_t *pName, ITexture* pTexture, EShaderAccess access) = 0;
 
         //**********************************************************************
         // Method: Render

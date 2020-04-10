@@ -9,6 +9,7 @@
 #include "MaterialAttrib.h"
 #include "CausticFactory.h"
 #include "Sampler.h"
+#include <string>
 
 namespace Caustic
 {
@@ -19,61 +20,20 @@ namespace Caustic
         (*ppMaterialAttrib)->AddRef();
     }
 
-    CAUSTICAPI void CreateRenderMaterial(IGraphics *pGraphics, IMaterialAttrib *pMaterialAttrib, IShader *pShader, IRenderMaterial **ppRenderMaterial)
+    CAUSTICAPI void CreateRenderMaterial(IGraphics* pGraphics, IMaterialAttrib* pMaterialAttrib, IShader* pShader, IRenderMaterial** ppRenderMaterial)
     {
         std::unique_ptr<CRenderMaterial> spRenderMaterial(new CRenderMaterial());
+        CRenderMaterial* wpRenderMaterial = spRenderMaterial.get();
         spRenderMaterial->m_spMaterial = pMaterialAttrib;
         spRenderMaterial->m_spShader = pShader;
-
         if (pMaterialAttrib)
         {
-            if (pMaterialAttrib->GetDiffuseTexture() == nullptr)
-            {
-                std::string fnDiffuse = pMaterialAttrib->GetDiffuseTextureFN();
-                if (!fnDiffuse.empty())
-                {
-                    std::wstring wfn(fnDiffuse.begin(), fnDiffuse.end());
-                    Caustic::CCausticFactory::Instance()->LoadTexture(wfn.c_str(), pGraphics, &spRenderMaterial->m_spDiffuseTexture);
-                    CCausticFactory::Instance()->CreateSampler(pGraphics, spRenderMaterial->m_spDiffuseTexture, &spRenderMaterial->m_spDiffuseSampler);
-                }
-            }
-            else
-            {
-                Caustic::CCausticFactory::Instance()->CreateTexture(pGraphics, pMaterialAttrib->GetDiffuseTexture(), D3D11_CPU_ACCESS_WRITE, D3D11_BIND_SHADER_RESOURCE, &spRenderMaterial->m_spDiffuseTexture);
-                CCausticFactory::Instance()->CreateSampler(pGraphics, spRenderMaterial->m_spDiffuseTexture, &spRenderMaterial->m_spDiffuseSampler);
-            }
-
-            if (pMaterialAttrib->GetSpecularTexture() == nullptr)
-            {
-                std::string fnSpecular = pMaterialAttrib->GetSpecularTextureFN();
-                if (!fnSpecular.empty())
-                {
-                    std::wstring wfn(fnSpecular.begin(), fnSpecular.end());
-                    Caustic::CCausticFactory::Instance()->LoadTexture(wfn.c_str(), pGraphics, &spRenderMaterial->m_spSpecularTexture);
-				    CCausticFactory::Instance()->CreateSampler(pGraphics, spRenderMaterial->m_spSpecularTexture, &spRenderMaterial->m_spSpecularSampler);
-                }
-            }
-            else
-            {
-                Caustic::CCausticFactory::Instance()->CreateTexture(pGraphics, pMaterialAttrib->GetSpecularTexture(), D3D11_CPU_ACCESS_WRITE, D3D11_BIND_SHADER_RESOURCE, &spRenderMaterial->m_spSpecularTexture);
-                CCausticFactory::Instance()->CreateSampler(pGraphics, spRenderMaterial->m_spSpecularTexture, &spRenderMaterial->m_spSpecularSampler);
-            }
-
-            if (pMaterialAttrib->GetAmbientTexture() == nullptr)
-            {
-                std::string fnAmbient = pMaterialAttrib->GetAmbientTextureFN();
-                if (!fnAmbient.empty())
-                {
-                    std::wstring wfn(fnAmbient.begin(), fnAmbient.end());
-				    Caustic::CCausticFactory::Instance()->LoadTexture(wfn.c_str(), pGraphics, &spRenderMaterial->m_spAmbientTexture);
-				    CCausticFactory::Instance()->CreateSampler(pGraphics, spRenderMaterial->m_spAmbientTexture, &spRenderMaterial->m_spAmbientSampler);
-                }
-            }
-            else
-            {
-                Caustic::CCausticFactory::Instance()->CreateTexture(pGraphics, pMaterialAttrib->GetAmbientTexture(), D3D11_CPU_ACCESS_WRITE, D3D11_BIND_SHADER_RESOURCE, &spRenderMaterial->m_spAmbientTexture);
-                CCausticFactory::Instance()->CreateSampler(pGraphics, spRenderMaterial->m_spAmbientTexture, &spRenderMaterial->m_spAmbientSampler);
-            }
+            pMaterialAttrib->EnumerateTextures(
+                [pGraphics, wpRenderMaterial](const wchar_t* pName, IImage* pImage) {
+                    CRefObj<ITexture> spTexture;
+                    Caustic::CCausticFactory::Instance()->CreateTexture(pGraphics, pImage, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_SHADER_RESOURCE, &spTexture);
+                    wpRenderMaterial->SetTexture(pGraphics, pName, spTexture, EShaderAccess::PixelShader);
+                });
         }
 
         *ppRenderMaterial = spRenderMaterial.release();
@@ -81,25 +41,22 @@ namespace Caustic
 
     }
 
-    void CRenderMaterial::SetDiffuseTexture(IGraphics *pGraphics, ITexture *pTexture)
+    void CRenderMaterial::SetTexture(IGraphics* pGraphics, const wchar_t* pName, ITexture* pTexture, EShaderAccess access)
     {
-        m_spDiffuseTexture = pTexture;
-        m_spDiffuseSampler = nullptr;
-		CCausticFactory::Instance()->CreateSampler(pGraphics, m_spDiffuseTexture, &m_spDiffuseSampler);
-    }
+        std::map<std::wstring, CRenderTexture>::iterator it = m_textures.find(pName);
+        if (it != m_textures.end())
+            m_textures.erase(it);
+        CRenderTexture tex;
+        tex.m_spTexture = pTexture;
+        tex.m_access = access;
+        CCausticFactory::Instance()->CreateSampler(pGraphics, tex.m_spTexture, &tex.m_spSampler);
 
-    void CRenderMaterial::SetSpecularTexture(IGraphics *pGraphics, ITexture *pTexture)
-    {
-        m_spAmbientTexture = pTexture;
-        m_spSpecularSampler = nullptr;
-		CCausticFactory::Instance()->CreateSampler(pGraphics, m_spAmbientTexture, &m_spSpecularSampler);
-    }
-
-    void CRenderMaterial::SetAmbientTexture(IGraphics *pGraphics, ITexture *pTexture)
-    {
-        m_spSpecularTexture = pTexture;
-        m_spAmbientSampler = nullptr;
-		CCausticFactory::Instance()->CreateSampler(pGraphics, m_spSpecularTexture, &m_spAmbientSampler);
+        // pName is the name of our texture. We don't push textures to the shader, we push samplers. So rename it.
+        std::wstring name(pName);
+        size_t index = name.find(L"Texture");
+        if (index != name.npos)
+            name.replace(index, 7, L"Sampler");
+        m_textures.insert(std::make_pair(name.c_str(), tex));
     }
 
     void CRenderMaterial::SetShader(IShader *pShader) 
@@ -111,7 +68,8 @@ namespace Caustic
     {
         if (m_spShader == nullptr)
         {
-            if (m_spDiffuseTexture == nullptr)
+            CRefObj<IImage> spDiffuseTexture = m_spMaterial->GetTexture(L"diffuseTexture");
+            if (spDiffuseTexture == nullptr)
                 CShaderMgr::Instance()->FindShader(L"Default", &m_spShader);
             else
                 CShaderMgr::Instance()->FindShader(L"Textured", &m_spShader);
@@ -123,36 +81,38 @@ namespace Caustic
 
     void CRenderMaterial::Render(IGraphics *pGraphics, std::vector<CRefObj<IPointLight>> &lights, IRenderCtx * /*pRenderCtx*/, IShader *spShader)
     {
+        // First make sure defaults are set
         Float4 vAmbient(0.1f, 0.1f, 0.1f, 0.1f);
         Float4 vDiffuse(0.7f, 0.7f, 0.7f, 1.0f);
         Float4 vSpecular(0.7f, 0.7f, 0.7f, 1.0f);
         Float4 vSpecularExp(60.0f, 60.0f, 60.0f, 60.0f);
         float transparency = 1.0f;
-        if (m_spMaterial)
-        {
-            vAmbient.x = m_spMaterial->GetAmbientColor().x;
-            vAmbient.y = m_spMaterial->GetAmbientColor().y;
-            vAmbient.z = m_spMaterial->GetAmbientColor().z;
-            vAmbient.w = 1.0f;
-            vDiffuse.x = m_spMaterial->GetDiffuseColor().x;
-            vDiffuse.y = m_spMaterial->GetDiffuseColor().y;
-            vDiffuse.z = m_spMaterial->GetDiffuseColor().z;
-            vDiffuse.w = 1.0f;
-            vSpecular.x = m_spMaterial->GetSpecularColor().x;
-            vSpecular.y = m_spMaterial->GetSpecularColor().y;
-            vSpecular.z = m_spMaterial->GetSpecularColor().z;
-            vSpecular.w = 1.0f;
-            vSpecularExp.x = m_spMaterial->GetSpecularExp();
-            vSpecularExp.y = m_spMaterial->GetSpecularExp();
-            vSpecularExp.z = m_spMaterial->GetSpecularExp();
-            vSpecularExp.w = 0.0f;
-            transparency = m_spMaterial->GetAlpha();
-        }
-        spShader->SetPSParam(L"ambientColor", std::any(vAmbient));
         spShader->SetPSParam(L"diffuseColor", std::any(vDiffuse));
         spShader->SetPSParam(L"specularColor", std::any(vSpecular));
         spShader->SetPSParam(L"specularExp", std::any(vSpecularExp));
         spShader->SetPSParam(L"transparency", std::any(Float4(transparency, transparency, transparency, transparency)));
+
+        if (m_spMaterial)
+        {
+            m_spMaterial->EnumerateColors([spShader](std::wstring name, Vector3& v) {
+                Float4 sv(v.x, v.y, v.z, 1.0);
+                spShader->SetPSParam(name, std::any(sv));
+                });
+            m_spMaterial->EnumerateScalars([spShader](std::wstring name, float v) {
+                Float4 sv(v, v, v, 1.0);
+                spShader->SetPSParam(name, std::any(sv));
+                });
+            for (auto t : m_textures)
+            {
+                if (t.second.m_spTexture)
+                    t.second.m_spTexture->Update(pGraphics);
+                if (t.second.m_spSampler && (t.second.m_access == EShaderAccess::Both || t.second.m_access == EShaderAccess::PixelShader))
+                    spShader->SetPSParam(t.first, std::any(CSamplerRef(t.second.m_spSampler)));
+                if (t.second.m_spSampler && (t.second.m_access == EShaderAccess::Both || t.second.m_access == EShaderAccess::VertexShader))
+                    spShader->SetVSParam(t.first, std::any(CSamplerRef(t.second.m_spSampler)));
+            }
+        }
+
         spShader->SetPSParam(L"numLights", std::any());
         int numLights = (int)lights.size();
         if (numLights > 4)
@@ -174,17 +134,5 @@ namespace Caustic
             v.w = 0.0f;
             spShader->SetPSParam(L"lightColor", i, std::any(v));
         }
-        if (m_spDiffuseTexture)
-            m_spDiffuseTexture->Update(pGraphics);
-        if (m_spAmbientTexture)
-            m_spAmbientTexture->Update(pGraphics);
-        if (m_spSpecularTexture)
-            m_spSpecularTexture->Update(pGraphics);
-        if (m_spDiffuseSampler)
-            spShader->SetPSParam(L"diffuseSampler", std::any(CSamplerRef(m_spDiffuseSampler)));
-        if (m_spSpecularSampler)
-            spShader->SetPSParam(L"specularSampler", std::any(CSamplerRef(m_spSpecularSampler)));
-        if (m_spAmbientSampler)
-            spShader->SetPSParam(L"ambientSampler", std::any(CSamplerRef(m_spAmbientSampler)));
     }
 }

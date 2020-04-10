@@ -2,11 +2,27 @@
 // Copyright Patrick Sweeney 2015-2020
 // All Rights Reserved
 //**********************************************************************
-#include "defs.h"
 
 Texture2D depthTexture : register(t0);
-Texture2D rayTexture : register(t1);
 SamplerState depthSampler : register(s0);
+
+#define MAX_LIGHTS 4
+
+struct VSInput
+{
+    float3 posOS : POSITION; // Vertex position in object coordinates
+    float3 normOS : NORMAL; // Vertex normal in object coordinates
+    float2 uvs : TEXCOORD0; // Texture coordinates
+};
+
+struct VSOutput
+{
+    float4 posPS : SV_POSITION; // Position of vertex in projected coordinates
+    float3 posWS : TEXCOORD0;
+    float3 normWS : TEXCOORD1; // Normal vector in world coordinates
+    float2 uvs : TEXCOORD2; // UV coordinates
+    float depth : TEXCOORD3;
+};
 
 cbuffer VS_CONSTANT_BUFFER : register(b0)
 {
@@ -20,9 +36,9 @@ cbuffer VS_CONSTANT_BUFFER : register(b0)
 VSOutput VS(VSInput p)
 {
     VSOutput v;
-    float depth = depthTexture.Sample(depthSampler, p.uvs);
-    float2 ray = rayTexture.Sample(depthSampler, p.uvs);
-    float3 pos = float3(ray.x * depth, ray.y * depth, depth);
+
+    v.depth = depthTexture.SampleLevel(depthSampler, p.uvs, 0);
+    // Transform our vertex normal from object space to world space
     v.normWS = normalize(mul(float4(p.normOS,1.0f), worldInvTranspose).xyz);
     v.posWS = mul(float4(p.posOS, 1.0f), world).xyz;
     v.posPS = mul(float4(p.posOS, 1.0f), worldViewProj);
