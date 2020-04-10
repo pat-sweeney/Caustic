@@ -23,13 +23,6 @@ namespace Caustic
     struct IPointLight;
     struct IRenderCtx;
 
-    enum EShaderAccess
-    {
-        PixelShader,
-        VertexShader,
-        Both
-    };
-
     //**********************************************************************
     // Interface: IRenderMaterial
     // Defines a material that has its associated

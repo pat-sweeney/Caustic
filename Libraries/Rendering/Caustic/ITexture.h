@@ -74,5 +74,16 @@ namespace Caustic
         // pGraphics - graphics device
         //**********************************************************************
         virtual void GenerateMips(IGraphics *pGraphics) = 0;
+
+        //**********************************************************************
+        // Method: Render
+        // Pushes the specified texture to the GPU
+        //
+        // Parameters:
+        // pGraphics - graphics device
+        // slot - texture slot to assign texture to
+        // isPixelShader - is texture being assigned to a pixel or vertex shader
+        //**********************************************************************
+        virtual void Render(IGraphics* pGraphics, int slot, bool isPixelShader) = 0;
     };
 }

@@ -68,6 +68,7 @@ namespace Caustic
         virtual void Update(IGraphics *pGraphics) override;
         virtual CComPtr<ID3D11Texture2D> GetD3DTexture() override { return m_spTexture->GetD3DTexture(); }
         virtual CComPtr<ID3D11ShaderResourceView> GetD3DTextureRV() { return m_spTexture->GetD3DTextureRV(); }
-        virtual void GenerateMips(IGraphics * /*pGraphics*/) { _ASSERT(FALSE); return; }
+        virtual void GenerateMips(IGraphics* /*pGraphics*/) { _ASSERT(FALSE); return; }
+        virtual void Render(IGraphics* pGraphics, int slot, bool isPixelShader) override;
     };
 };

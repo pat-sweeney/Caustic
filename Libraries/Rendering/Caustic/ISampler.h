@@ -77,8 +77,9 @@ namespace Caustic
         // Parameters:
         // pGraphics - graphics device
         // slot - texture slot to which this sampler should be assigned
+        // isPixelShader - is this sampler for a pixel or vertex shader?
         //**********************************************************************
-        virtual void Render(IGraphics *pGraphics, int slot) = 0;
+        virtual void Render(IGraphics *pGraphics, int slot, bool isPixelShader) = 0;
 
         //**********************************************************************
         // Method: GetTexture

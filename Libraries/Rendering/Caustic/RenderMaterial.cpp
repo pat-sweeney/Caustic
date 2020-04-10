@@ -29,10 +29,13 @@ namespace Caustic
         if (pMaterialAttrib)
         {
             pMaterialAttrib->EnumerateTextures(
-                [pGraphics, wpRenderMaterial](const wchar_t* pName, IImage* pImage) {
-                    CRefObj<ITexture> spTexture;
-                    Caustic::CCausticFactory::Instance()->CreateTexture(pGraphics, pImage, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_SHADER_RESOURCE, &spTexture);
-                    wpRenderMaterial->SetTexture(pGraphics, pName, spTexture, EShaderAccess::PixelShader);
+                [pGraphics, wpRenderMaterial](const wchar_t* pName, IImage* pImage, EShaderAccess access) {
+                    if (pImage != nullptr)
+                    {
+                        CRefObj<ITexture> spTexture;
+                        Caustic::CCausticFactory::Instance()->CreateTexture(pGraphics, pImage, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_SHADER_RESOURCE, &spTexture);
+                        wpRenderMaterial->SetTexture(pGraphics, pName, spTexture, access);
+                    }
                 });
         }
 
@@ -52,11 +55,11 @@ namespace Caustic
         CCausticFactory::Instance()->CreateSampler(pGraphics, tex.m_spTexture, &tex.m_spSampler);
 
         // pName is the name of our texture. We don't push textures to the shader, we push samplers. So rename it.
-        std::wstring name(pName);
-        size_t index = name.find(L"Texture");
-        if (index != name.npos)
-            name.replace(index, 7, L"Sampler");
-        m_textures.insert(std::make_pair(name.c_str(), tex));
+        tex.m_samplerName = std::wstring(pName);
+        size_t index = tex.m_samplerName.find(L"Texture");
+        if (index != tex.m_samplerName.npos)
+            tex.m_samplerName.replace(index, 7, L"Sampler");
+        m_textures.insert(std::make_pair(pName, tex));
     }
 
     void CRenderMaterial::SetShader(IShader *pShader) 
@@ -105,11 +108,17 @@ namespace Caustic
             for (auto t : m_textures)
             {
                 if (t.second.m_spTexture)
+                {
                     t.second.m_spTexture->Update(pGraphics);
+                    if (t.second.m_access == EShaderAccess::Both || t.second.m_access == EShaderAccess::PixelShader)
+                        spShader->SetPSParam(t.first, std::any(t.second.m_spTexture));
+                    if (t.second.m_access == EShaderAccess::Both || t.second.m_access == EShaderAccess::VertexShader)
+                        spShader->SetVSParam(t.first, std::any(t.second.m_spTexture));
+                }
                 if (t.second.m_spSampler && (t.second.m_access == EShaderAccess::Both || t.second.m_access == EShaderAccess::PixelShader))
-                    spShader->SetPSParam(t.first, std::any(CSamplerRef(t.second.m_spSampler)));
+                    spShader->SetPSParam(t.second.m_samplerName, std::any(CSamplerRef(t.second.m_spSampler)));
                 if (t.second.m_spSampler && (t.second.m_access == EShaderAccess::Both || t.second.m_access == EShaderAccess::VertexShader))
-                    spShader->SetVSParam(t.first, std::any(CSamplerRef(t.second.m_spSampler)));
+                    spShader->SetVSParam(t.second.m_samplerName, std::any(CSamplerRef(t.second.m_spSampler)));
             }
         }
 

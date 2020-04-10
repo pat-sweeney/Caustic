@@ -124,6 +124,37 @@ namespace Caustic
         return s;
     }
 
+    void CShader::PushSamplers(IGraphics* pGraphics, std::vector<ShaderParamInstance>& params, bool isPixelShader)
+    {
+        // First push samplers
+        for (size_t i = 0; i < params.size(); i++)
+        {
+            if (!params[i].m_dirty)
+                continue;
+            switch (params[i].m_type)
+            {
+            case EShaderParamType::ShaderType_Texture:
+                {
+                    if (params[i].m_value.has_value())
+                    {
+                        CRefObj<ITexture> v = std::any_cast<CRefObj<ITexture>>(params[i].m_value);
+                        v->Render(pGraphics, params[i].m_offset, isPixelShader);
+                    }
+                }
+                break;
+            case EShaderParamType::ShaderType_Sampler:
+                {
+                    if (params[i].m_value.has_value())
+                    {
+                        Caustic::CSamplerRef v = std::any_cast<CSamplerRef>(params[i].m_value);
+                        v.m_spSampler->Render(pGraphics, params[i].m_offset, isPixelShader);
+                    }
+                }
+                break;
+            }
+        }
+    }
+
     //**********************************************************************
     // Method: PushConstants
     // Pushes each shader parameter into the D3D11 constant buffer.
@@ -135,27 +166,7 @@ namespace Caustic
     //**********************************************************************
     void CShader::PushConstants(IGraphics *pGraphics, SConstantBuffer *pBuffer, std::vector<ShaderParamInstance> &params)
     {
-        if (pBuffer->m_bufferSize == 0)
-            return;
-
-        // First push samplers
-        for (size_t i = 0; i < params.size(); i++)
-        {
-            if ( ! params[i].m_dirty)
-                continue;
-            switch(params[i].m_type)
-            {
-            case EShaderParamType::ShaderType_Sampler:
-                {
-                    Caustic::CSamplerRef v = std::any_cast<CSamplerRef>(params[i].m_value);
-                    v.m_spSampler->Render(pGraphics, params[i].m_offset);
-                }
-                break;
-            }
-        }
-
-        // Next push constants
-        if (pBuffer == nullptr)
+        if (pBuffer == nullptr || pBuffer->m_bufferSize == 0)
             return;
 
         D3D11_MAPPED_SUBRESOURCE ms;
@@ -171,7 +182,7 @@ namespace Caustic
                 break;
             case EShaderParamType::ShaderType_Float:
                 {
-                    float f = std::any_cast<float>(params[i].m_value);
+                    float f = (params[i].m_value.has_value()) ? std::any_cast<float>(params[i].m_value) : 0.0f;
                     memcpy(pb, &f, sizeof(float));
                     pb += sizeof(float);
                 }
@@ -180,7 +191,7 @@ namespace Caustic
                 {
                 for (size_t j = 0; j < params[i].m_members; j++)
                 {
-                        Float v = std::any_cast<Float>(params[i].m_values[j]);
+                        Float v = (params[i].m_values[j].has_value()) ? std::any_cast<Float>(params[i].m_values[j]) : 0.0f;
                         memcpy(pb, &v, sizeof(Float));
                         pb += sizeof(Float);
                     }
@@ -188,7 +199,7 @@ namespace Caustic
                 break;
             case EShaderParamType::ShaderType_Float2:
                 {
-                    Float2 f = std::any_cast<Float2>(params[i].m_value);
+                    Float2 f = (params[i].m_value.has_value()) ? std::any_cast<Float2>(params[i].m_value) : Float2(0.0f, 0.0f);
                     memcpy(pb, &f, sizeof(Float2));
                     pb += sizeof(Float2);
                 }
@@ -197,7 +208,7 @@ namespace Caustic
                 {
                 for (size_t j = 0; j < params[i].m_members; j++)
                 {
-                        Float2 v = std::any_cast<Float2>(params[i].m_values[j]);
+                        Float2 v = (params[i].m_values[j].has_value()) ? std::any_cast<Float2>(params[i].m_values[j]) : Float2(0.0f, 0.0f);
                         memcpy(pb, &v, sizeof(Float2));
                         pb += sizeof(Float2);
                     }
@@ -205,16 +216,16 @@ namespace Caustic
                 break;
             case EShaderParamType::ShaderType_Float3:
                 {
-                    Float3 f = std::any_cast<Float3>(params[i].m_value);
+                    Float3 f = (params[i].m_value.has_value()) ? std::any_cast<Float3>(params[i].m_value) : Float3(0.0f, 0.0f, 0.0f);
                     memcpy(pb, &f, sizeof(Float3));
                     pb += sizeof(Float3);
                 }
                 break;
             case EShaderParamType::ShaderType_Float3_Array:
                 {
-                for (size_t j = 0; j < params[i].m_members; j++)
-                {
-                        Float3 v = std::any_cast<Float3>(params[i].m_values[j]);
+                    for (size_t j = 0; j < params[i].m_members; j++)
+                    {
+                        Float3 v = (params[i].m_values[j].has_value()) ? std::any_cast<Float3>(params[i].m_values[j]) : Float3(0.0f, 0.0f, 0.0f);
                         memcpy(pb, &v, sizeof(Float3));
                         pb += sizeof(Float3);
                     }
@@ -222,16 +233,16 @@ namespace Caustic
                 break;
             case EShaderParamType::ShaderType_Float4:
                 {
-                    Float4 f = std::any_cast<Float4>(params[i].m_value);
+                    Float4 f = (params[i].m_value.has_value()) ? std::any_cast<Float4>(params[i].m_value) : Float4(0.0f, 0.0f, 0.0f, 0.0f);
                     memcpy(pb, &f, sizeof(Float4));
                     pb += sizeof(Float4);
                 }
                 break;
             case EShaderParamType::ShaderType_Float4_Array:
                 {
-                for (size_t j = 0; j < params[i].m_members; j++)
-                {
-                        Float4 v = std::any_cast<Float4>(params[i].m_values[j]);
+                    for (size_t j = 0; j < params[i].m_members; j++)
+                    {
+                        Float4 v = (params[i].m_values[j].has_value()) ? std::any_cast<Float4>(params[i].m_values[j]) : Float4(0.0f, 0.0f, 0.0f, 0.0f);
                         memcpy(pb, &v, sizeof(Float4));
                         pb += sizeof(Float4);
                     }
@@ -239,16 +250,16 @@ namespace Caustic
                 break;
             case EShaderParamType::ShaderType_Int:
                 {
-                    Int v = std::any_cast<Int>(params[i].m_value);
+                    Int v = (params[i].m_value.has_value()) ? std::any_cast<Int>(params[i].m_value) : 0;
                     memcpy(pb, &v, sizeof(int));
                     pb += sizeof(int);
                 }
                 break;
             case EShaderParamType::ShaderType_Int_Array:
                 {
-                for (size_t j = 0; j < params[i].m_members; j++)
-                {
-                        Int v = std::any_cast<Int>(params[i].m_values[j]);
+                    for (size_t j = 0; j < params[i].m_members; j++)
+                    {
+                        Int v = (params[i].m_values[j].has_value()) ? std::any_cast<Int>(params[i].m_values[j]) : 0;
                         memcpy(pb, &v.x, sizeof(int));
                         pb += sizeof(int);
                     }
@@ -256,7 +267,7 @@ namespace Caustic
                 break;
             case EShaderParamType::ShaderType_Matrix:
                 {
-                    Matrix m = std::any_cast<Matrix>(params[i].m_value);
+                    Matrix m = (params[i].m_value.has_value()) ? std::any_cast<Matrix>(params[i].m_value) : Matrix();
                     memcpy(pb, m.x, 16 * sizeof(float));
                     pb += 16 * sizeof(float);
                 }
@@ -265,7 +276,7 @@ namespace Caustic
                 {
                 for (size_t j = 0; j < params[i].m_members; j++)
                 {
-                        Matrix m = std::any_cast<Matrix>(params[i].m_values[j]);
+                    Matrix m = (params[i].m_values[j].has_value()) ? std::any_cast<Matrix>(params[i].m_values[j]) : Matrix();
                         memcpy(pb, m.x, 16 * sizeof(float));
                         pb += 16 * sizeof(float);
                     }
@@ -459,6 +470,8 @@ namespace Caustic
 
         PushLights(lights);
         PushMatrices(pGraphics, pWorld);
+        PushSamplers(pGraphics, m_vsParams, false);
+        PushSamplers(pGraphics, m_psParams, true);
         PushConstants(pGraphics, &m_vertexConstants, m_vsParams);
         PushConstants(pGraphics, &m_pixelConstants, m_psParams);
 

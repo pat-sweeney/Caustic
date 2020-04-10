@@ -64,7 +64,6 @@ void InitializeCaustic(HWND hwnd)
 
     InitializeCriticalSection(&cs);
 
-#if 0
     // First create a mesh to cover the depth map
     CRefObj<IMeshConstructor> spMeshConstructor;
     CreateMeshConstructor(&spMeshConstructor);
@@ -119,8 +118,9 @@ void InitializeCaustic(HWND hwnd)
     spSubMesh->SetVertexFlags(EVertexFlags(HasNormal | HasPosition | HasUV0));
     spSubMesh->SetMaterialID(0);
     spMeshConstructor->MeshClose(&spMesh);
-#endif
+#if 0
     CreateCube(&spMesh);
+#endif
 
     // Next create our scene graph mesh element
     CRefObj<ISceneMeshElem> spMeshElem;
@@ -128,7 +128,7 @@ void InitializeCaustic(HWND hwnd)
     spMeshElem->SetMesh(spMesh);
 
     // Find our depth map => mesh shader
-    CShaderMgr::Instance()->FindShader(L"Textured", &spShader);
+    CShaderMgr::Instance()->FindShader(L"PointCloud", &spShader);
 
     // Create material for the mesh
     CRefObj<ISceneMaterialElem> spMaterialElem;
@@ -157,7 +157,7 @@ void InitializeCaustic(HWND hwnd)
                     //Caustic::CreateColorize(&spFilter);
                     //spFilter->Apply(spDepthImage, nullptr, &spColoredDepthImage);
 
-                    spMaterial->SetDiffuseTexture(spDepthImage);
+                    spMaterial->SetTexture(L"depthTexture", spDepthImage, EShaderAccess::VertexShader);
                     pMeshElem->SetFlags(pMeshElem->GetFlags() | ESceneElemFlags::MaterialDirty);
                 }
             }

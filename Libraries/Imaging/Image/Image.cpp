@@ -102,7 +102,7 @@ namespace Caustic
 
     void CIntegralImage::BoxBlur(int width, int height, IImage **ppImage)
     {
-        std::unique_ptr<CImage> spDstImage(new CImage(GetWidth(), GetHeight()));
+        std::unique_ptr<CImage> spDstImage(new CImage(GetWidth(), GetHeight(), 32));
         BYTE *rowSrc = m_spImage->GetData();
         BYTE *rowDst = spDstImage->GetData();
         int miny = -height / 2;
@@ -136,13 +136,7 @@ namespace Caustic
 
     void CreateImage(uint32 width, uint32 height, uint32 bpp, IImage **ppImage)
     {
-        std::unique_ptr<CImage> spImage(new CImage());
-        spImage->m_width = width;
-        spImage->m_height = height;
-        spImage->m_bytesPerPixel = bpp / 8;
-        uint32 stride = width * spImage->m_bytesPerPixel;
-        uint32 numbytes = stride * height;
-        spImage->m_pData = new BYTE[numbytes];
+        std::unique_ptr<CImage> spImage(new CImage(width, height, bpp));
         *ppImage = spImage.release();
         (*ppImage)->AddRef();
     }

@@ -157,6 +157,12 @@ namespace Caustic
     }
 
     //**********************************************************************
+    void CVideoTexture::Render(IGraphics* pGraphics, int slot, bool isPixelShader)
+    {
+        m_spTexture->Render(pGraphics, slot, isPixelShader);
+    }
+
+    //**********************************************************************
     void CVideoTexture::LoadFromFile(const wchar_t *pFilename, IGraphics *pGraphics)
     {
         CComPtr<IMFAttributes> spAttributes;

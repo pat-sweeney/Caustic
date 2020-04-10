@@ -87,9 +87,9 @@ namespace Caustic
     
     CRefObj<IImage> CMaterialAttrib::GetTexture(const wchar_t *pName)
     {
-        std::map<std::wstring, CRefObj<IImage>>::iterator it = m_textures.find(pName);
+        std::map<std::wstring, std::pair<CRefObj<IImage>, EShaderAccess>>::iterator it = m_textures.find(pName);
         if (it != m_textures.end())
-            return it->second;
+            return it->second.first;
         if (s_spDefaultTexture == nullptr)
         {
             Caustic::CreateImage(32, 32, 32, &s_spDefaultTexture);
@@ -110,20 +110,20 @@ namespace Caustic
         }
         return s_spDefaultTexture;
     }
-    void CMaterialAttrib::SetTexture(const wchar_t *pName, IImage* pImage)
+    void CMaterialAttrib::SetTexture(const wchar_t *pName, IImage* pImage, EShaderAccess access)
     {
-        std::map<std::wstring, CRefObj<IImage>>::iterator it = m_textures.find(pName);
+        std::map<std::wstring, std::pair<CRefObj<IImage>,EShaderAccess>>::iterator it = m_textures.find(pName);
         if (it != m_textures.end())
-            it->second = CRefObj<IImage>(pImage);
+            it->second = std::make_pair(CRefObj<IImage>(pImage), access);
         else
-            m_textures.insert(std::make_pair(pName, CRefObj<IImage>(pImage)));
+            m_textures.insert(std::make_pair(pName, std::make_pair(CRefObj<IImage>(pImage), access)));
     }
 
-    void CMaterialAttrib::SetTextureViaFilename(const wchar_t *pName, std::wstring& filename)
+    void CMaterialAttrib::SetTextureViaFilename(const wchar_t *pName, std::wstring& filename, EShaderAccess access)
     {
         CRefObj<IImage> spImage;
         Caustic::LoadImage(filename.c_str(), &spImage);
-        SetTexture(pName, spImage);
+        SetTexture(pName, spImage, access);
     }
 
     void CMaterialAttrib::EnumerateColors(std::function<void(const wchar_t* pName, Vector3 & v)> func)
@@ -136,10 +136,10 @@ namespace Caustic
         for (auto x : m_scalars)
             func(x.first.c_str(), x.second);
     }
-    void CMaterialAttrib::EnumerateTextures(std::function<void(const wchar_t* pName, IImage * pTexture)> func)
+    void CMaterialAttrib::EnumerateTextures(std::function<void(const wchar_t*pName, IImage *pImage, EShaderAccess access)> func)
     {
         for (auto x : m_textures)
-            func(x.first.c_str(), x.second);
+            func(x.first.c_str(), x.second.first, x.second.second);
     }
     //**********************************************************************
     // Method: Load

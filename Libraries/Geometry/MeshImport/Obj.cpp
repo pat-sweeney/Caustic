@@ -188,7 +188,7 @@ namespace Caustic
                         p++;
                     std::string fn = m_Folder + std::string(p);
                     std::wstring wfn = str2wstr(fn);
-                    spMaterial->SetTextureViaFilename(L"ambientTexture", wfn);
+                    spMaterial->SetTextureViaFilename(L"ambientTexture", wfn, EShaderAccess::PixelShader);
                 }
                 else if (_strnicmp(p, "map_Kd", 6) == 0)
                 {
@@ -197,7 +197,7 @@ namespace Caustic
                         p++;
                     std::string fn = m_Folder + std::string(p);
                     std::wstring wfn = str2wstr(fn);
-                    spMaterial->SetTextureViaFilename(L"diffuseTexture", wfn);
+                    spMaterial->SetTextureViaFilename(L"diffuseTexture", wfn, EShaderAccess::PixelShader);
                 }
                 else if (_strnicmp(p, "map_Ks", 6) == 0)
                 {
@@ -206,7 +206,7 @@ namespace Caustic
                         p++;
                     std::string fn = m_Folder + std::string(p);
                     std::wstring wfn = str2wstr(fn);
-                    spMaterial->SetTextureViaFilename(L"specularTexture", wfn);
+                    spMaterial->SetTextureViaFilename(L"specularTexture", wfn, EShaderAccess::PixelShader);
                 }
                 else if (*p == 'N' && p[1] == 's')
                     spMaterial->SetScalar(L"specularExp", (float)atof(p + 3));

@@ -31,22 +31,13 @@ namespace Caustic
         (*ppSampler)->AddRef();
     }
 
-    void CSampler::Render(IGraphics *pGraphics, int slot)
+    void CSampler::Render(IGraphics *pGraphics, int slot, bool isPixelShader)
     {
         auto ctx = pGraphics->GetContext();
-        ctx->PSSetSamplers(slot, 1, &m_spSamplerState.p);
-        if (m_spTexture != nullptr)
-        {
-            CComPtr<ID3D11ShaderResourceView> spResource = m_spTexture->GetD3DTextureRV();
-            ctx->PSSetShaderResources(slot, 1, &spResource.p);
-        }
+        if (isPixelShader)
+            ctx->PSSetSamplers(slot, 1, &m_spSamplerState.p);
         else
-        {
-            // No valid texture?! Checkerboard it
-            CRefObj<ITexture> spTexture = CCausticFactory::Instance()->CheckerboardTexture(pGraphics);
-            CComPtr<ID3D11ShaderResourceView> spResource = spTexture->GetD3DTextureRV();
-            ctx->PSSetShaderResources(slot, 1, &spResource.p);
-        }
+            ctx->VSSetSamplers(slot, 1, &m_spSamplerState.p);
     }
 
     void CSampler::GetTexture(ITexture **ppTexture)

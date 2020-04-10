@@ -36,7 +36,7 @@ cbuffer PS_CONSTANT_BUFFER
 
 float4 PS(VSOutput p) : SV_Target
 {
-return float4(p.depth,p.depth,p.depth,1.0);
+return float4(p.depth.xxx/8000.0,1.0);
     float3 viewPosWS = mul(float4(0.0f, 0.0f, 0.0f, 1.0f), viewInv).xyz;
     float3 viewDirWS = normalize(viewPosWS - p.posWS);
     float3 color = float3(0.0f, 0.0f, 0.0f);

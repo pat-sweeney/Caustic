@@ -3,7 +3,7 @@
 // All Rights Reserved
 //**********************************************************************
 
-Texture2D depthTexture : register(t0);
+Texture2D<uint> depthTexture : register(t0);
 SamplerState depthSampler : register(s0);
 
 #define MAX_LIGHTS 4
@@ -37,7 +37,8 @@ VSOutput VS(VSInput p)
 {
     VSOutput v;
 
-    v.depth = depthTexture.SampleLevel(depthSampler, p.uvs, 0);
+    int3 pc = int3(p.uvs.x * 512, p.uvs.y * 512, 0);
+    v.depth = depthTexture.Load(pc);
     // Transform our vertex normal from object space to world space
     v.normWS = normalize(mul(float4(p.normOS,1.0f), worldInvTranspose).xyz);
     v.posWS = mul(float4(p.posOS, 1.0f), world).xyz;

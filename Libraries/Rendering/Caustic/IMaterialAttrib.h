@@ -21,6 +21,13 @@
 
 namespace Caustic
 {
+	enum EShaderAccess
+	{
+		PixelShader,
+		VertexShader,
+		Both
+	};
+
 	//**********************************************************************
 	// Interface: IMaterialAttrib
 	// Used for manipulating the materials assigned to a mesh.
@@ -32,11 +39,11 @@ namespace Caustic
 		virtual float GetScalar(const wchar_t *pName) = 0;
 		virtual void SetScalar(const wchar_t *pName, float s) = 0;
 		virtual CRefObj<IImage> GetTexture(const wchar_t *pName) = 0;
-		virtual void SetTexture(const wchar_t *pName, IImage* pImage) = 0;
-		virtual void SetTextureViaFilename(const wchar_t* pName, std::wstring& filename) = 0;
+		virtual void SetTexture(const wchar_t *pName, IImage* pImage, EShaderAccess access) = 0;
+		virtual void SetTextureViaFilename(const wchar_t* pName, std::wstring& filename, EShaderAccess access) = 0;
 		virtual void EnumerateColors(std::function<void(const wchar_t* pName, Vector3 & v)> func) = 0;
 		virtual void EnumerateScalars(std::function<void(const wchar_t* pName, float s)> func) = 0;
-		virtual void EnumerateTextures(std::function<void(const wchar_t* pName, IImage * pTexture)> func) = 0;
+		virtual void EnumerateTextures(std::function<void(const wchar_t* pName, IImage * pTexture, EShaderAccess access)> func) = 0;
 
 		//**********************************************************************
 		// Method: GetMaterialID

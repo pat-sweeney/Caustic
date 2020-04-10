@@ -15,6 +15,7 @@ namespace Caustic
     {
         EShaderAccess m_access;
         CRefObj<ITexture> m_spTexture;
+        std::wstring m_samplerName;
         CRefObj<ISampler> m_spSampler;
     };
 

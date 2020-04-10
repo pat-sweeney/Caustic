@@ -39,18 +39,31 @@ namespace Caustic
         friend class CImageIter;
         friend void LoadImage(const wchar_t *pFilename, IImage **ppImage);
         friend void StoreImage(const wchar_t *pFilename, IImage *pImage);
-        friend void CreateImage(uint32 width, uint32 height, uint32 bpp, IImage **ppImage);
     public:
-        CImage()
+        CImage() :
+            m_width(0),
+            m_height(0),
+            m_bytesPerPixel(0),
+            m_spParent(nullptr),
+            m_subx(0),
+            m_suby(0),
+            m_pData(nullptr),
+            m_ownData(true)
         {
         }
         
-        CImage(int w, int h)
+        CImage(int w, int h, int bpp)
         {
             m_width = w;
             m_height = h;
-            m_bytesPerPixel = 4;
-            m_pData = new BYTE[h * GetStride()];
+            m_bytesPerPixel = bpp / 8;
+            m_spParent = nullptr;
+            m_subx = 0;
+            m_suby = 0;
+            uint32 stride = m_width * m_bytesPerPixel;
+            uint32 numbytes = stride * m_height;
+            m_pData = new BYTE[numbytes];
+            m_ownData = true;
         }
 
         virtual ~CImage()

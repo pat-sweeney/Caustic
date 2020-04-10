@@ -118,6 +118,7 @@ namespace Caustic
         void PushMatrices(IGraphics *pGraphics, DirectX::XMMATRIX *pWorld);
         uint32 ComputeParamSize(ShaderParamDef *pParams, uint32 numParams, std::vector<ShaderParamInstance> &params);
         void PushConstants(IGraphics *pGraphics, SConstantBuffer *pBuffer, std::vector<ShaderParamInstance> &params);
+        void PushSamplers(IGraphics* pGraphics, std::vector<ShaderParamInstance>& params, bool isPixelShader);
         void SetParam(std::wstring paramName, std::any &value, std::vector<ShaderParamInstance> &params);
         void SetParam(std::wstring paramName, int index, std::any &value, std::vector<ShaderParamInstance> &params);
     public:
