@@ -72,8 +72,8 @@ namespace Caustic
 		virtual void LoadTexture(const wchar_t *pFilename, IGraphics *pGraphics, ITexture **ppTexture) override;
 		virtual void LoadVideoTexture(const wchar_t *pFilename, IGraphics *pGraphics, ITexture **ppTexture) override;
         virtual void CreateShader(IRenderer *pRenderer, const wchar_t *pShaderName,
-            ID3DBlob *pVertexShaderBlob, ID3DBlob *pPixelShaderBlob, IShaderInfo *pShaderInfo,
-            IShader **ppShader) override;
+            ID3DBlob *pVertexShaderBlob, ID3DBlob* pPixelShaderBlob, ID3DBlob* pComputeShaderBlob,
+			IShaderInfo *pShaderInfo, IShader **ppShader) override;
         virtual void CreateShaderInfo(const wchar_t *pFilename, IShaderInfo **ppShaderInfo) override;
     };
 };

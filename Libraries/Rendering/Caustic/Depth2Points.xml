@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Shader>
+  <ComputeShader Filename="$(CausticRoot)\Libraries\Rendering\Caustic\Depth2Points.cs" Output="$(CausticRoot)\$(Configuration)\Depth2Points_CS.cso"/>
+</Shader>

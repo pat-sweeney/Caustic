@@ -43,6 +43,9 @@ namespace Caustic
         ShaderType_Float4_Array,
         ShaderType_Int_Array,
         ShaderType_Matrix_Array,
+        ShaderType_StructuredBuffer,
+        ShaderType_RWStructuredBuffer,
+        ShaderType_AppendStructuredBuffer,
     };
 
     //**********************************************************************
@@ -70,6 +73,11 @@ namespace Caustic
     // ShaderParamInstance defines each parameter that a shader exposes. These parameters
     // are derived from the ShaderParamDefs above. This is servers copy of each
     // parameter along with its value and position in the constant buffer.
+    //
+    // Parameters:
+    // m_value - Value assigned to this parameter
+    // m_values - Array of values assigned to this parameter
+    // m_dirty - Is parameter dirty and needs to be pushed to constant buffer
     //**********************************************************************
     struct ShaderParamInstance : public ShaderParamDef
     {
@@ -107,11 +115,14 @@ namespace Caustic
         CComPtr<ID3D11InputLayout> m_spLayout;
         CComPtr<ID3D11PixelShader> m_spPixelShader;
         CComPtr<ID3D11VertexShader> m_spVertexShader;
+        CComPtr<ID3D11ComputeShader> m_spComputeShader;
         SConstantBuffer m_vertexConstants;
         SConstantBuffer m_pixelConstants;
+        SConstantBuffer m_computeConstants;
         std::vector<ShaderParamInstance> m_psParams;
         std::vector<ShaderParamInstance> m_vsParams;
-		CRefObj<IShaderInfo> m_spShaderInfo;
+        std::vector<ShaderParamInstance> m_csParams;
+        CRefObj<IShaderInfo> m_spShaderInfo;
     protected:
         void PushMatrix(const wchar_t *name, std::any mat);
         void PushLights(std::vector<CRefObj<IPointLight>> &lights);
@@ -122,7 +133,7 @@ namespace Caustic
         void SetParam(std::wstring paramName, std::any &value, std::vector<ShaderParamInstance> &params);
         void SetParam(std::wstring paramName, int index, std::any &value, std::vector<ShaderParamInstance> &params);
     public:
-        void Create(IGraphics *pGraphics, const wchar_t *pShaderName, IShaderInfo *pShaderInfo, ID3DBlob *pPSBlob, ID3DBlob *pVSBlob);
+        void Create(IGraphics *pGraphics, const wchar_t *pShaderName, IShaderInfo *pShaderInfo, ID3DBlob *pPSBlob, ID3DBlob* pVSBlob, ID3DBlob* pCSBlob);
         void CreateConstantBuffer(ID3D11Device *pDevice, ShaderParamDef *pDefs, uint32 paramsSize, std::vector<ShaderParamInstance> &params, SConstantBuffer *pConstantBuffer);
 
         //**********************************************************************
@@ -139,7 +150,9 @@ namespace Caustic
         virtual void SetPSParam(std::wstring paramName, std::any &value) override;
         virtual void SetPSParam(std::wstring paramName, int index, std::any &value) override;
         virtual void SetVSParam(std::wstring paramName, std::any &value) override;
-        virtual void SetVSParam(std::wstring paramName, int index, std::any &value) override;
+        virtual void SetVSParam(std::wstring paramName, int index, std::any& value) override;
+        virtual void SetCSParam(std::wstring paramName, std::any& value) override;
+        virtual void SetCSParam(std::wstring paramName, int index, std::any& value) override;
         virtual void EndRender(IGraphics *pGraphics) override;
         virtual CRefObj<IShaderInfo> GetShaderInfo() override;
     };

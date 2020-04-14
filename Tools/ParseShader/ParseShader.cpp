@@ -22,12 +22,19 @@
 #include <stdlib.h>
 #include <map>
 
+enum EShaderType
+{
+    PixelShader,
+    VertexShader,
+    ComputeShader
+};
+
 std::map<std::string, std::string> variables;
 void Usage()
 {
     fprintf(stderr, "Usage: ParseShader -i <shaderFN> -o <paramFN>\n");
     fprintf(stderr, "where:\n");
-    fprintf(stderr, "		<shaderFN> : name of vertex or pixel shader filename\n");
+    fprintf(stderr, "		<shaderFN> : name of vertex, pixel or compute shader filename\n");
     fprintf(stderr, "		<paramFN>  : name of output filename to write parameter usage to\n");
     exit(0);
 }
@@ -88,67 +95,89 @@ void GetDXGIFormat(D3D11_SIGNATURE_PARAMETER_DESC &pd, std::string &format)
     }
 }
 
-void ParseLoop(ID3D11ShaderReflection *pReflection, HANDLE oh)
+void ParseLoop(ID3D11ShaderReflection *pReflection, HANDLE oh, EShaderType shaderType)
 {
     D3D11_SHADER_DESC shaderDesc;
     CT(pReflection->GetDesc(&shaderDesc));
 
     // Determine our vertex format
-    WriteStr(oh, "        <VertexLayout>\n");
-    for (UINT i = 0; i < shaderDesc.InputParameters; i++)
+    if (shaderType == PixelShader || shaderType == VertexShader)
     {
-        D3D11_SIGNATURE_PARAMETER_DESC paramDesc;
-        CT(pReflection->GetInputParameterDesc(i, &paramDesc));
-        std::string format;
-        GetDXGIFormat(paramDesc, format);
-        WriteStr(oh, "            <Field Name='%s' Semantic='%s' SemanticIndex='%d' Format='%s'/>\n",
-            paramDesc.SemanticName, paramDesc.SemanticName, (int)paramDesc.SemanticIndex, format.c_str());
-    }
-    WriteStr(oh, "        </VertexLayout>\n");
+        WriteStr(oh, "        <VertexLayout>\n");
+        for (UINT i = 0; i < shaderDesc.InputParameters; i++)
+        {
+            D3D11_SIGNATURE_PARAMETER_DESC paramDesc;
+            CT(pReflection->GetInputParameterDesc(i, &paramDesc));
+            std::string format;
+            GetDXGIFormat(paramDesc, format);
+            WriteStr(oh, "            <Field Name='%s' Semantic='%s' SemanticIndex='%d' Format='%s'/>\n",
+                paramDesc.SemanticName, paramDesc.SemanticName, (int)paramDesc.SemanticIndex, format.c_str());
+        }
+        WriteStr(oh, "        </VertexLayout>\n");
 
-    // Parse samplers
-    WriteStr(oh, "        <Textures>\n");
-    for (UINT i = 0; i < shaderDesc.BoundResources; i++)
-    {
-        D3D11_SHADER_INPUT_BIND_DESC bindDesc;
-        pReflection->GetResourceBindingDesc(i, &bindDesc);
-        if (bindDesc.Type == D3D_SIT_TEXTURE)
-            WriteStr(oh, "            <Texture Name='%s' Register='%d'/>\n", bindDesc.Name, (int)bindDesc.BindPoint);
-    }
-    WriteStr(oh, "        </Textures>\n");
+        // Parse samplers
+        WriteStr(oh, "        <Textures>\n");
+        for (UINT i = 0; i < shaderDesc.BoundResources; i++)
+        {
+            D3D11_SHADER_INPUT_BIND_DESC bindDesc;
+            pReflection->GetResourceBindingDesc(i, &bindDesc);
+            if (bindDesc.Type == D3D_SIT_TEXTURE)
+                WriteStr(oh, "            <Texture Name='%s' Register='%d'/>\n", bindDesc.Name, (int)bindDesc.BindPoint);
+        }
+        WriteStr(oh, "        </Textures>\n");
 
-    WriteStr(oh, "        <Samplers>\n");
-    for (UINT i = 0; i < shaderDesc.BoundResources; i++)
-    {
-        D3D11_SHADER_INPUT_BIND_DESC bindDesc;
-        pReflection->GetResourceBindingDesc(i, &bindDesc);
-        if (bindDesc.Type == D3D_SIT_SAMPLER)
-            WriteStr(oh, "            <SamplerState Name='%s' Register='%d'/>\n", bindDesc.Name, (int)bindDesc.BindPoint);
+        WriteStr(oh, "        <Samplers>\n");
+        for (UINT i = 0; i < shaderDesc.BoundResources; i++)
+        {
+            D3D11_SHADER_INPUT_BIND_DESC bindDesc;
+            pReflection->GetResourceBindingDesc(i, &bindDesc);
+            if (bindDesc.Type == D3D_SIT_SAMPLER)
+                WriteStr(oh, "            <SamplerState Name='%s' Register='%d'/>\n", bindDesc.Name, (int)bindDesc.BindPoint);
+        }
+        WriteStr(oh, "        </Samplers>\n");
     }
-    WriteStr(oh, "        </Samplers>\n");
-
+    
+    if (shaderType == ComputeShader)
+        WriteStr(oh, "        <Buffers>\n");
+    
     // Get constant buffer names
     for (UINT i = 0; i < shaderDesc.ConstantBuffers; i++)
     {
-        ID3D11ShaderReflectionConstantBuffer *pCB = pReflection->GetConstantBufferByIndex(i);
+        ID3D11ShaderReflectionConstantBuffer* pCB = pReflection->GetConstantBufferByIndex(i);
         D3D11_SHADER_BUFFER_DESC cbDesc;
         pCB->GetDesc(&cbDesc);
-        WriteStr(oh, "        <CBuffer>\n");
-        for (UINT j = 0; j < cbDesc.Variables; j++)
+        if (shaderType == ComputeShader)
         {
-            ID3D11ShaderReflectionVariable *pVar = pCB->GetVariableByIndex(j);
-            ID3D11ShaderReflectionType *pType = pVar->GetType();
-            D3D11_SHADER_TYPE_DESC typeDesc;
-            pType->GetDesc(&typeDesc);
-            D3D11_SHADER_VARIABLE_DESC varDesc;
-            pVar->GetDesc(&varDesc);
-            if (typeDesc.Class == D3D_SHADER_VARIABLE_CLASS::D3D10_SVC_VECTOR && typeDesc.Elements > 1)
-                WriteStr(oh, "             <Property Name='%s' Type='%s[%d]'/>\n", varDesc.Name, typeDesc.Name, typeDesc.Elements);
-            else
-                WriteStr(oh, "             <Property Name='%s' Type='%s'/>\n", varDesc.Name, typeDesc.Name);
+            D3D11_SHADER_INPUT_BIND_DESC bind;
+            pReflection->GetResourceBindingDesc(i, &bind);
+            if (bind.Type == D3D_SIT_STRUCTURED)
+                WriteStr(oh, "             <StructuredBuffer Name='%s' Slot='%d'/>\n", cbDesc.Name, bind.BindPoint);
+            else if (bind.Type == D3D_SIT_UAV_RWSTRUCTURED)
+                WriteStr(oh, "             <RWStructuredBuffer Name='%s' Slot='%d'/>\n", cbDesc.Name, bind.BindPoint);
+            else if (bind.Type == D3D_SIT_UAV_APPEND_STRUCTURED)
+                WriteStr(oh, "             <AppendStructuredBuffer Name='%s' Slot='%d'/>\n", cbDesc.Name, bind.BindPoint);
         }
-        WriteStr(oh, "        </CBuffer>\n");
+        else
+        {
+            WriteStr(oh, "        <CBuffer>\n");
+            for (UINT j = 0; j < cbDesc.Variables; j++)
+            {
+                ID3D11ShaderReflectionVariable* pVar = pCB->GetVariableByIndex(j);
+                ID3D11ShaderReflectionType* pType = pVar->GetType();
+                D3D11_SHADER_TYPE_DESC typeDesc;
+                pType->GetDesc(&typeDesc);
+                D3D11_SHADER_VARIABLE_DESC varDesc;
+                pVar->GetDesc(&varDesc);
+                if (typeDesc.Class == D3D_SHADER_VARIABLE_CLASS::D3D10_SVC_VECTOR && typeDesc.Elements > 1)
+                    WriteStr(oh, "             <Property Name='%s' Type='%s[%d]'/>\n", varDesc.Name, typeDesc.Name, typeDesc.Elements);
+                else
+                    WriteStr(oh, "             <Property Name='%s' Type='%s'/>\n", varDesc.Name, typeDesc.Name);
+            }
+            WriteStr(oh, "        </CBuffer>\n");
+        }
     }
+    if (shaderType == ComputeShader)
+        WriteStr(oh, "        </Buffers>\n");
 }
 
 void ExpandEnvironmentVariables(std::string &outputFn)
@@ -174,7 +203,7 @@ void ExpandEnvironmentVariables(std::string &outputFn)
     outputFn = expanded;
 }
 
-void CompileShader(IXMLDOMNode *pNode, bool pixelShader, std::string &shaderFn, std::string &outputFn)
+void CompileShader(IXMLDOMNode *pNode, EShaderType shaderType, std::string &shaderFn, std::string &outputFn)
 {
     CComPtr<IXMLDOMNamedNodeMap> spAttribs;
     CT(pNode->get_attributes(&spAttribs));
@@ -213,8 +242,25 @@ void CompileShader(IXMLDOMNode *pNode, bool pixelShader, std::string &shaderFn, 
             ::MessageBox(nullptr, "Path to fxc not found. Define path to fxc.exe in $(CausticFXCPath)", "Undefined path", MB_OK);
             exit(1);
         }
+        char* entryPoint = "";
+        char* profile = "";
+        switch (shaderType)
+        {
+        case EShaderType::PixelShader:
+            entryPoint = "PS";
+            profile = "ps_5_0";
+            break;
+        case EShaderType::VertexShader:
+            entryPoint = "VS";
+            profile = "vs_5_0";
+            break;
+        case EShaderType::ComputeShader:
+            entryPoint = "CS";
+            profile = "cs_5_0";
+            break;
+        }
         sprintf_s(buffer, "\"%s\" /Zi /E\"%s\" /Od /Fd\"%s\" /Fo\"%s\" /T\"%s\" /nologo %s", fxcpath,
-            (pixelShader) ? "PS" : "VS", pdbFn.c_str(), outputFn.c_str(), (pixelShader) ? "ps_5_0" : "vs_5_0", shaderFn.c_str());
+            entryPoint, pdbFn.c_str(), outputFn.c_str(), profile, shaderFn.c_str());
         if (CreateProcess(nullptr, buffer, nullptr, nullptr, TRUE, 0, nullptr, nullptr, &info, &processInfo))
         {
             WaitForSingleObject(processInfo.hProcess, INFINITE);
@@ -224,8 +270,11 @@ void CompileShader(IXMLDOMNode *pNode, bool pixelShader, std::string &shaderFn, 
     }
 }
 
-void ParseShader(IXMLDOMNode *pNode, std::string &vertexShader, std::string &vertexOuput,
-    std::string &pixelShader, std::string &pixelOuput, std::string &topology)
+void ParseShader(IXMLDOMNode* pNode,
+    std::string& vertexShader, std::string& vertexOuput,
+    std::string& pixelShader, std::string& pixelOuput,
+    std::string& computeShader, std::string& computeOuput,
+    std::string& topology)
 {
     CComPtr<IXMLDOMNodeList> spChildren;
     CT(pNode->get_childNodes(&spChildren));
@@ -240,12 +289,17 @@ void ParseShader(IXMLDOMNode *pNode, std::string &vertexShader, std::string &ver
         if (bstrName == L"VertexShader")
         {
             // <PixelShader Filename="ColorNormal.ps" Output="$(CausticRoot)\$(Configuration)\ColorNormal_PS.cso"/>
-            CompileShader(spNode, false, vertexShader, vertexOuput);
+            CompileShader(spNode, EShaderType::VertexShader, vertexShader, vertexOuput);
         }
         else if (bstrName == L"PixelShader")
         {
             // <VertexShader Filename="Default.vs" Output="$(CausticRoot)\$(Configuration)\ColorNormal_VS.cso"/>
-            CompileShader(spNode, true, pixelShader, pixelOuput);
+            CompileShader(spNode, EShaderType::PixelShader, pixelShader, pixelOuput);
+        }
+        else if (bstrName == L"ComputeShader")
+        {
+            // <ComputeShader Filename="Default.cs" Output="$(CausticRoot)\$(Configuration)\Default_CS.cso"/>
+            CompileShader(spNode, EShaderType::ComputeShader, computeShader, computeOuput);
         }
         else if (bstrName == L"Topology")
         {
@@ -256,8 +310,11 @@ void ParseShader(IXMLDOMNode *pNode, std::string &vertexShader, std::string &ver
     }
 }
 
-void LoadShaderDefinition(std::string &fn, std::string &vertexShader, std::string &vertexOuput,
-    std::string &pixelShader, std::string &pixelOuput, std::string &topology)
+void LoadShaderDefinition(std::string &fn,
+    std::string &vertexShader, std::string &vertexOutput,
+    std::string& pixelShader, std::string& pixelOutput,
+    std::string& computeShader, std::string& computeOutput,
+    std::string &topology)
 {
     CComPtr<IXMLDOMDocument> spDocument;
     CT(CoCreateInstance(CLSID_DOMDocument60, nullptr, CLSCTX_INPROC_SERVER, IID_IXMLDOMDocument, (void**)&spDocument));
@@ -279,14 +336,20 @@ void LoadShaderDefinition(std::string &fn, std::string &vertexShader, std::strin
         CComBSTR bstrName;
         CT(spNode->get_nodeName(&bstrName));
         if (bstrName == L"Shader")
-            ParseShader(spNode, vertexShader, vertexOuput, pixelShader, pixelOuput, topology);
+            ParseShader(spNode, 
+                vertexShader, vertexOutput, 
+                pixelShader, pixelOutput,
+                computeShader, computeOutput,
+                topology);
     }
 }
 
-void ExportShader(std::string &compiledVS, HANDLE oh)
+void ExportShader(std::string &compiledFN, HANDLE oh, EShaderType shaderType)
 {
+    if (compiledFN.empty())
+        return;
     // Load the shader
-    HANDLE h = ::CreateFile(compiledVS.c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr);
+    HANDLE h = ::CreateFile(compiledFN.c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr);
     if (h == INVALID_HANDLE_VALUE)
         CT(E_FAIL);
     DWORD bytesRead;
@@ -299,7 +362,7 @@ void ExportShader(std::string &compiledVS, HANDLE oh)
     CT(D3DReflect(buffer, bytesRead, __uuidof(ID3D11ShaderReflection), (void**)&spReflection));
 
     int numParams = 0;
-    ParseLoop(spReflection, oh);
+    ParseLoop(spReflection, oh, shaderType);
 }
 
 // Parses a shader (vertex or pixel shader) to determine the name of the parameters
@@ -336,8 +399,14 @@ int _tmain(int argc, _TCHAR* argv[])
     std::string vertexOuput;
     std::string pixelShader;
     std::string pixelOuput;
+    std::string computeShader;
+    std::string computeOuput;
     std::string topology;
-    LoadShaderDefinition(infn, vertexShader, vertexOuput, pixelShader, pixelOuput, topology);
+    LoadShaderDefinition(infn, 
+        vertexShader, vertexOuput, 
+        pixelShader, pixelOuput,
+        computeShader, computeOuput,
+        topology);
 
     HANDLE oh = CreateFile(outfn.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, 0, nullptr);
     if (oh == INVALID_HANDLE_VALUE)
@@ -349,12 +418,24 @@ int _tmain(int argc, _TCHAR* argv[])
     WriteStr(oh, "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
     WriteStr(oh, "<ShaderDef>\n");
     WriteStr(oh, "    <Topology>%s</Topology>\n", topology.c_str());
-    WriteStr(oh, "    <VertexShader>\n");
-    ExportShader(vertexOuput, oh);
-    WriteStr(oh, "    </VertexShader>\n");
-    WriteStr(oh, "    <PixelShader>\n");
-    ExportShader(pixelOuput, oh);
-    WriteStr(oh, "    </PixelShader>\n");
+    if (!vertexOuput.empty())
+    {
+        WriteStr(oh, "    <VertexShader>\n");
+        ExportShader(vertexOuput, oh, EShaderType::VertexShader);
+        WriteStr(oh, "    </VertexShader>\n");
+    }
+    if (!pixelOuput.empty())
+    {
+        WriteStr(oh, "    <PixelShader>\n");
+        ExportShader(pixelOuput, oh, EShaderType::PixelShader);
+        WriteStr(oh, "    </PixelShader>\n");
+    }
+    if (!computeOuput.empty())
+    {
+        WriteStr(oh, "    <ComputeShader>\n");
+        ExportShader(computeOuput, oh, EShaderType::ComputeShader);
+        WriteStr(oh, "    </ComputeShader>\n");
+    }
     WriteStr(oh, "</ShaderDef>\n");
     CloseHandle(oh);
 

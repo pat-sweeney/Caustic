@@ -226,13 +226,18 @@ namespace Caustic
             {
                 CComPtr<ID3DBlob> spPixelShaderBlob;
                 CComPtr<ID3DBlob> spVertexShaderBlob;
+                CComPtr<ID3DBlob> spComputeShaderBlob;
                 CRefObj<IShaderInfo> spShaderInfo;
                 CRefObj<IShader> spShader;
                 std::wstring shaderName(fn.substr(0, found));
-                LoadShaderBlob(std::wstring(const_cast<wchar_t*>(pFolder)) + std::wstring(L"\\") + shaderName + L"_PS.cso", &spPixelShaderBlob);
-                LoadShaderBlob(std::wstring(const_cast<wchar_t*>(pFolder)) + std::wstring(L"\\") + shaderName + L"_VS.cso", &spVertexShaderBlob);
                 LoadShaderInfo(std::wstring(const_cast<wchar_t*>(pFolder)) + std::wstring(L"\\") + shaderName + L".shi", &spShaderInfo);
-                CCausticFactory::Instance()->CreateShader(this, shaderName.c_str(), spVertexShaderBlob, spPixelShaderBlob, spShaderInfo, &spShader);
+                if (spShaderInfo->HasShader(EShaderType::TypePixelShader))
+                    LoadShaderBlob(std::wstring(const_cast<wchar_t*>(pFolder)) + std::wstring(L"\\") + shaderName + L"_PS.cso", &spPixelShaderBlob);
+                if (spShaderInfo->HasShader(EShaderType::TypeVertexShader))
+                    LoadShaderBlob(std::wstring(const_cast<wchar_t*>(pFolder)) + std::wstring(L"\\") + shaderName + L"_VS.cso", &spVertexShaderBlob);
+                if (spShaderInfo->HasShader(EShaderType::TypeComputeShader))
+                    LoadShaderBlob(std::wstring(const_cast<wchar_t*>(pFolder)) + std::wstring(L"\\") + shaderName + L"_CS.cso", &spComputeShaderBlob);
+                CCausticFactory::Instance()->CreateShader(this, shaderName.c_str(), spVertexShaderBlob, spPixelShaderBlob, spComputeShaderBlob, spShaderInfo, &spShader);
                 pShaderMgr->RegisterShader(shaderName.c_str(), spShader);
             }
             if (!::FindNextFile(h, &findData))

@@ -40,7 +40,8 @@ VSOutput VS(VSInput p)
 
     int3 pc = int3(p.uvs.x * 512, p.uvs.y * 512, 0);
     v.depth = depthTexture.Load(pc);
-    float4 ray = rayTexture.Load(pc);
+    int3 rp = int3(int(p.posOS.x*512),int(p.posOS.y*512),0);
+    float4 ray = rayTexture.Load(rp);
     float4 pos = float4(ray.xyz * float(v.depth) / 1000.0, 1.0);
     // convert depth to point
     // Transform our vertex normal from object space to world space

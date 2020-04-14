@@ -23,6 +23,16 @@ namespace Caustic
 	struct IShader;
 	struct ShaderParamDef;
 
+    enum EShaderType
+    {
+        TypePixelShader = 0x1,
+        TypeVertexShader = 0x2,
+        TypeGeometryShader = 0x4,
+        TypeHullShade = 0x8,
+        TypeDomainShader = 0x10,
+        TypeComputeShader = 0x20
+    };
+
 	//**********************************************************************
 	// Interface: IShaderInfo
 	// Defines primary interface used for getting information about pre-compiled
@@ -31,6 +41,13 @@ namespace Caustic
 	//**********************************************************************
 	struct IShaderInfo : public IRefCount
 	{
+        //**********************************************************************
+        // Method: HasShader
+        // Returns:
+        // Returns whether the Caustic shader contains the specified D3D shader type
+        //**********************************************************************
+        virtual bool HasShader(EShaderType type) = 0;
+
         //**********************************************************************
         // Method: GetTopologyType
         // Returns:
@@ -50,7 +67,14 @@ namespace Caustic
         // Returns:
         // Returns list of vertex parameter definitions that the shader uses
         //**********************************************************************
-        virtual std::vector<ShaderParamDef> &VertexShaderParameterDefs() = 0;
+        virtual std::vector<ShaderParamDef>& VertexShaderParameterDefs() = 0;
+
+        //**********************************************************************
+        // Method: ComputeShaderParameterDefs
+        // Returns:
+        // Returns list of compute parameter definitions that the shader uses
+        //**********************************************************************
+        virtual std::vector<ShaderParamDef>& ComputeShaderParameterDefs() = 0;
 
         //**********************************************************************
         // Method: VertexLayout

@@ -120,6 +120,16 @@ namespace Caustic
                     params[i].m_values.push_back(m);
                 s += params[i].m_members * 16 * sizeof(float);
             }
+            else if (pDefs[i].m_type == EShaderParamType::ShaderType_StructuredBuffer ||
+                     pDefs[i].m_type == EShaderParamType::ShaderType_RWStructuredBuffer ||
+                     pDefs[i].m_type == EShaderParamType::ShaderType_AppendStructuredBuffer)
+            {
+                if (params[i].m_value.has_value())
+                {
+                    StructuredBuffer& buffer = std::any_cast<StructuredBuffer>(params[i].m_value);
+                    s += buffer.m_dataSize;
+                }
+            }
         }
         return s;
     }
@@ -274,12 +284,20 @@ namespace Caustic
                 break;
             case EShaderParamType::ShaderType_Matrix_Array:
                 {
-                for (size_t j = 0; j < params[i].m_members; j++)
-                {
-                    Matrix m = (params[i].m_values[j].has_value()) ? std::any_cast<Matrix>(params[i].m_values[j]) : Matrix();
+                    for (size_t j = 0; j < params[i].m_members; j++)
+                    {
+                        Matrix m = (params[i].m_values[j].has_value()) ? std::any_cast<Matrix>(params[i].m_values[j]) : Matrix();
                         memcpy(pb, m.x, 16 * sizeof(float));
                         pb += 16 * sizeof(float);
                     }
+                }
+                break;
+            case EShaderParamType::ShaderType_StructuredBuffer:
+            case EShaderParamType::ShaderType_AppendStructuredBuffer:
+            case EShaderParamType::ShaderType_RWStructuredBuffer:
+                {
+                    StructuredBuffer& s = std::any_cast<StructuredBuffer>(params[i].m_value);
+                    memcpy(pb, s.m_pData, s.m_dataSize);
                 }
                 break;
             }
@@ -345,7 +363,7 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // Method: SetParam
+    // Method: SetPSParam
     // Sets a pixel shader array element parameter
     //
     // Parameters:
@@ -366,13 +384,13 @@ namespace Caustic
     // paramName - Name of parameter
     // value - Value of parameter
     //**********************************************************************
-    void CShader::SetVSParam(std::wstring paramName, std::any &value)
+    void CShader::SetVSParam(std::wstring paramName, std::any& value)
     {
         SetParam(paramName, value, m_vsParams);
     }
-
+    
     //**********************************************************************
-    // Method: SetPSParam
+    // Method: SetVSParam
     // Sets a vertex shader array element parameter
     //
     // Parameters:
@@ -381,6 +399,33 @@ namespace Caustic
     // value - Value of parameter
     //**********************************************************************
     void CShader::SetVSParam(std::wstring paramName, int index, std::any &value)
+    {
+        SetParam(paramName, index, value, m_psParams);
+    }
+
+    //**********************************************************************
+    // Method: SetCSParam
+    // Sets a compute shader parameter
+    //
+    // Parameters:
+    // paramName - Name of parameter
+    // value - Value of parameter
+    //**********************************************************************
+    void CShader::SetCSParam(std::wstring paramName, std::any& value)
+    {
+        SetParam(paramName, value, m_csParams);
+    }
+
+    //**********************************************************************
+    // Method: SetCSParam
+    // Sets a compute shader array element parameter
+    //
+    // Parameters:
+    // paramName - Name of parameter
+    // index - Index into array
+    // value - Value of parameter
+    //**********************************************************************
+    void CShader::SetCSParam(std::wstring paramName, int index, std::any& value)
     {
         SetParam(paramName, index, value, m_psParams);
     }
@@ -461,22 +506,46 @@ namespace Caustic
     //**********************************************************************
     void CShader::BeginRender(IGraphics *pGraphics, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, std::vector<CRefObj<IPointLight>> &lights, DirectX::XMMATRIX *pWorld)
     {
-        pGraphics->GetContext()->IASetInputLayout(m_spLayout);
-        pGraphics->GetContext()->PSSetShader(m_spPixelShader, nullptr, 0);
-        pGraphics->GetContext()->VSSetShader(m_spVertexShader, nullptr, 0);
+        CComPtr<ID3D11DeviceContext> spCtx = pGraphics->GetContext();
+        bool hasVS = m_spShaderInfo->HasShader(EShaderType::TypeVertexShader);
+        bool hasPS = m_spShaderInfo->HasShader(EShaderType::TypePixelShader);
+        bool hasCS = m_spShaderInfo->HasShader(EShaderType::TypeComputeShader);
+        if (hasVS)
+        {
+            spCtx->IASetInputLayout(m_spLayout);
+            spCtx->VSSetShader(m_spVertexShader, nullptr, 0);
+        }
+        if (hasPS)
+            spCtx->PSSetShader(m_spPixelShader, nullptr, 0);
+        if (hasCS)
+            spCtx->CSSetShader(m_spComputeShader, nullptr, 0);
         
-        if (pFrontMaterial)
-            pFrontMaterial->Render(pGraphics, lights, nullptr, this);
+        if (hasVS || hasPS)
+        {
+            if (pFrontMaterial)
+                pFrontMaterial->Render(pGraphics, lights, nullptr, this);
+            PushLights(lights);
+        }
 
-        PushLights(lights);
         PushMatrices(pGraphics, pWorld);
-        PushSamplers(pGraphics, m_vsParams, false);
-        PushSamplers(pGraphics, m_psParams, true);
-        PushConstants(pGraphics, &m_vertexConstants, m_vsParams);
-        PushConstants(pGraphics, &m_pixelConstants, m_psParams);
-
-        pGraphics->GetContext()->VSSetConstantBuffers(0, 1, &m_vertexConstants.m_spBuffer.p);
-        pGraphics->GetContext()->PSSetConstantBuffers(0, 1, &m_pixelConstants.m_spBuffer.p);
+        if (hasVS)
+        {
+            PushSamplers(pGraphics, m_vsParams, false);
+            PushConstants(pGraphics, &m_vertexConstants, m_vsParams);
+            spCtx->VSSetConstantBuffers(0, 1, &m_vertexConstants.m_spBuffer.p);
+        }
+        if (hasPS)
+        {
+            PushSamplers(pGraphics, m_psParams, true);
+            PushConstants(pGraphics, &m_pixelConstants, m_psParams);
+            spCtx->PSSetConstantBuffers(0, 1, &m_pixelConstants.m_spBuffer.p);
+        }
+        if (hasCS)
+        {
+            PushSamplers(pGraphics, m_csParams, false);
+            PushConstants(pGraphics, &m_computeConstants, m_csParams);
+            spCtx->CSSetConstantBuffers(0, 1, &m_computeConstants.m_spBuffer.p);
+        }
     }
 
     //**********************************************************************
@@ -489,14 +558,23 @@ namespace Caustic
     //**********************************************************************
     void CShader::EndRender(IGraphics * /*pGraphics*/)
     {
+        // Run the compute shader
+//        if (m_spShaderInfo->HasShader(EShaderType::TypeComputeShader))
+//            ;
     }
 
-	CRefObj<IShaderInfo> CShader::GetShaderInfo()
+    //**********************************************************************
+    // Method: GetShaderInfo
+    // Returns:
+    // Returns information about the shader
+    //**********************************************************************
+    CRefObj<IShaderInfo> CShader::GetShaderInfo()
 	{
 		return m_spShaderInfo;
 	}
 	
 	//**********************************************************************
+    // Method: CreateConstantBuffer
     // CreateConstantBuffer creates the constant buffer (pixel or vertex shader)
     //
     // Parameters:
@@ -535,35 +613,46 @@ namespace Caustic
     // pShaderName - Name of shader
     // pShaderInfo - Shader description
     // pPSBlob - Compiled binary for the pixel shader
-    // pVSBlob - Compiled binary for the vertexshader
+    // pVSBlob - Compiled binary for the vertex shader
+    // pCSBlob - Compiled binary for the compute shader
     //**********************************************************************
-	void CShader::Create(IGraphics *pGraphics, const wchar_t *pShaderName, IShaderInfo *pShaderInfo, ID3DBlob *pPSBlob, ID3DBlob *pVSBlob)
+	void CShader::Create(IGraphics *pGraphics, const wchar_t *pShaderName, IShaderInfo *pShaderInfo, ID3DBlob *pPSBlob, ID3DBlob* pVSBlob, ID3DBlob* pCSBlob)
     {
         if (pShaderName)
             m_name = std::wstring(pShaderName);
-        
-        std::vector<D3D11_INPUT_ELEMENT_DESC> &vertexLayout = pShaderInfo->VertexLayout();
-        D3D11_INPUT_ELEMENT_DESC *pVertexLayout = vertexLayout.data();
 
+        ID3D11Device* pDevice = pGraphics->GetDevice();
         m_spShaderInfo = pShaderInfo;
-        const byte *pPSByteCodes = (const byte*)pPSBlob->GetBufferPointer();
-        uint32 psBufferLen = (uint32)pPSBlob->GetBufferSize();
-        const byte *pVSByteCodes = (const byte*)pVSBlob->GetBufferPointer();
-        uint32 vsBufferLen = (uint32)pVSBlob->GetBufferSize();
+        if (pShaderInfo->HasShader(EShaderType::TypeVertexShader))
+        {
+            const byte* pVSByteCodes = (const byte*)pVSBlob->GetBufferPointer();
+            uint32 vsBufferLen = (uint32)pVSBlob->GetBufferSize();
+            std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout = pShaderInfo->VertexLayout();
+            D3D11_INPUT_ELEMENT_DESC* pVertexLayout = vertexLayout.data();
+            CT(pDevice->CreateInputLayout(pShaderInfo->VertexLayout().data(), (UINT)pShaderInfo->VertexLayout().size(),
+                pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), &m_spLayout));
+            CreateConstantBuffer(pDevice, pShaderInfo->VertexShaderParameterDefs().data(),
+                (uint32)pShaderInfo->VertexShaderParameterDefs().size(), m_vsParams, &m_vertexConstants);
+            CT(pDevice->CreateVertexShader(pVSByteCodes, vsBufferLen, nullptr, &m_spVertexShader));
+        }
+        if (pShaderInfo->HasShader(EShaderType::TypePixelShader))
+        {
+            const byte* pPSByteCodes = (const byte*)pPSBlob->GetBufferPointer();
+            uint32 psBufferLen = (uint32)pPSBlob->GetBufferSize();
+            CreateConstantBuffer(pDevice, pShaderInfo->PixelShaderParameterDefs().data(),
+                (uint32)pShaderInfo->PixelShaderParameterDefs().size(), m_psParams, &m_pixelConstants);
+            CT(pDevice->CreatePixelShader(pPSByteCodes, psBufferLen, nullptr, &m_spPixelShader));
+        }
+        if (pShaderInfo->HasShader(EShaderType::TypeComputeShader))
+        {
+            const byte* pPSByteCodes = (const byte*)pCSBlob->GetBufferPointer();
+            uint32 psBufferLen = (uint32)pCSBlob->GetBufferSize();
+            CreateConstantBuffer(pDevice, pShaderInfo->ComputeShaderParameterDefs().data(),
+                (uint32)pShaderInfo->ComputeShaderParameterDefs().size(), m_csParams, &m_computeConstants);
+            CT(pDevice->CreateComputeShader(pPSByteCodes, psBufferLen, nullptr, &m_spComputeShader));
+        }
 
         //**********************************************************************
-        ID3D11Device *pDevice = pGraphics->GetDevice();
-        CT(pDevice->CreateInputLayout(pShaderInfo->VertexLayout().data(), (UINT)pShaderInfo->VertexLayout().size(),
-            pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), &m_spLayout));
-
-        CreateConstantBuffer(pDevice, pShaderInfo->VertexShaderParameterDefs().data(),
-            (uint32)pShaderInfo->VertexShaderParameterDefs().size(), m_vsParams, &m_vertexConstants);
-        CreateConstantBuffer(pDevice, pShaderInfo->PixelShaderParameterDefs().data(),
-            (uint32)pShaderInfo->PixelShaderParameterDefs().size(), m_psParams, &m_pixelConstants);
-
-        CT(pDevice->CreateVertexShader(pVSByteCodes, vsBufferLen, nullptr, &m_spVertexShader));
-        CT(pDevice->CreatePixelShader(pPSByteCodes, psBufferLen, nullptr, &m_spPixelShader));
-
         CD3D11_SAMPLER_DESC sdesc(D3D11_DEFAULT);
         CT(pDevice->CreateSamplerState(&sdesc, &m_spSamplerState));
     }
@@ -581,10 +670,10 @@ namespace Caustic
     // ppShader - Returns the created shader
     //**********************************************************************
     CAUSTICAPI void CreateShader(IGraphics *pGraphics, const wchar_t *pShaderName, IShaderInfo *pShaderInfo,
-        ID3DBlob *pPSBlob, ID3DBlob *pVSBlob, IShader **ppShader)
+        ID3DBlob *pPSBlob, ID3DBlob *pVSBlob, ID3DBlob *pCSBlob, IShader **ppShader)
     {
         std::unique_ptr<CShader> spShader(new CShader());
-        spShader->Create(pGraphics, pShaderName, pShaderInfo, pPSBlob, pVSBlob);
+        spShader->Create(pGraphics, pShaderName, pShaderInfo, pPSBlob, pVSBlob, pCSBlob);
         *ppShader = spShader.release();
         (*ppShader)->AddRef();
     }

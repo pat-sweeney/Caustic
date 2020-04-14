@@ -31,6 +31,19 @@ namespace Caustic
             m_Flags(0)
         {
         }
+
+        //**********************************************************************
+        // ISceneElem base implementation
+        //**********************************************************************
+        ESceneElemType GetType() { return ESceneElemType::Unknown; }
+        std::wstring& Name() { return CSceneElem::m_Name; };
+        void Render(IRenderer* pRenderer, IRenderCtx* pRenderCtx, SceneCtx* pSceneCtx)
+        {
+            CT(E_UNEXPECTED);
+        }
+        void GetBBox(BBox3* pBBox) { *pBBox = m_BBox; }
+        uint32 GetFlags() { return m_Flags; }
+        void SetFlags(uint32 flags) { m_Flags = flags; }
     };
 }
 #include "GroupElem.h"

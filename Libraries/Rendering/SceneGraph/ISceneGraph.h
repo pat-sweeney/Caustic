@@ -23,13 +23,15 @@ namespace Caustic
 	//**********************************************************************
 	enum ESceneElemType
 	{
+		Unknown,
 		SceneGraph,
 		Mesh,
 		CustomRenderElem,
 		Group,
 		Renderable,
 		PointLight,
-		Material
+		Material,
+		ComputeShaderElem
 	};
 
 	//**********************************************************************
@@ -209,6 +211,17 @@ namespace Caustic
 		// pMaterial - material to associate with this scene material
 		//**********************************************************************
 		virtual void SetMaterial(IMaterialAttrib *pMaterial) = 0;
+	};
+
+	//**********************************************************************
+	// Interface: ISceneComputeShaderElem
+	// Defines a compute shader in our scene graph. Compute shaders are run
+	// during scene graph traversal but before any rendering elements.
+	//**********************************************************************
+	struct ISceneComputeShaderElem : public ISceneElem
+	{
+		virtual void SetInputBuffer(std::string &bufferName, uint8 *pData, uint32 bufSize) = 0;
+		virtual void SetOutputBuffer(std::string &bufferName, uint8* pData, uint32 bufSize) = 0;
 	};
 
 	//**********************************************************************

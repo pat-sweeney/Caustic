@@ -253,5 +253,13 @@
     <None Include="PointCloud.ps">
       <Filter>Source Files\Shaders</Filter>
     </None>
+    <None Include="Depth2Points.cs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="Depth2Points.xml">
+      <Filter>Source Files\Shaders\Definitions</Filter>
+    </Xml>
   </ItemGroup>
 </Project>

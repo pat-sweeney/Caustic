@@ -22,18 +22,23 @@ namespace Caustic
 		std::vector<D3D11_INPUT_ELEMENT_DESC> m_vertexLayout;
 		std::vector<ShaderParamDef> m_pixelShaderParamDefs;
 		std::vector<ShaderParamDef> m_vertexShaderParamDefs;
+		std::vector<ShaderParamDef> m_computeShaderParamDefs;
+		uint32 m_shaderTypeFlags;
 		uint32 m_vertexSize;
         D3D10_PRIMITIVE_TOPOLOGY m_topologyType;
 
 		void ParseShaderDef(IXMLDOMNode *pNode);
-        void ParseSamplersOrTextures(IXMLDOMNode *pNode, bool isPixelShader);
+        void ParseSamplersOrTextures(IXMLDOMNode *pNode, EShaderType shaderType);
         void ParseLayout(IXMLDOMNode *pNode);
-		void ParseCBuffer(IXMLDOMNode *pNode, bool isPixelShader);
+		void ParseCBuffer(IXMLDOMNode* pNode, EShaderType shaderType);
+		void ParseBuffers(IXMLDOMNode* pNode);
 		DXGI_FORMAT StringToFormat(BSTR bstrStr);
 		uint32 FormatSize(DXGI_FORMAT format);
-		void ParseShaderEntry(IXMLDOMNode *pNode, bool isPixelShader);
+		void ParseShaderEntry(IXMLDOMNode *pNode, EShaderType shaderType);
 	public:
-        CShaderInfo()
+        CShaderInfo() :
+			m_shaderTypeFlags(0),
+			m_vertexSize(0)
         {
             m_topologyType = D3D10_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
         }
@@ -49,9 +54,14 @@ namespace Caustic
 		//**********************************************************************
 		// IShaderInfo
 		//**********************************************************************
-        virtual D3D10_PRIMITIVE_TOPOLOGY GetTopologyType() override;
+		virtual bool HasShader(EShaderType type) override
+		{
+			return (type & m_shaderTypeFlags);
+		}
+		virtual D3D10_PRIMITIVE_TOPOLOGY GetTopologyType() override;
         virtual std::vector<ShaderParamDef> &PixelShaderParameterDefs() override;
-		virtual std::vector<ShaderParamDef> &VertexShaderParameterDefs() override;
+		virtual std::vector<ShaderParamDef>& VertexShaderParameterDefs() override;
+		virtual std::vector<ShaderParamDef>& ComputeShaderParameterDefs() override;
 		virtual std::vector<D3D11_INPUT_ELEMENT_DESC> &VertexLayout() override;
 		virtual uint32 GetVertexSize() override;
 	};

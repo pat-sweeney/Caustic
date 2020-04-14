@@ -147,7 +147,7 @@ namespace Caustic
         m_cameraStarted = true;
     }
     
-    bool  CAzureKinectDevice::NextFrame(IImage** ppColorImage)
+    bool CAzureKinectDevice::NextFrame(IImage** ppColorImage)
     {
         return NextFrame(ppColorImage, nullptr, nullptr);
     }

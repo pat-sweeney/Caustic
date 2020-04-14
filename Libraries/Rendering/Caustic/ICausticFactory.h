@@ -229,8 +229,8 @@ namespace Caustic
         // ppShader - Returns the created shader
         //**********************************************************************
         virtual void CreateShader(IRenderer *pRenderer, const wchar_t *pShaderName,
-            ID3DBlob *pVertexShaderBlob, ID3DBlob *pPixelShaderBlob, IShaderInfo *pShaderInfo,
-            IShader **ppShader) = 0;
+            ID3DBlob *pVertexShaderBlob, ID3DBlob* pPixelShaderBlob, ID3DBlob* pComputeShaderBlob,
+			IShaderInfo *pShaderInfo, IShader **ppShader) = 0;
 
         //**********************************************************************
         // Method: CreateShaderInfo

@@ -25,6 +25,22 @@ namespace Caustic
     struct IPointLight;
 
     //**********************************************************************
+    // Structure: StructuredBuffer
+    // Value to assign to structured buffers (whether they are StructuredBuffer,
+    // RWStructuredBuffer, or AppendStructuredBuffer). This structure is what
+    // clients will pass to IShader::SetCSParam for any of these shader types.
+    //
+    // Parameters:
+    // m_pData - point to the buffer
+    // m_dataSize - size of buffer in bytes
+    //**********************************************************************
+    struct StructuredBuffer
+    {
+        uint8* m_pData;
+        uint32 m_dataSize;
+    };
+
+    //**********************************************************************
     // Interface: IShader
     // Defines the public interface for using <CShader>
     //**********************************************************************
@@ -58,7 +74,7 @@ namespace Caustic
         // paramName - name of parameter
         // value - value to set
         //**********************************************************************
-        virtual void SetPSParam(std::wstring paramName, std::any &value) = 0; // Sets a pixel shader parameter
+        virtual void SetPSParam(std::wstring paramName, std::any &value) = 0;
 
         //**********************************************************************
         // Method: SetVSParam
@@ -68,7 +84,17 @@ namespace Caustic
         // paramName - name of parameter
         // value - value to set
         //**********************************************************************
-        virtual void SetVSParam(std::wstring paramName, std::any &value) = 0; // Sets a vertex shader parameter
+        virtual void SetVSParam(std::wstring paramName, std::any &value) = 0;
+
+        //**********************************************************************
+        // Method: SetCSParam
+        // Sets a computer shader parameter
+        //
+        // Parameters:
+        // paramName - name of parameter
+        // value - value to set
+        //**********************************************************************
+        virtual void SetCSParam(std::wstring paramName, std::any& value) = 0;
 
         //**********************************************************************
         // Method: SetPSParam
@@ -79,7 +105,7 @@ namespace Caustic
         // index - array index to set
         // value - value to set
         //**********************************************************************
-        virtual void SetPSParam(std::wstring paramName, int index, std::any &value) = 0; // Sets a pixel shader array member parameter
+        virtual void SetPSParam(std::wstring paramName, int index, std::any &value) = 0;
 
         //**********************************************************************
         // Method: SetVSParam
@@ -90,7 +116,18 @@ namespace Caustic
         // index - array index to set
         // value - value to set
         //**********************************************************************
-        virtual void SetVSParam(std::wstring paramName, int index, std::any &value) = 0; // Sets a vertex shader array member parameter
+        virtual void SetVSParam(std::wstring paramName, int index, std::any& value) = 0;
+
+        //**********************************************************************
+        // Method: SetCSParam
+        // Sets a compute shader parameter that is part of an array
+        //
+        // Parameters:
+        // paramName - name of parameter
+        // index - array index to set
+        // value - value to set
+        //**********************************************************************
+        virtual void SetCSParam(std::wstring paramName, int index, std::any& value) = 0;
 
         //**********************************************************************
         // Method: EndRender

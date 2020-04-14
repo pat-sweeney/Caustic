@@ -43,6 +43,9 @@
     <ClInclude Include="CustomRenderElem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="ComputeShaderElem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -67,6 +70,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CustomRenderElem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputeShaderElem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

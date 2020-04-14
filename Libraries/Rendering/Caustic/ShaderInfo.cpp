@@ -23,9 +23,14 @@ namespace Caustic
 		return m_pixelShaderParamDefs;
 	}
 
-	std::vector<ShaderParamDef> &CShaderInfo::VertexShaderParameterDefs()
+	std::vector<ShaderParamDef>& CShaderInfo::VertexShaderParameterDefs()
 	{
 		return m_vertexShaderParamDefs;
+	}
+
+	std::vector<ShaderParamDef>& CShaderInfo::ComputeShaderParameterDefs()
+	{
+		return m_computeShaderParamDefs;
 	}
 
 	std::vector<D3D11_INPUT_ELEMENT_DESC> &CShaderInfo::VertexLayout()
@@ -343,7 +348,7 @@ namespace Caustic
 		}
 	}
 
-	void CShaderInfo::ParseCBuffer(IXMLDOMNode *pNode, bool isPixelShader)
+	void CShaderInfo::ParseCBuffer(IXMLDOMNode* pNode, EShaderType shaderType)
 	{
 		CComPtr<IXMLDOMNodeList> spChildren;
 		CT(pNode->get_childNodes(&spChildren));
@@ -365,7 +370,7 @@ namespace Caustic
 				CT(spAttribs->get_length(&numAttribs));
 				ShaderParamDef param;
 				param.m_offset = offset;
-                param.m_members = 1;
+				param.m_members = 1;
 				for (long j = 0; j < numAttribs; j++)
 				{
 					CComPtr<IXMLDOMNode> spAttrib;
@@ -389,69 +394,122 @@ namespace Caustic
 							param.m_type = ShaderType_Float;
 							offset += sizeof(float);
 						}
-                        else if (wstr.substr(0, 6) == L"float[")
-                        {
-                            param.m_type = ShaderType_Float_Array;
-                            param.m_members = std::stoi(wstr.substr(6).c_str());
-                            offset += sizeof(float) * param.m_members;
-                        }
-                        else if (wstr == L"float2")
-                        {
-                            param.m_type = ShaderType_Float2;
-                            offset += sizeof(float) * 2;
-                        }
-                        else if (wstr.substr(0, 7) == L"float2[")
-                        {
-                            param.m_type = ShaderType_Float2_Array;
-                            param.m_members = std::stoi(wstr.substr(7).c_str());
-                            offset += sizeof(float) * 2 * param.m_members;
-                        }
-                        else if (wstr == L"float3")
+						else if (wstr.substr(0, 6) == L"float[")
+						{
+							param.m_type = ShaderType_Float_Array;
+							param.m_members = std::stoi(wstr.substr(6).c_str());
+							offset += sizeof(float) * param.m_members;
+						}
+						else if (wstr == L"float2")
+						{
+							param.m_type = ShaderType_Float2;
+							offset += sizeof(float) * 2;
+						}
+						else if (wstr.substr(0, 7) == L"float2[")
+						{
+							param.m_type = ShaderType_Float2_Array;
+							param.m_members = std::stoi(wstr.substr(7).c_str());
+							offset += sizeof(float) * 2 * param.m_members;
+						}
+						else if (wstr == L"float3")
 						{
 							param.m_type = ShaderType_Float3;
 							offset += sizeof(float) * 3;
 						}
-                        else if (wstr.substr(0, 7) == L"float3[")
-                        {
-                            param.m_type = ShaderType_Float3_Array;
-                            param.m_members = std::stoi(wstr.substr(7).c_str());
-                            offset += sizeof(float) * 3 * param.m_members;
-                        }
-                        else if (wstr == L"float4")
+						else if (wstr.substr(0, 7) == L"float3[")
+						{
+							param.m_type = ShaderType_Float3_Array;
+							param.m_members = std::stoi(wstr.substr(7).c_str());
+							offset += sizeof(float) * 3 * param.m_members;
+						}
+						else if (wstr == L"float4")
 						{
 							param.m_type = ShaderType_Float4;
 							offset += sizeof(float) * 4;
 						}
-                        else if (wstr.substr(0, 7) == L"float4[")
-                        {
-                            param.m_type = ShaderType_Float4_Array;
-                            param.m_members = std::stoi(wstr.substr(7).c_str());
-                            offset += sizeof(float) * 4 * param.m_members;
-                        }
-                        else if (wstr == L"int")
+						else if (wstr.substr(0, 7) == L"float4[")
+						{
+							param.m_type = ShaderType_Float4_Array;
+							param.m_members = std::stoi(wstr.substr(7).c_str());
+							offset += sizeof(float) * 4 * param.m_members;
+						}
+						else if (wstr == L"int")
 						{
 							param.m_type = ShaderType_Int;
 							offset += sizeof(int);
 						}
-                        else if (wstr.substr(0, 4) == L"int[")
-                        {
-                            param.m_type = ShaderType_Int_Array;
-                            param.m_members = std::stoi(wstr.substr(4).c_str());
-                            offset += sizeof(int) * param.m_members;
-                        }
-                        else
+						else if (wstr.substr(0, 4) == L"int[")
+						{
+							param.m_type = ShaderType_Int_Array;
+							param.m_members = std::stoi(wstr.substr(4).c_str());
+							offset += sizeof(int) * param.m_members;
+						}
+						else
 							param.m_type = ShaderType_Undefined;
 					}
 				}
-				if (isPixelShader)
+				if (shaderType == EShaderType::TypePixelShader)
 					m_pixelShaderParamDefs.push_back(param);
-				else
+				else if (shaderType == EShaderType::TypeVertexShader)
 					m_vertexShaderParamDefs.push_back(param);
+				else if (shaderType == EShaderType::TypeComputeShader)
+					m_computeShaderParamDefs.push_back(param);
+				else
+					CT(E_UNEXPECTED);
 			}
 		}
 	}
 
-    void CShaderInfo::ParseSamplersOrTextures(IXMLDOMNode *pNode, bool isPixelShader)
+	void CShaderInfo::ParseBuffers(IXMLDOMNode* pNode)
+	{
+		CComPtr<IXMLDOMNodeList> spChildren;
+		CT(pNode->get_childNodes(&spChildren));
+		long len;
+		int offset = 0;
+		CT(spChildren->get_length(&len));
+		for (long i = 0; i < len; i++)
+		{
+			CComPtr<IXMLDOMNode> spNode;
+			CT(spChildren->get_item(i, &spNode));
+			CComBSTR bstrName;
+			CT(spNode->get_nodeName(&bstrName));
+			if (bstrName == L"StructuredBuffer" ||
+				bstrName == L"RWStructuredBuffer")
+			{
+				// <StructuredBuffer Name='Buffer0' Slot='0' / >
+				CComPtr<IXMLDOMNamedNodeMap> spAttribs;
+				CT(spNode->get_attributes(&spAttribs));
+				long numAttribs;
+				CT(spAttribs->get_length(&numAttribs));
+				ShaderParamDef param;
+				param.m_members = 1;
+				if (bstrName == L"StructuredBuffer")
+					param.m_type = ShaderType_StructuredBuffer;
+				else if (bstrName == L"RWStructuredBuffer")
+					param.m_type = ShaderType_RWStructuredBuffer;
+				else if (bstrName == L"AppendStructuredBuffer")
+					param.m_type = ShaderType_AppendStructuredBuffer;
+				else
+					CT(E_UNEXPECTED);
+				for (long j = 0; j < numAttribs; j++)
+				{
+					CComPtr<IXMLDOMNode> spAttrib;
+					CT(spAttribs->get_item(j, &spAttrib));
+					CComBSTR attribName;
+					CT(spAttrib->get_nodeName(&attribName));
+					CComVariant attribVal;
+					CT(spAttrib->get_nodeValue(&attribVal));
+					if (attribName == "Name")
+						param.m_name = attribVal.bstrVal;
+					else if (attribName == "Slot")
+						param.m_offset = _wtoi(attribVal.bstrVal);
+				}
+				m_computeShaderParamDefs.push_back(param);
+			}
+		}
+	}
+
+	void CShaderInfo::ParseSamplersOrTextures(IXMLDOMNode *pNode, EShaderType shaderType)
     {
         CComPtr<IXMLDOMNodeList> spChildren;
         CT(pNode->get_childNodes(&spChildren));
@@ -487,15 +545,19 @@ namespace Caustic
                     else if (attribName == "Register")
                         param.m_offset = _wtoi(attribVal.bstrVal);
                 }
-                if (isPixelShader)
-                    m_pixelShaderParamDefs.push_back(param);
-                else
-                    m_vertexShaderParamDefs.push_back(param);
+				if (shaderType == EShaderType::TypePixelShader)
+					m_pixelShaderParamDefs.push_back(param);
+				else if (shaderType == EShaderType::TypeVertexShader)
+					m_vertexShaderParamDefs.push_back(param);
+				else if (shaderType == EShaderType::TypeComputeShader)
+					m_computeShaderParamDefs.push_back(param);
+				else
+					CT(E_UNEXPECTED);
             }
         }
     }
 
-    void CShaderInfo::ParseShaderEntry(IXMLDOMNode *pNode, bool isPixelShader)
+    void CShaderInfo::ParseShaderEntry(IXMLDOMNode *pNode, EShaderType shaderType)
 	{
 		CComPtr<IXMLDOMNodeList> spChildren;
 		CT(pNode->get_childNodes(&spChildren));
@@ -507,14 +569,16 @@ namespace Caustic
 			CT(spChildren->get_item(i, &spNode));
 			CComBSTR bstrName;
 			CT(spNode->get_nodeName(&bstrName));
-            if (bstrName == L"VertexLayout" && !isPixelShader)
+            if (bstrName == L"VertexLayout" && shaderType == EShaderType::TypeVertexShader)
                 ParseLayout(spNode);
-            else if (bstrName == L"CBuffer")
-                ParseCBuffer(spNode, isPixelShader);
+			else if (bstrName == L"Buffers")
+				ParseBuffers(spNode);
+			else if (bstrName == L"CBuffer")
+                ParseCBuffer(spNode, shaderType);
             else if (bstrName == L"Textures")
-                ParseSamplersOrTextures(spNode, isPixelShader);
+                ParseSamplersOrTextures(spNode, shaderType);
             else if (bstrName == L"Samplers")
-                ParseSamplersOrTextures(spNode, isPixelShader);
+                ParseSamplersOrTextures(spNode, shaderType);
         }
 	}
 
@@ -531,10 +595,21 @@ namespace Caustic
 			CComBSTR bstrName;
 			CT(spNode->get_nodeName(&bstrName));
 			if (bstrName == L"VertexShader")
-				ParseShaderEntry(spNode, false);
+			{
+				ParseShaderEntry(spNode, EShaderType::TypeVertexShader);
+				m_shaderTypeFlags |= EShaderType::TypeVertexShader;
+			}
 			else if (bstrName == L"PixelShader")
-				ParseShaderEntry(spNode, true);
-            else if (bstrName == L"Topology")
+			{
+				ParseShaderEntry(spNode, EShaderType::TypePixelShader);
+				m_shaderTypeFlags |= EShaderType::TypePixelShader;
+			}
+			else if (bstrName == L"ComputeShader")
+			{
+				ParseShaderEntry(spNode, EShaderType::TypeComputeShader);
+				m_shaderTypeFlags |= (int)EShaderType::TypeComputeShader;
+			}
+			else if (bstrName == L"Topology")
             {
                 CComBSTR var;
                 CT(spNode->get_text(&var));

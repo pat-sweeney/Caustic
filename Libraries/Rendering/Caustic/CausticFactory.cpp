@@ -252,11 +252,11 @@ namespace Caustic
     // See <ICausticFactory::CreateShader>
     //**********************************************************************
     void CCausticFactory::CreateShader(IRenderer *pRenderer, const wchar_t *pShaderName,
-        ID3DBlob *pVertexShaderBlob, ID3DBlob *pPixelShaderBlob, IShaderInfo *pShaderInfo,
-        IShader **ppShader)
+        ID3DBlob *pVertexShaderBlob, ID3DBlob* pPixelShaderBlob, ID3DBlob* pComputeShaderBlob,
+        IShaderInfo *pShaderInfo, IShader **ppShader)
     {
         std::unique_ptr<CShader> spShader(new CShader());
-        spShader->Create(pRenderer, pShaderName, pShaderInfo, pPixelShaderBlob, pVertexShaderBlob);
+        spShader->Create(pRenderer, pShaderName, pShaderInfo, pPixelShaderBlob, pVertexShaderBlob, pComputeShaderBlob);
         *ppShader = spShader.release();
         (*ppShader)->AddRef();
     }
