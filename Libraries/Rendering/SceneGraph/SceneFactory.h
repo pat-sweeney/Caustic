@@ -41,6 +41,7 @@ namespace Caustic
 		// ISceneFactory
 		//**********************************************************************
 		virtual void CreateSceneGraph(ISceneGraph **ppGraph) override;
+		virtual void CreateComputeShaderElem(IShader* pComputeShader, ISceneComputeShaderElem** ppElem) override;
 		virtual void CreateMaterialElem(ISceneMaterialElem **ppElem) override;
 		virtual void CreatePointLightElem(IScenePointLightElem **ppLight) override;
 		virtual void CreateGroupElem(ISceneGroupElem **ppGroup) override;

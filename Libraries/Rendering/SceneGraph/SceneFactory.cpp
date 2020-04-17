@@ -29,6 +29,12 @@ namespace Caustic
 		Caustic::CreateSceneGraph(ppGraph);
 	}
 
+	CAUSTICAPI void CreateComputeShaderElem(IShader* pComputeShader, ISceneComputeShaderElem** ppElem);
+	void CSceneFactory::CreateComputeShaderElem(IShader *pComputeShader, ISceneComputeShaderElem** ppElem)
+	{
+		Caustic::CreateComputeShaderElem(pComputeShader, ppElem);
+	}
+
 	CAUSTICAPI void CreateMaterialElem(ISceneMaterialElem **ppElem);
 	void CSceneFactory::CreateMaterialElem(ISceneMaterialElem **ppElem)
 	{

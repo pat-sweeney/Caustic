@@ -26,7 +26,7 @@ namespace Caustic
     // numParams - Number of parameters in params
     // params - Parameter list we will copy definitions into
     //**********************************************************************
-    uint32 CShader::ComputeParamSize(ShaderParamDef *pDefs, uint32 numParams, std::vector<ShaderParamInstance> &params)
+    uint32 CShader::ComputeParamSize(ShaderParamDef* pDefs, uint32 numParams, std::vector<ShaderParamInstance>& params)
     {
         if (pDefs == nullptr || numParams == 0)
             return 0;
@@ -36,10 +36,14 @@ namespace Caustic
         {
             if (pDefs[i].m_name.length() == 0)
                 continue;
-            ShaderParamDef &d = params[i];
+            ShaderParamDef& d = params[i];
             d = pDefs[i];
             params[i].m_dirty = true;
-            params[i].m_offset = (pDefs[i].m_type == EShaderParamType::ShaderType_Texture) ? pDefs[i].m_offset : s;
+            params[i].m_offset = (pDefs[i].m_type == EShaderParamType::ShaderType_Texture ||
+                pDefs[i].m_type == EShaderParamType::ShaderType_AppendStructuredBuffer ||
+                pDefs[i].m_type == EShaderParamType::ShaderType_RWStructuredBuffer ||
+                pDefs[i].m_type == EShaderParamType::ShaderType_RWByteAddressBuffer ||
+                pDefs[i].m_type == EShaderParamType::ShaderType_StructuredBuffer) ? pDefs[i].m_offset : s;
             if (pDefs[i].m_type == EShaderParamType::ShaderType_Float)
             {
                 params[i].m_value = std::any(0.0f);
@@ -121,15 +125,16 @@ namespace Caustic
                 s += params[i].m_members * 16 * sizeof(float);
             }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_StructuredBuffer ||
-                     pDefs[i].m_type == EShaderParamType::ShaderType_RWStructuredBuffer ||
-                     pDefs[i].m_type == EShaderParamType::ShaderType_AppendStructuredBuffer)
+                pDefs[i].m_type == EShaderParamType::ShaderType_AppendStructuredBuffer ||
+                pDefs[i].m_type == EShaderParamType::ShaderType_RWByteAddressBuffer ||
+                pDefs[i].m_type == EShaderParamType::ShaderType_RWStructuredBuffer)
             {
-                if (params[i].m_value.has_value())
-                {
-                    StructuredBuffer& buffer = std::any_cast<StructuredBuffer>(params[i].m_value);
-                    s += buffer.m_dataSize;
-                }
+                // Structured buffers (used by compute shaders) are not included in the final
+                // buffer count since those buffers are not part of the constant buffer. So,
+                // do nothing here.
             }
+            else
+                CT(E_UNEXPECTED);
         }
         return s;
     }
@@ -174,135 +179,217 @@ namespace Caustic
     // pBuffer - Constant buffer to push values into
     // params - List of parameters to push
     //**********************************************************************
-    void CShader::PushConstants(IGraphics *pGraphics, SConstantBuffer *pBuffer, std::vector<ShaderParamInstance> &params)
+    void CShader::PushConstants(IGraphics* pGraphics, SBuffer* pBuffer, std::vector<ShaderParamInstance>& params)
     {
         if (pBuffer == nullptr || pBuffer->m_bufferSize == 0)
             return;
 
         D3D11_MAPPED_SUBRESOURCE ms;
         CT(pGraphics->GetContext()->Map(pBuffer->m_spBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
-        BYTE *pb = reinterpret_cast<BYTE*>(ms.pData);
+        BYTE* pb = reinterpret_cast<BYTE*>(ms.pData);
         for (size_t i = 0; i < params.size(); i++)
         {
-            switch(params[i].m_type)
+            switch (params[i].m_type)
             {
             case EShaderParamType::ShaderType_Sampler:
                 break;
             case EShaderParamType::ShaderType_Texture:
                 break;
             case EShaderParamType::ShaderType_Float:
-                {
-                    float f = (params[i].m_value.has_value()) ? std::any_cast<float>(params[i].m_value) : 0.0f;
-                    memcpy(pb, &f, sizeof(float));
-                    pb += sizeof(float);
-                }
-                break;
+            {
+                float f = (params[i].m_value.has_value()) ? std::any_cast<float>(params[i].m_value) : 0.0f;
+                memcpy(pb, &f, sizeof(float));
+                pb += sizeof(float);
+            }
+            break;
             case EShaderParamType::ShaderType_Float_Array:
-                {
+            {
                 for (size_t j = 0; j < params[i].m_members; j++)
                 {
-                        Float v = (params[i].m_values[j].has_value()) ? std::any_cast<Float>(params[i].m_values[j]) : 0.0f;
-                        memcpy(pb, &v, sizeof(Float));
-                        pb += sizeof(Float);
-                    }
+                    Float v = (params[i].m_values[j].has_value()) ? std::any_cast<Float>(params[i].m_values[j]) : 0.0f;
+                    memcpy(pb, &v, sizeof(Float));
+                    pb += sizeof(Float);
                 }
-                break;
+            }
+            break;
             case EShaderParamType::ShaderType_Float2:
+            {
+                Float2 f = (params[i].m_value.has_value()) ? std::any_cast<Float2>(params[i].m_value) : Float2(0.0f, 0.0f);
+                memcpy(pb, &f, sizeof(Float2));
+                pb += sizeof(Float2);
+            }
+            break;
+            case EShaderParamType::ShaderType_Float2_Array:
+            {
+                for (size_t j = 0; j < params[i].m_members; j++)
                 {
-                    Float2 f = (params[i].m_value.has_value()) ? std::any_cast<Float2>(params[i].m_value) : Float2(0.0f, 0.0f);
-                    memcpy(pb, &f, sizeof(Float2));
+                    Float2 v = (params[i].m_values[j].has_value()) ? std::any_cast<Float2>(params[i].m_values[j]) : Float2(0.0f, 0.0f);
+                    memcpy(pb, &v, sizeof(Float2));
                     pb += sizeof(Float2);
                 }
-                break;
-            case EShaderParamType::ShaderType_Float2_Array:
-                {
+            }
+            break;
+            case EShaderParamType::ShaderType_Float3:
+            {
+                Float3 f = (params[i].m_value.has_value()) ? std::any_cast<Float3>(params[i].m_value) : Float3(0.0f, 0.0f, 0.0f);
+                memcpy(pb, &f, sizeof(Float3));
+                pb += sizeof(Float3);
+            }
+            break;
+            case EShaderParamType::ShaderType_Float3_Array:
+            {
                 for (size_t j = 0; j < params[i].m_members; j++)
                 {
-                        Float2 v = (params[i].m_values[j].has_value()) ? std::any_cast<Float2>(params[i].m_values[j]) : Float2(0.0f, 0.0f);
-                        memcpy(pb, &v, sizeof(Float2));
-                        pb += sizeof(Float2);
-                    }
-                }
-                break;
-            case EShaderParamType::ShaderType_Float3:
-                {
-                    Float3 f = (params[i].m_value.has_value()) ? std::any_cast<Float3>(params[i].m_value) : Float3(0.0f, 0.0f, 0.0f);
-                    memcpy(pb, &f, sizeof(Float3));
+                    Float3 v = (params[i].m_values[j].has_value()) ? std::any_cast<Float3>(params[i].m_values[j]) : Float3(0.0f, 0.0f, 0.0f);
+                    memcpy(pb, &v, sizeof(Float3));
                     pb += sizeof(Float3);
                 }
-                break;
-            case EShaderParamType::ShaderType_Float3_Array:
-                {
-                    for (size_t j = 0; j < params[i].m_members; j++)
-                    {
-                        Float3 v = (params[i].m_values[j].has_value()) ? std::any_cast<Float3>(params[i].m_values[j]) : Float3(0.0f, 0.0f, 0.0f);
-                        memcpy(pb, &v, sizeof(Float3));
-                        pb += sizeof(Float3);
-                    }
-                }
-                break;
+            }
+            break;
             case EShaderParamType::ShaderType_Float4:
+            {
+                Float4 f = (params[i].m_value.has_value()) ? std::any_cast<Float4>(params[i].m_value) : Float4(0.0f, 0.0f, 0.0f, 0.0f);
+                memcpy(pb, &f, sizeof(Float4));
+                pb += sizeof(Float4);
+            }
+            break;
+            case EShaderParamType::ShaderType_Float4_Array:
+            {
+                for (size_t j = 0; j < params[i].m_members; j++)
                 {
-                    Float4 f = (params[i].m_value.has_value()) ? std::any_cast<Float4>(params[i].m_value) : Float4(0.0f, 0.0f, 0.0f, 0.0f);
-                    memcpy(pb, &f, sizeof(Float4));
+                    Float4 v = (params[i].m_values[j].has_value()) ? std::any_cast<Float4>(params[i].m_values[j]) : Float4(0.0f, 0.0f, 0.0f, 0.0f);
+                    memcpy(pb, &v, sizeof(Float4));
                     pb += sizeof(Float4);
                 }
-                break;
-            case EShaderParamType::ShaderType_Float4_Array:
-                {
-                    for (size_t j = 0; j < params[i].m_members; j++)
-                    {
-                        Float4 v = (params[i].m_values[j].has_value()) ? std::any_cast<Float4>(params[i].m_values[j]) : Float4(0.0f, 0.0f, 0.0f, 0.0f);
-                        memcpy(pb, &v, sizeof(Float4));
-                        pb += sizeof(Float4);
-                    }
-                }
-                break;
+            }
+            break;
             case EShaderParamType::ShaderType_Int:
+            {
+                Int v = (params[i].m_value.has_value()) ? std::any_cast<Int>(params[i].m_value) : 0;
+                memcpy(pb, &v, sizeof(int));
+                pb += sizeof(int);
+            }
+            break;
+            case EShaderParamType::ShaderType_Int_Array:
+            {
+                for (size_t j = 0; j < params[i].m_members; j++)
                 {
-                    Int v = (params[i].m_value.has_value()) ? std::any_cast<Int>(params[i].m_value) : 0;
-                    memcpy(pb, &v, sizeof(int));
+                    Int v = (params[i].m_values[j].has_value()) ? std::any_cast<Int>(params[i].m_values[j]) : 0;
+                    memcpy(pb, &v.x, sizeof(int));
                     pb += sizeof(int);
                 }
-                break;
-            case EShaderParamType::ShaderType_Int_Array:
-                {
-                    for (size_t j = 0; j < params[i].m_members; j++)
-                    {
-                        Int v = (params[i].m_values[j].has_value()) ? std::any_cast<Int>(params[i].m_values[j]) : 0;
-                        memcpy(pb, &v.x, sizeof(int));
-                        pb += sizeof(int);
-                    }
-                }
-                break;
+            }
+            break;
             case EShaderParamType::ShaderType_Matrix:
+            {
+                Matrix m = (params[i].m_value.has_value()) ? std::any_cast<Matrix>(params[i].m_value) : Matrix();
+                memcpy(pb, m.x, 16 * sizeof(float));
+                pb += 16 * sizeof(float);
+            }
+            break;
+            case EShaderParamType::ShaderType_Matrix_Array:
+            {
+                for (size_t j = 0; j < params[i].m_members; j++)
                 {
-                    Matrix m = (params[i].m_value.has_value()) ? std::any_cast<Matrix>(params[i].m_value) : Matrix();
+                    Matrix m = (params[i].m_values[j].has_value()) ? std::any_cast<Matrix>(params[i].m_values[j]) : Matrix();
                     memcpy(pb, m.x, 16 * sizeof(float));
                     pb += 16 * sizeof(float);
                 }
-                break;
-            case EShaderParamType::ShaderType_Matrix_Array:
-                {
-                    for (size_t j = 0; j < params[i].m_members; j++)
-                    {
-                        Matrix m = (params[i].m_values[j].has_value()) ? std::any_cast<Matrix>(params[i].m_values[j]) : Matrix();
-                        memcpy(pb, m.x, 16 * sizeof(float));
-                        pb += 16 * sizeof(float);
-                    }
-                }
-                break;
-            case EShaderParamType::ShaderType_StructuredBuffer:
-            case EShaderParamType::ShaderType_AppendStructuredBuffer:
-            case EShaderParamType::ShaderType_RWStructuredBuffer:
-                {
-                    StructuredBuffer& s = std::any_cast<StructuredBuffer>(params[i].m_value);
-                    memcpy(pb, s.m_pData, s.m_dataSize);
-                }
-                break;
+            }
+            break;
             }
         }
         pGraphics->GetContext()->Unmap(pBuffer->m_spBuffer, 0);
+    }
+
+    //**********************************************************************
+    // Method: PushBuffers
+    // Pushes buffers from the CPU to the GPU (for instance,
+    // from a CPU buffer to a GPU structured buffer).
+    //
+    // Parameters:
+    // pGraphics - D3D11 device/context to use
+    // pBuffer - Constant buffer to push values into
+    // params - List of parameters to push
+    //**********************************************************************
+    void CShader::PushBuffers(IGraphics* pGraphics, 
+        std::vector<ShaderParamInstance>& params)
+    {
+        CComPtr<ID3D11DeviceContext> spCtx = pGraphics->GetContext();
+        for (size_t i = 0; i < params.size(); i++)
+        {
+            if (!params[i].m_value.has_value())
+                continue;
+            switch (params[i].m_type)
+            {
+            case EShaderParamType::ShaderType_AppendStructuredBuffer:
+            case EShaderParamType::ShaderType_RWStructuredBuffer:
+                CT(E_NOTIMPL);
+                break;
+            case EShaderParamType::ShaderType_StructuredBuffer:
+            case EShaderParamType::ShaderType_RWByteAddressBuffer:
+            {
+                    // Check if our underlying buffer has been created
+                    size_t bufferIndex = -1;
+                    for (; bufferIndex < m_csBuffers.size(); bufferIndex++)
+                    {
+                        if (m_csBuffers[bufferIndex].m_name == params[i].m_name)
+                            break;
+                    }
+
+                    if (params[i].m_dirty || bufferIndex == -1)
+                    {
+                        params[i].m_dirty = false;
+
+                        // Recreate the underlying buffer
+                        StructuredBuffer& s = std::any_cast<StructuredBuffer>(params[i].m_value);
+                        uint32 bind = D3D11_BIND_FLAG::D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE;
+                        uint32 access = 0;
+                        D3D11_USAGE usage = D3D11_USAGE::D3D11_USAGE_DEFAULT;
+                        uint32 miscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+                        uint32 stride = ((params[i].m_elemSize + 3) / 4) * 4; // Must be multiple of 4
+                        SBuffer buffer;
+                        CComPtr<ID3D11Device> spDevice = pGraphics->GetDevice();
+                        CreateBuffer(spDevice, s.m_dataSize, bind, access, usage, miscFlags, stride, &buffer, &buffer.m_spBuffer);
+                        usage = D3D11_USAGE::D3D11_USAGE_STAGING;
+                        access = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_READ;
+                        bind = 0;
+                        CreateBuffer(spDevice, s.m_dataSize, bind, access, usage, miscFlags, stride, &buffer, &buffer.m_spStagingBuffer);
+
+                        D3D11_UNORDERED_ACCESS_VIEW_DESC viewdesc;
+                        ZeroMemory(&viewdesc, sizeof(viewdesc));
+                        viewdesc.Buffer.FirstElement = 0;
+                        viewdesc.Buffer.Flags = 0;
+                        viewdesc.Buffer.NumElements = m_xThreads * m_yThreads * m_zThreads;
+                        viewdesc.Format = DXGI_FORMAT_UNKNOWN;
+                        viewdesc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
+                        spDevice->CreateUnorderedAccessView(buffer.m_spBuffer, nullptr, &buffer.m_spView);
+
+                        // Save the buffer in our list
+                        ShaderParamInstance bufInstance;
+                        bufInstance = params[i];
+                        bufInstance.m_value = std::any(buffer);
+                        m_csBuffers.push_back(bufInstance);
+                        bufferIndex = m_csBuffers.size() - 1;
+
+                        // Copy the data from the CPU memory to the buffer
+                        D3D11_MAPPED_SUBRESOURCE ms;
+                        CT(spCtx->Map(buffer.m_spStagingBuffer, 0, D3D11_MAP_WRITE, 0, &ms));
+                        BYTE* pb = reinterpret_cast<BYTE*>(ms.pData);
+                        memcpy(pb, s.m_spData.get(), s.m_dataSize);
+                        spCtx->Unmap(buffer.m_spStagingBuffer, 0);
+                        spCtx->CopyResource(buffer.m_spBuffer, buffer.m_spStagingBuffer);
+                    }
+
+                    // Assign the buffer
+                    if (m_csBuffers[bufferIndex].m_value.has_value())
+                    {
+                        SBuffer& s = std::any_cast<SBuffer>(m_csBuffers[bufferIndex].m_value);
+                        spCtx->CSSetUnorderedAccessViews(m_csBuffers[bufferIndex].m_offset, 1, &s.m_spView.p, nullptr);
+                    }
+                }
+            }
+        }
     }
 
     //**********************************************************************
@@ -497,6 +584,23 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Method: SetThreadCounts
+    // Specifies the number of thread groups to run when dispatching the shader's
+    // compute shader.
+    //
+    // Parameters:
+    // xThreads - number of threads in X
+    // yThreads - number of threads in Y
+    // zThreads - number of threads in Z
+    //**********************************************************************
+    void CShader::SetThreadCounts(int xThreads, int yThreads, int zThreads)
+    {
+        m_xThreads = xThreads;
+        m_yThreads = yThreads;
+        m_zThreads = zThreads;
+    }
+    
+    //**********************************************************************
     // Method: BeginRender
     // BeginRender is called before rendering using this shader occurs.
     // This call is responsible for setting up the pGraphics device to use the shader.
@@ -545,6 +649,8 @@ namespace Caustic
             PushSamplers(pGraphics, m_csParams, false);
             PushConstants(pGraphics, &m_computeConstants, m_csParams);
             spCtx->CSSetConstantBuffers(0, 1, &m_computeConstants.m_spBuffer.p);
+            PushBuffers(pGraphics, m_csParams);
+            spCtx->Dispatch(m_xThreads, m_yThreads, m_zThreads);
         }
     }
 
@@ -558,9 +664,6 @@ namespace Caustic
     //**********************************************************************
     void CShader::EndRender(IGraphics * /*pGraphics*/)
     {
-        // Run the compute shader
-//        if (m_spShaderInfo->HasShader(EShaderType::TypeComputeShader))
-//            ;
     }
 
     //**********************************************************************
@@ -573,6 +676,40 @@ namespace Caustic
 		return m_spShaderInfo;
 	}
 	
+    //**********************************************************************
+    // Method: CreateBuffer
+    // Helper function that creates a buffer for the shader (Constant buffer
+    // or StructuredBuffer)
+    //
+    // Parameters:
+    // pDevice - rendering device
+    // bufSize - size of buffer in bytes
+    // bindFlags - bind flags
+    // cpuAccessFlags - access flags
+    // usage - Usage model for buffer
+    // pBuffer - returns the created buffer
+    //**********************************************************************
+    void CShader::CreateBuffer(ID3D11Device* pDevice, uint32 bufSize,
+        uint32 bindFlags, uint32 cpuAccessFlags, D3D11_USAGE usage,
+        uint32 miscFlags, uint32 stride, SBuffer* pBuffer, ID3D11Buffer **ppBuffer)
+    {
+        pBuffer->m_heapSize = 0;
+        pBuffer->m_bufferSize = 0;
+        if (bufSize > 0)
+        {
+            D3D11_BUFFER_DESC buffDesc;
+            buffDesc.BindFlags = bindFlags;
+            buffDesc.ByteWidth = ((bufSize + 15) / 16) * 16;
+            buffDesc.CPUAccessFlags = cpuAccessFlags;
+            buffDesc.MiscFlags = miscFlags;
+            buffDesc.StructureByteStride = stride;
+            buffDesc.Usage = usage;
+            CT(pDevice->CreateBuffer(&buffDesc, nullptr, ppBuffer));
+            pBuffer->m_heapSize = (uint32)buffDesc.ByteWidth;
+            pBuffer->m_bufferSize = (uint32)bufSize;
+        }
+    }
+
 	//**********************************************************************
     // Method: CreateConstantBuffer
     // CreateConstantBuffer creates the constant buffer (pixel or vertex shader)
@@ -584,23 +721,42 @@ namespace Caustic
     // params - Generated parameter list
     // ppBuffer - Returns the created constant buffer
     //**********************************************************************
-    void CShader::CreateConstantBuffer(ID3D11Device *pDevice, ShaderParamDef *pDefs, uint32 paramsSize, std::vector<ShaderParamInstance> &params, SConstantBuffer *pConstantBuffer)
+    void CShader::CreateConstantBuffer(ID3D11Device *pDevice, ShaderParamDef *pDefs, uint32 paramsSize, std::vector<ShaderParamInstance> &params, SBuffer *pConstantBuffer)
     {
-        pConstantBuffer->m_heapSize = 0;
-        pConstantBuffer->m_bufferSize = 0;
         uint32 s = ComputeParamSize(pDefs, paramsSize, params);
-        if (s > 0)
+        CreateBuffer(pDevice, s, D3D10_BIND_CONSTANT_BUFFER, D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE, D3D11_USAGE_DYNAMIC, 0, 0, pConstantBuffer, &pConstantBuffer->m_spBuffer);
+    }
+
+    //**********************************************************************
+    // Method: CreateConstantBuffer
+    // CreateConstantBuffer creates the constant buffer (pixel or vertex shader)
+    //
+    // Parameters:
+    // pDevice - D3D device
+    // pDefs - List of parameter definitions (parsed from HLSL)
+    // paramsSize - Length of pDefs
+    // params - Generated parameter list
+    // ppBuffer - Returns the created constant buffer
+    //**********************************************************************
+    void CShader::CreateBuffers(ID3D11Device* pDevice, ShaderParamDef* pDefs, uint32 numParams, std::vector<ShaderParamInstance>& params)
+    {
+        if (pDefs == nullptr || numParams == 0)
+            return;
+        uint32 s = 0;
+        params.resize(numParams);
+        for (size_t i = 0; i < numParams; i++)
         {
-            D3D11_BUFFER_DESC buffDesc;
-            buffDesc.BindFlags = D3D10_BIND_CONSTANT_BUFFER;
-            buffDesc.ByteWidth = ((s + 15) / 16) * 16;
-            buffDesc.CPUAccessFlags = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE;
-            buffDesc.MiscFlags = 0;
-            buffDesc.StructureByteStride = 0;
-            buffDesc.Usage = D3D11_USAGE_DYNAMIC;
-            CT(pDevice->CreateBuffer(&buffDesc, nullptr, &pConstantBuffer->m_spBuffer));
-	        pConstantBuffer->m_heapSize = (uint32)buffDesc.ByteWidth;
-	        pConstantBuffer->m_bufferSize = (uint32)s;
+            if (pDefs[i].m_name.length() == 0)
+                continue;
+            ShaderParamDef& d = params[i];
+            d = pDefs[i];
+            params[i].m_dirty = true;
+            params[i].m_offset = (pDefs[i].m_type == EShaderParamType::ShaderType_Texture) ? pDefs[i].m_offset : s;
+            if (pDefs[i].m_type == EShaderParamType::ShaderType_StructuredBuffer)
+            {
+                StructuredBuffer& buffer = std::any_cast<StructuredBuffer>(params[i].m_value);
+                s += buffer.m_dataSize;
+            }
         }
     }
 
@@ -647,9 +803,10 @@ namespace Caustic
         {
             const byte* pPSByteCodes = (const byte*)pCSBlob->GetBufferPointer();
             uint32 psBufferLen = (uint32)pCSBlob->GetBufferSize();
+            CT(pDevice->CreateComputeShader(pPSByteCodes, psBufferLen, nullptr, &m_spComputeShader));
+
             CreateConstantBuffer(pDevice, pShaderInfo->ComputeShaderParameterDefs().data(),
                 (uint32)pShaderInfo->ComputeShaderParameterDefs().size(), m_csParams, &m_computeConstants);
-            CT(pDevice->CreateComputeShader(pPSByteCodes, psBufferLen, nullptr, &m_spComputeShader));
         }
 
         //**********************************************************************

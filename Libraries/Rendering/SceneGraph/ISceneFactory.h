@@ -26,6 +26,12 @@ namespace Caustic
 		virtual void CreateMaterialElem(Caustic::ISceneMaterialElem **ppElem) = 0;
 
 		//**********************************************************************
+		// Method: CreateMaterialElem
+		// Creates a material element
+		//**********************************************************************
+		virtual void CreateComputeShaderElem(IShader* pComputeShader, ISceneComputeShaderElem** ppElem) = 0;
+
+		//**********************************************************************
 		// Method: CreatePointLightElem
 		// Creates a point light element
 		//**********************************************************************

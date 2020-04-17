@@ -12,6 +12,7 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <vector>
+#include <memory>
 
 //**********************************************************************
 // File: IShader.h
@@ -31,12 +32,12 @@ namespace Caustic
     // clients will pass to IShader::SetCSParam for any of these shader types.
     //
     // Parameters:
-    // m_pData - point to the buffer
+    // m_spData - pointer to the buffer
     // m_dataSize - size of buffer in bytes
     //**********************************************************************
     struct StructuredBuffer
     {
-        uint8* m_pData;
+        std::shared_ptr<uint8> m_spData;
         uint32 m_dataSize;
     };
 
@@ -144,5 +145,18 @@ namespace Caustic
         // Returns the shader info associated with the shader
         //**********************************************************************
         virtual CRefObj<IShaderInfo> GetShaderInfo() = 0;
+
+        //**********************************************************************
+        // Method: SetThreadCounts
+        // This is a bit of a hack. We need some way to specify how many threads
+        // to execute for the compute shader. This needs to be rethought (maybe
+        // make specific class for shader with underlying compute shader??)
+        //
+        // Parameters:
+        // xThreads - Number of threads in X axis
+        // yThreads - Number of threads in Y axis
+        // zThreads - Number of threads in Z axis
+        //**********************************************************************
+        virtual void SetThreadCounts(int xThreads, int yThreads, int zThreads) = 0;
     };
 }

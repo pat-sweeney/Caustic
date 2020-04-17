@@ -114,18 +114,81 @@ void ParseLoop(ID3D11ShaderReflection *pReflection, HANDLE oh, EShaderType shade
                 paramDesc.SemanticName, paramDesc.SemanticName, (int)paramDesc.SemanticIndex, format.c_str());
         }
         WriteStr(oh, "        </VertexLayout>\n");
+    }
+    
+    // Parse textures
+    WriteStr(oh, "        <Textures>\n");
+    for (UINT i = 0; i < shaderDesc.BoundResources; i++)
+    {
+        D3D11_SHADER_INPUT_BIND_DESC bindDesc;
+        CT(pReflection->GetResourceBindingDesc(i, &bindDesc));
+        if (bindDesc.Type == D3D_SIT_TEXTURE)
+            WriteStr(oh, "            <Texture Name='%s' Register='%d'/>\n", bindDesc.Name, (int)bindDesc.BindPoint);
+    }
+    WriteStr(oh, "        </Textures>\n");
 
-        // Parse samplers
-        WriteStr(oh, "        <Textures>\n");
-        for (UINT i = 0; i < shaderDesc.BoundResources; i++)
+    // Parse buffers
+    WriteStr(oh, "        <Buffers>\n");
+    for (UINT i = 0; i < shaderDesc.BoundResources; i++)
+    {
+        D3D11_SHADER_INPUT_BIND_DESC bindDesc;
+        CT(pReflection->GetResourceBindingDesc(i, &bindDesc));
+        const char* tagName = nullptr;
+        bool findTypeSize = true;
+        Caustic::uint32 elemSize = 1;
+        if (bindDesc.Type == D3D_SIT_UAV_RWBYTEADDRESS)
         {
-            D3D11_SHADER_INPUT_BIND_DESC bindDesc;
-            pReflection->GetResourceBindingDesc(i, &bindDesc);
-            if (bindDesc.Type == D3D_SIT_TEXTURE)
-                WriteStr(oh, "            <Texture Name='%s' Register='%d'/>\n", bindDesc.Name, (int)bindDesc.BindPoint);
+            tagName = "RWByteAddressBuffer";
+            findTypeSize = false;
         }
-        WriteStr(oh, "        </Textures>\n");
+        else if (bindDesc.Type == D3D_SIT_STRUCTURED)
+            tagName = "StructuredBuffer";
+        else if (bindDesc.Type == D3D_SIT_UAV_RWSTRUCTURED)
+            tagName = "RWStructuredBuffer";
+        else if (bindDesc.Type == D3D_SIT_UAV_APPEND_STRUCTURED)
+            tagName = "AppendStructuredBuffer";
+        else
+            continue;
+        if (findTypeSize)
+        {
+            // I'm not sure if this is the correct way to do this, but
+            // the compute buffers show up as constantBuffers and we seem
+            // to be able to query them to determine the type size.
+            ID3D11ShaderReflectionConstantBuffer* pCB = pReflection->GetConstantBufferByName(bindDesc.Name);
+            D3D11_SHADER_BUFFER_DESC cbDesc;
+            CT(pCB->GetDesc(&cbDesc));
+            CT((cbDesc.Type != D3D_CBUFFER_TYPE::D3D11_CT_CBUFFER) ? S_OK : E_UNEXPECTED);
+            ID3D11ShaderReflectionVariable* pVar = pCB->GetVariableByIndex(0);
+            ID3D11ShaderReflectionType* pType = pVar->GetType();
+            D3D11_SHADER_TYPE_DESC typeDesc;
+            CT(pType->GetDesc(&typeDesc));
+            switch (typeDesc.Type)
+            {
+            case D3D_SHADER_VARIABLE_TYPE::D3D10_SVT_BOOL:
+            case D3D_SHADER_VARIABLE_TYPE::D3D10_SVT_INT:
+            case D3D_SHADER_VARIABLE_TYPE::D3D10_SVT_FLOAT:
+            case D3D_SHADER_VARIABLE_TYPE::D3D_SVT_UINT:
+                elemSize = 4;
+                break;
+            case D3D_SHADER_VARIABLE_TYPE::D3D11_SVT_DOUBLE:
+                elemSize = 8;
+                break;
+            case D3D_SHADER_VARIABLE_TYPE::D3D_SVT_UINT8:
+                elemSize = 1;
+                break;
+            case D3D_SHADER_VARIABLE_TYPE::D3D_SVT_MIN16INT:
+            case D3D_SHADER_VARIABLE_TYPE::D3D_SVT_MIN16UINT:
+                elemSize = 2;
+                break;
+            }
+        }
+        if (tagName != nullptr)
+            WriteStr(oh, "            <%s Name='%s' Slot='%d' ElemSize='%d'/>\n", tagName, bindDesc.Name, (int)bindDesc.BindPoint, elemSize);
+    }
+    WriteStr(oh, "        </Buffers>\n");
 
+    if (shaderType == PixelShader || shaderType == VertexShader)
+    {
         WriteStr(oh, "        <Samplers>\n");
         for (UINT i = 0; i < shaderDesc.BoundResources; i++)
         {
@@ -137,47 +200,30 @@ void ParseLoop(ID3D11ShaderReflection *pReflection, HANDLE oh, EShaderType shade
         WriteStr(oh, "        </Samplers>\n");
     }
     
-    if (shaderType == ComputeShader)
-        WriteStr(oh, "        <Buffers>\n");
-    
     // Get constant buffer names
     for (UINT i = 0; i < shaderDesc.ConstantBuffers; i++)
     {
         ID3D11ShaderReflectionConstantBuffer* pCB = pReflection->GetConstantBufferByIndex(i);
         D3D11_SHADER_BUFFER_DESC cbDesc;
         pCB->GetDesc(&cbDesc);
-        if (shaderType == ComputeShader)
+        if (cbDesc.Type != D3D_CBUFFER_TYPE::D3D11_CT_CBUFFER)
+            continue;
+        WriteStr(oh, "        <CBuffer>\n");
+        for (UINT j = 0; j < cbDesc.Variables; j++)
         {
-            D3D11_SHADER_INPUT_BIND_DESC bind;
-            pReflection->GetResourceBindingDesc(i, &bind);
-            if (bind.Type == D3D_SIT_STRUCTURED)
-                WriteStr(oh, "             <StructuredBuffer Name='%s' Slot='%d'/>\n", cbDesc.Name, bind.BindPoint);
-            else if (bind.Type == D3D_SIT_UAV_RWSTRUCTURED)
-                WriteStr(oh, "             <RWStructuredBuffer Name='%s' Slot='%d'/>\n", cbDesc.Name, bind.BindPoint);
-            else if (bind.Type == D3D_SIT_UAV_APPEND_STRUCTURED)
-                WriteStr(oh, "             <AppendStructuredBuffer Name='%s' Slot='%d'/>\n", cbDesc.Name, bind.BindPoint);
+            ID3D11ShaderReflectionVariable* pVar = pCB->GetVariableByIndex(j);
+            ID3D11ShaderReflectionType* pType = pVar->GetType();
+            D3D11_SHADER_TYPE_DESC typeDesc;
+            pType->GetDesc(&typeDesc);
+            D3D11_SHADER_VARIABLE_DESC varDesc;
+            pVar->GetDesc(&varDesc);
+            if (typeDesc.Class == D3D_SHADER_VARIABLE_CLASS::D3D10_SVC_VECTOR && typeDesc.Elements > 1)
+                WriteStr(oh, "             <Property Name='%s' Type='%s[%d]'/>\n", varDesc.Name, typeDesc.Name, typeDesc.Elements);
+            else
+                WriteStr(oh, "             <Property Name='%s' Type='%s'/>\n", varDesc.Name, typeDesc.Name);
         }
-        else
-        {
-            WriteStr(oh, "        <CBuffer>\n");
-            for (UINT j = 0; j < cbDesc.Variables; j++)
-            {
-                ID3D11ShaderReflectionVariable* pVar = pCB->GetVariableByIndex(j);
-                ID3D11ShaderReflectionType* pType = pVar->GetType();
-                D3D11_SHADER_TYPE_DESC typeDesc;
-                pType->GetDesc(&typeDesc);
-                D3D11_SHADER_VARIABLE_DESC varDesc;
-                pVar->GetDesc(&varDesc);
-                if (typeDesc.Class == D3D_SHADER_VARIABLE_CLASS::D3D10_SVC_VECTOR && typeDesc.Elements > 1)
-                    WriteStr(oh, "             <Property Name='%s' Type='%s[%d]'/>\n", varDesc.Name, typeDesc.Name, typeDesc.Elements);
-                else
-                    WriteStr(oh, "             <Property Name='%s' Type='%s'/>\n", varDesc.Name, typeDesc.Name);
-            }
-            WriteStr(oh, "        </CBuffer>\n");
-        }
+        WriteStr(oh, "        </CBuffer>\n");
     }
-    if (shaderType == ComputeShader)
-        WriteStr(oh, "        </Buffers>\n");
 }
 
 void ExpandEnvironmentVariables(std::string &outputFn)

@@ -65,6 +65,7 @@ void InitializeCaustic(HWND hwnd)
 
     InitializeCriticalSection(&cs);
 
+#if 0
     // First create a mesh to cover the depth map
     CRefObj<IMeshConstructor> spMeshConstructor;
     CreateMeshConstructor(&spMeshConstructor);
@@ -76,42 +77,39 @@ void InitializeCaustic(HWND hwnd)
         {
             Vector3 pos;
             Vector3 normal;
-            Vector2 uv;
+            Vector2 uv = Vector2(float(x) / 512.0f, float(y) / 512.0f);
 
-            spMeshConstructor->FaceOpen();
-            pos = Vector3(float(x) / 512.0f, float(y) / 512.0f, 1.0f);
-            normal = Vector3(0.0f, 0.0f, 1.0f);
-            uv = Vector2(float(x) / 512.0f, float(y) / 512.0f);
-            spMeshConstructor->VertexAdd(pos, normal, uv);
+            for (int j = 0; j < 2; j++)
+            {
+                spMeshConstructor->FaceOpen();
+                pos = Vector3(float(x) / 512.0f, float(y) / 512.0f, 1.0f);
+                normal = Vector3(0.0f, 0.0f, (j==0)?-1.0f:1.0f);
+                spMeshConstructor->VertexAdd(pos, normal, uv);
 
-            pos = Vector3(float(x) / 512.0f, float(y + 1) / 512.0f, 1.0f);
-            normal = Vector3(0.0f, 0.0f, 1.0f);
-            uv = Vector2(float(x) / 512.0f, float(y + 1) / 512.0f);
-            spMeshConstructor->VertexAdd(pos, normal, uv);
+                pos = Vector3(float(x + 1) / 512.0f, float(y + 1) / 512.0f, 1.0f);
+                normal = Vector3(0.0f, 0.0f, (j == 0) ? -1.0f : 1.0f);
+                spMeshConstructor->VertexAdd(pos, normal, uv);
 
-            pos = Vector3(float(x + 1) / 512.0f, float(y + 1) / 512.0f, 1.0f);
-            normal = Vector3(0.0f, 0.0f, 1.0f);
-            uv = Vector2(float(x + 1) / 512.0f, float(y + 1) / 512.0f);
-            spMeshConstructor->VertexAdd(pos, normal, uv);
-            spMeshConstructor->FaceClose();
+                pos = Vector3(float(x) / 512.0f, float(y + 1) / 512.0f, 1.0f);
+                normal = Vector3(0.0f, 0.0f, (j == 0) ? -1.0f : 1.0f);
+                spMeshConstructor->VertexAdd(pos, normal, uv);
+                spMeshConstructor->FaceClose();
 
-            spMeshConstructor->FaceOpen();
-            pos = Vector3(float(x) / 512.0f, float(y) / 512.0f, 1.0f);
-            normal = Vector3(0.0f, 0.0f, 1.0f);
-            uv = Vector2(float(x) / 512.0f, float(y) / 512.0f);
-            spMeshConstructor->VertexAdd(pos, normal, uv);
+                spMeshConstructor->FaceOpen();
+                pos = Vector3(float(x) / 512.0f, float(y) / 512.0f, 1.0f);
+                normal = Vector3(0.0f, 0.0f, (j == 0) ? -1.0f : 1.0f);
+                spMeshConstructor->VertexAdd(pos, normal, uv);
 
-            pos = Vector3(float(x + 1) / 512.0f, float(y + 1) / 512.0f, 1.0f);
-            normal = Vector3(0.0f, 0.0f, 1.0f);
-            uv = Vector2(float(x + 1) / 512.0f, float(y + 1) / 512.0f);
-            spMeshConstructor->VertexAdd(pos, normal, uv);
+                pos = Vector3(float(x + 1) / 512.0f, float(y) / 512.0f, 1.0f);
+                normal = Vector3(0.0f, 0.0f, (j == 0) ? -1.0f : 1.0f);
+                spMeshConstructor->VertexAdd(pos, normal, uv);
 
-            pos = Vector3(float(x + 1) / 512.0f, float(y) / 512.0f, 1.0f);
-            normal = Vector3(0.0f, 0.0f, 1.0f);
-            uv = Vector2(float(x + 1) / 512.0f, float(y) / 512.0f);
-            spMeshConstructor->VertexAdd(pos, normal, uv);
+                pos = Vector3(float(x + 1) / 512.0f, float(y + 1) / 512.0f, 1.0f);
+                normal = Vector3(0.0f, 0.0f, (j == 0) ? -1.0f : 1.0f);
+                spMeshConstructor->VertexAdd(pos, normal, uv);
 
-            spMeshConstructor->FaceClose();
+                spMeshConstructor->FaceClose();
+            }
         }
     }
     CRefObj<ISubMesh> spSubMesh;
@@ -119,16 +117,18 @@ void InitializeCaustic(HWND hwnd)
     spSubMesh->SetVertexFlags(EVertexFlags(HasNormal | HasPosition | HasUV0));
     spSubMesh->SetMaterialID(0);
     spMeshConstructor->MeshClose(&spMesh);
-#if 0
+#endif
+#if 1
     CreateCube(&spMesh);
 #endif
-
     // Next create our scene graph mesh element
     CRefObj<ISceneMeshElem> spMeshElem;
     spSceneFactory->CreateMeshElem(&spMeshElem);
     spMeshElem->SetMesh(spMesh);
 
     // Find our depth map => mesh shader
+    CRefObj<IShader> spComputeShader;
+    CShaderMgr::Instance()->FindShader(L"Depth2Points", &spComputeShader);
     CShaderMgr::Instance()->FindShader(L"PointCloud", &spShader);
 
     // Create material for the mesh
@@ -141,11 +141,16 @@ void InitializeCaustic(HWND hwnd)
     spMaterialElem->SetShader(spShader);
     spMaterialElem->AddChild(spMeshElem);
     spRenderWindow->GetSceneGraph()->AddChild(spMaterialElem);
+    CRefObj<ISceneComputeShaderElem> spComputeElem;
+    spSceneFactory->CreateComputeShaderElem(spComputeShader, &spComputeElem);
+    spRenderWindow->GetSceneGraph()->AddChild(spComputeElem);
+
 
     CRefObj<ISceneCustomRenderElem> spCustomElem;
     ISceneMeshElem* pMeshElem = spMeshElem;
+    ISceneComputeShaderElem* pComputeElem = spComputeElem;
     spSceneFactory->CreateCustomRenderElem(
-        [pMeshElem](IRenderer* pRenderer, IRenderCtx* pCtx, SceneCtx* pSceneCtx)
+        [pMeshElem, pComputeElem](IRenderer* pRenderer, IRenderCtx* pCtx, SceneCtx* pSceneCtx)
         {
             if (spCamera != nullptr)
             {
@@ -153,13 +158,10 @@ void InitializeCaustic(HWND hwnd)
                 CRefObj<IImage> spColorImage;
                 if (spCamera->NextFrame(&spColorImage, &spDepthImage, nullptr))
                 {
-                    //CRefObj<IImage> spColoredDepthImage;
-                    //CRefObj<IImageFilter> spFilter;
-                    //Caustic::CreateColorize(&spFilter);
-                    //spFilter->Apply(spDepthImage, nullptr, &spColoredDepthImage);
-
                     spMaterial->SetTexture(L"depthTexture", spDepthImage, EShaderAccess::VertexShader);
                     spMaterial->SetTexture(L"rayTexture", spRayMap, EShaderAccess::VertexShader);
+                    if (spDepthImage)
+                        pComputeElem->SetInputBuffer(L"DepthBuffer", spDepthImage->GetData(), spDepthImage->GetWidth() * spDepthImage->GetHeight() * 2);
                     pMeshElem->SetFlags(pMeshElem->GetFlags() | ESceneElemFlags::MaterialDirty);
                 }
             }

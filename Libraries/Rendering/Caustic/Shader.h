@@ -46,6 +46,7 @@ namespace Caustic
         ShaderType_StructuredBuffer,
         ShaderType_RWStructuredBuffer,
         ShaderType_AppendStructuredBuffer,
+        ShaderType_RWByteAddressBuffer
     };
 
     //**********************************************************************
@@ -59,6 +60,7 @@ namespace Caustic
     // m_name - Name of shader parameter
     // m_offset - Register offset
     // m_members - Number of elements (i.e. some parameters can be arrays) 
+    // m_elemSize - sizeof a single element in bytes (used by buffers)
     //**********************************************************************
     struct ShaderParamDef
     {
@@ -66,6 +68,7 @@ namespace Caustic
         std::wstring m_name;     // Name of shader parameter
         uint32 m_offset;         // register offset
         uint32 m_members;        // Number of elements (i.e. some parameters can be arrays)
+        uint32 m_elemSize;       // size of a single element (used by buffers)
     };
 
     //**********************************************************************
@@ -93,9 +96,23 @@ namespace Caustic
     struct Float4 { float x; float y; float z; float w; Float4(float _x, float _y, float _z, float _w) { x = _x; y = _y; z = _z; w = _w; } };
     struct Matrix { float x[16]; Matrix() { ZeroMemory(x, sizeof(x)); } Matrix(float _x[16]) { memcpy(x, _x, sizeof(float) * 16); } };
     
-    struct SConstantBuffer
+    //**********************************************************************
+    // Class: SBuffer
+    // Defines a buffer (which may be either a constant buffer or
+    // and unordered access buffer used by a compute shader).
+    //
+    // Members:
+    // m_spBuffer - the D3D buffer (that will be passed to the compute shader)
+    // m_spStagingBuffer - staging buffer for going between CPU and GPU
+    // m_spView - A view onto the buffer m_spBuffer
+    // m_bufferSize - size of buffer in bytes
+    // m_heapSize - size of the total heap the buffer is contained in
+    //**********************************************************************
+    struct SBuffer
     {
         CComPtr<ID3D11Buffer> m_spBuffer;
+        CComPtr<ID3D11Buffer> m_spStagingBuffer;
+        CComPtr<ID3D11UnorderedAccessView> m_spView;
         uint32 m_bufferSize;
         uint32 m_heapSize;
     };
@@ -116,25 +133,39 @@ namespace Caustic
         CComPtr<ID3D11PixelShader> m_spPixelShader;
         CComPtr<ID3D11VertexShader> m_spVertexShader;
         CComPtr<ID3D11ComputeShader> m_spComputeShader;
-        SConstantBuffer m_vertexConstants;
-        SConstantBuffer m_pixelConstants;
-        SConstantBuffer m_computeConstants;
+        SBuffer m_vertexConstants;
+        SBuffer m_pixelConstants;
+        SBuffer m_computeConstants;
         std::vector<ShaderParamInstance> m_psParams;
         std::vector<ShaderParamInstance> m_vsParams;
         std::vector<ShaderParamInstance> m_csParams;
+        std::vector<ShaderParamInstance> m_csBuffers;
         CRefObj<IShaderInfo> m_spShaderInfo;
+        int m_xThreads;
+        int m_yThreads;
+        int m_zThreads;
     protected:
         void PushMatrix(const wchar_t *name, std::any mat);
         void PushLights(std::vector<CRefObj<IPointLight>> &lights);
         void PushMatrices(IGraphics *pGraphics, DirectX::XMMATRIX *pWorld);
         uint32 ComputeParamSize(ShaderParamDef *pParams, uint32 numParams, std::vector<ShaderParamInstance> &params);
-        void PushConstants(IGraphics *pGraphics, SConstantBuffer *pBuffer, std::vector<ShaderParamInstance> &params);
+        void PushConstants(IGraphics *pGraphics, SBuffer *pBuffer, std::vector<ShaderParamInstance> &params);
         void PushSamplers(IGraphics* pGraphics, std::vector<ShaderParamInstance>& params, bool isPixelShader);
+        void PushBuffers(IGraphics* pGraphics, std::vector<ShaderParamInstance>& params);
         void SetParam(std::wstring paramName, std::any &value, std::vector<ShaderParamInstance> &params);
         void SetParam(std::wstring paramName, int index, std::any &value, std::vector<ShaderParamInstance> &params);
     public:
         void Create(IGraphics *pGraphics, const wchar_t *pShaderName, IShaderInfo *pShaderInfo, ID3DBlob *pPSBlob, ID3DBlob* pVSBlob, ID3DBlob* pCSBlob);
-        void CreateConstantBuffer(ID3D11Device *pDevice, ShaderParamDef *pDefs, uint32 paramsSize, std::vector<ShaderParamInstance> &params, SConstantBuffer *pConstantBuffer);
+        void CreateBuffer(ID3D11Device* pDevice, uint32 bufSize, uint32 bindFlags, uint32 cpuAccessFlags, D3D11_USAGE usage, uint32 miscFlags, uint32 stride, SBuffer* pBuffer, ID3D11Buffer **ppBuffer);
+        void CreateBuffers(ID3D11Device* pDevice, ShaderParamDef* pDefs, uint32 paramsSize, std::vector<ShaderParamInstance>& params);
+        void CreateConstantBuffer(ID3D11Device *pDevice, ShaderParamDef *pDefs, uint32 paramsSize, std::vector<ShaderParamInstance> &params, SBuffer *pConstantBuffer);
+
+        CShader() :
+            m_xThreads(0),
+            m_yThreads(0),
+            m_zThreads(0)
+        {
+        }
 
         //**********************************************************************
         // IRefCount
@@ -155,6 +186,7 @@ namespace Caustic
         virtual void SetCSParam(std::wstring paramName, int index, std::any& value) override;
         virtual void EndRender(IGraphics *pGraphics) override;
         virtual CRefObj<IShaderInfo> GetShaderInfo() override;
+        virtual void SetThreadCounts(int xThreads, int yThreads, int zThreads) override;
     };
 
     //**********************************************************************

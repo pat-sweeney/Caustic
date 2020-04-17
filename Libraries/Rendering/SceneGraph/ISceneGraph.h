@@ -220,8 +220,8 @@ namespace Caustic
 	//**********************************************************************
 	struct ISceneComputeShaderElem : public ISceneElem
 	{
-		virtual void SetInputBuffer(std::string &bufferName, uint8 *pData, uint32 bufSize) = 0;
-		virtual void SetOutputBuffer(std::string &bufferName, uint8* pData, uint32 bufSize) = 0;
+		virtual void SetInputBuffer(const wchar_t* pBufferName, uint8 *pData, uint32 bufSize) = 0;
+		virtual void SetOutputBuffer(const wchar_t* pBufferName, uint8* pData, uint32 bufSize) = 0;
 	};
 
 	//**********************************************************************

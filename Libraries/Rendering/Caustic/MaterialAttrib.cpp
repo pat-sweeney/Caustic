@@ -110,6 +110,7 @@ namespace Caustic
         }
         return s_spDefaultTexture;
     }
+    
     void CMaterialAttrib::SetTexture(const wchar_t *pName, IImage* pImage, EShaderAccess access)
     {
         std::map<std::wstring, std::pair<CRefObj<IImage>,EShaderAccess>>::iterator it = m_textures.find(pName);

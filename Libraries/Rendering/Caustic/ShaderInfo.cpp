@@ -371,6 +371,7 @@ namespace Caustic
 				ShaderParamDef param;
 				param.m_offset = offset;
 				param.m_members = 1;
+				param.m_elemSize = 1;
 				for (long j = 0; j < numAttribs; j++)
 				{
 					CComPtr<IXMLDOMNode> spAttrib;
@@ -474,7 +475,9 @@ namespace Caustic
 			CComBSTR bstrName;
 			CT(spNode->get_nodeName(&bstrName));
 			if (bstrName == L"StructuredBuffer" ||
-				bstrName == L"RWStructuredBuffer")
+				bstrName == L"RWStructuredBuffer" ||
+				bstrName == L"AppendStructuredBuffer" ||
+				bstrName == L"RWByteAddressBuffer")
 			{
 				// <StructuredBuffer Name='Buffer0' Slot='0' / >
 				CComPtr<IXMLDOMNamedNodeMap> spAttribs;
@@ -489,6 +492,8 @@ namespace Caustic
 					param.m_type = ShaderType_RWStructuredBuffer;
 				else if (bstrName == L"AppendStructuredBuffer")
 					param.m_type = ShaderType_AppendStructuredBuffer;
+				else if (bstrName == L"RWByteAddressBuffer")
+					param.m_type = ShaderType_RWByteAddressBuffer;
 				else
 					CT(E_UNEXPECTED);
 				for (long j = 0; j < numAttribs; j++)
@@ -503,6 +508,8 @@ namespace Caustic
 						param.m_name = attribVal.bstrVal;
 					else if (attribName == "Slot")
 						param.m_offset = _wtoi(attribVal.bstrVal);
+					else if (attribName == "ElemSize")
+						param.m_elemSize = _wtoi(attribVal.bstrVal);
 				}
 				m_computeShaderParamDefs.push_back(param);
 			}

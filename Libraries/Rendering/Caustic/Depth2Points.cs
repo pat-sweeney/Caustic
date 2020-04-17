@@ -1,24 +1,30 @@
-//--------------------------------------------------------------------------------------
-// File: BasicCompute11.hlsl
-//
-// This file contains the Compute Shader to perform array A + array B
-// 
-// Copyright (c) Microsoft Corporation. All rights reserved.
-//--------------------------------------------------------------------------------------
-
-struct BufType
+//**********************************************************************
+// Copyright Patrick Sweeney 2015-2020
+// Licensed under the MIT license.
+// See file LICENSE for details.
+//**********************************************************************
+struct Vertex
 {
-    int i;
-    float f;
+    float4 pos;
+    float4 norm;
 };
 
-StructuredBuffer<BufType> Buffer0 : register(t0);
-StructuredBuffer<BufType> Buffer1 : register(t1);
-RWStructuredBuffer<BufType> BufferOut : register(u0);
+cbuffer ConstantBuffer
+{
+    int imageWidth;
+    int imageHeight;
+};
 
-[numthreads(1, 1, 1)]
+StructuredBuffer<min16uint> DepthBuffer : register(t2);
+RWByteAddressBuffer Points : register(u1);
+
+[numthreads(32, 32, 1)]
 void CS(uint3 DTid : SV_DispatchThreadID )
 {
-    BufferOut[DTid.x].i = Buffer0[DTid.x].i + Buffer1[DTid.x].i;
-    BufferOut[DTid.x].f = Buffer0[DTid.x].f + Buffer1[DTid.x].f;
+    uint depth = DepthBuffer[DTid.x + DTid.y * imageWidth];
+    uint addr = DTid.x + DTid.y * imageWidth;
+    float4 pos = float4(float(depth),0.0,0.0f,0.0f);
+    Points.Store4(addr, pos);
+    float4 norm = float4(float(depth),0.0f,0.0f,0.0f);
+    Points.Store4(addr, norm);
 }
