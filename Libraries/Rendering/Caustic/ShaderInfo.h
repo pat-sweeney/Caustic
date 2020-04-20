@@ -25,6 +25,7 @@ namespace Caustic
 		std::vector<ShaderParamDef> m_computeShaderParamDefs;
 		uint32 m_shaderTypeFlags;
 		uint32 m_vertexSize;
+		int m_xThreads, m_yThreads, m_zThreads;
         D3D10_PRIMITIVE_TOPOLOGY m_topologyType;
 
 		void ParseShaderDef(IXMLDOMNode *pNode);
@@ -38,8 +39,11 @@ namespace Caustic
 	public:
         CShaderInfo() :
 			m_shaderTypeFlags(0),
-			m_vertexSize(0)
-        {
+			m_vertexSize(0),
+			m_xThreads(1), 
+			m_yThreads(1),
+			m_zThreads(1)
+		{
             m_topologyType = D3D10_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
         }
 
@@ -64,5 +68,14 @@ namespace Caustic
 		virtual std::vector<ShaderParamDef>& ComputeShaderParameterDefs() override;
 		virtual std::vector<D3D11_INPUT_ELEMENT_DESC> &VertexLayout() override;
 		virtual uint32 GetVertexSize() override;
+		virtual void GetThreadGroupSize(uint32* pXThreads, uint32* pYThreads, uint32* pZThreads) override
+		{
+			if (pXThreads)
+				*pXThreads = m_xThreads;
+			if (pYThreads)
+				*pYThreads = m_yThreads;
+			if (pZThreads)
+				*pZThreads = m_zThreads;
+		}
 	};
 }

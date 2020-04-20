@@ -407,8 +407,39 @@ void ExportShader(std::string &compiledFN, HANDLE oh, EShaderType shaderType)
     CComPtr<ID3D11ShaderReflection> spReflection;
     CT(D3DReflect(buffer, bytesRead, __uuidof(ID3D11ShaderReflection), (void**)&spReflection));
 
+    switch (shaderType)
+    {
+    case EShaderType::VertexShader:
+        WriteStr(oh, "    <VertexShader>\n");
+        break;
+    case EShaderType::PixelShader:
+        WriteStr(oh, "    <PixelShader>\n");
+        break;
+    case EShaderType::ComputeShader:
+        {
+            UINT xThreads, yThreads, zThreads;
+            spReflection->GetThreadGroupSize(&xThreads, &yThreads, &zThreads);
+            WriteStr(oh, "    <ComputeShader ThreadGroupSize='%d,%d,%d'>\n", xThreads, yThreads, zThreads);
+        }
+        break;
+    }
+
     int numParams = 0;
     ParseLoop(spReflection, oh, shaderType);
+
+    switch (shaderType)
+    {
+    case EShaderType::VertexShader:
+        WriteStr(oh, "    </VertexShader>\n");
+        break;
+    case EShaderType::PixelShader:
+        WriteStr(oh, "    </PixelShader>\n");
+        break;
+    case EShaderType::ComputeShader:
+        WriteStr(oh, "    </ComputeShader>\n");
+        break;
+    }
+
 }
 
 // Parses a shader (vertex or pixel shader) to determine the name of the parameters
@@ -465,23 +496,11 @@ int _tmain(int argc, _TCHAR* argv[])
     WriteStr(oh, "<ShaderDef>\n");
     WriteStr(oh, "    <Topology>%s</Topology>\n", topology.c_str());
     if (!vertexOuput.empty())
-    {
-        WriteStr(oh, "    <VertexShader>\n");
         ExportShader(vertexOuput, oh, EShaderType::VertexShader);
-        WriteStr(oh, "    </VertexShader>\n");
-    }
     if (!pixelOuput.empty())
-    {
-        WriteStr(oh, "    <PixelShader>\n");
         ExportShader(pixelOuput, oh, EShaderType::PixelShader);
-        WriteStr(oh, "    </PixelShader>\n");
-    }
     if (!computeOuput.empty())
-    {
-        WriteStr(oh, "    <ComputeShader>\n");
         ExportShader(computeOuput, oh, EShaderType::ComputeShader);
-        WriteStr(oh, "    </ComputeShader>\n");
-    }
     WriteStr(oh, "</ShaderDef>\n");
     CloseHandle(oh);
 

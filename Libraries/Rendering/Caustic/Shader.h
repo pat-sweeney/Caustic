@@ -112,9 +112,21 @@ namespace Caustic
     {
         CComPtr<ID3D11Buffer> m_spBuffer;
         CComPtr<ID3D11Buffer> m_spStagingBuffer;
-        CComPtr<ID3D11UnorderedAccessView> m_spView;
+        CComPtr<ID3D11UnorderedAccessView> m_spUAView;
+        CComPtr<ID3D11ShaderResourceView> m_spSRView;
         uint32 m_bufferSize;
         uint32 m_heapSize;
+        bool m_isInput;
+        int m_bufferSlot;
+        std::wstring m_name;
+
+        SBuffer() :
+            m_bufferSize(0),
+            m_heapSize(0),
+            m_isInput(true),
+            m_bufferSlot(0)
+        {
+        }
     };
 
     //**********************************************************************
@@ -139,7 +151,7 @@ namespace Caustic
         std::vector<ShaderParamInstance> m_psParams;
         std::vector<ShaderParamInstance> m_vsParams;
         std::vector<ShaderParamInstance> m_csParams;
-        std::vector<ShaderParamInstance> m_csBuffers;
+        std::vector<SBuffer> m_csBuffers;
         CRefObj<IShaderInfo> m_spShaderInfo;
         int m_xThreads;
         int m_yThreads;
@@ -152,6 +164,7 @@ namespace Caustic
         void PushConstants(IGraphics *pGraphics, SBuffer *pBuffer, std::vector<ShaderParamInstance> &params);
         void PushSamplers(IGraphics* pGraphics, std::vector<ShaderParamInstance>& params, bool isPixelShader);
         void PushBuffers(IGraphics* pGraphics, std::vector<ShaderParamInstance>& params);
+        void PopBuffers(IGraphics* pGraphics);
         void SetParam(std::wstring paramName, std::any &value, std::vector<ShaderParamInstance> &params);
         void SetParam(std::wstring paramName, int index, std::any &value, std::vector<ShaderParamInstance> &params);
     public:
@@ -161,9 +174,9 @@ namespace Caustic
         void CreateConstantBuffer(ID3D11Device *pDevice, ShaderParamDef *pDefs, uint32 paramsSize, std::vector<ShaderParamInstance> &params, SBuffer *pConstantBuffer);
 
         CShader() :
-            m_xThreads(0),
-            m_yThreads(0),
-            m_zThreads(0)
+            m_xThreads(32),
+            m_yThreads(32),
+            m_zThreads(1)
         {
         }
 

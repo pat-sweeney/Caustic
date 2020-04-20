@@ -89,5 +89,14 @@ namespace Caustic
         // Returns the size of each vertex in bytes
         //**********************************************************************
         virtual uint32 GetVertexSize() = 0;
-	};
+
+        //**********************************************************************
+        // Method: GetThreadGroupSize
+        // Returns:
+        // pXThreads - Number of threads in X (as defined by numthreads() in compute shader)
+        // pYThreads - Number of threads in Y (as defined by numthreads() in compute shader)
+        // pZThreads - Number of threads in Z (as defined by numthreads() in compute shader)
+        //**********************************************************************
+        virtual void GetThreadGroupSize(uint32* pXThreads, uint32* pYThreads, uint32* pZThreads) = 0;
+    };
 }

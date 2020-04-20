@@ -127,11 +127,13 @@ namespace Caustic
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_StructuredBuffer ||
                 pDefs[i].m_type == EShaderParamType::ShaderType_AppendStructuredBuffer ||
                 pDefs[i].m_type == EShaderParamType::ShaderType_RWByteAddressBuffer ||
-                pDefs[i].m_type == EShaderParamType::ShaderType_RWStructuredBuffer)
+                pDefs[i].m_type == EShaderParamType::ShaderType_RWStructuredBuffer ||
+                pDefs[i].m_type == EShaderParamType::ShaderType_Texture ||
+                pDefs[i].m_type == EShaderParamType::ShaderType_Sampler)
             {
-                // Structured buffers (used by compute shaders) are not included in the final
-                // buffer count since those buffers are not part of the constant buffer. So,
-                // do nothing here.
+                // Structured buffers (used by compute shaders) and textures/samplers are not
+                // included in the final buffer count since those buffers are not part of
+                // the constant buffer. So, do nothing here.
             }
             else
                 CT(E_UNEXPECTED);
@@ -303,6 +305,32 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Method: PopBuffers
+    // PopBuffers copies GPU buffers back to the CPU (after a compute shader
+    // has written to them).
+    //
+    // Parameters:
+    // pGraphics - D3D11 device/context to use
+    //**********************************************************************
+    void CShader::PopBuffers(IGraphics* pGraphics)
+    {
+        CComPtr<ID3D11DeviceContext> spCtx = pGraphics->GetContext();
+        for (int bufferIndex = 0; bufferIndex < (int)m_csBuffers.size(); bufferIndex++)
+        {
+            SBuffer& s = m_csBuffers[bufferIndex];
+            if (!s.m_isInput)
+            {
+                D3D11_MAPPED_SUBRESOURCE ms;
+                spCtx->CopyResource(s.m_spStagingBuffer, s.m_spBuffer);
+                CT(spCtx->Map(s.m_spStagingBuffer, 0, D3D11_MAP_READ, 0, &ms));
+                BYTE* pb = reinterpret_cast<BYTE*>(ms.pData);
+                //memcpy(pb, srcVal.m_spData.get(), srcVal.m_dataSize);
+                spCtx->Unmap(s.m_spStagingBuffer, 0);
+            }
+        }
+    }
+
+    //**********************************************************************
     // Method: PushBuffers
     // Pushes buffers from the CPU to the GPU (for instance,
     // from a CPU buffer to a GPU structured buffer).
@@ -312,7 +340,7 @@ namespace Caustic
     // pBuffer - Constant buffer to push values into
     // params - List of parameters to push
     //**********************************************************************
-    void CShader::PushBuffers(IGraphics* pGraphics, 
+    void CShader::PushBuffers(IGraphics* pGraphics,
         std::vector<ShaderParamInstance>& params)
     {
         CComPtr<ID3D11DeviceContext> spCtx = pGraphics->GetContext();
@@ -320,6 +348,14 @@ namespace Caustic
         {
             if (!params[i].m_value.has_value())
                 continue;
+            if (params[i].m_type != EShaderParamType::ShaderType_AppendStructuredBuffer &&
+                params[i].m_type != EShaderParamType::ShaderType_RWStructuredBuffer &&
+                params[i].m_type != EShaderParamType::ShaderType_StructuredBuffer &&
+                params[i].m_type != EShaderParamType::ShaderType_RWByteAddressBuffer)
+                continue;
+
+            uint32 miscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+            uint32 bind = 0;
             switch (params[i].m_type)
             {
             case EShaderParamType::ShaderType_AppendStructuredBuffer:
@@ -327,68 +363,97 @@ namespace Caustic
                 CT(E_NOTIMPL);
                 break;
             case EShaderParamType::ShaderType_StructuredBuffer:
+                miscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+                bind = D3D11_BIND_FLAG::D3D11_BIND_UNORDERED_ACCESS;
+                break;
             case EShaderParamType::ShaderType_RWByteAddressBuffer:
+                miscFlags = D3D11_RESOURCE_MISC_BUFFER_ALLOW_RAW_VIEWS;
+                bind = D3D11_BIND_FLAG::D3D11_BIND_UNORDERED_ACCESS;
+                break;
+            }
+            
+            // Check if our underlying buffer has been created
+            int bufferIndex = 0;
+            for (; bufferIndex < (int)m_csBuffers.size(); bufferIndex++)
             {
-                    // Check if our underlying buffer has been created
-                    size_t bufferIndex = -1;
-                    for (; bufferIndex < m_csBuffers.size(); bufferIndex++)
-                    {
-                        if (m_csBuffers[bufferIndex].m_name == params[i].m_name)
-                            break;
-                    }
+                if (m_csBuffers[bufferIndex].m_name == params[i].m_name)
+                    break;
+            }
+            if (bufferIndex == (int)m_csBuffers.size())
+            {
+                SBuffer buffer;
+                buffer.m_bufferSlot = params[i].m_offset;
+                buffer.m_name = params[i].m_name;
+                m_csBuffers.push_back(buffer);
+                bufferIndex = (int)m_csBuffers.size() - 1;
+            }
 
-                    if (params[i].m_dirty || bufferIndex == -1)
-                    {
-                        params[i].m_dirty = false;
+            StructuredBuffer& srcVal = std::any_cast<StructuredBuffer>(params[i].m_value);
+            if (params[i].m_dirty || bufferIndex == -1)
+            {
+                params[i].m_dirty = false;
 
-                        // Recreate the underlying buffer
-                        StructuredBuffer& s = std::any_cast<StructuredBuffer>(params[i].m_value);
-                        uint32 bind = D3D11_BIND_FLAG::D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE;
-                        uint32 access = 0;
-                        D3D11_USAGE usage = D3D11_USAGE::D3D11_USAGE_DEFAULT;
-                        uint32 miscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
-                        uint32 stride = ((params[i].m_elemSize + 3) / 4) * 4; // Must be multiple of 4
-                        SBuffer buffer;
-                        CComPtr<ID3D11Device> spDevice = pGraphics->GetDevice();
-                        CreateBuffer(spDevice, s.m_dataSize, bind, access, usage, miscFlags, stride, &buffer, &buffer.m_spBuffer);
-                        usage = D3D11_USAGE::D3D11_USAGE_STAGING;
-                        access = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_READ;
-                        bind = 0;
-                        CreateBuffer(spDevice, s.m_dataSize, bind, access, usage, miscFlags, stride, &buffer, &buffer.m_spStagingBuffer);
+                // Recreate the underlying buffer
+                uint32 access = 0;
+                D3D11_USAGE usage = D3D11_USAGE::D3D11_USAGE_DEFAULT;
+                uint32 stride;
+                if (params[i].m_type == EShaderParamType::ShaderType_StructuredBuffer ||
+                    params[i].m_type == EShaderParamType::ShaderType_RWStructuredBuffer)
+                {
+                    // This is lame. Structured buffers must have each element be a multiple of 4
+                    stride = ((params[i].m_elemSize + 3) / 4) * 4;
+                }
+                else
+                    stride = params[i].m_elemSize;
+                CComPtr<ID3D11Device> spDevice = pGraphics->GetDevice();
+                CreateBuffer(spDevice, srcVal.m_dataSize, bind | D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE, access, usage, miscFlags, stride, &m_csBuffers[bufferIndex], &m_csBuffers[bufferIndex].m_spBuffer.p);
+                usage = D3D11_USAGE::D3D11_USAGE_STAGING;
+                access = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_READ;
+                bind = 0;
+                miscFlags = 0;
+                CreateBuffer(spDevice, srcVal.m_dataSize, bind, access, usage, miscFlags, stride, &m_csBuffers[bufferIndex], &m_csBuffers[bufferIndex].m_spStagingBuffer.p);
 
-                        D3D11_UNORDERED_ACCESS_VIEW_DESC viewdesc;
-                        ZeroMemory(&viewdesc, sizeof(viewdesc));
-                        viewdesc.Buffer.FirstElement = 0;
-                        viewdesc.Buffer.Flags = 0;
-                        viewdesc.Buffer.NumElements = m_xThreads * m_yThreads * m_zThreads;
-                        viewdesc.Format = DXGI_FORMAT_UNKNOWN;
-                        viewdesc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
-                        spDevice->CreateUnorderedAccessView(buffer.m_spBuffer, nullptr, &buffer.m_spView);
+                if (params[i].m_type == EShaderParamType::ShaderType_StructuredBuffer)
+                {
+                    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+                    ZeroMemory(&srvDesc, sizeof(srvDesc));
+                    srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
+                    srvDesc.Buffer.ElementWidth = stride;
+                    //srvDesc.Buffer.NumElements = s.m_dataSize / params[i].m_elemSize;
+                    srvDesc.Format = DXGI_FORMAT::DXGI_FORMAT_R16_UINT;
+                    CT(spDevice->CreateShaderResourceView(m_csBuffers[bufferIndex].m_spBuffer, &srvDesc, &m_csBuffers[bufferIndex].m_spSRView.p));
+                }
+                else
+                {
+                    D3D11_UNORDERED_ACCESS_VIEW_DESC uavDesc;
+                    ZeroMemory(&uavDesc, sizeof(uavDesc));
+                    uavDesc.Buffer.FirstElement = 0;
+                    uavDesc.Buffer.Flags = D3D11_BUFFER_UAV_FLAG_RAW;
+                    uavDesc.Buffer.NumElements = srcVal.m_dataSize / 4;
+                    uavDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+                    uavDesc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
+                    CT(spDevice->CreateUnorderedAccessView(m_csBuffers[bufferIndex].m_spBuffer, &uavDesc, &m_csBuffers[bufferIndex].m_spUAView.p));
+                }
 
-                        // Save the buffer in our list
-                        ShaderParamInstance bufInstance;
-                        bufInstance = params[i];
-                        bufInstance.m_value = std::any(buffer);
-                        m_csBuffers.push_back(bufInstance);
-                        bufferIndex = m_csBuffers.size() - 1;
-
-                        // Copy the data from the CPU memory to the buffer
-                        D3D11_MAPPED_SUBRESOURCE ms;
-                        CT(spCtx->Map(buffer.m_spStagingBuffer, 0, D3D11_MAP_WRITE, 0, &ms));
-                        BYTE* pb = reinterpret_cast<BYTE*>(ms.pData);
-                        memcpy(pb, s.m_spData.get(), s.m_dataSize);
-                        spCtx->Unmap(buffer.m_spStagingBuffer, 0);
-                        spCtx->CopyResource(buffer.m_spBuffer, buffer.m_spStagingBuffer);
-                    }
-
-                    // Assign the buffer
-                    if (m_csBuffers[bufferIndex].m_value.has_value())
-                    {
-                        SBuffer& s = std::any_cast<SBuffer>(m_csBuffers[bufferIndex].m_value);
-                        spCtx->CSSetUnorderedAccessViews(m_csBuffers[bufferIndex].m_offset, 1, &s.m_spView.p, nullptr);
-                    }
+                m_csBuffers[bufferIndex].m_isInput = srcVal.m_isInputBuffer;
+                
+                if (srcVal.m_isInputBuffer)
+                {
+                    // Copy the data from the CPU memory to the buffer
+                    D3D11_MAPPED_SUBRESOURCE ms;
+                    CT(spCtx->Map(m_csBuffers[bufferIndex].m_spStagingBuffer, 0, D3D11_MAP_WRITE, 0, &ms));
+                    BYTE* pb = reinterpret_cast<BYTE*>(ms.pData);
+                    memcpy(pb, srcVal.m_spData.get(), srcVal.m_dataSize);
+                    spCtx->Unmap(m_csBuffers[bufferIndex].m_spStagingBuffer, 0);
+                    spCtx->CopyResource(m_csBuffers[bufferIndex].m_spBuffer, m_csBuffers[bufferIndex].m_spStagingBuffer);
                 }
             }
+
+            // Assign the buffer
+            if (params[i].m_type == EShaderParamType::ShaderType_StructuredBuffer)
+                spCtx->CSSetShaderResources(m_csBuffers[bufferIndex].m_bufferSlot, 1, &m_csBuffers[bufferIndex].m_spSRView.p);
+            else
+                spCtx->CSSetUnorderedAccessViews(m_csBuffers[bufferIndex].m_bufferSlot, 1, &m_csBuffers[bufferIndex].m_spUAView.p, nullptr);
         }
     }
 
@@ -651,6 +716,12 @@ namespace Caustic
             spCtx->CSSetConstantBuffers(0, 1, &m_computeConstants.m_spBuffer.p);
             PushBuffers(pGraphics, m_csParams);
             spCtx->Dispatch(m_xThreads, m_yThreads, m_zThreads);
+            PopBuffers(pGraphics);
+            spCtx->CSSetShader(nullptr, nullptr, 0);
+            ID3D11UnorderedAccessView* uavNull[1] = { nullptr };
+            ID3D11ShaderResourceView* srvNull[1] = { nullptr };
+            spCtx->CSSetUnorderedAccessViews(0, 1, uavNull, NULL);
+            spCtx->CSSetShaderResources(0, 1, srvNull);
         }
     }
 

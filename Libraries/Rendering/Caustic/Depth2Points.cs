@@ -5,8 +5,8 @@
 //**********************************************************************
 struct Vertex
 {
-    float4 pos;
-    float4 norm;
+    int4 pos;
+    int4 norm;
 };
 
 cbuffer ConstantBuffer
@@ -15,16 +15,14 @@ cbuffer ConstantBuffer
     int imageHeight;
 };
 
-StructuredBuffer<min16uint> DepthBuffer : register(t2);
+RWByteAddressBuffer DepthBuffer : register(u0);
 RWByteAddressBuffer Points : register(u1);
 
 [numthreads(32, 32, 1)]
 void CS(uint3 DTid : SV_DispatchThreadID )
 {
-    uint depth = DepthBuffer[DTid.x + DTid.y * imageWidth];
-    uint addr = DTid.x + DTid.y * imageWidth;
-    float4 pos = float4(float(depth),0.0,0.0f,0.0f);
-    Points.Store4(addr, pos);
-    float4 norm = float4(float(depth),0.0f,0.0f,0.0f);
-    Points.Store4(addr, norm);
+    uint byteaddr = 2 * DTid.x + DTid.y * imageWidth * 2;
+    byteaddr = (byteaddr / 4) *4;
+    uint lword = DepthBuffer.Load(byteaddr);
+    Points.Store(byteaddr, lword);
 }

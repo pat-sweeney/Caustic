@@ -613,6 +613,29 @@ namespace Caustic
 			}
 			else if (bstrName == L"ComputeShader")
 			{
+				CComPtr<IXMLDOMNamedNodeMap> spAttribs;
+				CT(spNode->get_attributes(&spAttribs));
+				long numAttribs;
+				CT(spAttribs->get_length(&numAttribs));
+				for (long j = 0; j < numAttribs; j++)
+				{
+					CComPtr<IXMLDOMNode> spAttrib;
+					CT(spAttribs->get_item(j, &spAttrib));
+					CComBSTR attribName;
+					CT(spAttrib->get_nodeName(&attribName));
+					CComVariant attribVal;
+					CT(spAttrib->get_nodeValue(&attribVal));
+					if (attribName == L"ThreadGroupSize")
+					{
+						wchar_t* p = attribVal.bstrVal;
+						m_xThreads = _wtoi(p);
+						while (*p && *p != ',') p++; if (*p == ',') p++;
+						m_yThreads = _wtoi(p);
+						while (*p && *p != ',') p++; if (*p == ',') p++;
+						m_zThreads = _wtoi(p);
+						break;
+					}
+				}
 				ParseShaderEntry(spNode, EShaderType::TypeComputeShader);
 				m_shaderTypeFlags |= (int)EShaderType::TypeComputeShader;
 			}

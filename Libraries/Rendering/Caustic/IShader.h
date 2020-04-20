@@ -34,11 +34,13 @@ namespace Caustic
     // Parameters:
     // m_spData - pointer to the buffer
     // m_dataSize - size of buffer in bytes
+    // m_isInputBuffer - indicates whether this is an input or output buffer
     //**********************************************************************
     struct StructuredBuffer
     {
         std::shared_ptr<uint8> m_spData;
         uint32 m_dataSize;
+        bool m_isInputBuffer;
     };
 
     //**********************************************************************

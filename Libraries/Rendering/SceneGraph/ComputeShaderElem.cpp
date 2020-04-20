@@ -18,10 +18,16 @@ namespace Caustic
         (*ppElem)->AddRef();
     }
 
+    void CSceneComputeShaderElem::SetNumberThreads(int xThreads, int yThreads, int zThreads)
+    {
+        m_spComputeShader->SetThreadCounts(xThreads, yThreads, zThreads);
+    }
+
     void CSceneComputeShaderElem::SetInputBuffer(const wchar_t * pBufferName, uint8* pData, uint32 bufSize)
     {
         StructuredBuffer s;
         s.m_dataSize = bufSize;
+        s.m_isInputBuffer = true;
         uint8* pBuffer = new uint8[bufSize];
         memcpy(pBuffer, pData, bufSize);
         s.m_spData.reset(pBuffer);
@@ -30,5 +36,10 @@ namespace Caustic
 
     void CSceneComputeShaderElem::SetOutputBuffer(const wchar_t* pBufferName, uint8* pData, uint32 bufSize)
     {
+        StructuredBuffer s;
+        s.m_dataSize = bufSize;
+        s.m_spData.reset(pData);
+        s.m_isInputBuffer = false;
+        m_spComputeShader->SetCSParam(pBufferName, std::any(s));
     }
 }
