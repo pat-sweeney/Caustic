@@ -236,8 +236,9 @@ namespace Caustic
                 {
                     col.SetRed(0.0f);
                     col.SetGreen(0.0f);
-                    col.SetBlue(0.0f);
+                    col.SetBlue(1.0f);
                 }
+                col.SetAlpha(1.0f);
                 col.Step(CImageIter::Right);
             }
             row.Step(CImageIter::Down);
