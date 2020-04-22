@@ -161,6 +161,7 @@ namespace Caustic
         void PushLights(std::vector<CRefObj<IPointLight>> &lights);
         void PushMatrices(IGraphics *pGraphics, DirectX::XMMATRIX *pWorld);
         uint32 ComputeParamSize(ShaderParamDef *pParams, uint32 numParams, std::vector<ShaderParamInstance> &params);
+        uint32 ShaderTypeSize(ShaderParamDef& paramDef);
         void PushConstants(IGraphics *pGraphics, SBuffer *pBuffer, std::vector<ShaderParamInstance> &params);
         void PushSamplers(IGraphics* pGraphics, std::vector<ShaderParamInstance>& params, bool isPixelShader);
         void PushBuffers(IGraphics* pGraphics, std::vector<ShaderParamInstance>& params);
@@ -169,7 +170,7 @@ namespace Caustic
         void SetParam(std::wstring paramName, int index, std::any &value, std::vector<ShaderParamInstance> &params);
     public:
         void Create(IGraphics *pGraphics, const wchar_t *pShaderName, IShaderInfo *pShaderInfo, ID3DBlob *pPSBlob, ID3DBlob* pVSBlob, ID3DBlob* pCSBlob);
-        void CreateBuffer(ID3D11Device* pDevice, uint32 bufSize, uint32 bindFlags, uint32 cpuAccessFlags, D3D11_USAGE usage, uint32 miscFlags, uint32 stride, SBuffer* pBuffer, ID3D11Buffer **ppBuffer);
+        void CreateBuffer(ID3D11Device* pDevice, uint32 bufSize, uint32 bindFlags, uint32 cpuAccessFlags, D3D11_USAGE usage, uint32 miscFlags, uint32 stride, uint32 alignment, SBuffer* pBuffer, ID3D11Buffer **ppBuffer);
         void CreateBuffers(ID3D11Device* pDevice, ShaderParamDef* pDefs, uint32 paramsSize, std::vector<ShaderParamInstance>& params);
         void CreateConstantBuffer(ID3D11Device *pDevice, ShaderParamDef *pDefs, uint32 paramsSize, std::vector<ShaderParamInstance> &params, SBuffer *pConstantBuffer);
 
@@ -209,10 +210,7 @@ namespace Caustic
     class CShaderMgr : public IShaderMgr, public CRefCount
     {
         std::map<std::wstring, CRefObj<IShader>> m_shaders; // List of registered shaders
-        static CShaderMgr s_ShaderMgr; // Our shader manager singleton
     public:
-        static IShaderMgr *Instance() { return &s_ShaderMgr; }
-        
         //**********************************************************************
         // IRefCount
         //**********************************************************************

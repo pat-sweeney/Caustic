@@ -39,8 +39,7 @@ namespace Caustic
         m_spSceneGraph->AddChild(m_spScenePointLight);
 
 		Caustic::CCausticFactory::Instance()->CreateCamera(true, &m_spCamera);
-        CRefObj<IRenderer> spRenderer;
-        m_spMarshaller->GetRenderer(&spRenderer);
+        CRefObj<IRenderer> spRenderer = m_spMarshaller->GetRenderer();
         spRenderer->SetCamera(m_spCamera);
 		Caustic::CCausticFactory::Instance()->CreateTrackball(&m_spTrackball);
         m_hwnd = hwnd;

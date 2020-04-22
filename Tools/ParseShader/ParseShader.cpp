@@ -168,17 +168,17 @@ void ParseLoop(ID3D11ShaderReflection *pReflection, HANDLE oh, EShaderType shade
             case D3D_SHADER_VARIABLE_TYPE::D3D10_SVT_INT:
             case D3D_SHADER_VARIABLE_TYPE::D3D10_SVT_FLOAT:
             case D3D_SHADER_VARIABLE_TYPE::D3D_SVT_UINT:
-                elemSize = 4;
+                elemSize = 4 * typeDesc.Rows * typeDesc.Columns;
                 break;
             case D3D_SHADER_VARIABLE_TYPE::D3D11_SVT_DOUBLE:
-                elemSize = 8;
+                elemSize = 8 * typeDesc.Rows * typeDesc.Columns;
                 break;
             case D3D_SHADER_VARIABLE_TYPE::D3D_SVT_UINT8:
-                elemSize = 1;
+                elemSize = 1 * typeDesc.Rows * typeDesc.Columns;
                 break;
             case D3D_SHADER_VARIABLE_TYPE::D3D_SVT_MIN16INT:
             case D3D_SHADER_VARIABLE_TYPE::D3D_SVT_MIN16UINT:
-                elemSize = 2;
+                elemSize = 2 * typeDesc.Rows * typeDesc.Columns;
                 break;
             }
         }

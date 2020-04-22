@@ -46,5 +46,6 @@ namespace Caustic
         virtual void MouseUp(int x, int y, uint32 button, uint32 flags) override;
         virtual void MouseWheel(int factor) override;
         virtual void MapKey(uint32 wParam, uint32 lParam) override;
+        virtual CRefObj<IRenderer> GetRenderer() { return m_spMarshaller->GetRenderer(); }
     };
 }

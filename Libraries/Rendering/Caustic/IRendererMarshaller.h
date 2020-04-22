@@ -49,13 +49,13 @@ namespace Caustic
         virtual void Shutdown() = 0;
 
         //**********************************************************************
-        // Method: GetRenderer
-        // Returns the underlying renderer
+        // Method: RunOnRenderer
+        // Runs the specified callback function on the renderer's thread
         //
         // Parameters:
-        // ppRenderer - returns the renderer
+        // callback - function to run
         //**********************************************************************
-        virtual void GetRenderer(IRenderer **ppRenderer) = 0;
+        virtual void RunOnRenderer(std::function<void(IRenderer*,void*clientData)> callback, void* clientData) = 0;
 
         //**********************************************************************
         // Method: LoadTexture
@@ -100,5 +100,14 @@ namespace Caustic
         // pSceneGraph - scene graph to load into
         //**********************************************************************
         virtual void LoadScene(const wchar_t *pFilename, ISceneGraph *pSceneGraph) = 0;
+
+        //**********************************************************************
+        // Method: GetRenderer
+        // Returns the renderer this object is marshalling calls to
+        //
+        // Returns:
+        // Renderer this object is marshalling calls to
+        //**********************************************************************
+        virtual CRefObj<IRenderer> GetRenderer() = 0;
     };
 }

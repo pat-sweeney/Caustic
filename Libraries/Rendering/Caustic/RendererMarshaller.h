@@ -17,6 +17,23 @@
 
 namespace Caustic
 {
+    struct CRenderQueue
+    {
+        CRITICAL_SECTION m_cs;
+        std::queue<std::function<void()>> m_queue;
+
+        //**********************************************************************
+        // Method: AddLambda
+        // Adds the specified lambda into the render's instruction queue
+        //**********************************************************************
+        void AddLambda(std::function<void()> func)
+        {
+            EnterCriticalSection(&m_cs);
+            m_queue.push(func);
+            LeaveCriticalSection(&m_cs);
+        }
+    };
+
     //**********************************************************************
     // Class: CRendererMarshaller
     // Implements <IRendererMarshaller>
@@ -33,14 +50,12 @@ namespace Caustic
         public IRendererMarshaller,
         public CRefCount
     {
-        CRITICAL_SECTION m_cs;
         CRefObj<IRenderer> m_spRenderer;
-        std::queue<std::function<void()> > m_queue;
+        CRenderQueue m_renderQueue;
         bool m_exit;
         HANDLE m_thread;
         std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> m_renderCallback;
 
-        void AddLambda(std::function<void()> func);
     public:
         CRendererMarshaller();
         void MainLoop();
@@ -56,15 +71,12 @@ namespace Caustic
         //**********************************************************************
         virtual void Initialize(HWND hwnd, std::wstring &shaderFolder, std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) override;
         virtual void Shutdown() override;
-        virtual void GetRenderer(IRenderer **ppRenderer)
-        {
-            *ppRenderer = this;
-            (*ppRenderer)->AddRef();
-        }
         virtual void LoadTexture(const wchar_t *pPath, ITexture **ppTexture) override;
         virtual void LoadVideoTexture(const wchar_t *pPath, ITexture **ppTexture) override;
         virtual void SaveScene(const wchar_t *pFilename, ISceneGraph *pSceneGraph) override;
         virtual void LoadScene(const wchar_t *pFilename, ISceneGraph *pSceneGraph) override;
+        virtual void RunOnRenderer(std::function<void(IRenderer*, void* clientData)> callback, void* clientData) override;
+        virtual CRefObj<IRenderer> GetRenderer() { return m_spRenderer; }
 
         //**********************************************************************
         // IGraphics methods
@@ -72,6 +84,7 @@ namespace Caustic
         virtual CComPtr<ID3D11Device> GetDevice() override;
         virtual CComPtr<ID3D11DeviceContext> GetContext() override;
         virtual CRefObj<ICamera> GetCamera() override;
+        virtual CRefObj<IShaderMgr> GetShaderMgr() override { return m_spRenderer->GetShaderMgr(); }
 
         //**********************************************************************
         // IRenderer methods

@@ -30,6 +30,12 @@ namespace Caustic
 		virtual CRefObj<ISceneGraph> GetSceneGraph() = 0;
 
 		//**********************************************************************
+		// Method: GetRenderer
+		// Returns the underlying renderer
+		//**********************************************************************
+		virtual CRefObj<IRenderer> GetRenderer() = 0;
+
+		//**********************************************************************
 		// Method: MouseDown
 		// Called when a mouse down event occurs in the window
 		//
@@ -82,7 +88,7 @@ namespace Caustic
 		// lParam - lParam from WM_KEY event
 		//**********************************************************************
 		virtual void MapKey(uint32 wParam, uint32 lParam) = 0;
-    };
+	};
 
 
 	//**********************************************************************

@@ -71,11 +71,11 @@ namespace Caustic
         CRefObj<IShader> spShader;
         if (pRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayNormalsAsColors)
         {
-            CShaderMgr::Instance()->FindShader(L"ColorNormal", &spShader);
+            pGraphics->GetShaderMgr()->FindShader(L"ColorNormal", &spShader);
         }
         else if (pRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayUVsAsColors)
         {
-            CShaderMgr::Instance()->FindShader(L"ColorUVs", &spShader);
+            pGraphics->GetShaderMgr()->FindShader(L"ColorUVs", &spShader);
         }
         else
             pRenderMaterial->GetShader(&spShader);
@@ -148,7 +148,7 @@ namespace Caustic
             (pRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayFaceNormals))
         {
             CRefObj<IShader> spShader;
-            CShaderMgr::Instance()->FindShader(L"DrawNormal", &spShader);
+            pGraphics->GetShaderMgr()->FindShader(L"DrawNormal", &spShader);
             UINT offset = 0;
             const MeshData &md = m_spSubMesh->GetMeshData(true);
             spContext->IASetVertexBuffers(0, 1, &md.m_spVB.p, &md.m_vertexSize, &offset);

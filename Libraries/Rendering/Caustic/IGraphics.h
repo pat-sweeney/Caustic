@@ -10,6 +10,7 @@
 #include "Base\Core\Core.h"
 #include "Base\Core\IRefCount.h"
 #include "Base\Math\BBox.h"
+#include "IShaderMgr.h"
 
 //**********************************************************************
 // File: IGraphics.h
@@ -90,5 +91,6 @@ namespace Caustic
         // pCamera - camera
         //**********************************************************************
         virtual void SetCamera(ICamera *pCamera) = 0;
+        virtual CRefObj<IShaderMgr> GetShaderMgr() = 0;
     };
 };

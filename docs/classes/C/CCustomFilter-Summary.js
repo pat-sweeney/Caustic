@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:CCustomFilter","CCustomFilter");NDSummary.OnSummaryLoaded("CClass:CCustomFilter",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[863,0,0,"CCustomFilter"],[864,0,2,"Functions","Functions"],[865,0,1,"Apply","Apply"],[866,0,1,"CreateCustomFilter","CreateCustomFilter"]]);

@@ -53,10 +53,16 @@
  <div class="CBody"><div class="CHeading">Returns</div><p>Returns the underlying D3D shader resource view associated with the texture</p></div>
 </div>
 
-<a name="GenerateMips"></a><a name="Topic460"></a><div class="CTopic TFunction LC last">
+<a name="GenerateMips"></a><a name="Topic460"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GenerateMips</div>
  <div id="NDPrototype460" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> GenerateMips(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,577);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pGraphics</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
  <div class="CBody"><p>Generates a set of mipmaps for the texture</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pGraphics<div class="CDLParameterType"><a href="../../index.html#CClass:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,577);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>*</div></td><td class="CDLDefinition"><p>graphics device</p></td></tr></table></div>
+</div>
+
+<a name="Render"></a><a name="Topic342"></a><div class="CTopic TFunction LC last">
+ <div class="CTitle">Render</div>
+ <div id="NDPrototype342" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> Render(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,577);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pGraphics,</td></tr><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td></td><td class="PName last">slot,</td></tr><tr><td class="PType first"><span class="SHKeyword">bool</span>&nbsp;</td><td></td><td class="PName last">isPixelShader</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Pushes the specified texture to the GPU</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pGraphics<div class="CDLParameterType"><a href="../../index.html#CClass:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,577);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>*</div></td><td class="CDLDefinition"><p>graphics device</p></td></tr><tr><td class="CDLEntry">slot<div class="CDLParameterType"><span class="SHKeyword">int</span></div></td><td class="CDLDefinition"><p>texture slot to assign texture to</p></td></tr><tr><td class="CDLEntry">isPixelShader<div class="CDLParameterType"><span class="SHKeyword">bool</span></div></td><td class="CDLDefinition"><p>is texture being assigned to a pixel or vertex shader</p></td></tr></table></div>
 </div>
 
 </body></html>

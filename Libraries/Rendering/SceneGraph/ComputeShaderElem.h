@@ -66,8 +66,8 @@ namespace Caustic
         // IComputeShaderElem
         //**********************************************************************
         virtual CRefObj<IShader> GetShader() override { return m_spComputeShader; }
-        virtual void SetInputBuffer(const wchar_t* pBufferName, uint8* pData, uint32 bufSize) override;
-        virtual void SetOutputBuffer(const wchar_t* pBufferName, uint8* pData, uint32 bufSize) override;
+        virtual void SetInputBuffer(const wchar_t* pBufferName, uint8* pData, uint32 bufSize, uint32 stride) override;
+        virtual void SetOutputBuffer(const wchar_t* pBufferName, uint8* pData, uint32 bufSize, uint32 stride) override;
         virtual void SetNumberThreads(int xThreads, int yThreads, int zThreads) override;
     };
 }

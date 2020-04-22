@@ -23,10 +23,11 @@ namespace Caustic
         m_spComputeShader->SetThreadCounts(xThreads, yThreads, zThreads);
     }
 
-    void CSceneComputeShaderElem::SetInputBuffer(const wchar_t * pBufferName, uint8* pData, uint32 bufSize)
+    void CSceneComputeShaderElem::SetInputBuffer(const wchar_t * pBufferName, uint8* pData, uint32 bufSize, uint32 stride)
     {
         StructuredBuffer s;
         s.m_dataSize = bufSize;
+        s.m_stride = stride;
         s.m_isInputBuffer = true;
         uint8* pBuffer = new uint8[bufSize];
         memcpy(pBuffer, pData, bufSize);
@@ -34,10 +35,11 @@ namespace Caustic
         m_spComputeShader->SetCSParam(pBufferName, std::any(s));
     }
 
-    void CSceneComputeShaderElem::SetOutputBuffer(const wchar_t* pBufferName, uint8* pData, uint32 bufSize)
+    void CSceneComputeShaderElem::SetOutputBuffer(const wchar_t* pBufferName, uint8* pData, uint32 bufSize, uint32 stride)
     {
         StructuredBuffer s;
         s.m_dataSize = bufSize;
+        s.m_stride = stride;
         s.m_spData.reset(pData);
         s.m_isInputBuffer = false;
         m_spComputeShader->SetCSParam(pBufferName, std::any(s));

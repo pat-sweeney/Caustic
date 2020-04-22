@@ -7,6 +7,7 @@
 
 #include "Base\Core\Core.h"
 #include "Base\Core\IRefCount.h"
+#include "IGraphics.h"
 #include <string>
 #include <any>
 #include <d3d11.h>
@@ -24,6 +25,7 @@ namespace Caustic
     struct IShaderInfo;
     struct IRenderMaterial;
     struct IPointLight;
+    struct IGraphics;
 
     //**********************************************************************
     // Structure: StructuredBuffer
@@ -40,7 +42,23 @@ namespace Caustic
     {
         std::shared_ptr<uint8> m_spData;
         uint32 m_dataSize;
+        uint32 m_stride; // Size of each element
         bool m_isInputBuffer;
+
+        StructuredBuffer()
+        {
+            m_dataSize = 0;
+        }
+
+        StructuredBuffer(const StructuredBuffer &s)
+        {
+            *this = s;
+        }
+
+        ~StructuredBuffer()
+        {
+            m_dataSize = 0;
+        }
     };
 
     //**********************************************************************

@@ -71,12 +71,13 @@ namespace Caustic
     //**********************************************************************
     void CRenderer::Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice)
     {
+        m_renderThreadId = GetCurrentThreadId();
         CGraphicsBase::Setup(hwnd, createDebugDevice);
 
+        m_spShaderMgr = CRefObj<IShaderMgr>(new CShaderMgr());
         LoadDefaultShaders(shaderFolder.c_str());
 
-        IShaderMgr *pShaderMgr = CShaderMgr::Instance();
-        pShaderMgr->FindShader(L"Line", &m_spLineShader);
+        m_spShaderMgr->FindShader(L"Line", &m_spLineShader);
 
         //**********************************************************************
         // Create vertex buffer used to draw lines
@@ -96,76 +97,6 @@ namespace Caustic
             data.SysMemSlicePitch = 0;
             CT(m_spDevice->CreateBuffer(&bufdesc, &data, &m_spLineVB));
         }
-
-        //**********************************************************************
-        // Create vertex buffer used to draw infinite plane
-        //**********************************************************************
-        {
-            CD3D11_BUFFER_DESC bufdesc(sizeof(CLineVertex) * 5, D3D11_BIND_VERTEX_BUFFER);
-            CLineVertex planePts[5] = {
-                { 0.0f, 0.0f, 0.0f },
-                { 1.0f, 0.0f, 0.0f },
-                { 0.0f, 0.0f, 1.0f },
-                { -1.0f, 0.0f, 0.0f },
-                { 0.0f, 0.0f, -1.0f },
-            };
-            D3D11_SUBRESOURCE_DATA data;
-            data.pSysMem = planePts;
-            data.SysMemPitch = 0;
-            data.SysMemSlicePitch = 0;
-            CT(m_spDevice->CreateBuffer(&bufdesc, &data, &m_spInfinitePlaneVB));
-        }
-
-        //**********************************************************************
-        // Create index buffer used to draw infinite plane
-        //**********************************************************************
-        {
-            CD3D11_BUFFER_DESC bufdesc(sizeof(uint32) * 12, D3D11_BIND_INDEX_BUFFER);
-            uint32 planeIndices[4][3] = {
-                { 0, 1, 2 },
-                { 0, 2, 3 },
-                { 0, 3, 4 },
-                { 0, 4, 1 }
-            };
-            D3D11_SUBRESOURCE_DATA data;
-            data.pSysMem = planeIndices;
-            data.SysMemPitch = 0;
-            data.SysMemSlicePitch = 0;
-            CT(m_spDevice->CreateBuffer(&bufdesc, &data, &m_spInfinitePlaneIB));
-        }
-
-#ifdef SUPPORT_FULLQUAD
-        //**********************************************************************
-        // Create vertex buffer used to draw fullscreen quad
-        //**********************************************************************
-        {
-            CD3D11_BUFFER_DESC vbdesc(sizeof(SVertex_5) * 4, D3D11_BIND_VERTEX_BUFFER);
-            SVertex_5 quadPts[5] = {
-                { -1.0f, -1.0f, 0.9f, 1.0f },
-                { -1.0f, +1.0f, 0.9f, 1.0f },
-                { +1.0f, +1.0f, 0.9f, 1.0f },
-                { +1.0f, -1.0f, 0.9f, 1.0f },
-            };
-            D3D11_SUBRESOURCE_DATA data;
-            data.pSysMem = quadPts;
-            data.SysMemPitch = 0;
-            data.SysMemSlicePitch = 0;
-            CT(m_spDevice->CreateBuffer(&vbdesc, &data, &m_spFullQuadVB));
-
-            //**********************************************************************
-            // Create index buffer used to draw full quad
-            //**********************************************************************
-            CD3D11_BUFFER_DESC ibdesc(sizeof(uint32) * 6, D3D11_BIND_INDEX_BUFFER);
-            uint32 quadIndices[2][3] = {
-                { 0, 2, 1 },
-                { 0, 3, 2 },
-            };
-            data.pSysMem = quadIndices;
-            data.SysMemPitch = 0;
-            data.SysMemSlicePitch = 0;
-            CT(m_spDevice->CreateBuffer(&ibdesc, &data, &m_spFullQuadIB));
-        }
-#endif // SUPPORT_FULLQUAD
     }
 
     //**********************************************************************
@@ -211,7 +142,6 @@ namespace Caustic
     //**********************************************************************
     void CRenderer::LoadDefaultShaders(const wchar_t *pFolder)
     {
-        IShaderMgr *pShaderMgr = CShaderMgr::Instance();
         WIN32_FIND_DATA findData;
         std::wstring fn(pFolder);
         fn += L"\\*.shi";
@@ -238,7 +168,7 @@ namespace Caustic
                 if (spShaderInfo->HasShader(EShaderType::TypeComputeShader))
                     LoadShaderBlob(std::wstring(const_cast<wchar_t*>(pFolder)) + std::wstring(L"\\") + shaderName + L"_CS.cso", &spComputeShaderBlob);
                 CCausticFactory::Instance()->CreateShader(this, shaderName.c_str(), spVertexShaderBlob, spPixelShaderBlob, spComputeShaderBlob, spShaderInfo, &spShader);
-                pShaderMgr->RegisterShader(shaderName.c_str(), spShader);
+                m_spShaderMgr->RegisterShader(shaderName.c_str(), spShader);
             }
             if (!::FindNextFile(h, &findData))
                 break;
@@ -270,6 +200,7 @@ namespace Caustic
     //**********************************************************************
     void CRenderer::AddPointLight(IPointLight *pLight)
     {
+        CHECKTHREAD;
         m_lights.push_back(CRefObj<IPointLight>(pLight));
     }
 
@@ -279,40 +210,10 @@ namespace Caustic
     //**********************************************************************
     void CRenderer::GetRenderCtx(IRenderCtx **ppCtx)
     {
+        CHECKTHREAD;
         (*ppCtx) = m_spRenderCtx;
         if (m_spRenderCtx)
             (*ppCtx)->AddRef();
-    }
-
-    //**********************************************************************
-    // Method: DrawInfinitePlane
-    // See <IRenderer::DrawInfinitePlane>
-    //**********************************************************************
-    void CRenderer::DrawInfinitePlane()
-    {
-#ifdef SUPPORT_FULLQUAD
-        UINT offset = 0;
-        UINT vertexSize = sizeof(SVertex_5);
-        ID3D11DeviceContext *pContext = GetContext();
-        CComPtr<ID3D11RasterizerState> spRasterState;
-        D3D11_RASTERIZER_DESC rasDesc;
-        ZeroMemory(&rasDesc, sizeof(rasDesc));
-        rasDesc.CullMode = D3D11_CULL_NONE;
-        rasDesc.DepthClipEnable = TRUE;
-        rasDesc.FillMode = D3D11_FILL_SOLID;
-        m_spDevice->CreateRasterizerState(&rasDesc, &spRasterState);
-        pContext->RSSetState(spRasterState);
-        pContext->IASetVertexBuffers(0, 1, &m_spFullQuadVB, &vertexSize, &offset);
-        pContext->IASetIndexBuffer(m_spFullQuadIB, DXGI_FORMAT_R32_UINT, 0);
-        Vector3 eye;
-        GetCamera()->GetPosition(&eye, nullptr, nullptr, nullptr, nullptr, nullptr);
-        Float3 vEye(eye.x, eye.y, eye.z);
-        m_spFullQuadShader->SetPSParam(L"eye", std::any(vEye));
-        m_spFullQuadShader->BeginRender(this);
-        pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-        pContext->DrawIndexed(6, 0, 0);
-        m_spFullQuadShader->EndRender(this);
-#endif // SUPPORT_FULLQUAD
     }
 
     //**********************************************************************
@@ -321,6 +222,7 @@ namespace Caustic
     //**********************************************************************
     void CRenderer::DrawLine(Vector3 p1, Vector3 p2, Vector4 clr)
     {
+        CHECKTHREAD;
         UINT offset = 0;
         UINT vertexSize = sizeof(CLineVertex);
         ID3D11DeviceContext *pContext = GetContext();
@@ -344,8 +246,9 @@ namespace Caustic
     // Method: GetGraphics
     // See <IRenderer::GetGraphics>
     //**********************************************************************
-    void CRenderer::GetGraphics(IGraphics **ppGraphics)
+    void CRenderer::GetGraphics(IGraphics** ppGraphics)
     {
+        CHECKTHREAD;
         *ppGraphics = this;
         (*ppGraphics)->AddRef();
     }
@@ -378,7 +281,6 @@ namespace Caustic
     //**********************************************************************
     void CRenderer::RenderScene(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback)
     {
-        DrawInfinitePlane();
         if (m_spRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayWorldAxis)
         {
             DrawLine(Vector3(0.0f, 0.0f, 0.0f), Vector3(10.0f, 0.0f, 0.0f), Vector4(1.0f, 0.0f, 0.0f, 1.0f));
@@ -512,7 +414,7 @@ namespace Caustic
     // hwnd - window to attach renderer to
     // ppGraphics - Returns the created device
     //**********************************************************************
-    CAUSTICAPI void CreateGraphics(HWND hwnd, IGraphics **ppGraphics)
+    CAUSTICAPI void CreateGraphics(HWND hwnd, IGraphics** ppGraphics)
     {
         _ASSERT(ppGraphics);
         std::unique_ptr<CGraphics> spGraphics(new CGraphics());
@@ -553,7 +455,7 @@ namespace Caustic
     // Method: SetCamera
     // See <IRenderer::SetCamera>
     //**********************************************************************
-    void CGraphicsBase::SetCamera(ICamera *pCamera)
+    void CGraphicsBase::SetCamera(ICamera* pCamera)
     {
         m_spCamera = pCamera;
     }

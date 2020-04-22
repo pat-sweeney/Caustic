@@ -69,7 +69,7 @@ namespace Caustic
     class CLight : public IPointLight, public CRefCount
     {
     public:
-        void Render(IGraphics * /*pGraphics*/) {}
+        void Render(IGraphics* /*pGraphics*/) {}
     };
 
     //**********************************************************************
@@ -131,15 +131,17 @@ namespace Caustic
         CComPtr<ID3D11DepthStencilView> m_spStencilView;    // Stencil view
         CComPtr<ID3D11Texture2D> m_spDepthStencilBuffer;    // Our depth map
         D3D11_TEXTURE2D_DESC m_BBDesc;                      // Description of our back buffer
+        CRefObj<IShaderMgr> m_spShaderMgr;                  // Our shader manager
 
-        friend CAUSTICAPI void CreateGraphics(HWND hwnd, IGraphics **ppGraphics);
+        friend CAUSTICAPI void CreateGraphics(HWND hwnd, IGraphics** ppGraphics);
 
         void InitializeD3D(HWND hwnd);
         void Setup(HWND hwnd, bool createDebugDevice);
-        void SetCamera(ICamera *pCamera);
+        void SetCamera(ICamera* pCamera);
         CComPtr<ID3D11Device> GetDevice() { return m_spDevice; }
         CComPtr<ID3D11DeviceContext> GetContext() { return m_spContext; }
         CRefObj<ICamera> GetCamera() { return m_spCamera; }
+        CRefObj<IShaderMgr> GetShaderMgr() { return m_spShaderMgr; }
     };
 
     //**********************************************************************
@@ -161,7 +163,8 @@ namespace Caustic
         virtual CComPtr<ID3D11Device> GetDevice() override { return CGraphicsBase::GetDevice(); }
         virtual CComPtr<ID3D11DeviceContext> GetContext() override { return CGraphicsBase::GetContext(); }
         virtual CRefObj<ICamera> GetCamera() override { return CGraphicsBase::GetCamera(); }
-        virtual void SetCamera(ICamera *pCamera) override { CGraphicsBase::SetCamera(pCamera); }
+        virtual void SetCamera(ICamera* pCamera) override { CGraphicsBase::SetCamera(pCamera); }
+        virtual CRefObj<IShaderMgr> GetShaderMgr() override { return CGraphicsBase::GetShaderMgr(); }
     };
 
     //**********************************************************************
@@ -169,6 +172,8 @@ namespace Caustic
     // See <IRenderer>
     //
     // Members:
+    // m_renderThreadId - Thread ID this thread is running on. That is the only valid thread to make calls to this object from.
+    // m_spShaderMgr - Our shader manager
     // m_singleObjs - List of individual renderable objects (outside scene graph)
     // m_lights - List of lights in this scene
     // m_spObjIDTexture - Texture for rendering object IDs
@@ -179,36 +184,37 @@ namespace Caustic
     // m_exitThread - Controls whether we are exiting the render thread
     // m_spLineVB - Vertex buffer used to draw lines
     // m_spLineShader - Shader used to draw lines
-    // m_spInfinitePlaneVB - Vertex buffer used to draw ground plane
-    // m_spInfinitePlaneIB - Index buffer used to draw ground plane
-    // m_spInfinitePlaneShader - Shader used to draw ground plane
-    // m_spFullQuadVB - Vertex buffer used for drawing full screen quad
-    // m_spFullQuadIB - Index buffer used for drawing full screen quad
-    // m_spFullQuadShader - Shader used for drawing full screen quad
     //**********************************************************************
     class CRenderer : 
         public CGraphicsBase,
         public IRenderer
     {
-        std::vector<CRenderable> m_singleObjs;                              // List of individual renderable objects (outside scene graph)
-        std::vector<CRefObj<IPointLight>> m_lights;                         // List of lights in this scene
-        CComPtr<ID3D11Texture2D> m_spObjIDTexture;                          // Texture for rendering object IDs
-        CComPtr<ID3D11RenderTargetView> m_spObjIDRTView;                    // Render target view for m_spObjIDTexture
+    protected:
+        DWORD m_renderThreadId;                             // Render thread's ID
+        std::vector<CRenderable> m_singleObjs;              // List of individual renderable objects (outside scene graph)
+        std::vector<CRefObj<IPointLight>> m_lights;         // List of lights in this scene
+        CComPtr<ID3D11Texture2D> m_spObjIDTexture;          // Texture for rendering object IDs
+        CComPtr<ID3D11RenderTargetView> m_spObjIDRTView;    // Render target view for m_spObjIDTexture
         CComPtr<ID3D11Texture2D> m_spShadowTexture[c_MaxShadowMaps];        // Texture for shadow map
         CComPtr<ID3D11RenderTargetView> m_spShadowRTView[c_MaxShadowMaps];  // Render target view for m_spShadowTexture
-        CEvent m_waitForShutdown;                       // Event to control shutdown (waits for render thread to exit)
-        bool m_exitThread;                              // Controls whether we are exiting the render thread
-        CComPtr<ID3D11Buffer> m_spLineVB;               // Vertex buffer used to draw lines
-        CRefObj<IShader> m_spLineShader;                // Shader used to draw lines
-        CComPtr<ID3D11Buffer> m_spInfinitePlaneVB;      // Vertex buffer used to draw ground plane
-        CComPtr<ID3D11Buffer> m_spInfinitePlaneIB;      // Index buffer used to draw ground plane
-        CRefObj<IShader> m_spInfinitePlaneShader;       // Shader used to draw ground plane
-#ifdef SUPPORT_FULLQUAD
-        CComPtr<ID3D11Buffer> m_spFullQuadVB;           // Vertex buffer used for drawing full screen quad
-        CComPtr<ID3D11Buffer> m_spFullQuadIB;           // Index buffer used for drawing full screen quad
-        CRefObj<IShader> m_spFullQuadShader;            // Shader used for drawing full screen quad
-#endif // SUPPORT_FULLQUAD
+        CEvent m_waitForShutdown;                           // Event to control shutdown (waits for render thread to exit)
+        bool m_exitThread;                                  // Controls whether we are exiting the render thread
+        CComPtr<ID3D11Buffer> m_spLineVB;                   // Vertex buffer used to draw lines
+        CRefObj<IShader> m_spLineShader;                    // Shader used to draw lines
 
+#ifdef DIAGNOSTICS
+        void CheckThread()
+        {
+            if (m_renderThreadId != GetCurrentThreadId())
+            {
+                OutputDebugString(L"ERROR! Renderer called from non-renderer thread! Clients should be calling the marshalled version of the renderer\n");
+                CT(E_UNEXPECTED);
+            }
+        }
+#define CHECKTHREAD CheckThread()
+#else
+#define CHECKTHREAD
+#endif
         void LoadDefaultShaders(const wchar_t *pFolder);
         void LoadShaderBlob(std::wstring &filename, ID3DBlob **ppBlob);
         void LoadShaderInfo(std::wstring &filename, IShaderInfo **ppShaderInfo);
@@ -230,10 +236,11 @@ namespace Caustic
         //**********************************************************************
         // IGraphics
         //**********************************************************************
-        virtual CComPtr<ID3D11Device> GetDevice() override { return CGraphicsBase::GetDevice(); }
-        virtual CComPtr<ID3D11DeviceContext> GetContext() override { return CGraphicsBase::GetContext(); }
-        virtual CRefObj<ICamera> GetCamera() override { return CGraphicsBase::GetCamera(); }
-        virtual void SetCamera(ICamera *pCamera) override { CGraphicsBase::SetCamera(pCamera); }
+        virtual CComPtr<ID3D11Device> GetDevice() override { CHECKTHREAD;  return CGraphicsBase::GetDevice(); }
+        virtual CComPtr<ID3D11DeviceContext> GetContext() override { CHECKTHREAD; return CGraphicsBase::GetContext(); }
+        virtual CRefObj<ICamera> GetCamera() override { CHECKTHREAD; return CGraphicsBase::GetCamera(); }
+        virtual void SetCamera(ICamera* pCamera) override { CHECKTHREAD; CGraphicsBase::SetCamera(pCamera); }
+        virtual CRefObj<IShaderMgr> GetShaderMgr() override { CHECKTHREAD; return CGraphicsBase::GetShaderMgr(); }
 
         //**********************************************************************
         // IRenderer
@@ -243,7 +250,6 @@ namespace Caustic
         virtual void AddPointLight(IPointLight *pLight) override;
         virtual void GetRenderCtx(IRenderCtx **ppCtx) override;
         virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) override;
-        virtual void GetGraphics(IGraphics **ppGraphics) override;
-        void DrawInfinitePlane();
+        virtual void GetGraphics(IGraphics** ppGraphics) override;
     };
 }

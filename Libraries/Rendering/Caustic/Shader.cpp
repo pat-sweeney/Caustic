@@ -14,6 +14,48 @@
 
 namespace Caustic
 {
+    uint32 CShader::ShaderTypeSize(ShaderParamDef& paramDef)
+    {
+        if (paramDef.m_type == EShaderParamType::ShaderType_Float)
+            return sizeof(float);
+        else if (paramDef.m_type == EShaderParamType::ShaderType_Float_Array)
+            return paramDef.m_members * sizeof(float);
+        else if (paramDef.m_type == EShaderParamType::ShaderType_Float2)
+            return sizeof(float) * 2;
+        else if (paramDef.m_type == EShaderParamType::ShaderType_Float2_Array)
+            return paramDef.m_members * sizeof(float) * 2;
+        else if (paramDef.m_type == EShaderParamType::ShaderType_Float3)
+            return sizeof(float) * 3;
+        else if (paramDef.m_type == EShaderParamType::ShaderType_Float3_Array)
+            return paramDef.m_members * sizeof(float) * 3;
+        else if (paramDef.m_type == EShaderParamType::ShaderType_Float4)
+            return sizeof(float) * 4;
+        else if (paramDef.m_type == EShaderParamType::ShaderType_Float4_Array)
+            return paramDef.m_members * sizeof(float) * 4;
+        else if (paramDef.m_type == EShaderParamType::ShaderType_Int)
+            return sizeof(int);
+        else if (paramDef.m_type == EShaderParamType::ShaderType_Int_Array)
+            return paramDef.m_members * sizeof(int);
+        else if (paramDef.m_type == EShaderParamType::ShaderType_Matrix)
+            return 16 * sizeof(float);
+        else if (paramDef.m_type == EShaderParamType::ShaderType_Matrix_Array)
+            return paramDef.m_members * 16 * sizeof(float);
+        else if (paramDef.m_type == EShaderParamType::ShaderType_StructuredBuffer ||
+            paramDef.m_type == EShaderParamType::ShaderType_AppendStructuredBuffer ||
+            paramDef.m_type == EShaderParamType::ShaderType_RWByteAddressBuffer ||
+            paramDef.m_type == EShaderParamType::ShaderType_RWStructuredBuffer ||
+            paramDef.m_type == EShaderParamType::ShaderType_Texture ||
+            paramDef.m_type == EShaderParamType::ShaderType_Sampler)
+        {
+            // Structured buffers (used by compute shaders) and textures/samplers are not
+            // included in the final buffer count since those buffers are not part of
+            // the constant buffer. So, do nothing here.
+        }
+        else
+            CT(E_UNEXPECTED);
+        return 0;
+    }
+
     //**********************************************************************
     // Method: ComputeParamSize
     // Parses the definitions of each shader parameter that was read from
@@ -38,6 +80,7 @@ namespace Caustic
                 continue;
             ShaderParamDef& d = params[i];
             d = pDefs[i];
+            s += ShaderTypeSize(d);
             params[i].m_dirty = true;
             params[i].m_offset = (pDefs[i].m_type == EShaderParamType::ShaderType_Texture ||
                 pDefs[i].m_type == EShaderParamType::ShaderType_AppendStructuredBuffer ||
@@ -45,59 +88,39 @@ namespace Caustic
                 pDefs[i].m_type == EShaderParamType::ShaderType_RWByteAddressBuffer ||
                 pDefs[i].m_type == EShaderParamType::ShaderType_StructuredBuffer) ? pDefs[i].m_offset : s;
             if (pDefs[i].m_type == EShaderParamType::ShaderType_Float)
-            {
                 params[i].m_value = std::any(0.0f);
-                s += sizeof(float);
-            }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Float_Array)
             {
                 for (size_t j = 0; j < params[i].m_members; j++)
                     params[i].m_values.push_back(Float(0.0f));
-                s += params[i].m_members * sizeof(float);
             }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Float2)
-            {
                 params[i].m_value = std::any(Float2(0.0f, 0.0f));
-                s += sizeof(float) * 2;
-            }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Float2_Array)
             {
                 for (size_t j = 0; j < params[i].m_members; j++)
                     params[i].m_values.push_back(Float2(0.0f, 0.0f));
-                s += params[i].m_members * sizeof(float) * 2;
             }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Float3)
-            {
                 params[i].m_value = std::any(Float3(0.0f, 0.0f, 0.0f));
-                s += sizeof(float) * 3;
-            }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Float3_Array)
             {
                 for (size_t j = 0; j < params[i].m_members; j++)
                     params[i].m_values.push_back(Float3(0.0f, 0.0f, 0.0f));
-                s += params[i].m_members * sizeof(float) * 3;
             }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Float4)
-            {
                 params[i].m_value = std::any(Float4(0.0f, 0.0f, 0.0f, 0.0f));
-                s += sizeof(float) * 4;
-            }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Float4_Array)
             {
                 for (size_t j = 0; j < params[i].m_members; j++)
                     params[i].m_values.push_back(Float4(0.0f, 0.0f, 0.0f, 0.0f));
-                s += params[i].m_members * sizeof(float) * 4;
             }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Int)
-            {
                 params[i].m_value = std::any(Int(0));
-                s += sizeof(int);
-            }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Int_Array)
             {
                 for (size_t j = 0; j < params[i].m_members; j++)
                     params[i].m_values.push_back(Int(0));
-                s += params[i].m_members * sizeof(int);
             }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Matrix)
             {
@@ -109,7 +132,6 @@ namespace Caustic
                 };
                 Matrix m(v);
                 params[i].m_value = std::any(m);
-                s += 16 * sizeof(float);
             }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Matrix_Array)
             {
@@ -122,7 +144,6 @@ namespace Caustic
                 Matrix m(v);
                 for (size_t j = 0; j < params[i].m_members; j++)
                     params[i].m_values.push_back(m);
-                s += params[i].m_members * 16 * sizeof(float);
             }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_StructuredBuffer ||
                 pDefs[i].m_type == EShaderParamType::ShaderType_AppendStructuredBuffer ||
@@ -324,10 +345,13 @@ namespace Caustic
                 spCtx->CopyResource(s.m_spStagingBuffer, s.m_spBuffer);
                 CT(spCtx->Map(s.m_spStagingBuffer, 0, D3D11_MAP_READ, 0, &ms));
                 BYTE* pb = reinterpret_cast<BYTE*>(ms.pData);
-                //memcpy(pb, srcVal.m_spData.get(), srcVal.m_dataSize);
+                // TODO: Need to copy the data back to the client's buffer,
+                // but we need to get the pointer from some where
+               // memcpy(pb, srcVal.m_spData.get(), srcVal.m_dataSize);
                 spCtx->Unmap(s.m_spStagingBuffer, 0);
             }
         }
+        m_csBuffers.clear();
     }
 
     //**********************************************************************
@@ -359,10 +383,10 @@ namespace Caustic
             switch (params[i].m_type)
             {
             case EShaderParamType::ShaderType_AppendStructuredBuffer:
-            case EShaderParamType::ShaderType_RWStructuredBuffer:
                 CT(E_NOTIMPL);
                 break;
             case EShaderParamType::ShaderType_StructuredBuffer:
+            case EShaderParamType::ShaderType_RWStructuredBuffer:
                 miscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
                 bind = D3D11_BIND_FLAG::D3D11_BIND_UNORDERED_ACCESS;
                 break;
@@ -396,22 +420,26 @@ namespace Caustic
                 // Recreate the underlying buffer
                 uint32 access = 0;
                 D3D11_USAGE usage = D3D11_USAGE::D3D11_USAGE_DEFAULT;
-                uint32 stride;
+                uint32 stride, alignment;
                 if (params[i].m_type == EShaderParamType::ShaderType_StructuredBuffer ||
                     params[i].m_type == EShaderParamType::ShaderType_RWStructuredBuffer)
                 {
                     // This is lame. Structured buffers must have each element be a multiple of 4
                     stride = ((params[i].m_elemSize + 3) / 4) * 4;
+                    alignment = stride;
                 }
                 else
+                {
                     stride = params[i].m_elemSize;
+                    alignment = 16;
+                }
                 CComPtr<ID3D11Device> spDevice = pGraphics->GetDevice();
-                CreateBuffer(spDevice, srcVal.m_dataSize, bind | D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE, access, usage, miscFlags, stride, &m_csBuffers[bufferIndex], &m_csBuffers[bufferIndex].m_spBuffer.p);
+                CreateBuffer(spDevice, srcVal.m_dataSize, bind | D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE, access, usage, miscFlags, stride, alignment, &m_csBuffers[bufferIndex], &m_csBuffers[bufferIndex].m_spBuffer.p);
                 usage = D3D11_USAGE::D3D11_USAGE_STAGING;
                 access = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_READ;
                 bind = 0;
                 miscFlags = 0;
-                CreateBuffer(spDevice, srcVal.m_dataSize, bind, access, usage, miscFlags, stride, &m_csBuffers[bufferIndex], &m_csBuffers[bufferIndex].m_spStagingBuffer.p);
+                CreateBuffer(spDevice, srcVal.m_dataSize, bind, access, usage, miscFlags, stride, alignment, &m_csBuffers[bufferIndex], &m_csBuffers[bufferIndex].m_spStagingBuffer.p);
 
                 if (params[i].m_type == EShaderParamType::ShaderType_StructuredBuffer)
                 {
@@ -419,8 +447,7 @@ namespace Caustic
                     ZeroMemory(&srvDesc, sizeof(srvDesc));
                     srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
                     srvDesc.Buffer.ElementWidth = stride;
-                    //srvDesc.Buffer.NumElements = s.m_dataSize / params[i].m_elemSize;
-                    srvDesc.Format = DXGI_FORMAT::DXGI_FORMAT_R16_UINT;
+                    srvDesc.Format = DXGI_FORMAT::DXGI_FORMAT_UNKNOWN;
                     CT(spDevice->CreateShaderResourceView(m_csBuffers[bufferIndex].m_spBuffer, &srvDesc, &m_csBuffers[bufferIndex].m_spSRView.p));
                 }
                 else
@@ -428,9 +455,17 @@ namespace Caustic
                     D3D11_UNORDERED_ACCESS_VIEW_DESC uavDesc;
                     ZeroMemory(&uavDesc, sizeof(uavDesc));
                     uavDesc.Buffer.FirstElement = 0;
-                    uavDesc.Buffer.Flags = D3D11_BUFFER_UAV_FLAG_RAW;
-                    uavDesc.Buffer.NumElements = srcVal.m_dataSize / 4;
-                    uavDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+                    uavDesc.Buffer.NumElements = srcVal.m_dataSize / stride;
+                    if (params[i].m_type == EShaderParamType::ShaderType_RWStructuredBuffer)
+                    {
+                        uavDesc.Format = DXGI_FORMAT_UNKNOWN;
+                        uavDesc.Buffer.Flags = 0;
+                    }
+                    else
+                    {
+                        uavDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+                        uavDesc.Buffer.Flags = D3D11_BUFFER_UAV_FLAG_RAW;
+                    }
                     uavDesc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
                     CT(spDevice->CreateUnorderedAccessView(m_csBuffers[bufferIndex].m_spBuffer, &uavDesc, &m_csBuffers[bufferIndex].m_spUAView.p));
                 }
@@ -762,7 +797,7 @@ namespace Caustic
     //**********************************************************************
     void CShader::CreateBuffer(ID3D11Device* pDevice, uint32 bufSize,
         uint32 bindFlags, uint32 cpuAccessFlags, D3D11_USAGE usage,
-        uint32 miscFlags, uint32 stride, SBuffer* pBuffer, ID3D11Buffer **ppBuffer)
+        uint32 miscFlags, uint32 stride, uint32 alignment, SBuffer* pBuffer, ID3D11Buffer **ppBuffer)
     {
         pBuffer->m_heapSize = 0;
         pBuffer->m_bufferSize = 0;
@@ -770,7 +805,7 @@ namespace Caustic
         {
             D3D11_BUFFER_DESC buffDesc;
             buffDesc.BindFlags = bindFlags;
-            buffDesc.ByteWidth = ((bufSize + 15) / 16) * 16;
+            buffDesc.ByteWidth = ((bufSize + alignment - 1) / alignment) * alignment;
             buffDesc.CPUAccessFlags = cpuAccessFlags;
             buffDesc.MiscFlags = miscFlags;
             buffDesc.StructureByteStride = stride;
@@ -795,7 +830,7 @@ namespace Caustic
     void CShader::CreateConstantBuffer(ID3D11Device *pDevice, ShaderParamDef *pDefs, uint32 paramsSize, std::vector<ShaderParamInstance> &params, SBuffer *pConstantBuffer)
     {
         uint32 s = ComputeParamSize(pDefs, paramsSize, params);
-        CreateBuffer(pDevice, s, D3D10_BIND_CONSTANT_BUFFER, D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE, D3D11_USAGE_DYNAMIC, 0, 0, pConstantBuffer, &pConstantBuffer->m_spBuffer);
+        CreateBuffer(pDevice, s, D3D11_BIND_CONSTANT_BUFFER, D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE, D3D11_USAGE_DYNAMIC, 0, 0, 16, pConstantBuffer, &pConstantBuffer->m_spBuffer);
     }
 
     //**********************************************************************
@@ -906,8 +941,6 @@ namespace Caustic
         (*ppShader)->AddRef();
     }
     
-    CShaderMgr CShaderMgr::s_ShaderMgr;
-
     //**********************************************************************
     // Method: FindShader
     // Returns the requested shader

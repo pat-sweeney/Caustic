@@ -67,7 +67,7 @@ namespace Caustic
     void CRendererMarshaller::Initialize(HWND hwnd, std::wstring &shaderFolder, std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback)
     {
 		CCausticFactory::Instance()->CreateRenderer(hwnd, shaderFolder, &m_spRenderer);
-        InitializeCriticalSection(&m_cs);
+        InitializeCriticalSection(&m_renderQueue.m_cs);
         m_thread = CreateThread(nullptr, 0, RenderThreadProc, this, 0, nullptr);
         m_renderCallback = renderCallback;
     }
@@ -82,6 +82,16 @@ namespace Caustic
         WaitForSingleObject(m_thread, INFINITE);
     }
 
+    void CRendererMarshaller::RunOnRenderer(std::function<void(IRenderer*, void* clientData)> callback, void* clientData)
+    {
+        m_renderQueue.AddLambda(
+            [this, callback, clientData]()
+            {
+                callback(m_spRenderer, clientData);
+            }
+        );
+    }
+
     //**********************************************************************
     // Method: SaveScene
     // Saves the scene graph to the specified file.
@@ -93,7 +103,7 @@ namespace Caustic
     void CRendererMarshaller::SaveScene(const wchar_t *pFilename, ISceneGraph *pSceneGraph)
     {
         HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-        AddLambda(
+        m_renderQueue.AddLambda(
             [this, pFilename, pSceneGraph, evt]()
             {
                 CComPtr<IStream> spStream;
@@ -119,7 +129,7 @@ namespace Caustic
     void CRendererMarshaller::LoadScene(const wchar_t *pFilename, ISceneGraph *pSceneGraph)
     {
         HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-        AddLambda(
+        m_renderQueue.AddLambda(
             [this, pFilename, pSceneGraph, evt]()
             {
                 CComPtr<IStream> spStream;
@@ -141,7 +151,7 @@ namespace Caustic
     void CRendererMarshaller::LoadTexture(const wchar_t *pPath, ITexture **ppTexture)
     {
         HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-        AddLambda(
+        m_renderQueue.AddLambda(
             [this, pPath, evt, ppTexture]()
             {
                 Caustic::CCausticFactory::Instance()->LoadTexture(pPath, m_spRenderer, ppTexture);
@@ -159,7 +169,7 @@ namespace Caustic
     void CRendererMarshaller::LoadVideoTexture(const wchar_t *pPath, ITexture **ppTexture)
     {
         HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-        AddLambda(
+        m_renderQueue.AddLambda(
             [this, pPath, evt, ppTexture]()
             {
 				Caustic::CCausticFactory::Instance()->LoadVideoTexture(pPath, m_spRenderer, ppTexture);
@@ -178,13 +188,13 @@ namespace Caustic
     {
         while (!m_exit)
         {
-            EnterCriticalSection(&m_cs);
-            while (!m_queue.empty())
+            EnterCriticalSection(&m_renderQueue.m_cs);
+            while (!m_renderQueue.m_queue.empty())
             {
-                (m_queue.front())();
-                m_queue.pop();
+                (m_renderQueue.m_queue.front())();
+                m_renderQueue.m_queue.pop();
             }
-            LeaveCriticalSection(&m_cs);
+            LeaveCriticalSection(&m_renderQueue.m_cs);
             m_spRenderer->RenderFrame(m_renderCallback);
         }
     }
@@ -217,23 +227,12 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // Method: AddLambda
-    // Adds the specified lambda into the render's instruction queue
-    //**********************************************************************
-    void CRendererMarshaller::AddLambda(std::function<void()> func)
-    {
-        EnterCriticalSection(&m_cs);
-        m_queue.push(func);
-        LeaveCriticalSection(&m_cs);
-    }
-
-    //**********************************************************************
     // Method: Setup
     // See <IRenderer::Setup>
     //**********************************************************************
     void CRendererMarshaller::Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice)
     {
-        AddLambda(
+        m_renderQueue.AddLambda(
             [this, hwnd, shaderFolder, createDebugDevice]()
             {
                 std::wstring sh = shaderFolder;
@@ -248,7 +247,7 @@ namespace Caustic
     //**********************************************************************
     void CRendererMarshaller::DrawLine(Vector3 p1, Vector3 p2, Vector4 clr)
     {
-        AddLambda(
+        m_renderQueue.AddLambda(
             [this, p1, p2, clr]()
             {
                 m_spRenderer->DrawLine(p1, p2, clr);
@@ -270,7 +269,7 @@ namespace Caustic
             pTexture->AddRef();
         if (pShader)
             pShader->AddRef();
-        AddLambda(
+        m_renderQueue.AddLambda(
             [this, pMesh, pMaterial, pTexture, pShader, mat]()
             {
                 DirectX::XMMATRIX m = mat;
@@ -294,7 +293,7 @@ namespace Caustic
     void CRendererMarshaller::GetRenderCtx(IRenderCtx **ppCtx)
     {
         HANDLE event = CreateEvent(NULL, false, false, NULL);
-        AddLambda(
+        m_renderQueue.AddLambda(
             [this, ppCtx, event]()
             {
                 m_spRenderer->GetRenderCtx(ppCtx);
@@ -312,7 +311,7 @@ namespace Caustic
     void CRendererMarshaller::AddPointLight(IPointLight *pLight)
     {
         pLight->AddRef();
-        AddLambda(
+        m_renderQueue.AddLambda(
             [this, pLight]()
             {
                 m_spRenderer->AddPointLight(pLight);
@@ -337,7 +336,7 @@ namespace Caustic
     void CRendererMarshaller::RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback)
     {
         std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> callback = renderCallback;
-        AddLambda(
+        m_renderQueue.AddLambda(
             [this, callback]()
             {
                 m_spRenderer->RenderFrame(callback);
@@ -352,7 +351,7 @@ namespace Caustic
     void CRendererMarshaller::SetCamera(ICamera *pCamera)
     {
         pCamera->AddRef();
-        AddLambda(
+        m_renderQueue.AddLambda(
             [this, pCamera]()
             {
                 m_spRenderer->SetCamera(pCamera);
