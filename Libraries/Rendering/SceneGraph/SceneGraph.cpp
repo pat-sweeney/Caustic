@@ -72,7 +72,11 @@ namespace Caustic
     void CSceneGraph::Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx)
     {
         Lock();
+        if (m_prerenderCallback)
+            m_prerenderCallback();
         m_spRoot->Render(pRenderer, pRenderCtx, pSceneCtx);
+        if (m_postrenderCallback)
+            m_postrenderCallback();
         Unlock();
     }
 

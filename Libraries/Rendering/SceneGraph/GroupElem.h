@@ -66,6 +66,15 @@ namespace Caustic
 		//**********************************************************************
 		virtual std::wstring &Name() override;
 
+		virtual void SetPreRenderCallback(std::function<void()> prerenderCallback) override
+		{
+			CSceneElem::SetPreRenderCallback(prerenderCallback);
+		}
+		virtual void SetPostRenderCallback(std::function<void()> postrenderCallback) override
+		{
+			CSceneElem::SetPostRenderCallback(postrenderCallback);
+		}
+
 		//**********************************************************************
 		// Method: Render
 		// Renders the scene element

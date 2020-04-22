@@ -18,6 +18,29 @@ namespace Caustic
         (*ppElem)->AddRef();
     }
 
+    void CSceneComputeShaderElem::SetInputThreads(uint32 width, uint32 height, uint32 depth /* = 1 */)
+    {
+        uint32 xThreads, yThreads, zThreads;
+        m_spComputeShader->GetShaderInfo()->GetThreadGroupSize(&xThreads, &yThreads, &zThreads);
+        // Determine the correct number of thread groups so we process the entire image
+        uint32 xGroups = (width + xThreads - 1) / xThreads;
+        uint32 yGroups = (height + yThreads - 1) / yThreads;
+        uint32 zGroups = (depth + zThreads - 1) / zThreads;
+        m_spComputeShader->SetThreadCounts(xGroups, yGroups, zGroups);
+    }
+
+    void CSceneComputeShaderElem::SetShaderParam(const wchar_t* pParamName, uint32 value)
+    {
+        std::any wv = std::any(Int(value));
+        m_spComputeShader->SetCSParam(pParamName, wv);
+    }
+    
+    void CSceneComputeShaderElem::SetShaderParam(const wchar_t* pParamName, float value)
+    {
+        std::any wv = std::any(Float(value));
+        m_spComputeShader->SetCSParam(pParamName, wv);
+    }
+
     void CSceneComputeShaderElem::SetNumberThreads(int xThreads, int yThreads, int zThreads)
     {
         m_spComputeShader->SetThreadCounts(xThreads, yThreads, zThreads);

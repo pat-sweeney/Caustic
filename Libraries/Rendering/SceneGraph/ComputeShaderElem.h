@@ -46,11 +46,23 @@ namespace Caustic
         //**********************************************************************
         virtual ESceneElemType GetType() { return ESceneElemType::ComputeShaderElem; }
         virtual std::wstring& Name() override { return CSceneElem::Name(); };
+        virtual void SetPreRenderCallback(std::function<void()> prerenderCallback) override
+        {
+            CSceneElem::SetPreRenderCallback(prerenderCallback);
+        }
+        virtual void SetPostRenderCallback(std::function<void()> postrenderCallback) override
+        {
+            CSceneElem::SetPostRenderCallback(postrenderCallback);
+        }
         virtual void Render(IRenderer* pRenderer, IRenderCtx* pRenderCtx, SceneCtx* pSceneCtx) override
         {
+            if (m_prerenderCallback)
+                m_prerenderCallback();
             std::vector<CRefObj<IPointLight>> lights;
             m_spComputeShader->BeginRender(pRenderer, nullptr, nullptr, lights, nullptr);
             m_spComputeShader->EndRender(pRenderer);
+            if (m_postrenderCallback)
+                m_postrenderCallback();
         }
         virtual void GetBBox(BBox3* pBBox) { CSceneElem::GetBBox(pBBox); }
         virtual uint32 GetFlags() override { return CSceneElem::GetFlags(); }
@@ -66,6 +78,9 @@ namespace Caustic
         // IComputeShaderElem
         //**********************************************************************
         virtual CRefObj<IShader> GetShader() override { return m_spComputeShader; }
+        virtual void SetInputThreads(uint32 width, uint32 height, uint32 depth = 1) override;
+        virtual void SetShaderParam(const wchar_t* pParamName, uint32 value) override;
+        virtual void SetShaderParam(const wchar_t* pParamName, float value) override;
         virtual void SetInputBuffer(const wchar_t* pBufferName, uint8* pData, uint32 bufSize, uint32 stride) override;
         virtual void SetOutputBuffer(const wchar_t* pBufferName, uint8* pData, uint32 bufSize, uint32 stride) override;
         virtual void SetNumberThreads(int xThreads, int yThreads, int zThreads) override;

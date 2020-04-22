@@ -24,6 +24,8 @@ namespace Caustic
         std::wstring m_Name; // User provided name for this element
         uint32 m_Flags;
         BBox3 m_BBox;
+        std::function<void()> m_prerenderCallback;
+        std::function<void()> m_postrenderCallback;
 
         void DrawSelected(IRenderer *pRenderer, ISceneElem *pElem, SceneCtx *pSceneCtx);
     public:
@@ -37,6 +39,14 @@ namespace Caustic
         //**********************************************************************
         ESceneElemType GetType() { return ESceneElemType::Unknown; }
         std::wstring& Name() { return CSceneElem::m_Name; };
+        void SetPreRenderCallback(std::function<void()> prerenderCallback)
+        {
+            m_prerenderCallback = prerenderCallback;
+        }
+        void SetPostRenderCallback(std::function<void()> postrenderCallback)
+        {
+            m_postrenderCallback = postrenderCallback;
+        }
         void Render(IRenderer* pRenderer, IRenderCtx* pRenderCtx, SceneCtx* pSceneCtx)
         {
             CT(E_UNEXPECTED);
@@ -81,6 +91,14 @@ namespace Caustic
         //**********************************************************************
         virtual ESceneElemType GetType() override { return ESceneElemType::SceneGraph; }
         virtual std::wstring &Name() override { static std::wstring wstr(L"SceneGraph"); return wstr; }
+        virtual void SetPreRenderCallback(std::function<void()> prerenderCallback) override
+        {
+            CSceneElem::SetPreRenderCallback(prerenderCallback);
+        }
+        virtual void SetPostRenderCallback(std::function<void()> postrenderCallback) override
+        {
+            CSceneElem::SetPostRenderCallback(postrenderCallback);
+        }
         virtual void Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx) override;
         virtual void GetBBox(BBox3 *pBBox) override
         {

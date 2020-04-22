@@ -345,9 +345,7 @@ namespace Caustic
                 spCtx->CopyResource(s.m_spStagingBuffer, s.m_spBuffer);
                 CT(spCtx->Map(s.m_spStagingBuffer, 0, D3D11_MAP_READ, 0, &ms));
                 BYTE* pb = reinterpret_cast<BYTE*>(ms.pData);
-                // TODO: Need to copy the data back to the client's buffer,
-                // but we need to get the pointer from some where
-               // memcpy(pb, srcVal.m_spData.get(), srcVal.m_dataSize);
+                memcpy(s.m_spOutputBuffer.get(), pb, s.m_bufferSize);
                 spCtx->Unmap(s.m_spStagingBuffer, 0);
             }
         }
@@ -446,7 +444,7 @@ namespace Caustic
                     D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
                     ZeroMemory(&srvDesc, sizeof(srvDesc));
                     srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
-                    srvDesc.Buffer.ElementWidth = stride;
+                    srvDesc.Buffer.ElementWidth = srcVal.m_dataSize / stride;
                     srvDesc.Format = DXGI_FORMAT::DXGI_FORMAT_UNKNOWN;
                     CT(spDevice->CreateShaderResourceView(m_csBuffers[bufferIndex].m_spBuffer, &srvDesc, &m_csBuffers[bufferIndex].m_spSRView.p));
                 }
@@ -482,6 +480,8 @@ namespace Caustic
                     spCtx->Unmap(m_csBuffers[bufferIndex].m_spStagingBuffer, 0);
                     spCtx->CopyResource(m_csBuffers[bufferIndex].m_spBuffer, m_csBuffers[bufferIndex].m_spStagingBuffer);
                 }
+                else
+                    m_csBuffers[bufferIndex].m_spOutputBuffer = srcVal.m_spData;
             }
 
             // Assign the buffer

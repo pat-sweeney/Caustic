@@ -120,6 +120,8 @@ namespace Caustic
         int m_bufferSlot;
         std::wstring m_name;
 
+        std::shared_ptr<uint8> m_spOutputBuffer; // Reference to the output buffer (if this object represents an output buffer)
+
         SBuffer() :
             m_bufferSize(0),
             m_heapSize(0),

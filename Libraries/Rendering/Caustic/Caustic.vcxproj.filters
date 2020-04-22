@@ -218,6 +218,10 @@
     <CustomBuild Include="ShadowMap.xml">
       <Filter>Source Files\Shaders\Definitions</Filter>
     </CustomBuild>
+    <CustomBuild Include="Depth2Points.xml" />
+    <CustomBuild Include="Brighten.xml">
+      <Filter>Source Files\Shaders\Definitions</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <None Include="Default.ps">
@@ -256,10 +260,8 @@
     <None Include="Depth2Points.cs">
       <Filter>Source Files\Shaders</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Xml Include="Depth2Points.xml">
-      <Filter>Source Files\Shaders\Definitions</Filter>
-    </Xml>
+    <None Include="Brighten.cs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

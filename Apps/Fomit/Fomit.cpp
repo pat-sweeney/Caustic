@@ -49,9 +49,11 @@ void AddPointLight(Vector3& lightPos)
 
 CRefObj<IRenderable> spRenderable;
 CRefObj<IMesh> spMesh;
+CRefObj<ISceneMeshElem> spMeshElem;
 CRefObj<IRenderMesh> spRenderMesh;
 CRefObj<IRenderSubMesh> spRenderSubMesh;
 CRefObj<IMaterialAttrib> spMaterial;
+CRefObj<IImage> spOutputImage;
 void InitializeCaustic(HWND hwnd)
 {
     Caustic::CreateSceneFactory(&spSceneFactory);
@@ -65,109 +67,60 @@ void InitializeCaustic(HWND hwnd)
 
     InitializeCriticalSection(&cs);
 
-#if 0
-    // First create a mesh to cover the depth map
-    CRefObj<IMeshConstructor> spMeshConstructor;
-    CreateMeshConstructor(&spMeshConstructor);
-    spMeshConstructor->MeshOpen();
-    spMeshConstructor->SubMeshOpen();
-    for (int y = 0; y < 512; y++)
-    {
-        for (int x = 0; x < 512; x++)
-        {
-            Vector3 pos;
-            Vector3 normal;
-            Vector2 uv = Vector2(float(x) / 512.0f, float(y) / 512.0f);
-
-            for (int j = 0; j < 2; j++)
-            {
-                spMeshConstructor->FaceOpen();
-                pos = Vector3(float(x) / 512.0f, float(y) / 512.0f, 1.0f);
-                normal = Vector3(0.0f, 0.0f, (j==0)?-1.0f:1.0f);
-                spMeshConstructor->VertexAdd(pos, normal, uv);
-
-                pos = Vector3(float(x + 1) / 512.0f, float(y + 1) / 512.0f, 1.0f);
-                normal = Vector3(0.0f, 0.0f, (j == 0) ? -1.0f : 1.0f);
-                spMeshConstructor->VertexAdd(pos, normal, uv);
-
-                pos = Vector3(float(x) / 512.0f, float(y + 1) / 512.0f, 1.0f);
-                normal = Vector3(0.0f, 0.0f, (j == 0) ? -1.0f : 1.0f);
-                spMeshConstructor->VertexAdd(pos, normal, uv);
-                spMeshConstructor->FaceClose();
-
-                spMeshConstructor->FaceOpen();
-                pos = Vector3(float(x) / 512.0f, float(y) / 512.0f, 1.0f);
-                normal = Vector3(0.0f, 0.0f, (j == 0) ? -1.0f : 1.0f);
-                spMeshConstructor->VertexAdd(pos, normal, uv);
-
-                pos = Vector3(float(x + 1) / 512.0f, float(y) / 512.0f, 1.0f);
-                normal = Vector3(0.0f, 0.0f, (j == 0) ? -1.0f : 1.0f);
-                spMeshConstructor->VertexAdd(pos, normal, uv);
-
-                pos = Vector3(float(x + 1) / 512.0f, float(y + 1) / 512.0f, 1.0f);
-                normal = Vector3(0.0f, 0.0f, (j == 0) ? -1.0f : 1.0f);
-                spMeshConstructor->VertexAdd(pos, normal, uv);
-
-                spMeshConstructor->FaceClose();
-            }
-        }
-    }
-    CRefObj<ISubMesh> spSubMesh;
-    spMeshConstructor->SubMeshClose(&spSubMesh);
-    spSubMesh->SetVertexFlags(EVertexFlags(HasNormal | HasPosition | HasUV0));
-    spSubMesh->SetMaterialID(0);
-    spMeshConstructor->MeshClose(&spMesh);
-#endif
-#if 1
     CreateCube(&spMesh);
-#endif
+    
     // Next create our scene graph mesh element
-    CRefObj<ISceneMeshElem> spMeshElem;
     spSceneFactory->CreateMeshElem(&spMeshElem);
     spMeshElem->SetMesh(spMesh);
 
-    // Find our depth map => mesh shader
+    // Find our shader
+    CRefObj<IRenderer> spRenderer = spRenderWindow->GetRenderer();
+    CRefObj<IShaderMgr> spShaderMgr = spRenderer->GetShaderMgr();
     CRefObj<IShader> spComputeShader;
-    CShaderMgr::Instance()->FindShader(L"Depth2Points", &spComputeShader);
-    CShaderMgr::Instance()->FindShader(L"PointCloud", &spShader);
+    spShaderMgr->FindShader(L"Brighten", &spComputeShader);
+    CRefObj<IShader> spDefaultShader;
+    spShaderMgr->FindShader(L"Textured", &spDefaultShader);
 
-    // Create material for the mesh
+    // Assign a material to our mesh
     CRefObj<ISceneMaterialElem> spMaterialElem;
     spSceneFactory->CreateMaterialElem(&spMaterialElem);
     spMaterialElem->GetMaterial(&spMaterial);
     std::vector<CRefObj<IMaterialAttrib>> attribs;
     attribs.push_back(spMaterial);
     spMesh->SetMaterials(attribs);
-    spMaterialElem->SetShader(spShader);
+    spMaterialElem->SetShader(spDefaultShader);
     spMaterialElem->AddChild(spMeshElem);
     spRenderWindow->GetSceneGraph()->AddChild(spMaterialElem);
+
     CRefObj<ISceneComputeShaderElem> spComputeElem;
     spSceneFactory->CreateComputeShaderElem(spComputeShader, &spComputeElem);
-    spRenderWindow->GetSceneGraph()->AddChild(spComputeElem);
-
-
-    CRefObj<ISceneCustomRenderElem> spCustomElem;
-    ISceneMeshElem* pMeshElem = spMeshElem;
+    IShader* pComputeShader = spComputeShader;
     ISceneComputeShaderElem* pComputeElem = spComputeElem;
-    spSceneFactory->CreateCustomRenderElem(
-        [pMeshElem, pComputeElem](IRenderer* pRenderer, IRenderCtx* pCtx, SceneCtx* pSceneCtx)
+    int counter = 0;
+    spComputeElem->SetPreRenderCallback([pComputeShader, pComputeElem]() {
+        if (spCamera != nullptr)
         {
-            if (spCamera != nullptr)
+            CRefObj<IImage> spColorImage;
+            if (spCamera->NextFrame(&spColorImage, nullptr, nullptr))
             {
-                CRefObj<IImage> spDepthImage;
-                CRefObj<IImage> spColorImage;
-                if (spCamera->NextFrame(&spColorImage, &spDepthImage, nullptr))
+                if (spColorImage)
                 {
-                    spMaterial->SetTexture(L"depthTexture", spDepthImage, EShaderAccess::VertexShader);
-                    spMaterial->SetTexture(L"rayTexture", spRayMap, EShaderAccess::VertexShader);
-                    if (spDepthImage)
-                        pComputeElem->SetInputBuffer(L"DepthBuffer", spDepthImage->GetData(), spDepthImage->GetWidth() * spDepthImage->GetHeight() * 2);
-                    pMeshElem->SetFlags(pMeshElem->GetFlags() | ESceneElemFlags::MaterialDirty);
+                    pComputeElem->SetShaderParam(L"imageWidth", spColorImage->GetWidth());
+                    pComputeElem->SetShaderParam(L"imageHeight", spColorImage->GetHeight());
+                    pComputeElem->SetShaderParam(L"brightness", (uint32)10);
+                    pComputeElem->SetInputBuffer(L"ColorBuffer", spColorImage->GetData(), spColorImage->GetStride() * spColorImage->GetHeight(), spColorImage->GetBytesPerPixel());
+                    pComputeElem->SetInputThreads(spColorImage->GetWidth(), spColorImage->GetHeight());
+                    CreateImage(spColorImage->GetWidth(), spColorImage->GetHeight(), 32, &spOutputImage);
+                    pComputeElem->SetOutputBuffer(L"Brightened", (uint8*)spOutputImage->GetData(), (uint32)(spOutputImage->GetStride() * spOutputImage->GetHeight()), spOutputImage->GetBytesPerPixel());
                 }
             }
-        }, &spCustomElem);
-    spRenderWindow->GetSceneGraph()->AddChild(spCustomElem);
-
+        }
+        });
+    spComputeElem->SetPostRenderCallback([pComputeShader, pComputeElem]() {
+        spMeshElem->SetFlags(spMeshElem->GetFlags() | ESceneElemFlags::MaterialDirty);
+        spMaterial->SetTexture(L"diffuseTexture", spOutputImage, EShaderAccess::PixelShader);
+        });
+    spRenderWindow->GetSceneGraph()->AddChild(spComputeElem);
     CreateAzureKinect(0, AzureKinect::ColorMode::Color1080p, AzureKinect::Depth512x512, AzureKinect::FPS30, &spCamera);
     spCamera->BuildRayMap(512, 512, &spRayMap);
 }

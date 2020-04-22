@@ -305,8 +305,15 @@ void CompileShader(IXMLDOMNode *pNode, EShaderType shaderType, std::string &shad
             profile = "cs_5_0";
             break;
         }
+#ifdef DEBUG
+        std::string asmFn = outputFn;
+        asmFn.replace(index, 4, ".asm");
+        sprintf_s(buffer, "\"%s\" /Zi /E\"%s\" /Od /Fd\"%s\" /Fo\"%s\" /Fx\"%s\" /T\"%s\" /nologo %s", fxcpath,
+            entryPoint, pdbFn.c_str(), outputFn.c_str(), asmFn.c_str(), profile, shaderFn.c_str());
+#else
         sprintf_s(buffer, "\"%s\" /Zi /E\"%s\" /Od /Fd\"%s\" /Fo\"%s\" /T\"%s\" /nologo %s", fxcpath,
             entryPoint, pdbFn.c_str(), outputFn.c_str(), profile, shaderFn.c_str());
+#endif
         if (CreateProcess(nullptr, buffer, nullptr, nullptr, TRUE, 0, nullptr, nullptr, &info, &processInfo))
         {
             WaitForSingleObject(processInfo.hProcess, INFINITE);

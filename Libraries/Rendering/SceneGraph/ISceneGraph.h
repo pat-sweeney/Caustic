@@ -122,6 +122,18 @@ namespace Caustic
 		virtual std::wstring &Name() = 0;
 
 		//**********************************************************************
+		// Method: Name
+		// Returns the name of this scene element
+		//**********************************************************************
+		virtual void SetPreRenderCallback(std::function<void()> prerenderCallback) = 0;
+
+		//**********************************************************************
+		// Method: Name
+		// Returns the name of this scene element
+		//**********************************************************************
+		virtual void SetPostRenderCallback(std::function<void()> prerenderCallback) = 0;
+
+		//**********************************************************************
 		// Method: GetFlags
 		// Returns the flags associated with this scene element
 		// See also: ESceneElemFlags
@@ -221,6 +233,9 @@ namespace Caustic
 	struct ISceneComputeShaderElem : public ISceneElem
 	{
 		virtual CRefObj<IShader> GetShader() = 0;
+		virtual void SetInputThreads(uint32 width, uint32 height, uint32 depth = 1) = 0;
+		virtual void SetShaderParam(const wchar_t* pParamName, uint32 value) = 0;
+		virtual void SetShaderParam(const wchar_t* pParamName, float value) = 0;
 		virtual void SetInputBuffer(const wchar_t* pBufferName, uint8 *pData, uint32 bufSize, uint32 stride) = 0;
 		virtual void SetOutputBuffer(const wchar_t* pBufferName, uint8* pData, uint32 bufSize, uint32 stride) = 0;
 		virtual void SetNumberThreads(int xThreads, int yThreads, int zThreads) = 0;

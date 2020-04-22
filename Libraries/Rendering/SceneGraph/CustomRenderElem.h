@@ -42,9 +42,21 @@ namespace Caustic
         //**********************************************************************
         virtual ESceneElemType GetType() { return ESceneElemType::Mesh; }
         virtual std::wstring& Name() override { return CSceneElem::m_Name;};
+        virtual void SetPreRenderCallback(std::function<void()> prerenderCallback) override
+        {
+            CSceneElem::SetPreRenderCallback(prerenderCallback);
+        }
+        virtual void SetPostRenderCallback(std::function<void()> postrenderCallback) override
+        {
+            CSceneElem::SetPostRenderCallback(postrenderCallback);
+        }
         virtual void Render(IRenderer* pRenderer, IRenderCtx* pRenderCtx, SceneCtx* pSceneCtx) override
         {
+            if (m_prerenderCallback)
+                m_prerenderCallback();
             m_clientCallback(pRenderer, pRenderCtx, pSceneCtx);
+            if (m_postrenderCallback)
+                m_postrenderCallback();
         }
         virtual void GetBBox(BBox3* pBBox) override { return; }
         virtual uint32 GetFlags() override { return m_Flags; }

@@ -33,7 +33,7 @@ float4 PS(VSOutput p) : SV_Target
         lightDirWS = reflect(lightDirWS, p.normWS);
         float specdp = saturate(dot(lightDirWS, -viewDirWS));
         float spec = pow(specdp, specularExp.x);
-        //return float4(diffuseTexture.Sample(diffuseSampler, p.uvs).zyx * lightColor[i].xyz,1.0);
+        return float4(diffuseTexture.Sample(diffuseSampler, p.uvs).zyx * lightColor[i].xyz,1.0);
         color.xyz += specularColor.xyz * lightColor[i].xyz * spec;
     }
     return float4(ambientColor.xyz + color, transparency.x);

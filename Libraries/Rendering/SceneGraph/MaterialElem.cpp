@@ -29,6 +29,8 @@ namespace Caustic
 
     void CSceneMaterialElem::Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx)
     {
+        if (m_prerenderCallback)
+            m_prerenderCallback();
         CRefObj<IMaterialAttrib> spOldMaterial = pSceneCtx->m_spCurrentMaterial;
         CRefObj<IShader> spOldShader = pSceneCtx->m_spCurrentShader;
         pSceneCtx->m_spCurrentMaterial = m_spMaterial;
@@ -36,6 +38,8 @@ namespace Caustic
         CSceneGroupElem::Render(pRenderer, pRenderCtx, pSceneCtx);
         pSceneCtx->m_spCurrentMaterial = spOldMaterial;
         pSceneCtx->m_spCurrentShader = spOldShader;
+        if (m_postrenderCallback)
+            m_postrenderCallback();
     }
 
     void CSceneMaterialElem::Store(IStream *pStream)
