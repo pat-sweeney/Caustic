@@ -95,6 +95,33 @@ void GetDXGIFormat(D3D11_SIGNATURE_PARAMETER_DESC &pd, std::string &format)
     }
 }
 
+Caustic::uint32 TypeSize(D3D11_SHADER_TYPE_DESC &typeDesc)
+{
+    Caustic::uint32 elemSize = 0;
+    switch (typeDesc.Type)
+    {
+    case D3D_SHADER_VARIABLE_TYPE::D3D10_SVT_VOID:
+        break;
+    case D3D_SHADER_VARIABLE_TYPE::D3D10_SVT_BOOL:
+    case D3D_SHADER_VARIABLE_TYPE::D3D10_SVT_INT:
+    case D3D_SHADER_VARIABLE_TYPE::D3D10_SVT_FLOAT:
+    case D3D_SHADER_VARIABLE_TYPE::D3D_SVT_UINT:
+        elemSize = 4 * typeDesc.Rows * typeDesc.Columns;
+        break;
+    case D3D_SHADER_VARIABLE_TYPE::D3D11_SVT_DOUBLE:
+        elemSize = 8 * typeDesc.Rows * typeDesc.Columns;
+        break;
+    case D3D_SHADER_VARIABLE_TYPE::D3D_SVT_UINT8:
+        elemSize = 1 * typeDesc.Rows * typeDesc.Columns;
+        break;
+    case D3D_SHADER_VARIABLE_TYPE::D3D_SVT_MIN16INT:
+    case D3D_SHADER_VARIABLE_TYPE::D3D_SVT_MIN16UINT:
+        elemSize = 2 * typeDesc.Rows * typeDesc.Columns;
+        break;
+    }
+    return elemSize;
+}
+
 void ParseLoop(ID3D11ShaderReflection *pReflection, HANDLE oh, EShaderType shaderType)
 {
     D3D11_SHADER_DESC shaderDesc;
@@ -162,25 +189,19 @@ void ParseLoop(ID3D11ShaderReflection *pReflection, HANDLE oh, EShaderType shade
             ID3D11ShaderReflectionType* pType = pVar->GetType();
             D3D11_SHADER_TYPE_DESC typeDesc;
             CT(pType->GetDesc(&typeDesc));
-            switch (typeDesc.Type)
+            if (typeDesc.Class == D3D10_SVC_STRUCT)
             {
-            case D3D_SHADER_VARIABLE_TYPE::D3D10_SVT_BOOL:
-            case D3D_SHADER_VARIABLE_TYPE::D3D10_SVT_INT:
-            case D3D_SHADER_VARIABLE_TYPE::D3D10_SVT_FLOAT:
-            case D3D_SHADER_VARIABLE_TYPE::D3D_SVT_UINT:
-                elemSize = 4 * typeDesc.Rows * typeDesc.Columns;
-                break;
-            case D3D_SHADER_VARIABLE_TYPE::D3D11_SVT_DOUBLE:
-                elemSize = 8 * typeDesc.Rows * typeDesc.Columns;
-                break;
-            case D3D_SHADER_VARIABLE_TYPE::D3D_SVT_UINT8:
-                elemSize = 1 * typeDesc.Rows * typeDesc.Columns;
-                break;
-            case D3D_SHADER_VARIABLE_TYPE::D3D_SVT_MIN16INT:
-            case D3D_SHADER_VARIABLE_TYPE::D3D_SVT_MIN16UINT:
-                elemSize = 2 * typeDesc.Rows * typeDesc.Columns;
-                break;
+                elemSize = 0;
+                for (int memberIndex = 0; memberIndex < (int)typeDesc.Members; memberIndex++)
+                {
+                    ID3D11ShaderReflectionType* pMemberType = pType->GetMemberTypeByIndex(memberIndex);
+                    D3D11_SHADER_TYPE_DESC memberDesc;
+                    pMemberType->GetDesc(&memberDesc);
+                    elemSize += TypeSize(memberDesc);
+                }
             }
+            else
+                elemSize = TypeSize(typeDesc);
         }
         if (tagName != nullptr)
             WriteStr(oh, "            <%s Name='%s' Slot='%d' ElemSize='%d'/>\n", tagName, bindDesc.Name, (int)bindDesc.BindPoint, elemSize);
