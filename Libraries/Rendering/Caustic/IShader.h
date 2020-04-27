@@ -28,39 +28,40 @@ namespace Caustic
     struct IGraphics;
 
     //**********************************************************************
-    // Structure: StructuredBuffer
-    // Value to assign to structured buffers (whether they are StructuredBuffer,
+    // Structure: ClientBuffer
+    // Data from/to the client that is mapped to/from a shader's StructuredBuffer,
     // RWStructuredBuffer, or AppendStructuredBuffer). This structure is what
     // clients will pass to IShader::SetCSParam for any of these shader types.
     //
     // Parameters:
-    // m_spData - pointer to the buffer
+    // m_pData - pointer to the buffer. If output buffer then client owns this. Otherwise do (i.e. we free it).
     // m_dataSize - size of buffer in bytes
-    // m_isInputBuffer - indicates whether this is an input or output buffer
+    // m_stride - size of each buffer element in bytes
     //**********************************************************************
-    struct StructuredBuffer
+    struct ClientBuffer
     {
-        std::shared_ptr<uint8> m_spData;
+        std::shared_ptr<uint8> m_spInputData; // Copy of client data. Owned by this object.
+        uint8* m_wpOutputData; // Weak reference to client output buffer. Owned by client.
         uint32 m_dataSize;
         uint32 m_stride; // Size of each element
-        bool m_isInputBuffer;
 
-        StructuredBuffer()
+        ClientBuffer() :
+            m_dataSize(0),
+            m_stride(0),
+            m_wpOutputData(nullptr)
         {
-            m_dataSize = 0;
         }
-
-        StructuredBuffer(const StructuredBuffer &s)
+        ClientBuffer(const ClientBuffer& s)
         {
             *this = s;
         }
 
-        ~StructuredBuffer()
+        ~ClientBuffer()
         {
             m_dataSize = 0;
         }
     };
-
+    
     //**********************************************************************
     // Interface: IShader
     // Defines the public interface for using <CShader>

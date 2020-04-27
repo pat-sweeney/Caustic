@@ -73,10 +73,14 @@ namespace Caustic
     {
         Lock();
         if (m_prerenderCallback)
-            m_prerenderCallback();
+            if (!m_prerenderCallback(pRenderCtx->GetCurrentPass()))
+            {
+                Unlock();
+                return;
+            }
         m_spRoot->Render(pRenderer, pRenderCtx, pSceneCtx);
         if (m_postrenderCallback)
-            m_postrenderCallback();
+            m_postrenderCallback(pRenderCtx->GetCurrentPass());
         Unlock();
     }
 

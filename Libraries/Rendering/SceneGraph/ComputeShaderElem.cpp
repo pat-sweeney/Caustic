@@ -48,23 +48,33 @@ namespace Caustic
 
     void CSceneComputeShaderElem::SetInputBuffer(const wchar_t * pBufferName, uint8* pData, uint32 bufSize, uint32 stride)
     {
-        StructuredBuffer s;
+        ClientBuffer s;
         s.m_dataSize = bufSize;
         s.m_stride = stride;
-        s.m_isInputBuffer = true;
         uint8* pBuffer = new uint8[bufSize];
         memcpy(pBuffer, pData, bufSize);
-        s.m_spData.reset(pBuffer);
+        s.m_spInputData.reset(pBuffer);
         m_spComputeShader->SetCSParam(pBufferName, std::any(s));
     }
 
     void CSceneComputeShaderElem::SetOutputBuffer(const wchar_t* pBufferName, uint8* pData, uint32 bufSize, uint32 stride)
     {
-        StructuredBuffer s;
+        ClientBuffer s;
         s.m_dataSize = bufSize;
         s.m_stride = stride;
-        s.m_spData.reset(pData);
-        s.m_isInputBuffer = false;
+        s.m_wpOutputData = pData;
+        m_spComputeShader->SetCSParam(pBufferName, std::any(s));
+    }
+
+    void CSceneComputeShaderElem::SetInputOutputBuffer(const wchar_t* pBufferName, uint8* pInputData, uint8* pOutputData, uint32 bufSize, uint32 stride)
+    {
+        ClientBuffer s;
+        s.m_dataSize = bufSize;
+        s.m_stride = stride;
+        uint8* pBuffer = new uint8[bufSize];
+        memcpy(pBuffer, pInputData, bufSize);
+        s.m_spInputData.reset(pBuffer);
+        s.m_wpOutputData = pOutputData;
         m_spComputeShader->SetCSParam(pBufferName, std::any(s));
     }
 }

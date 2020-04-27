@@ -47,6 +47,12 @@ void AddPointLight(Vector3& lightPos)
     spRenderWindow->GetSceneGraph()->AddChild(spLightElem);
 }
 
+struct Vertex
+{
+    float pos[3];
+    float norm[3];
+};
+
 CRefObj<IRenderable> spRenderable;
 CRefObj<IMesh> spMesh;
 CRefObj<ISceneMeshElem> spMeshElem;
@@ -54,6 +60,8 @@ CRefObj<IRenderMesh> spRenderMesh;
 CRefObj<IRenderSubMesh> spRenderSubMesh;
 CRefObj<IMaterialAttrib> spMaterial;
 CRefObj<IImage> spOutputImage;
+std::shared_ptr<Vertex> vertices;
+int numVertices = 0;
 void InitializeCaustic(HWND hwnd)
 {
     Caustic::CreateSceneFactory(&spSceneFactory);
@@ -77,7 +85,7 @@ void InitializeCaustic(HWND hwnd)
     CRefObj<IRenderer> spRenderer = spRenderWindow->GetRenderer();
     CRefObj<IShaderMgr> spShaderMgr = spRenderer->GetShaderMgr();
     CRefObj<IShader> spComputeShader;
-    spShaderMgr->FindShader(L"Brighten", &spComputeShader);
+    spShaderMgr->FindShader(L"Depth2Points", &spComputeShader);
     CRefObj<IShader> spDefaultShader;
     spShaderMgr->FindShader(L"Textured", &spDefaultShader);
 
@@ -97,28 +105,36 @@ void InitializeCaustic(HWND hwnd)
     IShader* pComputeShader = spComputeShader;
     ISceneComputeShaderElem* pComputeElem = spComputeElem;
     int counter = 0;
-    spComputeElem->SetPreRenderCallback([pComputeShader, pComputeElem]() {
+    spComputeElem->SetPreRenderCallback([pComputeShader, pComputeElem](int pass) -> bool {
+        if (pass != 2)
+            return false;
         if (spCamera != nullptr)
         {
-            CRefObj<IImage> spColorImage;
-            if (spCamera->NextFrame(&spColorImage, nullptr, nullptr))
+            CRefObj<IImage> spDepthImage;
+            if (spCamera->NextFrame(nullptr, &spDepthImage, nullptr))
             {
-                if (spColorImage)
+                if (spDepthImage)
                 {
-                    pComputeElem->SetShaderParam(L"imageWidth", spColorImage->GetWidth());
-                    pComputeElem->SetShaderParam(L"imageHeight", spColorImage->GetHeight());
-                    pComputeElem->SetShaderParam(L"brightness", (uint32)10);
-                    pComputeElem->SetInputBuffer(L"ColorBuffer", spColorImage->GetData(), spColorImage->GetStride() * spColorImage->GetHeight(), spColorImage->GetBytesPerPixel());
-                    pComputeElem->SetInputThreads(spColorImage->GetWidth(), spColorImage->GetHeight());
-                    CreateImage(spColorImage->GetWidth(), spColorImage->GetHeight(), 32, &spOutputImage);
-                    pComputeElem->SetOutputBuffer(L"Brightened", (uint8*)spOutputImage->GetData(), (uint32)(spOutputImage->GetStride() * spOutputImage->GetHeight()), spOutputImage->GetBytesPerPixel());
+                    if (numVertices == 0)
+                    {
+                        numVertices = spDepthImage->GetWidth() * spDepthImage->GetHeight();
+                        vertices.reset(new Vertex[numVertices]);
+                    }
+                    OutputDebugString(L"Read frame\n");
+                    uint32 depthWidth2 = spDepthImage->GetWidth() / 2; // We need half the width since the shader does 2 depth points at a time
+                    pComputeElem->SetShaderParam(L"depthImageWidth", depthWidth2);
+                    pComputeElem->SetInputBuffer(L"DepthBuffer", spDepthImage->GetData(), spDepthImage->GetStride() * spDepthImage->GetHeight(), spDepthImage->GetBytesPerPixel() * 2);
+                    pComputeElem->SetInputBuffer(L"RayBuffer", spRayMap->GetData(), spRayMap->GetStride() * spRayMap->GetHeight(), spRayMap->GetBytesPerPixel());
+                    pComputeElem->SetInputThreads(depthWidth2, spDepthImage->GetHeight());
+                    pComputeElem->SetOutputBuffer(L"Points", (uint8*)vertices.get(), (uint32)(sizeof(Vertex) * numVertices), (uint32)sizeof(Vertex));
                 }
             }
         }
-        });
-    spComputeElem->SetPostRenderCallback([pComputeShader, pComputeElem]() {
-        spMeshElem->SetFlags(spMeshElem->GetFlags() | ESceneElemFlags::MaterialDirty);
-        spMaterial->SetTexture(L"diffuseTexture", spOutputImage, EShaderAccess::PixelShader);
+        return true;
+    });
+    spComputeElem->SetPostRenderCallback([pComputeShader, pComputeElem](int pass) {
+        //spMeshElem->SetFlags(spMeshElem->GetFlags() | ESceneElemFlags::MaterialDirty);
+        //spMaterial->SetTexture(L"diffuseTexture", spOutputImage, EShaderAccess::PixelShader);
         });
     spRenderWindow->GetSceneGraph()->AddChild(spComputeElem);
     CreateAzureKinect(0, AzureKinect::ColorMode::Color1080p, AzureKinect::Depth512x512, AzureKinect::FPS30, &spCamera);

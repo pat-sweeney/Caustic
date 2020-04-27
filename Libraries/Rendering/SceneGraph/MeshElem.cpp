@@ -86,7 +86,8 @@ namespace Caustic
     void CSceneMeshElem::Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx)
     {
         if (m_prerenderCallback)
-            m_prerenderCallback();
+            if (!m_prerenderCallback(pRenderCtx->GetCurrentPass()))
+                return;
         CRefObj<IGraphics> spGraphics;
         pRenderer->GetGraphics(&spGraphics);
         if (GetFlags() & ESceneElemFlags::RenderableDirty)
@@ -101,7 +102,7 @@ namespace Caustic
         }
         m_spRenderMesh->Render(pRenderer, pSceneCtx->m_lights);
         if (m_postrenderCallback)
-            m_postrenderCallback();
+            m_postrenderCallback(pRenderCtx->GetCurrentPass());
     }
 
     void CSceneMeshElem::GetBBox(BBox3 *pBBox)

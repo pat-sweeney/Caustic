@@ -45,11 +45,11 @@ namespace Caustic
         //**********************************************************************
         virtual ESceneElemType GetType() { return ESceneElemType::PointLight; }
         virtual std::wstring &Name() override;
-        virtual void SetPreRenderCallback(std::function<void()> prerenderCallback) override
+        virtual void SetPreRenderCallback(std::function<bool(int pass)> prerenderCallback) override
         {
             CSceneElem::SetPreRenderCallback(prerenderCallback);
         }
-        virtual void SetPostRenderCallback(std::function<void()> postrenderCallback) override
+        virtual void SetPostRenderCallback(std::function<void(int pass)> postrenderCallback) override
         {
             CSceneElem::SetPostRenderCallback(postrenderCallback);
         }

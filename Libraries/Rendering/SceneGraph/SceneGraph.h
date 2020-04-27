@@ -24,8 +24,8 @@ namespace Caustic
         std::wstring m_Name; // User provided name for this element
         uint32 m_Flags;
         BBox3 m_BBox;
-        std::function<void()> m_prerenderCallback;
-        std::function<void()> m_postrenderCallback;
+        std::function<bool(int pass)> m_prerenderCallback;
+        std::function<void(int pass)> m_postrenderCallback;
 
         void DrawSelected(IRenderer *pRenderer, ISceneElem *pElem, SceneCtx *pSceneCtx);
     public:
@@ -39,11 +39,11 @@ namespace Caustic
         //**********************************************************************
         ESceneElemType GetType() { return ESceneElemType::Unknown; }
         std::wstring& Name() { return CSceneElem::m_Name; };
-        void SetPreRenderCallback(std::function<void()> prerenderCallback)
+        void SetPreRenderCallback(std::function<bool(int pass)> prerenderCallback)
         {
             m_prerenderCallback = prerenderCallback;
         }
-        void SetPostRenderCallback(std::function<void()> postrenderCallback)
+        void SetPostRenderCallback(std::function<void(int pass)> postrenderCallback)
         {
             m_postrenderCallback = postrenderCallback;
         }
@@ -91,11 +91,11 @@ namespace Caustic
         //**********************************************************************
         virtual ESceneElemType GetType() override { return ESceneElemType::SceneGraph; }
         virtual std::wstring &Name() override { static std::wstring wstr(L"SceneGraph"); return wstr; }
-        virtual void SetPreRenderCallback(std::function<void()> prerenderCallback) override
+        virtual void SetPreRenderCallback(std::function<bool(int pass)> prerenderCallback) override
         {
             CSceneElem::SetPreRenderCallback(prerenderCallback);
         }
-        virtual void SetPostRenderCallback(std::function<void()> postrenderCallback) override
+        virtual void SetPostRenderCallback(std::function<void(int pass)> postrenderCallback) override
         {
             CSceneElem::SetPostRenderCallback(postrenderCallback);
         }

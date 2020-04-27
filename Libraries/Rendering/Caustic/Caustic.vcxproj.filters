@@ -218,8 +218,10 @@
     <CustomBuild Include="ShadowMap.xml">
       <Filter>Source Files\Shaders\Definitions</Filter>
     </CustomBuild>
-    <CustomBuild Include="Depth2Points.xml" />
     <CustomBuild Include="Brighten.xml">
+      <Filter>Source Files\Shaders\Definitions</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Depth2Points.xml">
       <Filter>Source Files\Shaders\Definitions</Filter>
     </CustomBuild>
   </ItemGroup>

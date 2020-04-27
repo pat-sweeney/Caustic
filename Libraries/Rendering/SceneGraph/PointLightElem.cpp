@@ -28,10 +28,11 @@ namespace Caustic
     void CPointLightElem::Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx)
     {
         if (m_prerenderCallback)
-            m_prerenderCallback();
+            if (!m_prerenderCallback(pRenderCtx->GetCurrentPass()))
+                return;
         pSceneCtx->m_lights.push_back(m_spPointLight);
         if (m_postrenderCallback)
-            m_postrenderCallback();
+            m_postrenderCallback(pRenderCtx->GetCurrentPass());
     }
 
     void CPointLightElem::GetBBox(BBox3 *pBBox)

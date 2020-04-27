@@ -11,6 +11,7 @@
 #include "IPointLight.h"
 #include <DirectXMath.h>
 #include <memory>
+#include <d3d11_4.h>
 
 namespace Caustic
 {
@@ -160,6 +161,15 @@ namespace Caustic
                 CT(E_UNEXPECTED);
         }
         return s;
+    }
+
+    void CShader::ClearSamplers(IGraphics* pGraphics)
+    {
+        // Set deafult sampler
+        CComPtr<ID3D11DeviceContext> spCtx = pGraphics->GetContext();
+        spCtx->PSSetSamplers(0, 1, &m_spSamplerState.p);
+        spCtx->VSSetSamplers(0, 1, &m_spSamplerState.p);
+        
     }
 
     void CShader::PushSamplers(IGraphics* pGraphics, std::vector<ShaderParamInstance>& params, bool isPixelShader)
@@ -345,11 +355,11 @@ namespace Caustic
                 spCtx->CopyResource(s.m_spStagingBuffer, s.m_spBuffer);
                 CT(spCtx->Map(s.m_spStagingBuffer, 0, D3D11_MAP_READ, 0, &ms));
                 BYTE* pb = reinterpret_cast<BYTE*>(ms.pData);
-                memcpy(s.m_spOutputBuffer.get(), pb, s.m_bufferSize);
+                memcpy(s.m_wpOutputBuffer, pb, s.m_bufferSize);
                 spCtx->Unmap(s.m_spStagingBuffer, 0);
             }
         }
-        m_csBuffers.clear();
+        //m_csBuffers.clear();
     }
 
     //**********************************************************************
@@ -410,7 +420,7 @@ namespace Caustic
                 bufferIndex = (int)m_csBuffers.size() - 1;
             }
 
-            StructuredBuffer& srcVal = std::any_cast<StructuredBuffer>(params[i].m_value);
+            ClientBuffer& srcVal = std::any_cast<ClientBuffer>(params[i].m_value);
             if (params[i].m_dirty || bufferIndex == -1)
             {
                 params[i].m_dirty = false;
@@ -468,20 +478,20 @@ namespace Caustic
                     CT(spDevice->CreateUnorderedAccessView(m_csBuffers[bufferIndex].m_spBuffer, &uavDesc, &m_csBuffers[bufferIndex].m_spUAView.p));
                 }
 
-                m_csBuffers[bufferIndex].m_isInput = srcVal.m_isInputBuffer;
+                m_csBuffers[bufferIndex].m_isInput = (srcVal.m_spInputData != nullptr);
                 
-                if (srcVal.m_isInputBuffer)
+                if (srcVal.m_spInputData)
                 {
                     // Copy the data from the CPU memory to the buffer
                     D3D11_MAPPED_SUBRESOURCE ms;
                     CT(spCtx->Map(m_csBuffers[bufferIndex].m_spStagingBuffer, 0, D3D11_MAP_WRITE, 0, &ms));
                     BYTE* pb = reinterpret_cast<BYTE*>(ms.pData);
-                    memcpy(pb, srcVal.m_spData.get(), srcVal.m_dataSize);
+                    memcpy(pb, srcVal.m_spInputData.get(), srcVal.m_dataSize);
                     spCtx->Unmap(m_csBuffers[bufferIndex].m_spStagingBuffer, 0);
                     spCtx->CopyResource(m_csBuffers[bufferIndex].m_spBuffer, m_csBuffers[bufferIndex].m_spStagingBuffer);
                 }
-                else
-                    m_csBuffers[bufferIndex].m_spOutputBuffer = srcVal.m_spData;
+                if (srcVal.m_wpOutputData)
+                    m_csBuffers[bufferIndex].m_wpOutputBuffer = srcVal.m_wpOutputData;
             }
 
             // Assign the buffer
@@ -711,6 +721,10 @@ namespace Caustic
     void CShader::BeginRender(IGraphics *pGraphics, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, std::vector<CRefObj<IPointLight>> &lights, DirectX::XMMATRIX *pWorld)
     {
         CComPtr<ID3D11DeviceContext> spCtx = pGraphics->GetContext();
+        CComPtr<ID3DUserDefinedAnnotation> spAnnotations;
+        CT(spCtx->QueryInterface(__uuidof(ID3DUserDefinedAnnotation), (void**)&spAnnotations));
+        spAnnotations->BeginEvent(L"BeginRender");
+        
         bool hasVS = m_spShaderInfo->HasShader(EShaderType::TypeVertexShader);
         bool hasPS = m_spShaderInfo->HasShader(EShaderType::TypePixelShader);
         bool hasCS = m_spShaderInfo->HasShader(EShaderType::TypeComputeShader);
@@ -732,6 +746,7 @@ namespace Caustic
         }
 
         PushMatrices(pGraphics, pWorld);
+        ClearSamplers(pGraphics);
         if (hasVS)
         {
             PushSamplers(pGraphics, m_vsParams, false);
@@ -758,6 +773,7 @@ namespace Caustic
             spCtx->CSSetUnorderedAccessViews(0, 1, uavNull, NULL);
             spCtx->CSSetShaderResources(0, 1, srvNull);
         }
+        spAnnotations->EndEvent();
     }
 
     //**********************************************************************
@@ -860,7 +876,7 @@ namespace Caustic
             params[i].m_offset = (pDefs[i].m_type == EShaderParamType::ShaderType_Texture) ? pDefs[i].m_offset : s;
             if (pDefs[i].m_type == EShaderParamType::ShaderType_StructuredBuffer)
             {
-                StructuredBuffer& buffer = std::any_cast<StructuredBuffer>(params[i].m_value);
+                ClientBuffer& buffer = std::any_cast<ClientBuffer>(params[i].m_value);
                 s += buffer.m_dataSize;
             }
         }

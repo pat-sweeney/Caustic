@@ -28,7 +28,8 @@ namespace Caustic
     void CSceneGroupElem::Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx)
     {
         if (m_prerenderCallback)
-            m_prerenderCallback();
+            if (!m_prerenderCallback(pRenderCtx->GetCurrentPass()))
+                return;
         Matrix4x4 old = pSceneCtx->m_Transform;
         pSceneCtx->m_Transform = pSceneCtx->m_Transform * m_Transform;
 
@@ -51,7 +52,7 @@ namespace Caustic
         DrawSelected(pRenderer, this, pSceneCtx);
         pSceneCtx->m_Transform = old;
         if (m_postrenderCallback)
-            m_postrenderCallback();
+            m_postrenderCallback(pRenderCtx->GetCurrentPass());
     }
 
     void CSceneGroupElem::GetBBox(BBox3 *pBBox)

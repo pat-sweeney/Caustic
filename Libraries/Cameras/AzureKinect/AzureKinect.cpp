@@ -228,6 +228,10 @@ namespace Caustic
                     k4a_calibration_type_t::K4A_CALIBRATION_TYPE_DEPTH, &result, &valid);
                 if (err == K4A_RESULT_SUCCEEDED && valid)
                 {
+                    float len = sqrtf(result.xyz.x * result.xyz.x + result.xyz.y * result.xyz.y + result.xyz.z * result.xyz.z);
+                    result.xyz.x /= len;
+                    result.xyz.y /= len;
+                    result.xyz.z /= len;
                     col.SetRed(result.xyz.x);
                     col.SetGreen(result.xyz.y);
                     col.SetBlue(result.xyz.z);

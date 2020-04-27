@@ -46,23 +46,24 @@ namespace Caustic
         //**********************************************************************
         virtual ESceneElemType GetType() { return ESceneElemType::ComputeShaderElem; }
         virtual std::wstring& Name() override { return CSceneElem::Name(); };
-        virtual void SetPreRenderCallback(std::function<void()> prerenderCallback) override
+        virtual void SetPreRenderCallback(std::function<bool(int pass)> prerenderCallback) override
         {
             CSceneElem::SetPreRenderCallback(prerenderCallback);
         }
-        virtual void SetPostRenderCallback(std::function<void()> postrenderCallback) override
+        virtual void SetPostRenderCallback(std::function<void(int pass)> postrenderCallback) override
         {
             CSceneElem::SetPostRenderCallback(postrenderCallback);
         }
         virtual void Render(IRenderer* pRenderer, IRenderCtx* pRenderCtx, SceneCtx* pSceneCtx) override
         {
             if (m_prerenderCallback)
-                m_prerenderCallback();
+                if (!m_prerenderCallback(pRenderCtx->GetCurrentPass()))
+                    return;
             std::vector<CRefObj<IPointLight>> lights;
             m_spComputeShader->BeginRender(pRenderer, nullptr, nullptr, lights, nullptr);
             m_spComputeShader->EndRender(pRenderer);
             if (m_postrenderCallback)
-                m_postrenderCallback();
+                m_postrenderCallback(pRenderCtx->GetCurrentPass());
         }
         virtual void GetBBox(BBox3* pBBox) { CSceneElem::GetBBox(pBBox); }
         virtual uint32 GetFlags() override { return CSceneElem::GetFlags(); }
@@ -83,6 +84,7 @@ namespace Caustic
         virtual void SetShaderParam(const wchar_t* pParamName, float value) override;
         virtual void SetInputBuffer(const wchar_t* pBufferName, uint8* pData, uint32 bufSize, uint32 stride) override;
         virtual void SetOutputBuffer(const wchar_t* pBufferName, uint8* pData, uint32 bufSize, uint32 stride) override;
+        virtual void SetInputOutputBuffer(const wchar_t* pBufferName, uint8* pInputData, uint8* pOutputData, uint32 bufSize, uint32 stride) override;
         virtual void SetNumberThreads(int xThreads, int yThreads, int zThreads) override;
     };
 }

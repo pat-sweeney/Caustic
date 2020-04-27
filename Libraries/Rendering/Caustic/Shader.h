@@ -120,7 +120,7 @@ namespace Caustic
         int m_bufferSlot;
         std::wstring m_name;
 
-        std::shared_ptr<uint8> m_spOutputBuffer; // Reference to the output buffer (if this object represents an output buffer)
+        uint8* m_wpOutputBuffer; // Weak reference to the output buffer
 
         SBuffer() :
             m_bufferSize(0),
@@ -165,6 +165,7 @@ namespace Caustic
         uint32 ComputeParamSize(ShaderParamDef *pParams, uint32 numParams, std::vector<ShaderParamInstance> &params);
         uint32 ShaderTypeSize(ShaderParamDef& paramDef);
         void PushConstants(IGraphics *pGraphics, SBuffer *pBuffer, std::vector<ShaderParamInstance> &params);
+        void ClearSamplers(IGraphics* pGraphics);
         void PushSamplers(IGraphics* pGraphics, std::vector<ShaderParamInstance>& params, bool isPixelShader);
         void PushBuffers(IGraphics* pGraphics, std::vector<ShaderParamInstance>& params);
         void PopBuffers(IGraphics* pGraphics);
