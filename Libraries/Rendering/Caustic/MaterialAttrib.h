@@ -3,6 +3,7 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+#pragma once
 #include "IMaterialAttrib.h"
 #include "Base\Core\RefCount.h"
 #include "Imaging\Image\Image.h"
@@ -32,7 +33,7 @@ namespace Caustic
         }
 
         //**********************************************************************
-        // IAddRef
+        // IRefCount
         //**********************************************************************
         virtual uint32 AddRef() override { return CRefCount::AddRef(); }
         virtual uint32 Release() override { return CRefCount::Release(); }

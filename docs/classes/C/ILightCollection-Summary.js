@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:ILightCollection","ILightCollection");NDSummary.OnSummaryLoaded("CClass:ILightCollection",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Interfaces","Interface"]],[[892,0,2,"ILightCollection"],[907,0,1,"Functions","Functions"],[909,0,0,"AddLight","AddLight"],[932,0,0,"Clear","Clear"],[933,0,0,"ToVector","ToVector"]]);

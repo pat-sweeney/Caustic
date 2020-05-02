@@ -21,7 +21,7 @@ namespace Caustic
         void SimplifyRecursive(IPolygon2 *pResult, int start, int end, float err, float maxLen);
     public:
         //**********************************************************************
-        // IAddRef
+        // IRefCount
         //**********************************************************************
         virtual uint32 AddRef() override { return CRefCount::AddRef(); }
         virtual uint32 Release() override { return CRefCount::AddRef(); }

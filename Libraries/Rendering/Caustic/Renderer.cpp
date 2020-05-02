@@ -208,12 +208,10 @@ namespace Caustic
     // Method: GetRenderCtx
     // See <IRenderer::GetRenderCtx>
     //**********************************************************************
-    void CRenderer::GetRenderCtx(IRenderCtx **ppCtx)
+    CRefObj<IRenderCtx> CRenderer::GetRenderCtx()
     {
         CHECKTHREAD;
-        (*ppCtx) = m_spRenderCtx;
-        if (m_spRenderCtx)
-            (*ppCtx)->AddRef();
+        return CRefObj<IRenderCtx>(m_spRenderCtx);
     }
 
     //**********************************************************************
@@ -246,11 +244,10 @@ namespace Caustic
     // Method: GetGraphics
     // See <IRenderer::GetGraphics>
     //**********************************************************************
-    void CRenderer::GetGraphics(IGraphics** ppGraphics)
+    CRefObj<IGraphics> CRenderer::GetGraphics()
     {
         CHECKTHREAD;
-        *ppGraphics = this;
-        (*ppGraphics)->AddRef();
+        return CRefObj<IGraphics>(this);
     }
 
     //**********************************************************************

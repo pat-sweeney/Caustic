@@ -80,7 +80,7 @@ namespace Caustic
 		// pos - position of light source in world coordinates
 		// ppLight - Returns the point light source
 		//**********************************************************************
-		virtual void CreatePointLight(Vector3 &pos, IPointLight **ppLight) = 0;
+		virtual void CreatePointLight(Vector3 &pos, Vector3 &color, IPointLight **ppLight) = 0;
 
 		//**********************************************************************
 		// Method: CreateTrackball

@@ -13,30 +13,24 @@
 
 namespace Caustic
 {
-    CAUSTICAPI void CreateRenderWindow(HWND hwnd, std::wstring &shaderFolder, IRenderWindow **ppRenderWindow)
+    CAUSTICAPI CRefObj<IRenderWindow> CreateRenderWindow(HWND hwnd, std::wstring &shaderFolder)
     {
-        std::unique_ptr<CRenderWindow> spRenderWindow(new CRenderWindow(hwnd, shaderFolder));
-        *ppRenderWindow = spRenderWindow.release();
-        (*ppRenderWindow)->AddRef();
+        return CRefObj<IRenderWindow>(new CRenderWindow(hwnd, shaderFolder));
     }
 
     CRenderWindow::CRenderWindow(HWND hwnd, std::wstring &shaderFolder)
     {
         Caustic::CCausticFactory::Instance()->CreateRendererMarshaller(&m_spMarshaller);
-        CSceneFactory::Instance()->CreateSceneGraph(&m_spSceneGraph);
+        m_spRenderGraphFactory = Caustic::CreateRenderGraphFactory();
+        m_spRenderGraph = m_spRenderGraphFactory->CreateRenderGraph();
         m_spMarshaller->Initialize(hwnd, shaderFolder,
             [this](IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass) {
-                SceneCtx sceneCtx;
-                sceneCtx.m_CurrentPass = pass;
-                m_spSceneGraph->Render(pRenderer, pRenderCtx, &sceneCtx);
+                m_spRenderGraph->Render(pRenderer, pRenderCtx);
         });
 
-        Caustic::CSceneFactory::Instance()->CreatePointLightElem(&m_spScenePointLight);
-        Caustic::Vector3 clr(1.0f, 1.0f, 1.0f);
-        m_spScenePointLight->SetColor(clr);
         Caustic::Vector3 pos(0.0f, 0.0f, 0.0f);
-        m_spScenePointLight->SetPosition(pos);
-        m_spSceneGraph->AddChild(m_spScenePointLight);
+        Caustic::Vector3 clr(1.0f, 1.0f, 1.0f);
+        Caustic::CCausticFactory::Instance()->CreatePointLight(pos, clr, &m_spPointLight);
 
 		Caustic::CCausticFactory::Instance()->CreateCamera(true, &m_spCamera);
         CRefObj<IRenderer> spRenderer = m_spMarshaller->GetRenderer();
@@ -124,7 +118,7 @@ namespace Caustic
                     nup = nup - neye;
                     nup.Normalize();
                     m_spCamera->SetPosition(neye, m_look, nup);
-                    m_spScenePointLight->SetPosition(neye);
+                    m_spPointLight->SetPosition(neye);
                 }
             }
         }

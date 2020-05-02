@@ -79,6 +79,18 @@ namespace Caustic
         virtual void SetTexture(IGraphics* pGraphics, const wchar_t *pName, ITexture* pTexture, EShaderAccess access) = 0;
 
         //**********************************************************************
+        // Method: GetTexture
+        // Returns the texture with the specified name
+        //
+        // Parameters:
+        // name - name of texture (as referenced by the shader)
+        //
+        // Returns:
+        // Returns the associated texture
+        //**********************************************************************
+        virtual CRefObj<ITexture> GetTexture(const wchar_t* pName) = 0;
+        
+        //**********************************************************************
         // Method: Render
         // Renders the material (pushes it to the shader)
         //

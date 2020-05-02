@@ -30,7 +30,7 @@ namespace Caustic
 {
     CAUSTICAPI void CreateRenderer(HWND hwnd, std::wstring &shaderFolder, IRenderer **ppRenderer);
     CAUSTICAPI void CreateGraphics(HWND hwnd, IGraphics **ppGraphics);
-    CAUSTICAPI void CreatePointLight(Vector3 &pos, IPointLight **ppLight);
+    CAUSTICAPI void CreatePointLight(Vector3 &pos, Vector3 &color, IPointLight **ppLight);
     CAUSTICAPI void CreateTrackball(ITrackball **ppTrackball);
     CAUSTICAPI void CreateRendererMarshaller(IRendererMarshaller **ppClientServer);
     CAUSTICAPI void CreateMaterialAttrib(IMaterialAttrib** ppMaterialAttib);
@@ -134,9 +134,9 @@ namespace Caustic
     // Method: CreatePointLight
     // See <ICausticFactory::CreatePointLight>
     //**********************************************************************
-    void CCausticFactory::CreatePointLight(Vector3 &pos, IPointLight **ppLight)
+    void CCausticFactory::CreatePointLight(Vector3 &pos, Vector3 &color, IPointLight **ppLight)
 	{
-		Caustic::CreatePointLight(pos, ppLight);
+		Caustic::CreatePointLight(pos, color, ppLight);
 	}
 
     //**********************************************************************

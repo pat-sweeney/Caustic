@@ -8,14 +8,17 @@
 #include "Base\Core\Core.h"
 #include "Base\Core\RefCount.h"
 #include "Rendering\RenderWindow\IRenderWindow.h"
+#include "Rendering\RenderGraph\IRenderGraph.h"
+#include "Rendering\RenderGraph\IRenderGraphFactory.h"
 
 namespace Caustic
 {
     class CRenderWindow : public IRenderWindow, public CRefCount
     {
         CRefObj<IRendererMarshaller> m_spMarshaller;
-        CRefObj<ISceneGraph> m_spSceneGraph;
-        CRefObj<IScenePointLightElem> m_spScenePointLight; // Light that moves with camera
+        CRefObj<IRenderGraphFactory> m_spRenderGraphFactory;
+        CRefObj<IRenderGraph> m_spRenderGraph;
+        CRefObj<IPointLight> m_spPointLight;
         CRefObj<ICamera> m_spCamera;
         CRefObj<ITrackball> m_spTrackball;
         bool m_tracking;
@@ -40,7 +43,7 @@ namespace Caustic
         //**********************************************************************
         // IRenderWindow
         //**********************************************************************
-        virtual CRefObj<ISceneGraph> GetSceneGraph() override { return m_spSceneGraph; }
+        virtual CRefObj<IRenderGraph> GetRenderGraph() override { return m_spRenderGraph; }
         virtual void MouseDown(int x, int y, uint32 button, uint32 flags) override;
         virtual void MouseMove(int x, int y, uint32 flags) override;
         virtual void MouseUp(int x, int y, uint32 button, uint32 flags) override;

@@ -9,6 +9,7 @@
 #include "Rendering\Caustic\IRenderer.h"
 #include "Rendering\Caustic\IShaderInfo.h"
 #include "Rendering\Caustic\IRenderMesh.h"
+#include "Rendering\Caustic\IShader.h"
 #include "Base\Core\IRefCount.h"
 #include "Base\Math\BBox.h"
 
@@ -129,6 +130,18 @@ namespace Caustic
         virtual void Render(IRenderer *pRenderer, std::vector<CRefObj<IPointLight>> &lights) = 0;
 
         //**********************************************************************
+        // Method: Render
+        // Renders the mesh
+        //
+        // Parameters:
+        // pRenderer - Renderer to use for rendering the mesh
+        // pShader - Shader to use
+        // pMaterial - Material to use
+        // lights - List of lights to use
+        //**********************************************************************
+        virtual void Render(IRenderer* pRenderer, IShader* pShader, IRenderMaterial* pMaterial, std::vector<CRefObj<IPointLight>>& lights) = 0;
+
+        //**********************************************************************
         // Method: SetShader
         // Sets the shader to use when rendering this mesh
         //
@@ -219,6 +232,18 @@ namespace Caustic
         // pRenderer - renderer to use
         // lights - list of lights to use
         //**********************************************************************
-        virtual void Render(IRenderer *pRenderer, std::vector<CRefObj<IPointLight>> &lights) = 0;
-	};
+        virtual void Render(IRenderer* pRenderer, std::vector<CRefObj<IPointLight>>& lights) = 0;
+
+        //**********************************************************************
+        // Method: Render
+        // Renders the mesh
+        //
+        // Parameters:
+        // pRenderer - renderer to use
+        // pShader - shader to use
+        // pMaterial - material to use
+        // lights - list of lights to use
+        //**********************************************************************
+        virtual void Render(IRenderer* pRenderer, IShader *pShader, IRenderMaterial*pMaterial, std::vector<CRefObj<IPointLight>> &lights) = 0;
+    };
 }

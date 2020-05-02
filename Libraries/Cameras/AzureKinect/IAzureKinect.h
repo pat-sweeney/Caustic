@@ -19,17 +19,8 @@ namespace Caustic
     // Interface: IAzureKinect
     // Base interface shared across all image types
     //**********************************************************************
-    struct IAzureKinect : public ICameraDevice
+    struct IAzureKinect : public IDepthCameraDevice
     {
-        //**********************************************************************
-        // Method: NextFrame
-        // Retrieves the next color/depth/ir image from the camera
-        // Parameters:
-        // ppColorImage - returns the next color image retrieved from the camera. Maybe nullptr.
-        // ppDepthImage - returns the next depth image retrieved from the camera. Maybe nullptr.
-        // ppIRImage - returns the next infrared image retrieved from the camera. Maybe nullptr.
-        //**********************************************************************
-        virtual bool NextFrame(IImage** ppColorImage, IImage** ppDepthImage, IImage** ppIRImage) = 0;
         virtual bool NextFrame(IImage** ppColorImage, std::vector<Vector3>& pts, std::vector<Vector3>& normals, BBox3 &bbox) = 0;
         virtual void BuildRayMap(uint32 w, uint32 h, IImage** ppImage) = 0;
     };

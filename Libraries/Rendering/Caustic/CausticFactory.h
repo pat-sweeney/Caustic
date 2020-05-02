@@ -58,7 +58,7 @@ namespace Caustic
 		virtual void CreateGraphics(HWND hwnd, IGraphics **ppGraphics) override;
 		virtual void CreateRenderMesh(IRenderMesh **ppRenderMesh) override;
 		virtual void CreateRenderSubMesh(IRenderSubMesh **ppRenderSubMesh) override;
-		virtual void CreatePointLight(Vector3 &pos, IPointLight **ppLight) override;
+		virtual void CreatePointLight(Vector3 &pos, Vector3 &color, IPointLight **ppLight) override;
 		virtual void CreateTrackball(ITrackball **ppTrackball) override;
 		virtual void CreateRendererMarshaller(IRendererMarshaller **ppMarshaller) override;
 		virtual void CreateMaterialAttrib(IMaterialAttrib** ppMaterialAttrib) override;

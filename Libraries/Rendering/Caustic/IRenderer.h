@@ -98,11 +98,8 @@ namespace Caustic
         //**********************************************************************
         // Method: GetRenderCtx
         // Returns the current render context
-        //
-        // Parameters:
-        // ppCtx - Returns the current render context
         //**********************************************************************
-        virtual void GetRenderCtx(IRenderCtx **ppCtx) = 0;
+        virtual CRefObj<IRenderCtx> GetRenderCtx() = 0;
 
         //**********************************************************************
         // Method: DrawLine
@@ -118,10 +115,7 @@ namespace Caustic
         //**********************************************************************
         // Method: GetGraphics
         // Returns the current graphics device the renderer is using
-        //
-        // Parameters:
-        // ppGraphics - returns the current graphics device
         //**********************************************************************
-        virtual void GetGraphics(IGraphics **ppGraphics) = 0;
+        virtual CRefObj<IGraphics> GetGraphics() = 0;
     };
 }

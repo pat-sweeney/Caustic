@@ -217,8 +217,10 @@
     <ClInclude Include="Caustic.h" />
     <ClInclude Include="CausticFactory.h" />
     <ClInclude Include="ConstructBuffers.h" />
+    <ClInclude Include="IBuffer.h" />
     <ClInclude Include="ICamera.h" />
     <ClInclude Include="ICausticFactory.h" />
+    <ClInclude Include="ILightCollection.h" />
     <ClInclude Include="IMaterialAttrib.h" />
     <ClInclude Include="IPointLight.h" />
     <ClInclude Include="IRenderable.h" />

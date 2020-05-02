@@ -54,7 +54,7 @@ namespace Caustic
 		}
 
 		//**********************************************************************
-		// IAddRef
+		// IRefCount
 		//**********************************************************************
 		virtual uint32 AddRef() override { return CRefCount::AddRef(); }
 		virtual uint32 Release() override { return CRefCount::Release(); }

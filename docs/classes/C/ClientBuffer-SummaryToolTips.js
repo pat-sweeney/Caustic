@@ -1,0 +1,1 @@
+NDSummary.OnToolTipsLoaded("CClass:ClientBuffer",{367:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Data from/to the client that is mapped to/from a shader\'s StructuredBuffer, RWStructuredBuffer, or AppendStructuredBuffer). This structure is what clients will pass to IShader::SetCSParam for any of these shader types.</div></div>"});

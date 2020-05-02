@@ -16,20 +16,39 @@ namespace Caustic
     // Method: Render
     // See <IRenderSubMesh::Render>
     //**********************************************************************
-    void CRenderSubMesh::Render(IRenderer *pRenderer, std::vector<CRefObj<IPointLight>> &lights)
-	{
-        ID3D11DeviceContext *pContext = pRenderer->GetContext();
-        ID3D11Device *pDevice = pRenderer->GetDevice();
+    void CRenderSubMesh::Render(IRenderer* pRenderer, std::vector<CRefObj<IPointLight>>& lights)
+    {
+        ID3D11DeviceContext* pContext = pRenderer->GetContext();
+        ID3D11Device* pDevice = pRenderer->GetDevice();
         pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		m_spShader->BeginRender(pRenderer, m_spFrontMaterial, m_spBackMaterial, lights, nullptr);
-		uint32 vertexSize = m_spShader->GetShaderInfo()->GetVertexSize();
-		uint32 numVertices = m_VB.m_numVertices;
+        m_spShader->BeginRender(pRenderer, m_spFrontMaterial, m_spBackMaterial, lights, nullptr);
+        uint32 vertexSize = m_spShader->GetShaderInfo()->GetVertexSize();
+        uint32 numVertices = m_VB.m_numVertices;
         UINT offset = 0;
         pContext->IASetVertexBuffers(0, 1, &m_VB.m_spVB.p, &vertexSize, &offset);
         pContext->IASetIndexBuffer(m_VB.m_spIB, DXGI_FORMAT::DXGI_FORMAT_R32_UINT, 0);
         pContext->DrawIndexed(m_VB.m_numIndices, 0, 0);
-		m_spShader->EndRender(pRenderer);
-	}
+        m_spShader->EndRender(pRenderer);
+    }
+
+    //**********************************************************************
+    // Method: Render
+    // See <IRenderSubMesh::Render>
+    //**********************************************************************
+    void CRenderSubMesh::Render(IRenderer* pRenderer, IShader *pShader, IRenderMaterial *pMaterial, std::vector<CRefObj<IPointLight>>& lights)
+    {
+        ID3D11DeviceContext* pContext = pRenderer->GetContext();
+        ID3D11Device* pDevice = pRenderer->GetDevice();
+        pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        pShader->BeginRender(pRenderer, pMaterial, pMaterial, lights, nullptr);
+        uint32 vertexSize = pShader->GetShaderInfo()->GetVertexSize();
+        uint32 numVertices = m_VB.m_numVertices;
+        UINT offset = 0;
+        pContext->IASetVertexBuffers(0, 1, &m_VB.m_spVB.p, &vertexSize, &offset);
+        pContext->IASetIndexBuffer(m_VB.m_spIB, DXGI_FORMAT::DXGI_FORMAT_R32_UINT, 0);
+        pContext->DrawIndexed(m_VB.m_numIndices, 0, 0);
+        pShader->EndRender(pRenderer);
+    }
 
     //**********************************************************************
     // Constructor: CRenderMesh
@@ -105,11 +124,21 @@ namespace Caustic
     // Method: Render
     // See <IRenderMesh::Render>
     //**********************************************************************
-    void CRenderMesh::Render(IRenderer *pRenderer, std::vector<CRefObj<IPointLight>> &lights)
-	{
+    void CRenderMesh::Render(IRenderer* pRenderer, std::vector<CRefObj<IPointLight>>& lights)
+    {
 		for (auto submesh : m_subMeshes)
-			submesh->Render(pRenderer, lights);
-	}
+            submesh->Render(pRenderer, lights);
+    }
+
+    //**********************************************************************
+    // Method: Render
+    // See <IRenderMesh::Render>
+    //**********************************************************************
+    void CRenderMesh::Render(IRenderer* pRenderer, IShader* pShader, IRenderMaterial* pMaterial, std::vector<CRefObj<IPointLight>>& lights)
+    {
+        for (auto submesh : m_subMeshes)
+            submesh->Render(pRenderer, pShader, pMaterial, lights);
+    }
 
     CAUSTICAPI void CreatePointCloudSubMesh(IRenderer *pRenderer, IShader *pShader, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, std::vector<CGeomVertex>& verts, IRenderSubMesh** ppSubMesh)
     {

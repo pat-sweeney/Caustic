@@ -1,0 +1,1 @@
+NDSummary.OnToolTipsLoaded("CClass:CRenderGraphNode_PhongMaterial",{919:"<div class=\"NDToolTip TClass LC\"><div class=\"NDClassPrototype\" id=\"NDClassPrototype919\"><div class=\"CPEntry TClass Current\"><div class=\"CPName\">CRenderGraphNode_PhongMaterial</div></div></div><div class=\"TTSummary\">Implements IRenderGraphNode_PhongMaterial</div></div>"});

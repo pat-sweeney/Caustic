@@ -38,10 +38,8 @@ namespace Caustic
                     }
                 });
         }
-
         *ppRenderMaterial = spRenderMaterial.release();
         (*ppRenderMaterial)->AddRef();
-
     }
 
     void CRenderMaterial::SetTexture(IGraphics* pGraphics, const wchar_t* pName, ITexture* pTexture, EShaderAccess access)

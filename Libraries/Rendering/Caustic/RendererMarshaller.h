@@ -95,8 +95,8 @@ namespace Caustic
         virtual void RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) override; // Have renderer draw and present next frame
         virtual void SetCamera(ICamera *pCamera) override; // Sets camera
         virtual void AddPointLight(IPointLight *pLight) override;
-        virtual void GetRenderCtx(IRenderCtx **ppCtx) override;
+        virtual CRefObj<IRenderCtx> GetRenderCtx() override;
         virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) override;
-        virtual void GetGraphics(IGraphics ** /*ppGraphics*/) override { return; }
+        virtual CRefObj<IGraphics> GetGraphics() override { return CRefObj<IGraphics>(nullptr); }
     };
 }

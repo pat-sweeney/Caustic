@@ -9,12 +9,13 @@
 #include "Imaging\Image\ImageFilter.h"
 #include "Rendering\RenderWindow\IRenderWindow.h"
 #include "Rendering\Caustic\ICausticFactory.h"
-#include "Rendering\SceneGraph\ISceneGraph.h"
-#include "Rendering\SceneGraph\ISceneFactory.h"
+#include "Rendering\RenderGraph\IRenderGraph.h"
 #include "Geometry\MeshImport\MeshImport.h"
 #include "Cameras\AzureKinect\IAzureKinect.h"
 #include "Rendering\Caustic\ConstructBuffers.h"
 #include "Geometry\Mesh\IMeshConstructor.h"
+#include "Rendering\RenderGraph\IRenderGraph.h"
+#include "Rendering\RenderGraph\IRenderGraphFactory.h"
 #include <Windows.h>
 #include <commdlg.h>
 
@@ -23,29 +24,19 @@ namespace Caustic {
     extern void CreatePointCloudSubMesh(IRenderer* pRenderer, IShader* pShader, IRenderMaterial* pFrontMaterial, IRenderMaterial* pBackMaterial, std::vector<CGeomVertex>& verts, IRenderSubMesh** ppSubMesh);
 }
 
-CRefObj<IRenderWindow> spRenderWindow;
-CRefObj<Caustic::ICausticFactory> spCausticFactory;
-CRefObj<Caustic::ISceneFactory> spSceneFactory;
-CRefObj<IRenderMaterial> spFrontMaterial;
-CRefObj<IRenderMaterial> spBackMaterial;
-CRefObj<IShader> spShader;
-CRefObj<IMaterialAttrib> spMatAttrib;
-CRefObj<IRenderMaterial> spRenderMaterial;
-CRefObj<IImage> spRayMap;
-DirectX::XMMATRIX xm;
-CRITICAL_SECTION cs;
-std::vector<CGeomVertex> verts;
-CRefObj<IAzureKinect> spCamera;
-
-void AddPointLight(Vector3& lightPos)
+class CApp
 {
-    CRefObj<IScenePointLightElem> spLightElem;
-    spSceneFactory->CreatePointLightElem(&spLightElem);
-    spLightElem->SetPosition(lightPos);
-    Vector3 lightColor(1.0f, 1.0f, 1.0f);
-    spLightElem->SetColor(lightColor);
-    spRenderWindow->GetSceneGraph()->AddChild(spLightElem);
-}
+public:
+    CRefObj<IRenderWindow> m_spRenderWindow;
+    CRefObj<Caustic::ICausticFactory> m_spCausticFactory;
+    CRefObj<IRenderGraphFactory> m_spRenderGraphFactory;
+    CRefObj<IRenderGraph> m_spRenderGraph;
+    CRefObj<IAzureKinect> m_spCamera;
+    CRefObj<IImage> m_spRayMap;
+
+    void InitializeCaustic(HWND hWnd);
+};
+CApp app;
 
 struct Vertex
 {
@@ -53,92 +44,111 @@ struct Vertex
     float norm[3];
 };
 
-CRefObj<IRenderable> spRenderable;
-CRefObj<IMesh> spMesh;
-CRefObj<ISceneMeshElem> spMeshElem;
-CRefObj<IRenderMesh> spRenderMesh;
-CRefObj<IRenderSubMesh> spRenderSubMesh;
-CRefObj<IMaterialAttrib> spMaterial;
-CRefObj<IImage> spOutputImage;
-std::shared_ptr<Vertex> vertices;
-int numVertices = 0;
-void InitializeCaustic(HWND hwnd)
+void CApp::InitializeCaustic(HWND hwnd)
 {
-    Caustic::CreateSceneFactory(&spSceneFactory);
-    Caustic::CreateCausticFactory(&spCausticFactory);
+    // First create our underlying Caustic factory.
+    // I have not yet made counter parts to all the Caustic objects
+    // in the render graph (and probably won't since they are unnecessary
+    // and would only act as wrappers. Wrapping for its own sake is bad design IMHO).
+    Caustic::CreateCausticFactory(&m_spCausticFactory);
+
+    // Next create our output window
     std::wstring shaderFolder(SHADERPATH);
-    CreateRenderWindow(hwnd, shaderFolder, &spRenderWindow);
-    Vector3 lightPos(10.0f, 10.0f, 0.0f);
-    AddPointLight(lightPos);
-    lightPos = Vector3(-10.0f, 10.0f, 0.0f);
-    AddPointLight(lightPos);
+    m_spRenderWindow = CreateRenderWindow(hwnd, shaderFolder);
 
-    InitializeCriticalSection(&cs);
+    CreateAzureKinect(0, AzureKinect::ColorMode::Color1080p, AzureKinect::Depth512x512, AzureKinect::FPS30, &m_spCamera);
 
-    CreateCube(&spMesh);
-    
-    // Next create our scene graph mesh element
-    spSceneFactory->CreateMeshElem(&spMeshElem);
-    spMeshElem->SetMesh(spMesh);
-
-    // Find our shader
-    CRefObj<IRenderer> spRenderer = spRenderWindow->GetRenderer();
+    // Load our shaders
+    CRefObj<IRenderer> spRenderer = m_spRenderWindow->GetRenderer();
     CRefObj<IShaderMgr> spShaderMgr = spRenderer->GetShaderMgr();
-    CRefObj<IShader> spComputeShader;
-    spShaderMgr->FindShader(L"Depth2Points", &spComputeShader);
+    CRefObj<IShader> spDepth2PointsShader;
+    spShaderMgr->FindShader(L"Depth2Points", &spDepth2PointsShader);
     CRefObj<IShader> spDefaultShader;
     spShaderMgr->FindShader(L"Textured", &spDefaultShader);
 
-    // Assign a material to our mesh
-    CRefObj<ISceneMaterialElem> spMaterialElem;
-    spSceneFactory->CreateMaterialElem(&spMaterialElem);
-    spMaterialElem->GetMaterial(&spMaterial);
-    std::vector<CRefObj<IMaterialAttrib>> attribs;
-    attribs.push_back(spMaterial);
-    spMesh->SetMaterials(attribs);
-    spMaterialElem->SetShader(spDefaultShader);
-    spMaterialElem->AddChild(spMeshElem);
-    spRenderWindow->GetSceneGraph()->AddChild(spMaterialElem);
+    m_spRenderGraphFactory = Caustic::CreateRenderGraphFactory();
+    m_spRenderGraph = m_spRenderWindow->GetRenderGraph();
 
-    CRefObj<ISceneComputeShaderElem> spComputeElem;
-    spSceneFactory->CreateComputeShaderElem(spComputeShader, &spComputeElem);
-    IShader* pComputeShader = spComputeShader;
-    ISceneComputeShaderElem* pComputeElem = spComputeElem;
-    int counter = 0;
-    spComputeElem->SetPreRenderCallback([pComputeShader, pComputeElem](int pass) -> bool {
-        if (pass != 2)
-            return false;
-        if (spCamera != nullptr)
-        {
-            CRefObj<IImage> spDepthImage;
-            if (spCamera->NextFrame(nullptr, &spDepthImage, nullptr))
-            {
-                if (spDepthImage)
-                {
-                    if (numVertices == 0)
-                    {
-                        numVertices = spDepthImage->GetWidth() * spDepthImage->GetHeight();
-                        vertices.reset(new Vertex[numVertices]);
-                    }
-                    OutputDebugString(L"Read frame\n");
-                    uint32 depthWidth2 = spDepthImage->GetWidth() / 2; // We need half the width since the shader does 2 depth points at a time
-                    pComputeElem->SetShaderParam(L"depthImageWidth", depthWidth2);
-                    pComputeElem->SetInputBuffer(L"DepthBuffer", spDepthImage->GetData(), spDepthImage->GetStride() * spDepthImage->GetHeight(), spDepthImage->GetBytesPerPixel() * 2);
-                    pComputeElem->SetInputBuffer(L"RayBuffer", spRayMap->GetData(), spRayMap->GetStride() * spRayMap->GetHeight(), spRayMap->GetBytesPerPixel());
-                    pComputeElem->SetInputThreads(depthWidth2, spDepthImage->GetHeight());
-                    pComputeElem->SetOutputBuffer(L"Points", (uint8*)vertices.get(), (uint32)(sizeof(Vertex) * numVertices), (uint32)sizeof(Vertex));
-                }
-            }
-        }
-        return true;
-    });
-    spComputeElem->SetPostRenderCallback([pComputeShader, pComputeElem](int pass) {
-        //spMeshElem->SetFlags(spMeshElem->GetFlags() | ESceneElemFlags::MaterialDirty);
-        //spMaterial->SetTexture(L"diffuseTexture", spOutputImage, EShaderAccess::PixelShader);
-        });
-    spRenderWindow->GetSceneGraph()->AddChild(spComputeElem);
-    CreateAzureKinect(0, AzureKinect::ColorMode::Color1080p, AzureKinect::Depth512x512, AzureKinect::FPS30, &spCamera);
-    spCamera->BuildRayMap(512, 512, &spRayMap);
+    m_spCamera->BuildRayMap(512, 512, &m_spRayMap);
+    CRefObj<IRenderGraphNode_ImageToTexture> spImageNode = m_spRenderGraphFactory->CreateImageToTextureNode();
+    spImageNode->SetName("Ray2Texture");
+    spImageNode->FindInputPin("image")->SetDefaultValue(std::any(m_spRayMap));
+
+    // The render graph we are building looks like:
+    //
+    //                        +---------------------------------------+
+    // +--------+             |                 Group                 |
+    // | lights |-----> o-----| +--------+                            |
+    // +--------+      lights | |  Mesh  |                            |
+    //                        | | (cube) |                            |
+    // +----------+           | +--------+                            |
+    // | material |---> 0-----| +----------------+     +----------+   |
+    // +----------+  frontMat | |  Depth2Points  |---->|   Mesh   |   |
+    //                        | | Compute Shader |     | (Points) |   |
+    //                        | +----------------+     +----------+   |
+    //                        |                                       |
+    //                        +---------------------------------------+
+    //
+
+    CRefObj<IRenderGraphNode_LightCollection> spLightsNode = m_spRenderGraphFactory->CreateLightCollectionNode();
+    spLightsNode->SetName("LightsCollection");
+    m_spRenderGraph->AddChild(spLightsNode);
+
+    // Add light @ 10,10,0
+    CRefObj<IPointLight> spPointLight;
+    Vector3 lightPos(10.0f, 10.0f, 0.0f);
+    Vector3 lightColor(1.0f, 1.0f, 1.0f);
+    m_spCausticFactory->CreatePointLight(lightPos, lightColor, &spPointLight.p);
+    spLightsNode->AddLight(spPointLight);
+
+    // Add light @ -10,10,0
+    CRefObj<IPointLight> spPointLight2;
+    Vector3 lightPos2(-10.0f, 10.0f, 0.0f);
+    m_spCausticFactory->CreatePointLight(lightPos2, lightColor, &spPointLight2.p);
+    spLightsNode->AddLight(spPointLight2);
+
+    CRefObj<IRenderGraphNode_Group> spGroupNode = m_spRenderGraphFactory->CreateGroupNode();
+    spGroupNode->SetName("TopGroup");
+    m_spRenderGraph->AddChild(spGroupNode);
+
+    // Create our mesh (a cube). Our scene will have two objects: 1) a cube at the origin
+    // that will display the camera's color image and 2) a point cloud displaying the depth image
+    CRefObj<IMesh> spMesh;
+    Caustic::CreateCube(&spMesh);
+    CRefObj<IRenderGraphNode_Mesh> spCubeMeshNode = m_spRenderGraphFactory->CreateMeshNode();
+    spCubeMeshNode->SetName("Cube");
+    spGroupNode->AddChild(spCubeMeshNode);
+    spCubeMeshNode->FindInputPin("mesh")->SetDefaultValue(std::any(spMesh));
+
+    // Create a material node to attach to the cube
+    CRefObj<IRenderGraphNode_PhongMaterial> spMaterialNode = m_spRenderGraphFactory->CreatePhongMaterialNode();
+    spMaterialNode->SetName("FrontMaterial");
+    m_spRenderGraph->AddChild(spMaterialNode);
+
+    CRefObj<IRenderGraphNode_DepthCameraSource> spDepthCameraNode = m_spRenderGraphFactory->CreateDepthCameraSource(m_spCamera);
+    spDepthCameraNode->SetName("DepthCamera");
+    m_spRenderGraph->AddChild(spDepthCameraNode);
+    spDepthCameraNode->FindOutputPin("colorImage")->LinkTo(spMaterialNode->FindInputPin("diffuseTexture"));
+    CRefObj<IRenderGraphPin> spGroupMaterialPin = spGroupNode->FindInputPin("frontMaterial");
+    spMaterialNode->FindOutputPin("material")->LinkTo(spGroupMaterialPin);
+
+    // Create our Depth2Points compute shader
+    CRefObj<IRenderGraphNode_Compute> spComputeNode = m_spRenderGraphFactory->CreateComputeNode(spDepth2PointsShader);
+    spComputeNode->SetName("Depth2Points");
+
+    CRefObj<IRenderGraphPin> spGroupLightsPin = spGroupNode->FindInputPin("lights");
+    spLightsNode->FindOutputPin("lights")->LinkTo(spGroupLightsPin);
+
+    //                   uint32 depthWidth2 = spDepthImage->GetWidth() / 2; // We need half the width since the shader does 2 depth points at a time
+ //                   pComputeElem->SetShaderParam(L"depthImageWidth", depthWidth2);
+ //                   pComputeElem->SetInputBuffer(L"DepthBuffer", spDepthImage->GetData(), spDepthImage->GetStride() * spDepthImage->GetHeight(), spDepthImage->GetBytesPerPixel() * 2);
+ //                   pComputeElem->SetInputBuffer(L"RayBuffer", spRayMap->GetData(), spRayMap->GetStride() * spRayMap->GetHeight(), spRayMap->GetBytesPerPixel());
+ //                   pComputeElem->SetInputThreads(depthWidth2, spDepthImage->GetHeight());
+ //                   pComputeElem->SetOutputBuffer(L"Points", (uint8*)vertices.get(), (uint32)(sizeof(Vertex) * numVertices), (uint32)sizeof(Vertex));
+   // spComputeElem->SetPostRenderCallback([pComputeShader, pComputeElem](int pass) {
+   //     //spMeshElem->SetFlags(spMeshElem->GetFlags() | ESceneElemFlags::MaterialDirty);
+   //     //spMaterial->SetTexture(L"diffuseTexture", spOutputImage, EShaderAccess::PixelShader);
+   //     });
 }
 
 #define MAX_LOADSTRING 100
@@ -244,7 +254,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    }
 
    // Setup our renderer
-   InitializeCaustic(hWnd);
+   app.InitializeCaustic(hWnd);
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
@@ -295,19 +305,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         PostQuitMessage(0);
         break;
     case WM_LBUTTONDOWN:
-        spRenderWindow->MouseDown((int)LOWORD(lParam), (int)HIWORD(lParam), c_LeftButton, (uint32)wParam);
+        app.m_spRenderWindow->MouseDown((int)LOWORD(lParam), (int)HIWORD(lParam), c_LeftButton, (uint32)wParam);
         break;
     case WM_LBUTTONUP:
-        spRenderWindow->MouseUp((int)LOWORD(lParam), (int)HIWORD(lParam), c_LeftButton, (uint32)wParam);
+        app.m_spRenderWindow->MouseUp((int)LOWORD(lParam), (int)HIWORD(lParam), c_LeftButton, (uint32)wParam);
         break;
     case WM_MOUSEMOVE:
-        spRenderWindow->MouseMove((int)LOWORD(lParam), (int)HIWORD(lParam), (uint32)wParam);
+        app.m_spRenderWindow->MouseMove((int)LOWORD(lParam), (int)HIWORD(lParam), (uint32)wParam);
         break;
     case WM_MOUSEWHEEL:
-        spRenderWindow->MouseWheel((int)wParam);
+        app.m_spRenderWindow->MouseWheel((int)wParam);
         break;
     case WM_KEYDOWN:
-        spRenderWindow->MapKey((uint32)wParam, (uint32)lParam);
+        app.m_spRenderWindow->MapKey((uint32)wParam, (uint32)lParam);
         break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);

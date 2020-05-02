@@ -47,10 +47,34 @@
  <div class="CBody"><p>Returns the current render pass</p></div>
 </div>
 
-<a name="PassBlendable"></a><a name="Topic572"></a><div class="CTopic TFunction LC last">
+<a name="PassBlendable"></a><a name="Topic572"></a><div class="CTopic TFunction LC">
  <div class="CTitle">PassBlendable</div>
  <div id="NDPrototype572" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">bool</span> PassBlendable() = <span class="SHNumber">0</span></div>
  <div class="CBody"><p>Returns whether the current render pass supports alpha blending</p></div>
+</div>
+
+<a name="IncrementEpoch"></a><a name="Topic443"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">IncrementEpoch</div>
+ <div id="NDPrototype443" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> IncrementEpoch() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><p>Increment to the next epoch</p><div class="CHeading">Returns</div><p>Returns the new epoch</p></div>
+</div>
+
+<a name="GetEpoch"></a><a name="Topic877"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetEpoch</div>
+ <div id="NDPrototype877" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetEpoch() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><p>Returns the current epoch. The epoch is updated each time something changes</p><div class="CHeading">Returns</div><p>Returns the current epoch</p></div>
+</div>
+
+<a name="GetMostRecentEpoch"></a><a name="Topic878"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetMostRecentEpoch</div>
+ <div id="NDPrototype878" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetMostRecentEpoch() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><p>Returns the most recent epoch found while traversing the render graph</p><div class="CHeading">Returns</div><p>Returns the most recent epoch</p></div>
+</div>
+
+<a name="SetMostRecentEpoch"></a><a name="Topic879"></a><div class="CTopic TFunction LC last">
+ <div class="CTitle">SetMostRecentEpoch</div>
+ <div id="NDPrototype879" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetMostRecentEpoch(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">v</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Sets the most recent epoch found while traversing the render graph</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">v<div class="CDLParameterType"><span class="SHKeyword">uint32</span></div></td><td class="CDLDefinition"><p>value to set most recent epoch to</p></td></tr></table></div>
 </div>
 
 </body></html>

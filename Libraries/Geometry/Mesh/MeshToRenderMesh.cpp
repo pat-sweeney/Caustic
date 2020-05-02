@@ -253,8 +253,7 @@ namespace Caustic
 	//**********************************************************************
 	void CSubMesh::ToRenderSubMesh(IRenderer *pRenderer, IShader *pShader, IRenderSubMesh **ppRenderSubMesh)
 	{
-        CRefObj<IGraphics> spGraphics;
-        pRenderer->GetGraphics(&spGraphics);
+        CRefObj<IGraphics> spGraphics = pRenderer->GetGraphics();
         CRefObj<ICausticFactory> spFactory;
 		Caustic::CreateCausticFactory(&spFactory);
 		CRefObj<IRenderSubMesh> spRenderSubMesh;

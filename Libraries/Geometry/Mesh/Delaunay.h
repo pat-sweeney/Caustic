@@ -93,7 +93,7 @@ namespace Caustic
         CDelaunay2(BBox2 &bb);
 
         //**********************************************************************
-        // IAddRef
+        // IRefCount
         //**********************************************************************
         virtual uint32 AddRef() override { return CRefCount::AddRef(); }
         virtual uint32 Release() override { return CRefCount::Release(); }

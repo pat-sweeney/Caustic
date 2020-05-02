@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{C794B439-228E-4659-8895-5169BB46DB55}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>RenderGraph</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="..\..\..\Caustic.props" />
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="..\..\..\Caustic.props" />
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>CAUSTIC_EXPORT;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(CausticRoot)\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>CAUSTIC_EXPORT;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(CausticRoot)\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="RenderGraph.cpp" />
+    <ClCompile Include="RenderGraphFactory.cpp" />
+    <ClCompile Include="RenderGraphNode.cpp" />
+    <ClCompile Include="RenderGraphPin.cpp" />
+    <ClCompile Include="RGNCompute.cpp" />
+    <ClCompile Include="RGNDepthCameraSource.cpp" />
+    <ClCompile Include="RGNGroup.cpp" />
+    <ClCompile Include="RGNImageToTexture.cpp" />
+    <ClCompile Include="RGNMesh.cpp" />
+    <ClCompile Include="RGNPhongMaterial.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ILightCollection.h" />
+    <ClInclude Include="IRenderGraph.h" />
+    <ClInclude Include="IRenderGraphFactory.h" />
+    <ClInclude Include="IRenderGraphNode.h" />
+    <ClInclude Include="IRenderGraphPin.h" />
+    <ClInclude Include="IRenderGraphPointLightNode.h" />
+    <ClInclude Include="IRGNDepthCameraSource.h" />
+    <ClInclude Include="IRGNGroup.h" />
+    <ClInclude Include="IRGNImageToTexture.h" />
+    <ClInclude Include="IRGNLightCollection.h" />
+    <ClInclude Include="IRGNCompute.h" />
+    <ClInclude Include="IRGNMaterial.h" />
+    <ClInclude Include="IRGNMesh.h" />
+    <ClInclude Include="IRGNPhongMaterial.h" />
+    <ClInclude Include="LightCollection.h" />
+    <ClInclude Include="RenderGraph.h" />
+    <ClInclude Include="RenderGraphDiagnostics.h" />
+    <ClInclude Include="RenderGraphFactory.h" />
+    <ClInclude Include="RenderGraphLightCollectionNode.h" />
+    <ClInclude Include="RenderGraphNode.h" />
+    <ClInclude Include="RenderGraphPin.h" />
+    <ClInclude Include="RenderGraphPointLightNode.h" />
+    <ClInclude Include="RGNCompute.h" />
+    <ClInclude Include="RGNDepthCameraSource.h" />
+    <ClInclude Include="RGNGroup.h" />
+    <ClInclude Include="RGNImageToTexture.h" />
+    <ClInclude Include="RGNLightCollection.h" />
+    <ClInclude Include="RGNMaterial.h" />
+    <ClInclude Include="RGNMesh.h" />
+    <ClInclude Include="RGNPhongMaterial.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

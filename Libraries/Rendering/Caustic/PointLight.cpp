@@ -24,10 +24,11 @@ namespace Caustic
     // pos - position in world coordinates for the light
     // ppLight - Returns the created point light
     //**********************************************************************
-    CAUSTICAPI void CreatePointLight(Vector3 &pos, IPointLight **ppLight)
+    CAUSTICAPI void CreatePointLight(Vector3 &pos, Vector3 &color, IPointLight **ppLight)
     {
         std::unique_ptr<CPointLight> spPointLight(new CPointLight());
         spPointLight->SetPosition(pos);
+        spPointLight->SetColor(color);
         *ppLight = spPointLight.release();
         (*ppLight)->AddRef();
     }

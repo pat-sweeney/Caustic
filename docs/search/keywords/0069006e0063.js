@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("inc",["Function"],[["IncrementEpoch",,[["IRenderCtx",,,,0,"File:Rendering/Caustic/IRenderCtx.h:IRenderCtx.IncrementEpoch","CClass:IRenderCtx:IncrementEpoch"]]]]);

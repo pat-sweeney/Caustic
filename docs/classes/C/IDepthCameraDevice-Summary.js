@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:IDepthCameraDevice","IDepthCameraDevice");NDSummary.OnSummaryLoaded("CClass:IDepthCameraDevice",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Interfaces","Interface"]],[[934,0,2,"IDepthCameraDevice"],[935,0,1,"Functions","Functions"],[936,0,0,"NextFrame","NextFrame"]]);

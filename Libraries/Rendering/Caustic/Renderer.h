@@ -75,6 +75,14 @@ namespace Caustic
     //**********************************************************************
     // Class: CRenderCtx
     // Class implementing <IRenderCtx>
+    //
+    // Members:
+    // m_debugFlags - current set of debug flags (used for rendering debug information)
+    // m_NormalScale - scale factor to apply to lines when drawing vertex/face normals
+    // m_currentPass - current pass (transparent, opaque, shadow, ...)
+    // m_passBlendable - indicates whether alpha blending is enabled on the current pass
+    // m_currentEpoch - current epoch for keeping track of changes. Each time something changes this number is updated
+    // m_mostRecentEpoch - most recent epoch we have found while traversing the render graph
     //**********************************************************************
     class CRenderCtx : public IRenderCtx, public CRefCount
     {
@@ -82,6 +90,8 @@ namespace Caustic
         float m_NormalScale;
         int m_currentPass;
         bool m_passBlendable;
+        uint32 m_currentEpoch;
+        uint32 m_mostRecentEpoch;
 
     public:
         friend class CRenderer;
@@ -91,7 +101,9 @@ namespace Caustic
             m_debugFlags(0),
             m_NormalScale(1.0f),
             m_currentPass(0),
-            m_passBlendable(false)
+            m_passBlendable(false),
+            m_currentEpoch(0),
+            m_mostRecentEpoch(0)
         {
         }
 
@@ -109,7 +121,11 @@ namespace Caustic
         virtual void SetNormalScale(float normalScale) override { m_NormalScale = normalScale; };
         virtual float GetNormalScale() override { return m_NormalScale; }
         virtual uint32 GetCurrentPass() override { return m_currentPass; }
-        virtual bool PassBlendable() { return m_passBlendable; }
+        virtual bool PassBlendable() override { return m_passBlendable; }
+        virtual uint32 GetEpoch() override { return m_currentEpoch; }
+        virtual uint32 IncrementEpoch() override { return ++m_currentEpoch; }
+        virtual uint32 GetMostRecentEpoch() override { return m_mostRecentEpoch; }
+        virtual void SetMostRecentEpoch(uint32 v) override { m_mostRecentEpoch = v; }
     };
 
     const int c_MaxShadowMaps = 4;
@@ -248,8 +264,8 @@ namespace Caustic
         virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice) override;
         virtual void DrawMesh(IRenderSubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) override;
         virtual void AddPointLight(IPointLight *pLight) override;
-        virtual void GetRenderCtx(IRenderCtx **ppCtx) override;
+        virtual CRefObj<IRenderCtx> GetRenderCtx() override;
         virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) override;
-        virtual void GetGraphics(IGraphics** ppGraphics) override;
+        virtual CRefObj<IGraphics> GetGraphics() override;
     };
 }

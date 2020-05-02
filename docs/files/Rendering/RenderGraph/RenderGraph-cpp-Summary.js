@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("File:Rendering/RenderGraph/RenderGraph.cpp","RenderGraph.cpp");NDSummary.OnSummaryLoaded("File:Rendering/RenderGraph/RenderGraph.cpp",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"]],[[948,0,1,"Functions","Functions"],[950,0,0,"AddChild","AddChild"],[951,0,0,"Render","Render"],[952,0,0,"Lock","Lock"],[953,0,0,"Unlock","Unlock"]]);

@@ -64,6 +64,7 @@ namespace Caustic
         virtual void SetBBox(BBox3 *pBBox) override { m_VB.m_bbox = *pBBox; }
         virtual void GetBBox(BBox3 *pBBox) override { *pBBox = m_VB.m_bbox; };
 		virtual void Render(IRenderer *pRenderer, std::vector<CRefObj<IPointLight>> &lights) override;
+		virtual void Render(IRenderer* pRenderer, IShader* pShader, IRenderMaterial* pMaterial, std::vector<CRefObj<IPointLight>>& lights) override;
 		virtual void SetShader(IShader *pShader) override { m_spShader = pShader; }
 		virtual CRefObj<IShader> GetShader() override { return m_spShader; }
 	};
@@ -92,7 +93,8 @@ namespace Caustic
 		virtual void SetMaterials(std::vector<CRefObj<IMaterialAttrib>> &materials) override;
 		virtual void GetMaterial(uint32 materialID, IMaterialAttrib **ppMaterial) override;
 		virtual void ComputeNormals() override {}
-		virtual void Render(IRenderer *pRenderer, std::vector<CRefObj<IPointLight>> &lights) override;
+		virtual void Render(IRenderer* pRenderer, std::vector<CRefObj<IPointLight>>& lights) override;
+		virtual void Render(IRenderer* pRenderer, IShader *pShader, IRenderMaterial*pMaterial, std::vector<CRefObj<IPointLight>>& lights) override;
 
 		//**********************************************************************
 		// ISerialize

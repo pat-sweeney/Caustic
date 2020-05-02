@@ -6,7 +6,7 @@
 #pragma once
 #include "Base\Core\Core.h"
 #include "Base\Core\IRefCount.h"
-#include "Rendering\SceneGraph\ISceneGraph.h"
+#include "Rendering\RenderGraph\IRenderGraph.h"
 #include <Windows.h>
 
 namespace Caustic
@@ -27,7 +27,7 @@ namespace Caustic
 		// Method: GetSceneGraph
 		// Returns the scene graph associated with this render window
 		//**********************************************************************
-		virtual CRefObj<ISceneGraph> GetSceneGraph() = 0;
+		virtual CRefObj<IRenderGraph> GetRenderGraph() = 0;
 
 		//**********************************************************************
 		// Method: GetRenderer
@@ -100,5 +100,5 @@ namespace Caustic
     // shaderFolder - Path to folder containing shaders
 	// ppRenderWindow - returns the created render window
 	//**********************************************************************
-	CAUSTICAPI void CreateRenderWindow(HWND hwnd, std::wstring &shaderFolder, IRenderWindow **ppRenderWindow);
+	CAUSTICAPI CRefObj<IRenderWindow> CreateRenderWindow(HWND hwnd, std::wstring &shaderFolder);
 }

@@ -1,1 +1,0 @@
-NDSummary.OnToolTipsLoaded("CClass:StructuredBuffer",{359:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Value to assign to structured buffers (whether they are StructuredBuffer, RWStructuredBuffer, or AppendStructuredBuffer). This structure is what clients will pass to IShader::SetCSParam for any of these shader types.</div></div>"});

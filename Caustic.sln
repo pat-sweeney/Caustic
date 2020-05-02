@@ -90,6 +90,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Fomit", "Apps\Fomit\Fomit.v
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Color", "Libraries\Imaging\Color\Color.vcxproj", "{6BD55E78-59F0-402F-9BBD-650C8FE563F3}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RenderGraph", "Libraries\Rendering\RenderGraph\RenderGraph.vcxproj", "{C794B439-228E-4659-8895-5169BB46DB55}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -198,6 +200,10 @@ Global
 		{6BD55E78-59F0-402F-9BBD-650C8FE563F3}.Debug|x64.Build.0 = Debug|x64
 		{6BD55E78-59F0-402F-9BBD-650C8FE563F3}.Release|x64.ActiveCfg = Release|x64
 		{6BD55E78-59F0-402F-9BBD-650C8FE563F3}.Release|x64.Build.0 = Release|x64
+		{C794B439-228E-4659-8895-5169BB46DB55}.Debug|x64.ActiveCfg = Debug|x64
+		{C794B439-228E-4659-8895-5169BB46DB55}.Debug|x64.Build.0 = Debug|x64
+		{C794B439-228E-4659-8895-5169BB46DB55}.Release|x64.ActiveCfg = Release|x64
+		{C794B439-228E-4659-8895-5169BB46DB55}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -236,6 +242,7 @@ Global
 		{A709451A-AF31-43BE-9204-63A5B6D544A0} = {13E8C4A1-0338-428F-BF47-E9AA893329D5}
 		{3567032E-1896-4CCE-8319-65A94F7EB46E} = {13E8C4A1-0338-428F-BF47-E9AA893329D5}
 		{6BD55E78-59F0-402F-9BBD-650C8FE563F3} = {CE35B135-A8F8-47F8-AE64-789E7744950C}
+		{C794B439-228E-4659-8895-5169BB46DB55} = {B74B63E0-E87A-4063-8622-DE713CAF38A7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {60363C0E-C20A-4E6B-AE61-6E0BD7D6B964}

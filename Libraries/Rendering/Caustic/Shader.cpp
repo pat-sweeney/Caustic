@@ -718,7 +718,7 @@ namespace Caustic
     // Parameters:
     // pGraphics - D3D11 device/context to use
     //**********************************************************************
-    void CShader::BeginRender(IGraphics *pGraphics, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, std::vector<CRefObj<IPointLight>> &lights, DirectX::XMMATRIX *pWorld)
+    void CShader::BeginRender(IGraphics* pGraphics, IRenderMaterial* pFrontMaterial, IRenderMaterial* pBackMaterial, std::vector<CRefObj<IPointLight>>& lights, DirectX::XMMATRIX* pWorld)
     {
         CComPtr<ID3D11DeviceContext> spCtx = pGraphics->GetContext();
         CComPtr<ID3DUserDefinedAnnotation> spAnnotations;

@@ -160,7 +160,7 @@ namespace Caustic
         int m_zThreads;
     protected:
         void PushMatrix(const wchar_t *name, std::any mat);
-        void PushLights(std::vector<CRefObj<IPointLight>> &lights);
+        void PushLights(std::vector<CRefObj<IPointLight>>& lights);
         void PushMatrices(IGraphics *pGraphics, DirectX::XMMATRIX *pWorld);
         uint32 ComputeParamSize(ShaderParamDef *pParams, uint32 numParams, std::vector<ShaderParamInstance> &params);
         uint32 ShaderTypeSize(ShaderParamDef& paramDef);
@@ -194,7 +194,7 @@ namespace Caustic
         // IShader
         //**********************************************************************
         virtual std::wstring &Name() override { return m_name; }
-        virtual void BeginRender(IGraphics *pGraphics, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, std::vector<CRefObj<IPointLight>> &lights, DirectX::XMMATRIX *pWorld) override;
+        virtual void BeginRender(IGraphics* pGraphics, IRenderMaterial* pFrontMaterial, IRenderMaterial* pBackMaterial, std::vector<CRefObj<IPointLight>>& lights, DirectX::XMMATRIX* pWorld) override;
         virtual void SetPSParam(std::wstring paramName, std::any &value) override;
         virtual void SetPSParam(std::wstring paramName, int index, std::any &value) override;
         virtual void SetVSParam(std::wstring paramName, std::any &value) override;

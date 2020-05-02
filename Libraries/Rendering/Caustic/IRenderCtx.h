@@ -89,5 +89,41 @@ namespace Caustic
         // Returns whether the current render pass supports alpha blending
         //**********************************************************************
         virtual bool PassBlendable() = 0;
+
+        //**********************************************************************
+        // Method: IncrementEpoch
+        // Increment to the next epoch
+        //
+        // Returns:
+        // Returns the new epoch
+        //**********************************************************************
+        virtual uint32 IncrementEpoch() = 0;
+
+        //**********************************************************************
+        // Method: GetEpoch
+        // Returns the current epoch. The epoch is updated each time something changes
+        //
+        // Returns:
+        // Returns the current epoch
+        //**********************************************************************
+        virtual uint32 GetEpoch() = 0;
+
+        //**********************************************************************
+        // Method: GetMostRecentEpoch
+        // Returns the most recent epoch found while traversing the render graph
+        //
+        // Returns:
+        // Returns the most recent epoch
+        //**********************************************************************
+        virtual uint32 GetMostRecentEpoch() = 0;
+
+        //**********************************************************************
+        // Method: SetMostRecentEpoch
+        // Sets the most recent epoch found while traversing the render graph
+        //
+        // Parameters:
+        // v - value to set most recent epoch to
+        //**********************************************************************
+        virtual void SetMostRecentEpoch(uint32 v) = 0;
     };
 }

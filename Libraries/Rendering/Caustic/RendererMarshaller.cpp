@@ -290,18 +290,20 @@ namespace Caustic
     // Method: GetRenderCtx
     // See <IRenderer::GetRenderCtx>
     //**********************************************************************
-    void CRendererMarshaller::GetRenderCtx(IRenderCtx **ppCtx)
+    CRefObj<IRenderCtx> CRendererMarshaller::GetRenderCtx()
     {
         HANDLE event = CreateEvent(NULL, false, false, NULL);
+        CRefObj<IRenderCtx> spRenderCtx;
         m_renderQueue.AddLambda(
-            [this, ppCtx, event]()
+            [this, &spRenderCtx, event]()
             {
-                m_spRenderer->GetRenderCtx(ppCtx);
+                spRenderCtx = m_spRenderer->GetRenderCtx();
                 SetEvent(event);
             }
         );
         WaitForSingleObject(event, INFINITE);
         CloseHandle(event);
+        return spRenderCtx;
     }
 
     //**********************************************************************
