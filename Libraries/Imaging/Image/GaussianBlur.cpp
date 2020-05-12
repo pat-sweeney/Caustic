@@ -36,7 +36,7 @@ namespace Caustic
         //**********************************************************************
         // IImageFilter
         //**********************************************************************
-        virtual void Apply(IImage* pImage, IImage* pMask, IImage** ppResult) override;
+        virtual CRefObj<IImage> Apply(IImage* pImage, IImage* pMask) override;
         virtual bool ApplyInPlace(IImage* pImage, IImage* pMask) override;
     };
 
@@ -46,13 +46,13 @@ namespace Caustic
     //
     // Parameters:
     // sigma - sigma defining the shape of the gaussian.
-    // ppFilter - returns the newly created filter.
+    //
+    // Returns:
+    // Returns the newly created filter.
     //**********************************************************************
-    void CreateGaussianBlur(float sigma, IImageFilter** ppFilter)
+    CRefObj<IImageFilter> CreateGaussianBlur(float sigma)
     {
-        std::unique_ptr<CGaussianBlur> spFilter(new CGaussianBlur(sigma));
-        *ppFilter = spFilter.release();
-        (*ppFilter)->AddRef();
+        return CRefObj<IImageFilter>(new CGaussianBlur(sigma));
     }
 
     //**********************************************************************
@@ -62,9 +62,11 @@ namespace Caustic
     // Parameters:
     // pImage - image to perform filtering on.
     // pMask - unused.
-    // ppResult - returns the filtered image.
+    //
+    // Returns:
+    // Returns the filtered image.
     //**********************************************************************
-    void CGaussianBlur::Apply(IImage* pImage, IImage* pMask, IImage** ppResult)
+    CRefObj<IImage> CGaussianBlur::Apply(IImage* pImage, IImage* pMask)
     {
         // First compute kernel
         // A normal distribution is defined by:
@@ -121,13 +123,11 @@ namespace Caustic
         };
         uint32 bytesPerPixel = pImage->GetBytesPerPixel();
         uint32 stride = pImage->GetStride();
-        CRefObj<IImage> spImage;
-        CreateImage(pImage->GetWidth(), pImage->GetHeight(), pImage->GetBPP(), &spImage);
+        CRefObj<IImage> spImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), pImage->GetBPP());
         BlurPass(pImage, spImage, pImage->GetHeight(), pImage->GetWidth(), stride, bytesPerPixel);
-        CRefObj<IImage> spImage2;
-        CreateImage(pImage->GetWidth(), pImage->GetHeight(), pImage->GetBPP(), &spImage2);
+        CRefObj<IImage> spImage2 = CreateImage(pImage->GetWidth(), pImage->GetHeight(), pImage->GetBPP());
         BlurPass(spImage, spImage2, pImage->GetWidth(), pImage->GetHeight(), bytesPerPixel, stride);
-        *ppResult = spImage2.Detach();
+        return spImage2;
     }
 
     bool CGaussianBlur::ApplyInPlace(IImage* pImage, IImage* pMask)

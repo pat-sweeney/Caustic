@@ -134,19 +134,16 @@ namespace Caustic
     }
 
 
-    void CreateImage(uint32 width, uint32 height, uint32 bpp, IImage **ppImage)
+    CRefObj<IImage> CreateImage(uint32 width, uint32 height, uint32 bpp)
     {
-        std::unique_ptr<CImage> spImage(new CImage(width, height, bpp));
-        *ppImage = spImage.release();
-        (*ppImage)->AddRef();
+        return CRefObj<IImage>(new CImage(width, height, bpp));
     }
 
-    void CImage::Clone(IImage **ppImage)
+    CRefObj<IImage> CImage::Clone()
     {
-        CRefObj<IImage> spImage;
-        CreateImage(GetWidth(), GetHeight(), GetBPP(), &spImage);
+        CRefObj<IImage> spImage = CreateImage(GetWidth(), GetHeight(), GetBPP());
         memcpy(spImage->GetData(), GetData(), GetStride() * GetHeight());
-        *ppImage = spImage.Detach();
+        return spImage;
     }
 
     void CImage::Clear()
@@ -246,8 +243,7 @@ namespace Caustic
         WICPixelFormatGUID guid;
         CT(spFrame->GetPixelFormat(&guid));
 
-        CRefObj<IImage> spImage;
-        CreateImage(w, h, 32, &spImage);
+        CRefObj<IImage> spImage = CreateImage(w, h, 32);
         uint32 stride = spImage->GetStride();
         uint32 numbytes = stride * h;
         if (guid != GUID_WICPixelFormat32bppBGRA)

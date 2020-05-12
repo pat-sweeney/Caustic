@@ -94,10 +94,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                     DeleteObject(imgbitmap);
                 if (g_ShowDepth)
                 {
-                    CRefObj<IImage> spColoredDepthImage;
-                    CRefObj<IImageFilter> spFilter;
-                    CreateColorize(&spFilter);
-                    spFilter->Apply(spDepthImage, nullptr, &spColoredDepthImage);
+                    CRefObj<IImageFilter> spFilter = CreateColorize();
+                    CRefObj<IImage> spColoredDepthImage = spFilter->Apply(spDepthImage, nullptr);
                     imgbitmap = CreateBitmap(spColoredDepthImage->GetWidth(), spColoredDepthImage->GetHeight(), 1, 32, spColoredDepthImage->GetData());
                 }
                 else

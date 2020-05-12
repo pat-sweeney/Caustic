@@ -170,8 +170,7 @@ namespace Caustic
                         int w = k4a_image_get_width_pixels(colorimage);
                         int h = k4a_image_get_height_pixels(colorimage);
                         size_t s = k4a_image_get_size(colorimage);
-                        CRefObj<IImage> spImage;
-                        CreateImage(w, h, 32, &spImage);
+                        CRefObj<IImage> spImage = CreateImage(w, h, 32);
                         memcpy(spImage->GetData(), buffer, spImage->GetHeight() * spImage->GetStride());
                         *ppColorImage = spImage.Detach();
                         captured = true;
@@ -195,8 +194,7 @@ namespace Caustic
                         int w = k4a_image_get_width_pixels(depthimage);
                         int h = k4a_image_get_height_pixels(depthimage);
                         size_t s = k4a_image_get_size(depthimage);
-                        CRefObj<IImage> spImage;
-                        CreateImage(w, h, 16, &spImage);
+                        CRefObj<IImage> spImage = CreateImage(w, h, 16);
                         memcpy(spImage->GetData(), buffer, spImage->GetHeight() * spImage->GetStride());
                         *ppDepthImage = spImage.Detach();
                         captured = true;
@@ -210,10 +208,10 @@ namespace Caustic
         return captured;
     }
     
-    void CAzureKinectDevice::BuildRayMap(uint32 w, uint32 h, IImage **ppImage)
+    CRefObj<IImage> CAzureKinectDevice::BuildRayMap(uint32 w, uint32 h)
     {
-        CreateImage(w, h, 128, ppImage);
-        CImageIter128 row(*ppImage, 0, 0);
+        CRefObj<IImage> spImage = CreateImage(w, h, 128);
+        CImageIter128 row(spImage, 0, 0);
         int index = 0;
         for (uint32 iy = 0; iy < h; iy++)
         {
@@ -249,6 +247,7 @@ namespace Caustic
             }
             row.Step(CImageIter::Down);
         }
+        return spImage;
     }
     
     bool CAzureKinectDevice::NextFrame(IImage** ppColorImage, std::vector<Vector3>& pts, std::vector<Vector3>& normals, BBox3 &bbox)

@@ -69,7 +69,7 @@ void CApp::InitializeCaustic(HWND hwnd)
     m_spRenderGraphFactory = Caustic::CreateRenderGraphFactory();
     m_spRenderGraph = m_spRenderWindow->GetRenderGraph();
 
-    m_spCamera->BuildRayMap(512, 512, &m_spRayMap);
+    m_spRayMap = m_spCamera->BuildRayMap(512, 512);
     CRefObj<IRenderGraphNode_ImageToTexture> spImageNode = m_spRenderGraphFactory->CreateImageToTextureNode();
     spImageNode->SetName("Ray2Texture");
     spImageNode->FindInputPin("image")->SetDefaultValue(std::any(m_spRayMap));

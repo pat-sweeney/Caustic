@@ -36,7 +36,7 @@ namespace Caustic
 		//**********************************************************************
 		// IImageFilter
 		//**********************************************************************
-		virtual void Apply(IImage* pImage, IImage *pMask, IImage** ppResult) override;
+		virtual CRefObj<IImage> Apply(IImage* pImage, IImage *pMask) override;
 		virtual bool ApplyInPlace(IImage* pImage, IImage* pMask) override
 		{
 			return false;
@@ -50,11 +50,13 @@ namespace Caustic
 	// Parameters:
 	// pImage - image to perform filtering on. Must be 32bpp image.
 	// pMask - mask specifing where filtering should be performed. Must be a 1bpp image.
-	// ppResult - returns the filtered image.
+	//
+	// Returns:
+	// Returns the filtered image.
 	//**********************************************************************
-	void CMedianFilter::Apply(IImage* pImage, IImage *pMask, IImage** ppResult)
+	CRefObj<IImage> CMedianFilter::Apply(IImage* pImage, IImage *pMask)
 	{
-		CreateImage(pImage->GetWidth(), pImage->GetHeight(), pImage->GetBPP(), ppResult);
+		CRefObj<IImage> spResult = CreateImage(pImage->GetWidth(), pImage->GetHeight(), pImage->GetBPP());
 		if (pImage->GetBPP() != 32)
 			CT(E_UNEXPECTED); // Only 32bbp images supported
 		RGBColor clr[3][3];
@@ -70,7 +72,7 @@ namespace Caustic
 		riter[0] = CImageIter32(pImage, 0, 0);
 		riter[1] = CImageIter32(pImage, 0, 0);
 		riter[2] = CImageIter32(pImage, 0, (h > 1) ? 1 : 0);
-		CImageIter32 dstriter = CImageIter32(*ppResult, 0, 0);
+		CImageIter32 dstriter = CImageIter32(spResult, 0, 0);
 		if (pMask != nullptr)
 			riter1 = CImageIter1(pMask, 0, 0);
 		for (int y = 0; y < (int)h; y++)
@@ -184,20 +186,18 @@ namespace Caustic
 			if (pMask != nullptr)
 				riter1.Step(CImageIter::Down);
 		}
-		return;
+		return spResult;
 	}
 	
 	//**********************************************************************
 	// Function: CreateMedian
 	// Creates a filter that performs median filtering on an image.
 	//
-	// Parameters:
-	// ppFilter - returns the newly created filter.
+	// Returns:
+	// Returns the newly created filter.
 	//**********************************************************************
-	void CreateMedian(IImageFilter** ppFilter)
+	CRefObj<IImageFilter> CreateMedian()
 	{
-		std::unique_ptr<CMedianFilter> spFilter(new CMedianFilter());
-		*ppFilter = spFilter.release();
-		(*ppFilter)->AddRef();
+		return CRefObj<IImageFilter>(new CMedianFilter());
 	}
 }

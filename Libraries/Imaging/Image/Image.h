@@ -82,10 +82,10 @@ namespace Caustic
 		// Method: Clone
 		// Makes a copy of the image
 		//
-		// Parameters:
-		// ppImage - Copy of the image
+		// Returns:
+		// Copy of the image
 		//**********************************************************************
-		virtual void Clone(IImage** ppImage) = 0;
+		virtual CRefObj<IImage> Clone() = 0;
 
 		//**********************************************************************
 		// Method: TakeDataOwnership
@@ -156,7 +156,7 @@ namespace Caustic
 		virtual void DrawLine(Vector2 &v0, Vector2 &v1, uint8 color[4]) = 0;
 	};
 
-	extern void CreateImage(uint32 width, uint32 height, uint32 bpp, IImage **ppImage);
+	CAUSTICAPI CRefObj<IImage> CreateImage(uint32 width, uint32 height, uint32 bpp);
 
 	//**********************************************************************
 	// Interface: IIntegralImage

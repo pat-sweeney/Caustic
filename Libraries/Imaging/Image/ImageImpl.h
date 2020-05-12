@@ -94,7 +94,7 @@ namespace Caustic
         // IImage
         //**********************************************************************
         virtual void Clear() override;
-        virtual void Clone(IImage **ppImage) override;
+        virtual CRefObj<IImage> Clone() override;
         virtual void TakeDataOwnership() override {}
         virtual void SetPixel(uint32 x, uint32 y, uint8 color[4]) override;
         virtual void SetPixel(uint32 x, uint32 y, uint8 gray) override;

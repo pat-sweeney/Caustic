@@ -28,8 +28,8 @@ namespace Caustic
 		float m_weightBias;
 		float* m_kernelWeights;
 
-		void FastApply(IImage* pImage, IImage* pMask, IImage** ppResult);
-		void SlowApply(IImage* pImage, IImage* pMask, IImage** ppResult);
+		void FastApply(IImage* pImage, IImage* pMask, IImage* pResult);
+		void SlowApply(IImage* pImage, IImage* pMask, IImage* pResult);
 	public:
 		CCustomFilter(int kernelWidth, int kernelHeight, float *kernelWeights)
 		{
@@ -62,7 +62,7 @@ namespace Caustic
 		//**********************************************************************
 		// IImageFilter
 		//**********************************************************************
-		virtual void Apply(IImage* pImage, IImage* pMask, IImage** ppResult) override;
+		virtual CRefObj<IImage> Apply(IImage* pImage, IImage* pMask) override;
 		virtual bool ApplyInPlace(IImage* pImage, IImage* pMask) override
 		{
 			return false;
@@ -76,25 +76,28 @@ namespace Caustic
 	// Parameters:
 	// pImage - image to perform filtering on. Must be 32bpp image.
 	// pMask - mask specifing where filtering should be performed. Must be a 1bpp image.
-	// ppResult - returns the filtered image.
+	//
+	// Returns:
+	// Returns the filtered image.
 	//**********************************************************************
-	void CCustomFilter::Apply(IImage* pImage, IImage* pMask, IImage** ppResult)
+	CRefObj<IImage> CCustomFilter::Apply(IImage* pImage, IImage* pMask)
 	{
-		CreateImage(pImage->GetWidth(), pImage->GetHeight(), pImage->GetBPP(), ppResult);
+		CRefObj<IImage> spResult = CreateImage(pImage->GetWidth(), pImage->GetHeight(), pImage->GetBPP());
 		if (pImage->GetBPP() != 32)
 			CT(E_UNEXPECTED); // Only 32bbp images supported
 		if (m_kernelWidth == 3 && m_kernelHeight == 3)
-			FastApply(pImage, pMask, ppResult);
+			FastApply(pImage, pMask, spResult);
 		else
-			SlowApply(pImage, pMask, ppResult);
+			SlowApply(pImage, pMask, spResult);
+		return spResult;
 	}
 	
-	void CCustomFilter::SlowApply(IImage* pImage, IImage* pMask, IImage** ppResult)
+	void CCustomFilter::SlowApply(IImage* pImage, IImage* pMask, IImage* pResult)
 	{
 		CT(E_UNEXPECTED);
 	}
 
-	void CCustomFilter::FastApply(IImage *pImage, IImage *pMask, IImage **ppResult)
+	void CCustomFilter::FastApply(IImage *pImage, IImage *pMask, IImage *pResult)
 	{
 		RGBColor clr[3][3];
 		CImageIter32 riter[3];
@@ -105,7 +108,7 @@ namespace Caustic
 		riter[0] = CImageIter32(pImage, 0, 0);
 		riter[1] = CImageIter32(pImage, 0, 0);
 		riter[2] = CImageIter32(pImage, 0, (pImage->GetHeight() > 1) ? 1 : 0);
-		CImageIter32 dstriter(*ppResult, 0, 0);
+		CImageIter32 dstriter(pResult, 0, 0);
 		CImageIter1 riter1;
 		if (pMask != nullptr)
 			riter1 = CImageIter1(pMask, 0, 0);

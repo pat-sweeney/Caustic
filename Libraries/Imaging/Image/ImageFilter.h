@@ -12,15 +12,47 @@
 // Namespace: Caustic
 namespace Caustic
 {
+	//**********************************************************************
+	// Interface: IImageFilter
+	// Interface for objects that apply some sort of filter on a <IImage>
+	//**********************************************************************
 	struct IImageFilter : public IRefCount
 	{
-		virtual void Apply(IImage* pImage, IImage *pMask, IImage** ppResult) = 0;
+		//**********************************************************************
+		// Method: Apply
+		// Applies the filter to the specified image. The specified mask defines
+		// which pixels are effected by the filter (values > 0 in the mask will
+		// have the filter applied).
+		//
+		// Parameters:
+		// pImage - image to apply filter to
+		// pMask - per pixel mask indicating which pixels have the filter applied.
+		// Values > 0 have the filter applied.
+		//
+		// Returns:
+		// Returns a new image with the filter applied
+		//**********************************************************************
+		virtual CRefObj<IImage> Apply(IImage* pImage, IImage *pMask) = 0;
+
+		//**********************************************************************
+		// Method: ApplyInPlace
+		// Similar to the <Apply> method except the filter is applied in place
+		// on the original image.
+		//
+		// Parameters:
+		// pImage - image to apply filter to
+		// pMask - per pixel mask indicating which pixels have the filter applied.
+		// Values > 0 have the filter applied.
+		//
+		// Returns:
+		// True if filter supports in place application. False otherwise.
+		//**********************************************************************
 		virtual bool ApplyInPlace(IImage* pImage, IImage* pMask) = 0;
 	};
 
-	extern void CreateGaussianBlur(float sigma, IImageFilter** ppFilter);
-	extern void CreateColorize(IImageFilter** ppFilter);
-	extern void CreateColorize(int maxDepth, IImageFilter** ppFilter);
-	extern void CreateMedian(IImageFilter** ppFilter);
-	extern void CreateCustomFilter(int kernelWidth, int kernelHeight, float* kernelWeights, IImageFilter** ppFilter);
+	CAUSTICAPI CRefObj<IImageFilter> CreateGaussianBlur(float sigma);
+	CAUSTICAPI CRefObj<IImageFilter> CreateColorize();
+	CAUSTICAPI CRefObj<IImageFilter> CreateColorize(int maxDepth);
+	CAUSTICAPI CRefObj<IImageFilter> CreateMedian();
+	CAUSTICAPI CRefObj<IImageFilter> CreateCustomFilter(int kernelWidth, int kernelHeight, float* kernelWeights);
 }

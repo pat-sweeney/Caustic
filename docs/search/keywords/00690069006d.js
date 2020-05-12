@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("iim",["Interface"],[["IImage",,[[,,,,0,"File:Imaging/Image/Image.h:IImage","CClass:IImage"]]],["IImageBase",,[[,,,,0,"File:Imaging/Image/Image.h:IImageBase","CClass:IImageBase"]]]]);
+NDSearch.OnPrefixDataLoaded("iim",["Interface"],[["IImage",,[[,,,,0,"File:Imaging/Image/Image.h:IImage","CClass:IImage"]]],["IImageBase",,[[,,,,0,"File:Imaging/Image/Image.h:IImageBase","CClass:IImageBase"]]],["IImageFilter",,[[,,,,0,"File:Imaging/Image/ImageFilter.h:IImageFilter","CClass:IImageFilter"]]]]);

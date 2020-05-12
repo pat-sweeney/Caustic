@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("File:Cameras/AzureKinect/AzureKinect.cpp","AzureKinect.cpp");NDSummary.OnSummaryLoaded("File:Cameras/AzureKinect/AzureKinect.cpp",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"]],[[612,0,1,"Functions","Functions"],[613,0,0,"CreateAzureKinect","CreateAzureKinect"]]);

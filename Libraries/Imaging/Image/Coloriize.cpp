@@ -12,6 +12,7 @@
 #include "ImageIter.h"
 #include <memory>
 
+// Namespace: Caustic
 namespace Caustic
 {
     class CColorize : public IImageFilter, public CRefCount
@@ -32,7 +33,7 @@ namespace Caustic
         //**********************************************************************
         // IImageFilter
         //**********************************************************************
-        virtual void Apply(IImage* pImage, IImage* pMask, IImage** ppResult) override;
+        virtual CRefObj<IImage> Apply(IImage* pImage, IImage* pMask) override;
         virtual bool ApplyInPlace(IImage* pImage, IImage* pMask) override;
     };
 
@@ -40,22 +41,34 @@ namespace Caustic
     // Function: CreateColorize
     // Creates a filter that converts depth values to a false color image.
     //
-    // Parameters:
-    // ppFilter - returns the newly created filter.
+    // Returns:
+    // Returns the newly created filter.
     //**********************************************************************
-    void CreateColorize(IImageFilter** ppFilter)
+    CRefObj<IImageFilter> CreateColorize()
     {
-        CreateColorize(8000, ppFilter);
+        return CreateColorize(8000);
     }
     
-    void CreateColorize(int maxDepth, IImageFilter** ppFilter)
+    //**********************************************************************
+    // Function: CreateColorize
+    // Creates a filter that converts depth values to a false color image.
+    //
+    // Parameters:
+    // maxDepth - max depth in millimeters (used for scaling)
+    //
+    // Returns:
+    // Returns the newly created filter.
+    //**********************************************************************
+    CRefObj<IImageFilter> CreateColorize(int maxDepth)
     {
-        std::unique_ptr<CColorize> spFilter(new CColorize(maxDepth));
-        *ppFilter = spFilter.release();
-        (*ppFilter)->AddRef();
+        return CRefObj<IImageFilter>(new CColorize(maxDepth));
     }
 
-    void CColorize::Apply(IImage* pImage, IImage* pMask, IImage** ppResult)
+    //**********************************************************************
+    // Method: Apply
+    // See <IImageFilter::Apply>
+    //**********************************************************************
+    CRefObj<IImage> CColorize::Apply(IImage* pImage, IImage* pMask)
     {
         if (pImage->GetBPP() != 16)
             CT(E_UNEXPECTED);
@@ -75,8 +88,7 @@ namespace Caustic
             return v;
         };
 
-        CRefObj<IImage> spImage;
-        Caustic::CreateImage(pImage->GetWidth(), pImage->GetHeight(), 32, &spImage);
+        CRefObj<IImage> spImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), 32);
 
         unsigned short maxDepthVal = 0xFFFF;
         unsigned short minDepthVal = 0;
@@ -100,7 +112,7 @@ namespace Caustic
             srcRow.Step(CImageIter::Down);
             dstRow.Step(CImageIter::Down);
         }
-        *ppResult = spImage.Detach();
+        return spImage;
     }
     
     bool CColorize::ApplyInPlace(IImage* pImage, IImage* pMask)

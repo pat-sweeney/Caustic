@@ -39,9 +39,6 @@
     <ClCompile Include="SuperPixel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Coloriize.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GaussianBlur.cpp">
       <Filter>Source Files\Filters</Filter>
     </ClCompile>
@@ -49,6 +46,9 @@
       <Filter>Source Files\Filters</Filter>
     </ClCompile>
     <ClCompile Include="CustomFilter.cpp">
+      <Filter>Source Files\Filters</Filter>
+    </ClCompile>
+    <ClCompile Include="Coloriize.cpp">
       <Filter>Source Files\Filters</Filter>
     </ClCompile>
   </ItemGroup>
