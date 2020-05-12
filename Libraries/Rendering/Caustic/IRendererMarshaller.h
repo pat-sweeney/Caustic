@@ -63,9 +63,11 @@ namespace Caustic
         //
         // Parameters:
         // pPath - path to texture file
-        // pPTexture - Returns the created texture
+        //
+        // Returns:
+        // Returns the created texture
         //**********************************************************************
-        virtual void LoadTexture(const wchar_t *pPath, ITexture **ppTexture) = 0;
+        virtual CRefObj<ITexture> LoadTexture(const wchar_t *pPath) = 0;
 
         //**********************************************************************
         // Method: LoadVideoTexture
@@ -73,9 +75,11 @@ namespace Caustic
         //
         // Parameters:
         // pPath - path to video texture file
-        // pPTexture - Returns the created texture
+        //
+        // Returns:
+        // Returns the created texture
         //**********************************************************************
-        virtual void LoadVideoTexture(const wchar_t *pPath, ITexture **ppTexture) = 0;
+        virtual CRefObj<ITexture> LoadVideoTexture(const wchar_t *pPath) = 0;
 
         //**********************************************************************
         // Method: SaveScene

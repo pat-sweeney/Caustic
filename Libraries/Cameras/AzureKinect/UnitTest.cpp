@@ -15,15 +15,13 @@ namespace CausticTestSuite
 {
     static bool Test1()
     {
-        CRefObj<IAzureKinect> spAzureKinect;
-        AzureKinect::CreateAzureKinect(0, AzureKinect::Color1080p, AzureKinect::Depth1024x1024, AzureKinect::FPS30, &spAzureKinect);
+        CRefObj<IAzureKinect> spAzureKinect = AzureKinect::CreateAzureKinect(0, AzureKinect::Color1080p, AzureKinect::Depth1024x1024, AzureKinect::FPS30);
         return true;
     }
 
     static bool Test2()
     {
-        CRefObj<IAzureKinect> spAzureKinect;
-        AzureKinect::CreateAzureKinect(0, AzureKinect::Color1080p, AzureKinect::Depth512x512, AzureKinect::FPS30, &spAzureKinect);
+        CRefObj<IAzureKinect> spAzureKinect = AzureKinect::CreateAzureKinect(0, AzureKinect::Color1080p, AzureKinect::Depth512x512, AzureKinect::FPS30);
         return true;
     }
 

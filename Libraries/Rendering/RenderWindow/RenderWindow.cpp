@@ -20,7 +20,7 @@ namespace Caustic
 
     CRenderWindow::CRenderWindow(HWND hwnd, std::wstring &shaderFolder)
     {
-        Caustic::CCausticFactory::Instance()->CreateRendererMarshaller(&m_spMarshaller);
+        m_spMarshaller = Caustic::CCausticFactory::Instance()->CreateRendererMarshaller();
         m_spRenderGraphFactory = Caustic::CreateRenderGraphFactory();
         m_spRenderGraph = m_spRenderGraphFactory->CreateRenderGraph();
         m_spMarshaller->Initialize(hwnd, shaderFolder,
@@ -30,12 +30,12 @@ namespace Caustic
 
         Caustic::Vector3 pos(0.0f, 0.0f, 0.0f);
         Caustic::Vector3 clr(1.0f, 1.0f, 1.0f);
-        Caustic::CCausticFactory::Instance()->CreatePointLight(pos, clr, &m_spPointLight);
+        m_spPointLight = Caustic::CCausticFactory::Instance()->CreatePointLight(pos, clr);
 
-		Caustic::CCausticFactory::Instance()->CreateCamera(true, &m_spCamera);
+        m_spCamera = Caustic::CCausticFactory::Instance()->CreateCamera(true);
         CRefObj<IRenderer> spRenderer = m_spMarshaller->GetRenderer();
         spRenderer->SetCamera(m_spCamera);
-		Caustic::CCausticFactory::Instance()->CreateTrackball(&m_spTrackball);
+        m_spTrackball = Caustic::CCausticFactory::Instance()->CreateTrackball();
         m_hwnd = hwnd;
     }
     

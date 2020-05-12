@@ -126,11 +126,13 @@ namespace Caustic
     //
     // Parameters:
     // filename - Name of shader info file (*.shi)
-    // ppShaderInfo - Returns the new shader info object
+    //
+    // Returns:
+    // Returns the new shader info object
     //**********************************************************************
-    void CRenderer::LoadShaderInfo(std::wstring &filename, IShaderInfo **ppShaderInfo)
+    CRefObj<IShaderInfo> CRenderer::LoadShaderInfo(std::wstring &filename)
     {
-        CCausticFactory::Instance()->CreateShaderInfo(filename.c_str(), ppShaderInfo);
+        return CCausticFactory::Instance()->CreateShaderInfo(filename.c_str());
     }
 
     //**********************************************************************
@@ -160,14 +162,14 @@ namespace Caustic
                 CRefObj<IShaderInfo> spShaderInfo;
                 CRefObj<IShader> spShader;
                 std::wstring shaderName(fn.substr(0, found));
-                LoadShaderInfo(std::wstring(const_cast<wchar_t*>(pFolder)) + std::wstring(L"\\") + shaderName + L".shi", &spShaderInfo);
+                spShaderInfo = LoadShaderInfo(std::wstring(const_cast<wchar_t*>(pFolder)) + std::wstring(L"\\") + shaderName + L".shi");
                 if (spShaderInfo->HasShader(EShaderType::TypePixelShader))
                     LoadShaderBlob(std::wstring(const_cast<wchar_t*>(pFolder)) + std::wstring(L"\\") + shaderName + L"_PS.cso", &spPixelShaderBlob);
                 if (spShaderInfo->HasShader(EShaderType::TypeVertexShader))
                     LoadShaderBlob(std::wstring(const_cast<wchar_t*>(pFolder)) + std::wstring(L"\\") + shaderName + L"_VS.cso", &spVertexShaderBlob);
                 if (spShaderInfo->HasShader(EShaderType::TypeComputeShader))
                     LoadShaderBlob(std::wstring(const_cast<wchar_t*>(pFolder)) + std::wstring(L"\\") + shaderName + L"_CS.cso", &spComputeShaderBlob);
-                CCausticFactory::Instance()->CreateShader(this, shaderName.c_str(), spVertexShaderBlob, spPixelShaderBlob, spComputeShaderBlob, spShaderInfo, &spShader);
+                spShader = CCausticFactory::Instance()->CreateShader(this, shaderName.c_str(), spVertexShaderBlob, spPixelShaderBlob, spComputeShaderBlob, spShaderInfo);
                 m_spShaderMgr->RegisterShader(shaderName.c_str(), spShader);
             }
             if (!::FindNextFile(h, &findData))
@@ -182,12 +184,12 @@ namespace Caustic
     void CRenderer::DrawMesh(IRenderSubMesh *pSubMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat)
     {
         CRefObj<IRenderMaterial> spFrontMaterial;
-		CCausticFactory::Instance()->CreateRenderMaterial(this, pMaterial, pShader, &spFrontMaterial);
+        spFrontMaterial = CCausticFactory::Instance()->CreateRenderMaterial(this, pMaterial, pShader);
         spFrontMaterial->SetTexture(this, L"diffuseTexture", pTexture, EShaderAccess::PixelShader);
         CRefObj<IRenderMaterial> spBackMaterial;
         if (pSubMesh->GetMeshFlags() & EMeshFlags::TwoSided)
         {
-			CCausticFactory::Instance()->CreateRenderMaterial(this, pMaterial, pShader, &spBackMaterial);
+            spBackMaterial = CCausticFactory::Instance()->CreateRenderMaterial(this, pMaterial, pShader);
             spBackMaterial->SetTexture(this, L"diffuseTexture", pTexture, EShaderAccess::PixelShader);
         }
         CRenderable renderable(pSubMesh, spFrontMaterial, spBackMaterial, mat);
@@ -409,20 +411,18 @@ namespace Caustic
     //
     // Parameters:
     // hwnd - window to attach renderer to
-    // ppGraphics - Returns the created device
+    //
+    // Returns:
+    // Returns the created device
     //**********************************************************************
-    CAUSTICAPI void CreateGraphics(HWND hwnd, IGraphics** ppGraphics)
+    CAUSTICAPI CRefObj<IGraphics> CreateGraphics(HWND hwnd)
     {
-        _ASSERT(ppGraphics);
         std::unique_ptr<CGraphics> spGraphics(new CGraphics());
         spGraphics->Setup(hwnd, true);
 
-        CRefObj<ICamera> spCamera;
-        CCausticFactory::Instance()->CreateCamera(true, &spCamera);
+        CRefObj<ICamera> spCamera = CCausticFactory::Instance()->CreateCamera(true);
         spGraphics->SetCamera(spCamera);
-
-        *ppGraphics = spGraphics.release();
-        (*ppGraphics)->AddRef();
+        return CRefObj<IGraphics>(spGraphics.release());
     }
 
     //**********************************************************************
@@ -432,20 +432,18 @@ namespace Caustic
     // Parameters:
     // hwnd - window to attach renderer to
     // shaderFolder - path to directory containing shaders
-    // ppRenderer - Returns the created renderer
+    //
+    // Returns:
+    // Returns the created renderer
     //**********************************************************************
-    CAUSTICAPI void CreateRenderer(HWND hwnd, std::wstring &shaderFolder, IRenderer **ppRenderer)
+    CAUSTICAPI CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring &shaderFolder)
     {
-        _ASSERT(ppRenderer);
         std::unique_ptr<CRenderer> spRenderer(new CRenderer());
         spRenderer->Setup(hwnd, shaderFolder, true);
 
-        CRefObj<ICamera> spCamera;
-		CCausticFactory::Instance()->CreateCamera(true, &spCamera);
+        CRefObj<ICamera> spCamera = CCausticFactory::Instance()->CreateCamera(true);
         spRenderer->SetCamera(spCamera);
-
-        *ppRenderer = spRenderer.release();
-        (*ppRenderer)->AddRef();
+        return CRefObj<IRenderer>(spRenderer.release());
     }
 
     //**********************************************************************
@@ -545,6 +543,6 @@ namespace Caustic
         InitializeD3D(hwnd);
 
         // Create a default camera
-		CCausticFactory::Instance()->CreateCamera(false, &m_spCamera);
+        m_spCamera = CCausticFactory::Instance()->CreateCamera(false);
     }
 }

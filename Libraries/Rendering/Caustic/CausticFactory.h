@@ -54,26 +54,26 @@ namespace Caustic
 		//**********************************************************************
 		// ICausticFactory
 		//**********************************************************************
-		virtual void CreateRenderer(HWND hwnd, std::wstring &shaderFolder, IRenderer **ppRenderer) override;
-		virtual void CreateGraphics(HWND hwnd, IGraphics **ppGraphics) override;
-		virtual void CreateRenderMesh(IRenderMesh **ppRenderMesh) override;
-		virtual void CreateRenderSubMesh(IRenderSubMesh **ppRenderSubMesh) override;
-		virtual void CreatePointLight(Vector3 &pos, Vector3 &color, IPointLight **ppLight) override;
-		virtual void CreateTrackball(ITrackball **ppTrackball) override;
-		virtual void CreateRendererMarshaller(IRendererMarshaller **ppMarshaller) override;
-		virtual void CreateMaterialAttrib(IMaterialAttrib** ppMaterialAttrib) override;
-		virtual void CreateRenderMaterial(IGraphics *pGraphics, IMaterialAttrib *pMaterialAttrib, IShader *pShader, IRenderMaterial **ppRenderMaterial) override;
-        virtual void CreateRenderable(IRenderSubMesh *pSubMesh, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat, IRenderable **ppRenderable) override;
-        virtual void CreateSampler(IGraphics *pGraphics, ITexture *pTexture, ISampler **ppSampler) override;
-		virtual void CreateCamera(bool leftHanded, ICamera **ppCamera) override;
-		virtual void CreateTexture(IGraphics* pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags, ITexture** ppTexture) override;
-		virtual void CreateTexture(IGraphics* pGraphics, IImage *pImage, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags, ITexture** ppTexture) override;
+		virtual CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring &shaderFolder) override;
+		virtual CRefObj<IGraphics> CreateGraphics(HWND hwnd) override;
+		virtual CRefObj<IRenderMesh> CreateRenderMesh() override;
+		virtual CRefObj<IRenderSubMesh> CreateRenderSubMesh() override;
+		virtual CRefObj<IPointLight> CreatePointLight(Vector3 &pos, Vector3 &color) override;
+		virtual CRefObj<ITrackball> CreateTrackball() override;
+		virtual CRefObj<IRendererMarshaller> CreateRendererMarshaller() override;
+		virtual CRefObj<IMaterialAttrib> CreateMaterialAttrib() override;
+		virtual CRefObj<IRenderMaterial> CreateRenderMaterial(IGraphics *pGraphics, IMaterialAttrib *pMaterialAttrib, IShader *pShader) override;
+        virtual CRefObj<IRenderable> CreateRenderable(IRenderSubMesh *pSubMesh, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat) override;
+        virtual CRefObj<ISampler> CreateSampler(IGraphics *pGraphics, ITexture* pTexture) override;
+		virtual CRefObj<ICamera> CreateCamera(bool leftHanded) override;
+		virtual CRefObj<ITexture> CreateTexture(IGraphics* pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags) override;
+		virtual CRefObj<ITexture> CreateTexture(IGraphics* pGraphics, IImage *pImage, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags) override;
 		virtual CRefObj<ITexture> CheckerboardTexture(IGraphics *pGraphics) override;
-		virtual void LoadTexture(const wchar_t *pFilename, IGraphics *pGraphics, ITexture **ppTexture) override;
-		virtual void LoadVideoTexture(const wchar_t *pFilename, IGraphics *pGraphics, ITexture **ppTexture) override;
-        virtual void CreateShader(IRenderer *pRenderer, const wchar_t *pShaderName,
+		virtual CRefObj<ITexture> LoadTexture(const wchar_t *pFilename, IGraphics *pGraphics) override;
+		virtual CRefObj<ITexture> LoadVideoTexture(const wchar_t *pFilename, IGraphics *pGraphics) override;
+        virtual CRefObj<IShader> CreateShader(IRenderer *pRenderer, const wchar_t *pShaderName,
             ID3DBlob *pVertexShaderBlob, ID3DBlob* pPixelShaderBlob, ID3DBlob* pComputeShaderBlob,
-			IShaderInfo *pShaderInfo, IShader **ppShader) override;
-        virtual void CreateShaderInfo(const wchar_t *pFilename, IShaderInfo **ppShaderInfo) override;
+			IShaderInfo *pShaderInfo) override;
+        virtual CRefObj<IShaderInfo> CreateShaderInfo(const wchar_t *pFilename) override;
     };
 };

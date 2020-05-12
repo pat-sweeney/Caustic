@@ -946,15 +946,16 @@ namespace Caustic
     // pShaderInfo - Shader description
     // pPSBlob - Compiled binary for the pixel shader
     // pVSBlob - Compiled binary for the vertexshader
-    // ppShader - Returns the created shader
+    //
+    // Returns:
+    // Returns the created shader
     //**********************************************************************
-    CAUSTICAPI void CreateShader(IGraphics *pGraphics, const wchar_t *pShaderName, IShaderInfo *pShaderInfo,
-        ID3DBlob *pPSBlob, ID3DBlob *pVSBlob, ID3DBlob *pCSBlob, IShader **ppShader)
+    CAUSTICAPI CRefObj<IShader> CreateShader(IGraphics *pGraphics, const wchar_t *pShaderName, IShaderInfo *pShaderInfo,
+        ID3DBlob *pPSBlob, ID3DBlob *pVSBlob, ID3DBlob *pCSBlob)
     {
         std::unique_ptr<CShader> spShader(new CShader());
         spShader->Create(pGraphics, pShaderName, pShaderInfo, pPSBlob, pVSBlob, pCSBlob);
-        *ppShader = spShader.release();
-        (*ppShader)->AddRef();
+        return CRefObj<IShader>(spShader.release());
     }
     
     //**********************************************************************

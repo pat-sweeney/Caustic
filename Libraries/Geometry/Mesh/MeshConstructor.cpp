@@ -146,9 +146,9 @@ namespace Caustic
         if (m_pCurFace == nullptr)
             CT(E_FAIL); // Face isn't open
 
-        CGeomVertex *pVertex = m_spSubMesh->FindVertex(pos, nullptr, &uv);
-        if (pVertex == nullptr)
-            pVertex = m_spSubMesh->AllocateGeomVertex(pos, normal, uv);
+        //CGeomVertex *pVertex = m_spSubMesh->FindVertex(pos, nullptr, &uv);
+        //if (pVertex == nullptr)
+            CGeomVertex* pVertex = m_spSubMesh->AllocateGeomVertex(pos, normal, uv);
         m_pCurFace->m_vertices.push_back(pVertex);
 
         // Update running average of where current face's center point is

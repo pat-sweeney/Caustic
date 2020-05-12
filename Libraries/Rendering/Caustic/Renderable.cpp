@@ -174,12 +174,12 @@ namespace Caustic
     // pFrontMaterial - material for front faces
     // pBackMaterial - material for back faces
     // mat - transform to apply
-    // ppRenderable - Returns the created renderable
+    //
+    // Returns:
+    // Returns the created renderable
     //**********************************************************************
-    CAUSTICAPI void CreateRenderable(IRenderSubMesh *pSubMesh, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat, IRenderable **ppRenderable)
+    CAUSTICAPI CRefObj<IRenderable> CreateRenderable(IRenderSubMesh *pSubMesh, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat)
     {
-        CRenderable *pRenderable = new CRenderable(pSubMesh, pFrontMaterial, pBackMaterial, mat);
-        *ppRenderable = pRenderable;
-        (*ppRenderable)->AddRef();
+        return CRefObj<IRenderable>(new CRenderable(pSubMesh, pFrontMaterial, pBackMaterial, mat));
     }
 }

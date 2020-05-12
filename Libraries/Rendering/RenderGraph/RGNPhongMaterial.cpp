@@ -25,7 +25,7 @@ namespace Caustic
         m_spSpecularTexturePin = CreatePin(this, true, "specularTexture", ERenderGraphDataType::Image, empty);
         m_spAmbientTexturePin = CreatePin(this, true, "ambientTexture", ERenderGraphDataType::Image, empty);
         m_spMatPin = CreatePin(this, false, "material", ERenderGraphDataType::RenderMaterial, std::any());
-        Caustic::CreateCausticFactory(&m_spCausticFactory);
+        m_spCausticFactory = Caustic::CreateCausticFactory();
     }
     
     std::any CRenderGraphNode_PhongMaterial::GetPinValue(IRenderGraphPin* pPin, IRenderer* pRenderer, IRenderCtx* pRenderCtx)
@@ -44,10 +44,9 @@ namespace Caustic
                 if (spDiffuseImage)
                 {
                     CRefObj<IGraphics> spGraphics = pRenderer->GetGraphics();
-                    CRefObj<IMaterialAttrib> spMaterial;
-                    m_spCausticFactory->CreateMaterialAttrib(&spMaterial);
+                    CRefObj<IMaterialAttrib> spMaterial = m_spCausticFactory->CreateMaterialAttrib();
                     spMaterial->SetTexture(L"diffuseTexture", spDiffuseImage, EShaderAccess::PixelShader);
-                    m_spCausticFactory->CreateRenderMaterial(pRenderer, spMaterial, m_spShader, &m_spRenderMaterial);
+                    m_spRenderMaterial = m_spCausticFactory->CreateRenderMaterial(pRenderer, spMaterial, m_spShader);
                 }
             }
             m_lastEpochModified = pRenderCtx->GetEpoch();

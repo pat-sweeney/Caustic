@@ -26,14 +26,12 @@ namespace Caustic
     // Global function for creating the RendererMarshaller. This method should generally
     // not be called. Use the ICausticFactory to create new Caustic objects.
     //
-    // Parameters:
-    // ppClientServer - Returns the newly created RendererMarshaller.
+    // Returns:
+    // Returns the newly created RendererMarshaller.
     //**********************************************************************
-    CAUSTICAPI void CreateRendererMarshaller(IRendererMarshaller **ppClientServer)
+    CAUSTICAPI CRefObj<IRendererMarshaller> CreateRendererMarshaller()
     {
-        std::unique_ptr<CRendererMarshaller> spClientServer(new CRendererMarshaller());
-        *ppClientServer = spClientServer.release();
-        (*ppClientServer)->AddRef();
+        return CRefObj<IRendererMarshaller>(new CRendererMarshaller());
     }
 
     //**********************************************************************
@@ -66,7 +64,7 @@ namespace Caustic
     //**********************************************************************
     void CRendererMarshaller::Initialize(HWND hwnd, std::wstring &shaderFolder, std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback)
     {
-		CCausticFactory::Instance()->CreateRenderer(hwnd, shaderFolder, &m_spRenderer);
+        m_spRenderer = CCausticFactory::Instance()->CreateRenderer(hwnd, shaderFolder);
         InitializeCriticalSection(&m_renderQueue.m_cs);
         m_thread = CreateThread(nullptr, 0, RenderThreadProc, this, 0, nullptr);
         m_renderCallback = renderCallback;
@@ -148,36 +146,40 @@ namespace Caustic
     // Method: LoadTexture
     // See <IRenderer::LoadTexture>
     //**********************************************************************
-    void CRendererMarshaller::LoadTexture(const wchar_t *pPath, ITexture **ppTexture)
+    CRefObj<ITexture> CRendererMarshaller::LoadTexture(const wchar_t *pPath)
     {
         HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+        CRefObj<ITexture> spTexture;
         m_renderQueue.AddLambda(
-            [this, pPath, evt, ppTexture]()
+            [this, pPath, evt, &spTexture]()
             {
-                Caustic::CCausticFactory::Instance()->LoadTexture(pPath, m_spRenderer, ppTexture);
+                spTexture = Caustic::CCausticFactory::Instance()->LoadTexture(pPath, m_spRenderer);
                 SetEvent(evt);
             }
         );
         WaitForSingleObject(evt, INFINITE);
         CloseHandle(evt);
+        return spTexture;
     }
 
     //**********************************************************************
     // Method: LoadVideoTexture
     // See <IRenderer::LoadVideoTexture>
     //**********************************************************************
-    void CRendererMarshaller::LoadVideoTexture(const wchar_t *pPath, ITexture **ppTexture)
+    CRefObj<ITexture> CRendererMarshaller::LoadVideoTexture(const wchar_t *pPath)
     {
         HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+        CRefObj<ITexture> spTexture;
         m_renderQueue.AddLambda(
-            [this, pPath, evt, ppTexture]()
+            [this, pPath, evt, &spTexture]()
             {
-				Caustic::CCausticFactory::Instance()->LoadVideoTexture(pPath, m_spRenderer, ppTexture);
+                spTexture = Caustic::CCausticFactory::Instance()->LoadVideoTexture(pPath, m_spRenderer);
                 SetEvent(evt);
             }
         );
         WaitForSingleObject(evt, INFINITE);
         CloseHandle(evt);
+        return spTexture;
     }
 
     //**********************************************************************

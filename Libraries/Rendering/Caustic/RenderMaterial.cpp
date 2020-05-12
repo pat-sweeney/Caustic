@@ -13,33 +13,29 @@
 
 namespace Caustic
 {
-    CAUSTICAPI void CreateMaterialAttrib(IMaterialAttrib** ppMaterialAttrib)
+    CAUSTICAPI CRefObj<IMaterialAttrib> CreateMaterialAttrib()
     {
-        std::unique_ptr<CMaterialAttrib> spMaterialAttrib(new CMaterialAttrib());
-        *ppMaterialAttrib = spMaterialAttrib.release();
-        (*ppMaterialAttrib)->AddRef();
+        return CRefObj<IMaterialAttrib>(new CMaterialAttrib());
     }
 
-    CAUSTICAPI void CreateRenderMaterial(IGraphics* pGraphics, IMaterialAttrib* pMaterialAttrib, IShader* pShader, IRenderMaterial** ppRenderMaterial)
+    CAUSTICAPI CRefObj<IRenderMaterial> CreateRenderMaterial(IGraphics* pGraphics, IMaterialAttrib* pMaterialAttrib, IShader* pShader)
     {
         std::unique_ptr<CRenderMaterial> spRenderMaterial(new CRenderMaterial());
         CRenderMaterial* wpRenderMaterial = spRenderMaterial.get();
-        spRenderMaterial->m_spMaterial = pMaterialAttrib;
-        spRenderMaterial->m_spShader = pShader;
+        spRenderMaterial->SetMaterial(pMaterialAttrib);
+        spRenderMaterial->SetShader(pShader);
         if (pMaterialAttrib)
         {
             pMaterialAttrib->EnumerateTextures(
                 [pGraphics, wpRenderMaterial](const wchar_t* pName, IImage* pImage, EShaderAccess access) {
                     if (pImage != nullptr)
                     {
-                        CRefObj<ITexture> spTexture;
-                        Caustic::CCausticFactory::Instance()->CreateTexture(pGraphics, pImage, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_SHADER_RESOURCE, &spTexture);
+                        CRefObj<ITexture> spTexture = Caustic::CCausticFactory::Instance()->CreateTexture(pGraphics, pImage, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_SHADER_RESOURCE);
                         wpRenderMaterial->SetTexture(pGraphics, pName, spTexture, access);
                     }
                 });
         }
-        *ppRenderMaterial = spRenderMaterial.release();
-        (*ppRenderMaterial)->AddRef();
+        return CRefObj<IRenderMaterial>(spRenderMaterial.release());
     }
 
     void CRenderMaterial::SetTexture(IGraphics* pGraphics, const wchar_t* pName, ITexture* pTexture, EShaderAccess access)
@@ -50,7 +46,7 @@ namespace Caustic
         CRenderTexture tex;
         tex.m_spTexture = pTexture;
         tex.m_access = access;
-        CCausticFactory::Instance()->CreateSampler(pGraphics, tex.m_spTexture, &tex.m_spSampler);
+        tex.m_spSampler = CCausticFactory::Instance()->CreateSampler(pGraphics, tex.m_spTexture);
 
         // pName is the name of our texture. We don't push textures to the shader, we push samplers. So rename it.
         tex.m_samplerName = std::wstring(pName);

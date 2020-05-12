@@ -32,6 +32,8 @@ namespace Caustic
 	//**********************************************************************
 	struct IDepthCameraDevice : public ICameraDevice
 	{
+		using ICameraDevice::NextFrame;
+
 		//**********************************************************************
 		// Method: NextFrame
 		// Retrieves the next color/depth/ir image from the camera

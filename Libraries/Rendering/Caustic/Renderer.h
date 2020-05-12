@@ -149,7 +149,7 @@ namespace Caustic
         D3D11_TEXTURE2D_DESC m_BBDesc;                      // Description of our back buffer
         CRefObj<IShaderMgr> m_spShaderMgr;                  // Our shader manager
 
-        friend CAUSTICAPI void CreateGraphics(HWND hwnd, IGraphics** ppGraphics);
+        friend CAUSTICAPI CRefObj<IGraphics> CreateGraphics(HWND hwnd);
 
         void InitializeD3D(HWND hwnd);
         void Setup(HWND hwnd, bool createDebugDevice);
@@ -233,7 +233,7 @@ namespace Caustic
 #endif
         void LoadDefaultShaders(const wchar_t *pFolder);
         void LoadShaderBlob(std::wstring &filename, ID3DBlob **ppBlob);
-        void LoadShaderInfo(std::wstring &filename, IShaderInfo **ppShaderInfo);
+        CRefObj<IShaderInfo> LoadShaderInfo(std::wstring &filename);
         void RenderScene(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback);
         void DrawSceneObjects(int pass, std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback);
     public:

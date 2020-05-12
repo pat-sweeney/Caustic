@@ -19,14 +19,12 @@ namespace Caustic
     // Global function for creating a track ball. This method should generally
     // not be called. Use the ICausticFactory to create new Caustic objects.
     //
-    // Parameters:
-    // ppTrackball - Returns the newly created trackball.
+    // Returns:
+    // Returns the newly created trackball.
     //**********************************************************************
-    CAUSTICAPI void CreateTrackball(ITrackball **ppTrackball)
+    CAUSTICAPI CRefObj<ITrackball> CreateTrackball()
     {
-        std::unique_ptr<CTrackball> spTrackball(new CTrackball());
-        *ppTrackball = spTrackball.release();
-        (*ppTrackball)->AddRef();
+        return CRefObj<ITrackball>(new CTrackball());
     }
 
     //**********************************************************************

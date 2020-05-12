@@ -71,8 +71,8 @@ namespace Caustic
         //**********************************************************************
         virtual void Initialize(HWND hwnd, std::wstring &shaderFolder, std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) override;
         virtual void Shutdown() override;
-        virtual void LoadTexture(const wchar_t *pPath, ITexture **ppTexture) override;
-        virtual void LoadVideoTexture(const wchar_t *pPath, ITexture **ppTexture) override;
+        virtual CRefObj<ITexture> LoadTexture(const wchar_t *pPath) override;
+        virtual CRefObj<ITexture> LoadVideoTexture(const wchar_t *pPath) override;
         virtual void SaveScene(const wchar_t *pFilename, ISceneGraph *pSceneGraph) override;
         virtual void LoadScene(const wchar_t *pFilename, ISceneGraph *pSceneGraph) override;
         virtual void RunOnRenderer(std::function<void(IRenderer*, void* clientData)> callback, void* clientData) override;

@@ -57,9 +57,13 @@ namespace Caustic
         virtual bool NextFrame(IImage** ppColorImage) override;
 
         //**********************************************************************
-        // IAzureKinect
+        // IDepthCameraDevice
         //**********************************************************************
         virtual bool NextFrame(IImage** ppColorImage, IImage** ppDepthImage, IImage** ppIRImage) override;
+
+        //**********************************************************************
+        // IAzureKinect
+        //**********************************************************************
         virtual bool NextFrame(IImage** ppColorImage, std::vector<Vector3>& pts, std::vector<Vector3>& normals, BBox3 &bbox) override;
         virtual void BuildRayMap(uint32 w, uint32 h, IImage** ppImage) override;
     };

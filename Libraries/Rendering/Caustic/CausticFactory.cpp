@@ -28,21 +28,21 @@
 
 namespace Caustic
 {
-    CAUSTICAPI void CreateRenderer(HWND hwnd, std::wstring &shaderFolder, IRenderer **ppRenderer);
-    CAUSTICAPI void CreateGraphics(HWND hwnd, IGraphics **ppGraphics);
-    CAUSTICAPI void CreatePointLight(Vector3 &pos, Vector3 &color, IPointLight **ppLight);
-    CAUSTICAPI void CreateTrackball(ITrackball **ppTrackball);
-    CAUSTICAPI void CreateRendererMarshaller(IRendererMarshaller **ppClientServer);
-    CAUSTICAPI void CreateMaterialAttrib(IMaterialAttrib** ppMaterialAttib);
-    CAUSTICAPI void CreateRenderMaterial(IGraphics *pGraphics, IMaterialAttrib *pMaterialAttrib, IShader *pShader, IRenderMaterial **ppRenderMaterial);
-    CAUSTICAPI void CreateRenderable(IRenderSubMesh *pSubMesh, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat, IRenderable **ppRenderable);
-    CAUSTICAPI void CreateSampler(IGraphics *pGraphics, ITexture *pTexture, ISampler **ppSampler);
-    CAUSTICAPI void CreateCamera(bool leftHanded, ICamera **ppCamera);
-    CAUSTICAPI void CreateTexture(IGraphics* pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags, ITexture** ppTexture);
-    CAUSTICAPI void CreateTexture(IGraphics* pGraphics, IImage *pImage, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags, ITexture** ppTexture);
-    CAUSTICAPI CRefObj<ITexture> CheckerboardTexture(IGraphics *pGraphics);
-    CAUSTICAPI void LoadTexture(const wchar_t *pFilename, IGraphics *pGraphics, ITexture **ppTexture);
-    CAUSTICAPI void LoadVideoTexture(const wchar_t *pFilename, IGraphics *pGraphics, ITexture **ppTexture);
+    CAUSTICAPI CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring &shaderFolder);
+    CAUSTICAPI CRefObj<IGraphics> CreateGraphics(HWND hwnd);
+    CAUSTICAPI CRefObj<IPointLight> CreatePointLight(Vector3 &pos, Vector3 &color);
+    CAUSTICAPI CRefObj<ITrackball> CreateTrackball();
+    CAUSTICAPI CRefObj<IRendererMarshaller> CreateRendererMarshaller();
+    CAUSTICAPI CRefObj<IMaterialAttrib> CreateMaterialAttrib();
+    CAUSTICAPI CRefObj<IRenderMaterial> CreateRenderMaterial(IGraphics *pGraphics, IMaterialAttrib *pMaterialAttrib, IShader *pShader);
+    CAUSTICAPI CRefObj<IRenderable > CreateRenderable(IRenderSubMesh *pSubMesh, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat);
+    CAUSTICAPI CRefObj<ISampler> CreateSampler(IGraphics *pGraphics, ITexture *pTexture);
+    CAUSTICAPI CRefObj<ICamera> CreateCamera(bool leftHanded);
+    CAUSTICAPI CRefObj<ITexture> CreateTexture(IGraphics* pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags);
+    CAUSTICAPI CRefObj<ITexture> CreateTexture(IGraphics* pGraphics, IImage *pImage, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags);
+    CAUSTICAPI CRefObj<ITexture> CheckerboardTexture(IGraphics* pGraphics);
+    CAUSTICAPI CRefObj<ITexture> LoadTexture(const wchar_t *pFilename, IGraphics* pGraphics);
+    CAUSTICAPI CRefObj<ITexture> LoadVideoTexture(const wchar_t *pFilename, IGraphics* pGraphics);
     
     CRefObj<ICausticFactory> CCausticFactory::factory;
 
@@ -50,14 +50,12 @@ namespace Caustic
     // Function: CreateCausticFactory
     // Global function for creating the main Caustic factory.
     //
-    // Parameters:
+    // Returns:
     // ppFactory - Returns the newly created Caustic factory.
     //**********************************************************************
-    CAUSTICAPI void CreateCausticFactory(ICausticFactory **ppFactory)
+    CAUSTICAPI CRefObj<ICausticFactory> CreateCausticFactory()
 	{
-		CCausticFactory *pFactory = new CCausticFactory();
-		*ppFactory = pFactory;
-		(*ppFactory)->AddRef();
+		return CRefObj<ICausticFactory>(new CCausticFactory());
 	}
 
     //**********************************************************************
@@ -94,130 +92,126 @@ namespace Caustic
     // Method: CreateRenderer
     // See <ICausticFactory::CreateRenderer>
     //**********************************************************************
-    void CCausticFactory::CreateRenderer(HWND hwnd, std::wstring &shaderFolder, IRenderer **ppRenderer)
+    CRefObj<IRenderer> CCausticFactory::CreateRenderer(HWND hwnd, std::wstring &shaderFolder)
 	{
-		Caustic::CreateRenderer(hwnd, shaderFolder, ppRenderer);
+		return Caustic::CreateRenderer(hwnd, shaderFolder);
 	}
 	
     //**********************************************************************
     // Method: CreateGraphics
     // See <ICausticFactory::CreateGraphics>
     //**********************************************************************
-    void CCausticFactory::CreateGraphics(HWND hwnd, IGraphics **ppGraphics)
+    CRefObj<IGraphics> CCausticFactory::CreateGraphics(HWND hwnd)
 	{
-		Caustic::CreateGraphics(hwnd, ppGraphics);
+		return Caustic::CreateGraphics(hwnd);
 	}
 
     //**********************************************************************
     // Method: CreateRenderMesh
     // See <ICausticFactory::CreateRenderMesh>
     //**********************************************************************
-    void CCausticFactory::CreateRenderMesh(IRenderMesh **ppRenderMesh)
+    CRefObj<IRenderMesh> CCausticFactory::CreateRenderMesh()
 	{
-		_ASSERT(ppRenderMesh);
-		*ppRenderMesh = new CRenderMesh();
-		(*ppRenderMesh)->AddRef();
+		return CRefObj<IRenderMesh>(new CRenderMesh());
 	}
 
     //**********************************************************************
     // Method: CreateRenderSubMesh
     // See <ICausticFactory::CreateRenderSubMesh>
     //**********************************************************************
-    void CCausticFactory::CreateRenderSubMesh(IRenderSubMesh **ppRenderSubMesh)
+    CRefObj<IRenderSubMesh> CCausticFactory::CreateRenderSubMesh()
 	{
-		_ASSERT(ppRenderSubMesh);
-		*ppRenderSubMesh = new CRenderSubMesh();
-		(*ppRenderSubMesh)->AddRef();
+		return CRefObj<IRenderSubMesh>(new CRenderSubMesh());
 	}
 
     //**********************************************************************
     // Method: CreatePointLight
     // See <ICausticFactory::CreatePointLight>
     //**********************************************************************
-    void CCausticFactory::CreatePointLight(Vector3 &pos, Vector3 &color, IPointLight **ppLight)
+    CRefObj<IPointLight> CCausticFactory::CreatePointLight(Vector3 &pos, Vector3 &color)
 	{
-		Caustic::CreatePointLight(pos, color, ppLight);
+		return Caustic::CreatePointLight(pos, color);
 	}
 
     //**********************************************************************
     // Method: CreateTrackball
     // See <ICausticFactory::CreateTrackball>
     //**********************************************************************
-    void CCausticFactory::CreateTrackball(ITrackball **ppTrackball)
+    CRefObj<ITrackball> CCausticFactory::CreateTrackball()
 	{
-		Caustic::CreateTrackball(ppTrackball);
+		return Caustic::CreateTrackball();
 	}
 
     //**********************************************************************
     // Method: CreateRendererMarshaller
     // See <ICausticFactory::CreateRendererMarshaller>
     //**********************************************************************
-    void CCausticFactory::CreateRendererMarshaller(IRendererMarshaller **ppMarshaller)
+    CRefObj<IRendererMarshaller> CCausticFactory::CreateRendererMarshaller()
 	{
-		Caustic::CreateRendererMarshaller(ppMarshaller);
+		return Caustic::CreateRendererMarshaller();
 	}
 
     //**********************************************************************
     // Method: CreateMaterialAttrib
     // See <ICausticFactory::CreateMaterialAttrib>
     //**********************************************************************
-    void CCausticFactory::CreateMaterialAttrib(IMaterialAttrib** ppMaterialAttrib)
+    CRefObj<IMaterialAttrib> CCausticFactory::CreateMaterialAttrib()
     {
-        Caustic::CreateMaterialAttrib(ppMaterialAttrib);
+        return Caustic::CreateMaterialAttrib();
     }
 
     //**********************************************************************
     // Method: CreateRenderMaterial
     // See <ICausticFactory::CreateRenderMaterial>
     //**********************************************************************
-    void CCausticFactory::CreateRenderMaterial(IGraphics *pGraphics, IMaterialAttrib *pMaterialAttrib, IShader *pShader, IRenderMaterial **ppRenderMaterial)
+    CRefObj<IRenderMaterial> CCausticFactory::CreateRenderMaterial(IGraphics *pGraphics, IMaterialAttrib *pMaterialAttrib, IShader *pShader)
 	{
-		Caustic::CreateRenderMaterial(pGraphics, pMaterialAttrib, pShader, ppRenderMaterial);
+		return Caustic::CreateRenderMaterial(pGraphics, pMaterialAttrib, pShader);
 	}
 
     //**********************************************************************
     // Method: CreateRenderable
     // See <ICausticFactory::CreateRenderable>
     //**********************************************************************
-    void CCausticFactory::CreateRenderable(IRenderSubMesh *pSubMesh, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat, IRenderable **ppRenderable)
+    CRefObj<IRenderable> CCausticFactory::CreateRenderable(IRenderSubMesh *pSubMesh, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat)
 	{
-        Caustic::CreateRenderable(pSubMesh, pFrontMaterial, pBackMaterial, mat, ppRenderable);
+        return Caustic::CreateRenderable(pSubMesh, pFrontMaterial, pBackMaterial, mat);
 	}
     
     //**********************************************************************
     // Method: CreateSampler
     // See <ICausticFactory::CreateSampler>
     //**********************************************************************
-    void CCausticFactory::CreateSampler(IGraphics *pGraphics, ITexture *pTexture, ISampler **ppSampler)
+    CRefObj<ISampler> CCausticFactory::CreateSampler(IGraphics *pGraphics, ITexture *pTexture)
 	{
-		Caustic::CreateSampler(pGraphics, pTexture, ppSampler);
+		return Caustic::CreateSampler(pGraphics, pTexture);
 	}
 
     //**********************************************************************
     // Method: CreateCamera
     // See <ICausticFactory::CreateCamera>
     //**********************************************************************
-    void CCausticFactory::CreateCamera(bool leftHanded, ICamera **ppCamera)
+    CRefObj<ICamera> CCausticFactory::CreateCamera(bool leftHanded)
 	{
-		Caustic::CreateCamera(leftHanded, ppCamera);
+		return Caustic::CreateCamera(leftHanded);
 	}
 
     //**********************************************************************
     // Method: CreateTexture
     // See <ICausticFactory::CreateTexture>
     //**********************************************************************
-    void CCausticFactory::CreateTexture(IGraphics* pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags, ITexture** ppTexture)
+    CRefObj<ITexture> CCausticFactory::CreateTexture(IGraphics* pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags)
     {
-        Caustic::CreateTexture(pGraphics, width, height, format, cpuFlags, bindFlags, ppTexture);
+        return Caustic::CreateTexture(pGraphics, width, height, format, cpuFlags, bindFlags);
     }
 
     //**********************************************************************
     // Method: CreateTexture
     // See <ICausticFactory::CreateTexture>
     //**********************************************************************
-    void CCausticFactory::CreateTexture(IGraphics* pGraphics, IImage* pImage, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags, ITexture** ppTexture)
+    CRefObj<ITexture> CCausticFactory::CreateTexture(IGraphics* pGraphics, IImage* pImage, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags)
     {
-        Caustic::CreateTexture(pGraphics, pImage, cpuFlags, bindFlags, ppTexture);
+        return Caustic::CreateTexture(pGraphics, pImage, cpuFlags, bindFlags);
     }
 
     //**********************************************************************
@@ -233,44 +227,42 @@ namespace Caustic
     // Method: LoadTexture
     // See <ICausticFactory::LoadTexture>
     //**********************************************************************
-    void CCausticFactory::LoadTexture(const wchar_t *pFilename, IGraphics *pGraphics, ITexture **ppTexture)
+    CRefObj<ITexture> CCausticFactory::LoadTexture(const wchar_t *pFilename, IGraphics *pGraphics)
 	{
-		Caustic::LoadTexture(pFilename, pGraphics, ppTexture);
+		return Caustic::LoadTexture(pFilename, pGraphics);
 	}
 
     //**********************************************************************
     // Method: LoadVideoTexture
     // See <ICausticFactory::LoadVideoTexture>
     //**********************************************************************
-    void CCausticFactory::LoadVideoTexture(const wchar_t *pFilename, IGraphics *pGraphics, ITexture **ppTexture)
+    CRefObj<ITexture> CCausticFactory::LoadVideoTexture(const wchar_t *pFilename, IGraphics *pGraphics)
 	{
-		Caustic::LoadVideoTexture(pFilename, pGraphics, ppTexture);
+		return Caustic::LoadVideoTexture(pFilename, pGraphics);
 	}
 
     //**********************************************************************
     // Method: CreateShader
     // See <ICausticFactory::CreateShader>
     //**********************************************************************
-    void CCausticFactory::CreateShader(IRenderer *pRenderer, const wchar_t *pShaderName,
+    CRefObj<IShader> CCausticFactory::CreateShader(IRenderer *pRenderer, const wchar_t *pShaderName,
         ID3DBlob *pVertexShaderBlob, ID3DBlob* pPixelShaderBlob, ID3DBlob* pComputeShaderBlob,
-        IShaderInfo *pShaderInfo, IShader **ppShader)
+        IShaderInfo *pShaderInfo)
     {
         std::unique_ptr<CShader> spShader(new CShader());
         spShader->Create(pRenderer, pShaderName, pShaderInfo, pPixelShaderBlob, pVertexShaderBlob, pComputeShaderBlob);
-        *ppShader = spShader.release();
-        (*ppShader)->AddRef();
+        return CRefObj<IShader>(spShader.release());
     }
 
     //**********************************************************************
     // Method: CreateShaderInfo
     // See <ICausticFactory::CreateShaderInfo>
     //**********************************************************************
-    void CCausticFactory::CreateShaderInfo(const wchar_t *pFilename, IShaderInfo **ppShaderInfo)
+    CRefObj<IShaderInfo> CCausticFactory::CreateShaderInfo(const wchar_t *pFilename)
     {
-        CShaderInfo *pShaderInfo = new CShaderInfo();
+        std::unique_ptr<CShaderInfo> spShaderInfo(new CShaderInfo());
         std::wstring fn(pFilename);
-        pShaderInfo->LoadShaderDef(fn);
-        *ppShaderInfo = pShaderInfo;
-        (*ppShaderInfo)->AddRef();
+        spShaderInfo->LoadShaderDef(fn);
+        return CRefObj<IShaderInfo>(spShaderInfo.release());
     }
 };

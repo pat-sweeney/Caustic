@@ -41,5 +41,5 @@ namespace Caustic
         virtual Vector3 GetColor() override { return m_color; }
     };
 
-	CAUSTICAPI void CreatePointLight(Vector3 &pos, Vector3 &color, IPointLight **ppLight);
+	CAUSTICAPI CRefObj<IPointLight> CreatePointLight(Vector3 &pos, Vector3 &color);
 }

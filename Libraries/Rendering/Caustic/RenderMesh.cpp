@@ -140,10 +140,10 @@ namespace Caustic
             submesh->Render(pRenderer, pShader, pMaterial, lights);
     }
 
-    CAUSTICAPI void CreatePointCloudSubMesh(IRenderer *pRenderer, IShader *pShader, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, std::vector<CGeomVertex>& verts, IRenderSubMesh** ppSubMesh)
+    CAUSTICAPI CRefObj<IRenderSubMesh> CreatePointCloudSubMesh(IRenderer *pRenderer, IShader *pShader, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, std::vector<CGeomVertex>& verts)
     {
         if (verts.size() == 0)
-            return;
+            return CRefObj<IRenderSubMesh>(nullptr);
         std::vector<CGeomVertex> triangles;
         std::vector<uint32> faces;
         for (size_t i = 0; i < verts.size(); i++)
@@ -182,10 +182,8 @@ namespace Caustic
             faces.push_back(int(6 * i + 5));
         }
         
-        CRefObj<ICausticFactory> spFactory;
-        CreateCausticFactory(&spFactory);
-        CRefObj<IRenderSubMesh> spSubMesh;
-        spFactory->CreateRenderSubMesh(&spSubMesh);
+        CRefObj<ICausticFactory> spFactory = CreateCausticFactory();
+        CRefObj<IRenderSubMesh> spSubMesh = spFactory->CreateRenderSubMesh();
         spSubMesh->SetBackMaterial(pBackMaterial);
         spSubMesh->SetFrontMaterial(pFrontMaterial);
         spSubMesh->SetShader(pShader);
@@ -195,6 +193,6 @@ namespace Caustic
         BuildVertexBuffer(pRenderer, spShaderInfo, triangles, &meshData);
         BuildIndexBuffer(pRenderer, faces, &meshData);
         spSubMesh->SetMeshData(meshData);
-        *ppSubMesh = spSubMesh.Detach();
+        return spSubMesh;
     }
 }

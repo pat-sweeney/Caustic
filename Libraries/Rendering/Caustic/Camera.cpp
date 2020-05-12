@@ -26,13 +26,13 @@ namespace Caustic
     // Parameters:
     // leftHanded - indicates whether we are creating a left handed coordinate system
     //    or a right handed coordinates system.
-    // ppCamera - Returns the newly created camera.
+    //
+    // Returns:
+    // Returns the newly created camera.
     //**********************************************************************
-    CAUSTICAPI void CreateCamera(bool leftHanded, ICamera **ppCamera)
+    CAUSTICAPI CRefObj<ICamera> CreateCamera(bool leftHanded)
     {
-        std::unique_ptr<CCamera> pCamera(new CCamera(leftHanded));
-        *ppCamera = pCamera.release();
-        (*ppCamera)->AddRef();
+        return CRefObj<ICamera>(new CCamera(leftHanded));
     }
 
     //**********************************************************************

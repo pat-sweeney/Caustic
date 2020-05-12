@@ -9,8 +9,9 @@
 #include "Base\Core\IRefCount.h"
 #include "Rendering\RenderWindow\IRenderWindow.h"
 #include "Rendering\Caustic\ICausticFactory.h"
-#include "Rendering\SceneGraph\ISceneGraph.h"
-#include "Rendering\SceneGraph\ISceneFactory.h"
+#include "Rendering\RenderGraph\IRenderGraph.h"
+#include "Rendering\RenderGraph\IRenderGraphFactory.h"
+#include "Rendering\RenderGraph\RGNLightCollection.h"
 #include "Geometry\MeshImport\MeshImport.h"
 #include <Windows.h>
 #include <commdlg.h>
@@ -22,24 +23,23 @@ using namespace Caustic;
 
 CRefObj<IRenderWindow> spRenderWindow;
 CRefObj<Caustic::ICausticFactory> spCausticFactory;
-CRefObj<Caustic::ISceneFactory> spSceneFactory;
+CRefObj<Caustic::IRenderGraphFactory> spRenderGraphFactory;
 
 void AddPointLight(Vector3 &lightPos)
 {
-    CRefObj<IScenePointLightElem> spLightElem;
-    spSceneFactory->CreatePointLightElem(&spLightElem);
-    spLightElem->SetPosition(lightPos);
     Vector3 lightColor(1.0f, 1.0f, 1.0f);
-    spLightElem->SetColor(lightColor);
-    spRenderWindow->GetSceneGraph()->AddChild(spLightElem);
+    CRefObj<IPointLight> spLight = spCausticFactory->CreatePointLight(lightPos, lightColor);
+    CRefObj<IRenderGraphNode_LightCollection> spLightElem = spRenderGraphFactory->CreateLightCollectionNode();
+    spLightElem->AddLight(spLight);
+    spRenderWindow->GetRenderGraph()->AddChild(spLightElem);
 }
 
 void InitializeCaustic(HWND hwnd)
 {
-	Caustic::CreateSceneFactory(&spSceneFactory);
-	Caustic::CreateCausticFactory(&spCausticFactory);
+    spRenderGraphFactory = Caustic::CreateRenderGraphFactory();
+    spCausticFactory = Caustic::CreateCausticFactory();
     std::wstring shaderFolder(SHADERPATH);
-    CreateRenderWindow(hwnd, shaderFolder, &spRenderWindow);
+    spRenderWindow = CreateRenderWindow(hwnd, shaderFolder);
     Vector3 lightPos(10.0f, 10.0f, 0.0f);
     AddPointLight(lightPos);
     lightPos = Vector3(-10.0f, 10.0f, 0.0f);
@@ -195,32 +195,29 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (GetOpenFileName(&ofn))
                     {
                         wchar_t *ext = StrRChrW(fn, nullptr, L'.');
-                        CRefObj<ISceneMeshElem> spElem;
-                        spSceneFactory->CreateMeshElem(&spElem);
+                        CRefObj<IRenderGraphNode_Mesh> spElem = spRenderGraphFactory->CreateMeshNode();
                         CRefObj<IMesh> spMesh = nullptr;
                         if (StrCmpW(ext, L".obj") == 0)
                             spMesh = Caustic::MeshImport::LoadObj(fn);
                         else if (StrCmpW(ext, L".ply") == 0)
                             spMesh = Caustic::MeshImport::LoadPLY(fn);
-                        spElem->SetMesh(spMesh);
+                        spElem->FindInputPin("mesh")->SetDefaultValue(spMesh);
 
-                        CRefObj<ISceneMaterialElem> spMaterialElem;
-                        spSceneFactory->CreateMaterialElem(&spMaterialElem);
-
-                        CRefObj<IMaterialAttrib> spMaterial;
-                        spMaterialElem->GetMaterial(&spMaterial);
+#if 0
+                        CRefObj<IRenderGraphNode_Material> spMaterialElem = spRenderGraphFactory->CreateMaterialNode();
+                        CRefObj<IMaterialAttrib> spMaterial = spMaterialElem->GetMaterial();
 
                         Vector3 ambient(0.2f, 0.2f, 0.2f);
                         Vector3 diffuse(0.4f, 0.4f, 0.4f);
                         spMaterial->SetColor(L"ambientColor", ambient);
                         spMaterial->SetColor(L"diffuseColor", diffuse);
 
-                        CRefObj<IShader> spShader;
-                        CShaderMgr::Instance()->FindShader(L"Textured", &spShader);
+                        CRefObj<IShader> spShader = CShaderMgr::Instance()->FindShader(L"Textured");
                         spMaterialElem->SetShader(spShader);
 
-                        spRenderWindow->GetSceneGraph()->AddChild(spMaterialElem);
+                        spRenderWindow->GetRenderGraph()->AddChild(spMaterialElem);
                         spMaterialElem->AddChild(spElem);
+#endif
                     }
                 }
                 break;

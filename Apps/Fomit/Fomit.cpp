@@ -50,13 +50,13 @@ void CApp::InitializeCaustic(HWND hwnd)
     // I have not yet made counter parts to all the Caustic objects
     // in the render graph (and probably won't since they are unnecessary
     // and would only act as wrappers. Wrapping for its own sake is bad design IMHO).
-    Caustic::CreateCausticFactory(&m_spCausticFactory);
+    m_spCausticFactory = Caustic::CreateCausticFactory();
 
     // Next create our output window
     std::wstring shaderFolder(SHADERPATH);
     m_spRenderWindow = CreateRenderWindow(hwnd, shaderFolder);
 
-    CreateAzureKinect(0, AzureKinect::ColorMode::Color1080p, AzureKinect::Depth512x512, AzureKinect::FPS30, &m_spCamera);
+    m_spCamera = CreateAzureKinect(0, AzureKinect::ColorMode::Color1080p, AzureKinect::Depth512x512, AzureKinect::FPS30);
 
     // Load our shaders
     CRefObj<IRenderer> spRenderer = m_spRenderWindow->GetRenderer();
@@ -95,16 +95,14 @@ void CApp::InitializeCaustic(HWND hwnd)
     m_spRenderGraph->AddChild(spLightsNode);
 
     // Add light @ 10,10,0
-    CRefObj<IPointLight> spPointLight;
     Vector3 lightPos(10.0f, 10.0f, 0.0f);
     Vector3 lightColor(1.0f, 1.0f, 1.0f);
-    m_spCausticFactory->CreatePointLight(lightPos, lightColor, &spPointLight.p);
+    CRefObj<IPointLight> spPointLight = m_spCausticFactory->CreatePointLight(lightPos, lightColor);
     spLightsNode->AddLight(spPointLight);
 
     // Add light @ -10,10,0
-    CRefObj<IPointLight> spPointLight2;
     Vector3 lightPos2(-10.0f, 10.0f, 0.0f);
-    m_spCausticFactory->CreatePointLight(lightPos2, lightColor, &spPointLight2.p);
+    CRefObj<IPointLight> spPointLight2 = m_spCausticFactory->CreatePointLight(lightPos2, lightColor);
     spLightsNode->AddLight(spPointLight2);
 
     CRefObj<IRenderGraphNode_Group> spGroupNode = m_spRenderGraphFactory->CreateGroupNode();

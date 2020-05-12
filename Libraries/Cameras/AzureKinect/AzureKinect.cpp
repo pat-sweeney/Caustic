@@ -16,21 +16,23 @@ namespace Caustic
     namespace AzureKinect
     {
         //**********************************************************************
+        // Function: CreateAzureKinect
         // CreateAzureKinect instantiates an instance of an Azure Kinect camera
+        //
         // Parameters:
         // deviceId - indicates which device to use
         // colorMode - output size of color images
         // depthMode - output size of depth images
         // fpsMode - requested frame rate
+        //
         // Returns:
-        // ppCamera - returns the created Azure Kinect device
+        // Returns the created Azure Kinect device
         //**********************************************************************
-        void CreateAzureKinect(int deviceId, ColorMode colorMode, DepthMode depthMode, FPSMode fpsMode, IAzureKinect** ppCamera)
+        CRefObj<IAzureKinect> CreateAzureKinect(int deviceId, ColorMode colorMode, DepthMode depthMode, FPSMode fpsMode)
         {
             std::unique_ptr<CAzureKinectDevice> pCamera(new CAzureKinectDevice());
             pCamera->Startup(deviceId, colorMode, depthMode, fpsMode);
-            *ppCamera = pCamera.release();
-            (*ppCamera)->AddRef();
+            return CRefObj<IAzureKinect>(pCamera.release());
         }
     }
 

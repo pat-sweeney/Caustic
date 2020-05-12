@@ -19,8 +19,11 @@ namespace Caustic
     // Interface: IAzureKinect
     // Base interface shared across all image types
     //**********************************************************************
-    struct IAzureKinect : public IDepthCameraDevice
+    struct IAzureKinect : public Caustic::IDepthCameraDevice
     {
+        using ICameraDevice::NextFrame;
+        using IDepthCameraDevice::NextFrame;
+
         virtual bool NextFrame(IImage** ppColorImage, std::vector<Vector3>& pts, std::vector<Vector3>& normals, BBox3 &bbox) = 0;
         virtual void BuildRayMap(uint32 w, uint32 h, IImage** ppImage) = 0;
     };
@@ -64,8 +67,8 @@ namespace Caustic
         // fpsMode - frames per second mode
         //
         // Returns:
-        // ppCamera - Returns the newly created camera
+        // Returns the newly created camera
         //**********************************************************************
-        extern void CreateAzureKinect(int deviceId, ColorMode colorMode, DepthMode depthMode, FPSMode fpsMode, IAzureKinect** ppCamera);
+        CAUSTICAPI CRefObj<IAzureKinect> CreateAzureKinect(int deviceId, ColorMode colorMode, DepthMode depthMode, FPSMode fpsMode);
     }
 }

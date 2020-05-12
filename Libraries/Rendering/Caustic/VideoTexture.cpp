@@ -19,7 +19,7 @@ namespace Caustic
     //**********************************************************************
     CVideoTexture::CVideoTexture(IGraphics *pGraphics)
     {
-	    CCausticFactory::Instance()->CreateTexture(pGraphics, 1, 1, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE, &m_spTexture);
+        m_spTexture = CCausticFactory::Instance()->CreateTexture(pGraphics, 1, 1, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
     }
 
     //**********************************************************************
@@ -125,8 +125,7 @@ namespace Caustic
         if (flags & MF_SOURCE_READERF_CURRENTMEDIATYPECHANGED)
         {
             GetVideoFormat(&m_format);
-            m_spTexture = nullptr;
-		    CCausticFactory::Instance()->CreateTexture(pGraphics, m_Width, m_Height, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE, &m_spTexture);
+            m_spTexture = CCausticFactory::Instance()->CreateTexture(pGraphics, m_Width, m_Height, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
         }
         if (spSample)
         {
@@ -197,8 +196,7 @@ namespace Caustic
         GetVideoFormat(&m_format);
         m_Width = m_format.m_width;
         m_Height = m_format.m_height;
-        m_spTexture = nullptr;
-	    CCausticFactory::Instance()->CreateTexture(pGraphics, m_Width, m_Height, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE, &m_spTexture);
+        m_spTexture = CCausticFactory::Instance()->CreateTexture(pGraphics, m_Width, m_Height, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
     }
 
     //**********************************************************************
@@ -208,13 +206,14 @@ namespace Caustic
     // Parameters:
     // pFilename - Name of file to load
     // pGraphics - Renderer
-    // ppTexture - Returns the new texture
+    //
+    // Returns:
+    // Returns the new texture
     //**********************************************************************
-    CAUSTICAPI void LoadVideoTexture(const wchar_t *pFilename, IGraphics *pGraphics, ITexture **ppTexture)
+    CAUSTICAPI CRefObj<ITexture> LoadVideoTexture(const wchar_t *pFilename, IGraphics *pGraphics)
     {
         std::unique_ptr<CVideoTexture> spTexture(new CVideoTexture(pGraphics));
         spTexture->LoadFromFile(pFilename, pGraphics);
-        *ppTexture = spTexture.release();
-        (*ppTexture)->AddRef();
+        return CRefObj<ITexture>(spTexture.release());
     }
 }

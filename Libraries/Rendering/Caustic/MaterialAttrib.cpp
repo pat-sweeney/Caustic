@@ -21,9 +21,11 @@ namespace Caustic
     // specularColor - Normalized [0..1] specular color value
     // specularExp - Specular power value
     // alpha - Alpha value
-    // ppMaterial - Returns the created material object
+    //
+    // Returns:
+    // Returns the created material object
     //**********************************************************************
-    CAUSTICAPI void CreateStandardMaterial(Vector3 ambientColor, Vector3 diffuseColor, Vector3 specularColor, float specularExp, float alpha, IMaterialAttrib** ppMaterial)
+    CAUSTICAPI CRefObj<IMaterialAttrib> CreateStandardMaterial(Vector3 ambientColor, Vector3 diffuseColor, Vector3 specularColor, float specularExp, float alpha)
     {
         std::unique_ptr<CMaterialAttrib> spMaterial(new CMaterialAttrib());
         spMaterial->SetColor(L"ambientColor", ambientColor);
@@ -31,22 +33,19 @@ namespace Caustic
         spMaterial->SetColor(L"specularColor", specularColor);
         spMaterial->SetScalar(L"specularExp", specularExp);
         spMaterial->SetScalar(L"alpha", alpha);
-        *ppMaterial = spMaterial.release();
-        (*ppMaterial)->AddRef();
+        return CRefObj<IMaterialAttrib>(spMaterial.release());
     }
 
     //**********************************************************************
     // Function: CreateMaterial
     // Creates a new empty IMaterial object
     //
-    // Parameters:
-    // ppMaterial - Returns the created material object
+    // Returns:
+    // Returns the created material object
     //**********************************************************************
-    CAUSTICAPI void CreateMaterial(IMaterialAttrib** ppMaterial)
+    CAUSTICAPI CRefObj<IMaterialAttrib> CreateMaterial()
     {
-        std::unique_ptr<CMaterialAttrib> spMaterial(new CMaterialAttrib());
-        *ppMaterial = spMaterial.release();
-        (*ppMaterial)->AddRef();
+        return CRefObj<IMaterialAttrib>(new CMaterialAttrib());
     }
 
     Vector3 CMaterialAttrib::GetColor(const wchar_t* pName)

@@ -34,7 +34,7 @@ namespace Caustic
         std::map<std::wstring, CRenderTexture> m_textures;
     public:
         friend class CRenderer;
-        friend CAUSTICAPI void CreateRenderMaterial(IGraphics *pGraphics, IMaterialAttrib *pMaterialAttrib, IShader *pShader, IRenderMaterial **ppRenderMaterial);
+        friend CAUSTICAPI CRefObj<IRenderMaterial> CreateRenderMaterial(IGraphics *pGraphics, IMaterialAttrib *pMaterialAttrib, IShader *pShader);
 
         //**********************************************************************
         // IRefCount

@@ -24,11 +24,9 @@ namespace Caustic
     }
 
     
-    CAUSTICAPI void CreateSampler(IGraphics *pGraphics, ITexture *pTexture, ISampler **ppSampler)
+    CAUSTICAPI CRefObj<ISampler> CreateSampler(IGraphics *pGraphics, ITexture *pTexture)
     {
-        std::unique_ptr<CSampler> spSampler(new CSampler(pGraphics, pTexture));
-        *ppSampler = spSampler.release();
-        (*ppSampler)->AddRef();
+        return CRefObj<ISampler>(new CSampler(pGraphics, pTexture));
     }
 
     void CSampler::Render(IGraphics *pGraphics, int slot, bool isPixelShader)

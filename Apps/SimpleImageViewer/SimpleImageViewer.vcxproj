@@ -60,6 +60,7 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(AzureKinectSDKDir)\sdk\include;$(CausticRoot)\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessToFile>false</PreprocessToFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -113,6 +114,9 @@
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Cameras\AzureKinect\AzureKinect.vcxproj">
       <Project>{cacc2b4b-984d-49b1-8f5b-aa5b48a9d686}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Cameras\CameraBase\CameraBase.vcxproj">
+      <Project>{6bfeacf4-1bac-46ef-9945-eb31a8151b21}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Imaging\Image\Image.vcxproj">
       <Project>{f7bef797-220c-4585-a489-f06df155ea60}</Project>

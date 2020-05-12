@@ -61,8 +61,8 @@ namespace Caustic
 		virtual void SetMaterialID(uint32 v) = 0;
 	};
 
-	CAUSTICAPI void CreateStandardMaterial(Vector3 ambientColor, Vector3 diffuseColor,
-		Vector3 specularColor, float specularExp, float alpha, IMaterialAttrib** ppMaterial);
-	CAUSTICAPI void CreateMaterial(IMaterialAttrib** ppMaterial);
+	CAUSTICAPI CRefObj<IMaterialAttrib> CreateStandardMaterial(Vector3 ambientColor, Vector3 diffuseColor,
+		Vector3 specularColor, float specularExp, float alpha);
+	CAUSTICAPI CRefObj<IMaterialAttrib> CreateMaterial();
 
 }

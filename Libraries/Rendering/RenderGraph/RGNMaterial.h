@@ -70,9 +70,8 @@ namespace Caustic
                     if (pRenderCtx->GetMostRecentEpoch() > m_lastEpochModified || // Somebody preceeding us was modified
                         m_lastEpochModified == 0)
                     {
-                        CRefObj<ICausticFactory> spCausticFactory;
-                        Caustic::CreateCausticFactory(&spCausticFactory);
-                        spCausticFactory->CreateRenderMaterial(pRenderer, m_spMaterial, m_spShader, &m_spRenderMaterial);
+                        CRefObj<ICausticFactory> spCausticFactory = Caustic::CreateCausticFactory();
+                        m_spRenderMaterial = spCausticFactory->CreateRenderMaterial(pRenderer, m_spMaterial, m_spShader);
                         m_lastEpochModified = pRenderCtx->GetEpoch();
                     }
                     return std::any(m_spRenderMaterial);

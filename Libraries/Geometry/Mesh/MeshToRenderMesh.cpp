@@ -254,10 +254,8 @@ namespace Caustic
 	void CSubMesh::ToRenderSubMesh(IRenderer *pRenderer, IShader *pShader, IRenderSubMesh **ppRenderSubMesh)
 	{
         CRefObj<IGraphics> spGraphics = pRenderer->GetGraphics();
-        CRefObj<ICausticFactory> spFactory;
-		Caustic::CreateCausticFactory(&spFactory);
-		CRefObj<IRenderSubMesh> spRenderSubMesh;
-		spFactory->CreateRenderSubMesh(&spRenderSubMesh);
+        CRefObj<ICausticFactory> spFactory = Caustic::CreateCausticFactory();
+		CRefObj<IRenderSubMesh> spRenderSubMesh = spFactory->CreateRenderSubMesh();
 		std::vector<int> vertexReferenced(GetNumberVertices(), c_Vertex_Unreferenced);
 		BuildReferencedVertexList(vertexReferenced);
 		CRefObj<IShaderInfo> spShaderInfo = pShader->GetShaderInfo();
@@ -272,8 +270,7 @@ namespace Caustic
 
 	void CMesh::ToRenderMaterials(IRenderer* pRenderer, IShader* pShader, IRenderMesh* pRenderMesh)
 	{
-		CRefObj<ICausticFactory> spFactory;
-		CreateCausticFactory(&spFactory);
+		CRefObj<ICausticFactory> spFactory = CreateCausticFactory();
 		for (int i = 0; i < m_subMeshes.size(); i++)
 		{
 			ISubMesh* pSubMesh = m_subMeshes[i];
@@ -284,8 +281,7 @@ namespace Caustic
 			CRefObj<IMaterialAttrib> spMaterialAttrib;
 			this->GetMaterial(pSubMesh->GetMaterialID(), &spMaterialAttrib);
 
-			CRefObj<IRenderMaterial> spRenderMaterial;
-			spFactory->CreateRenderMaterial(pRenderer, spMaterialAttrib, pShader, &spRenderMaterial);
+			CRefObj<IRenderMaterial> spRenderMaterial = spFactory->CreateRenderMaterial(pRenderer, spMaterialAttrib, pShader);
 
 			spRenderSubMesh->SetFrontMaterial(spRenderMaterial);
 
@@ -306,10 +302,8 @@ namespace Caustic
     //**********************************************************************
     void CMesh::ToRenderMesh(IRenderer *pRenderer, IShader *pShader, IRenderMesh **ppRenderMesh)
     {
-        CRefObj<ICausticFactory> spFactory;
-        CreateCausticFactory(&spFactory);
-        CRefObj<IRenderMesh> spRenderMesh;
-        spFactory->CreateRenderMesh(&spRenderMesh);
+        CRefObj<ICausticFactory> spFactory = CreateCausticFactory();
+        CRefObj<IRenderMesh> spRenderMesh = spFactory->CreateRenderMesh();
         for (auto pSubMesh : m_subMeshes)
         {
             CRefObj<IRenderSubMesh> spRenderSubMesh;

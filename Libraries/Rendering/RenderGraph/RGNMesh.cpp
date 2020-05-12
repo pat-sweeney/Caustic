@@ -19,7 +19,7 @@ namespace Caustic
     CRenderGraphNode_Mesh::CRenderGraphNode_Mesh()
     {
         std::any empty;
-        Caustic::CreateCausticFactory(&m_spCausticFactory);
+        m_spCausticFactory = Caustic::CreateCausticFactory();
         m_spRenderPin = CreatePin(this, false, "render", ERenderGraphDataType::Void, empty);
         m_spMeshPin = CreatePin(this, true, "mesh", ERenderGraphDataType::Mesh, empty);
         m_spFrontMatPin = CreatePin(this, true, "frontMaterial", ERenderGraphDataType::RenderMaterial, empty);
@@ -36,11 +36,10 @@ namespace Caustic
             CRefObj<IShaderMgr> spShaderMgr = pRenderer->GetShaderMgr();
             spShaderMgr->FindShader(L"Textured", &m_spDefaultShader);
             CRefObj<IGraphics> spGraphics = pRenderer->GetGraphics();
-            CRefObj<IMaterialAttrib> spMaterialAttrib;
-            m_spCausticFactory->CreateMaterialAttrib(&spMaterialAttrib);
+            CRefObj<IMaterialAttrib> spMaterialAttrib = m_spCausticFactory->CreateMaterialAttrib();
             Vector3 clr(1.0f, 1.0f, 1.0f);
             spMaterialAttrib->SetColor(L"diffuse", clr);
-            m_spCausticFactory->CreateRenderMaterial(pRenderer, spMaterialAttrib, m_spDefaultShader, &m_spDefaultMaterial);
+            m_spDefaultMaterial = m_spCausticFactory->CreateRenderMaterial(pRenderer, spMaterialAttrib, m_spDefaultShader);
         }
         std::any meshVal = m_spMeshPin->GetValue(pRenderer, pRenderCtx);
         std::any frontMatVal = m_spFrontMatPin->GetValue(pRenderer, pRenderCtx);
