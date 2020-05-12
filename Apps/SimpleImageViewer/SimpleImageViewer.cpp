@@ -226,8 +226,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     ofn.Flags = OFN_ENABLESIZING | OFN_FILEMUSTEXIST;
                     if (GetOpenFileName(&ofn))
                     {
-                        Caustic::CRefObj<Caustic::IImage> spImage;
-                        Caustic::LoadImage(ofn.lpstrFile, &spImage);
+                        Caustic::CRefObj<Caustic::IImage> spImage = Caustic::LoadImage(ofn.lpstrFile);
                         imgbitmap = CreateBitmap(spImage->GetWidth(), spImage->GetHeight(), 1, 32, spImage->GetData());
                         InvalidateRect(hWnd, nullptr, true);
                     }

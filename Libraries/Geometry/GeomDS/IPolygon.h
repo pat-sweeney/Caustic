@@ -62,9 +62,11 @@ namespace Caustic
 		// Parameters:
 		// err - Tolerance for deciding whether to remove a point
 		// maxLen - Longest line segment allowed. If maxLen==0 then no limit.
-		// ppResult - The new simplified polygon
+		//
+		// Returns:
+		// Returns the new simplified polygon
 		//**********************************************************************
-		virtual void Simplify(float err, float maxLen, IPolygon2 **ppResult) = 0;
+		virtual CRefObj<IPolygon2> Simplify(float err, float maxLen) = 0;
 
 		//**********************************************************************
 		// Method: ContainsPoint
@@ -78,5 +80,5 @@ namespace Caustic
 		virtual bool ContainsPoint(Vector2 &pt, float *pMinDist = nullptr, float *pMaxDist = nullptr) = 0;
     };
 
-    extern void CreatePolygon2(IPolygon2 **ppPolygon);
+    CAUSTICAPI CRefObj<IPolygon2> CreatePolygon2();
 }

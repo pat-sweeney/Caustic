@@ -38,10 +38,8 @@ namespace Caustic
             ctx->VSSetSamplers(slot, 1, &m_spSamplerState.p);
     }
 
-    void CSampler::GetTexture(ITexture **ppTexture)
+    CRefObj<ITexture> CSampler::GetTexture()
     {
-        *ppTexture = m_spTexture;
-        if (m_spTexture)
-            (*ppTexture)->AddRef();
+        return m_spTexture;
     }
 };

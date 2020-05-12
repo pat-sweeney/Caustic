@@ -219,7 +219,7 @@ namespace Caustic
         virtual uint32 FaceToIndex(CFace *pFace) = 0;
         virtual uint32 EdgeToIndex(CHalfEdge *pEdge) = 0;
         virtual void Triangulate(ETriangulateMethod method) = 0;
-        virtual void ToRenderSubMesh(IRenderer *pRenderer, IShader *pShader, IRenderSubMesh **ppRenderMesh) = 0;
+        virtual CRefObj<IRenderSubMesh> ToRenderSubMesh(IRenderer *pRenderer, IShader *pShader) = 0;
     };
 
     //**********************************************************************
@@ -232,38 +232,35 @@ namespace Caustic
     struct IMesh : public ISerialize
     {
         virtual uint32 NumberSubMeshes() = 0;
-        virtual void GetSubMesh(uint32 index, ISubMesh **ppSubMesh) = 0;
+        virtual CRefObj<ISubMesh> GetSubMesh(uint32 index) = 0;
         virtual void AddSubMesh(ISubMesh *pSubMesh) = 0;
         virtual void GetBBox(BBox3 *pBBox) = 0;
         virtual void Normalize() = 0;
         virtual void SetMaterials(std::vector<CRefObj<IMaterialAttrib>> &materials) = 0;
-        virtual void GetMaterial(uint32 materialID, IMaterialAttrib **ppMaterial) = 0;
+        virtual CRefObj<IMaterialAttrib> GetMaterial(uint32 materialID) = 0;
         virtual void ComputeNormals() = 0;
-		virtual void ToRenderMesh(IRenderer *pRenderer, IShader *pShader, IRenderMesh **ppRenderMesh) = 0;
+		virtual CRefObj<IRenderMesh> ToRenderMesh(IRenderer *pRenderer, IShader *pShader) = 0;
         virtual void ToRenderMaterials(IRenderer* pRenderer, IShader* pShader, IRenderMesh* pRenderMesh) = 0;
     };
     
 
-    CAUSTICAPI void CreateSurfaceRevolution(std::vector<Vector3> &pts, uint32 npts, uint32 subdivisions, float maxAngle, IMesh **ppMesh);
-    CAUSTICAPI void CreateEmptyMesh(IMesh **ppMesh);
-    CAUSTICAPI void CreateSubMesh(std::vector<CGeomVertex> &verts,
+    CAUSTICAPI CRefObj<IMesh> CreateSurfaceRevolution(std::vector<Vector3> &pts, uint32 npts, uint32 subdivisions, float maxAngle);
+    CAUSTICAPI CRefObj<IMesh> CreateEmptyMesh();
+    CAUSTICAPI CRefObj<ISubMesh> CreateSubMesh(std::vector<CGeomVertex> &verts,
         std::vector<int> &faces,
-        uint32 materialID,
-        ISubMesh **ppSubMesh);
-    CAUSTICAPI void CreateSubMesh(std::vector<Vector3> &vertPos,
+        uint32 materialID);
+    CAUSTICAPI CRefObj<ISubMesh> CreateSubMesh(std::vector<Vector3> &vertPos,
         std::vector<Vector3> &vertNorms,
         std::vector<Vector2> &vertUVs,
         std::vector<int> &faces,
         EVertexFlags flags,
-        uint32 materialID,
-        ISubMesh **ppSubMesh);
-    CAUSTICAPI void CreateSubMesh(std::vector<Vector3> &vertPos,
+        uint32 materialID);
+    CAUSTICAPI CRefObj<ISubMesh> CreateSubMesh(std::vector<Vector3> &vertPos,
         std::vector<int> &faces,
-        uint32 materialID,
-        ISubMesh **ppSubMesh);
-    CAUSTICAPI void CreateEmptySubMesh(ISubMesh **ppSubMesh);
-    CAUSTICAPI void CreateCube(IMesh **ppMesh);
-    CAUSTICAPI void CreateSphere(uint32 subdivisions, IMesh **ppMesh);
-    CAUSTICAPI void CreateTetrahedron(IMesh **ppMesh);
-    CAUSTICAPI void CreateGrid(uint32 subdivisions, IMesh **ppMesh);
+        uint32 materialID);
+    CAUSTICAPI CRefObj<ISubMesh> CreateEmptySubMesh();
+    CAUSTICAPI CRefObj<IMesh> CreateCube();
+    CAUSTICAPI CRefObj<IMesh> CreateSphere(uint32 subdivisions);
+    CAUSTICAPI CRefObj<IMesh> CreateTetrahedron();
+    CAUSTICAPI CRefObj<IMesh> CreateGrid(uint32 subdivisions);
 }

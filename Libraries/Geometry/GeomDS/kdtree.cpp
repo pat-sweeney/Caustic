@@ -222,10 +222,8 @@ namespace Caustic
     }
 
     //**********************************************************************
-    CAUSTICAPI void CreateKDTree(Caustic::IKDTree **ppKDTree)
+    CAUSTICAPI CRefObj<IKDTree> CreateKDTree()
     {
-        std::unique_ptr<Caustic::CKDTree> pTree(new Caustic::CKDTree(50));
-        *ppKDTree = pTree.release();
-        (*ppKDTree)->AddRef();
+        return CRefObj<IKDTree>(new Caustic::CKDTree(50));
     }
 }

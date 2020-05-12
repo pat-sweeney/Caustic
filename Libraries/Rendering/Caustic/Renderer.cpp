@@ -77,7 +77,7 @@ namespace Caustic
         m_spShaderMgr = CRefObj<IShaderMgr>(new CShaderMgr());
         LoadDefaultShaders(shaderFolder.c_str());
 
-        m_spShaderMgr->FindShader(L"Line", &m_spLineShader);
+        m_spLineShader = m_spShaderMgr->FindShader(L"Line");
 
         //**********************************************************************
         // Create vertex buffer used to draw lines

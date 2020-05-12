@@ -28,7 +28,7 @@ namespace Caustic
         CT(CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&s_wic.m_spFactory)));
     }
 
-    void CreateIntegralImage(IImage *pImage, IIntegralImage **ppImage)
+    CRefObj<IIntegralImage> CreateIntegralImage(IImage *pImage)
     {
         std::unique_ptr<CIntegralImage> spIntegralImage(new CIntegralImage(pImage->GetWidth(), pImage->GetHeight()));
         uint32 *pDstRow = (uint32*)spIntegralImage->GetData();
@@ -72,8 +72,7 @@ namespace Caustic
             pDstRow += 3 * w;
         }
         spIntegralImage->m_spImage = pImage;
-        *ppImage = spIntegralImage.release();
-        (*ppImage)->AddRef();
+        return CRefObj<IIntegralImage>(spIntegralImage.release());
     }
 
     uint32 CIntegralImage::GetSum(int channel, int x1, int y1, int x2, int y2)
@@ -100,7 +99,7 @@ namespace Caustic
         return sum;
     }
 
-    void CIntegralImage::BoxBlur(int width, int height, IImage **ppImage)
+    CRefObj<IImage> CIntegralImage::BoxBlur(int width, int height)
     {
         std::unique_ptr<CImage> spDstImage(new CImage(GetWidth(), GetHeight(), 32));
         BYTE *rowSrc = m_spImage->GetData();
@@ -129,8 +128,7 @@ namespace Caustic
             miny++;
             maxy++;
         }
-        *ppImage = spDstImage.release();
-        (*ppImage)->AddRef();
+        return CRefObj<IImage>(spDstImage.release());
     }
 
 
@@ -231,7 +229,7 @@ namespace Caustic
     }
 
 #undef LoadImage
-    void LoadImage(const wchar_t *pFilename, IImage **ppImage)
+    CRefObj<IImage> LoadImage(const wchar_t *pFilename)
     {
         CComPtr<IWICBitmapDecoder> spDecoder;
         CT(s_wic.m_spFactory->CreateDecoderFromFilename(pFilename, NULL, GENERIC_READ, WICDecodeMetadataCacheOnDemand, &spDecoder));
@@ -254,7 +252,7 @@ namespace Caustic
         }
         else
             spFrame->CopyPixels(nullptr, stride, numbytes, spImage->GetData());
-        *ppImage = spImage.Detach();
+        return spImage;
     }
 
     void StoreImage(const wchar_t *pFilename, IImage *pImage)

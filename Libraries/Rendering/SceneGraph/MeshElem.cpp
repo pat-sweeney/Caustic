@@ -91,7 +91,7 @@ namespace Caustic
         CRefObj<IGraphics> spGraphics = pRenderer->GetGraphics();
         if (GetFlags() & ESceneElemFlags::RenderableDirty)
         {
-            m_spMesh->ToRenderMesh(pRenderer, pSceneCtx->m_spCurrentShader, &m_spRenderMesh);
+            m_spRenderMesh = m_spMesh->ToRenderMesh(pRenderer, pSceneCtx->m_spCurrentShader);
             SetFlags(GetFlags() & ~ESceneElemFlags::RenderableDirty);
         }
         if (GetFlags() & ESceneElemFlags::MaterialDirty)
@@ -128,7 +128,7 @@ namespace Caustic
 
     void CSceneMeshElem::Load(IStream *pStream)
     {
-        CreateEmptyMesh(&m_spMesh);
+        m_spMesh = CreateEmptyMesh();
         m_spMesh->Load(pStream);
         SetFlags(GetFlags() | ESceneElemFlags::RenderableDirty | ESceneElemFlags::BBoxDirty | ESceneElemFlags::MaterialDirty);
     }

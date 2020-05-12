@@ -60,7 +60,7 @@ namespace Caustic
             m_vertexFlags(EVertexFlags(HasPosition | HasNormal | HasUV0)),
             m_meshFlags(EMeshFlags(0))
         {
-            CreateKDTree(&m_spKDTree);
+            m_spKDTree = CreateKDTree();
         }
 
         CSubMesh(int approxNumVertices, int approxNumEdges, int approxNumFaces)
@@ -120,7 +120,7 @@ namespace Caustic
         // method - method to use for triangulation
         //**********************************************************************
         virtual void Triangulate(ETriangulateMethod method) override;
-        virtual void ToRenderSubMesh(IRenderer *pRenderer, IShader *pShader, IRenderSubMesh **ppRenderSubMesh) override;
+        virtual CRefObj<IRenderSubMesh> ToRenderSubMesh(IRenderer *pRenderer, IShader *pShader) override;
 
         //**********************************************************************
         // ISerialize
@@ -152,14 +152,14 @@ namespace Caustic
         // IMesh
         //**********************************************************************
         virtual uint32 NumberSubMeshes() override { return (uint32)m_subMeshes.size(); };
-        virtual void GetSubMesh(uint32 index, ISubMesh **ppSubMesh) override;
+        virtual CRefObj<ISubMesh> GetSubMesh(uint32 index) override;
         virtual void AddSubMesh(ISubMesh *pSubMesh) override;
         virtual void GetBBox(Caustic::BBox3 *pBBox) override;
         virtual void Normalize() override;
         virtual void SetMaterials(std::vector<CRefObj<IMaterialAttrib>> &materials) override;
-        virtual void GetMaterial(uint32 materialID, IMaterialAttrib **ppMaterial) override;
+        virtual CRefObj<IMaterialAttrib> GetMaterial(uint32 materialID) override;
         virtual void ComputeNormals() override;
-        virtual void ToRenderMesh(IRenderer* pRenderer, IShader* pShader, IRenderMesh** ppRenderMesh) override;
+        virtual CRefObj<IRenderMesh> ToRenderMesh(IRenderer* pRenderer, IShader* pShader) override;
         virtual void ToRenderMaterials(IRenderer* pRenderer, IShader* pShader, IRenderMesh* pRenderMesh) override;
 
         //**********************************************************************

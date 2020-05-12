@@ -85,9 +85,9 @@ namespace Caustic
         // Method: GetTexture
         // Returns the texture associated with this sampler
         //
-        // Parameters:
-        // ppTexture - Returns the texture
+        // Returns:
+        // Returns the texture
         //**********************************************************************
-        virtual void GetTexture(ITexture **ppTexture) = 0;
+        virtual CRefObj<ITexture> GetTexture() = 0;
     };
 }

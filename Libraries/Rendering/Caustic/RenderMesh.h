@@ -87,11 +87,11 @@ namespace Caustic
 		// IRenderMesh
 		//**********************************************************************
 		virtual uint32 NumberSubMeshes() override { return (uint32)m_subMeshes.size(); };
-		virtual void GetSubMesh(uint32 index, IRenderSubMesh **ppSubMesh) override;
+		virtual CRefObj<IRenderSubMesh> GetSubMesh(uint32 index) override;
 		virtual void AddSubMesh(IRenderSubMesh *pSubMesh) override;
 		virtual void GetBBox(Caustic::BBox3 *pBBox) override;
 		virtual void SetMaterials(std::vector<CRefObj<IMaterialAttrib>> &materials) override;
-		virtual void GetMaterial(uint32 materialID, IMaterialAttrib **ppMaterial) override;
+		virtual CRefObj<IMaterialAttrib> GetMaterial(uint32 materialID) override;
 		virtual void ComputeNormals() override {}
 		virtual void Render(IRenderer* pRenderer, std::vector<CRefObj<IPointLight>>& lights) override;
 		virtual void Render(IRenderer* pRenderer, IShader *pShader, IRenderMaterial*pMaterial, std::vector<CRefObj<IPointLight>>& lights) override;

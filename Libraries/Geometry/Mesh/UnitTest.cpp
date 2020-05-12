@@ -18,15 +18,13 @@ namespace CausticTestSuite
 {
     static bool Test1()
     {
-        CRefObj<IMesh> spMesh;
-        CreateEmptyMesh(&spMesh);
+        CRefObj<IMesh> spMesh = CreateEmptyMesh();
         return true;
     }
 
     static bool Test2()
     {
-        CRefObj<IMeshConstructor> spMeshConstructor;
-        Caustic::CreateMeshConstructor(&spMeshConstructor);
+        CRefObj<IMeshConstructor> spMeshConstructor = CreateMeshConstructor();
         spMeshConstructor->MeshOpen();
         spMeshConstructor->SubMeshOpen();
         spMeshConstructor->FaceOpen();
@@ -34,10 +32,8 @@ namespace CausticTestSuite
         Vector2 uv;
         spMeshConstructor->VertexAdd(pos, norm, uv);
         spMeshConstructor->FaceClose();
-        CRefObj<ISubMesh> spSubMesh;
-        spMeshConstructor->SubMeshClose(&spSubMesh);
-        CRefObj<IMesh> spMesh;
-        spMeshConstructor->MeshClose(&spMesh);
+        CRefObj<ISubMesh> spSubMesh = spMeshConstructor->SubMeshClose();
+        CRefObj<IMesh> spMesh = spMeshConstructor->MeshClose();
 
         return true;
     }
@@ -57,15 +53,13 @@ namespace CausticTestSuite
             pts.push_back(v);
             angle += 180.0f / (float)numSubdivisions;
         }
-        CRefObj<IMesh> spMesh;
-        CreateSurfaceRevolution(pts, (uint32)pts.size(), numSubdivisions, 360.0f, &spMesh);
+        CRefObj<IMesh> spMesh = CreateSurfaceRevolution(pts, (uint32)pts.size(), numSubdivisions, 360.0f);
         uint32 numSubMeshes = spMesh->NumberSubMeshes();
         if (numSubMeshes != 1)
             return false;
         for (uint32 i = 0; i < numSubMeshes; i++)
         {
-            CRefObj<ISubMesh> spSubMesh;
-            spMesh->GetSubMesh(i, &spSubMesh);
+            CRefObj<ISubMesh> spSubMesh = spMesh->GetSubMesh(i);
             uint32 numEdges = spSubMesh->GetNumberEdges();
             uint32 numFaces = spSubMesh->GetNumberFaces();
             uint32 numVertices = spSubMesh->GetNumberVertices();
@@ -81,29 +75,25 @@ namespace CausticTestSuite
 
     static bool TestCube()
     {
-        CRefObj<IMesh> spMesh;
-        CreateCube(&spMesh);
+        CRefObj<IMesh> spMesh = CreateCube();
         return true;
     }
 
     static bool TestSphere()
     {
-        CRefObj<IMesh> spMesh;
-        CreateSphere(20, &spMesh);
+        CRefObj<IMesh> spMesh = CreateSphere(20);
         return true;
     }
 
     static bool TestTetrahedron()
     {
-        CRefObj<IMesh> spMesh;
-        CreateTetrahedron(&spMesh);
+        CRefObj<IMesh> spMesh = CreateTetrahedron();
         return true;
     }
 
     static bool TestGrid()
     {
-        CRefObj<IMesh> spMesh;
-        Caustic::CreateGrid(20, &spMesh);
+        CRefObj<IMesh> spMesh = CreateGrid(20);
         return true;
     }
 

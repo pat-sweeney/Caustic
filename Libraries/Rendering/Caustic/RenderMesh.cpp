@@ -62,10 +62,9 @@ namespace Caustic
     // Method: GetSubMesh
     // See <IRenderMesh::GetSubMesh>
     //**********************************************************************
-    void CRenderMesh::GetSubMesh(uint32 index, IRenderSubMesh **ppSubMesh)
+    CRefObj<IRenderSubMesh> CRenderMesh::GetSubMesh(uint32 index)
 	{
-		*ppSubMesh = m_subMeshes[index];
-		(*ppSubMesh)->AddRef();
+		return m_subMeshes[index];
 	}
 
     //**********************************************************************
@@ -109,15 +108,11 @@ namespace Caustic
     // Method: GetMaterial
     // See <IRenderMesh::GetMaterial>
     //**********************************************************************
-    void CRenderMesh::GetMaterial(uint32 materialID, IMaterialAttrib **ppMaterial)
+    CRefObj<IMaterialAttrib> CRenderMesh::GetMaterial(uint32 materialID)
 	{
 		if (materialID < m_materials.size())
-		{
-			(*ppMaterial) = m_materials[materialID];
-			(*ppMaterial)->AddRef();
-		}
-		else
-			*ppMaterial = nullptr;
+			return m_materials[materialID];
+        return CRefObj<IMaterialAttrib>(nullptr);
 	}
 
     //**********************************************************************

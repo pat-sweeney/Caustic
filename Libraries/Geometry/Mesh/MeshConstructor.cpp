@@ -10,11 +10,9 @@
 
 namespace Caustic
 {
-    CAUSTICAPI void CreateMeshConstructor(IMeshConstructor **ppMeshConstructor)
+    CAUSTICAPI CRefObj<IMeshConstructor> CreateMeshConstructor()
     {
-        std::unique_ptr<CMeshConstructor> spMeshConstructor(new CMeshConstructor());
-        *ppMeshConstructor = spMeshConstructor.release();
-        (*ppMeshConstructor)->AddRef();
+        return CRefObj<IMeshConstructor>(new CMeshConstructor());
     }
 
     CMeshConstructor::CMeshConstructor() :
@@ -24,14 +22,12 @@ namespace Caustic
 
     void CMeshConstructor::MeshOpen()
     {
-        CreateEmptyMesh(&m_spMesh);
+        m_spMesh = CreateEmptyMesh();
     }
 
-    void CMeshConstructor::MeshClose(IMesh **ppMesh)
+    CRefObj<IMesh> CMeshConstructor::MeshClose()
     {
-        *ppMesh = m_spMesh;
-        (*ppMesh)->AddRef();
-        m_spMesh = nullptr;
+        return m_spMesh;
     }
 
     void CMeshConstructor::SubMeshOpen()
@@ -41,13 +37,8 @@ namespace Caustic
         m_spSubMesh->AddRef();
     }
 
-    void CMeshConstructor::SubMeshClose(ISubMesh **ppSubMesh)
+    CRefObj<ISubMesh> CMeshConstructor::SubMeshClose()
     {
-        if (ppSubMesh)
-        {
-            *ppSubMesh = m_spSubMesh;
-            (*ppSubMesh)->AddRef();
-        }
         if (m_spMesh)
         {
 #ifdef CHECK_CONSISTENCY
@@ -55,7 +46,9 @@ namespace Caustic
 #endif // CHECK_CONSISTENCY
             m_spMesh->AddSubMesh(m_spSubMesh);
         }
+        CRefObj<ISubMesh> spSubMesh = m_spSubMesh;
         m_spSubMesh = nullptr;
+        return spSubMesh;
     }
 
     void CMeshConstructor::FaceOpen()

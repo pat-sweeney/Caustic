@@ -150,17 +150,12 @@ namespace Caustic
         return pFace->index;
     };
 
-    CAUSTICAPI void CreateEmptySubMesh(ISubMesh **ppSubMesh)
+    CAUSTICAPI CRefObj<ISubMesh> CreateEmptySubMesh()
     {
-        std::unique_ptr<CSubMesh> pSubMesh(new CSubMesh());
-        *ppSubMesh = pSubMesh.release();
-        (*ppSubMesh)->AddRef();
+        return CRefObj<ISubMesh>(new CSubMesh());
     }
 
-    CAUSTICAPI void CreateSubMesh(std::vector<CGeomVertex> &verts,
-        std::vector<int> &faces,
-        uint32 materialID,
-        ISubMesh **ppSubMesh)
+    CAUSTICAPI CRefObj<ISubMesh> CreateSubMesh(std::vector<CGeomVertex> &verts, std::vector<int> &faces, uint32 materialID)
     {
         CMeshConstructor meshConstructor;
         meshConstructor.SubMeshOpen();
@@ -175,29 +170,26 @@ namespace Caustic
             meshConstructor.VertexAdd(verts[vIndex].pos, verts[vIndex].norm, verts[vIndex].uvs[0]);
             meshConstructor.FaceClose();
         }
-        CRefObj<ISubMesh> spSubMesh;
-        meshConstructor.SubMeshClose(&spSubMesh);
+        CRefObj<ISubMesh> spSubMesh = meshConstructor.SubMeshClose();
         spSubMesh->SetMaterialID(materialID);
-        *ppSubMesh = spSubMesh.Detach();
+        return spSubMesh;
     }
 
-    CAUSTICAPI void CreateSubMesh(std::vector<Vector3> &vertPos,
+    CAUSTICAPI CRefObj<ISubMesh> CreateSubMesh(std::vector<Vector3> &vertPos,
         std::vector<int> &faces,
-        uint32 materialID,
-        ISubMesh **ppSubMesh)
+        uint32 materialID)
     {
         std::vector<Vector3> norms;
         std::vector<Vector2> uvs;
-        CreateSubMesh(vertPos, norms, uvs, faces, EVertexFlags::HasPosition, materialID, ppSubMesh);
+        return CreateSubMesh(vertPos, norms, uvs, faces, EVertexFlags::HasPosition, materialID);
     }
 
-    CAUSTICAPI void CreateSubMesh(std::vector<Vector3> &vertPos,
+    CAUSTICAPI CRefObj<ISubMesh> CreateSubMesh(std::vector<Vector3> &vertPos,
                                   std::vector<Vector3> &vertNorms,
                                   std::vector<Vector2> &vertUVs, 
                                   std::vector<int> &faces, 
                                   EVertexFlags flags,
-                                  uint32 materialID,
-                                  ISubMesh **ppSubMesh)
+                                  uint32 materialID)
     {
         CMeshConstructor meshConstructor;
         meshConstructor.SubMeshOpen();
@@ -218,11 +210,10 @@ namespace Caustic
             meshConstructor.VertexAdd(vertPos[vIndex], norm, uv);
             meshConstructor.FaceClose();
         }
-        CRefObj<ISubMesh> spSubMesh;
-        meshConstructor.SubMeshClose(&spSubMesh);
+        CRefObj<ISubMesh> spSubMesh = meshConstructor.SubMeshClose();
         spSubMesh->SetVertexFlags(flags);
         spSubMesh->SetMaterialID(materialID);
-        *ppSubMesh = spSubMesh.Detach();
+        return spSubMesh;
     }
 
     //**********************************************************************

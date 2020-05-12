@@ -964,20 +964,16 @@ namespace Caustic
     //
     // Parameters:
     // pShaderName - Name of shader to locate
-    // ppShader - Returns the requested shader
+    //
+    // Returns:
+    // Returns the requested shader
     //**********************************************************************
-    void CShaderMgr::FindShader(const wchar_t *pShaderName, IShader **ppShader)
+    CRefObj<IShader> CShaderMgr::FindShader(const wchar_t *pShaderName)
     {
         std::map<std::wstring,CRefObj<IShader>>::iterator it = m_shaders.find(pShaderName);
         if (it == m_shaders.end())
-        {
-            *ppShader = nullptr;
-        }
-        else
-        {
-            *ppShader = it->second;
-            (*ppShader)->AddRef();
-        }
+            return CRefObj<IShader>(nullptr);
+        return it->second;
     }
 
     //**********************************************************************

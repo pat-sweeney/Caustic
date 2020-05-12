@@ -121,8 +121,7 @@ namespace Caustic
 
     void CMaterialAttrib::SetTextureViaFilename(const wchar_t *pName, std::wstring& filename, EShaderAccess access)
     {
-        CRefObj<IImage> spImage;
-        Caustic::LoadImage(filename.c_str(), &spImage);
+        CRefObj<IImage> spImage = Caustic::LoadImage(filename.c_str());
         SetTexture(pName, spImage, access);
     }
 

@@ -184,11 +184,13 @@ namespace Caustic
 		// Parameters:
 		// width - width of box filter
 		// height - height of box filter
-		// ppImage - Returns the blurred image
+		//
+		// Returns:
+		// Returns the blurred image
 		//**********************************************************************
-		virtual void BoxBlur(int width, int height, IImage **ppImage) = 0;
+		virtual CRefObj<IImage> BoxBlur(int width, int height) = 0;
 	};
-	extern void CreateIntegralImage(IImage *pImage, IIntegralImage **ppImage);
+	CAUSTICAPI CRefObj<IIntegralImage> CreateIntegralImage(IImage *pImage);
 
 #undef LoadImage
 }
@@ -201,9 +203,11 @@ namespace Caustic
 	//
 	// Parameters:
 	// pFilename - path to image file
-	// ppImage - Returns the loaded image
+	//
+	// Returns:
+	// Returns the loaded image
 	//**********************************************************************
-	void LoadImage(const wchar_t *pFilename, IImage **ppImage);
+	CRefObj<IImage> LoadImage(const wchar_t *pFilename);
 
 	//**********************************************************************
 	// Function: StoreImage

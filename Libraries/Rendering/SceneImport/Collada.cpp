@@ -234,7 +234,7 @@ namespace Caustic
             }
 #endif // RESPECT_WINDING_ORDER
         }
-        pMeshConstructor->SubMeshClose(nullptr);
+        pMeshConstructor->SubMeshClose();
     }
 
     void CColladaImporter::ParseP(IXMLDOMNode *pNode, Collada::SPolylist *pPolylist)
@@ -505,12 +505,10 @@ while(*p)//        for (int i = 0; i < pPolylist->m_count; i++)
 					Caustic::CSceneFactory::Instance()->CreateMeshElem(&spMeshElem);
 
                     Collada::SGeometry *pGeometry = pCollada->m_geometries[pNode->m_url.substr(1)];
-                    CRefObj<IMesh> spMesh;
-                    CRefObj<IMeshConstructor> spMeshConstructor;
-                    CreateMeshConstructor(&spMeshConstructor);
+                    CRefObj<IMeshConstructor> spMeshConstructor = CreateMeshConstructor();
                     spMeshConstructor->MeshOpen();
                     pGeometry->BuildMesh(spMeshConstructor);
-                    spMeshConstructor->MeshClose(&spMesh);
+                    CRefObj<IMesh> spMesh = spMeshConstructor->MeshClose();
                     spMeshElem->SetMesh(spMesh);
 
                     spXform->AddChild(spMeshElem);

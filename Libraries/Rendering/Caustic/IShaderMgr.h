@@ -29,9 +29,11 @@ namespace Caustic
         //
         // Parameters:
         // pShaderName - Name of shader to find.
-        // ppShader - Returns the found shader. Nullptr if no matching shader is found.
+        //
+        // Returns:
+        // Returns the found shader. Nullptr if no matching shader is found.
         //**********************************************************************
-        virtual void FindShader(const wchar_t *pShaderName, IShader **ppShader) = 0;
+        virtual CRefObj<IShader> FindShader(const wchar_t *pShaderName) = 0;
 
         //**********************************************************************
         // Method: RegisterShader

@@ -34,7 +34,7 @@ namespace Caustic
         if (m_spDefaultShader == nullptr)
         {
             CRefObj<IShaderMgr> spShaderMgr = pRenderer->GetShaderMgr();
-            spShaderMgr->FindShader(L"Textured", &m_spDefaultShader);
+            m_spDefaultShader = spShaderMgr->FindShader(L"Textured");
             CRefObj<IGraphics> spGraphics = pRenderer->GetGraphics();
             CRefObj<IMaterialAttrib> spMaterialAttrib = m_spCausticFactory->CreateMaterialAttrib();
             Vector3 clr(1.0f, 1.0f, 1.0f);
@@ -68,7 +68,7 @@ namespace Caustic
             m_lastEpochModified == 0)
         {
             // We need to update. Otherwise, nothing has changed
-            m_spMesh->ToRenderMesh(pRenderer, spShader, &m_spRenderMesh);
+            m_spRenderMesh = m_spMesh->ToRenderMesh(pRenderer, spShader);
             std::any lightsVal = m_spLightsPin->GetValue(pRenderer, pRenderCtx);
             if (lightsVal.has_value())
             {

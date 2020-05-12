@@ -37,7 +37,7 @@ namespace Caustic
         uint32 m_bytesPerPixel;         // width of each pixel in bytes
 
         friend class CImageIter;
-        friend void LoadImage(const wchar_t *pFilename, IImage **ppImage);
+        friend CRefObj<IImage> LoadImage(const wchar_t *pFilename);
         friend void StoreImage(const wchar_t *pFilename, IImage *pImage);
     public:
         CImage() :
@@ -110,7 +110,7 @@ namespace Caustic
         uint32 m_height;
         CRefObj<IImage> m_spImage;
 
-        friend extern void CreateIntegralImage(IImage *pImage, IIntegralImage **ppImage);
+        friend extern CRefObj<IIntegralImage> CreateIntegralImage(IImage *pImage);
     public:
         CIntegralImage()
         {
@@ -145,6 +145,6 @@ namespace Caustic
         // IIntegralImage
         //**********************************************************************
         virtual uint32 GetSum(int channel, int x1, int y1, int x2, int y2) override;
-        virtual void BoxBlur(int width, int height, IImage **ppImage) override;
+        virtual CRefObj<IImage> BoxBlur(int width, int height) override;
     };
 }

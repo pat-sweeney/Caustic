@@ -42,7 +42,7 @@ namespace Caustic
             *pBBox = m_bbox;
         }
 
-        void Simplify(float err, float maxLen, IPolygon2 **ppResult) override;
+        CRefObj<IPolygon2> Simplify(float err, float maxLen) override;
         bool ContainsPoint(Vector2 &pos, float *pMinDist, float *pMaxDist) override;
     };
 }

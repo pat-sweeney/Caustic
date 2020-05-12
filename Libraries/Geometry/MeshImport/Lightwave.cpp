@@ -175,10 +175,8 @@ namespace Caustic
             CloseHandle(h);
             CLightWaveParser parser(spBuffer.get(), dwSize);
             parser.ParseChunk(FormTable, spBuffer.get(), dwSize);
-            CRefObj<Caustic::IMesh> spMesh;
-            CreateEmptyMesh(&spMesh);
-            CRefObj<Caustic::ISubMesh> spSubMesh;
-            CreateSubMesh(parser.m_Verts, parser.m_Faces, 0, &spSubMesh);
+            CRefObj<Caustic::IMesh> spMesh = CreateEmptyMesh();
+            CRefObj<Caustic::ISubMesh> spSubMesh = CreateSubMesh(parser.m_Verts, parser.m_Faces, 0);
             spMesh->AddSubMesh(spSubMesh);
             return spMesh;
         }

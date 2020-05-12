@@ -220,13 +220,11 @@ namespace Caustic
 	// Function: CreateCustomFilter
 	// Creates a filter that performs a kernal based filtering on an image.
 	//
-	// Parameters:
-	// ppFilter - returns the newly created filter.
+	// Returns:
+	// Returns the newly created filter.
 	//**********************************************************************
-	void CreateCustomFilter(int kernelWidth, int kernelHeight, float *kernelWeights, IImageFilter** ppFilter)
+	CRefObj<IImageFilter> CreateCustomFilter(int kernelWidth, int kernelHeight, float *kernelWeights)
 	{
-		std::unique_ptr<CCustomFilter> spFilter(new CCustomFilter(kernelWidth, kernelHeight, kernelWeights));
-		*ppFilter = spFilter.release();
-		(*ppFilter)->AddRef();
+		return CRefObj<IImageFilter>(new CCustomFilter(kernelWidth, kernelHeight, kernelWeights));
 	}
 }

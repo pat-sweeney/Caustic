@@ -249,9 +249,11 @@ namespace Caustic
     // Parameters:
 	// pRenderer - Renderer
 	// pShader - shader
-	// ppRenderSubMesh - returns the new submesh
+	//
+	// Returns:
+	// Returns the new submesh
 	//**********************************************************************
-	void CSubMesh::ToRenderSubMesh(IRenderer *pRenderer, IShader *pShader, IRenderSubMesh **ppRenderSubMesh)
+	CRefObj<IRenderSubMesh> CSubMesh::ToRenderSubMesh(IRenderer *pRenderer, IShader *pShader)
 	{
         CRefObj<IGraphics> spGraphics = pRenderer->GetGraphics();
         CRefObj<ICausticFactory> spFactory = Caustic::CreateCausticFactory();
@@ -264,8 +266,7 @@ namespace Caustic
 		BuildIndexBuffer(spGraphics, vertexReferenced, &md);
         spRenderSubMesh->SetMeshData(md);
 		spRenderSubMesh->SetShader(pShader);
-		*ppRenderSubMesh = spRenderSubMesh;
-		(*ppRenderSubMesh)->AddRef();
+		return spRenderSubMesh;
 	}
 
 	void CMesh::ToRenderMaterials(IRenderer* pRenderer, IShader* pShader, IRenderMesh* pRenderMesh)
@@ -274,15 +275,11 @@ namespace Caustic
 		for (int i = 0; i < m_subMeshes.size(); i++)
 		{
 			ISubMesh* pSubMesh = m_subMeshes[i];
-			CRefObj<IRenderSubMesh> spRenderSubMesh;
-			pRenderMesh->GetSubMesh(i, &spRenderSubMesh);
+			CRefObj<IRenderSubMesh> spRenderSubMesh = pRenderMesh->GetSubMesh(i);
 			
 			// Assign appropriate materials
-			CRefObj<IMaterialAttrib> spMaterialAttrib;
-			this->GetMaterial(pSubMesh->GetMaterialID(), &spMaterialAttrib);
-
+			CRefObj<IMaterialAttrib> spMaterialAttrib = this->GetMaterial(pSubMesh->GetMaterialID());
 			CRefObj<IRenderMaterial> spRenderMaterial = spFactory->CreateRenderMaterial(pRenderer, spMaterialAttrib, pShader);
-
 			spRenderSubMesh->SetFrontMaterial(spRenderMaterial);
 
 			// TODO: Add support for back face materials (for now just use same
@@ -298,19 +295,19 @@ namespace Caustic
     // Parameters:
     // pRenderer - Renderer
     // pShader - shader
-    // ppRenderMesh - returns the new mesh
+	//
+	// Returns:
+    // Returns the new mesh
     //**********************************************************************
-    void CMesh::ToRenderMesh(IRenderer *pRenderer, IShader *pShader, IRenderMesh **ppRenderMesh)
+    CRefObj<IRenderMesh> CMesh::ToRenderMesh(IRenderer *pRenderer, IShader *pShader)
     {
         CRefObj<ICausticFactory> spFactory = CreateCausticFactory();
         CRefObj<IRenderMesh> spRenderMesh = spFactory->CreateRenderMesh();
         for (auto pSubMesh : m_subMeshes)
         {
-            CRefObj<IRenderSubMesh> spRenderSubMesh;
-            pSubMesh->ToRenderSubMesh(pRenderer, pShader, &spRenderSubMesh);
+            CRefObj<IRenderSubMesh> spRenderSubMesh = pSubMesh->ToRenderSubMesh(pRenderer, pShader);
             spRenderMesh->AddSubMesh(spRenderSubMesh);
         }
-        *ppRenderMesh = spRenderMesh;
-        (*ppRenderMesh)->AddRef();
+        return spRenderMesh;
     }
 };

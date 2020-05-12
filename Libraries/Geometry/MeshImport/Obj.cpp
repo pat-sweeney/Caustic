@@ -275,9 +275,8 @@ namespace Caustic
         {
             if (m_FaceVertIndices.size() > 0)
             {
-                CRefObj<ISubMesh> spSubMesh;
                 int materialID = (m_matmap.find(m_materialName) == m_matmap.end()) ? 0 : m_matmap[m_materialName]->GetMaterialID();
-                Caustic::CreateSubMesh(m_Vertices, m_FaceVertIndices, materialID, &spSubMesh);
+                CRefObj<ISubMesh> spSubMesh = Caustic::CreateSubMesh(m_Vertices, m_FaceVertIndices, materialID);
                 m_spMesh->AddSubMesh(spSubMesh);
                 m_Vertices.clear();
                 m_FaceVertIndices.clear();
@@ -363,7 +362,7 @@ namespace Caustic
             CloseHandle(h);
             spBuffer.get()[dwSize] = '\0';
             CObjParser parser;
-            Caustic::CreateEmptyMesh(&parser.m_spMesh);
+            parser.m_spMesh = Caustic::CreateEmptyMesh();
             parser.ParseAscii(pFilename, (const char*)spBuffer.get());
             return parser.m_spMesh;
         }

@@ -14,14 +14,12 @@ namespace Caustic
     // Function: CreatePolygon2
     // CreatePolygon2 creates a new 2D polygon
     //
-    // Parameters:
-    // ppPolygon - Returns new polygon object
+    // Returns:
+    // Returns new polygon object
     //**********************************************************************
-    void CreatePolygon2(IPolygon2 **ppPolygon)
+    CRefObj<IPolygon2> CreatePolygon2()
     {
-        std::unique_ptr<CPolygon2> spPolygon(new CPolygon2());
-        *ppPolygon = spPolygon.release();
-        (*ppPolygon)->AddRef();
+        return CRefObj<IPolygon2>(new CPolygon2());
     }
 
     //**********************************************************************
@@ -102,12 +100,13 @@ namespace Caustic
     // Parameters:
     // err - Tolerance for deciding whether to remove a point
     // maxLen - Longest line segment allowed. If maxLen==0 then no limit.
-    // ppResult - Returns the new simplified polygon
+    //
+    // Returns:
+    // Returns the new simplified polygon
     //**********************************************************************
-    void CPolygon2::Simplify(float err, float maxLen, IPolygon2 **ppResult)
+    CRefObj<IPolygon2> CPolygon2::Simplify(float err, float maxLen)
     {
-        CRefObj<IPolygon2> spPolygon;
-        CreatePolygon2(&spPolygon);
+        CRefObj<IPolygon2> spPolygon = CreatePolygon2();
 
         // Should probably replace this at some point with Zhao&Saalfeld's method which is faster
         // http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.494.7321&rep=rep1&type=pdf
@@ -116,7 +115,7 @@ namespace Caustic
         spPolygon->AddPoint(m_pts[start]);
         SimplifyRecursive(spPolygon, start, end, err, maxLen);
         spPolygon->AddPoint(m_pts[end]);
-        *ppResult = spPolygon.Detach();
+        return spPolygon;
     }
 
 

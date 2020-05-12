@@ -17,13 +17,13 @@ namespace Caustic
     struct IMeshConstructor : public IRefCount
     {
         virtual void MeshOpen() = 0;
-        virtual void MeshClose(IMesh **ppMesh) = 0;
+        virtual CRefObj<IMesh> MeshClose() = 0;
         virtual void SubMeshOpen() = 0;
-        virtual void SubMeshClose(ISubMesh **ppSubMesh) = 0;
+        virtual CRefObj<ISubMesh> SubMeshClose() = 0;
         virtual void FaceOpen() = 0;
         virtual void FaceClose() = 0;
         virtual void VertexAdd(Vector3 &pos, Vector3 &normal, Vector2 &uv) = 0;
     };
 
-    CAUSTICAPI void CreateMeshConstructor(IMeshConstructor **ppMeshConstructor);
+    CAUSTICAPI CRefObj<IMeshConstructor> CreateMeshConstructor();
 }

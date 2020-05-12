@@ -70,5 +70,5 @@ namespace Caustic
         bool FindPoint(Caustic::Vector3 &vec, std::function<bool(void *data)> comparator, void **data);
     };
     
-    CAUSTICAPI void CreateKDTree(IKDTree **ppKDTree);
+    CAUSTICAPI CRefObj<IKDTree> CreateKDTree();
 }

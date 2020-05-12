@@ -114,9 +114,8 @@ namespace Caustic
         }
         if (numFaces > 0)
         {
-            Caustic::CreateEmptyMesh(&m_spMesh);
-            CRefObj<ISubMesh> spSubMesh;
-            Caustic::CreateSubMesh(vertices, faces, 0, &spSubMesh);
+            m_spMesh = Caustic::CreateEmptyMesh();
+            CRefObj<ISubMesh> spSubMesh = Caustic::CreateSubMesh(vertices, faces, 0);
             m_spMesh->AddSubMesh(spSubMesh);
         }
         m_spMesh->ComputeNormals();
@@ -147,7 +146,7 @@ namespace Caustic
             CloseHandle(h);
             spBuffer.get()[dwSize] = '\0';
             CPlyParser parser;
-            Caustic::CreateEmptyMesh(&parser.m_spMesh);
+            parser.m_spMesh = Caustic::CreateEmptyMesh();
             parser.ParseAscii(pFilename, (const char*)spBuffer.get());
             return parser.m_spMesh;
         }

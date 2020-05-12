@@ -64,12 +64,13 @@ namespace Caustic
     //
     // Parameters:
     // index - Index of submesh to retrieve
-    // ppSubMesh - Returns the Nth submesh
+    //
+    // Returns:
+    // Returns the Nth submesh
     //**********************************************************************
-    void CMesh::GetSubMesh(uint32 index, ISubMesh **ppSubMesh)
+    CRefObj<ISubMesh> CMesh::GetSubMesh(uint32 index)
     {
-        *ppSubMesh = m_subMeshes[index];
-        (*ppSubMesh)->AddRef();
+        return m_subMeshes[index];
     }
 
     //**********************************************************************
@@ -135,17 +136,15 @@ namespace Caustic
     //
     // Parameters:
     // materialID - Index of material to retrieve
-    // ppMaterial - Returns the Nth material
+    //
+    // Returns:
+    // Returns the Nth material
     //**********************************************************************
-    void CMesh::GetMaterial(uint32 materialID, IMaterialAttrib **ppMaterial)
+    CRefObj<IMaterialAttrib> CMesh::GetMaterial(uint32 materialID)
     {
         if (materialID < m_materials.size())
-        {
-            (*ppMaterial) = m_materials[materialID];
-            (*ppMaterial)->AddRef();
-        }
-        else
-            *ppMaterial = nullptr;
+            return m_materials[materialID];
+        return CRefObj<IMaterialAttrib>(nullptr);
     }
 
     //**********************************************************************
@@ -182,8 +181,7 @@ namespace Caustic
         CT(pStream->Write(&numSubMeshes, sizeof(numSubMeshes), &bytesWritten));
         for (uint32 i = 0; i < numSubMeshes; i++)
         {
-            CRefObj<ISubMesh> spSubMesh;
-            GetSubMesh(i, &spSubMesh);
+            CRefObj<ISubMesh> spSubMesh = GetSubMesh(i);
             spSubMesh->Store(pStream);
         }
     }
@@ -202,13 +200,11 @@ namespace Caustic
     // Function: CreateEmptyMesh
     // Returns an empty mesh
     //
-    // Parameters:
-    // ppMesh - Returns the newly created mesh object
+    // Returns:
+    // Returns the newly created mesh object
     //**********************************************************************
-    CAUSTICAPI void CreateEmptyMesh(IMesh **ppMesh)
+    CAUSTICAPI CRefObj<IMesh> CreateEmptyMesh()
     {
-        std::unique_ptr<CMesh> pMesh(new CMesh());
-        *ppMesh = pMesh.release();
-        (*ppMesh)->AddRef();
+        return CRefObj<IMesh>(new CMesh());
     }
 }

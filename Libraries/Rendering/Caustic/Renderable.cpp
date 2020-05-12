@@ -70,15 +70,11 @@ namespace Caustic
 
         CRefObj<IShader> spShader;
         if (pRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayNormalsAsColors)
-        {
-            pGraphics->GetShaderMgr()->FindShader(L"ColorNormal", &spShader);
-        }
+            spShader = pGraphics->GetShaderMgr()->FindShader(L"ColorNormal");
         else if (pRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayUVsAsColors)
-        {
-            pGraphics->GetShaderMgr()->FindShader(L"ColorUVs", &spShader);
-        }
+            spShader = pGraphics->GetShaderMgr()->FindShader(L"ColorUVs");
         else
-            pRenderMaterial->GetShader(&spShader);
+            spShader = pRenderMaterial->GetShader();
 
         static int id = 0;
         std::any anyId(id);
@@ -147,8 +143,7 @@ namespace Caustic
         if ((pRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayNormalsAsLines) ||
             (pRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayFaceNormals))
         {
-            CRefObj<IShader> spShader;
-            pGraphics->GetShaderMgr()->FindShader(L"DrawNormal", &spShader);
+            CRefObj<IShader> spShader = pGraphics->GetShaderMgr()->FindShader(L"DrawNormal");
             UINT offset = 0;
             const MeshData &md = m_spSubMesh->GetMeshData(true);
             spContext->IASetVertexBuffers(0, 1, &md.m_spVB.p, &md.m_vertexSize, &offset);

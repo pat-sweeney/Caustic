@@ -61,7 +61,7 @@ namespace Caustic
         m_spShader = pShader;
     }
 
-    void CRenderMaterial::GetShader(IShader **ppShader)
+    CRefObj<IShader> CRenderMaterial::GetShader()
     {
         if (m_spShader == nullptr)
         {
@@ -72,9 +72,7 @@ namespace Caustic
 //            else
 //                CShaderMgr::Instance()->FindShader(L"Textured", &m_spShader);
         }
-        *ppShader = m_spShader;
-        if (m_spShader)
-            (*ppShader)->AddRef();
+        return m_spShader;
     }
 
     void CRenderMaterial::Render(IGraphics *pGraphics, std::vector<CRefObj<IPointLight>> &lights, IRenderCtx * /*pRenderCtx*/, IShader *spShader)

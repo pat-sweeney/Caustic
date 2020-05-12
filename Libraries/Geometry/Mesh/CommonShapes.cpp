@@ -22,13 +22,13 @@ namespace Caustic
     // npts - Number of points in 'pts'
     // subdivisions - Number of subdivisions to generate around the Y axis
     // maxAngle - Maximum number of degrees to rotate around Y axis
-    // ppMesh - Newly generated mesh
+    //
+    // Returns:
+    // Return newly generated mesh
     //**********************************************************************
-    CAUSTICAPI void CreateSurfaceRevolution(std::vector<Vector3> &pts, uint32 npts, uint32 subdivisions, float maxAngle, IMesh **ppMesh)
+    CAUSTICAPI CRefObj<IMesh> CreateSurfaceRevolution(std::vector<Vector3> &pts, uint32 npts, uint32 subdivisions, float maxAngle)
     {
-        CRefObj<IMeshConstructor> spMeshConstructor;
-
-        Caustic::CreateMeshConstructor(&spMeshConstructor);
+        CRefObj<IMeshConstructor> spMeshConstructor = Caustic::CreateMeshConstructor();
         spMeshConstructor->MeshOpen();
         spMeshConstructor->SubMeshOpen();
 
@@ -184,8 +184,8 @@ namespace Caustic
             ct = tmp2;
             angle += delta;
         }
-        spMeshConstructor->SubMeshClose(nullptr);
-        spMeshConstructor->MeshClose(ppMesh);
+        spMeshConstructor->SubMeshClose();
+        return spMeshConstructor->MeshClose();
     }
 
     //**********************************************************************
@@ -194,9 +194,11 @@ namespace Caustic
     //
     // Parameters:
     // subdivisions - Number of divisions along azimuth and elevation
-    // ppMesh - Returns the created mesh
+    //
+    // Returns:
+    // Returns the created mesh
     //**********************************************************************
-    CAUSTICAPI void CreateSphere(uint32 subdivisions, IMesh **ppMesh)
+    CAUSTICAPI CRefObj<IMesh> CreateSphere(uint32 subdivisions)
     {
         std::vector<Vector3> pts(subdivisions + 2);
         pts[0] = Vector3(0.0F, -1.0F, 0.0F);
@@ -209,17 +211,17 @@ namespace Caustic
             angle += delta;
         }
         pts[i] = Vector3(0.0F, 1.0F, 0.0F);
-        CreateSurfaceRevolution(pts, subdivisions + 2, subdivisions, 360.0f, ppMesh);
+        return CreateSurfaceRevolution(pts, subdivisions + 2, subdivisions, 360.0f);
     }
 
     //**********************************************************************
     // Function: CreateTetrahedron
     // Creates a mesh in the shape of a tetrahedron 
     //
-    // Parameters:
-    // ppMesh - Returns the created mesh
+    // Returns:
+    // Returns the created mesh
     //**********************************************************************
-    CAUSTICAPI void CreateTetrahedron(IMesh **ppMesh)
+    CAUSTICAPI CRefObj<IMesh> CreateTetrahedron()
     {
         Vector3 vertPos[4] =
         {
@@ -235,8 +237,7 @@ namespace Caustic
             { 1, 3, 0 },
             { 2, 3, 1 }
         };
-        CRefObj<IMeshConstructor> spMeshConstructor;
-        CreateMeshConstructor(&spMeshConstructor);
+        CRefObj<IMeshConstructor> spMeshConstructor = CreateMeshConstructor();
         spMeshConstructor->MeshOpen();
         spMeshConstructor->SubMeshOpen();
         for (int i = 0; i < (int)(sizeof(vertFaces) / sizeof(vertFaces[0])); i++)
@@ -251,8 +252,8 @@ namespace Caustic
             spMeshConstructor->VertexAdd(vertPos[vertFaces[i][2]], normal, zeroVec);
             spMeshConstructor->FaceClose();
         }
-        spMeshConstructor->SubMeshClose(nullptr);
-        spMeshConstructor->MeshClose(ppMesh);
+        spMeshConstructor->SubMeshClose();
+        return spMeshConstructor->MeshClose();
     }
 
     //**********************************************************************
@@ -262,12 +263,13 @@ namespace Caustic
     //
     // Parameters:
     // subdivisions - Number of times to subdivide the grid
-    // ppMesh - Returns the created mesh
+    //
+    // Returns:
+    // Returns the created mesh
     //**********************************************************************
-    CAUSTICAPI void CreateGrid(uint32 subdivisions, IMesh **ppMesh)
+    CAUSTICAPI CRefObj<IMesh> CreateGrid(uint32 subdivisions)
     {
-        CRefObj<IMeshConstructor> spMeshConstructor;
-        Caustic::CreateMeshConstructor(&spMeshConstructor);
+        CRefObj<IMeshConstructor> spMeshConstructor = Caustic::CreateMeshConstructor();
 
         spMeshConstructor->MeshOpen();
         spMeshConstructor->SubMeshOpen();
@@ -303,20 +305,19 @@ namespace Caustic
             cy += dy;
             cv += dv;
         }
-        CRefObj<ISubMesh> spSubMesh;
-        spMeshConstructor->SubMeshClose(&spSubMesh);
+        CRefObj<ISubMesh> spSubMesh = spMeshConstructor->SubMeshClose();
         spSubMesh->SetMeshFlags(EMeshFlags::TwoSided);
-        spMeshConstructor->MeshClose(ppMesh);
+        return spMeshConstructor->MeshClose();
     }
 
     //**********************************************************************
     // Function: CreateCube
     // Returns a cube mesh
     //
-    // Parameters:
-    // ppMesh - Returns the newly created mesh object
+    // Returns:
+    // Returns the newly created mesh object
     //**********************************************************************
-    CAUSTICAPI void CreateCube(IMesh **ppMesh)
+    CAUSTICAPI CRefObj<IMesh> CreateCube()
     {
         std::vector<Vector3> vpos =
         {
@@ -417,8 +418,7 @@ namespace Caustic
             { 0.0f, 0.0f, +1.0f },
             { 0.0f, 0.0f, +1.0f }
         };
-        CRefObj<IMesh> spMesh;
-        CreateEmptyMesh(&spMesh);
+        CRefObj<IMesh> spMesh = CreateEmptyMesh();
         std::vector<int> faces(36);
         for (int i = 0; i < 6; i++)
         {
@@ -429,10 +429,8 @@ namespace Caustic
             faces[6 * i + 4] = 4 * i + 1;
             faces[6 * i + 5] = 4 * i + 2;
         }
-        CRefObj<ISubMesh> spSubMesh;
-        CreateSubMesh(vpos, norm, uvs, faces, EVertexFlags(HasNormal | HasPosition | HasUV0), 0, &spSubMesh);
+        CRefObj<ISubMesh> spSubMesh = CreateSubMesh(vpos, norm, uvs, faces, EVertexFlags(HasNormal | HasPosition | HasUV0), 0);
         spMesh->AddSubMesh(spSubMesh);
-        *ppMesh = spMesh;
-        (*ppMesh)->AddRef();
+        return spMesh;
     }
 }

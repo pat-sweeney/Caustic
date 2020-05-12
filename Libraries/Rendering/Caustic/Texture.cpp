@@ -211,8 +211,7 @@ namespace Caustic
         std::map<std::wstring, CRefObj<ITexture>>::iterator it;
         if ((it = cache.find(pFilename)) != cache.end())
             return CRefObj<ITexture>(it->second);
-        CRefObj<IImage> spImage;
-        LoadImage(pFilename, &spImage);
+        CRefObj<IImage> spImage = LoadImage(pFilename);
         CRefObj<ITexture> spTexture = CreateTexture(pGraphics, spImage, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
         cache[pFilename] = spTexture;
         return spTexture;

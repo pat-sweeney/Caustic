@@ -177,9 +177,11 @@ namespace Caustic
         //
         // Parameters:
         // index - index of submesh to retrieve
-        // ppSubMesh - Returns the Nth submesh
+        //
+        // Returns:
+        // Returns the Nth submesh
         //**********************************************************************
-        virtual void GetSubMesh(uint32 index, IRenderSubMesh **ppSubMesh) = 0;
+        virtual CRefObj<IRenderSubMesh> GetSubMesh(uint32 index) = 0;
 
         //**********************************************************************
         // Method: AddSubMesh
@@ -214,9 +216,11 @@ namespace Caustic
         //
         // Parameters:
         // materialID - ID of which material to retrieve
-        // ppMaterial - returns the associated material
+        //
+        // Returns:
+        // Returns the associated material
         //**********************************************************************
-        virtual void GetMaterial(uint32 materialID, IMaterialAttrib **ppMaterial) = 0;
+        virtual CRefObj<IMaterialAttrib> GetMaterial(uint32 materialID) = 0;
 
         //**********************************************************************
         // Method: ComputeNormals

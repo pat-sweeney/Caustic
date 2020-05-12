@@ -61,10 +61,8 @@ void CApp::InitializeCaustic(HWND hwnd)
     // Load our shaders
     CRefObj<IRenderer> spRenderer = m_spRenderWindow->GetRenderer();
     CRefObj<IShaderMgr> spShaderMgr = spRenderer->GetShaderMgr();
-    CRefObj<IShader> spDepth2PointsShader;
-    spShaderMgr->FindShader(L"Depth2Points", &spDepth2PointsShader);
-    CRefObj<IShader> spDefaultShader;
-    spShaderMgr->FindShader(L"Textured", &spDefaultShader);
+    CRefObj<IShader> spDepth2PointsShader = spShaderMgr->FindShader(L"Depth2Points");
+    CRefObj<IShader> spDefaultShader = spShaderMgr->FindShader(L"Textured");
 
     m_spRenderGraphFactory = Caustic::CreateRenderGraphFactory();
     m_spRenderGraph = m_spRenderWindow->GetRenderGraph();
@@ -111,8 +109,7 @@ void CApp::InitializeCaustic(HWND hwnd)
 
     // Create our mesh (a cube). Our scene will have two objects: 1) a cube at the origin
     // that will display the camera's color image and 2) a point cloud displaying the depth image
-    CRefObj<IMesh> spMesh;
-    Caustic::CreateCube(&spMesh);
+    CRefObj<IMesh> spMesh = Caustic::CreateCube();
     CRefObj<IRenderGraphNode_Mesh> spCubeMeshNode = m_spRenderGraphFactory->CreateMeshNode();
     spCubeMeshNode->SetName("Cube");
     spGroupNode->AddChild(spCubeMeshNode);

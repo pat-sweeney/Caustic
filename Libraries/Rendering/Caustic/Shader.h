@@ -223,7 +223,7 @@ namespace Caustic
         //**********************************************************************
         // IShaderMgr
         //**********************************************************************
-        virtual void FindShader(const wchar_t *pShaderName, IShader **ppShader) override;
+        virtual CRefObj<IShader> FindShader(const wchar_t *pShaderName) override;
         virtual void RegisterShader(const wchar_t *pShaderName, IShader *pShader) override;
     };
 }

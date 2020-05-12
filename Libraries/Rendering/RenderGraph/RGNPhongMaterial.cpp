@@ -32,7 +32,7 @@ namespace Caustic
     {
         if (m_spShader == nullptr)
         {
-            pRenderer->GetShaderMgr()->FindShader(L"Textured", &m_spShader);
+            m_spShader = pRenderer->GetShaderMgr()->FindShader(L"Textured");
         }
         std::any diffuseTexVal = m_spDiffuseTexturePin->GetValue(pRenderer, pRenderCtx);
         if (pRenderCtx->GetMostRecentEpoch() > m_lastEpochModified || // Somebody preceeding us was modified

@@ -58,6 +58,6 @@ namespace Caustic
         virtual D3D11_TEXTURE_ADDRESS_MODE GetAddressV() override { return m_AddressV; }
         virtual void SetAddressV(D3D11_TEXTURE_ADDRESS_MODE address) override { m_AddressV = address; }
         virtual void Render(IGraphics *pGraphics, int slot, bool isPixelShader) override;
-        virtual void GetTexture(ITexture **ppTexture) override;
+        virtual CRefObj<ITexture> GetTexture() override;
     };
 };

@@ -68,5 +68,5 @@ namespace Caustic
 		virtual void WritePLY() = 0;
     };
 
-    CAUSTICAPI void CreateDelaunay2(IDelaunay2 **ppDelaunay, BBox2 &bb);
+    CAUSTICAPI CRefObj<IDelaunay2> CreateDelaunay2(BBox2 &bb);
 }

@@ -37,9 +37,9 @@ namespace Caustic
         // IMeshConstructor
         //**********************************************************************
         virtual void MeshOpen() override;
-        virtual void MeshClose(IMesh **ppMesh) override;
+        virtual CRefObj<IMesh> MeshClose() override;
         virtual void SubMeshOpen() override;
-        virtual void SubMeshClose(ISubMesh **ppSubMesh) override;
+        virtual CRefObj<ISubMesh> SubMeshClose() override;
         virtual void FaceOpen() override;
         virtual void FaceClose() override;
         virtual void VertexAdd(Caustic::Vector3 &pos, Caustic::Vector3 &normal, Caustic::Vector2 &uv) override;

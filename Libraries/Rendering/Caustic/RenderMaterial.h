@@ -46,14 +46,9 @@ namespace Caustic
         // IRenderMaterial
         //**********************************************************************
         virtual void SetShader(IShader *pShader) override;
-        virtual void GetShader(IShader **ppShader) override;
+        virtual CRefObj<IShader> GetShader() override;
         virtual void SetMaterial(IMaterialAttrib *pMaterial) override { m_spMaterial = pMaterial; }
-        virtual void GetMaterial(IMaterialAttrib **ppMaterial) override
-        {
-            *ppMaterial = m_spMaterial;
-            if (m_spMaterial)
-                (*ppMaterial)->AddRef();
-        }
+        virtual CRefObj<IMaterialAttrib> GetMaterial() override { return m_spMaterial; }
         virtual void SetTexture(IGraphics* pGraphics, const wchar_t *pName, ITexture* pTexture, EShaderAccess access) override;
         virtual CRefObj<ITexture> GetTexture(const wchar_t* pName) override {
             std::map<std::wstring, CRenderTexture>::iterator it = m_textures.find(pName);

@@ -612,10 +612,8 @@ namespace Caustic
     // Method: CreateDelaunay2
     // Creates a Delaunay triangulation
     //**********************************************************************
-    CAUSTICAPI void CreateDelaunay2(IDelaunay2 **ppDelaunay, BBox2 &bb)
+    CRefObj<IDelaunay2> CreateDelaunay2(BBox2 &bb)
     {
-        std::unique_ptr<CDelaunay2> spDelaunay(new CDelaunay2(bb));
-        *ppDelaunay = spDelaunay.release();
-        (*ppDelaunay)->AddRef();
+        return CRefObj<IDelaunay2>(new CDelaunay2(bb));
     }
 }

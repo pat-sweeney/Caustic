@@ -44,10 +44,10 @@ namespace Caustic
         // Method: GetShader
         // Gets shader used by this material
         //
-        // Parameters:
-        // ppShader - Returns the shader
+        // Returns:
+        // Returns the shader
         //**********************************************************************
-        virtual void GetShader(IShader **ppShader) = 0;
+        virtual CRefObj<IShader> GetShader() = 0;
 
         //**********************************************************************
         // Method: SetMaterial
@@ -62,10 +62,10 @@ namespace Caustic
         // Method: GetMaterial
         // Returns the material definition used by this material
         //
-        // Parameters:
-        // ppMaterial - returns material definition
+        // Returns:
+        // Returns material definition
         //**********************************************************************
-        virtual void GetMaterial(IMaterialAttrib **ppMaterial) = 0;
+        virtual CRefObj<IMaterialAttrib> GetMaterial() = 0;
 
         //**********************************************************************
         // Method: SetTexture
