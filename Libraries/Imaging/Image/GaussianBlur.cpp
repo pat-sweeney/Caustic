@@ -22,6 +22,10 @@ namespace Caustic
     {
         float m_sigma;
     public:
+        CGaussianBlur() : CGaussianBlur(0.2f)
+        {
+        }
+
         CGaussianBlur(float sigma) :
             m_sigma(sigma)
         {
@@ -36,8 +40,8 @@ namespace Caustic
         //**********************************************************************
         // IImageFilter
         //**********************************************************************
-        virtual CRefObj<IImage> Apply(IImage* pImage, IImage* pMask) override;
-        virtual bool ApplyInPlace(IImage* pImage, IImage* pMask) override;
+        virtual CRefObj<IImage> Apply(IImage* pImage, ImageFilterParams* pParams) override;
+        virtual bool ApplyInPlace(IImage* pImage, ImageFilterParams* pParams) override;
     };
 
     //**********************************************************************
@@ -56,17 +60,29 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Function: CreateGaussianBlur
+    // Creates a gaussian blur filter.
+    //
+    // Returns:
+    // Returns the a Gaussian blur filter.
+    //**********************************************************************
+    CRefObj<IImageFilter> CreateGaussianBlur()
+    {
+        return CRefObj<IImageFilter>(new CGaussianBlur());
+    }
+
+    //**********************************************************************
     // Method: Apply
     // Defines an image filter for performing gaussian blurring.
     //
     // Parameters:
     // pImage - image to perform filtering on.
-    // pMask - unused.
+    // pParams - filter parameters.
     //
     // Returns:
     // Returns the filtered image.
     //**********************************************************************
-    CRefObj<IImage> CGaussianBlur::Apply(IImage* pImage, IImage* pMask)
+    CRefObj<IImage> CGaussianBlur::Apply(IImage* pImage, ImageFilterParams* pParams)
     {
         // First compute kernel
         // A normal distribution is defined by:
@@ -130,7 +146,7 @@ namespace Caustic
         return spImage2;
     }
 
-    bool CGaussianBlur::ApplyInPlace(IImage* pImage, IImage* pMask)
+    bool CGaussianBlur::ApplyInPlace(IImage* pImage, ImageFilterParams* pParams)
     {
         return false; // Inplace transformation not supported
     }

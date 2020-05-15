@@ -16,6 +16,7 @@ namespace Caustic
     //**********************************************************************
     // Class: CImage
     // Members:
+    // <EImageType at Caustic::EImageType> m_imageType - Type of data stored in the image
     // <CRefObj> < <CImage> > m_spParent - parent image if image is a subimage
     // <uint32 at Caustic::uint32> m_subx - X offset into parent image
     // <uint32 at Caustic::uint32> m_suby - Y offset into parent image
@@ -27,6 +28,7 @@ namespace Caustic
     //**********************************************************************
     class CImage : public IImage, public CRefCount
     {
+        EImageType m_imageType;         // Type of data stored in the image
         CRefObj<CImage> m_spParent;     // parent image if image is a subimage
         uint32 m_subx;                  // X offset into parent image
         uint32 m_suby;                  // Y offset into parent image
@@ -41,6 +43,7 @@ namespace Caustic
         friend void StoreImage(const wchar_t *pFilename, IImage *pImage);
     public:
         CImage() :
+            m_imageType(EImageType::Unknown),
             m_width(0),
             m_height(0),
             m_bytesPerPixel(0),
@@ -81,6 +84,7 @@ namespace Caustic
         //**********************************************************************
         // IImageBase
         //**********************************************************************
+        virtual EImageType GetImageType() override { return m_imageType; }
         virtual uint8 *GetData() override { return m_pData; }
         virtual uint32 GetWidth() override { return m_width; }
         virtual uint32 GetHeight() override { return m_height; }
@@ -132,6 +136,7 @@ namespace Caustic
         //**********************************************************************
         // IImageBase
         //**********************************************************************
+        virtual EImageType GetImageType() override { return EImageType::Float4_128bpp; }
         virtual BYTE *GetData() override { return (BYTE*)m_spData.get(); }
         virtual uint32 GetStride() override { return m_width * sizeof(uint32) * 3; }
         virtual uint32 GetBytesPerPixel() override { return sizeof(uint32) * 3; }

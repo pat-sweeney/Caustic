@@ -8,31 +8,31 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="CSubMesh"></a><a name="Topic186"></a><div class="CTopic TClass LC first">
+<a name="CSubMesh"></a><a name="Topic199"></a><div class="CTopic TClass LC first">
  <div class="CTitle">CSubMesh</div>
- <div class="NDClassPrototype HasParents" id="NDClassPrototype186"><a class="CPEntry Parent TInterface" href="../../../index.html#File:Geometry/Mesh/IMesh.h:ISubMesh" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,255);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPModifiers"><span class="SHKeyword">public</span></div><div class="CPName">ISubMesh</div></a><a class="CPEntry Parent TClass" href="../../../index.html#File:Base/Core/RefCount.h:CRefCount" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPModifiers"><span class="SHKeyword">public</span></div><div class="CPName">CRefCount</div></a><div class="CPEntry TClass Current"><div class="CPName">CSubMesh</div></div></div>
+ <div class="NDClassPrototype HasParents" id="NDClassPrototype199"><a class="CPEntry Parent TInterface" href="../../../index.html#File:Geometry/Mesh/IMesh.h:ISubMesh" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,247);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPModifiers"><span class="SHKeyword">public</span></div><div class="CPName">ISubMesh</div></a><a class="CPEntry Parent TClass" href="../../../index.html#File:Base/Core/RefCount.h:CRefCount" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPModifiers"><span class="SHKeyword">public</span></div><div class="CPName">CRefCount</div></a><div class="CPEntry TClass Current"><div class="CPName">CSubMesh</div></div></div>
  <div class="CBody"><p>Defines a submesh. A submesh is a child of a mesh object and contains the actual mesh data (collection of vertices and edges).</p></div>
 </div>
 
-<a name="CSubMesh.Functions"></a><a name="Topic187"></a><div class="CTopic TGroup LC">
+<a name="CSubMesh.Functions"></a><a name="Topic200"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="CSubMesh.Normalize"></a><a name="Topic188"></a><div class="CTopic TFunction LC">
+<a name="CSubMesh.Normalize"></a><a name="Topic201"></a><div class="CTopic TFunction LC">
  <div class="CTitle">Normalize</div>
- <div id="NDPrototype188" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> Normalize(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><a href="../../../index.html#File:Base/Math/BBox.h:BBox3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,316);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >BBox3</a>&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">bbox</td></tr></table></td><td class="PAfterParameters">) <span class="SHKeyword">override</span></td></tr></table></div>
- <div class="CBody"><p>See <a href="../../../index.html#File:Geometry/Mesh/IMesh.h:ISubMesh.Normalize" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,257);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ISubMesh::Normalize</a></p></div>
+ <div id="NDPrototype201" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> Normalize(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><a href="../../../index.html#File:Base/Math/BBox.h:BBox3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,150);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >BBox3</a>&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">bbox</td></tr></table></td><td class="PAfterParameters">) <span class="SHKeyword">override</span></td></tr></table></div>
+ <div class="CBody"><p>See <a href="../../../index.html#File:Geometry/Mesh/IMesh.h:ISubMesh.Normalize" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,249);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ISubMesh::Normalize</a></p></div>
 </div>
 
-<a name="CSubMesh.Triangulate"></a><a name="Topic189"></a><div class="CTopic TFunction LC">
+<a name="CSubMesh.Triangulate"></a><a name="Topic202"></a><div class="CTopic TFunction LC">
  <div class="CTitle">Triangulate</div>
- <div id="NDPrototype189" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> Triangulate(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first">ETriangulateMethod&nbsp;</td><td class="PName last">method</td></tr></table></td><td class="PAfterParameters">) <span class="SHKeyword">override</span></td></tr></table></div>
+ <div id="NDPrototype202" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> Triangulate(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first">ETriangulateMethod&nbsp;</td><td class="PName last">method</td></tr></table></td><td class="PAfterParameters">) <span class="SHKeyword">override</span></td></tr></table></div>
  <div class="CBody"><p>Converts a mesh from arbitrary polygons into a triangulated mesh.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">method<div class="CDLParameterType">ETriangulateMethod</div></td><td class="CDLDefinition"><p>method to use for triangulation</p></td></tr></table></div>
 </div>
 
-<a name="CMesh"></a><a name="Topic190"></a><div class="CTopic TClass LC last">
+<a name="CMesh"></a><a name="Topic203"></a><div class="CTopic TClass LC last">
  <div class="CTitle">CMesh</div>
- <div class="NDClassPrototype HasParents" id="NDClassPrototype190"><a class="CPEntry Parent TInterface" href="../../../index.html#File:Geometry/Mesh/IMesh.h:IMesh" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,258);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPModifiers"><span class="SHKeyword">public</span></div><div class="CPName">IMesh</div></a><a class="CPEntry Parent TClass" href="../../../index.html#File:Base/Core/RefCount.h:CRefCount" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPModifiers"><span class="SHKeyword">public</span></div><div class="CPName">CRefCount</div></a><div class="CPEntry TClass Current"><div class="CPName">CMesh</div></div></div>
+ <div class="NDClassPrototype HasParents" id="NDClassPrototype203"><a class="CPEntry Parent TInterface" href="../../../index.html#File:Geometry/Mesh/IMesh.h:IMesh" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,250);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPModifiers"><span class="SHKeyword">public</span></div><div class="CPName">IMesh</div></a><a class="CPEntry Parent TClass" href="../../../index.html#File:Base/Core/RefCount.h:CRefCount" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1);" onmouseout="NDContentPage.OnLinkMouseOut(event);" ><div class="CPModifiers"><span class="SHKeyword">public</span></div><div class="CPName">CRefCount</div></a><div class="CPEntry TClass Current"><div class="CPName">CMesh</div></div></div>
  <div class="CBody"><p>Defines a mesh. A mesh object is simply a collection of submesh objects (ISubMesh). To convert this mesh into a renderable form the client should call &lt;MeshToD3D&gt;.</p></div>
 </div>
 

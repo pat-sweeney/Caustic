@@ -33,12 +33,47 @@ namespace Caustic
 	// An unsigned 64b value
 	typedef unsigned long long uint64;
 
-    typedef char int8;                  // A signed 8b value
+	typedef char int8;                  // A signed 8b value
     typedef short int16;                // A signed 16b value
     typedef int int32;                  // A signed 32b value
     typedef long long int64;            // A signed 64b value
 
-    const float c_Epsilon = 0.0000001f;
+	typedef struct float1 {
+		float x;
+
+		float1() : x(0.0f) {};
+		float1(float f) { x = f; }
+		operator float() { return x; }
+	} float1;
+
+	typedef struct float2 {
+		float x;
+		float y;
+
+		float2() : x(0.0f), y(0.0f) {};
+		float2(float fx, float fy) { x = fx; y = fy; }
+	} float2;
+
+	typedef struct float3 {
+		float x;
+		float y;
+		float z;
+
+		float3() : x(0.0f), y(0.0f), z(0.0f) {};
+		float3(float fx, float fy, float fz) { x = fx; y = fy; z = fz; }
+	} float3;
+
+	typedef struct float4 {
+		float x;
+		float y;
+		float z;
+		float w;
+
+		float4() : x(0.0f), y(0.0f), z(0.0f), w(0.0f) {};
+		float4(float fx, float fy, float fz, float fw) { x = fx; y = fy; z = fz; w = fw; }
+	} float4;
+
+	const float c_Epsilon = 0.0000001f;
 
     inline float Abs(float x) { return (x < 0.0f) ? -x : x; }
 

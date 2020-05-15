@@ -12,11 +12,47 @@
 namespace Caustic
 {
 	//**********************************************************************
+	// Class: EImageType
+	// Defines the types of images we currently support.
+	//
+	// Parameters:
+	// Unknown - type is undefined
+	// BW_1bpp - type is black/white image with 1 bit per pixel
+	// Gray_8bpp - type is grayscale image with 8 bits per pixel
+	// Gray_16bpp - type is grayscale image with 16 bits per pixel
+	// RGB_24bpp - type is RGB image with 24 bits per pixel
+	// RGBA_32bpp - type is RGBA image with 32 bits per pixel
+	// RGBX_32bpp - type is RGBX image with 32 bits per pixel (X is ignored alpha)
+	// Float_32bpp - type is floating point image
+	// Float4_128bpp - type is floating point image with 4 channels
+	//**********************************************************************
+	enum class EImageType
+	{
+		Unknown,
+		BW_1bpp,
+		Gray_8bpp,
+		Gray_16bpp,
+		RGB_24bpp,
+		RGBA_32bpp,
+		RGBX_32bpp,
+		Float1_32bpp,
+		Float2_64bpp,
+		Float3_96bpp,
+		Float4_128bpp
+	};
+
+	//**********************************************************************
 	// Interface: IImageBase
 	// Base interface shared across all image types
 	//**********************************************************************
 	struct IImageBase : public IRefCount
 	{
+		//**********************************************************************
+		// Method: GetImageType
+		// Returns the type of data stored in the image
+		//**********************************************************************
+		virtual EImageType GetImageType() = 0;
+
 		//**********************************************************************
 		// Method: GetData
 		// Returns a pointer to the image data

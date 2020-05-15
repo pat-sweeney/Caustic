@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("cha",["Class"],[["CHalfEdge",,[[,,,,0,"File:Geometry/Mesh/IMesh.h:CHalfEdge","CClass:CHalfEdge"]]]]);
+NDSearch.OnPrefixDataLoaded("cha",["Class"],[["CHalfEdge",,[[,,,,0,"File:Geometry/Mesh/IMesh.h:CHalfEdge","CClass:CHalfEdge"]]],["CHarrisCornerFilter",,[[,,,,0,"File:Imaging/Image/HarrisCorners.cpp:CHarrisCornerFilter","CClass:CHarrisCornerFilter"]]]]);

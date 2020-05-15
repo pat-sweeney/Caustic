@@ -90,12 +90,16 @@ namespace Caustic
         bool operator!=(T *v) { return !(p == v); }
         CRefObj &operator=(const CRefObj &v)
         {
+            if (p == v.p)
+                return *this;
             *this = v.p;
             return *this;
         }
 
         CRefObj &operator=(T *v)
         {
+            if (v == p)
+                return *this;
             if (p)
                 p->Release();
             p = v;

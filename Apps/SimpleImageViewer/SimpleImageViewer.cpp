@@ -18,6 +18,7 @@
 HINSTANCE hInst;                                // current instance
 HWND hWnd;
 HBITMAP imgbitmap = nullptr;
+int imgwidth, imgheight;
 bool g_ShowDepth = false;
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
@@ -30,21 +31,40 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 using namespace Caustic;
 CRefObj<IAzureKinect> spAzure;
+CRefObj<IImage> spSourceImage;
+CRefObj<IImage> spFilteredSourceImage;
+CRefObj<IImageFilter> spFilter;
 
-void DrawImage(HDC hdc)
+void DrawImage(HDC hdc, HBITMAP img, int w, int h)
 {
-    if (imgbitmap != nullptr)
+    if (img != nullptr)
     {
         HDC hdcMem = CreateCompatibleDC(hdc);
-        HGDIOBJ oldBitmap = SelectObject(hdcMem, imgbitmap);
-        BITMAP bitmap;
-        GetObject(imgbitmap, sizeof(bitmap), &bitmap);
+        HGDIOBJ oldBitmap = SelectObject(hdcMem, img);
         RECT rect;
         GetClientRect(hWnd, &rect);
-        StretchBlt(hdc, 0, 0, rect.right - rect.left, rect.bottom - rect.top, hdcMem, 0, 0, bitmap.bmWidth, bitmap.bmHeight, SRCCOPY);
+        SetStretchBltMode(hdc, COLORONCOLOR);
+        StretchBlt(hdc, 0, 0, rect.right - rect.left, rect.bottom - rect.top, hdcMem, 0, 0, w, h, SRCCOPY);
         SelectObject(hdcMem, oldBitmap);
         DeleteObject(hdcMem);
     }
+}
+
+void SetDisplayImage(IImage *pImage)
+{
+    IImage* pDisplayImage = pImage;
+    if (spFilter)
+    {
+        spFilteredSourceImage = spFilter->Apply(pImage, nullptr);
+        pDisplayImage = spFilteredSourceImage;
+    }
+    spSourceImage = pImage;
+    imgwidth = pDisplayImage->GetWidth();
+    imgheight = pDisplayImage->GetHeight();
+    if (imgbitmap != nullptr)
+        DeleteObject(imgbitmap);
+    imgbitmap = CreateBitmap(imgwidth, imgheight, 1, 32, pDisplayImage->GetData());
+    InvalidateRect(hWnd, nullptr, true);
 }
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -90,28 +110,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             spAzure->NextFrame(&spColorImage.p, &spDepthImage.p, nullptr);
             if ((spDepthImage != nullptr && g_ShowDepth) || (spColorImage != nullptr && !g_ShowDepth))
             {
-                if (imgbitmap != nullptr)
-                    DeleteObject(imgbitmap);
                 if (g_ShowDepth)
                 {
-                    CRefObj<IImageFilter> spFilter = CreateColorize();
-                    CRefObj<IImage> spColoredDepthImage = spFilter->Apply(spDepthImage, nullptr);
-                    imgbitmap = CreateBitmap(spColoredDepthImage->GetWidth(), spColoredDepthImage->GetHeight(), 1, 32, spColoredDepthImage->GetData());
+                    spFilter = CreateColorize();
+                    SetDisplayImage(spDepthImage);
                 }
                 else
                 {
-//                    CRefObj<IImageFilter> spFilter;
-//                    float weights[] = {
-//                        1.0f, 1.0f, 1.0f,
-//                        0.0f, 0.0f, 0.0f,
-//                        -1.0f, -1.0f, -1.0f
-//                    };
-//                    CreateCustomFilter(3, 3, weights, &spFilter);
-//                    CRefObj<IImage> spFiltered;
-//                    spFilter->Apply(spColorImage, nullptr, &spFiltered);
-                    imgbitmap = CreateBitmap(spColorImage->GetWidth(), spColorImage->GetHeight(), 1, 32, spColorImage->GetData());
+                    SetDisplayImage(spColorImage);
                 }
-                DrawImage(GetDC(hWnd));
+                DrawImage(GetDC(hWnd), imgbitmap, imgwidth, imgheight);
             }
         }
     }
@@ -195,6 +203,41 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             // Parse the menu selections:
             switch (wmId)
             {
+                /*
+                                    //                    CRefObj<IImageFilter> spFilter;
+                    //                    float weights[] = {
+                    //                        1.0f, 1.0f, 1.0f,
+                    //                        0.0f, 0.0f, 0.0f,
+                    //                        -1.0f, -1.0f, -1.0f
+                    //                    };
+                    //                    CreateCustomFilter(3, 3, weights, &spFilter);
+                    //                    CRefObj<IImage> spFiltered;
+                    //                    spFilter->Apply(spColorImage, nullptr, &spFiltered);
+*/
+            case ID_FILTER_NONE:
+                spFilter = nullptr;
+                SetDisplayImage(spSourceImage);
+                break;
+            case ID_FILTER_SOBEL:
+                spFilter = CreateSobelFilter(true);
+                SetDisplayImage(spSourceImage);
+                break;
+            case ID_FILTER_SHARPEN:
+                spFilter = CreateSharpenFilter();
+                SetDisplayImage(spSourceImage);
+                break;
+            case ID_FILTER_UNSHARPMASK:
+                spFilter = CreateUnsharpMaskFilter();
+                SetDisplayImage(spSourceImage);
+                break;
+            case ID_FILTER_GAUSSIANBLUR:
+                spFilter = CreateGaussianBlur();
+                SetDisplayImage(spSourceImage);
+                break;
+            case ID_FILTER_MEDIANFILTER:
+                spFilter = CreateMedian();
+                SetDisplayImage(spSourceImage);
+                break;
             case IDM_ABOUT:
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
                 break;
@@ -227,7 +270,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (GetOpenFileName(&ofn))
                     {
                         Caustic::CRefObj<Caustic::IImage> spImage = Caustic::LoadImage(ofn.lpstrFile);
-                        imgbitmap = CreateBitmap(spImage->GetWidth(), spImage->GetHeight(), 1, 32, spImage->GetData());
+                        spSourceImage = spImage;
+                        if (spFilter)
+                            spImage = spFilter->Apply(spImage, nullptr);
+                        imgwidth = spImage->GetWidth();
+                        imgheight = spImage->GetHeight();
+                        imgbitmap = CreateBitmap(imgwidth, imgheight, 1, 32, spImage->GetData());
                         InvalidateRect(hWnd, nullptr, true);
                     }
                 }
@@ -241,7 +289,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
-            DrawImage(hdc);
+            DrawImage(hdc, imgbitmap, imgwidth, imgheight);
             EndPaint(hWnd, &ps);
         }
         break;

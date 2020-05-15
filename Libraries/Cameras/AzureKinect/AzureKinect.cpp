@@ -169,20 +169,20 @@ namespace Caustic
                     {
                         int w = k4a_image_get_width_pixels(colorimage);
                         int h = k4a_image_get_height_pixels(colorimage);
-                        size_t s = k4a_image_get_size(colorimage);
+                        int stride = k4a_image_get_stride_bytes(colorimage);
                         CRefObj<IImage> spImage = CreateImage(w, h, 32);
-                        memcpy(spImage->GetData(), buffer, spImage->GetHeight() * spImage->GetStride());
+                        uint8* pRow = spImage->GetData();
+                        for (int y = 0; y < h; y++)
+                        {
+                            memcpy(pRow, &buffer[y*stride], spImage->GetWidth() * spImage->GetBytesPerPixel());
+                            pRow += spImage->GetStride();
+                        }
                         *ppColorImage = spImage.Detach();
                         captured = true;
                     }
                     k4a_image_release(colorimage);
                 }
             }
-            k4a_capture_release(m_capture);
-            m_capture = nullptr;
-        }
-        if (k4a_device_get_capture(m_device, &m_capture, 3000) == K4A_RESULT_SUCCEEDED)
-        {
             if (ppDepthImage != nullptr)
             {
                 auto depthimage = k4a_capture_get_depth_image(m_capture);

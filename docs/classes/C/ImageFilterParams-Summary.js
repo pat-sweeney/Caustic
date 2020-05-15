@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:ImageFilterParams","ImageFilterParams");NDSummary.OnSummaryLoaded("CClass:ImageFilterParams",[["C/C++","C"]],[["Interfaces","Interface"]],[[331,0,0,"ImageFilterParams"]]);

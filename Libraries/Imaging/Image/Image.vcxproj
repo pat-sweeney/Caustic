@@ -87,15 +87,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Coloriize.cpp" />
+    <ClCompile Include="Convert.cpp" />
     <ClCompile Include="CustomFilter.cpp" />
     <ClCompile Include="GaussianBlur.cpp" />
+    <ClCompile Include="HarrisCorners.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="MedianFilter.cpp" />
+    <ClCompile Include="Sharpen.cpp" />
+    <ClCompile Include="Sobel.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="SuperPixel.cpp" />
+    <ClCompile Include="UnsharpMask.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

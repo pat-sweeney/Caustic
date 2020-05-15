@@ -33,8 +33,8 @@ namespace Caustic
         //**********************************************************************
         // IImageFilter
         //**********************************************************************
-        virtual CRefObj<IImage> Apply(IImage* pImage, IImage* pMask) override;
-        virtual bool ApplyInPlace(IImage* pImage, IImage* pMask) override;
+        virtual CRefObj<IImage> Apply(IImage* pImage, ImageFilterParams* pParams) override;
+        virtual bool ApplyInPlace(IImage* pImage, ImageFilterParams* pParams) override;
     };
 
     //**********************************************************************
@@ -68,7 +68,7 @@ namespace Caustic
     // Method: Apply
     // See <IImageFilter::Apply>
     //**********************************************************************
-    CRefObj<IImage> CColorize::Apply(IImage* pImage, IImage* pMask)
+    CRefObj<IImage> CColorize::Apply(IImage* pImage, ImageFilterParams *ppParams)
     {
         if (pImage->GetBPP() != 16)
             CT(E_UNEXPECTED);
@@ -115,7 +115,7 @@ namespace Caustic
         return spImage;
     }
     
-    bool CColorize::ApplyInPlace(IImage* pImage, IImage* pMask)
+    bool CColorize::ApplyInPlace(IImage* pImage, ImageFilterParams* pParams)
     {
         return false; // Not supported
     }

@@ -36,11 +36,8 @@ namespace Caustic
 		//**********************************************************************
 		// IImageFilter
 		//**********************************************************************
-		virtual CRefObj<IImage> Apply(IImage* pImage, IImage *pMask) override;
-		virtual bool ApplyInPlace(IImage* pImage, IImage* pMask) override
-		{
-			return false;
-		}
+		virtual CRefObj<IImage> Apply(IImage* pImage, ImageFilterParams* pParams) override;
+		virtual bool ApplyInPlace(IImage* pImage, ImageFilterParams *pParams) override { return false; }
 	};
 	
 	//**********************************************************************
@@ -49,12 +46,12 @@ namespace Caustic
 	//
 	// Parameters:
 	// pImage - image to perform filtering on. Must be 32bpp image.
-	// pMask - mask specifing where filtering should be performed. Must be a 1bpp image.
+	// pParams - filter parameters.
 	//
 	// Returns:
 	// Returns the filtered image.
 	//**********************************************************************
-	CRefObj<IImage> CMedianFilter::Apply(IImage* pImage, IImage *pMask)
+	CRefObj<IImage> CMedianFilter::Apply(IImage* pImage, ImageFilterParams *pParams)
 	{
 		CRefObj<IImage> spResult = CreateImage(pImage->GetWidth(), pImage->GetHeight(), pImage->GetBPP());
 		if (pImage->GetBPP() != 32)
@@ -65,6 +62,7 @@ namespace Caustic
 		CImageIter1 citer1;
 		CImageIter1 riter1;
 
+		bool hasMask = pParams && pParams->spMask;
 		uint32 w = pImage->GetWidth();
 		uint32 h = pImage->GetHeight();
 		uint32 w1 = w - 1;
@@ -73,8 +71,8 @@ namespace Caustic
 		riter[1] = CImageIter32(pImage, 0, 0);
 		riter[2] = CImageIter32(pImage, 0, (h > 1) ? 1 : 0);
 		CImageIter32 dstriter = CImageIter32(spResult, 0, 0);
-		if (pMask != nullptr)
-			riter1 = CImageIter1(pMask, 0, 0);
+		if (hasMask)
+			riter1 = CImageIter1(pParams->spMask, 0, 0);
 		for (int y = 0; y < (int)h; y++)
 		{
 			CImageIter32 dstciter = dstriter;
@@ -112,7 +110,7 @@ namespace Caustic
 				clr[2][2].g = citer[2].GetGreen();
 				clr[2][2].r = citer[2].GetRed();
 				clr[2][2].b = citer[2].GetBlue();
-				if (pMask == nullptr || citer1.GetBit())
+				if (!hasMask || (hasMask && citer1.GetBit()))
 				{
 					//
 					// Find median value
@@ -174,7 +172,7 @@ namespace Caustic
 					citer[2].Step(CImageIter::Right);
 				}
 				dstciter.Step(CImageIter::Right);
-				if (pMask != nullptr)
+				if (hasMask)
 					citer1.Step(CImageIter::Right);
 			}
 			if (y > 0)
@@ -183,7 +181,7 @@ namespace Caustic
 			if (y < (int)h1 - 1)
 				riter[2].Step(CImageIter::Down);
 			dstriter.Step(CImageIter::Down);
-			if (pMask != nullptr)
+			if (hasMask)
 				riter1.Step(CImageIter::Down);
 		}
 		return spResult;

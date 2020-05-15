@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:CSharpenFilter","CSharpenFilter");NDSummary.OnSummaryLoaded("CClass:CSharpenFilter",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[321,0,0,"CSharpenFilter"],[322,0,2,"Functions","Functions"],[323,0,1,"CreateSharpenFilter","CreateSharpenFilter"],[324,0,1,"Apply","Apply"]]);

@@ -60,6 +60,191 @@ namespace Caustic
 	};
 
 	//**********************************************************************
+	// Class: CImageIterFloat1
+	// Defines an iterator for walking across the pixels in an image where
+	// each pixel is floating point value.
+	//**********************************************************************
+	class CImageIterFloat1 : public CImageIter
+	{
+	public:
+		CImageIterFloat1()
+		{
+		}
+
+		CImageIterFloat1(IImage* pImage, uint32 x, uint32 y)
+		{
+			assert(pImage->GetBPP() == 32);
+			m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * pImage->GetStride() + (pImage->GetSubX() + x) * 4];
+			m_bpl = pImage->GetStride();
+		}
+
+		void Step(CImageIter::EStepDirection dir)
+		{
+			switch (dir)
+			{
+			case CImageIter::EStepDirection::Left:
+				m_bp -= 4;
+				break;
+			case CImageIter::Right:
+				m_bp += 4;
+				break;
+			case CImageIter::Up:
+				m_bp -= m_bpl;
+				break;
+			case CImageIter::Down:
+				m_bp += m_bpl;
+				break;
+			}
+			return;
+		}
+
+		float1 GetValue() { return float1(((float*)m_bp)[0]); }
+		void SetValue(float1 v) { ((float*)m_bp)[0] = v.x; }
+		void SetValue(float v) { ((float*)m_bp)[0] = v; }
+	};
+
+	//**********************************************************************
+	// Class: CImageIterFloat2
+	// Defines an iterator for walking across the pixels in an image where
+	// each pixel is 2 floating point values.
+	//**********************************************************************
+	class CImageIterFloat2 : public CImageIter
+	{
+	public:
+		CImageIterFloat2()
+		{
+		}
+
+		CImageIterFloat2(IImage* pImage, uint32 x, uint32 y)
+		{
+			assert(pImage->GetBPP() == 64);
+			m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * pImage->GetStride() + (pImage->GetSubX() + x) * 4];
+			m_bpl = pImage->GetStride();
+		}
+
+		void Step(CImageIter::EStepDirection dir)
+		{
+			switch (dir)
+			{
+			case CImageIter::Left:
+				m_bp -= 8;
+				break;
+			case CImageIter::Right:
+				m_bp += 8;
+				break;
+			case CImageIter::Up:
+				m_bp -= m_bpl;
+				break;
+			case CImageIter::Down:
+				m_bp += m_bpl;
+				break;
+			}
+			return;
+		}
+
+		float2 GetValue() { return float2(((float*)m_bp)[0], ((float*)m_bp)[2]); }
+		void SetValue(float2 v) { ((float*)m_bp)[0] = v.x; ((float*)m_bp)[1] = v.y; }
+		void SetValue(float x, float y) { ((float*)m_bp)[0] = x; ((float*)m_bp)[1] = y; }
+		void SetValueX(float x) { ((float*)m_bp)[0] = x; }
+		void SetValueY(float y) { ((float*)m_bp)[1] = y; }
+	};
+
+	//**********************************************************************
+	// Class: CImageIterFloat3
+	// Defines an iterator for walking across the pixels in an image where
+	// each pixel is 3 floating point values.
+	//**********************************************************************
+	class CImageIterFloat3 : public CImageIter
+	{
+	public:
+		CImageIterFloat3()
+		{
+		}
+
+		CImageIterFloat3(IImage* pImage, uint32 x, uint32 y)
+		{
+			assert(pImage->GetBPP() == 32);
+			m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * pImage->GetStride() + (pImage->GetSubX() + x) * 4];
+			m_bpl = pImage->GetStride();
+		}
+
+		void Step(CImageIter::EStepDirection dir)
+		{
+			switch (dir)
+			{
+			case CImageIter::Left:
+				m_bp -= 12;
+				break;
+			case CImageIter::Right:
+				m_bp += 12;
+				break;
+			case CImageIter::Up:
+				m_bp -= m_bpl;
+				break;
+			case CImageIter::Down:
+				m_bp += m_bpl;
+				break;
+			}
+			return;
+		}
+
+		float3 GetValue() { return float3(((float*)m_bp)[0], ((float*)m_bp)[1], ((float*)m_bp)[2]); }
+		void SetValue(float3 v) { ((float*)m_bp)[0] = v.x;  ((float*)m_bp)[1] = v.y; ((float*)m_bp)[2] = v.z; }
+		void SetValue(float x, float y, float z) { ((float*)m_bp)[0] = x; ((float*)m_bp)[1] = y; ((float*)m_bp)[2] = z; }
+		void SetValueX(float x) { ((float*)m_bp)[0] = x; }
+		void SetValueY(float y) { ((float*)m_bp)[1] = y; }
+		void SetValueZ(float z) { ((float*)m_bp)[2] = z; }
+	};
+
+	//**********************************************************************
+	// Class: CImageIterFloat4
+	// Defines an iterator for walking across the pixels in an image where
+	// each pixel is 4 floating point values.
+	//**********************************************************************
+	class CImageIterFloat4 : public CImageIter
+	{
+	public:
+		CImageIterFloat4()
+		{
+		}
+
+		CImageIterFloat4(IImage* pImage, uint32 x, uint32 y)
+		{
+			assert(pImage->GetBPP() == 32);
+			m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * pImage->GetStride() + (pImage->GetSubX() + x) * 4];
+			m_bpl = pImage->GetStride();
+		}
+
+		void Step(CImageIter::EStepDirection dir)
+		{
+			switch (dir)
+			{
+			case CImageIter::Left:
+				m_bp -= 16;
+				break;
+			case CImageIter::Right:
+				m_bp += 16;
+				break;
+			case CImageIter::Up:
+				m_bp -= m_bpl;
+				break;
+			case CImageIter::Down:
+				m_bp += m_bpl;
+				break;
+			}
+			return;
+		}
+
+		float4 GetValue() { return float4(((float*)m_bp)[0], ((float*)m_bp)[1], ((float*)m_bp)[2], ((float*)m_bp)[3]); }
+		void SetValue(float4 v) { ((float*)m_bp)[0] = v.x;  ((float*)m_bp)[1] = v.y; ((float*)m_bp)[2] = v.z; ((float*)m_bp)[3] = v.w; }
+		void SetValue(float x, float y, float z, float w) { ((float*)m_bp)[0] = x; ((float*)m_bp)[1] = y; ((float*)m_bp)[2] = z; ((float*)m_bp)[3] = w; }
+		void SetValueX(float x) { ((float*)m_bp)[0] = x; }
+		void SetValueY(float y) { ((float*)m_bp)[1] = y; }
+		void SetValueZ(float z) { ((float*)m_bp)[2] = z; }
+		void SetValueW(float w) { ((float*)m_bp)[3] = w; }
+	};
+
+	//**********************************************************************
 	// Class: CImageIter1
 	// Defines an iterator for walking across the pixels in an image where
 	// each pixel is 1 bit in width.
@@ -256,6 +441,7 @@ namespace Caustic
 		void SetRed(uint8 v) { m_bp[0] = v; }
 		void SetGreen(uint8 v) { m_bp[1] = v; }
 		void SetBlue(uint8 v) { m_bp[2] = v; }
+		void SetAlpha(uint8 /*v*/) {} // Only defined so templatization works
 	};
 
 	//**********************************************************************
@@ -370,14 +556,18 @@ namespace Caustic
 		CImageIter24 m_iter24;
 		CImageIter32 m_iter32;
 		CImageIter128 m_iter128;
-		int m_bpp;
+		CImageIterFloat1 m_iterFloat1;
+		CImageIterFloat2 m_iterFloat2;
+		CImageIterFloat3 m_iterFloat3;
+		CImageIterFloat4 m_iterFloat4;
+		EImageType m_imageType;
 		int m_x;
 		int m_y;
 		int m_w;
 		int m_h;
 	public:
 		CImageIterGeneric() :
-			m_bpp(0),
+			m_imageType(EImageType::RGB_24bpp),
 			m_x(0),
 			m_y(0),
 			m_w(0),
@@ -387,7 +577,7 @@ namespace Caustic
 
 		CImageIterGeneric(IImage* pImage, int32 x, int32 y)
 		{
-			m_bpp = pImage->GetBPP();
+			m_imageType = pImage->GetImageType();
 			if (x < 0)
 				x = 0;
 			if (x >= (int32)pImage->GetWidth())
@@ -400,39 +590,54 @@ namespace Caustic
 			m_y = y;
 			m_w = pImage->GetWidth();
 			m_h = pImage->GetHeight();
-			switch (m_bpp)
+			switch (pImage->GetImageType())
 			{
-			case 1:
+			case EImageType::BW_1bpp:
 				m_iter1 = CImageIter1(pImage, x, y);
 				break;
-			case 8:
+			case EImageType::Gray_8bpp:
 				m_iter8 = CImageIter8(pImage, x, y);
 				break;
-			case 16:
+			case EImageType::Gray_16bpp:
 				m_iter16 = CImageIter16(pImage, x, y);
 				break;
-			case 24:
+			case EImageType::RGB_24bpp:
 				m_iter24 = CImageIter24(pImage, x, y);
 				break;
-			case 32:
+			case EImageType::RGBA_32bpp:
+			case EImageType::RGBX_32bpp:
 				m_iter32 = CImageIter32(pImage, x, y);
 				break;
-			case 129:
-				m_iter128 = CImageIter128(pImage, x, y);
+			case EImageType::Float1_32bpp:
+				m_iterFloat1 = CImageIterFloat1(pImage, x, y);
+				break;
+			case EImageType::Float2_64bpp:
+				m_iterFloat2 = CImageIterFloat2(pImage, x, y);
+				break;
+			case EImageType::Float3_96bpp:
+				m_iterFloat3 = CImageIterFloat3(pImage, x, y);
+				break;
+			case EImageType::Float4_128bpp:
+				m_iterFloat4 = CImageIterFloat4(pImage, x, y);
 				break;
 			}
 		}
 
 		void Step(CImageIter::EStepDirection dir)
 		{
-			switch (m_bpp)
+			switch (m_imageType)
 			{
-			case 1: m_iter1.Step(dir); break;
-			case 8: m_iter8.Step(dir); break;
-			case 16: m_iter16.Step(dir); break;
-			case 24: m_iter24.Step(dir); break;
-			case 32: m_iter32.Step(dir); break;
-			case 128: m_iter128.Step(dir); break;
+			case EImageType::BW_1bpp: m_iter1.Step(dir); break;
+			case EImageType::Gray_8bpp: m_iter8.Step(dir); break;
+			case EImageType::Gray_16bpp: m_iter16.Step(dir); break;
+			case EImageType::RGB_24bpp: m_iter24.Step(dir); break;
+			case EImageType::RGBA_32bpp:
+			case EImageType::RGBX_32bpp:
+				m_iter32.Step(dir); break;
+			case EImageType::Float1_32bpp: m_iterFloat1.Step(dir); break;
+			case EImageType::Float2_64bpp: m_iterFloat2.Step(dir); break;
+			case EImageType::Float3_96bpp: m_iterFloat3.Step(dir); break;
+			case EImageType::Float4_128bpp: m_iterFloat4.Step(dir); break;
 			}
 		}
 
@@ -461,155 +666,213 @@ namespace Caustic
 				m_y++;
 				break;
 			}
-			switch (m_bpp)
+			switch (m_imageType)
 			{
-			case 1: m_iter1.Step(dir); break;
-			case 8: m_iter8.Step(dir); break;
-			case 16: m_iter16.Step(dir); break;
-			case 24: m_iter24.Step(dir); break;
-			case 32: m_iter32.Step(dir); break;
-			case 128: m_iter32.Step(dir); break;
+			case EImageType::BW_1bpp: m_iter1.Step(dir); break;
+			case EImageType::Gray_8bpp: m_iter8.Step(dir); break;
+			case EImageType::Gray_16bpp: m_iter16.Step(dir); break;
+			case EImageType::RGB_24bpp: m_iter24.Step(dir); break;
+			case EImageType::RGBA_32bpp:
+			case EImageType::RGBX_32bpp:
+				m_iter32.Step(dir);
+				break;
+			case EImageType::Float1_32bpp: m_iterFloat1.Step(dir); break;
+			case EImageType::Float2_64bpp: m_iterFloat2.Step(dir); break;
+			case EImageType::Float3_96bpp: m_iterFloat3.Step(dir); break;
+			case EImageType::Float4_128bpp: m_iterFloat4.Step(dir); break;
 			}
 			return true;
 		}
 
 		uint8 GetRed()
 		{
-			switch (m_bpp)
+			switch (m_imageType)
 			{
-			case 1: return m_iter1.GetBit() ? 255 : 0;
-			case 8: return m_iter8.GetGray();
-			case 16: return (m_iter16.GetGray() > 0x7fff) ? 255 : 0;
-			case 24: return m_iter24.GetRed();
-			case 32: return m_iter32.GetRed();
-			case 128: return uint8(255.0f * m_iter128.GetRed());
+			case EImageType::BW_1bpp: return m_iter1.GetBit() ? 255 : 0;
+			case EImageType::Gray_8bpp: return m_iter8.GetGray();
+			case EImageType::Gray_16bpp: return (m_iter16.GetGray() > 0x7fff) ? 255 : 0;
+			case EImageType::RGB_24bpp: return m_iter24.GetRed();
+			case EImageType::RGBA_32bpp:
+			case EImageType::RGBX_32bpp:
+				return m_iter32.GetRed();
+			case EImageType::Float1_32bpp: return uint8(255.0f * m_iterFloat1.GetValue());
+			case EImageType::Float2_64bpp: return uint8(255.0f * m_iterFloat2.GetValue().x);
+			case EImageType::Float3_96bpp: return uint8(255.0f * m_iterFloat3.GetValue().x);
+			case EImageType::Float4_128bpp: return uint8(255.0f * m_iterFloat4.GetValue().x);
 			}
 			return 0;
 		}
 
 		uint8 GetGreen()
 		{
-			switch (m_bpp)
+			switch (m_imageType)
 			{
-			case 1: return m_iter1.GetBit() ? 255 : 0;
-			case 8: return m_iter8.GetGray();
-			case 16: return (m_iter16.GetGray() > 0x7fff) ? 255 : 0;
-			case 24: return m_iter24.GetGreen();
-			case 32: return m_iter32.GetGreen();
-			case 128: return uint8(255.0f * m_iter128.GetGreen());
+			case EImageType::BW_1bpp: return m_iter1.GetBit() ? 255 : 0;
+			case EImageType::Gray_8bpp: return m_iter8.GetGray();
+			case EImageType::Gray_16bpp: return (m_iter16.GetGray() > 0x7fff) ? 255 : 0;
+			case EImageType::RGB_24bpp: return m_iter24.GetGreen();
+			case EImageType::RGBA_32bpp:
+			case EImageType::RGBX_32bpp:
+				return m_iter32.GetGreen();
+			case EImageType::Float1_32bpp: return uint8(255.0f * m_iterFloat1.GetValue());
+			case EImageType::Float2_64bpp: return uint8(255.0f * m_iterFloat2.GetValue().y);
+			case EImageType::Float3_96bpp: return uint8(255.0f * m_iterFloat3.GetValue().y);
+			case EImageType::Float4_128bpp: return uint8(255.0f * m_iterFloat4.GetValue().y);
 			}
 			return 0;
 		}
 
 		uint8 GetBlue()
 		{
-			switch (m_bpp)
+			switch (m_imageType)
 			{
-			case 1: return m_iter1.GetBit() ? 255 : 0;
-			case 8: return m_iter8.GetGray();
-			case 16: return (m_iter16.GetGray() > 0x7fff) ? 255 : 0;
-			case 24: return m_iter24.GetBlue();
-			case 32: return m_iter32.GetBlue();
-			case 128: return uint8(255.0f * m_iter128.GetBlue());
+			case EImageType::BW_1bpp: return m_iter1.GetBit() ? 255 : 0;
+			case EImageType::Gray_8bpp: return m_iter8.GetGray();
+			case EImageType::Gray_16bpp: return (m_iter16.GetGray() > 0x7fff) ? 255 : 0;
+			case EImageType::RGB_24bpp: return m_iter24.GetBlue();
+			case EImageType::RGBA_32bpp:
+			case EImageType::RGBX_32bpp:
+				return m_iter32.GetBlue();
+			case EImageType::Float1_32bpp: return uint8(255.0f * m_iterFloat1.GetValue());
+			case EImageType::Float2_64bpp: return uint8(255);
+			case EImageType::Float3_96bpp: return uint8(255.0f * m_iterFloat3.GetValue().z);
+			case EImageType::Float4_128bpp: return uint8(255.0f * m_iterFloat4.GetValue().z);
 			}
 			return 0;
 		}
 
 		uint8 GetAlpha()
 		{
-			switch (m_bpp)
+			switch (m_imageType)
 			{
-			case 1: return m_iter1.GetBit() ? 255 : 0;
-			case 8: return m_iter8.GetGray();
-			case 16: return (m_iter16.GetGray() > 0x7fff) ? 255 : 0;
-			case 24: return 255;
-			case 32: return m_iter32.GetAlpha();
-			case 128: return uint8(255.0f * m_iter128.GetAlpha());
+			case EImageType::BW_1bpp: return m_iter1.GetBit() ? 255 : 0;
+			case EImageType::Gray_8bpp: return m_iter8.GetGray();
+			case EImageType::Gray_16bpp: return (m_iter16.GetGray() > 0x7fff) ? 255 : 0;
+			case EImageType::RGB_24bpp: return m_iter24.GetBlue();
+			case EImageType::RGBA_32bpp:
+			case EImageType::RGBX_32bpp:
+				return m_iter32.GetBlue();
+			case EImageType::Float1_32bpp: return uint8(255.0f * m_iterFloat1.GetValue());
+			case EImageType::Float2_64bpp: return uint8(255);
+			case EImageType::Float3_96bpp: return uint8(255);
+			case EImageType::Float4_128bpp: return uint8(255.0f * m_iterFloat4.GetValue().w);
 			}
 			return 0;
 		}
 
 		int GetGray()
 		{
-			switch (m_bpp)
+			switch (m_imageType)
 			{
-			case 1: return m_iter1.GetBit() ? 255 : 0;
-			case 8: return (int)m_iter8.GetGray();
-			case 16: return (int)m_iter16.GetGray();
-			case 24:
-				{
-					RGBColor rgb(m_iter32.GetRed(), m_iter32.GetGreen(), m_iter32.GetBlue());
-					YIQColor yiq(rgb);
-					return (int)yiq.y;
-				}
-			case 32:
-				{
-					RGBColor rgb(m_iter32.GetRed(), m_iter32.GetGreen(), m_iter32.GetBlue());
-					YIQColor yiq(rgb);
-					return (int)yiq.y;
-				}
-			case 128:
-				{
-					RGBColor rgb(
-						uint8(255.0f * m_iter128.GetRed()),
-						uint8(255.0f * m_iter128.GetGreen()),
-						uint8(255.0f * m_iter128.GetBlue()));
-					YIQColor yiq(rgb);
-					return (int)yiq.y;
-				}
+			case EImageType::BW_1bpp: return m_iter1.GetBit() ? 255 : 0;
+			case EImageType::Gray_8bpp: return m_iter8.GetGray();
+			case EImageType::Gray_16bpp: return m_iter16.GetGray();
+			case EImageType::RGB_24bpp:
+			{
+				RGBColor rgb(m_iter24.GetRed(), m_iter24.GetGreen(), m_iter24.GetBlue());
+				YIQColor yiq(rgb);
+				return (int)yiq.y;
+			}
+			case EImageType::RGBA_32bpp:
+			case EImageType::RGBX_32bpp:
+			{
+				RGBColor rgb(m_iter32.GetRed(), m_iter32.GetGreen(), m_iter32.GetBlue());
+				YIQColor yiq(rgb);
+				return (int)yiq.y;
+			}
+			case EImageType::Float1_32bpp: return uint8(255.0f * m_iterFloat1.GetValue());
+			case EImageType::Float2_64bpp:
+			{
+				RGBColor rgb(
+					uint8(255.0f * m_iterFloat4.GetValue().x),
+					uint8(255.0f * m_iterFloat4.GetValue().y),
+					uint8(255));
+				YIQColor yiq(rgb);
+				return (int)yiq.y;
+			}
+			case EImageType::Float3_96bpp:
+			case EImageType::Float4_128bpp:
+			{
+				RGBColor rgb(
+					uint8(255.0f * m_iterFloat4.GetValue().x),
+					uint8(255.0f * m_iterFloat4.GetValue().y),
+					uint8(255.0f * m_iterFloat4.GetValue().z));
+				YIQColor yiq(rgb);
+				return (int)yiq.y;
+			}
 			}
 			return 0;
 		}
 
 		void SetRed(uint8 r)
 		{
-			switch (m_bpp)
+			switch (m_imageType)
 			{
-			case 1: (r > 0x7f) ? m_iter1.SetBit(1) : m_iter1.SetBit(0); break;
-			case 8: m_iter8.SetGray(r); break;
-			case 16: m_iter16.SetGray(uint16(r)<<8); break;
-			case 24: m_iter24.SetRed(r); break;
-			case 32: m_iter32.SetRed(r); break;
-			case 128: m_iter128.SetRed(r / 255.0f); break;
+			case EImageType::BW_1bpp: (r > 0x7f) ? m_iter1.SetBit(1) : m_iter1.SetBit(0); break;
+			case EImageType::Gray_8bpp: m_iter8.SetGray(r); break;
+			case EImageType::Gray_16bpp: m_iter16.SetGray(uint16(r) << 8); break;
+			case EImageType::RGB_24bpp: m_iter24.SetRed(r); break;
+			case EImageType::RGBA_32bpp:
+			case EImageType::RGBX_32bpp:
+				m_iter32.SetRed(r); break;
+			case EImageType::Float1_32bpp: m_iterFloat1.SetValue(r / 255.0f); break;
+			case EImageType::Float2_64bpp: m_iterFloat2.SetValueX(r / 255.0f); break;
+			case EImageType::Float3_96bpp: m_iterFloat3.SetValueX(r / 255.0f); break;
+			case EImageType::Float4_128bpp: m_iterFloat4.SetValueX(r / 255.0f); break;
 			}
 		}
 
 		void SetGreen(uint8 g)
 		{
-			switch (m_bpp)
+			switch (m_imageType)
 			{
-			case 1: (g > 0x7f) ? m_iter1.SetBit(1) : m_iter1.SetBit(0); break;
-			case 8: m_iter8.SetGray(g); break;
-			case 16: m_iter16.SetGray(uint16(g) << 8); break;
-			case 24: m_iter24.SetGreen(g); break;
-			case 32: m_iter32.SetGreen(g); break;
-			case 128: m_iter128.SetGreen(g / 255.0f); break;
+			case EImageType::BW_1bpp: (g > 0x7f) ? m_iter1.SetBit(1) : m_iter1.SetBit(0); break;
+			case EImageType::Gray_8bpp: m_iter8.SetGray(g); break;
+			case EImageType::Gray_16bpp: m_iter16.SetGray(uint16(g) << 8); break;
+			case EImageType::RGB_24bpp: m_iter24.SetGreen(g); break;
+			case EImageType::RGBA_32bpp:
+			case EImageType::RGBX_32bpp:
+				m_iter32.SetGreen(g); break;
+			case EImageType::Float1_32bpp: m_iterFloat1.SetValue(g / 255.0f); break;
+			case EImageType::Float2_64bpp: m_iterFloat2.SetValueY(g / 255.0f); break;
+			case EImageType::Float3_96bpp: m_iterFloat3.SetValueY(g / 255.0f); break;
+			case EImageType::Float4_128bpp: m_iterFloat4.SetValueY(g / 255.0f); break;
 			}
 		}
 
 		void SetBlue(uint8 b)
 		{
-			switch (m_bpp)
+			switch (m_imageType)
 			{
-			case 1: (b > 0x7f) ? m_iter1.SetBit(1) : m_iter1.SetBit(0); break;
-			case 8: m_iter8.SetGray(b); break;
-			case 16: m_iter16.SetGray(uint16(b) << 8); break;
-			case 24: m_iter24.SetBlue(b); break;
-			case 32: m_iter32.SetBlue(b); break;
-			case 128: m_iter128.SetBlue(b / 255.0f); break;
+			case EImageType::BW_1bpp: (b > 0x7f) ? m_iter1.SetBit(1) : m_iter1.SetBit(0); break;
+			case EImageType::Gray_8bpp: m_iter8.SetGray(b); break;
+			case EImageType::Gray_16bpp: m_iter16.SetGray(uint16(b) << 8); break;
+			case EImageType::RGB_24bpp: m_iter24.SetBlue(b); break;
+			case EImageType::RGBA_32bpp:
+			case EImageType::RGBX_32bpp:
+				m_iter32.SetBlue(b); break;
+			case EImageType::Float1_32bpp: m_iterFloat1.SetValue(b / 255.0f); break;
+			case EImageType::Float2_64bpp: break;
+			case EImageType::Float3_96bpp: m_iterFloat3.SetValueZ(b / 255.0f); break;
+			case EImageType::Float4_128bpp: m_iterFloat4.SetValueZ(b / 255.0f); break;
 			}
 		}
 
 		void SetAlpha(uint8 a)
 		{
-			switch (m_bpp)
+			switch (m_imageType)
 			{
-			case 1: (a > 0x7f) ? m_iter1.SetBit(1) : m_iter1.SetBit(0); break;
-			case 8: m_iter8.SetGray(a); break;
-			case 16: m_iter16.SetGray(uint16(a) << 8); break;
-			case 24: break;
-			case 32: m_iter32.SetAlpha(a); break;
-			case 128: m_iter128.SetAlpha(a / 255.0f); break;
+			case EImageType::BW_1bpp: (a > 0x7f) ? m_iter1.SetBit(1) : m_iter1.SetBit(0); break;
+			case EImageType::Gray_8bpp: m_iter8.SetGray(a); break;
+			case EImageType::Gray_16bpp: m_iter16.SetGray(uint16(a) << 8); break;
+			case EImageType::RGB_24bpp: break;
+			case EImageType::RGBA_32bpp:
+			case EImageType::RGBX_32bpp:
+				m_iter32.SetAlpha(a); break;
+			case EImageType::Float1_32bpp: m_iterFloat1.SetValue(a / 255.0f); break;
+			case EImageType::Float2_64bpp: break;
+			case EImageType::Float3_96bpp: break;
+			case EImageType::Float4_128bpp: m_iterFloat4.SetValueW(a / 255.0f); break;
 			}
 		}
 	};

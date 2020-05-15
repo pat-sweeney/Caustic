@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:CRenderCtx","CRenderCtx");NDSummary.OnSummaryLoaded("CClass:CRenderCtx",[["C/C++","C"]],[["Classes","Class"]],[[876,0,0,"CRenderCtx"]]);
+NDFramePage.OnPageTitleLoaded("CClass:CRenderCtx","CRenderCtx");NDSummary.OnSummaryLoaded("CClass:CRenderCtx",[["C/C++","C"]],[["Classes","Class"]],[[520,0,0,"CRenderCtx"]]);

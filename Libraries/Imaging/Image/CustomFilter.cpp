@@ -62,11 +62,8 @@ namespace Caustic
 		//**********************************************************************
 		// IImageFilter
 		//**********************************************************************
-		virtual CRefObj<IImage> Apply(IImage* pImage, IImage* pMask) override;
-		virtual bool ApplyInPlace(IImage* pImage, IImage* pMask) override
-		{
-			return false;
-		}
+		virtual CRefObj<IImage> Apply(IImage* pImage, ImageFilterParams* pParams) override;
+		virtual bool ApplyInPlace(IImage* pImage, ImageFilterParams* pParams) override { return false; }
 	};
 
 	//**********************************************************************
@@ -75,20 +72,20 @@ namespace Caustic
 	//
 	// Parameters:
 	// pImage - image to perform filtering on. Must be 32bpp image.
-	// pMask - mask specifing where filtering should be performed. Must be a 1bpp image.
+	// pParams - filter parameters
 	//
 	// Returns:
 	// Returns the filtered image.
 	//**********************************************************************
-	CRefObj<IImage> CCustomFilter::Apply(IImage* pImage, IImage* pMask)
+	CRefObj<IImage> CCustomFilter::Apply(IImage* pImage, ImageFilterParams* pParams)
 	{
 		CRefObj<IImage> spResult = CreateImage(pImage->GetWidth(), pImage->GetHeight(), pImage->GetBPP());
 		if (pImage->GetBPP() != 32)
 			CT(E_UNEXPECTED); // Only 32bbp images supported
 		if (m_kernelWidth == 3 && m_kernelHeight == 3)
-			FastApply(pImage, pMask, spResult);
+			FastApply(pImage, pParams->spMask, spResult);
 		else
-			SlowApply(pImage, pMask, spResult);
+			SlowApply(pImage, pParams->spMask, spResult);
 		return spResult;
 	}
 	

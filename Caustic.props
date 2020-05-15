@@ -2,8 +2,9 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
-    <CausticRoot>g:\github\Caustic</CausticRoot>
-    <CausticFXCPath>C:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x64\fxc.exe</CausticFXCPath>
+    <AzureKinectSDKDir Condition="'$(AzureKinectSDKDir)'==''">C:\Program Files\Azure Kinect SDK v1.4.0</AzureKinectSDKDir>
+    <CausticRoot Condition="'$(CausticRoot)'==''">j:\github\Caustic</CausticRoot>
+    <CausticFXCPath Condition="'$(CausticFXCPath)'==''">C:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x64\fxc.exe</CausticFXCPath>
     <CausticDefaultExtLibs>windowscodecs.lib;msxml6.lib;d3dcompiler.lib;d3d11.lib;mf.lib;mfplat.lib;mfuuid.lib;mfreadwrite.lib;k4a.lib;msxml6.lib;d3dcompiler.lib;d3d11.lib</CausticDefaultExtLibs>
     <CausticDefaultExtLibDirs>$(AzureKinectSDKDir)\sdk\windows-desktop\amd64\release\lib</CausticDefaultExtLibDirs>
   </PropertyGroup>

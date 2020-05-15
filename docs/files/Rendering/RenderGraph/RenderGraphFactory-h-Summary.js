@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("File:Rendering/RenderGraph/RenderGraphFactory.h","RenderGraphFactory.h");NDSummary.OnSummaryLoaded("File:Rendering/RenderGraph/RenderGraphFactory.h",[["C/C++","C"]],[["Classes","Class"]],[[921,0,0,"CRenderGraphFactory","CRenderGraphFactory"]]);
+NDFramePage.OnPageTitleLoaded("File:Rendering/RenderGraph/RenderGraphFactory.h","RenderGraphFactory.h");NDSummary.OnSummaryLoaded("File:Rendering/RenderGraph/RenderGraphFactory.h",[["C/C++","C"]],[["Classes","Class"]],[[819,0,0,"CRenderGraphFactory","CRenderGraphFactory"]]);

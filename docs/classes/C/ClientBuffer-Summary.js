@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:ClientBuffer","ClientBuffer");NDSummary.OnSummaryLoaded("CClass:ClientBuffer",[["C/C++","C"]],[["Structs","Struct"]],[[367,0,0,"ClientBuffer"]]);
+NDFramePage.OnPageTitleLoaded("CClass:ClientBuffer","ClientBuffer");NDSummary.OnSummaryLoaded("CClass:ClientBuffer",[["C/C++","C"]],[["Structs","Struct"]],[[686,0,0,"ClientBuffer"]]);
