@@ -264,6 +264,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 spFilter = CreateMedian();
                 SetDisplayImage(spSourceImage);
                 break;
+            case ID_FILTER_BOXFILTER3X3:
+                spFilter = CreateBoxFilter(3);
+                SetDisplayImage(spSourceImage);
+                break;
+            case ID_FILTER_BOXFILTER9X9:
+                spFilter = CreateBoxFilter(9);
+                SetDisplayImage(spSourceImage);
+                break;
             case IDM_ABOUT:
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
                 break;

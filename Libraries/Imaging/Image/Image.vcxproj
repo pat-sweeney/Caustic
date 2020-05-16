@@ -86,6 +86,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BoxFilter.cpp" />
     <ClCompile Include="Coloriize.cpp" />
     <ClCompile Include="Convert.cpp" />
     <ClCompile Include="CustomFilter.cpp" />
