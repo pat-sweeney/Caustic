@@ -89,10 +89,13 @@
     <ClCompile Include="Coloriize.cpp" />
     <ClCompile Include="Convert.cpp" />
     <ClCompile Include="CustomFilter.cpp" />
+    <ClCompile Include="EqualizeFilter.cpp" />
     <ClCompile Include="GaussianBlur.cpp" />
     <ClCompile Include="HarrisCorners.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="MedianFilter.cpp" />
+    <ClCompile Include="MosaicFilter.cpp" />
+    <ClCompile Include="MotionBlurFilter.cpp" />
     <ClCompile Include="Sharpen.cpp" />
     <ClCompile Include="Sobel.cpp" />
     <ClCompile Include="stdafx.cpp">

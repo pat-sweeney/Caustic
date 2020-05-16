@@ -50,12 +50,12 @@ void DrawImage(HDC hdc, HBITMAP img, int w, int h)
     }
 }
 
-void SetDisplayImage(IImage *pImage)
+void SetDisplayImage(IImage *pImage, ImageFilterParams *pParams = nullptr)
 {
     IImage* pDisplayImage = pImage;
     if (spFilter)
     {
-        spFilteredSourceImage = spFilter->Apply(pImage, nullptr);
+        spFilteredSourceImage = spFilter->Apply(pImage, pParams);
         pDisplayImage = spFilteredSourceImage;
     }
     spSourceImage = pImage;
@@ -230,6 +230,32 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 spFilter = CreateUnsharpMaskFilter();
                 SetDisplayImage(spSourceImage);
                 break;
+            case ID_FILTER_EQUALIZE:
+            {
+                spFilter = CreateEqualizeFilter();
+                ImageFilterParams params;
+                params.params["UseLuminance"] = std::any((bool)true);
+                SetDisplayImage(spSourceImage, &params);
+            }
+            break;
+            case ID_FILTER_MOSAIC:
+            {
+                spFilter = CreateMosaicFilter();
+                ImageFilterParams params;
+                params.params["BlockWidth"] = std::any((int)15);
+                params.params["BlockHeight"] = std::any((int)15);
+                SetDisplayImage(spSourceImage, &params);
+            }
+            break;
+            case ID_FILTER_MOTIONBLUR:
+            {
+                spFilter = CreateMotionBlurFilter();
+                ImageFilterParams params;
+                params.params["DeltaX"] = std::any((int)20);
+                params.params["DeltaY"] = std::any((int)20);
+                SetDisplayImage(spSourceImage, &params);
+            }
+            break;
             case ID_FILTER_GAUSSIANBLUR:
                 spFilter = CreateGaussianBlur();
                 SetDisplayImage(spSourceImage);
