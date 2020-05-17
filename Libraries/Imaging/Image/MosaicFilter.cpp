@@ -16,6 +16,14 @@
 // Namespace: Caustic
 namespace Caustic
 {
+	//**********************************************************************
+	// Class: CMosaicFilter
+	// Defines an image filter for performing mosaic filtering
+	//
+	// Image Filter Parameters:
+	// "BlockWidth" : <int> - Width in pixels of a block
+	// "BlockHeight" : <int> - Height in pixels of a block
+	//**********************************************************************
 	class CMosaicFilter : public IImageFilter, public CRefCount
 	{
 		template <typename T>
@@ -60,7 +68,8 @@ namespace Caustic
 		int blockh = 10;
 		if (pParams != nullptr)
 		{
-			std::map<std::string, std::any>::iterator it = pParams->params.find("BlockWidth");
+			std::map<std::string, std::any>::iterator it;
+			it = pParams->params.find("BlockWidth");
 			if (it != pParams->params.end())
 				blockw = std::any_cast<int>(it->second);
 			it = pParams->params.find("BlockHeight");

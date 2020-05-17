@@ -17,7 +17,10 @@ namespace Caustic
 {
     //**********************************************************************
     // Class: CBoxFilter
-    // Defines an image filter for performing blurring via box filter.
+    // Defines an image filter for performing blurring via box filter
+    //
+    // Image Filter Parameters:
+    // None
     //**********************************************************************
     class CBoxFilter : public IImageFilter, public CRefCount
     {
@@ -70,7 +73,7 @@ namespace Caustic
     CRefObj<IImage> CBoxFilter::Apply(IImage* pImage, ImageFilterParams* pParams)
     {
         CRefObj<IIntegralImage> spIntegralImage = CreateIntegralImage(pImage);
-        return spIntegralImage->BoxBlur(40, 40);// m_kernelSize, m_kernelSize);
+        return spIntegralImage->BoxBlur(m_kernelSize, m_kernelSize);
     }
 
     bool CBoxFilter::ApplyInPlace(IImage* pImage, ImageFilterParams* pParams)

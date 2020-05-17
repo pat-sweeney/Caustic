@@ -19,6 +19,9 @@ namespace Caustic
 	//**********************************************************************
 	// Class: CCustomFilter
 	// Defines an general image filter using a weighted kernel.
+	//
+	// Image Filter Parameters:
+	// None
 	//**********************************************************************
 	class CCustomFilter : public IImageFilter, public CRefCount
 	{

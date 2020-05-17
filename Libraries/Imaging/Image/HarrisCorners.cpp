@@ -19,6 +19,9 @@ namespace Caustic
 	//**********************************************************************
 	// Class: CHarrisCornerFilter
 	// Defines an image filter for computing Harris corners in an image
+	//
+	// Image Filter Parameters:
+	// None
 	//**********************************************************************
 	class CHarrisCornerFilter : public IImageFilter, public CRefCount
 	{

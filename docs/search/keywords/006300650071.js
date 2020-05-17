@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("ceq",["Class"],[["CEqualizeFilter",,[[,,,,0,"File:Imaging/Image/EqualizeFilter.cpp:CEqualizeFilter","CClass:CEqualizeFilter"]]]]);

@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("File:Rendering/RenderGraph/RGNMaterial.h","RGNMaterial.h");NDSummary.OnSummaryLoaded("File:Rendering/RenderGraph/RGNMaterial.h",[["C/C++","C"]],[["Classes","Class"]],[[816,0,0,"CRenderGraphNode_Material","CRenderGraphNode_Material"]]);
+NDFramePage.OnPageTitleLoaded("File:Rendering/RenderGraph/RGNMaterial.h","RGNMaterial.h");NDSummary.OnSummaryLoaded("File:Rendering/RenderGraph/RGNMaterial.h",[["C/C++","C"]],[["Classes","Class"]],[[858,0,0,"CRenderGraphNode_Material","CRenderGraphNode_Material"]]);

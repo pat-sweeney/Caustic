@@ -19,6 +19,9 @@ namespace Caustic
 	//**********************************************************************
 	// Class: CSobelFilter
 	// Filter for performing edge detection using a Sobel filter.
+	//
+	// Image Filter Parameters:
+	// None
 	//**********************************************************************
 	class CSobelFilter : public IImageFilter, public CRefCount
 	{

@@ -12,6 +12,28 @@
 namespace Caustic
 {
 	//**********************************************************************
+	// Function: isqrt
+	// Computes the sqrt of an integer via Newtons method without using floating point.
+	// See https://en.wikipedia.org/wiki/Integer_square_root for details.
+	//**********************************************************************
+	inline uint32 isqrt(uint32 n)
+	{
+		uint32 next = n >> 1;
+		uint32 cur;
+
+		if (n <= 1)
+			return n;
+		while (true)
+		{
+			cur = next;
+			next = (next + n / next) >> 1;
+			if (next >= cur)
+				break;
+		}
+		return cur;
+	}
+
+	//**********************************************************************
 	// Function: Determinant2x2
 	// Computes the determinant of a 2x2 matrix.
 	//

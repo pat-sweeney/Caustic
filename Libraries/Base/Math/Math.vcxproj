@@ -81,8 +81,10 @@
     <ClInclude Include="BBox.h" />
     <ClInclude Include="Covariance.h" />
     <ClInclude Include="Helper.h" />
+    <ClInclude Include="IBBox.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="OBBox.h" />
+    <ClInclude Include="Point.h" />
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="stdafx.h" />

@@ -17,6 +17,9 @@ namespace Caustic
     //**********************************************************************
     // Class: CGaussianBlur
     // Defines an image filter for performing gaussian blurring.
+    //
+    // Image Filter Parameters:
+    // None
     //**********************************************************************
     class CGaussianBlur : public IImageFilter, public CRefCount
     {

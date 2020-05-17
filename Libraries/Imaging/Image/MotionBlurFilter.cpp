@@ -17,6 +17,14 @@
 // Namespace: Caustic
 namespace Caustic
 {
+	//**********************************************************************
+	// Class: CMotionBlurFilter
+	// Defines an image filter for performing motion blur
+	//
+	// Image Filter Parameters:
+	// "DeltaX" : <int> - X direction for motion
+	// "DeltaY" : <int> - Y direction for motion
+	//**********************************************************************
 	class CMotionBlurFilter : public IImageFilter, public CRefCount
 	{
 		template <typename T>

@@ -20,96 +20,96 @@ namespace Caustic
     {
         float x, y;
 
-	//**********************************************************************
-	// Constructor: Vector2
-	// Default contructor
-	//**********************************************************************
-	Vector2() {}
+	    //**********************************************************************
+	    // Constructor: Vector2
+	    // Default contructor
+	    //**********************************************************************
+	    Vector2() {}
 
-	//**********************************************************************
-	// Constructor: Vector2
-	// Contructor for a 2D vector
-	//
-	// Parameters:
-	// _x - X coordinate
-	// _y - Y coordinate
-	//**********************************************************************
-	Vector2(float _x, float _y) { x = _x; y = _y; }
+	    //**********************************************************************
+	    // Constructor: Vector2
+	    // Contructor for a 2D vector
+	    //
+	    // Parameters:
+	    // _x - X coordinate
+	    // _y - Y coordinate
+	    //**********************************************************************
+	    Vector2(float _x, float _y) { x = _x; y = _y; }
 
-	//**********************************************************************
-	// Method: IsEq
-	// Returns whether two points are equivalent (within some tolerance)
-	//
-	// Parameters:
-	// p - Point to compare against
-	//
-	// Returns:
-	// True if points are equivalent. False otherwise.
-	//**********************************************************************
-	bool IsEq(const Vector2 &p)
-	{
-	    if (IsZero(p.x - x) && IsZero(p.y - y))
-		    return true;
-	    return false;
-	}
-
-	//**********************************************************************
-	// Method: Length
-	// Returns the L2 norm for the vector
-	//
-	// Returns:
-	// Length of vector
-	//**********************************************************************
-	float Length() { return (float)sqrtf(x * x + y * y); }
-
-	//**********************************************************************
-	// Method: Normalize
-	// Normalizes the vector
-	//
-	// Returns:
-	// Normalized vector
-	//**********************************************************************
-	Vector2 Normalize()
-	{
-	    float len = Length();
-	    if (!IsZero(len))
+	    //**********************************************************************
+	    // Method: IsEq
+	    // Returns whether two points are equivalent (within some tolerance)
+	    //
+	    // Parameters:
+	    // p - Point to compare against
+	    //
+	    // Returns:
+	    // True if points are equivalent. False otherwise.
+	    //**********************************************************************
+	    bool IsEq(const Vector2 &p)
 	    {
-		    x /= len;
-		    y /= len;
+	        if (IsZero(p.x - x) && IsZero(p.y - y))
+		        return true;
+	        return false;
 	    }
-	    return Vector2(x, y);
-	}
 
-	//**********************************************************************
-	// Method: Cross
-	// Computes cross product between two vectors
-	//
-	// Returns:
-	// Cross product vector
-	//**********************************************************************
-	float Cross(const Vector2 &v)
-	{
-	    return x * v.y - y * v.x;
-	}
+	    //**********************************************************************
+	    // Method: Length
+	    // Returns the L2 norm for the vector
+	    //
+	    // Returns:
+	    // Length of vector
+	    //**********************************************************************
+	    float Length() { return (float)sqrtf(x * x + y * y); }
 
-	//**********************************************************************
-	// Method: Dot
-	// Computes dot product between two vectors
-	//
-	// Returns:
-	// Dot product
-	//**********************************************************************
-	float Dot(const Vector2 &v)
-	{
-	    return x * v.x + y * v.y;
-	}
+	    //**********************************************************************
+	    // Method: Normalize
+	    // Normalizes the vector
+	    //
+	    // Returns:
+	    // Normalized vector
+	    //**********************************************************************
+	    Vector2 Normalize()
+	    {
+	        float len = Length();
+	        if (!IsZero(len))
+	        {
+		        x /= len;
+		        y /= len;
+	        }
+	        return Vector2(x, y);
+	    }
 
-	Vector2 operator-() { return Vector2(-x, -y); }
-	Vector2 operator-(Vector2 &rhs) { return Vector2(x - rhs.x, y - rhs.y); }
-	Vector2 operator+(Vector2 &rhs) { return Vector2(x + rhs.x, y + rhs.y); }
-	Vector2 operator*(float f) { return Vector2(x * f, y * f); }
-	bool operator==(Vector2 &rhs) { return this->IsEq(rhs); }
-	bool operator!=(Vector2 &rhs) { return !this->IsEq(rhs); }
+	    //**********************************************************************
+	    // Method: Cross
+	    // Computes cross product between two vectors
+	    //
+	    // Returns:
+	    // Cross product vector
+	    //**********************************************************************
+	    float Cross(const Vector2 &v)
+	    {
+	        return x * v.y - y * v.x;
+	    }
+
+	    //**********************************************************************
+	    // Method: Dot
+	    // Computes dot product between two vectors
+	    //
+	    // Returns:
+	    // Dot product
+	    //**********************************************************************
+	    float Dot(const Vector2 &v)
+	    {
+	        return x * v.x + y * v.y;
+	    }
+
+	    Vector2 operator-() { return Vector2(-x, -y); }
+	    Vector2 operator-(Vector2 &rhs) { return Vector2(x - rhs.x, y - rhs.y); }
+	    Vector2 operator+(Vector2 &rhs) { return Vector2(x + rhs.x, y + rhs.y); }
+	    Vector2 operator*(float f) { return Vector2(x * f, y * f); }
+	    bool operator==(Vector2 &rhs) { return this->IsEq(rhs); }
+	    bool operator!=(Vector2 &rhs) { return !this->IsEq(rhs); }
     };
 
     //**********************************************************************

@@ -19,6 +19,9 @@ namespace Caustic
 	//**********************************************************************
 	// Class: CMedianFilter
 	// Defines an image filter for performing median filtering.
+	//
+	// Image Filter Parameters:
+	// None
 	//**********************************************************************
 	class CMedianFilter : public IImageFilter, public CRefCount
 	{

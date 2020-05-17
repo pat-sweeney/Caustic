@@ -15,6 +15,13 @@
 // Namespace: Caustic
 namespace Caustic
 {
+    //**********************************************************************
+    // Class: Colorize
+    // Defines an image filter that converts a 16bpp depth image to psuedo color
+    //
+    // Image Filter Parameters:
+    // None
+    //**********************************************************************
     class CColorize : public IImageFilter, public CRefCount
     {
         int m_maxDepth;

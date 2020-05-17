@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:CBoxFilter","CBoxFilter");NDSummary.OnSummaryLoaded("CClass:CBoxFilter",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[351,0,0,"CBoxFilter"],[455,0,2,"Functions","Functions"],[456,0,1,"CreateBoxFilter","CreateBoxFilter"],[457,0,1,"Apply","Apply"]]);

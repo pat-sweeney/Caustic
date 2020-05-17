@@ -78,5 +78,8 @@
     <ClCompile Include="BoxFilter.cpp">
       <Filter>Source Files\Filters</Filter>
     </ClCompile>
+    <ClCompile Include="FloodFill.cpp">
+      <Filter>Source Files\Filters</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

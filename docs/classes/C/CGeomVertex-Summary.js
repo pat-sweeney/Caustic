@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:CGeomVertex","CGeomVertex");NDSummary.OnSummaryLoaded("CClass:CGeomVertex",[["C/C++","C"]],[["Structs","Struct"]],[[449,0,0,"CGeomVertex"]]);
+NDFramePage.OnPageTitleLoaded("CClass:CGeomVertex","CGeomVertex");NDSummary.OnSummaryLoaded("CClass:CGeomVertex",[["C/C++","C"]],[["Structs","Struct"]],[[491,0,0,"CGeomVertex"]]);

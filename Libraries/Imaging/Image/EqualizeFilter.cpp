@@ -16,6 +16,13 @@
 // Namespace: Caustic
 namespace Caustic
 {
+	//**********************************************************************
+	// Class: CEqualizeFilter
+	// Defines an image filter for performing histogram equalization
+	//
+	// Image Filter Parameters:
+	// "UseLuminance"   : <bool> - Indicates whether equalization is done on the luminance or each color channel
+	//**********************************************************************
 	class CEqualizeFilter: public IImageFilter, public CRefCount
 	{
 		template <typename T>

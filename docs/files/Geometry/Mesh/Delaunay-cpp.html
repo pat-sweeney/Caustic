@@ -8,60 +8,60 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="Functions"></a><a name="Topic259"></a><div class="CTopic TGroup LC first">
+<a name="Functions"></a><a name="Topic280"></a><div class="CTopic TGroup LC first">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="FindOrAddEdge"></a><a name="Topic260"></a><div class="CTopic TFunction LC">
+<a name="FindOrAddEdge"></a><a name="Topic281"></a><div class="CTopic TFunction LC">
  <div class="CTitle">FindOrAddEdge</div>
- <div id="NDPrototype260" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">int</span> CDelaunay2::FindOrAddEdge(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td class="PName last">v0,</td></tr><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td class="PName last">v1,</td></tr><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td class="PName last">tri,</td></tr><tr><td class="PType first"><span class="SHKeyword">bool</span>&nbsp;</td><td class="PName last">isBoundaryEdge</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div id="NDPrototype281" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">int</span> CDelaunay2::FindOrAddEdge(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td class="PName last">v0,</td></tr><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td class="PName last">v1,</td></tr><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td class="PName last">tri,</td></tr><tr><td class="PType first"><span class="SHKeyword">bool</span>&nbsp;</td><td class="PName last">isBoundaryEdge</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
  <div class="CBody"><p>Adds a new edge to our mesh</p><p>Adds a new edge to our mesh. Each edge is directed from v0=&gt;v1.&nbsp; Each face is oriented so that edges go in counter-clockwise order.</p><p>v0</p><pre>/</pre><p>t1|t0&nbsp; /</p><pre>   /<br />/</pre><p>+ v1</p></div>
 </div>
 
-<a name="AddPoint"></a><a name="Topic261"></a><div class="CTopic TFunction LC">
+<a name="AddPoint"></a><a name="Topic282"></a><div class="CTopic TFunction LC">
  <div class="CTitle">AddPoint</div>
- <div id="NDPrototype261" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CDelaunay2::AddPoint(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Base/Math/Vector.h:Vector2" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,62);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector2</a>&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">pt,</td></tr><tr><td class="PType first"><a href="../../../index.html#File:Base/Math/Vector.h:Vector2" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,62);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector2</a>&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">uv,</td></tr><tr><td class="PType first"><span class="SHKeyword">bool</span>&nbsp;</td><td></td><td class="PName last">isBoundary</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div id="NDPrototype282" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CDelaunay2::AddPoint(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Base/Math/Vector.h:Vector2" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,63);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector2</a>&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">pt,</td></tr><tr><td class="PType first"><a href="../../../index.html#File:Base/Math/Vector.h:Vector2" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,63);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector2</a>&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">uv,</td></tr><tr><td class="PType first"><span class="SHKeyword">bool</span>&nbsp;</td><td></td><td class="PName last">isBoundary</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
  <div class="CBody"><p>Adds a new point to our current Delaunay triangulation using the Bowyer-Watson algorithm.</p></div>
 </div>
 
-<a name="CreateBoundaryEdges"></a><a name="Topic262"></a><div class="CTopic TFunction LC">
+<a name="CreateBoundaryEdges"></a><a name="Topic283"></a><div class="CTopic TFunction LC">
  <div class="CTitle">CreateBoundaryEdges</div>
- <div id="NDPrototype262" class="NDPrototype NoParameterForm"><span class="SHKeyword">void</span> CDelaunay2::CreateBoundaryEdges()</div>
+ <div id="NDPrototype283" class="NDPrototype NoParameterForm"><span class="SHKeyword">void</span> CDelaunay2::CreateBoundaryEdges()</div>
  <div class="CBody"><p>Pre-allocates all the edges that form our meshes boundary.&nbsp; We assume that boundary edges are added in counter-clockwise order around the mesh.</p></div>
 </div>
 
-<a name="ComputeTriangulation"></a><a name="Topic263"></a><div class="CTopic TFunction LC">
+<a name="ComputeTriangulation"></a><a name="Topic284"></a><div class="CTopic TFunction LC">
  <div class="CTitle">ComputeTriangulation</div>
- <div id="NDPrototype263" class="NDPrototype NoParameterForm"><span class="SHKeyword">void</span> CDelaunay2::ComputeTriangulation()</div>
+ <div id="NDPrototype284" class="NDPrototype NoParameterForm"><span class="SHKeyword">void</span> CDelaunay2::ComputeTriangulation()</div>
  <div class="CBody"><p>Computes the Delaunay triangulation of our mesh. We first compute a triangulation based on the boundary vertices. We then remove the exterior triangles (super triangles) and then add the interior vertices.</p></div>
 </div>
 
-<a name="TriangulePoints"></a><a name="Topic264"></a><div class="CTopic TFunction LC">
+<a name="TriangulePoints"></a><a name="Topic285"></a><div class="CTopic TFunction LC">
  <div class="CTitle">TriangulePoints</div>
  <div class="CBody"><p>Adds the set of vertex points that match the specified vertex flag to the current triangulation.</p></div>
 </div>
 
-<a name="RemoveExteriorTriangles"></a><a name="Topic265"></a><div class="CTopic TFunction LC">
+<a name="RemoveExteriorTriangles"></a><a name="Topic286"></a><div class="CTopic TFunction LC">
  <div class="CTitle">RemoveExteriorTriangles</div>
- <div id="NDPrototype265" class="NDPrototype NoParameterForm"><span class="SHKeyword">void</span> CDelaunay2::RemoveExteriorTriangles()</div>
+ <div id="NDPrototype286" class="NDPrototype NoParameterForm"><span class="SHKeyword">void</span> CDelaunay2::RemoveExteriorTriangles()</div>
  <div class="CBody"><p>Removes the exterior triangles (ones connected to the super triangle vertices)</p></div>
 </div>
 
-<a name="Close"></a><a name="Topic266"></a><div class="CTopic TFunction LC">
+<a name="Close"></a><a name="Topic287"></a><div class="CTopic TFunction LC">
  <div class="CTitle">Close</div>
- <div id="NDPrototype266" class="NDPrototype NoParameterForm"><span class="SHKeyword">void</span> CDelaunay2::Close()</div>
+ <div id="NDPrototype287" class="NDPrototype NoParameterForm"><span class="SHKeyword">void</span> CDelaunay2::Close()</div>
  <div class="CBody"><p>Performs the triangulation step after the points have all been added to the mesh.</p></div>
 </div>
 
-<a name="WriteString"></a><a name="Topic267"></a><div class="CTopic TFunction LC">
+<a name="WriteString"></a><a name="Topic288"></a><div class="CTopic TFunction LC">
  <div class="CTitle">WriteString</div>
- <div id="NDPrototype267" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">static</span> <span class="SHKeyword">void</span> WriteString(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="first"></td><td class="PType">HANDLE&nbsp;</td><td></td><td class="PName last">h,</td></tr><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><span class="SHKeyword">char</span>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pData,</td></tr><tr><td class="PModifierQualifier first">...</td><td></td><td></td><td class="last"></td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div id="NDPrototype288" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">static</span> <span class="SHKeyword">void</span> WriteString(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="first"></td><td class="PType">HANDLE&nbsp;</td><td></td><td class="PName last">h,</td></tr><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><span class="SHKeyword">char</span>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pData,</td></tr><tr><td class="PModifierQualifier first">...</td><td></td><td></td><td class="last"></td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
  <div class="CBody"><p>Writes a string to the specified stream using vsprintf_s()</p></div>
 </div>
 
-<a name="CreateDelaunay2"></a><a name="Topic268"></a><div class="CTopic TFunction LC last">
+<a name="CreateDelaunay2"></a><a name="Topic289"></a><div class="CTopic TFunction LC last">
  <div class="CTitle">CreateDelaunay2</div>
- <div id="NDPrototype268" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><a href="../../../index.html#File:Base/Core/IRefCount.h:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,10);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Geometry/Mesh/IDelaunay.h:IDelaunay2" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,251);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IDelaunay2</a>&gt; CreateDelaunay2(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Base/Math/BBox.h:BBox2" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,141);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >BBox2</a>&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">bb</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div id="NDPrototype289" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><a href="../../../index.html#File:Base/Core/IRefCount.h:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,48);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Geometry/Mesh/IDelaunay.h:IDelaunay2" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,271);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IDelaunay2</a>&gt; CreateDelaunay2(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Base/Math/BBox.h:BBox2" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,160);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >BBox2</a>&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">bb</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
  <div class="CBody"><p>Creates a Delaunay triangulation</p></div>
 </div>
 

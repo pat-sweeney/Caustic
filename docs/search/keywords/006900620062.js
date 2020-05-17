@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("ibb",["Struct"],[["IBBox2",,[[,,,,0,"File:Base/Math/IBBox.h:IBBox2","CClass:IBBox2"]]]]);

@@ -91,6 +91,7 @@
     <ClCompile Include="Convert.cpp" />
     <ClCompile Include="CustomFilter.cpp" />
     <ClCompile Include="EqualizeFilter.cpp" />
+    <ClCompile Include="FloodFill.cpp" />
     <ClCompile Include="GaussianBlur.cpp" />
     <ClCompile Include="HarrisCorners.cpp" />
     <ClCompile Include="Image.cpp" />

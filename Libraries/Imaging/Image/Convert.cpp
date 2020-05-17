@@ -16,6 +16,13 @@
 // Namespace: Caustic
 namespace Caustic
 {
+    //**********************************************************************
+    // Class: CConvertFilter
+    // Defines an image filter that converts from one pixel format to another
+    //
+    // Image Filter Parameters:
+    // "DestFormat" : <EImageType> - pixel format to convert to
+    //**********************************************************************
     class CConvertFilter : public IImageFilter, public CRefCount
     {
         CRefObj<IImage> Convert8to16(IImage* pImage);
@@ -454,7 +461,14 @@ namespace Caustic
     //**********************************************************************
     CRefObj<IImage> CConvertFilter::Apply(IImage* pImage, ImageFilterParams* pParams)
     {
-        EImageType destFormat = std::any_cast<EImageType>(pParams->params.find("DestFormat"));
+        EImageType destFormat = EImageType::RGB_24bpp;
+        if (pParams != nullptr)
+        {
+            std::map<std::string, std::any>::iterator it = pParams->params.find("DestFormat");
+            if (it != pParams->params.end())
+                destFormat = std::any_cast<EImageType>(it->second);
+        }
+
         CRefObj<IImage> spImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), 32);
 
         struct DispatchTable

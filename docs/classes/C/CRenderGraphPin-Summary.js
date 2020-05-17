@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:CRenderGraphPin","CRenderGraphPin");NDSummary.OnSummaryLoaded("CClass:CRenderGraphPin",[["C/C++","C"]],[["Classes","Class"]],[[817,0,0,"CRenderGraphPin"]]);
+NDFramePage.OnPageTitleLoaded("CClass:CRenderGraphPin","CRenderGraphPin");NDSummary.OnSummaryLoaded("CClass:CRenderGraphPin",[["C/C++","C"]],[["Classes","Class"]],[[859,0,0,"CRenderGraphPin"]]);

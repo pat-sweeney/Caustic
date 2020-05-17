@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("emp",["Function"],[["Empty",,[["BBox2",,,,0,"File:Base/Math/BBox.h:BBox2.Empty","CClass:BBox2:Empty"],["BBox3",,,,0,"File:Base/Math/BBox.h:BBox3.Empty","CClass:BBox3:Empty"]]]]);
+NDSearch.OnPrefixDataLoaded("emp",["Function"],[["Empty",,[["BBox2",,,,0,"File:Base/Math/BBox.h:BBox2.Empty","CClass:BBox2:Empty"],["BBox3",,,,0,"File:Base/Math/BBox.h:BBox3.Empty","CClass:BBox3:Empty"],["IBBox2",,,,0,"File:Base/Math/IBBox.h:IBBox2.Empty","CClass:IBBox2:Empty"]]]]);

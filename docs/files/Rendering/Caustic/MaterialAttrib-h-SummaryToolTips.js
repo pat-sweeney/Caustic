@@ -1,1 +1,1 @@
-NDSummary.OnToolTipsLoaded("File:Rendering/Caustic/MaterialAttrib.h",{555:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines the basic material</div></div>"});
+NDSummary.OnToolTipsLoaded("File:Rendering/Caustic/MaterialAttrib.h",{601:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines the basic material</div></div>"});

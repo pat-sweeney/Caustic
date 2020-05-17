@@ -15,6 +15,13 @@
 // Namespace: Caustic
 namespace Caustic
 {
+	//**********************************************************************
+	// Class: CUnsharpMaskFilter
+	// Defines an image filter for performing unsharp masking
+	//
+	// Image Filter Parameters:
+	// "Strength"   : <int> - Strength of sharpening
+	//**********************************************************************
 	class CUnsharpMaskFilter : public IImageFilter, public CRefCount
 	{
 		template <typename T>

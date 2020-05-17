@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("File:Geometry/Mesh/Delaunay.h","Delaunay.h");NDSummary.OnSummaryLoaded("File:Geometry/Mesh/Delaunay.h",[["C/C++","C"]],[["Classes","Class"]],[[269,0,0,"CDelaunay2","CDelaunay2"]]);
+NDFramePage.OnPageTitleLoaded("File:Geometry/Mesh/Delaunay.h","Delaunay.h");NDSummary.OnSummaryLoaded("File:Geometry/Mesh/Delaunay.h",[["C/C++","C"]],[["Classes","Class"]],[[279,0,0,"CDelaunay2","CDelaunay2"]]);

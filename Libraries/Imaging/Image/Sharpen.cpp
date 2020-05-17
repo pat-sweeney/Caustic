@@ -17,6 +17,10 @@ namespace Caustic
 	//**********************************************************************
 	// Class: CSharpenFilter
 	// Defines an image filter for performing sharpening.
+	//
+	// Image Filter Parameters:
+	// "Threshold" : <int> - Threshold for determining whether a pixel is an edge
+	// "Boost"     : <int> - Amount to boost signal at edge pixels
 	//**********************************************************************
 	class CSharpenFilter : public IImageFilter, public CRefCount
 	{
@@ -183,8 +187,19 @@ namespace Caustic
 	//**********************************************************************
 	CRefObj<IImage> CSharpenFilter::Apply(IImage* pImage, ImageFilterParams* pParams)
 	{
-		int threshold = (pParams == nullptr) ? 80 : std::any_cast<int>(pParams->params.find("Threshold"));
-		int boost = (pParams == nullptr) ? 20 : std::any_cast<int>(pParams->params.find("Boost"));
+		int threshold = 80;
+		int boost = 20;
+		if (pParams != nullptr)
+		{
+			std::map<std::string, std::any>::iterator it;
+			it = pParams->params.find("Threshold");
+			if (it != pParams->params.end())
+				threshold = std::any_cast<int>(it->second);
+			it = pParams->params.find("Boost");
+			if (it != pParams->params.end())
+				boost = std::any_cast<int>(it->second);
+		}
+
 		if (pImage->GetBPP() == 24)
 		{
 			return Sharpen<CImageIter24>(threshold, boost, pImage, (pParams && pParams->spMask) ? pParams->spMask : nullptr);

@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:CFaceVertex","CFaceVertex");NDSummary.OnSummaryLoaded("CClass:CFaceVertex",[["C/C++","C"]],[["Structs","Struct"]],[[232,0,0,"CFaceVertex"]]);
+NDFramePage.OnPageTitleLoaded("CClass:CFaceVertex","CFaceVertex");NDSummary.OnSummaryLoaded("CClass:CFaceVertex",[["C/C++","C"]],[["Structs","Struct"]],[[252,0,0,"CFaceVertex"]]);
