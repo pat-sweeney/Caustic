@@ -131,6 +131,18 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Method: GetNumberMaterials
+    // Returns number of materials currently assigned to mesh
+    //
+    // Returns:
+    // Returns number of materials
+    //**********************************************************************
+    uint32 CMesh::GetNumberMaterials()
+    {
+        return (uint32)m_materials.size();
+    }
+
+    //**********************************************************************
     // Method: GetMaterial
     // Returns the Nth material
     //

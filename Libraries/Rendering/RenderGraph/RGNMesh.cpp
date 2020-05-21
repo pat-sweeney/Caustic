@@ -69,6 +69,7 @@ namespace Caustic
         {
             // We need to update. Otherwise, nothing has changed
             m_spRenderMesh = m_spMesh->ToRenderMesh(pRenderer, spShader);
+            m_spMesh->ToRenderMaterials(pRenderer, spShader, m_spRenderMesh);
             std::any lightsVal = m_spLightsPin->GetValue(pRenderer, pRenderCtx);
             if (lightsVal.has_value())
             {
@@ -77,9 +78,9 @@ namespace Caustic
             }
             m_lastEpochModified = pRenderCtx->GetEpoch();
         }
-        m_spRenderMesh->Render(pRenderer, spShader, spFrontMaterial, m_lights);
+        m_spRenderMesh->Render(pRenderer, m_lights);
         if (spBackMaterial)
-            m_spRenderMesh->Render(pRenderer, spShader, spBackMaterial, m_lights);
+            m_spRenderMesh->Render(pRenderer, m_lights);
         return std::any();
     }
 }

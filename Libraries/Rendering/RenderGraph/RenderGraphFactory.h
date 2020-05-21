@@ -45,7 +45,7 @@ namespace Caustic
         virtual CRefObj<IRenderGraphNode_Mesh> CreateMeshNode() override;
         virtual CRefObj<IRenderGraphNode_LightCollection> CreateLightCollectionNode() override;
         virtual CRefObj<IRenderGraphNode_Group> CreateGroupNode() override;
-        virtual CRefObj<IRenderGraphNode_Material> CreateMaterialNode(IShader* pShader) override;
+        virtual CRefObj<IRenderGraphNode_Material> CreateMaterialNode() override;
         virtual CRefObj<IRenderGraphNode_PhongMaterial> CreatePhongMaterialNode() override;
         virtual CRefObj<IRenderGraphNode_DepthCameraSource> CreateDepthCameraSource(IDepthCameraDevice* pDevice) override;
         virtual CRefObj<IRenderGraphNode_ImageToTexture> CreateImageToTextureNode() override;

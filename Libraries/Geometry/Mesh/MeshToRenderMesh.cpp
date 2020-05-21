@@ -290,7 +290,11 @@ namespace Caustic
 
 	//**********************************************************************
     // Method: ToRenderMesh
-    // Converts a CMesh object into a renderable form
+    // Converts a CMesh object into a renderable form. NOTE: The client will
+	// also have to convert the mesh's materials to a RenderMaterial via
+	// <ToRenderMaterial>. The reason this is split out as a separate call
+	// (versus just being part of this call) is to allow the client to update
+	// the materials without having to completely rebuild the mesh.
     //
     // Parameters:
     // pRenderer - Renderer

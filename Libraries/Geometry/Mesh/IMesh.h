@@ -237,6 +237,7 @@ namespace Caustic
         virtual void GetBBox(BBox3 *pBBox) = 0;
         virtual void Normalize() = 0;
         virtual void SetMaterials(std::vector<CRefObj<IMaterialAttrib>> &materials) = 0;
+        virtual uint32 GetNumberMaterials() = 0;
         virtual CRefObj<IMaterialAttrib> GetMaterial(uint32 materialID) = 0;
         virtual void ComputeNormals() = 0;
 		virtual CRefObj<IRenderMesh> ToRenderMesh(IRenderer *pRenderer, IShader *pShader) = 0;

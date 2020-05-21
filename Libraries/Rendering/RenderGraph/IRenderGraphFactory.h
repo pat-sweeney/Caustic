@@ -114,16 +114,17 @@ namespace Caustic
         // --- Code
         // A material node exposes the following pins:
         //                      Material
-        //                    +---------+    
+        //                    +---------+
         //           mesh o---|         |---o material
         // materialAttrib o---|         |
-        //                    +---------+    
+        //         shader o---|         |
+        //                    +---------+
         // ---
         //
         // Parameters:
         // pShader - shader that material will use
         //**********************************************************************
-        virtual CRefObj<IRenderGraphNode_Material> CreateMaterialNode(IShader *pShader) = 0;
+        virtual CRefObj<IRenderGraphNode_Material> CreateMaterialNode() = 0;
 
         //**********************************************************************
         // Method: CreatePhongMaterialNode

@@ -25,25 +25,12 @@ CRefObj<IRenderWindow> spRenderWindow;
 CRefObj<Caustic::ICausticFactory> spCausticFactory;
 CRefObj<Caustic::IRenderGraphFactory> spRenderGraphFactory;
 
-void AddPointLight(Vector3 &lightPos)
-{
-    Vector3 lightColor(1.0f, 1.0f, 1.0f);
-    CRefObj<IPointLight> spLight = spCausticFactory->CreatePointLight(lightPos, lightColor);
-    CRefObj<IRenderGraphNode_LightCollection> spLightElem = spRenderGraphFactory->CreateLightCollectionNode();
-    spLightElem->AddLight(spLight);
-    spRenderWindow->GetRenderGraph()->AddChild(spLightElem);
-}
-
 void InitializeCaustic(HWND hwnd)
 {
     spRenderGraphFactory = Caustic::CreateRenderGraphFactory();
     spCausticFactory = Caustic::CreateCausticFactory();
     std::wstring shaderFolder(SHADERPATH);
     spRenderWindow = CreateRenderWindow(hwnd, shaderFolder);
-    Vector3 lightPos(10.0f, 10.0f, 0.0f);
-    AddPointLight(lightPos);
-    lightPos = Vector3(-10.0f, 10.0f, 0.0f);
-    AddPointLight(lightPos);
 }
 
 // Global Variables:
@@ -195,29 +182,35 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (GetOpenFileName(&ofn))
                     {
                         wchar_t *ext = StrRChrW(fn, nullptr, L'.');
-                        CRefObj<IRenderGraphNode_Mesh> spElem = spRenderGraphFactory->CreateMeshNode();
+                        CRefObj<IRenderGraphNode_Mesh> spMeshElem = spRenderGraphFactory->CreateMeshNode();
                         CRefObj<IMesh> spMesh = nullptr;
                         if (StrCmpW(ext, L".obj") == 0)
                             spMesh = Caustic::MeshImport::LoadObj(fn);
                         else if (StrCmpW(ext, L".ply") == 0)
                             spMesh = Caustic::MeshImport::LoadPLY(fn);
-                        spElem->FindInputPin("mesh")->SetDefaultValue(spMesh);
-
-#if 0
+                        spMeshElem->FindInputPin("mesh")->SetDefaultValue(spMesh);
+                        spRenderWindow->GetRenderGraph()->AddChild(spMeshElem);
+                        CRefObj<IShader> spShader = spRenderWindow->GetRenderer()->GetShaderMgr()->FindShader(L"Textured");
                         CRefObj<IRenderGraphNode_Material> spMaterialElem = spRenderGraphFactory->CreateMaterialNode();
-                        CRefObj<IMaterialAttrib> spMaterial = spMaterialElem->GetMaterial();
-
+                        CRefObj<IMaterialAttrib> spMaterial = spCausticFactory->CreateMaterialAttrib();
                         Vector3 ambient(0.2f, 0.2f, 0.2f);
                         Vector3 diffuse(0.4f, 0.4f, 0.4f);
                         spMaterial->SetColor(L"ambientColor", ambient);
                         spMaterial->SetColor(L"diffuseColor", diffuse);
-
-                        CRefObj<IShader> spShader = CShaderMgr::Instance()->FindShader(L"Textured");
-                        spMaterialElem->SetShader(spShader);
-
+                        spMaterialElem->FindInputPin("materialAttrib")->SetDefaultValue(spMaterial);
+                        spMaterialElem->FindOutputPin("material")->LinkTo(spMeshElem->FindInputPin("frontMaterial"));
                         spRenderWindow->GetRenderGraph()->AddChild(spMaterialElem);
-                        spMaterialElem->AddChild(spElem);
-#endif
+
+                        CRefObj<IRenderGraphNode_LightCollection> spLightElem = spRenderGraphFactory->CreateLightCollectionNode();
+                        spRenderWindow->GetRenderGraph()->AddChild(spLightElem);
+                        spLightElem->FindOutputPin("lights")->LinkTo(spMeshElem->FindInputPin("lights"));
+
+                        Vector3 lightPos(10.0f, 10.0f, 0.0f);
+                        Vector3 lightColor(1.0f, 1.0f, 1.0f);
+                        spLightElem->AddLight(spCausticFactory->CreatePointLight(lightPos, lightColor));
+
+                        lightPos = Vector3(-10.0f, 10.0f, 0.0f);
+                        spLightElem->AddLight(spCausticFactory->CreatePointLight(lightPos, lightColor));
                     }
                 }
                 break;

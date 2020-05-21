@@ -82,9 +82,9 @@ namespace Caustic
     // Function: CreateMaterialNode
     // See <IRenderGraphFactory>
     //**********************************************************************
-    CRefObj<IRenderGraphNode_Material> CRenderGraphFactory::CreateMaterialNode(IShader* pShader)
+    CRefObj<IRenderGraphNode_Material> CRenderGraphFactory::CreateMaterialNode()
     {
-        return CRefObj<IRenderGraphNode_Material>(new CRenderGraphNode_Material(pShader));
+        return CRefObj<IRenderGraphNode_Material>(new CRenderGraphNode_Material());
     }
 
     //**********************************************************************

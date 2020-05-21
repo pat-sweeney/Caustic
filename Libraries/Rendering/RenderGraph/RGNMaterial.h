@@ -22,15 +22,12 @@ namespace Caustic
     {
     protected:
         CRefObj<IRenderMaterial> m_spRenderMaterial;
-        CRefObj<IMaterialAttrib> m_spMaterial;
-        CRefObj<IShader> m_spShader;
         CRefObj<IRenderGraphPin> m_spMaterialPin;
         CRefObj<IRenderGraphPin> m_spShaderPin;
         CRefObj<IRenderGraphPin> m_spRenderMaterialPin;
     public:
-        CRenderGraphNode_Material(IShader* pShader) 
+        CRenderGraphNode_Material() 
         { 
-            m_spShader = pShader; 
             std::any empty;
             m_spMaterialPin = CreatePin(this, true, "materialAttrib", ERenderGraphDataType::Material, empty);
             m_spShaderPin = CreatePin(this, true, "shader", ERenderGraphDataType::Shader, empty);
@@ -66,12 +63,14 @@ namespace Caustic
                 std::any shaderVal = m_spShaderPin->GetValue(pRenderer, pRenderCtx);
                 if (materialVal.has_value() && shaderVal.has_value())
                 {
+                    CRefObj<IMaterialAttrib> spMaterial = std::any_cast<CRefObj<IMaterialAttrib>>(materialVal);
+                    CRefObj<IShader> spShader = std::any_cast<CRefObj<IShader>>(shaderVal);
                     CRefObj<IGraphics> spGraphics = pRenderer->GetGraphics();
                     if (pRenderCtx->GetMostRecentEpoch() > m_lastEpochModified || // Somebody preceeding us was modified
                         m_lastEpochModified == 0)
                     {
                         CRefObj<ICausticFactory> spCausticFactory = Caustic::CreateCausticFactory();
-                        m_spRenderMaterial = spCausticFactory->CreateRenderMaterial(pRenderer, m_spMaterial, m_spShader);
+                        m_spRenderMaterial = spCausticFactory->CreateRenderMaterial(pRenderer, spMaterial, spShader);
                         m_lastEpochModified = pRenderCtx->GetEpoch();
                     }
                     return std::any(m_spRenderMaterial);
