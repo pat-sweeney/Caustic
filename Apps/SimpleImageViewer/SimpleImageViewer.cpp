@@ -272,6 +272,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 spFilter = CreateBoxFilter(9);
                 SetDisplayImage(spSourceImage);
                 break;
+            case ID_FILTER_QUANTIZE:
+                spFilter = CreateQuantizeFilter();
+                SetDisplayImage(spSourceImage);
+                break;
             case IDM_ABOUT:
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
                 break;

@@ -98,6 +98,7 @@
     <ClCompile Include="MedianFilter.cpp" />
     <ClCompile Include="MosaicFilter.cpp" />
     <ClCompile Include="MotionBlurFilter.cpp" />
+    <ClCompile Include="Quantize.cpp" />
     <ClCompile Include="Sharpen.cpp" />
     <ClCompile Include="Sobel.cpp" />
     <ClCompile Include="stdafx.cpp">

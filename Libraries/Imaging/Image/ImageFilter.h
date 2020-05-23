@@ -77,4 +77,5 @@ namespace Caustic
 	CAUSTICAPI CRefObj<IImageFilter> CreateMosaicFilter();
 	CAUSTICAPI CRefObj<IImageFilter> CreateMotionBlurFilter();
 	CAUSTICAPI CRefObj<IImageFilter> CreateBoxFilter(int kernelSize);
+	CAUSTICAPI CRefObj<IImageFilter> CreateQuantizeFilter();
 }
