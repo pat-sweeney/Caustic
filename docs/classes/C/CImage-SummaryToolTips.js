@@ -1,1 +1,1 @@
-NDSummary.OnToolTipsLoaded("CClass:CImage",{192:"<div class=\"NDToolTip TClass LC\"><div class=\"NDClassPrototype\" id=\"NDClassPrototype192\"><div class=\"CPEntry TClass Current\"><div class=\"CPName\">CImage</div></div></div></div>"});
+NDSummary.OnToolTipsLoaded("CClass:CImage",{389:"<div class=\"NDToolTip TClass LC\"><div class=\"NDClassPrototype\" id=\"NDClassPrototype389\"><div class=\"CPEntry TClass Current\"><div class=\"CPName\">CImage</div></div></div></div>"});

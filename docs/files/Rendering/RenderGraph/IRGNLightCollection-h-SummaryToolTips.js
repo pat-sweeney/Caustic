@@ -1,1 +1,1 @@
-NDSummary.OnToolTipsLoaded("File:Rendering/RenderGraph/IRGNLightCollection.h",{902:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines interface for adding lights to a collection</div></div>"});
+NDSummary.OnToolTipsLoaded("File:Rendering/RenderGraph/IRGNLightCollection.h",{910:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines interface for adding lights to a collection</div></div>"});

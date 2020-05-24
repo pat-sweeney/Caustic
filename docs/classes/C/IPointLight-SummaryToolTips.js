@@ -1,1 +1,1 @@
-NDSummary.OnToolTipsLoaded("CClass:IPointLight",{723:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines a point light</div></div>"});
+NDSummary.OnToolTipsLoaded("CClass:IPointLight",{810:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines a point light</div></div>"});

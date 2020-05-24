@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:CRenderGraphNode_PhongMaterial","CRenderGraphNode_PhongMaterial");NDSummary.OnSummaryLoaded("CClass:CRenderGraphNode_PhongMaterial",[["C/C++","C"]],[["Classes","Class"]],[[860,0,0,"CRenderGraphNode_PhongMaterial"]]);
+NDFramePage.OnPageTitleLoaded("CClass:CRenderGraphNode_PhongMaterial","CRenderGraphNode_PhongMaterial");NDSummary.OnSummaryLoaded("CClass:CRenderGraphNode_PhongMaterial",[["C/C++","C"]],[["Classes","Class"]],[[871,0,0,"CRenderGraphNode_PhongMaterial"]]);

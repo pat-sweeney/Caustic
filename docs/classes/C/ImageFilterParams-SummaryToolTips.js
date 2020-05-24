@@ -1,1 +1,1 @@
-NDSummary.OnToolTipsLoaded("CClass:ImageFilterParams",{328:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Parameters used by image filters when Apply() is called</div></div>"});
+NDSummary.OnToolTipsLoaded("CClass:ImageFilterParams",{384:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Parameters used by image filters when Apply() is called</div></div>"});

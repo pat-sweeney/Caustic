@@ -1,1 +1,1 @@
-NDSummary.OnToolTipsLoaded("CClass:Matrix2x2",{147:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines a 2x2 matrix</div></div>"});
+NDSummary.OnToolTipsLoaded("CClass:Matrix2x2",{133:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines a 2x2 matrix</div></div>"});

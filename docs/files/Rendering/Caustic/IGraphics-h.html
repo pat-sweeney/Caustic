@@ -8,47 +8,47 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="IGraphics.h"></a><a name="Topic736"></a><div class="CTopic TFile LC first">
+<a name="IGraphics.h"></a><a name="Topic811"></a><div class="CTopic TFile LC first">
  <div class="CTitle">IGraphics.h</div>
  <div class="CBody"><p>Primary interface for talking to the graphics device</p></div>
 </div>
 
-<a name="MeshData"></a><a name="Topic737"></a><div class="CTopic TStruct LC">
+<a name="MeshData"></a><a name="Topic812"></a><div class="CTopic TStruct LC">
  <div class="CTitle">MeshData</div>
  <div class="CBody"><p>Defines class for holding mesh data (i.e. vertices and indices)</p><div class="CHeading">Members</div><table class="CDefinitionList"><tr><td class="CDLEntry">m_spVB</td><td class="CDLDefinition"><p>The vertex buffer</p></td></tr><tr><td class="CDLEntry">m_spIB</td><td class="CDLDefinition"><p>The index buffer (maybe null)</p></td></tr><tr><td class="CDLEntry">m_vertexSize</td><td class="CDLDefinition"><p>Size in bytes of each vertex</p></td></tr><tr><td class="CDLEntry">m_numVertices</td><td class="CDLDefinition"><p>Number of vertices</p></td></tr><tr><td class="CDLEntry">m_numIndices</td><td class="CDLDefinition"><p>Number of indices. Maybe 0</p></td></tr></table></div>
 </div>
 
-<a name="IGraphics"></a><a name="Topic738"></a><div class="CTopic TInterface LC">
+<a name="IGraphics"></a><a name="Topic813"></a><div class="CTopic TInterface LC">
  <div class="CTitle">IGraphics</div>
- <div class="CBody"><p>Defines our basic rendering device.</p><p><a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,738);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a> differs from <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,725);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer</a> in that it is essentially just a wrapper around our underlying graphics device. It does not support things such as a scene graph, complex lighting (list of lights), or HMD support. Also, all rendering occurs on whatever thread this object is created on (versus marshalling the rendering over to a render thread). For those features, use <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,725);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer</a>.</p></div>
+ <div class="CBody"><p>Defines our basic rendering device.</p><p><a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,813);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a> differs from <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,721);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer</a> in that it is essentially just a wrapper around our underlying graphics device. It does not support things such as a scene graph, complex lighting (list of lights), or HMD support. Also, all rendering occurs on whatever thread this object is created on (versus marshalling the rendering over to a render thread). For those features, use <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,721);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer</a>.</p></div>
 </div>
 
-<a name="IGraphics.Functions"></a><a name="Topic739"></a><div class="CTopic TGroup LC">
+<a name="IGraphics.Functions"></a><a name="Topic814"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="IGraphics.GetDevice"></a><a name="Topic740"></a><div class="CTopic TFunction LC">
+<a name="IGraphics.GetDevice"></a><a name="Topic815"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetDevice</div>
- <div id="NDPrototype740" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> CComPtr&lt;ID3D11Device&gt; GetDevice() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype815" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> CComPtr&lt;ID3D11Device&gt; GetDevice() = <span class="SHNumber">0</span></div>
  <div class="CBody"><div class="CHeading">Returns</div><p>The underlying D3D11 device</p></div>
 </div>
 
-<a name="IGraphics.GetContext"></a><a name="Topic741"></a><div class="CTopic TFunction LC">
+<a name="IGraphics.GetContext"></a><a name="Topic816"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetContext</div>
- <div id="NDPrototype741" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> CComPtr&lt;ID3D11DeviceContext&gt; GetContext() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype816" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> CComPtr&lt;ID3D11DeviceContext&gt; GetContext() = <span class="SHNumber">0</span></div>
  <div class="CBody"><div class="CHeading">Returns</div><p>The underlying D3D11 device context</p></div>
 </div>
 
-<a name="IGraphics.GetCamera"></a><a name="Topic742"></a><div class="CTopic TFunction LC">
+<a name="IGraphics.GetCamera"></a><a name="Topic817"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetCamera</div>
- <div id="NDPrototype742" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <a href="../../../index.html#File:Base/Core/IRefCount.h:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,6);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Rendering/Caustic/ICamera.h:ICamera" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,759);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ICamera</a>&gt; GetCamera() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype817" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <a href="../../../index.html#File:Base/Core/IRefCount.h:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,23);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Rendering/Caustic/ICamera.h:ICamera" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,820);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ICamera</a>&gt; GetCamera() = <span class="SHNumber">0</span></div>
  <div class="CBody"><div class="CHeading">Returns</div><p>The camera associated with this device</p></div>
 </div>
 
-<a name="IGraphics.SetCamera"></a><a name="Topic743"></a><div class="CTopic TFunction LC last">
+<a name="IGraphics.SetCamera"></a><a name="Topic818"></a><div class="CTopic TFunction LC last">
  <div class="CTitle">SetCamera</div>
- <div id="NDPrototype743" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetCamera(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/ICamera.h:ICamera" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,759);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ICamera</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pCamera</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
- <div class="CBody"><p>Sets the camera associated with this device</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pCamera<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/Caustic/ICamera.h:ICamera" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,759);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ICamera</a>*</div></td><td class="CDLDefinition"><p>camera</p></td></tr></table></div>
+ <div id="NDPrototype818" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetCamera(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/ICamera.h:ICamera" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,820);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ICamera</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pCamera</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Sets the camera associated with this device</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pCamera<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/Caustic/ICamera.h:ICamera" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,820);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ICamera</a>*</div></td><td class="CDLDefinition"><p>camera</p></td></tr></table></div>
 </div>
 
 </body></html>

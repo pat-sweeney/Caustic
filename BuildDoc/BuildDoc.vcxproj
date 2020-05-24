@@ -88,7 +88,7 @@
       <Command>"C:\Program Files (x86)\Natural Docs\NaturalDocs.exe" $(CausticRoot)\docs</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>$(CausticRoot)\DocumentOverrides\FinalizeDocs.cmd</Command>
+      <Command>call $(CausticRoot)\DocumentOverrides\FinalizeDocs.cmd $(Configuration)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -110,7 +110,7 @@
       <Command>"C:\Program Files (x86)\Natural Docs\NaturalDocs.exe" $(CausticRoot)\docs</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>$(CausticRoot)\DocumentOverrides\FinalizeDocs.cmd</Command>
+      <Command>call $(CausticRoot)\DocumentOverrides\FinalizeDocs.cmd $(Configuration)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
