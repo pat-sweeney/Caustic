@@ -1,0 +1,34 @@
+Generated on 5/23/2020 10:31:08 PM
+
+Crash Message:
+
+   Object reference not set to an instance of an object. (Finalizer Thread 1)
+   (System.NullReferenceException)
+
+Stack Trace:
+
+   ----- Finalizer Thread 1 -----
+   at CodeClear.NaturalDocs.Engine.Files.Manager.FileSourceOf(File file)
+   at CodeClear.NaturalDocs.Engine.Output.Menu.FindOrCreateFileSourceEntryOf(File file)
+   at CodeClear.NaturalDocs.Engine.Output.Menu.AddFile(File file)
+   at CodeClear.NaturalDocs.Engine.Output.Builders.HTML.BuildMenu(Accessor accessor, CancelDelegate cancelDelegate)
+   at CodeClear.NaturalDocs.Engine.Output.Builders.HTML.WorkOnFinalizingOutput(CancelDelegate cancelDelegate)
+   at CodeClear.NaturalDocs.Engine.Output.Manager.WorkOnFinalizingOutput(CancelDelegate cancelDelegate)
+   at CodeClear.NaturalDocs.Engine.Thread.InternalStart()
+   ----- Parent Thread -----
+   at CodeClear.NaturalDocs.CLI.Application.Multithread(String threadName, CancellableTask task)
+   at CodeClear.NaturalDocs.CLI.Application.BuildDocumentation(ErrorList errorList)
+   at CodeClear.NaturalDocs.CLI.Application.Main(String[] commandLine)
+
+Command Line:
+
+   "c:\Program Files (x86)\Natural Docs\NaturalDocs.exe"  .
+
+Versions:
+
+   Natural Docs 2.0.2
+
+   .NET 4.8.4180.0
+   Microsoft Windows NT 6.2.9200.0 (Win32NT)
+
+   SQLite 3.13.0

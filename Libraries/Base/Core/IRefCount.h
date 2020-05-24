@@ -11,6 +11,9 @@ namespace Caustic
     //**********************************************************************
     // Struct: IRefCount
 	// Defines the basic interface used by reference counted objects
+    //
+    // Header:
+    // [Link:Base/Core/IRefCount.h]
     //**********************************************************************
     struct IRefCount
     {
@@ -35,6 +38,9 @@ namespace Caustic
 	//
 	// Parameters:
 	// T - type of object to manage
+    //
+    // Header:
+    // [Link:Base/Core/IRefCount.h]
     //**********************************************************************
     template <typename T>
     struct CRefObj

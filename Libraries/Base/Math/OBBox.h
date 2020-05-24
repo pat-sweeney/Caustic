@@ -23,6 +23,9 @@ namespace Caustic
     // <Vector2> v - Y axis of the bbox
     // <Vector2> normu - Normalized version of the u azis
     // <Vector2> normv - Normalized version of the v azis
+    //
+    // Header:
+    // [Link:Base/Math/OBBox.h]
     //**********************************************************************
     struct OBBox2
     {
@@ -55,6 +58,9 @@ namespace Caustic
     // <Vector3> normu - Normalized version of the u azis
     // <Vector3> normv - Normalized version of the v azis
     // <Vector3> normn - Normalized version of the n azis
+    //
+    // Header:
+    // [Link:Base/Math/OBBox.h]
     //**********************************************************************
     struct OBBox3
     {

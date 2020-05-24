@@ -25,6 +25,9 @@ namespace Caustic
     // <uint32 at Caustic::uint32> m_width - width of image in pixels
     // <uint32 at Caustic::uint32> m_height - height of image in pixels
     // <uint32 at Caustic::uint32> m_bytesPerPixel - width of each pixel in bytes
+    //
+    // Header:
+    // [Link:Imaging/Image/ImageImpl.h]
     //**********************************************************************
     class CImage : public IImage, public CRefCount
     {

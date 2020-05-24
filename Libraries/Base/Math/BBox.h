@@ -17,6 +17,9 @@ namespace Caustic
     // Members:
     // <Vector2> minPt - Minimum point defining one coroner of the bbox
     // <Vector2> maxPt - Maximum point defining one coroner of the bbox
+    //
+    // Header:
+    // [Link:Base/Math/BBox.h]
     //**********************************************************************
     struct BBox2
     {
@@ -124,6 +127,9 @@ namespace Caustic
     // Members:
     // <Vector3> minPt - Minimum point defining one coroner of the bbox
     // <Vector3> maxPt - Maximum point defining one coroner of the bbox
+    //
+    // Header:
+    // [Link:Base/Math/BBox.h]
     //**********************************************************************
     struct BBox3
     {

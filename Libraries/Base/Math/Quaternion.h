@@ -22,6 +22,9 @@ namespace Caustic
 	// float y - Y component
 	// float z - Z component
 	// float w - W component
+	//
+	// Header:
+	// [Link:Base/Math/Quaternion.h]
 	//**********************************************************************
 	struct Quaternion
     {

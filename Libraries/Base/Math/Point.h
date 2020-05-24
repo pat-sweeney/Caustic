@@ -16,6 +16,9 @@ namespace Caustic
     // Members:
     // int32 x - x component
     // int32 y - y component
+    //
+    // Header:
+    // [Link:Base/Math/Point.h]
     //**********************************************************************
     struct Point2
     {

@@ -28,6 +28,9 @@ namespace Caustic
     // k4a_image_t m_depthImage - last depth image read from camera
     // k4a_capture_t m_capture - capture context
     // bool m_cameraStarted - Has the camera been started?
+    //
+    // Header:
+    // [Link:Cameras/AzureKinect/AzureKinect.h]
     //**********************************************************************
     class CAzureKinectDevice : public IAzureKinect, public CRefCount
     {

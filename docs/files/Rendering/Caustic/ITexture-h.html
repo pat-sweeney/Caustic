@@ -8,66 +8,66 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="ITexture.h"></a><a name="Topic614"></a><div class="CTopic TFile LC first">
+<a name="ITexture.h"></a><a name="Topic609"></a><div class="CTopic TFile LC first">
  <div class="CTitle">ITexture.h</div>
  <div class="CBody"><p>This file defines the published interface for textures.</p></div>
 </div>
 
-<a name="ITexture"></a><a name="Topic615"></a><div class="CTopic TInterface LC">
+<a name="ITexture"></a><a name="Topic610"></a><div class="CTopic TInterface LC">
  <div class="CTitle">ITexture</div>
  <div class="CBody"><p>Defines how clients interact with textures</p></div>
 </div>
 
-<a name="ITexture.Functions"></a><a name="Topic616"></a><div class="CTopic TGroup LC">
+<a name="ITexture.Functions"></a><a name="Topic611"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="ITexture.GetWidth"></a><a name="Topic617"></a><div class="CTopic TFunction LC">
+<a name="ITexture.GetWidth"></a><a name="Topic612"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetWidth</div>
- <div id="NDPrototype617" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetWidth() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype612" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetWidth() = <span class="SHNumber">0</span></div>
  <div class="CBody"><div class="CHeading">Returns</div><p>Returns the width of the texture in pixels</p></div>
 </div>
 
-<a name="ITexture.GetHeight"></a><a name="Topic618"></a><div class="CTopic TFunction LC">
+<a name="ITexture.GetHeight"></a><a name="Topic613"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetHeight</div>
- <div id="NDPrototype618" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetHeight() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype613" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetHeight() = <span class="SHNumber">0</span></div>
  <div class="CBody"><div class="CHeading">Returns</div><p>Returns the height of the texture in pixels</p></div>
 </div>
 
-<a name="ITexture.GetFormat"></a><a name="Topic619"></a><div class="CTopic TFunction LC">
+<a name="ITexture.GetFormat"></a><a name="Topic614"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetFormat</div>
- <div id="NDPrototype619" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> DXGI_FORMAT GetFormat() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype614" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> DXGI_FORMAT GetFormat() = <span class="SHNumber">0</span></div>
  <div class="CBody"><div class="CHeading">Returns</div><p>Returns the pixel format of the texture</p></div>
 </div>
 
-<a name="ITexture.Update"></a><a name="Topic620"></a><div class="CTopic TFunction LC">
+<a name="ITexture.Update"></a><a name="Topic615"></a><div class="CTopic TFunction LC">
  <div class="CTitle">Update</div>
- <div id="NDPrototype620" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> Update(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,760);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pGraphics</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
- <div class="CBody"><p>Updates the underlying graphics card texture. Primarily used for video textures.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pGraphics<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,760);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>*</div></td><td class="CDLDefinition"><p>graphics device</p></td></tr></table></div>
+ <div id="NDPrototype615" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> Update(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,738);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pGraphics</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Updates the underlying graphics card texture. Primarily used for video textures.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pGraphics<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,738);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>*</div></td><td class="CDLDefinition"><p>graphics device</p></td></tr></table></div>
 </div>
 
-<a name="ITexture.GetD3DTexture"></a><a name="Topic621"></a><div class="CTopic TFunction LC">
+<a name="ITexture.GetD3DTexture"></a><a name="Topic616"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetD3DTexture</div>
- <div id="NDPrototype621" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> CComPtr&lt;ID3D11Texture2D&gt; GetD3DTexture() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype616" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> CComPtr&lt;ID3D11Texture2D&gt; GetD3DTexture() = <span class="SHNumber">0</span></div>
  <div class="CBody"><div class="CHeading">Returns</div><p>Returns the underlying D3D texture</p></div>
 </div>
 
-<a name="ITexture.GetD3DTextureRV"></a><a name="Topic622"></a><div class="CTopic TFunction LC">
+<a name="ITexture.GetD3DTextureRV"></a><a name="Topic617"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetD3DTextureRV</div>
- <div id="NDPrototype622" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> CComPtr&lt;ID3D11ShaderResourceView&gt; GetD3DTextureRV() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype617" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> CComPtr&lt;ID3D11ShaderResourceView&gt; GetD3DTextureRV() = <span class="SHNumber">0</span></div>
  <div class="CBody"><div class="CHeading">Returns</div><p>Returns the underlying D3D shader resource view associated with the texture</p></div>
 </div>
 
-<a name="ITexture.GenerateMips"></a><a name="Topic623"></a><div class="CTopic TFunction LC">
+<a name="ITexture.GenerateMips"></a><a name="Topic618"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GenerateMips</div>
- <div id="NDPrototype623" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> GenerateMips(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,760);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pGraphics</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
- <div class="CBody"><p>Generates a set of mipmaps for the texture</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pGraphics<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,760);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>*</div></td><td class="CDLDefinition"><p>graphics device</p></td></tr></table></div>
+ <div id="NDPrototype618" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> GenerateMips(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,738);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pGraphics</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Generates a set of mipmaps for the texture</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pGraphics<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,738);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>*</div></td><td class="CDLDefinition"><p>graphics device</p></td></tr></table></div>
 </div>
 
-<a name="ITexture.Render"></a><a name="Topic624"></a><div class="CTopic TFunction LC last">
+<a name="ITexture.Render"></a><a name="Topic619"></a><div class="CTopic TFunction LC last">
  <div class="CTitle">Render</div>
- <div id="NDPrototype624" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> Render(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,760);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pGraphics,</td></tr><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td></td><td class="PName last">slot,</td></tr><tr><td class="PType first"><span class="SHKeyword">bool</span>&nbsp;</td><td></td><td class="PName last">isPixelShader</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
- <div class="CBody"><p>Pushes the specified texture to the GPU</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pGraphics<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,760);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>*</div></td><td class="CDLDefinition"><p>graphics device</p></td></tr><tr><td class="CDLEntry">slot<div class="CDLParameterType"><span class="SHKeyword">int</span></div></td><td class="CDLDefinition"><p>texture slot to assign texture to</p></td></tr><tr><td class="CDLEntry">isPixelShader<div class="CDLParameterType"><span class="SHKeyword">bool</span></div></td><td class="CDLDefinition"><p>is texture being assigned to a pixel or vertex shader</p></td></tr></table></div>
+ <div id="NDPrototype619" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> Render(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,738);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pGraphics,</td></tr><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td></td><td class="PName last">slot,</td></tr><tr><td class="PType first"><span class="SHKeyword">bool</span>&nbsp;</td><td></td><td class="PName last">isPixelShader</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Pushes the specified texture to the GPU</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pGraphics<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/Caustic/IGraphics.h:IGraphics" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,738);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGraphics</a>*</div></td><td class="CDLDefinition"><p>graphics device</p></td></tr><tr><td class="CDLEntry">slot<div class="CDLParameterType"><span class="SHKeyword">int</span></div></td><td class="CDLDefinition"><p>texture slot to assign texture to</p></td></tr><tr><td class="CDLEntry">isPixelShader<div class="CDLParameterType"><span class="SHKeyword">bool</span></div></td><td class="CDLDefinition"><p>is texture being assigned to a pixel or vertex shader</p></td></tr></table></div>
 </div>
 
 </body></html>

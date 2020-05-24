@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:CRenderGraphFactory","CRenderGraphFactory");NDSummary.OnSummaryLoaded("CClass:CRenderGraphFactory",[["C/C++","C"]],[["Classes","Class"]],[[865,0,0,"CRenderGraphFactory"]]);
+NDFramePage.OnPageTitleLoaded("CClass:CRenderGraphFactory","CRenderGraphFactory");NDSummary.OnSummaryLoaded("CClass:CRenderGraphFactory",[["C/C++","C"]],[["Classes","Class"]],[[875,0,0,"CRenderGraphFactory"]]);

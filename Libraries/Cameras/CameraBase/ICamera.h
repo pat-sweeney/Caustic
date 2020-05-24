@@ -14,6 +14,9 @@ namespace Caustic
 	//**********************************************************************
 	// Interface: ICameraDevice
 	// Base interface shared across all camera types
+	//
+	// Header:
+	// [Link:Cameras/CameraBase/ICamera.h]
 	//**********************************************************************
 	struct ICameraDevice : public IRefCount
 	{

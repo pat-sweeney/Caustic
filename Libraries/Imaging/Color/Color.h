@@ -19,6 +19,9 @@ namespace Caustic
 	// <uint8 at Caustic::uint8> y - Y component
 	// <uint8 at Caustic::uint8> i - I component
 	// <uint8 at Caustic::uint8> q - Q component
+	//
+	// Header:
+	// [Link:Imaging/Color/Color.h]
 	//**********************************************************************
 	struct YIQColor
 	{
@@ -40,6 +43,9 @@ namespace Caustic
 	// <uint8 at Caustic::uint8> r - R component
 	// <uint8 at Caustic::uint8> g - G component
 	// <uint8 at Caustic::uint8> b - B component
+	//
+	// Header:
+	// [Link:Imaging/Color/Color.h]
 	//**********************************************************************
 	struct FRGBColor
 	{
@@ -66,6 +72,9 @@ namespace Caustic
 	// <uint8 at Caustic::uint8> r - R component
 	// <uint8 at Caustic::uint8> g - G component
 	// <uint8 at Caustic::uint8> b - B component
+	//
+	// Header:
+	// [Link:Imaging/Color/Color.h]
 	//**********************************************************************
 	struct RGBColor
 	{
@@ -110,6 +119,9 @@ namespace Caustic
 	// <uint8 at Caustic::uint8> r - R component
 	// <uint8 at Caustic::uint8> g - G component
 	// <uint8 at Caustic::uint8> b - B component
+	//
+	// Header:
+	// [Link:Imaging/Color/Color.h]
 	//**********************************************************************
 	struct HLSColor
 	{

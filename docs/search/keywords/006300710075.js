@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("cqu",["Class"],[["CQuantizeFilter",,[[,,,,0,"File:Imaging/Image/Quantize.cpp:CQuantizeFilter","CClass:CQuantizeFilter"]]]]);

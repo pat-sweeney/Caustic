@@ -14,6 +14,9 @@ namespace Caustic
 	//**********************************************************************
 	// Class: CausticException
 	// Class for handling throwing of exceptions
+	//
+	// Header:
+	// [Link:Base/Core/error.h]
 	//**********************************************************************
 	class CausticException : public std::exception
     {
@@ -43,6 +46,9 @@ namespace Caustic
 // Macro for testing result from function and throwing an exception if the result is an error
 //
 // hr - HRESULT to throw
+//
+// Header:
+// [Link:Base/Core/error.h]
 //**********************************************************************
 #define CT(hr) \
 do {\
@@ -56,6 +62,9 @@ do {\
 // Macro for calling a Win32 function and throwing if it fails
 //
 // func - function to call
+//
+// Header:
+// [Link:Base/Core/error.h]
 //**********************************************************************
 #define CTWIN32(func) \
 do {\

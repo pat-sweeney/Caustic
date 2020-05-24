@@ -1,1 +1,1 @@
-NDSummary.OnToolTipsLoaded("CClass:CSamplerRef",{489:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">CSamplerRef only exists because I was having trouble adding CRefObj&lt;ISampler&gt; to std::any(). This seemed like the simpliest fix</div></div>"});
+NDSummary.OnToolTipsLoaded("CClass:CSamplerRef",{483:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">CSamplerRef only exists because I was having trouble adding CRefObj&lt;ISampler&gt; to std::any(). This seemed like the simpliest fix</div></div>"});

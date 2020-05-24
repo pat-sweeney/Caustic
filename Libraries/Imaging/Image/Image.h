@@ -25,6 +25,9 @@ namespace Caustic
 	// RGBX_32bpp - type is RGBX image with 32 bits per pixel (X is ignored alpha)
 	// Float_32bpp - type is floating point image
 	// Float4_128bpp - type is floating point image with 4 channels
+	//
+	// Header:
+	// [Link:Imaging/Image/Image.h]
 	//**********************************************************************
 	enum class EImageType
 	{
@@ -44,6 +47,9 @@ namespace Caustic
 	//**********************************************************************
 	// Interface: IImageBase
 	// Base interface shared across all image types
+	//
+	// Header:
+	// [Link:Imaging/Image/Image.h]
 	//**********************************************************************
 	struct IImageBase : public IRefCount
 	{
@@ -105,6 +111,9 @@ namespace Caustic
 	//**********************************************************************
 	// Interface: IImage
 	// Interface to an image (CPU based)
+	//
+	// Header:
+	// [Link:Imaging/Image/Image.h]
 	//**********************************************************************
 	struct IImage : public IImageBase
 	{
@@ -197,6 +206,9 @@ namespace Caustic
 	//**********************************************************************
 	// Interface: IIntegralImage
 	// Interface to an integral image (see https://en.wikipedia.org/wiki/Summed-area_table)
+	//
+	// Header:
+	// [Link:Imaging/Image/Image.h]
 	//**********************************************************************
 	struct IIntegralImage : public IImageBase
 	{
@@ -242,6 +254,9 @@ namespace Caustic
 	//
 	// Returns:
 	// Returns the loaded image
+	//
+	// Header:
+	// [Link:Imaging/Image/Image.h]
 	//**********************************************************************
 	CRefObj<IImage> LoadImage(const wchar_t *pFilename);
 
@@ -252,6 +267,9 @@ namespace Caustic
 	// Parameters:
 	// pFilename - path to save image file
 	// pImage - Image to save
+	//
+	// Header:
+	// [Link:Imaging/Image/Image.h]
 	//**********************************************************************
 	void StoreImage(const wchar_t *pFilename, IImage *pImage);
 }

@@ -19,6 +19,9 @@ namespace Caustic
     // <Vector2> hitPt - Point on line where ray intersects
     // float hitTimeRay - Value of 'u' on ray equation where ray intersects line
     // <Vector2> hitPtRay - Point on ray where line intersects
+    //
+    // Header:
+    // [Link:Base/Math/Ray.h]
     //**********************************************************************
     struct RayIntersect2
     {
@@ -35,6 +38,9 @@ namespace Caustic
     // Members:
     // <Vector2> pos - Starting point of the ray
     // <Vector2> dir - Direction of the ray
+    //
+    // Header:
+    // [Link:Base/Math/Ray.h]
     //**********************************************************************
     struct Ray2
     {
@@ -93,6 +99,9 @@ namespace Caustic
     // float hitTime - Value of 't' where ray intersects surface
     // <Vector2> hitPt - Point on ray where ray intersects surface
     // <Vector2> hitNorm - Normal vector where ray intersects surface
+    //
+    // Header:
+    // [Link:Base/Math/Ray.h]
     //**********************************************************************
     struct RayIntersect3
     {
@@ -148,62 +157,62 @@ namespace Caustic
         //**********************************************************************
         bool Intersect(const BBox3 &bbox, Matrix4x4 *pInvTm, RayIntersect3 *pIntersectInfo);
       
-	//**********************************************************************
-	// Method: Intersect
+	    //**********************************************************************
+	    // Method: Intersect
         // Calculates intersection of a ray with a cone
-	//
-	// Calculates the intersection of a ray with a cone. The cone is defined
-	// by a top and bottom radius (which maybe something other than 0.0f and
-	// 1.0f resulting in a tapered cone). The equation for the cone is:
-	//
+	    //
+	    // Calculates the intersection of a ray with a cone. The cone is defined
+	    // by a top and bottom radius (which maybe something other than 0.0f and
+	    // 1.0f resulting in a tapered cone). The equation for the cone is:
+	    //
         // --- Text ---
-	//        b = bottom radius
-	//        t = top radius
-	//        h = height of cone
-	//        x^2 + y^2 = (((z + 1) * t - (z - 1) * b) / 2)^2
+	    //        b = bottom radius
+	    //        t = top radius
+	    //        h = height of cone
+	    //        x^2 + y^2 = (((z + 1) * t - (z - 1) * b) / 2)^2
         // ---
-	//
-	// Parameters:
-	// bottomRadius - Radius of the bottom of the cone
-	// topRadius - Radius of the top of the cone
-	// height - Height of cone
-	// pInvTm - Matrix to convert from ray's coordinate space to unit space (generally world=>object)
-	// pIntersectInfo - Returns the interesection info. Maybe nullptr.
+	    //
+	    // Parameters:
+	    // bottomRadius - Radius of the bottom of the cone
+	    // topRadius - Radius of the top of the cone
+	    // height - Height of cone
+	    // pInvTm - Matrix to convert from ray's coordinate space to unit space (generally world=>object)
+	    // pIntersectInfo - Returns the interesection info. Maybe nullptr.
         //
         // Returns:
         // True if ray intersects cone. False otherwise.
-	//**********************************************************************
+	    //**********************************************************************
         bool Intersect(float bottomRadius, float topRadius, float height, Matrix4x4 *pInvTm, RayIntersect3 *pIntersectInfo);
       
-	//**********************************************************************
-	// Method: Intersect
+        //**********************************************************************
+        // Method: Intersect
         // Calculates the intersection of a ray with an sphere. If pIntersectInfo
-	// is not nullptr then the intersection data is returned via this pointer.
+        // is not nullptr then the intersection data is returned via this pointer.
         //
         // Parameters:
-	// radius - Radius of sphere
-	// pInvTm - Matrix to convert from ray's coordinate space to unit space (generally world=>object)
-	// pIntersectInfo - Returns the interesection info. Maybe nullptr.
+        // radius - Radius of sphere
+        // pInvTm - Matrix to convert from ray's coordinate space to unit space (generally world=>object)
+        // pIntersectInfo - Returns the interesection info. Maybe nullptr.
         //
         // Returns:
-	// True if ray interesects bbox. False otherwise.
-	//**********************************************************************
+        // True if ray interesects bbox. False otherwise.
+        //**********************************************************************
         bool Intersect(float radius, Matrix4x4 *pInvTm, RayIntersect3 *pIntersectInfo);
       
-	//**********************************************************************
-	// Method: Intersect
-	// Calculates the intersection of a ray with an cylinder. If pIntersectInfo
-	// is not nullptr then the intersection data is returned via this pointer.
+        //**********************************************************************
+        // Method: Intersect
+        // Calculates the intersection of a ray with an cylinder. If pIntersectInfo
+        // is not nullptr then the intersection data is returned via this pointer.
         //
         // Parameters:
-	// radius - Radius of top/bottom of cylinder
-	// height - Height of cylinder
-	// pInvTm - Matrix to convert from ray's coordinate space to unit space (generally world=>object)
-	// pIntersectInfo - Returns the interesection info. Maybe nullptr.
+        // radius - Radius of top/bottom of cylinder
+        // height - Height of cylinder
+        // pInvTm - Matrix to convert from ray's coordinate space to unit space (generally world=>object)
+        // pIntersectInfo - Returns the interesection info. Maybe nullptr.
         //
         // Returns:
-	// \return true if ray interesects bbox, otherwise false
-	//**********************************************************************
+        // \return true if ray interesects bbox, otherwise false
+        //**********************************************************************
         bool Intersect(float radius, float height, Matrix4x4 *pInvTm, RayIntersect3 *pIntersectInfo);
     };
 }

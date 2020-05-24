@@ -14,6 +14,9 @@ namespace Caustic
 	// Defines a base class that all our reference counted
     // objects are derived from. When an obejcts reference count goes to 0
     // the object will be deleted.
+    //
+    // Header:
+    // [Link:Base/Core/RefCount.h]
     //**********************************************************************
     class CRefCount
     {

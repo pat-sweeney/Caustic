@@ -22,6 +22,9 @@ namespace Caustic
 	// Members:
 	// <CRefObj < IImage > > spMask - per pixel mask indicating which pixels have the filter applied. Values > 0 have the filter applied.
 	// <std::map< std::string, std::any> > params - parameters specific to a filter type
+	//
+	// Header:
+	// [Link:Imaging/Image/ImageFilter.h]
 	//**********************************************************************
 	struct ImageFilterParams
 	{
@@ -32,7 +35,10 @@ namespace Caustic
 	//**********************************************************************
     // Interface: IImageFilter
     // Interface for objects that apply some sort of filter on a <IImage>
-    //**********************************************************************
+	//
+	// Header:
+	// [Link:Imaging/Image/ImageFilter.h]
+	//**********************************************************************
     struct IImageFilter : public IRefCount
 	{
 		//**********************************************************************

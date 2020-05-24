@@ -13,7 +13,10 @@ namespace Caustic
     //**********************************************************************
     // Interface: ISerialize
     // Defines an interface for serializing out objects to some stream. 
-    //**********************************************************************
+	//
+	// Header:
+	// [Link:Base/Core/ISerialize.h]
+	//**********************************************************************
     struct ISerialize : public IRefCount
     {
 		//**********************************************************************

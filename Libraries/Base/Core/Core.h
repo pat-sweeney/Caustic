@@ -19,7 +19,7 @@ namespace Caustic
 
 	// Type: uint8
 	// An unsigned 8b value
-    typedef unsigned char uint8;        // Type: uint8\n An unsigned 8b value
+	typedef unsigned char uint8;        // Type: uint8\n An unsigned 8b value
     
 	// Type: uint16
 	// An unsigned 16b value

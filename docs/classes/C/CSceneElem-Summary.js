@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:CSceneElem","CSceneElem");NDSummary.OnSummaryLoaded("CClass:CSceneElem",[["C/C++","C"]],[["Classes","Class"]],[[956,0,0,"CSceneElem"]]);
+NDFramePage.OnPageTitleLoaded("CClass:CSceneElem","CSceneElem");NDSummary.OnSummaryLoaded("CClass:CSceneElem",[["C/C++","C"]],[["Classes","Class"]],[[976,0,0,"CSceneElem"]]);

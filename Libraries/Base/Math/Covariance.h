@@ -22,6 +22,9 @@ namespace Caustic
 	// xdata - x values
 	// ydata - y values
 	// useSampleVariance - indicates whether to compute the sample or population variance
+	//
+	// Header:
+	// [Link:Base/Math/Covariance.h]
 	//**********************************************************************
 	double Covariance(std::vector<double> &xdata, std::vector<double> &ydata, bool useSampleVariance);
 }

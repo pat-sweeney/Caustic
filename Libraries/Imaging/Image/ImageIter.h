@@ -21,6 +21,9 @@ namespace Caustic
 	// classes (CImageIter1, CImageIter8, CImageIter16, CImageIter24, or CImageIter32)
 	// to walk across an image.
 	//
+	// Header:
+	// [Link:Imaging/Image/ImageIter.h]
+	//
 	// Example:
 	// --- Code
 	//  CImageIter24 rowSrc(pSrcImage, 0, 0);
@@ -63,6 +66,9 @@ namespace Caustic
 	// Class: CImageIterFloat1
 	// Defines an iterator for walking across the pixels in an image where
 	// each pixel is floating point value.
+	//
+	// Header:
+	// [Link:Imaging/Image/ImageIter.h]
 	//**********************************************************************
 	class CImageIterFloat1 : public CImageIter
 	{
@@ -107,6 +113,9 @@ namespace Caustic
 	// Class: CImageIterFloat2
 	// Defines an iterator for walking across the pixels in an image where
 	// each pixel is 2 floating point values.
+	//
+	// Header:
+	// [Link:Imaging/Image/ImageIter.h]
 	//**********************************************************************
 	class CImageIterFloat2 : public CImageIter
 	{
@@ -153,6 +162,9 @@ namespace Caustic
 	// Class: CImageIterFloat3
 	// Defines an iterator for walking across the pixels in an image where
 	// each pixel is 3 floating point values.
+	//
+	// Header:
+	// [Link:Imaging/Image/ImageIter.h]
 	//**********************************************************************
 	class CImageIterFloat3 : public CImageIter
 	{
@@ -200,6 +212,9 @@ namespace Caustic
 	// Class: CImageIterFloat4
 	// Defines an iterator for walking across the pixels in an image where
 	// each pixel is 4 floating point values.
+	//
+	// Header:
+	// [Link:Imaging/Image/ImageIter.h]
 	//**********************************************************************
 	class CImageIterFloat4 : public CImageIter
 	{
@@ -248,6 +263,9 @@ namespace Caustic
 	// Class: CImageIter1
 	// Defines an iterator for walking across the pixels in an image where
 	// each pixel is 1 bit in width.
+	//
+	// Header:
+	// [Link:Imaging/Image/ImageIter.h]
 	//**********************************************************************
 	class CImageIter1 : public CImageIter
 	{
@@ -314,6 +332,9 @@ namespace Caustic
 	// Class: CImageIter8
 	// Defines an iterator for walking across the pixels in an image where
 	// each pixel is 8 bits in width.
+	//
+	// Header:
+	// [Link:Imaging/Image/ImageIter.h]
 	//**********************************************************************
 	class CImageIter8 : public CImageIter
 	{
@@ -357,6 +378,9 @@ namespace Caustic
 	// Class: CImageIter16
 	// Defines an iterator for walking across the pixels in an image where
 	// each pixel is 16 bits in width.
+	//
+	// Header:
+	// [Link:Imaging/Image/ImageIter.h]
 	//**********************************************************************
 	class CImageIter16 : public CImageIter
 	{
@@ -400,6 +424,9 @@ namespace Caustic
 	// Class: CImageIter24
 	// Defines an iterator for walking across the pixels in an image where
 	// each pixel is 24 bits in width.
+	//
+	// Header:
+	// [Link:Imaging/Image/ImageIter.h]
 	//**********************************************************************
 	class CImageIter24 : public CImageIter
 	{
@@ -448,6 +475,9 @@ namespace Caustic
 	// Class: CImageIter32
 	// Defines an iterator for walking across the pixels in an image where
 	// each pixel is 32 bits in width.
+	//
+	// Header:
+	// [Link:Imaging/Image/ImageIter.h]
 	//**********************************************************************
 	class CImageIter32 : public CImageIter
 	{
@@ -497,6 +527,9 @@ namespace Caustic
 	// Class: CImageIter128
 	// Defines an iterator for walking across the pixels in an image where
 	// each pixel is 128 bits in width (i.e. single float per channel)
+	//
+	// Header:
+	// [Link:Imaging/Image/ImageIter.h]
 	//**********************************************************************
 	class CImageIter128 : public CImageIter
 	{
@@ -547,6 +580,9 @@ namespace Caustic
 	// Defines an iterator for walking across the pixels in an image of
 	// arbitrary pixel depth. NOTE: These iterators are slower than using
 	// the iterator that matches the given image's pixel depth.
+	//
+	// Header:
+	// [Link:Imaging/Image/ImageIter.h]
 	//**********************************************************************
 	class CImageIterGeneric : public CImageIter
 	{

@@ -1,1 +1,1 @@
-NDContentPage.OnToolTipsLoaded({388:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Interface to an image (CPU based)</div></div>"});
+NDContentPage.OnToolTipsLoaded({360:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Interface to an image (CPU based)</div></div>"});

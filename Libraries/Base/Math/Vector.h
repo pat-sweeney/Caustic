@@ -15,6 +15,9 @@ namespace Caustic
     // Members:
     // float x - x component
     // float y - y component
+    //
+    // Header:
+    // [Link:Base/Math/Vector.h]
     //**********************************************************************
     struct Vector2
     {
@@ -120,6 +123,9 @@ namespace Caustic
     // float x - x component
     // float y - y component
     // float z - z component
+    //
+    // Header:
+    // [Link:Base/Math/Vector.h]
     //**********************************************************************
     struct Vector3
     {
@@ -259,6 +265,9 @@ namespace Caustic
     // float y - y component
     // float z - z component
     // float w - w component
+    //
+    // Header:
+    // [Link:Base/Math/Vector.h]
     //**********************************************************************
     struct Vector4
     {
