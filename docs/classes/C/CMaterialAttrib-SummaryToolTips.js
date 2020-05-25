@@ -1,1 +1,1 @@
-NDSummary.OnToolTipsLoaded("CClass:CMaterialAttrib",{625:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines the basic material</div></div>"});
+NDSummary.OnToolTipsLoaded("CClass:CMaterialAttrib",{559:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines the basic material</div></div>"});

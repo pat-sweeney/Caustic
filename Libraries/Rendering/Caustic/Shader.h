@@ -25,6 +25,9 @@ namespace Caustic
     //**********************************************************************
     // EShaderParamType defines the various types of parameters that can
     // be passed to a CShader
+    //
+    // Header:
+    // [Link:Rendering/Caustic/Shader.h]
     //**********************************************************************
     enum EShaderParamType
     {
@@ -61,6 +64,9 @@ namespace Caustic
     // m_offset - Register offset
     // m_members - Number of elements (i.e. some parameters can be arrays) 
     // m_elemSize - sizeof a single element in bytes (used by buffers)
+    //
+    // Header:
+    // [Link:Rendering/Caustic/Shader.h]
     //**********************************************************************
     struct ShaderParamDef
     {
@@ -81,6 +87,9 @@ namespace Caustic
     // m_value - Value assigned to this parameter
     // m_values - Array of values assigned to this parameter
     // m_dirty - Is parameter dirty and needs to be pushed to constant buffer
+    //
+    // Header:
+    // [Link:Rendering/Caustic/Shader.h]
     //**********************************************************************
     struct ShaderParamInstance : public ShaderParamDef
     {
@@ -107,6 +116,9 @@ namespace Caustic
     // m_spView - A view onto the buffer m_spBuffer
     // m_bufferSize - size of buffer in bytes
     // m_heapSize - size of the total heap the buffer is contained in
+    //
+    // Header:
+    // [Link:Rendering/Caustic/Shader.h]
     //**********************************************************************
     struct SBuffer
     {
@@ -137,6 +149,9 @@ namespace Caustic
     //
     // A shader defines a material on a renderable. It is comprised of a pixel
     // shader, a vertex shader, and constants passed to those shaders.
+    //
+    // Header:
+    // [Link:Rendering/Caustic/Shader.h]
     //**********************************************************************
     class CShader : public IShader, public CRefCount
     {
@@ -209,6 +224,9 @@ namespace Caustic
     //**********************************************************************
     // Class: CShaderMgr
     // Defines our shader manager. Each shader is registered with this manager.
+    //
+    // Header:
+    // [Link:Rendering/Caustic/Shader.h]
     //**********************************************************************
     class CShaderMgr : public IShaderMgr, public CRefCount
     {

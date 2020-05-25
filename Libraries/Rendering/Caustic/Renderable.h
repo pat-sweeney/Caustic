@@ -34,7 +34,10 @@ namespace Caustic
     // m_xform - Current transform to apply to object
     // m_vertexBuffer - vertex buffer
     // m_normalVB - vertex buffer with normal vectors
-    //**********************************************************************
+	//
+	// Header:
+	// [Link:Rendering/Caustic/Renderable.h]
+	//**********************************************************************
 	class CRenderable : public IRenderable, public CRefCount
 	{
 	protected:

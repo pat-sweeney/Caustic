@@ -15,6 +15,23 @@
 
 namespace Caustic
 {
+    //**********************************************************************
+    // Class: CTrackball
+    // Implementation of ITrackball
+    //
+    // Members:
+    // <uint32> m_centerX - Center of screen's X coordinate
+    // <uint32> m_centerY - Center of screen's Y coordinate
+    // <uint32> m_width - Width of screen
+    // <uint32> m_height - Height of screen
+    // <uint32> m_radius - Radius of trackball
+    // <uint32> m_startX - X Position of mouse when drag was started
+    // <uint32> m_startY - Y Position of mouse when drag was started
+    // <Vector3> m_startPos - Position of m_startX,m_startY on trackball surface
+    //
+    // Header:
+    // [Link:Rendering/Caustic/Trackball.h]
+    //**********************************************************************
     class CTrackball : public ITrackball, public CRefCount
     {
         uint32 m_centerX; // Center of screen's X coordinate

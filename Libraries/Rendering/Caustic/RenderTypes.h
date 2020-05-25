@@ -28,6 +28,9 @@ namespace Caustic
     // is stored separately (such as normal information).
     // Typically most mesh data is stored in CGeomVertex. Only faces
     // at material boundaries or smoothing groups contain CFaceVertex data.
+    //
+    // Header:
+    // [Link:Rendering/Caustic/RenderTypes.h]
     //**********************************************************************
     struct CGeomVertex
     {

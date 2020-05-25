@@ -16,6 +16,9 @@ namespace Caustic
 	//**********************************************************************
 	// Class: CShaderInfo
 	// Defines information parsed from a shader
+	//
+	// Header:
+	// [Link:Rendering/Caustic/ShaderInfo.h]
 	//**********************************************************************
 	class CShaderInfo : public IShaderInfo, public CRefCount
 	{

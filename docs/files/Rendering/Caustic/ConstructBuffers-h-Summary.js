@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/ConstructBuffers.h","ConstructBuffers.h");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/ConstructBuffers.h",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"]],[[518,0,1,"Functions","Functions"],[562,0,0,"BuildVertexBuffer","BuildVertexBuffer"],[563,0,0,"BuildIndexBuffer","BuildIndexBuffer"]]);

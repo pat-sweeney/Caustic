@@ -37,6 +37,9 @@ namespace Caustic
     // c_PassEnvironment - pass rendering environment maps
     // c_PassLast - last pass
     // c_PassAllPasses - combination of all the pass flags
+    //
+    // Header:
+    // [Link:Rendering/Caustic/Renderer.h]
     //**********************************************************************
 
     const int c_RenderCmd_DrawMesh = 0; // Command ID for rendering a mesh
@@ -56,6 +59,9 @@ namespace Caustic
     //**********************************************************************
     // Class: CLineVertex
     // Vertex structure for drawing lines
+    //
+    // Header:
+    // [Link:Rendering/Caustic/Renderer.h]
     //**********************************************************************
     struct CLineVertex
     {
@@ -65,6 +71,9 @@ namespace Caustic
     //**********************************************************************
     // Class: CLight
     // Class implementing <IPointLight>
+    //
+    // Header:
+    // [Link:Rendering/Caustic/Renderer.h]
     //**********************************************************************
     class CLight : public IPointLight, public CRefCount
     {
@@ -83,6 +92,9 @@ namespace Caustic
     // m_passBlendable - indicates whether alpha blending is enabled on the current pass
     // m_currentEpoch - current epoch for keeping track of changes. Each time something changes this number is updated
     // m_mostRecentEpoch - most recent epoch we have found while traversing the render graph
+    //
+    // Header:
+    // [Link:Rendering/Caustic/Renderer.h]
     //**********************************************************************
     class CRenderCtx : public IRenderCtx, public CRefCount
     {
@@ -133,6 +145,9 @@ namespace Caustic
     //**********************************************************************
     // Class: CGraphicsBase
     // Defines the data shared between our CGraphics and CRenderer objects
+    //
+    // Header:
+    // [Link:Rendering/Caustic/Renderer.h]
     //**********************************************************************
     class CGraphicsBase : public CRefCount
     {
@@ -162,7 +177,10 @@ namespace Caustic
 
     //**********************************************************************
     // Class: CGraphics
-    // See <IGraphics>
+    // Implementation of <IGraphics>
+    //
+    // Header:
+    // [Link:Rendering/Caustic/Renderer.h]
     //**********************************************************************
     class CGraphics : public CGraphicsBase, public IGraphics
     {
@@ -185,7 +203,7 @@ namespace Caustic
 
     //**********************************************************************
     // Class: CRenderer
-    // See <IRenderer>
+    // Implementation of <IRenderer>
     //
     // Members:
     // m_renderThreadId - Thread ID this thread is running on. That is the only valid thread to make calls to this object from.
@@ -200,6 +218,9 @@ namespace Caustic
     // m_exitThread - Controls whether we are exiting the render thread
     // m_spLineVB - Vertex buffer used to draw lines
     // m_spLineShader - Shader used to draw lines
+    //
+    // Header:
+    // [Link:Rendering/Caustic/Renderer.h]
     //**********************************************************************
     class CRenderer : 
         public CGraphicsBase,

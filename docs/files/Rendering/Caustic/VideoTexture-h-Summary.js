@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/VideoTexture.h","VideoTexture.h");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/VideoTexture.h",[["C/C++","C"]],[["Classes","Class"]],[[489,0,0,"CVideoTexture","CVideoTexture"]]);
+NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/VideoTexture.h","VideoTexture.h");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/VideoTexture.h",[["C/C++","C"]],[["Classes","Class"]],[[842,0,0,"CVideoFormat","CVideoFormat"],[511,0,0,"CVideoTexture","CVideoTexture"]]);

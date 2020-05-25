@@ -29,7 +29,10 @@ namespace Caustic
     // m_spShader - Shader to use for rendering
     // m_bbox - bounding box of submesh
     // m_flags - Mesh flags inherited from the ISubMesh
-    //**********************************************************************
+	//
+	// Header:
+	// [Link:Rendering/Caustic/RenderMesh.h]
+	//**********************************************************************
     class CRenderSubMesh : public IRenderSubMesh, public CRefCount
 	{
         MeshData m_VB;
@@ -69,6 +72,16 @@ namespace Caustic
 		virtual CRefObj<IShader> GetShader() override { return m_spShader; }
 	};
 
+	//**********************************************************************
+	// Class: CRenderMesh
+	// Implements <IRenderMesh>
+	//
+	// Members:
+	// m_subMeshes - List of submeshes that comprise this mesh
+	// m_materials - list of materials used by the submeshes
+	//
+	// Header:
+	// [Link:Rendering/Caustic/RenderMesh.h]
 	//**********************************************************************
 	class CRenderMesh : public IRenderMesh, public CRefCount
 	{

@@ -23,7 +23,10 @@ namespace Caustic
     //
     // Members:
     // factory - The CausticFactory singleton
-    //**********************************************************************
+	//
+	// Header:
+	// [Link:Rendering/Caustic/CausticFactory.h]
+	//**********************************************************************
     class CCausticFactory : public ICausticFactory, public CRefCount
 	{
 		static CRefObj<ICausticFactory> factory;

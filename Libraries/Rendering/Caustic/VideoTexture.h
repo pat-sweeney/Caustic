@@ -15,6 +15,19 @@
 
 namespace Caustic
 {
+    //**********************************************************************
+    // Class: CVideoFormat
+    // Defines the format for a video
+    //
+    // Members:
+    // <uint32 at Caustic::uint32> m_width - width of video in pixels
+    // <uint32 at Caustic::uint32> m_height - heightof video in pixels
+    // bool m_topDown - is video oriented from top to bottom (pixel 0,0 in top left corner)
+    // RECT m_rect - Video rect corrected for pixel aspect ratio
+    //
+    // Header:
+    // [Link:Rendering/Caustic/VideoTexture.h]
+    //**********************************************************************
     struct CVideoFormat
     {
         uint32 m_width;
@@ -34,6 +47,16 @@ namespace Caustic
     //**********************************************************************
     // Class: CVideoTexture
     // Defines class for a video as a texture
+    //
+    // Members:
+    // CComPtr<IMFSourceReader> m_spSourceReader - Media Foundation's source reader
+    // <uint32 at Caustic::uint32> m_Width - width of video in pixels
+    // <uint32 at Caustic::uint32> m_Height - height of video in pixels
+    // <CVideoFormat> m_format - format of the video
+    // <CRefObj> < <ITexture> > m_spTexture - texture for decoded video frame
+    //
+    // Header:
+    // [Link:Rendering/Caustic/VideoTexture.h]
     //**********************************************************************
     class CVideoTexture :
         public ITexture,

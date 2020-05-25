@@ -17,6 +17,14 @@
 
 namespace Caustic
 {
+    //**********************************************************************
+    // Class: CRenderQueue
+    // Implements the render queue. Render commands from the client are stored
+    // in this queue until the render thread picks them up and executes them.
+    //
+    // Header:
+    // [Link:Rendering/Caustic/RendererMarshaller.h]
+    //**********************************************************************
     struct CRenderQueue
     {
         CRITICAL_SECTION m_cs;
@@ -44,6 +52,9 @@ namespace Caustic
     // m_queue - Queue of client side renderer requests
     // m_exit - Flag to indicate whether the renderer is exiting
     // m_thread - Handle to the renderer thread
+    //
+    // Header:
+    // [Link:Rendering/Caustic/RendererMarshaller.h]
     //**********************************************************************
     class CRendererMarshaller :
         public IRenderer,

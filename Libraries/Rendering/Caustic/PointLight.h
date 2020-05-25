@@ -15,6 +15,13 @@
 
 namespace Caustic
 {
+    //**********************************************************************
+    // Class: CPointLight
+    // Implementation of IPointLight
+    //
+    // Header:
+    // [Link:Rendering/Caustic/PointLight.h]
+    //**********************************************************************
     class CPointLight : public IPointLight, public CRefCount
     {
         Vector3 m_pos;
