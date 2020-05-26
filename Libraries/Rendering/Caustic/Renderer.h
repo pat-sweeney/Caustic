@@ -92,6 +92,7 @@ namespace Caustic
     // m_passBlendable - indicates whether alpha blending is enabled on the current pass
     // m_currentEpoch - current epoch for keeping track of changes. Each time something changes this number is updated
     // m_mostRecentEpoch - most recent epoch we have found while traversing the render graph
+    // c_MaxShadowMaps - maximum number of shadow maps that can be active during a frame
     //
     // Header:
     // [Link:Rendering/Caustic/Renderer.h]
@@ -163,6 +164,8 @@ namespace Caustic
         CComPtr<ID3D11Texture2D> m_spDepthStencilBuffer;    // Our depth map
         D3D11_TEXTURE2D_DESC m_BBDesc;                      // Description of our back buffer
         CRefObj<IShaderMgr> m_spShaderMgr;                  // Our shader manager
+        CComPtr<ID3D11Texture2D> m_spShadowTexture[c_MaxShadowMaps];        // Texture for shadow map
+        CComPtr<ID3D11RenderTargetView> m_spShadowRTView[c_MaxShadowMaps];  // Render target view for m_spShadowTexture
 
         friend CAUSTICAPI CRefObj<IGraphics> CreateGraphics(HWND hwnd);
 
@@ -232,8 +235,6 @@ namespace Caustic
         std::vector<CRefObj<IPointLight>> m_lights;         // List of lights in this scene
         CComPtr<ID3D11Texture2D> m_spObjIDTexture;          // Texture for rendering object IDs
         CComPtr<ID3D11RenderTargetView> m_spObjIDRTView;    // Render target view for m_spObjIDTexture
-        CComPtr<ID3D11Texture2D> m_spShadowTexture[c_MaxShadowMaps];        // Texture for shadow map
-        CComPtr<ID3D11RenderTargetView> m_spShadowRTView[c_MaxShadowMaps];  // Render target view for m_spShadowTexture
         CEvent m_waitForShutdown;                           // Event to control shutdown (waits for render thread to exit)
         bool m_exitThread;                                  // Controls whether we are exiting the render thread
         CComPtr<ID3D11Buffer> m_spLineVB;                   // Vertex buffer used to draw lines

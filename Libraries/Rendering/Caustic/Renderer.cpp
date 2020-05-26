@@ -312,10 +312,9 @@ namespace Caustic
                 m_spContext->ClearDepthStencilView(m_spStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
             }
 #endif // SUPPORT_OBJID
-#ifdef SUPPORT_SHADOWS
             else if (pass == c_PassShadow)
             {
-                int numShadowPasses = (m_lights.size() < c_MaxShadowMaps) ? m_lights.size() : c_MaxShadowMaps;
+                int numShadowPasses = (m_lights.size() < c_MaxShadowMaps) ? (int)m_lights.size() : c_MaxShadowMaps;
                 for (int i = 0; i < numShadowPasses; i++)
                 {
                     m_spContext->OMSetRenderTargets(1, &m_spShadowRTView[i], m_spStencilView);
@@ -323,8 +322,7 @@ namespace Caustic
                     m_spContext->ClearRenderTargetView(m_spShadowRTView[i], bgClr);
                     m_spContext->ClearDepthStencilView(m_spStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
                     // Reset the camera to be from the lights perspective
-                    CRefObj<ICamera> spCamera;
-                    CreateCamera(true, &spCamera);
+                    CRefObj<ICamera> spCamera = CreateCamera(true);
                     spCamera->SetPosition(m_lights[i]->GetPosition(), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f));
                     this->SetCamera(spCamera);
                     DrawSceneObjects(pass, renderCallback);
@@ -332,7 +330,6 @@ namespace Caustic
                     m_spContext->OMSetRenderTargets(1, &m_spRTView, m_spStencilView);
                 }
             }
-#endif
             else if (pass == c_PassTransparent)
             {
                 std::vector<int> order;
@@ -473,7 +470,6 @@ namespace Caustic
         m_spBackBuffer->GetDesc(&m_BBDesc);
         CT(m_spDevice->CreateRenderTargetView(m_spBackBuffer, nullptr, &m_spRTView));
 
-#ifdef SUPPORT_SHADOWS
         // Create texture for rendering shadow map
         for (int i = 0; i < c_MaxShadowMaps; i++)
         {
@@ -485,7 +481,6 @@ namespace Caustic
             rtdesc.Texture2D.MipSlice = 0;
             CT(m_spDevice->CreateRenderTargetView(m_spShadowTexture[i], &rtdesc, &m_spShadowRTView[i]));
         }
-#endif
 
         // Create depth buffer
         CD3D11_TEXTURE2D_DESC texDesc2D(DXGI_FORMAT_D24_UNORM_S8_UINT, m_BBDesc.Width, m_BBDesc.Height, 1, 1, D3D11_BIND_DEPTH_STENCIL);
