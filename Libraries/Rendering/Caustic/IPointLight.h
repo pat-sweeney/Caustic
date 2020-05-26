@@ -8,6 +8,8 @@
 #include "Base\Core\Core.h"
 #include "Base\Core\IRefCount.h"
 #include "Base\Math\Vector.h"
+#include "Imaging\Color\Color.h"
+#include "Rendering\Caustic\ILight.h"
 
 //**********************************************************************
 // File: IPointLight.h
@@ -19,12 +21,26 @@ namespace Caustic
     //**********************************************************************
     // Interface: IPointLight
     // Defines a point light
+    //
+    // Header:
+    // [Link:Rendering/Caustic/IPointLight.h]
     //**********************************************************************
-    struct IPointLight : public IRefCount
+    struct IPointLight : public ILight
     {
-        virtual void SetPosition(Vector3 &pos) = 0;
-        virtual Vector3 GetPosition() = 0;
-        virtual void SetColor(Vector3 &color) = 0;
-        virtual Vector3 GetColor() = 0;
     };
+
+    //**********************************************************************
+    // Function: CreatePointLight
+    // Creates a point light
+    //
+    // Parameters:
+    // pos - position of light in world coordinates
+    // color - color of light
+    // intensity - intensity of light
+    // casts - indicates whether this light participates in shadow mapping
+    //
+    // Header:
+    // [Link:Rendering/Caustic/IPointLight.h]
+    //**********************************************************************
+    CAUSTICAPI CRefObj<IPointLight> CreatePointLight(Vector3& pos, FRGBColor& color, float intensity, bool casts = true);
 }

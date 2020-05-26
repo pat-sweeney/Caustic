@@ -26,7 +26,10 @@ namespace Caustic
 	// Defines the D3D counterpart to an ISubMesh object (i.e. the renderable
 	// form of a mesh, that is, a mesh converted from a half-edge structure
 	// to a vertex and index buffer).
-	//**********************************************************************
+    //
+    // Header:
+    // [Link:Rendering/Caustic/IRenderMesh.h]
+    //**********************************************************************
 	struct IRenderSubMesh : public IRefCount
 	{
         //**********************************************************************
@@ -161,7 +164,10 @@ namespace Caustic
 	//**********************************************************************
 	// Interface: IRenderMesh
 	// IRenderMesh is simply a collection of submesh objects (IRenderSubMesh).
-	//**********************************************************************
+    //
+    // Header:
+    // [Link:Rendering/Caustic/IRenderMesh.h]
+    //**********************************************************************
 	struct IRenderMesh : public ISerialize
 	{
         //**********************************************************************

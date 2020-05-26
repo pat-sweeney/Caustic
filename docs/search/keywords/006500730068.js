@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("esh",["Enumeration"],[["EShaderAccess",,[[,,,,0,"File:Rendering/Caustic/IMaterialAttrib.h:EShaderAccess"]]],["EShaderType",,[[,,,,0,"File:Rendering/Caustic/IShaderInfo.h:EShaderType"]]]]);

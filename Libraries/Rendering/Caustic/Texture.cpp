@@ -24,6 +24,8 @@ namespace Caustic
     // width - width of texture in pixels
     // height - height of texture in pixels
     // format - image format
+    // cpuFlags - D3D cpu flags to use
+    // bindFlags - D3D bind flags to use
     //
     // Returns:
     // Returns the created texture

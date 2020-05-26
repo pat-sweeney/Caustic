@@ -23,6 +23,13 @@ namespace Caustic
 	struct IShader;
 	struct ShaderParamDef;
 
+    //**********************************************************************
+    // Enum: EShaderType
+    // Defines the various types of shaders
+    //
+    // Header:
+    // [Link:Rendering/Caustic/IShaderInfo.h]
+    //**********************************************************************
     enum EShaderType
     {
         TypePixelShader = 0x1,
@@ -38,7 +45,10 @@ namespace Caustic
 	// Defines primary interface used for getting information about pre-compiled
 	// shaders. This isn't the shader itself. It is simply the data that we
 	// load from disk to create a shader (i.e. data from .shi file)
-	//**********************************************************************
+    //
+    // Header:
+    // [Link:Rendering/Caustic/IShaderInfo.h]
+    //**********************************************************************
 	struct IShaderInfo : public IRefCount
 	{
         //**********************************************************************

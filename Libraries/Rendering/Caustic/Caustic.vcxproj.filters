@@ -58,7 +58,40 @@
     <ClInclude Include="CausticFactory.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderInfo.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderMesh.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderable.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstructBuffers.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTypes.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialAttrib.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IBuffer.h">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="ICamera.h">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClInclude>
     <ClInclude Include="ICausticFactory.h">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="IGraphics.h">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="IMaterialAttrib.h">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="IPointLight.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="IRenderable.h">
@@ -76,7 +109,16 @@
     <ClInclude Include="IRenderMaterial.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="IRenderMesh.h">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClInclude>
     <ClInclude Include="ISampler.h">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="IShader.h">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="IShaderInfo.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="IShaderMgr.h">
@@ -85,53 +127,26 @@
     <ClInclude Include="ITexture.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="ICamera.h">
-      <Filter>Source Files\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="IGraphics.h">
-      <Filter>Source Files\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="IPointLight.h">
-      <Filter>Source Files\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="IShader.h">
-      <Filter>Source Files\Interfaces</Filter>
-    </ClInclude>
     <ClInclude Include="ITrackball.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="ShaderInfo.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IShaderInfo.h">
+    <ClInclude Include="IDirectionalLight.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="IRenderMesh.h">
+    <ClInclude Include="ILight.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="RenderMesh.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderable.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ConstructBuffers.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderTypes.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IMaterialAttrib.h">
+    <ClInclude Include="ISpotLight.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="MaterialAttrib.h">
+    <ClInclude Include="DirectionalLight.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="ILightCollection.h">
-      <Filter>Source Files\Interfaces</Filter>
+    <ClInclude Include="SpotLight.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="IBuffer.h">
-      <Filter>Source Files\Interfaces</Filter>
+    <ClInclude Include="Light.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -186,9 +201,15 @@
     <ClCompile Include="MaterialAttrib.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DirectionalLight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SpotLight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="Textured.xml">
+    <CustomBuild Include="Brighten.xml">
       <Filter>Source Files\Shaders\Definitions</Filter>
     </CustomBuild>
     <CustomBuild Include="ColorNormal.xml">
@@ -200,7 +221,7 @@
     <CustomBuild Include="Default.xml">
       <Filter>Source Files\Shaders\Definitions</Filter>
     </CustomBuild>
-    <CustomBuild Include="PointCloud.xml">
+    <CustomBuild Include="Depth2Points.xml">
       <Filter>Source Files\Shaders\Definitions</Filter>
     </CustomBuild>
     <CustomBuild Include="DrawNormal.xml">
@@ -221,27 +242,33 @@
     <CustomBuild Include="ObjID.xml">
       <Filter>Source Files\Shaders\Definitions</Filter>
     </CustomBuild>
+    <CustomBuild Include="PointCloud.xml">
+      <Filter>Source Files\Shaders\Definitions</Filter>
+    </CustomBuild>
     <CustomBuild Include="ShadowMap.xml">
       <Filter>Source Files\Shaders\Definitions</Filter>
     </CustomBuild>
-    <CustomBuild Include="Brighten.xml">
-      <Filter>Source Files\Shaders\Definitions</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Depth2Points.xml">
+    <CustomBuild Include="Textured.xml">
       <Filter>Source Files\Shaders\Definitions</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Default.ps">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="Default.vs">
+    <None Include="Brighten.cs">
       <Filter>Source Files\Shaders</Filter>
     </None>
     <None Include="ColorNormal.ps">
       <Filter>Source Files\Shaders</Filter>
     </None>
     <None Include="ColorUVs.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Default.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Default.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Depth2Points.cs">
       <Filter>Source Files\Shaders</Filter>
     </None>
     <None Include="DrawNormal.vs">
@@ -256,19 +283,13 @@
     <None Include="Normal.ps">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="Textured.ps">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="Pointcloud.vs">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
     <None Include="PointCloud.ps">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="Depth2Points.cs">
+    <None Include="PointCloud.vs">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="Brighten.cs">
+    <None Include="Textured.ps">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>

@@ -19,6 +19,9 @@ namespace Caustic
     //**********************************************************************
     // Interface: ISampler
     // Defines a sampler. Samplers define how the underlying texture is accessed by shaders.
+    //
+    // Header:
+    // [Link:Rendering/Caustic/ISampler.h]
     //**********************************************************************
     struct ISampler : public IRefCount
     {
@@ -90,4 +93,17 @@ namespace Caustic
         //**********************************************************************
         virtual CRefObj<ITexture> GetTexture() = 0;
     };
+
+    //**********************************************************************
+    // Function: CreateSampler
+    // Creates a sampler. See <ISampler>
+    //
+    // Parameters:
+    // pGraphics - Renderer
+    // pTexture - texture sampler is associated with
+    //
+    // Header:
+    // [Link:Rendering/Caustic/ISampler.h]
+    //**********************************************************************
+    CAUSTICAPI CRefObj<ISampler> CreateSampler(IGraphics* pGraphics, ITexture* pTexture);
 }

@@ -13,11 +13,6 @@
 
 namespace Caustic
 {
-    CAUSTICAPI CRefObj<IMaterialAttrib> CreateMaterialAttrib()
-    {
-        return CRefObj<IMaterialAttrib>(new CMaterialAttrib());
-    }
-
     CAUSTICAPI CRefObj<IRenderMaterial> CreateRenderMaterial(IGraphics* pGraphics, IMaterialAttrib* pMaterialAttrib, IShader* pShader)
     {
         std::unique_ptr<CRenderMaterial> spRenderMaterial(new CRenderMaterial());
@@ -90,8 +85,8 @@ namespace Caustic
 
         if (m_spMaterial)
         {
-            m_spMaterial->EnumerateColors([spShader](std::wstring name, Vector3& v) {
-                Float4 sv(v.x, v.y, v.z, 1.0);
+            m_spMaterial->EnumerateColors([spShader](std::wstring name, FRGBColor& v) {
+                Float4 sv(v.r, v.g, v.b, 1.0);
                 spShader->SetPSParam(name, std::any(sv));
                 });
             m_spMaterial->EnumerateScalars([spShader](std::wstring name, float v) {
@@ -129,10 +124,10 @@ namespace Caustic
             v.z = pos.z;
             v.w = 0.0f;
             spShader->SetPSParam(L"lightPosWS", i, std::any(v));
-            Vector3 lightColor = lights[i]->GetColor();
-            v.x = lightColor.x;
-            v.y = lightColor.y;
-            v.z = lightColor.z;
+            FRGBColor lightColor = lights[i]->GetColor();
+            v.x = lightColor.r;
+            v.y = lightColor.g;
+            v.z = lightColor.b;
             v.w = 0.0f;
             spShader->SetPSParam(L"lightColor", i, std::any(v));
         }

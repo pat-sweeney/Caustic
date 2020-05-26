@@ -193,8 +193,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                         CRefObj<IShader> spShader = spRenderWindow->GetRenderer()->GetShaderMgr()->FindShader(L"Textured");
                         CRefObj<IRenderGraphNode_Material> spMaterialElem = spRenderGraphFactory->CreateMaterialNode();
                         CRefObj<IMaterialAttrib> spMaterial = spCausticFactory->CreateMaterialAttrib();
-                        Vector3 ambient(0.2f, 0.2f, 0.2f);
-                        Vector3 diffuse(0.4f, 0.4f, 0.4f);
+                        FRGBColor ambient(0.2f, 0.2f, 0.2f);
+                        FRGBColor diffuse(0.4f, 0.4f, 0.4f);
                         spMaterial->SetColor(L"ambientColor", ambient);
                         spMaterial->SetColor(L"diffuseColor", diffuse);
                         spMaterialElem->FindInputPin("materialAttrib")->SetDefaultValue(spMaterial);
@@ -206,11 +206,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                         spLightElem->FindOutputPin("lights")->LinkTo(spMeshElem->FindInputPin("lights"));
 
                         Vector3 lightPos(10.0f, 10.0f, 0.0f);
-                        Vector3 lightColor(1.0f, 1.0f, 1.0f);
-                        spLightElem->AddLight(spCausticFactory->CreatePointLight(lightPos, lightColor));
+                        FRGBColor lightColor(1.0f, 1.0f, 1.0f);
+                        spLightElem->AddLight(spCausticFactory->CreatePointLight(lightPos, lightColor, 1.0f));
 
                         lightPos = Vector3(-10.0f, 10.0f, 0.0f);
-                        spLightElem->AddLight(spCausticFactory->CreatePointLight(lightPos, lightColor));
+                        spLightElem->AddLight(spCausticFactory->CreatePointLight(lightPos, lightColor, 1.0f));
                     }
                 }
                 break;

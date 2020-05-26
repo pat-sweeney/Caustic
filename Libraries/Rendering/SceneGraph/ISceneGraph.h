@@ -258,7 +258,7 @@ namespace Caustic
 		// Method: SetColor
 		// Defines the color of the light
 		//**********************************************************************
-		virtual void SetColor(Caustic::Vector3 &clr) = 0;
+		virtual void SetColor(Caustic::FRGBColor &clr) = 0;
 	};
 
 	//**********************************************************************

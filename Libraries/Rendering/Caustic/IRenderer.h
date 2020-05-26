@@ -28,6 +28,9 @@ namespace Caustic
     // Interface: IRenderer 
     // Defines our basic renderer. IRenderer handles all rendering commands.
     // It is generally expected that this object is running on its own thread.
+    //
+    // Header:
+    // [Link:Rendering/Caustic/IRenderer.h]
     //**********************************************************************
     struct IRenderer : public IGraphics
     {
@@ -118,4 +121,20 @@ namespace Caustic
         //**********************************************************************
         virtual CRefObj<IGraphics> GetGraphics() = 0;
     };
+
+    //**********************************************************************
+    // Function: CreateRenderer
+    // Creates a renderer
+    //
+    // Parameters:
+    // hwnd - window to attach renderer to
+    // shaderFolder - path to directory containing shaders
+    //
+    // Returns:
+    // Returns the created renderer
+    //
+    // Header:
+    // [Link:Rendering/Caustic/IRenderer.h]
+    //**********************************************************************
+    CAUSTICAPI CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring& shaderFolder);
 }

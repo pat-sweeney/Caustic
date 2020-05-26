@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("ili",["Interface"],[["ILightCollection",,[[,,,,0,"File:Rendering/RenderGraph/ILightCollection.h:ILightCollection","CClass:ILightCollection"]]]]);
+NDSearch.OnPrefixDataLoaded("ili",["Interface","File"],[["ILight",,[[,,,,0,"File:Rendering/Caustic/ILight.h:ILight","CClass:ILight"],[,"ILight.h",,,1,"File:Rendering/Caustic/ILight.h:ILight.h"]]],["ILightCollection",,[[,,,,0,"File:Rendering/RenderGraph/ILightCollection.h:ILightCollection","CClass:ILightCollection"]]]]);

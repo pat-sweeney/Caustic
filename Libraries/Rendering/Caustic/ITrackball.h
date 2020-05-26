@@ -23,6 +23,9 @@ namespace Caustic
     // Constraint_XAxis - Constrain rotations to be around X axis
     // Constraint_YAxis - Constrain rotations to be around Y axis
     // Constraint_ZAxis - Constrain rotations to be around Z axis
+    //
+    // Header:
+    // [Link:Rendering/Caustic/ITrackball.h]
     //**********************************************************************
     enum ETrackballConstraint
     {
@@ -35,6 +38,9 @@ namespace Caustic
     //**********************************************************************
     // Interface: ITrackball
     // Defines the interface to our trackball implementation
+    //
+    // Header:
+    // [Link:Rendering/Caustic/ITrackball.h]
     //**********************************************************************
     struct ITrackball : public IRefCount
     {
@@ -68,4 +74,17 @@ namespace Caustic
         //**********************************************************************
         virtual void EndTracking() = 0;
     };
+    
+    //**********************************************************************
+    // Function: CreateTrackball
+    // Global function for creating a track ball. This method should generally
+    // not be called. Use the ICausticFactory to create new Caustic objects.
+    //
+    // Returns:
+    // Returns the newly created trackball.
+    //
+    // Header:
+    // [Link:Rendering/Caustic/ITrackball.h]
+    //**********************************************************************
+    CAUSTICAPI CRefObj<ITrackball> CreateTrackball();
 }

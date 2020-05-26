@@ -35,6 +35,9 @@ namespace Caustic
     // to <IRenderer::RenderFrame>. The purpose of this object is to allow
     // the renderer to render a set of objects without forcing the client
     // to maintain an entire scene graph.
+    //
+    // Header:
+    // [Link:Rendering/Caustic/IRenderable.h]
     //**********************************************************************
     struct IRenderable : public IRefCount
     {
@@ -127,4 +130,22 @@ namespace Caustic
         //**********************************************************************
         virtual bool InPass(int pass) = 0;
     };
+
+    //**********************************************************************
+    // Function: CreateRenderable
+    // Creates a renderable object
+    //
+    // Parameters:
+    // pSubMesh - Submesh to create renderable for
+    // pFrontMaterial - material for front faces
+    // pBackMaterial - material for back faces
+    // mat - transform to apply
+    //
+    // Returns:
+    // Returns the created renderable
+    //
+    // Header:
+    // [Link:Rendering/Caustic/IRenderable.h]
+    //**********************************************************************
+    CAUSTICAPI CRefObj<IRenderable> CreateRenderable(IRenderSubMesh* pSubMesh, IRenderMaterial* pFrontMaterial, IRenderMaterial* pBackMaterial, DirectX::XMMATRIX& mat);
 }

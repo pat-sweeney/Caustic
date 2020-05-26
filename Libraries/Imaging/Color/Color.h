@@ -61,6 +61,13 @@ namespace Caustic
 			g = _g;
 			b = _b;
 		}
+
+		FRGBColor(const Vector3 &clr)
+		{
+			r = clr.x;
+			g = clr.y;
+			b = clr.z;
+		}
 	};
 
 	//**********************************************************************

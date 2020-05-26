@@ -660,8 +660,8 @@ namespace Caustic
         uint32 numLights = (uint32)lights.size();
         for (uint32 i = 0; i < numLights; i++)
         {
-            Caustic::Vector3 color = lights[i]->GetColor();
-            Float4 lightColor(color.x, color.y, color.z, 1.0f);
+            Caustic::FRGBColor color = lights[i]->GetColor();
+            Float4 lightColor(color.r, color.g, color.b, 1.0f);
             SetParam(L"lightColor", i, std::any(lightColor), m_psParams);
             Caustic::Vector3 pos = lights[i]->GetPosition();
             Float4 lightPos(pos.x, pos.y, pos.z, 1.0f);

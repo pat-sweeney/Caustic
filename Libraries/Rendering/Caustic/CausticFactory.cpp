@@ -28,22 +28,6 @@
 
 namespace Caustic
 {
-    CAUSTICAPI CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring &shaderFolder);
-    CAUSTICAPI CRefObj<IGraphics> CreateGraphics(HWND hwnd);
-    CAUSTICAPI CRefObj<IPointLight> CreatePointLight(Vector3 &pos, Vector3 &color);
-    CAUSTICAPI CRefObj<ITrackball> CreateTrackball();
-    CAUSTICAPI CRefObj<IRendererMarshaller> CreateRendererMarshaller();
-    CAUSTICAPI CRefObj<IMaterialAttrib> CreateMaterialAttrib();
-    CAUSTICAPI CRefObj<IRenderMaterial> CreateRenderMaterial(IGraphics *pGraphics, IMaterialAttrib *pMaterialAttrib, IShader *pShader);
-    CAUSTICAPI CRefObj<IRenderable > CreateRenderable(IRenderSubMesh *pSubMesh, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat);
-    CAUSTICAPI CRefObj<ISampler> CreateSampler(IGraphics *pGraphics, ITexture *pTexture);
-    CAUSTICAPI CRefObj<ICamera> CreateCamera(bool leftHanded);
-    CAUSTICAPI CRefObj<ITexture> CreateTexture(IGraphics* pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags);
-    CAUSTICAPI CRefObj<ITexture> CreateTexture(IGraphics* pGraphics, IImage *pImage, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags);
-    CAUSTICAPI CRefObj<ITexture> CheckerboardTexture(IGraphics* pGraphics);
-    CAUSTICAPI CRefObj<ITexture> LoadTexture(const wchar_t *pFilename, IGraphics* pGraphics);
-    CAUSTICAPI CRefObj<ITexture> LoadVideoTexture(const wchar_t *pFilename, IGraphics* pGraphics);
-    
     CRefObj<ICausticFactory> CCausticFactory::factory;
 
     //**********************************************************************
@@ -128,10 +112,28 @@ namespace Caustic
     // Method: CreatePointLight
     // See <ICausticFactory::CreatePointLight>
     //**********************************************************************
-    CRefObj<IPointLight> CCausticFactory::CreatePointLight(Vector3 &pos, Vector3 &color)
-	{
-		return Caustic::CreatePointLight(pos, color);
-	}
+    CRefObj<IPointLight> CCausticFactory::CreatePointLight(Vector3& pos, FRGBColor& color, float intensity)
+    {
+        return Caustic::CreatePointLight(pos, color, intensity);
+    }
+
+    //**********************************************************************
+    // Method: CreateSpotLight
+    // See <ICausticFactory::CreateSpotLight>
+    //**********************************************************************
+    CRefObj<ISpotLight> CCausticFactory::CreateSpotLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity, float innerAngle, float outerAngle, bool casts)
+    {
+        return CreateSpotLight(pos, dir, color, intensity, innerAngle, outerAngle, casts);
+    }
+
+    //**********************************************************************
+    // Method: CreateDirectionalLight
+    // See <ICausticFactory::CreateDirectionalLight>
+    //**********************************************************************
+    CRefObj<IDirectionalLight> CCausticFactory::CreateDirectionalLight(Vector3& pos, FRGBColor& color, float intensity)
+    {
+        return Caustic::CreateDirectionalLight(pos, color, intensity);
+    }
 
     //**********************************************************************
     // Method: CreateTrackball

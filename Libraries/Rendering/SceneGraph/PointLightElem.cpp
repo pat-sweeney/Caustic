@@ -13,7 +13,7 @@ namespace Caustic
 {
     CAUSTICAPI void CreatePointLightElem(IScenePointLightElem **ppElem)
     {
-		CRefObj<IPointLight> spPointLight = Caustic::CCausticFactory::Instance()->CreatePointLight(Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f, 1.0f, 1.0f));
+		CRefObj<IPointLight> spPointLight = Caustic::CCausticFactory::Instance()->CreatePointLight(Vector3(0.0f, 0.0f, 0.0f), FRGBColor(1.0f, 1.0f, 1.0f), 1.0f);
 		std::unique_ptr<CPointLightElem> spPointLightObj(new CPointLightElem(spPointLight));
         *ppElem = spPointLightObj.release();
         (*ppElem)->AddRef();
@@ -43,14 +43,14 @@ namespace Caustic
         m_spPointLight->SetPosition(pos);
     }
 
-    void CPointLightElem::SetColor(Caustic::Vector3 &clr)
+    void CPointLightElem::SetColor(Caustic::FRGBColor&clr)
     {
         m_spPointLight->SetColor(clr);
     }
 
     void CPointLightElem::Store(IStream *pStream)
     {
-        Vector3 clr = m_spPointLight->GetColor();
+        FRGBColor clr = m_spPointLight->GetColor();
         Vector3 pos = m_spPointLight->GetPosition();
         ULONG bytesWritten;
         CT(pStream->Write(&clr, sizeof(clr), &bytesWritten));
@@ -59,7 +59,7 @@ namespace Caustic
 
     void CPointLightElem::Load(IStream *pStream)
     {
-        Vector3 clr;
+        FRGBColor clr;
         Vector3 pos;
         ULONG bytesRead;
         CT(pStream->Read(&clr, sizeof(clr), &bytesRead));

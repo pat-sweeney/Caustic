@@ -37,6 +37,9 @@ namespace Caustic
     // m_pData - pointer to the buffer. If output buffer then client owns this. Otherwise do (i.e. we free it).
     // m_dataSize - size of buffer in bytes
     // m_stride - size of each buffer element in bytes
+    //
+    // Header:
+    // [Link:Rendering/Caustic/IShader.h]
     //**********************************************************************
     struct ClientBuffer
     {
@@ -65,6 +68,9 @@ namespace Caustic
     //**********************************************************************
     // Interface: IShader
     // Defines the public interface for using <CShader>
+    //
+    // Header:
+    // [Link:Rendering/Caustic/IShader.h]
     //**********************************************************************
     struct IShader : public IRefCount
     {

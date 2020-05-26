@@ -61,7 +61,9 @@ namespace Caustic
 		virtual CRefObj<IGraphics> CreateGraphics(HWND hwnd) override;
 		virtual CRefObj<IRenderMesh> CreateRenderMesh() override;
 		virtual CRefObj<IRenderSubMesh> CreateRenderSubMesh() override;
-		virtual CRefObj<IPointLight> CreatePointLight(Vector3 &pos, Vector3 &color) override;
+		virtual CRefObj<IPointLight> CreatePointLight(Vector3& pos, FRGBColor& color, float intensity) override;
+		virtual CRefObj<ISpotLight> CreateSpotLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity = 1000.0f, float innerAngle = 30.0f, float outerAngle = 45.0f, bool casts = true) override;
+		virtual CRefObj<IDirectionalLight> CreateDirectionalLight(Vector3& pos, FRGBColor& color, float intensity) override;
 		virtual CRefObj<ITrackball> CreateTrackball() override;
 		virtual CRefObj<IRendererMarshaller> CreateRendererMarshaller() override;
 		virtual CRefObj<IMaterialAttrib> CreateMaterialAttrib() override;

@@ -28,6 +28,9 @@ namespace Caustic
     // Creates a renderer that runs on its own thread and method calls
     // are marshalled from the client to render thread.
     // renderer is on a separate thread where the client is calling from)
+    //
+    // Header:
+    // [Link:Rendering/Caustic/IRendererMarshaller.h]
     //**********************************************************************
     struct IRendererMarshaller : public IRefCount
     {
@@ -114,4 +117,17 @@ namespace Caustic
         //**********************************************************************
         virtual CRefObj<IRenderer> GetRenderer() = 0;
     };
+
+    //**********************************************************************
+    // Function: CreateRendererMarshaller
+    // Global function for creating the RendererMarshaller. This method should generally
+    // not be called. Use the ICausticFactory to create new Caustic objects.
+    //
+    // Returns:
+    // Returns the newly created RendererMarshaller.
+    //
+    // Header:
+    // [Link:Rendering/Caustic/IRendererMarshaller.h]
+    //**********************************************************************
+    CAUSTICAPI CRefObj<IRendererMarshaller> CreateRendererMarshaller();
 }

@@ -12,13 +12,15 @@
 // File: IBuffer.h
 // Defines interface for buffers.
 //**********************************************************************
-
 namespace Caustic
 {
     //**********************************************************************
     // Interface: IBuffer
     // Wrapper around arbitrary buffers (StructuredBuffer, RWStructuredBuffer, ...)
     // This is mostly used by compute shaders.
+    //
+    // Header:
+    // [Link:Rendering/Caustic/IBuffer.h]
     //**********************************************************************
     struct IBuffer : public IRefCount
     {

@@ -347,7 +347,7 @@ namespace Caustic
                 m_width = textures[0]->GetWidth();
                 m_height = textures[0]->GetHeight();
             }
-			Caustic::CCausticFactory::Instance()->CreateTexture(spGraphics, m_width, m_height, DXGI_FORMAT_R8G8B8A8_UNORM, m_cpuFlags, m_bindFlags, &m_spOutputTexture);
+            Caustic::CCausticFactory::Instance()->CreateTexture(spGraphics, m_width, m_height, DXGI_FORMAT_R8G8B8A8_UNORM, m_cpuFlags, m_bindFlags, &m_spOutputTexture);
             CComPtr<ID3D11RenderTargetView> spRTView;
             CT(spDevice->CreateRenderTargetView(m_spOutputTexture->GetD3DTexture(), nullptr, &spRTView));
 

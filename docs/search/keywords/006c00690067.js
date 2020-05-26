@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("lig",["File"],[["Light",,[[,"Light.h",,,0,"File:Rendering/Caustic/Light.h:Light.h"]]]]);

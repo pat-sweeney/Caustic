@@ -29,8 +29,8 @@ namespace Caustic
         });
 
         Caustic::Vector3 pos(0.0f, 0.0f, 0.0f);
-        Caustic::Vector3 clr(1.0f, 1.0f, 1.0f);
-        m_spPointLight = Caustic::CCausticFactory::Instance()->CreatePointLight(pos, clr);
+        Caustic::FRGBColor clr(1.0f, 1.0f, 1.0f);
+        m_spPointLight = Caustic::CCausticFactory::Instance()->CreatePointLight(pos, clr, 1.0f);
 
         m_spCamera = Caustic::CCausticFactory::Instance()->CreateCamera(true);
         CRefObj<IRenderer> spRenderer = m_spMarshaller->GetRenderer();

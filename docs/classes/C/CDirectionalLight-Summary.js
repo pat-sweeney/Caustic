@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:CDirectionalLight","CDirectionalLight");NDSummary.OnSummaryLoaded("CClass:CDirectionalLight",[["C/C++","C"]],[["Classes","Class"]],[[1146,0,0,"CDirectionalLight"]]);

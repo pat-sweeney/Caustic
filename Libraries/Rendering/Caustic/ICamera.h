@@ -22,6 +22,9 @@ namespace Caustic
     // Interface: ICamera
     // The CCamera object defines our camera. We pass this to our IRenderer
     // to determine where to render from.
+    //
+    // Header:
+    // [Link:Rendering/Caustic/ICamera.h]
     //**********************************************************************
     struct ICamera : public ISerialize
     {
@@ -115,4 +118,21 @@ namespace Caustic
         //**********************************************************************
         virtual void GetUVN(Vector3 *u, Vector3 *v, Vector3 *n) = 0;
     };
+
+    //**********************************************************************
+    // Function: CreateCamera
+    // Global function for creating a camera. This method should generally
+    // not be called. Use the ICausticFactory to create new Caustic objects.
+    //
+    // Parameters:
+    // leftHanded - indicates whether we are creating a left handed coordinate system
+    //    or a right handed coordinates system.
+    //
+    // Returns:
+    // Returns the newly created camera.
+    //
+    // Header:
+    // [Link:Rendering/Caustic/ICamera.h]
+    //**********************************************************************
+    CAUSTICAPI CRefObj<ICamera> CreateCamera(bool leftHanded);
 }

@@ -33,6 +33,9 @@ namespace Caustic
     // m_offset - Additional offset added to camera's position (in meters)
     // m_Pers - Current perspective matrix
     // m_View - Current view matrix (world to camera transform)
+    //
+    // Header:
+    // [Link:Rendering/Caustic/Camera.h]
     //**********************************************************************
     _declspec(align(16)) class CCamera : public ICamera, public CRefCount
     {

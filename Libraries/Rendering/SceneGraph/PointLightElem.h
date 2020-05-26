@@ -68,6 +68,6 @@ namespace Caustic
         // IPointLightElem
         //**********************************************************************
         virtual void SetPosition(Caustic::Vector3 &pos) override;
-        virtual void SetColor(Caustic::Vector3 &clr) override;
+        virtual void SetColor(Caustic::FRGBColor &clr) override;
     };
 }

@@ -27,6 +27,9 @@ namespace Caustic
 	//**********************************************************************
 	// Interface: ICausticFactory
 	// Defines the main factory for creating Caustic objects
+	//
+	// Header:
+	// [Link:Rendering/Caustic/ICausticFactory.h]
 	//**********************************************************************
 	struct ICausticFactory : public IRefCount
 	{
@@ -86,7 +89,37 @@ namespace Caustic
 		// Returns:
 		// Returns the point light source
 		//**********************************************************************
-		virtual CRefObj<IPointLight> CreatePointLight(Vector3 &pos, Vector3 &color) = 0;
+		virtual CRefObj<IPointLight> CreatePointLight(Vector3& pos, FRGBColor& color, float intensity) = 0;
+
+		//**********************************************************************
+		// Method: CreateSpotLight
+		// Creates a spot light
+		//
+		// Parameters:
+		// pos - position of light source in world coordinates
+		// dir - direction light is pointing 
+		// color - color of light
+		// intensity - light's intensity
+		// innerAngle - inner angle defining where light is full intensity
+		// outerAngle - outer angle. Light falls off from full to no intensity between inner and outer angle
+		// casts - does light participate in shadow mapping?
+		//
+		// Returns:
+		// Returns the spotlight
+		//**********************************************************************
+		virtual CRefObj<ISpotLight> CreateSpotLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity = 1000.0f, float innerAngle = 30.0f, float outerAngle = 45.0f, bool casts = true) = 0;
+
+		//**********************************************************************
+		// Method: CreateDirectionalLight
+		// Creates a directional light source
+		//
+		// Parameters:
+		// pos - position of light source in world coordinates
+		//
+		// Returns:
+		// Returns the point light source
+		//**********************************************************************
+		virtual CRefObj<IDirectionalLight> CreateDirectionalLight(Vector3& pos, FRGBColor& color, float intensity) = 0;
 
 		//**********************************************************************
 		// Method: CreateTrackball
@@ -272,6 +305,9 @@ namespace Caustic
     //**********************************************************************
     // Function: CreateCausticFactory
     // Function used by clients to create a Caustic factory
-    //**********************************************************************
+	//
+	// Header:
+	// [Link:Rendering/Caustic/ICausticFactory.h]
+	//**********************************************************************
     CAUSTICAPI CRefObj<ICausticFactory> CreateCausticFactory();
 }

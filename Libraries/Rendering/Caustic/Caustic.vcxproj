@@ -217,10 +217,12 @@
     <ClInclude Include="Caustic.h" />
     <ClInclude Include="CausticFactory.h" />
     <ClInclude Include="ConstructBuffers.h" />
+    <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="IBuffer.h" />
     <ClInclude Include="ICamera.h" />
     <ClInclude Include="ICausticFactory.h" />
-    <ClInclude Include="ILightCollection.h" />
+    <ClInclude Include="IDirectionalLight.h" />
+    <ClInclude Include="ILight.h" />
     <ClInclude Include="IMaterialAttrib.h" />
     <ClInclude Include="IPointLight.h" />
     <ClInclude Include="IRenderable.h" />
@@ -233,8 +235,10 @@
     <ClInclude Include="IShader.h" />
     <ClInclude Include="IShaderInfo.h" />
     <ClInclude Include="IShaderMgr.h" />
+    <ClInclude Include="ISpotLight.h" />
     <ClInclude Include="ITexture.h" />
     <ClInclude Include="ITrackball.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="MaterialAttrib.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Renderable.h" />
@@ -247,6 +251,7 @@
     <ClInclude Include="Sampler.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderInfo.h" />
+    <ClInclude Include="SpotLight.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Texture.h" />
@@ -257,6 +262,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CausticFactory.cpp" />
     <ClCompile Include="ConstructBuffers.cpp" />
+    <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="MaterialAttrib.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="RendererMarshaller.cpp" />
@@ -267,6 +273,7 @@
     <ClCompile Include="Sampler.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderInfo.cpp" />
+    <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>

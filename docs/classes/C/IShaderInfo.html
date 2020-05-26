@@ -8,60 +8,60 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="Topic710"></a><div class="CTopic TInterface LC first">
+<a name="Topic666"></a><div class="CTopic TInterface LC first">
  <div class="CTitle">IShaderInfo</div>
- <div class="CBody"><p>Defines primary interface used for getting information about pre-compiled shaders. This isn't the shader itself. It is simply the data that we load from disk to create a shader (i.e. data from .shi file)</p></div>
+ <div class="CBody"><p>Defines primary interface used for getting information about pre-compiled shaders. This isn't the shader itself. It is simply the data that we load from disk to create a shader (i.e. data from .shi file)</p><div class="CHeading">Header</div><p><a href='../../index.html#File:Rendering/Caustic/IShaderInfo.h' target='_top'>Rendering/Caustic/IShaderInfo.h</a></p></div>
 </div>
 
-<a name="Functions"></a><a name="Topic711"></a><div class="CTopic TGroup LC">
+<a name="Functions"></a><a name="Topic667"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="HasShader"></a><a name="Topic712"></a><div class="CTopic TFunction LC">
+<a name="HasShader"></a><a name="Topic668"></a><div class="CTopic TFunction LC">
  <div class="CTitle">HasShader</div>
- <div id="NDPrototype712" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">bool</span> HasShader(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first">EShaderType&nbsp;</td><td class="PName last">type</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div id="NDPrototype668" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">bool</span> HasShader(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#File:Rendering/Caustic/IShaderInfo.h:EShaderType" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,665);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >EShaderType</a>&nbsp;</td><td class="PName last">type</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
  <div class="CBody"><div class="CHeading">Returns</div><p>Returns whether the Caustic shader contains the specified D3D shader type</p></div>
 </div>
 
-<a name="GetTopologyType"></a><a name="Topic713"></a><div class="CTopic TFunction LC">
+<a name="GetTopologyType"></a><a name="Topic669"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetTopologyType</div>
- <div id="NDPrototype713" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> D3D11_PRIMITIVE_TOPOLOGY GetTopologyType() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype669" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> D3D11_PRIMITIVE_TOPOLOGY GetTopologyType() = <span class="SHNumber">0</span></div>
  <div class="CBody"><div class="CHeading">Returns</div><p>Returns the type of mesh this shader renders (triangles/points/lines/etc)</p></div>
 </div>
 
-<a name="PixelShaderParameterDefs"></a><a name="Topic714"></a><div class="CTopic TFunction LC">
+<a name="PixelShaderParameterDefs"></a><a name="Topic670"></a><div class="CTopic TFunction LC">
  <div class="CTitle">PixelShaderParameterDefs</div>
- <div id="NDPrototype714" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> std::vector&lt;<a href="../../index.html#CClass:ShaderParamDef" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,515);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ShaderParamDef</a>&gt; &amp;PixelShaderParameterDefs() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype670" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> std::vector&lt;<a href="../../index.html#CClass:ShaderParamDef" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,515);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ShaderParamDef</a>&gt; &amp;PixelShaderParameterDefs() = <span class="SHNumber">0</span></div>
  <div class="CBody"><div class="CHeading">Returns</div><p>Returns list of pixel parameter definitions that the shader uses</p></div>
 </div>
 
-<a name="VertexShaderParameterDefs"></a><a name="Topic715"></a><div class="CTopic TFunction LC">
+<a name="VertexShaderParameterDefs"></a><a name="Topic671"></a><div class="CTopic TFunction LC">
  <div class="CTitle">VertexShaderParameterDefs</div>
- <div id="NDPrototype715" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> std::vector&lt;<a href="../../index.html#CClass:ShaderParamDef" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,515);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ShaderParamDef</a>&gt;&amp; VertexShaderParameterDefs() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype671" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> std::vector&lt;<a href="../../index.html#CClass:ShaderParamDef" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,515);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ShaderParamDef</a>&gt;&amp; VertexShaderParameterDefs() = <span class="SHNumber">0</span></div>
  <div class="CBody"><div class="CHeading">Returns</div><p>Returns list of vertex parameter definitions that the shader uses</p></div>
 </div>
 
-<a name="ComputeShaderParameterDefs"></a><a name="Topic716"></a><div class="CTopic TFunction LC">
+<a name="ComputeShaderParameterDefs"></a><a name="Topic672"></a><div class="CTopic TFunction LC">
  <div class="CTitle">ComputeShaderParameterDefs</div>
- <div id="NDPrototype716" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> std::vector&lt;<a href="../../index.html#CClass:ShaderParamDef" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,515);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ShaderParamDef</a>&gt;&amp; ComputeShaderParameterDefs() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype672" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> std::vector&lt;<a href="../../index.html#CClass:ShaderParamDef" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,515);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ShaderParamDef</a>&gt;&amp; ComputeShaderParameterDefs() = <span class="SHNumber">0</span></div>
  <div class="CBody"><div class="CHeading">Returns</div><p>Returns list of compute parameter definitions that the shader uses</p></div>
 </div>
 
-<a name="VertexLayout"></a><a name="Topic717"></a><div class="CTopic TFunction LC">
+<a name="VertexLayout"></a><a name="Topic673"></a><div class="CTopic TFunction LC">
  <div class="CTitle">VertexLayout</div>
- <div id="NDPrototype717" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> std::vector&lt;D3D11_INPUT_ELEMENT_DESC&gt; &amp;VertexLayout() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype673" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> std::vector&lt;D3D11_INPUT_ELEMENT_DESC&gt; &amp;VertexLayout() = <span class="SHNumber">0</span></div>
  <div class="CBody"><div class="CHeading">Returns</div><p>Returns the vertex format for the shader</p></div>
 </div>
 
-<a name="GetVertexSize"></a><a name="Topic718"></a><div class="CTopic TFunction LC">
+<a name="GetVertexSize"></a><a name="Topic674"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetVertexSize</div>
- <div id="NDPrototype718" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetVertexSize() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype674" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetVertexSize() = <span class="SHNumber">0</span></div>
  <div class="CBody"><div class="CHeading">Returns</div><p>Returns the size of each vertex in bytes</p></div>
 </div>
 
-<a name="GetThreadGroupSize"></a><a name="Topic719"></a><div class="CTopic TFunction LC last">
+<a name="GetThreadGroupSize"></a><a name="Topic675"></a><div class="CTopic TFunction LC last">
  <div class="CTitle">GetThreadGroupSize</div>
- <div id="NDPrototype719" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> GetThreadGroupSize(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pXThreads,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pYThreads,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pZThreads</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div id="NDPrototype675" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> GetThreadGroupSize(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pXThreads,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pYThreads,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pZThreads</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
  <div class="CBody"><div class="CHeading">Returns</div><table class="CDefinitionList"><tr><td class="CDLEntry">pXThreads</td><td class="CDLDefinition"><p>Number of threads in X (as defined by numthreads() in compute shader)</p></td></tr><tr><td class="CDLEntry">pYThreads</td><td class="CDLDefinition"><p>Number of threads in Y (as defined by numthreads() in compute shader)</p></td></tr><tr><td class="CDLEntry">pZThreads</td><td class="CDLDefinition"><p>Number of threads in Z (as defined by numthreads() in compute shader)</p></td></tr></table></div>
 </div>
 

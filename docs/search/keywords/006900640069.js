@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("idi",["Interface","File"],[["IDirectionalLight",,[[,,,,0,"File:Rendering/Caustic/IDirectionalLight.h:IDirectionalLight","CClass:IDirectionalLight"]]],["IDirectionLight",,[[,"IDirectionLight.h",,,1,"File:Rendering/Caustic/IDirectionalLight.h:IDirectionLight.h"]]]]);

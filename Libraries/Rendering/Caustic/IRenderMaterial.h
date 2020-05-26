@@ -28,6 +28,9 @@ namespace Caustic
     // Defines a material that has its associated
     // render element (as opposed to an IMaterialAttrib which only defines
     // the attributes of the material).
+    //
+    // Header:
+    // [Link:Rendering/Caustic/IRenderMaterial.h]
     //**********************************************************************
     struct IRenderMaterial : public IRefCount
     {
@@ -102,4 +105,6 @@ namespace Caustic
         //**********************************************************************
         virtual void Render(IGraphics *pGraphics, std::vector<CRefObj<IPointLight>> &lights, IRenderCtx *pRenderCtx, IShader *pOverrideShader) = 0;
     };
+
+    CAUSTICAPI CRefObj<IRenderMaterial> CreateRenderMaterial(IGraphics* pGraphics, IMaterialAttrib* pMaterialAttrib, IShader* pShader);
 }

@@ -22,15 +22,14 @@ namespace Caustic
     //
     // Parameters:
     // pos - position in world coordinates for the light
+    // color - color of the light
+    // intensity - intensity of the light
     //
     // Returns:
     // Returns the created point light
     //**********************************************************************
-    CAUSTICAPI CRefObj<IPointLight> CreatePointLight(Vector3 &pos, Vector3 &color)
+    CAUSTICAPI CRefObj<IPointLight> CreatePointLight(Vector3 &pos, FRGBColor &color, float intensity, bool casts)
     {
-        std::unique_ptr<CPointLight> spPointLight(new CPointLight());
-        spPointLight->SetPosition(pos);
-        spPointLight->SetColor(color);
-        return CRefObj<IPointLight>(spPointLight.release());
+        return CRefObj<IPointLight>(new CPointLight(pos, color, intensity, casts));
     }
 }

@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:IPointLight","IPointLight");NDSummary.OnSummaryLoaded("CClass:IPointLight",[["C/C++","C"]],[["Interfaces","Interface"]],[[810,0,0,"IPointLight"]]);
+NDFramePage.OnPageTitleLoaded("CClass:IPointLight","IPointLight");NDSummary.OnSummaryLoaded("CClass:IPointLight",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Interfaces","Interface"]],[[1121,0,2,"IPointLight"],[1148,0,1,"Functions","Functions"],[1149,0,0,"CreatePointLight","CreatePointLight"]]);

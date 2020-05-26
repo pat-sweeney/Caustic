@@ -28,6 +28,9 @@ namespace Caustic
     // c_DisplayUVsAsColors - Render the mesh using UV texture coordinates as the mesh surface color
     // c_DisplayLightDir - Render geometry to indicate the light direction
     // c_DisplayGrid - Render an XY grid plane at the origin
+    //
+    // Header:
+    // [Link:Rendering/Caustic/IRenderCtx.h]
     //**********************************************************************
     namespace RenderCtxFlags
     {
@@ -45,6 +48,9 @@ namespace Caustic
     // Interface: IRenderCtx
     // Defines the main interface for setting various features in
     // the renderer
+    //
+    // Header:
+    // [Link:Rendering/Caustic/IRenderCtx.h]
     //**********************************************************************
     struct IRenderCtx : public IRefCount
     {

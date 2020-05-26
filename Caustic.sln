@@ -95,7 +95,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Color", "Libraries\Imaging\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RenderGraph", "Libraries\Rendering\RenderGraph\RenderGraph.vcxproj", "{C794B439-228E-4659-8895-5169BB46DB55}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostProcDoc", "Tools\PostProcDoc\PostProcDoc.csproj", "{2688C1F6-3C75-4213-B652-AFD237BE5408}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostProcDoc", "Tools\PostProcDoc\PostProcDoc.csproj", "{2688C1F6-3C75-4213-B652-AFD237BE5408}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

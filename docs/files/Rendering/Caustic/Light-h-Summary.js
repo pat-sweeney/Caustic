@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/Light.h","Light.h");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/Light.h",[["C/C++","C"]],[["Classes","Class"],["Files","File"]],[[1138,0,1,"Light.h","Light.h"],[1139,0,0,"CLightBase","CLightBase"]]);

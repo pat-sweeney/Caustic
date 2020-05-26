@@ -171,7 +171,7 @@ namespace Caustic
             if (line.substr(0, 6) == "newmtl")
             {
                 std::string matname = line.substr(7);
-                spMaterial = CreateMaterial();
+                spMaterial = CreateMaterialAttrib();
                 spMaterial->SetMaterialID(materialID);
                 materialID++;
                 m_matmap.insert(std::make_pair(matname, spMaterial));
@@ -212,41 +212,41 @@ namespace Caustic
                     spMaterial->SetScalar(L"specularExp", (float)atof(p + 3));
                 else if (*p == 'K' && p[1] == 'a')
                 {
-                    Vector3 v;
+                    FRGBColor v;
                     p += 3;
-                    v.x = (float)atof(p);
+                    v.r = (float)atof(p);
                     while (*p && !isspace(*p))
                         p++;
-                    v.y = (float)atof(p);
+                    v.g = (float)atof(p);
                     while (*p && !isspace(*p))
                         p++;
-                    v.z = (float)atof(p);
+                    v.b = (float)atof(p);
                     spMaterial->SetColor(L"ambientColor", v);
                 }
                 else if (*p == 'K' && p[1] == 's')
                 {
-                    Vector3 v;
+                    FRGBColor v;
                     p += 3;
-                    v.x = (float)atof(p);
+                    v.r = (float)atof(p);
                     while (*p && !isspace(*p))
                         p++;
-                    v.y = (float)atof(p);
+                    v.g = (float)atof(p);
                     while (*p && !isspace(*p))
                         p++;
-                    v.z = (float)atof(p);
+                    v.b = (float)atof(p);
                     spMaterial->SetColor(L"specularColor", v);
                 }
                 else if (*p == 'K' && p[1] == 'd')
                 {
-                    Vector3 v;
+                    FRGBColor v;
                     p += 3;
-                    v.x = (float)atof(p);
+                    v.r = (float)atof(p);
                     while (*p && !isspace(*p))
                         p++;
-                    v.y = (float)atof(p);
+                    v.g = (float)atof(p);
                     while (*p && !isspace(*p))
                         p++;
-                    v.z = (float)atof(p);
+                    v.b = (float)atof(p);
                     spMaterial->SetColor(L"diffuseColor", v);
                 }
                 else if (*p == 'd')

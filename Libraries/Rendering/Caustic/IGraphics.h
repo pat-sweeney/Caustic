@@ -16,7 +16,6 @@
 // File: IGraphics.h
 // Primary interface for talking to the graphics device
 //**********************************************************************
-
 namespace Caustic
 {
     struct ICamera;
@@ -31,6 +30,9 @@ namespace Caustic
     // m_vertexSize - Size in bytes of each vertex
     // m_numVertices - Number of vertices
     // m_numIndices - Number of indices. Maybe 0
+    //
+    // Header:
+    // [Link:Rendering/Caustic/IGraphics.h]
     //**********************************************************************
     struct MeshData
     {
@@ -59,6 +61,9 @@ namespace Caustic
     // (list of lights), or HMD support. Also, all rendering occurs on whatever
     // thread this object is created on (versus marshalling the rendering over
     // to a render thread). For those features, use <IRenderer>.
+    //
+    // Header:
+    // [Link:Rendering/Caustic/IGraphics.h]
     //**********************************************************************
     struct IGraphics : public IRefCount
     {

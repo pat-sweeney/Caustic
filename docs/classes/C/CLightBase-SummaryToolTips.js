@@ -1,0 +1,1 @@
+NDSummary.OnToolTipsLoaded("CClass:CLightBase",{1139:"<div class=\"NDToolTip TClass LC\"><div class=\"NDClassPrototype\" id=\"NDClassPrototype1139\"><div class=\"CPEntry TClass Current\"><div class=\"CPName\">CLightBase</div></div></div><div class=\"TTSummary\">Contains the implementation of stuff common to all lights</div></div>"});

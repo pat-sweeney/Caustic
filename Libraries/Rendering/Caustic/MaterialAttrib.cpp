@@ -12,7 +12,7 @@
 namespace Caustic
 {
     //**********************************************************************
-    // Function: CreateMaterial
+    // Function: CreateMaterialAttrib
     // Creates a new IMaterialAttrib object
     //
     // Parameters:
@@ -25,7 +25,7 @@ namespace Caustic
     // Returns:
     // Returns the created material object
     //**********************************************************************
-    CAUSTICAPI CRefObj<IMaterialAttrib> CreateStandardMaterial(Vector3 ambientColor, Vector3 diffuseColor, Vector3 specularColor, float specularExp, float alpha)
+    CAUSTICAPI CRefObj<IMaterialAttrib> CreateStandardMaterialAttrib(FRGBColor ambientColor, FRGBColor diffuseColor, FRGBColor specularColor, float specularExp, float alpha)
     {
         std::unique_ptr<CMaterialAttrib> spMaterial(new CMaterialAttrib());
         spMaterial->SetColor(L"ambientColor", ambientColor);
@@ -37,28 +37,28 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // Function: CreateMaterial
+    // Function: CreateMaterialAttrib
     // Creates a new empty IMaterial object
     //
     // Returns:
     // Returns the created material object
     //**********************************************************************
-    CAUSTICAPI CRefObj<IMaterialAttrib> CreateMaterial()
+    CAUSTICAPI CRefObj<IMaterialAttrib> CreateMaterialAttrib()
     {
         return CRefObj<IMaterialAttrib>(new CMaterialAttrib());
     }
 
-    Vector3 CMaterialAttrib::GetColor(const wchar_t* pName)
+    FRGBColor CMaterialAttrib::GetColor(const wchar_t* pName)
     {
-        std::map<std::wstring, Vector3>::iterator it = m_colors.find(std::wstring(pName));
+        std::map<std::wstring, FRGBColor>::iterator it = m_colors.find(std::wstring(pName));
         if (it != m_colors.end())
             return it->second;
         return Vector3(0.0f, 0.0f, 0.0f);
     }
 
-    void CMaterialAttrib::SetColor(const wchar_t *pName, Vector3& v)
+    void CMaterialAttrib::SetColor(const wchar_t *pName, FRGBColor& v)
     {
-        std::map<std::wstring, Vector3>::iterator it = m_colors.find(pName);
+        std::map<std::wstring, FRGBColor>::iterator it = m_colors.find(pName);
         if (it != m_colors.end())
             it->second = v;
         else
@@ -125,7 +125,7 @@ namespace Caustic
         SetTexture(pName, spImage, access);
     }
 
-    void CMaterialAttrib::EnumerateColors(std::function<void(const wchar_t* pName, Vector3 & v)> func)
+    void CMaterialAttrib::EnumerateColors(std::function<void(const wchar_t* pName, FRGBColor & v)> func)
     {
         for (auto x : m_colors)
             func(x.first.c_str(), x.second);

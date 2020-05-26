@@ -312,7 +312,7 @@ namespace Caustic
                 m_spContext->ClearDepthStencilView(m_spStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
             }
 #endif // SUPPORT_OBJID
-#ifdef SUPPORT_SHADOW_MAPPING
+#ifdef SUPPORT_SHADOWS
             else if (pass == c_PassShadow)
             {
                 int numShadowPasses = (m_lights.size() < c_MaxShadowMaps) ? m_lights.size() : c_MaxShadowMaps;
@@ -332,7 +332,7 @@ namespace Caustic
                     m_spContext->OMSetRenderTargets(1, &m_spRTView, m_spStencilView);
                 }
             }
-#endif // SUPPORT_SHADOW_MAPPING
+#endif
             else if (pass == c_PassTransparent)
             {
                 std::vector<int> order;
@@ -473,7 +473,7 @@ namespace Caustic
         m_spBackBuffer->GetDesc(&m_BBDesc);
         CT(m_spDevice->CreateRenderTargetView(m_spBackBuffer, nullptr, &m_spRTView));
 
-#ifdef SUPPORT_SHADOW_MAPPING
+#ifdef SUPPORT_SHADOWS
         // Create texture for rendering shadow map
         for (int i = 0; i < c_MaxShadowMaps; i++)
         {
@@ -485,7 +485,7 @@ namespace Caustic
             rtdesc.Texture2D.MipSlice = 0;
             CT(m_spDevice->CreateRenderTargetView(m_spShadowTexture[i], &rtdesc, &m_spShadowRTView[i]));
         }
-#endif // SUPPORT_SHADOW_MAPPING
+#endif
 
         // Create depth buffer
         CD3D11_TEXTURE2D_DESC texDesc2D(DXGI_FORMAT_D24_UNORM_S8_UINT, m_BBDesc.Width, m_BBDesc.Height, 1, 1, D3D11_BIND_DEPTH_STENCIL);
