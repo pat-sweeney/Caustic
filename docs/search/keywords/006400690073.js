@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("dis",["Function"],[["DistancePointToLine",,[[,,,,0,"File:Geometry/GeomDS/Polygon.cpp:DistancePointToLine"]]]]);
+NDSearch.OnPrefixDataLoaded("dis",["Function"],[["DistancePointToLine",,[[,,,,0,"File:Base/Math/Helper.cpp:DistancePointToLine"],["Caustic",,,,0,"File:Base/Math/Helper.h:Caustic.DistancePointToLine","CClass:Caustic:DistancePointToLine"]]]]);

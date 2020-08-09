@@ -6,6 +6,7 @@
 #include "stdafx.h"
 #include "Polygon.h"
 #include "Base\Math\Ray.h"
+#include "Base\Math\Helper.h"
 #include <memory>
 
 namespace Caustic
@@ -20,27 +21,6 @@ namespace Caustic
     CRefObj<IPolygon2> CreatePolygon2()
     {
         return CRefObj<IPolygon2>(new CPolygon2());
-    }
-
-    //**********************************************************************
-    // Function: DistancePointToLine
-    // DistancePointToLine returns the shortest distance from a given
-    // point to a line.
-    //
-    // Parameters:
-    // p0 - First point defining the line
-    // p1 - Second point defining the line
-    // pt - Point to test against line
-    //**********************************************************************
-    float DistancePointToLine(Caustic::Vector2 &p0, Caustic::Vector2 &p1, Caustic::Vector2 &pt)
-    {
-        float area = (p1.y - p0.y) * pt.x - (p1.x - p0.x) * pt.y + p1.x * p0.y - p1.y * p0.x;
-        if (area < 0)
-            area = -area;
-        float dx = p1.x - p0.x;
-        float dy = p1.y - p0.y;
-        float dist = area / sqrtf(dx * dx + dy * dy);
-        return dist;
     }
 
     //**********************************************************************

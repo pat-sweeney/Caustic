@@ -6,6 +6,7 @@
 #include "Base\Core\Core.h"
 #include "Geometry\Mesh\UnitTest.h"
 #include "Cameras\AzureKinect\UnitTest.h"
+#include "Imaging\Image\UnitTest.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -27,6 +28,8 @@ int main(int argc, char** argv)
                     whichTests |= 0x1;
                 else if (_stricmp(argv[i], "-camera") == 0)
                     whichTests |= 0x2;
+                else if (_stricmp(argv[i], "-imaging") == 0)
+                    whichTests |= 0x4;
             }
         }
     }
@@ -34,5 +37,7 @@ int main(int argc, char** argv)
         (new CausticTestSuite::MeshTests())->RunUnitTests();
     if (whichTests & 0x2)
         (new CausticTestSuite::AzureKinectTests())->RunUnitTests();
+    if (whichTests & 0x4)
+        (new CausticTestSuite::ImageTests())->RunUnitTests();
     return 0;
 }

@@ -10,6 +10,7 @@
 #include "Base\Core\RefCount.h"
 #include "Image.h"
 #include "ImageIter.h"
+#include "Geometry\GeomDS\IPath2.h"
 
 namespace Caustic
 {
@@ -107,7 +108,8 @@ namespace Caustic
         virtual void SetPixel(uint32 x, uint32 y, uint8 gray) override;
         virtual void SetPixel(uint32 x, uint32 y, uint16 v) override;
         virtual void DrawCircle(Vector2 &center, uint32 radius, uint8 color[4]) override;
-        virtual void DrawLine(Vector2 &v0, Vector2 &v1, uint8 color[4]) override;
+        virtual void DrawLine(const Vector2 &v0, const Vector2 &v1, uint8 color[4]) override;
+        virtual void DrawPath(IPath2* pPath) override;
     };
 
     class CIntegralImage : public IIntegralImage, public CRefCount

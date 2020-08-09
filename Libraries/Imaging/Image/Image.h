@@ -7,6 +7,7 @@
 #include "Base\Core\Core.h"
 #include "Base\Core\IRefCount.h"
 #include "Base\Math\Vector.h"
+#include "Geometry\GeomDS\IPath2.h"
 
 // Namespace: Caustic
 namespace Caustic
@@ -198,7 +199,16 @@ namespace Caustic
 		// v1 - end of line (in pixel coordinates)
 		// color - color used for rendering the line
 		//**********************************************************************
-		virtual void DrawLine(Vector2 &v0, Vector2 &v1, uint8 color[4]) = 0;
+		virtual void DrawLine(const Vector2 &v0, const Vector2 &v1, uint8 color[4]) = 0;
+
+		//**********************************************************************
+		// Method: DrawPath
+		// Renders a path on the image
+		//
+		// Parameters:
+		// pPath - path to render
+		//**********************************************************************
+		virtual void DrawPath(IPath2* pPath) = 0;
 	};
 
 	CAUSTICAPI CRefObj<IImage> CreateImage(uint32 width, uint32 height, uint32 bpp);

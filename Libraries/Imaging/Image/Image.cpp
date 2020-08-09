@@ -209,7 +209,21 @@ namespace Caustic
         }
     }
 
-    void CImage::DrawLine(Vector2 &v0, Vector2 &v1, uint8 color[4])
+    void CImage::DrawPath(IPath2* path)
+    {
+        CRefObj<IPath2> flatPath = path->Flatten(1.0f);
+        int numElems = flatPath->GetNumberElems();
+        uint8 color[4] = { 255, 0, 0, 255 };
+        const PathElem* pPrevElem = flatPath->GetElement(0);
+        for (int i = 1; i < numElems; i++)
+        {
+            const PathElem* pCurElem = flatPath->GetElement(i);
+            DrawLine(pPrevElem->pt[0], pCurElem->pt[0], color);
+            pPrevElem = pCurElem;
+        }
+    }
+
+    void CImage::DrawLine(const Vector2 &v0, const Vector2 &v1, uint8 color[4])
     {
         if (m_bytesPerPixel != 4)
             CT(E_UNEXPECTED);

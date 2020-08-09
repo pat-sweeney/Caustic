@@ -150,7 +150,7 @@ namespace CausticTestSuite
                 continue;
             if (!(*tests[i].testFunc)())
             {
-                printf("MathTestSuite: Test %d failed\n", i);
+                printf("MeshTestSuite: Test %d failed\n", i);
                 result = false;
             }
             else

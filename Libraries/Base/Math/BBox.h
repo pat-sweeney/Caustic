@@ -96,6 +96,19 @@ namespace Caustic
         // Returns true if point is inside bbox. False otherwise.
         //**********************************************************************
         bool PointInside(const Vector2 &p, float tolerance);
+
+        //**********************************************************************
+        // Method: LineInside
+        // Determines if any part of the specified line is inside the bounding box
+        //
+        // Parameters:
+        // p1 - first end point of line segment
+        // p1 - second end point of line segment
+        //
+        // Returns:
+        // Returns true if any part of the specified line is inside bbox. False otherwise.
+        //**********************************************************************
+        bool LineInside(const Vector2& p1, const Vector2& p2);
     };
 
     //**********************************************************************

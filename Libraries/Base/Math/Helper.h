@@ -37,6 +37,20 @@ namespace Caustic
 	}
 
 	//**********************************************************************
+	// Function: DistancePointToLine
+	// Determines the distance of a given point from a line
+	//
+	// Parameters:
+	// p0 - first point defining the line segment
+	// p1 - second point defining the line segment
+	// pt - point to test
+	//
+	// Header:
+	// [Link:Base/Math/Helper.h]
+	//**********************************************************************
+	float DistancePointToLine(Caustic::Vector2& p0, Caustic::Vector2& p1, Caustic::Vector2& pt);
+
+	//**********************************************************************
 	// Function: Determinant2x2
 	// Computes the determinant of a 2x2 matrix.
 	//

@@ -89,14 +89,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="IKDTree.h" />
+    <ClInclude Include="IPath2.h" />
     <ClInclude Include="IPolygon.h" />
     <ClInclude Include="kdtree.h" />
+    <ClInclude Include="Path2.h" />
     <ClInclude Include="Polygon.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="kdtree.cpp" />
+    <ClCompile Include="Path2.cpp" />
     <ClCompile Include="Polygon.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

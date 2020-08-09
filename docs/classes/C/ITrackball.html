@@ -29,10 +29,16 @@
  <div class="CBody"><p>Called when mouse moves during trackball tracking</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">screenX<div class="CDLParameterType"><span class="SHKeyword">int</span></div></td><td class="CDLDefinition"><p>current mouse's X position</p></td></tr><tr><td class="CDLEntry">screenY<div class="CDLParameterType"><span class="SHKeyword">int</span></div></td><td class="CDLDefinition"><p>current mouse's Y position</p></td></tr><tr><td class="CDLEntry">constraint<div class="CDLParameterType"><a href="../../index.html#CClass:ETrackballConstraint" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,632);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ETrackballConstraint</a></div></td><td class="CDLDefinition"><p>current constraint</p></td></tr><tr><td class="CDLEntry">pMatrix<div class="CDLParameterType">DirectX::XMMATRIX*</div></td><td class="CDLDefinition"><p>Resulting trackball matrix</p></td></tr></table></div>
 </div>
 
-<a name="EndTracking"></a><a name="Topic637"></a><div class="CTopic TFunction LC last">
+<a name="EndTracking"></a><a name="Topic637"></a><div class="CTopic TFunction LC">
  <div class="CTitle">EndTracking</div>
  <div id="NDPrototype637" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> EndTracking() = <span class="SHNumber">0</span></div>
  <div class="CBody"><p>Called when mouse is released during trackball tracking</p></div>
+</div>
+
+<a name="CreateTrackball"></a><a name="Topic1141"></a><div class="CTopic TFunction LC last">
+ <div class="CTitle">CreateTrackball</div>
+ <div id="NDPrototype1141" class="NDPrototype NoParameterForm">CAUSTICAPI <a href="../../index.html#CClass:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,23);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../index.html#CClass:ITrackball" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,633);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ITrackball</a>&gt; CreateTrackball()</div>
+ <div class="CBody"><p>Global function for creating a track ball. This method should generally not be called. Use the ICausticFactory to create new Caustic objects.</p><div class="CHeading">Returns</div><p>Returns the newly created trackball.</p><div class="CHeading">Header</div><p><a href='../../index.html#File:Rendering/Caustic/ITrackball.h' target='_top'>Rendering/Caustic/ITrackball.h</a></p></div>
 </div>
 
 </body></html>
