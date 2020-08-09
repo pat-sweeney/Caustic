@@ -46,6 +46,9 @@
     <ClInclude Include="Point.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="NewtonsMethod.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -82,6 +85,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Helper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewtonsMethod.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

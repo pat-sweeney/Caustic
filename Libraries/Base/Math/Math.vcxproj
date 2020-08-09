@@ -83,6 +83,7 @@
     <ClInclude Include="Helper.h" />
     <ClInclude Include="IBBox.h" />
     <ClInclude Include="Matrix.h" />
+    <ClInclude Include="NewtonsMethod.h" />
     <ClInclude Include="OBBox.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Quaternion.h" />
@@ -99,6 +100,7 @@
     <ClCompile Include="Helper.cpp" />
     <ClCompile Include="Matrix4x3.cpp" />
     <ClCompile Include="Matrix4x4.cpp" />
+    <ClCompile Include="NewtonsMethod.cpp" />
     <ClCompile Include="OBBox2.cpp" />
     <ClCompile Include="OBBox3.cpp" />
     <ClCompile Include="Quaternion.cpp" />

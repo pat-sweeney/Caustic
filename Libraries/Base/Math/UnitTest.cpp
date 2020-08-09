@@ -5,6 +5,7 @@
 //**********************************************************************
 #include "stdafx.h"
 #include "Vector.h"
+#include "NewtonsMethod.h"
 #include "UnitTest.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -36,13 +37,31 @@ namespace CausticTestSuite
         return true;
     }
 
+    static bool Test3()
+    {
+        float val = NewtonsMethod(5.0f, [](float x)->float {
+            return x * x - 4 * x;
+            }, [](float x, ObjectiveFunction f)->float {
+                return 2 * x - 4;
+            });
+        if (!Caustic::IsEq(val, 4.0))
+            return false;
+        val = NewtonsMethod(5.0f, [](float x)->float {
+            return x * x - 4 * x;
+            });
+        if (!Caustic::IsEq(val, 4.0))
+            return false;
+        return true;
+    }
+
     bool MathTests::RunUnitTests()
     {
         typedef bool(*UnitTestFunc)();
         UnitTestEntry tests[] =
         {
             { Test1, true },
-            { Test2, true }
+            { Test2, true },
+            { Test3, true }
         };
         bool result = true;
         m_totalTests = _countof(tests);
