@@ -23,11 +23,11 @@ namespace Caustic
 
 	struct PathElem
 	{
-		EPathElem elemtype;
+		Caustic::EPathElem elemtype;
 		Vector2 pt[3];
 	public:
-		EPathElem ElemType() { return elemtype; }
-		EPathElem ElemType() const { return elemtype; }
+		Caustic::EPathElem ElemType() { return elemtype; }
+		Caustic::EPathElem ElemType() const { return elemtype; }
 		const Vector2* Point() { return &pt[0]; }
 		const Vector2* Point() const { return &pt[0]; }
 		const Vector2* ControlPoint(int index) { return &pt[index]; }

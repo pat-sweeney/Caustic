@@ -27,7 +27,7 @@ namespace Caustic
 	    // Constructor: Vector2
 	    // Default contructor
 	    //**********************************************************************
-	    Vector2() {}
+	    Vector2() : x(0.0), y(0.0) {}
 
 	    //**********************************************************************
 	    // Constructor: Vector2
@@ -135,7 +135,7 @@ namespace Caustic
 		// Constructor: Vector3
 		// Default constructor
 		//**********************************************************************
-        Vector3() {}
+        Vector3() : x(0.0f), y(0.0f), z(0.0f) {}
 
 		//**********************************************************************
 		// Constructor: Vector3
@@ -180,7 +180,7 @@ namespace Caustic
         }
 
 		//**********************************************************************
-		// Method: cross
+		// Method: Cross
 		// Returns the cross product between two vectors
         //
         // Parameters:
@@ -189,7 +189,7 @@ namespace Caustic
 		// Returns:
 		// The cross product
 		//**********************************************************************
-        Vector3 cross(Vector3 &v)
+        Vector3 Cross(Vector3 &v)
         {
             Vector3 nv;
             
@@ -200,16 +200,16 @@ namespace Caustic
         }
 
 		//**********************************************************************
-		// Method: dot
-		// Returns the dot product between two vectors
+		// Method: Dot
+		// Returns the scalar product between two vectors
         //
         // Parameters:
         // v - vector to compute dot product against
 		//
 		// Returns:
-		// The dot product
+		// The scalar product
 		//**********************************************************************
-        float dot(const Vector3 &v)
+        float Dot(const Vector3 &v)
         {
             return x * v.x + y * v.y + z * v.z;
         }
@@ -273,7 +273,7 @@ namespace Caustic
     {
         float x, y, z, w;
 
-        Vector4() {}
+        Vector4() : x(0.0f), y(0.0f), z(0.0f), w(0.0f) {}
         Vector4(const float _x, const float _y, const float _z, const float _w) { x = _x; y = _y; z = _z; w = _w; }
 
         //**********************************************************************

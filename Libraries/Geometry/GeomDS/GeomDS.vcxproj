@@ -88,6 +88,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BezierFit.h" />
     <ClInclude Include="IKDTree.h" />
     <ClInclude Include="IPath2.h" />
     <ClInclude Include="IPolygon.h" />
@@ -98,6 +99,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BezierFit.cpp" />
     <ClCompile Include="kdtree.cpp" />
     <ClCompile Include="Path2.cpp" />
     <ClCompile Include="Polygon.cpp" />

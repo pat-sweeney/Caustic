@@ -31,6 +31,9 @@
     <ClInclude Include="Path2.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="BezierFit.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -43,6 +46,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Path2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BezierFit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

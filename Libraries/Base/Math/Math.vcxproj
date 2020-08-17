@@ -78,6 +78,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Basis.h" />
     <ClInclude Include="BBox.h" />
     <ClInclude Include="Covariance.h" />
     <ClInclude Include="Helper.h" />

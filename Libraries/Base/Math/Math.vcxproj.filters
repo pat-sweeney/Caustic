@@ -49,6 +49,9 @@
     <ClInclude Include="NewtonsMethod.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Basis.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

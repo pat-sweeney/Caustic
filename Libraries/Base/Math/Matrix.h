@@ -26,7 +26,11 @@ namespace Caustic
 	struct Matrix2x2
     {
         float v[2][2];
-        // TODO: Fill this in
+
+        float Determinant()
+        {
+            return v[0][0] * v[1][1] - v[0][1] * v[1][0];
+        }
     };
 
 	//**********************************************************************
