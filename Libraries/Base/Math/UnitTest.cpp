@@ -17,7 +17,7 @@ namespace CausticTestSuite
     {
         Vector3 v0(1.0f, 0.0f, 0.0f);
         Vector3 v1(0.0f, 1.0f, 0.0f);
-        Vector3 r = v0.cross(v1).Normalize();
+        Vector3 r = v0.Cross(v1).Normalize();
         if (r != Vector3(0.0f, 0.0f, 1.0f)) // Implicitly a right-handed system
         {
             return false;

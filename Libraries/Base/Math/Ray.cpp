@@ -353,9 +353,9 @@ namespace Caustic
             genray.pos = pos;
             genray.dir = dir;
         }
-        float dirdir = genray.dir.dot(genray.dir);
-        float startdir = genray.pos.dot(genray.dir);
-        float startstart = genray.pos.dot(genray.pos) - 1.0F;
+        float dirdir = genray.dir.Dot(genray.dir);
+        float startdir = genray.pos.Dot(genray.dir);
+        float startstart = genray.pos.Dot(genray.pos) - 1.0F;
         float discrim = startdir * startdir - dirdir * startstart;
         if (discrim >= 0.0F)
         {

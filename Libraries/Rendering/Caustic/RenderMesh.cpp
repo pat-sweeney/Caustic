@@ -145,9 +145,9 @@ namespace Caustic
         {
             Vector3 pos = verts[i].pos;
             Vector3 v(0.0f, 1.0f, 0.0f);
-            Vector3 u = verts[i].norm.cross(v);
+            Vector3 u = verts[i].norm.Cross(v);
             u.Normalize();
-            v = u.cross(verts[i].norm);
+            v = u.Cross(verts[i].norm);
             v.Normalize();
             const float stepSize = 0.01f;
             CGeomVertex p0, p1, p2, p3;

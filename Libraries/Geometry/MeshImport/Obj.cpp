@@ -131,7 +131,7 @@ namespace Caustic
         else
             n = m_Norms[nIndex[0] - 1];
         bool flipWindingOrder = false;
-        if (v0.cross(v1).dot(n) < 0)
+        if (v0.Cross(v1).Dot(n) < 0)
         {
             flipWindingOrder = true;
         }

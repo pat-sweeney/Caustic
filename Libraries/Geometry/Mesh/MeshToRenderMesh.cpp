@@ -33,7 +33,7 @@ namespace Caustic
 	{
 		Vector3 u = (v1->pos - v0->pos);
 		Vector3 v = (v2->pos - v0->pos);
-		return IsZero(u.cross(v).Length());
+		return IsZero(u.Cross(v).Length());
 	}
 
     //**********************************************************************

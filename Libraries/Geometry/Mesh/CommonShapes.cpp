@@ -110,7 +110,7 @@ namespace Caustic
                 // Compute normal vector
                 Vector3 np = (lp[0] - *bottom).Normalize();
                 Vector3 nq = (cp[0] - *bottom).Normalize();
-                Vector3 normal = nq.cross(np).Normalize();
+                Vector3 normal = nq.Cross(np).Normalize();
 
                 // Add face vertices
                 Vector2 zeroVec(0.0f, 0.0f);
@@ -137,7 +137,7 @@ namespace Caustic
                     spMeshConstructor->FaceOpen();
                     np = (cp[j] - lp[j - 1]).Normalize();
                     nq = (cp[j - 1] - lp[j - 1]).Normalize();
-                    normal = nq.cross(np).Normalize();
+                    normal = nq.Cross(np).Normalize();
                     spMeshConstructor->VertexAdd(lp[j - 1], normal, lt[j - 1]);
                     spMeshConstructor->VertexAdd(cp[j - 1], normal, ct[j - 1]);
                     spMeshConstructor->VertexAdd(cp[j], normal, ct[j]);
@@ -146,7 +146,7 @@ namespace Caustic
                     spMeshConstructor->FaceOpen();
                     np = (lp[j] - lp[j - 1]).Normalize();
                     nq = (cp[j] - lp[j - 1]).Normalize();
-                    normal = nq.cross(np).Normalize();
+                    normal = nq.Cross(np).Normalize();
                     spMeshConstructor->VertexAdd(lp[j - 1], normal, lt[j - 1]);
                     spMeshConstructor->VertexAdd(cp[j], normal, ct[j]);
                     spMeshConstructor->VertexAdd(lp[j], normal, lt[j]);
@@ -160,7 +160,7 @@ namespace Caustic
                 // Compute normal vector
                 np = (cp[j] - *top).Normalize();
                 nq = (lp[j] - *top).Normalize();
-                normal = nq.cross(np).Normalize();
+                normal = nq.Cross(np).Normalize();
 
                 // Add face vertices
                 Vector2 oneVec(1.0f, 1.0f);
@@ -245,7 +245,7 @@ namespace Caustic
             spMeshConstructor->FaceOpen();
             Vector3 np = (vertPos[vertFaces[i][1]] - vertPos[vertFaces[i][0]]).Normalize();
             Vector3 nq = (vertPos[vertFaces[i][2]] - vertPos[vertFaces[i][0]]).Normalize();
-            Vector3 normal = nq.cross(np).Normalize();
+            Vector3 normal = nq.Cross(np).Normalize();
             Vector2 zeroVec(0.0f, 0.0f);
             spMeshConstructor->VertexAdd(vertPos[vertFaces[i][0]], normal, zeroVec);
             spMeshConstructor->VertexAdd(vertPos[vertFaces[i][1]], normal, zeroVec);
