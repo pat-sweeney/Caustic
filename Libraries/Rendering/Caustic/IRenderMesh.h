@@ -128,9 +128,11 @@ namespace Caustic
         //
         // Parameters:
         // pRenderer - Renderer to use for rendering the mesh
+        // pFrontMaterialOverride - material to use to override mesh's material. Maybe nullptr.
+        // pBackMaterialOverride - material to use to override mesh's material. Maybe nullptr.
         // lights - List of lights to use
         //**********************************************************************
-        virtual void Render(IRenderer *pRenderer, std::vector<CRefObj<IPointLight>> &lights) = 0;
+        virtual void Render(IRenderer* pRenderer, IRenderMaterial* pFrontMaterialOverride, IRenderMaterial* pBackMaterialOverride, std::vector<CRefObj<IPointLight>>& lights) = 0;
 
         //**********************************************************************
         // Method: Render
@@ -240,9 +242,11 @@ namespace Caustic
         //
         // Parameters:
         // pRenderer - renderer to use
+        // pFrontMaterialOverride - material to use to override mesh's material. Maybe nullptr.
+        // pBackMaterialOverride - material to use to override mesh's material. Maybe nullptr.
         // lights - list of lights to use
         //**********************************************************************
-        virtual void Render(IRenderer* pRenderer, std::vector<CRefObj<IPointLight>>& lights) = 0;
+        virtual void Render(IRenderer* pRenderer, IRenderMaterial* pFrontMaterialOverride, IRenderMaterial* pBackMaterialOverride, std::vector<CRefObj<IPointLight>>& lights) = 0;
 
         //**********************************************************************
         // Method: Render

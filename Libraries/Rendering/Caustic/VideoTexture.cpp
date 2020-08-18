@@ -162,12 +162,54 @@ namespace Caustic
     }
 
     //**********************************************************************
-    void CVideoTexture::LoadFromFile(const wchar_t *pFilename, IGraphics *pGraphics)
+    static void CreateVideoCaptureDevice(IMFMediaSource** ppSource)
+    {
+        *ppSource = nullptr;
+
+        CComPtr<IMFAttributes> spConfig;
+        CT(MFCreateAttributes(&spConfig, 1));
+        CT(spConfig->SetGUID(MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE, MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_VIDCAP_GUID));
+
+        IMFActivate** ppDevices = nullptr;
+        UINT32 count = 0;
+        CT(MFEnumDeviceSources(spConfig, &ppDevices, &count));
+        CT((count <= 0) ? MF_E_NOT_FOUND : S_OK);
+        CT(ppDevices[0]->ActivateObject(IID_PPV_ARGS(ppSource)));
+        for (DWORD i = 0; i < count; i++)
+        {
+            ppDevices[i]->Release();
+        }
+        CoTaskMemFree(ppDevices);
+    }
+
+    //**********************************************************************
+    void CVideoTexture::CreateFromWebcam(IGraphics* pGraphics)
     {
         CComPtr<IMFAttributes> spAttributes;
         CT(MFCreateAttributes(&spAttributes, 1));
         CT(spAttributes->SetUINT32(MF_SOURCE_READER_ENABLE_VIDEO_PROCESSING, TRUE));
-        CT(MFCreateSourceReaderFromURL(pFilename, spAttributes, &m_spSourceReader));
+        CComPtr<IMFMediaSource> spMediaSource;
+        CreateVideoCaptureDevice(&spMediaSource);
+        CComPtr<IMFSourceReader> spSourceReader;
+        MFCreateSourceReaderFromMediaSource(spMediaSource, spAttributes, &spSourceReader);
+        FromMediaSource(spSourceReader, pGraphics);
+    }
+
+    //**********************************************************************
+    void CVideoTexture::LoadFromFile(const wchar_t* pFilename, IGraphics* pGraphics)
+    {
+        CComPtr<IMFAttributes> spAttributes;
+        CT(MFCreateAttributes(&spAttributes, 1));
+        CT(spAttributes->SetUINT32(MF_SOURCE_READER_ENABLE_VIDEO_PROCESSING, TRUE));
+        CComPtr<IMFSourceReader> spSourceReader;
+        CT(MFCreateSourceReaderFromURL(pFilename, spAttributes, &spSourceReader));
+        FromMediaSource(spSourceReader, pGraphics);
+    }
+
+    //**********************************************************************
+    void CVideoTexture::FromMediaSource(IMFSourceReader *pSourceReader, IGraphics* pGraphics)
+    {
+        m_spSourceReader = pSourceReader;
         CComPtr<IMFMediaType> spType;
         CT(MFCreateMediaType(&spType));
         CT(spType->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Video));
@@ -210,10 +252,27 @@ namespace Caustic
     // Returns:
     // Returns the new texture
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> LoadVideoTexture(const wchar_t *pFilename, IGraphics *pGraphics)
+    CAUSTICAPI CRefObj<ITexture> LoadVideoTexture(const wchar_t* pFilename, IGraphics* pGraphics)
     {
         std::unique_ptr<CVideoTexture> spTexture(new CVideoTexture(pGraphics));
         spTexture->LoadFromFile(pFilename, pGraphics);
+        return CRefObj<ITexture>(spTexture.release());
+    }
+
+    //**********************************************************************
+    // Function: VideoTextureFromWebcam
+    // VideoTextureFromWebcam uses a webcam to receive a video texture
+    //
+    // Parameters:
+    // pGraphics - Renderer
+    //
+    // Returns:
+    // Returns the new texture
+    //**********************************************************************
+    CAUSTICAPI CRefObj<ITexture> VideoTextureFromWebcam(IGraphics* pGraphics)
+    {
+        std::unique_ptr<CVideoTexture> spTexture(new CVideoTexture(pGraphics));
+        spTexture->CreateFromWebcam(pGraphics);
         return CRefObj<ITexture>(spTexture.release());
     }
 }

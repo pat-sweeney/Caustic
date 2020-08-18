@@ -99,7 +99,7 @@ namespace Caustic
             m_spMesh->ToRenderMaterials(pRenderer, pSceneCtx->m_spCurrentShader, m_spRenderMesh);
             SetFlags(GetFlags() & ~ESceneElemFlags::MaterialDirty);
         }
-        m_spRenderMesh->Render(pRenderer, pSceneCtx->m_lights);
+        m_spRenderMesh->Render(pRenderer, (IRenderMaterial*)nullptr, nullptr, pSceneCtx->m_lights);
         if (m_postrenderCallback)
             m_postrenderCallback(pRenderCtx->GetCurrentPass());
     }

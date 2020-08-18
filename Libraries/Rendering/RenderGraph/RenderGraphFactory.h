@@ -42,6 +42,7 @@ namespace Caustic
         //**********************************************************************
         virtual CRefObj<IRenderGraph> CreateRenderGraph() override;
         virtual CRefObj<IRenderGraphNode_Compute> CreateComputeNode(IShader* pShader) override;
+        virtual CRefObj<IRenderGraphNode_Mesh> CreateMeshNode(CRefObj<IMesh> spMesh) override;
         virtual CRefObj<IRenderGraphNode_Mesh> CreateMeshNode() override;
         virtual CRefObj<IRenderGraphNode_LightCollection> CreateLightCollectionNode() override;
         virtual CRefObj<IRenderGraphNode_Group> CreateGroupNode() override;

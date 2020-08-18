@@ -269,9 +269,21 @@ namespace Caustic
 		// Returns:
 		// Returns the newly created texture
 		//**********************************************************************
-		virtual CRefObj<ITexture> LoadVideoTexture(const wchar_t *pFilename, IGraphics *pGraphics) = 0;
+		virtual CRefObj<ITexture> LoadVideoTexture(const wchar_t* pFilename, IGraphics* pGraphics) = 0;
 
-        //**********************************************************************
+		//**********************************************************************
+		// Method: VideoTextureFromWebcam
+		// Loads a video texture using a webcam as the source
+		//
+		// Parameters:
+		// pGraphics - graphics device
+		//
+		// Returns:
+		// Returns the newly created texture
+		//**********************************************************************
+		virtual CRefObj<ITexture> VideoTextureFromWebcam(IGraphics* pGraphics) = 0;
+
+		//**********************************************************************
         // Method: CreateShader
         // Creates a shader
         //

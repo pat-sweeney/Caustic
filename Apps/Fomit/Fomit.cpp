@@ -94,13 +94,13 @@ void CApp::InitializeCaustic(HWND hwnd)
 
     // Add light @ 10,10,0
     Vector3 lightPos(10.0f, 10.0f, 0.0f);
-    Vector3 lightColor(1.0f, 1.0f, 1.0f);
-    CRefObj<IPointLight> spPointLight = m_spCausticFactory->CreatePointLight(lightPos, lightColor);
+    FRGBColor lightColor(1.0f, 1.0f, 1.0f);
+    CRefObj<IPointLight> spPointLight = m_spCausticFactory->CreatePointLight(lightPos, lightColor, 1.0f);
     spLightsNode->AddLight(spPointLight);
 
     // Add light @ -10,10,0
     Vector3 lightPos2(-10.0f, 10.0f, 0.0f);
-    CRefObj<IPointLight> spPointLight2 = m_spCausticFactory->CreatePointLight(lightPos2, lightColor);
+    CRefObj<IPointLight> spPointLight2 = m_spCausticFactory->CreatePointLight(lightPos2, lightColor, 1.0f);
     spLightsNode->AddLight(spPointLight2);
 
     CRefObj<IRenderGraphNode_Group> spGroupNode = m_spRenderGraphFactory->CreateGroupNode();

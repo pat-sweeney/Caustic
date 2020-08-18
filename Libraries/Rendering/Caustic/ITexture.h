@@ -190,4 +190,19 @@ namespace Caustic
     // [Link:Rendering/Caustic/ITexture.h]
     //**********************************************************************
     CAUSTICAPI CRefObj<ITexture> LoadVideoTexture(const wchar_t* pFilename, IGraphics* pGraphics);
+
+    //**********************************************************************
+    // Function: VideoTextureFromWebcam
+    // VideoTextureFromWebcam loads a video texture using a webcam as its source
+    //
+    // Parameters:
+    // pGraphics - Renderer
+    //
+    // Returns:
+    // Returns the new texture
+    //
+    // Header:
+    // [Link:Rendering/Caustic/ITexture.h]
+    //**********************************************************************
+    CAUSTICAPI CRefObj<ITexture> VideoTextureFromWebcam(IGraphics* pGraphics);
 }

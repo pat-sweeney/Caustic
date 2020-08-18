@@ -42,18 +42,19 @@ namespace Caustic
 		return CRefObj<ICausticFactory>(new CCausticFactory());
 	}
 
+    static bool setupRequired = true;
+
     //**********************************************************************
     // Method: CCausticFactory
     // Defines the implementation of <ICausticFactory>
     //**********************************************************************
     CCausticFactory::CCausticFactory()
 	{
-		static bool setup = false;
-		if (!setup)
+		if (setupRequired)
 		{
 			CoInitializeEx(0, COINIT_MULTITHREADED);
 			CT(MFStartup(MF_VERSION, MFSTARTUP_FULL));
-			setup = true;
+            setupRequired = false;
 		}
 	}
 
@@ -68,6 +69,7 @@ namespace Caustic
 		{
 			MFShutdown();
 			CoUninitialize();
+            setupRequired = true;
 			shutdown = true;
 		}
 	}
@@ -238,10 +240,19 @@ namespace Caustic
     // Method: LoadVideoTexture
     // See <ICausticFactory::LoadVideoTexture>
     //**********************************************************************
-    CRefObj<ITexture> CCausticFactory::LoadVideoTexture(const wchar_t *pFilename, IGraphics *pGraphics)
-	{
-		return Caustic::LoadVideoTexture(pFilename, pGraphics);
-	}
+    CRefObj<ITexture> CCausticFactory::LoadVideoTexture(const wchar_t* pFilename, IGraphics* pGraphics)
+    {
+        return Caustic::LoadVideoTexture(pFilename, pGraphics);
+    }
+
+    //**********************************************************************
+    // Method: VideoTextureFromWebcam
+    // See <ICausticFactory::VideoTextureFromWebcam>
+    //**********************************************************************
+    CRefObj<ITexture> CCausticFactory::VideoTextureFromWebcam(IGraphics* pGraphics)
+    {
+        return Caustic::VideoTextureFromWebcam(pGraphics);
+    }
 
     //**********************************************************************
     // Method: CreateShader

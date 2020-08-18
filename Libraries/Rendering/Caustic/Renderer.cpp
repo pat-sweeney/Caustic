@@ -29,7 +29,7 @@ namespace Caustic
     // Constructor: CRenderer
     //**********************************************************************
     CRenderer::CRenderer() :
-        m_waitForShutdown(false, true),
+        m_waitForShutdown(true, true),
         m_exitThread(false)
     {
     }
@@ -74,6 +74,8 @@ namespace Caustic
         m_renderThreadId = GetCurrentThreadId();
         CGraphicsBase::Setup(hwnd, createDebugDevice);
 
+        if (shaderFolder.empty())
+            shaderFolder = std::wstring(DEFAULT_SHADER_PATH);
         m_spShaderMgr = CRefObj<IShaderMgr>(new CShaderMgr());
         LoadDefaultShaders(shaderFolder.c_str());
 
@@ -395,6 +397,7 @@ namespace Caustic
     //**********************************************************************
     void CRenderer::RenderLoop(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback)
     {
+        m_waitForShutdown.Clear();
         while (!m_exitThread)
         {
             RenderFrame(renderCallback);

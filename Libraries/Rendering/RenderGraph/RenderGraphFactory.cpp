@@ -55,6 +55,18 @@ namespace Caustic
     // Function: CreateMeshNode
     // See <IRenderGraphFactory>
     //**********************************************************************
+    CRefObj<IRenderGraphNode_Mesh> CRenderGraphFactory::CreateMeshNode(CRefObj<IMesh> spMesh)
+    {
+        auto spMeshNode = CRefObj<IRenderGraphNode_Mesh>(new CRenderGraphNode_Mesh());
+        if (spMesh)
+            spMeshNode->FindInputPin("mesh")->SetDefaultValue(spMesh);
+        return spMeshNode;
+    }
+
+    //**********************************************************************
+    // Function: CreateMeshNode
+    // See <IRenderGraphFactory>
+    //**********************************************************************
     CRefObj<IRenderGraphNode_Mesh> CRenderGraphFactory::CreateMeshNode()
     {
         return CRefObj<IRenderGraphNode_Mesh>(new CRenderGraphNode_Mesh());

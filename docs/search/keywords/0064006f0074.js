@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("dot",["Function"],[["Dot",,[["Vector3","dot",,,0,"File:Base/Math/Vector.h:Vector3.dot","CClass:Vector3:dot"],["Vector2",,,,0,"File:Base/Math/Vector.h:Vector2.Dot","CClass:Vector2:Dot"]]]]);
+NDSearch.OnPrefixDataLoaded("dot",["Function"],[["Dot",,[["Vector2",,,,0,"File:Base/Math/Vector.h:Vector2.Dot","CClass:Vector2:Dot"],["Vector3",,,,0,"File:Base/Math/Vector.h:Vector3.Dot","CClass:Vector3:Dot"]]]]);

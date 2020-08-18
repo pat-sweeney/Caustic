@@ -39,6 +39,11 @@ namespace Caustic
         m_hwnd = hwnd;
     }
     
+    CRenderWindow::~CRenderWindow()
+    {
+        m_spMarshaller->Shutdown();
+    }
+
     void CRenderWindow::MouseDown(int x, int y, uint32 button, uint32 flags)
     {
         if (button == c_LeftButton)

@@ -68,8 +68,9 @@ namespace Caustic
         // ---
         //
         // Parameters:
-        // pShader - pointer to the compute shader
+        // pMesh - Default mesh
         //**********************************************************************
+        virtual CRefObj<IRenderGraphNode_Mesh> CreateMeshNode(CRefObj<IMesh> spMesh) = 0;
         virtual CRefObj<IRenderGraphNode_Mesh> CreateMeshNode() = 0;
 
         //**********************************************************************

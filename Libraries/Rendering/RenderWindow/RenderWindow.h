@@ -33,6 +33,7 @@ namespace Caustic
         int m_winwidth, m_winheight;
     public:
         CRenderWindow(HWND hwnd, std::wstring &shaderFolder);
+        ~CRenderWindow();
         
         //**********************************************************************
         // IRefCount

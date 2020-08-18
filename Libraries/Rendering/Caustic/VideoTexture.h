@@ -74,6 +74,8 @@ namespace Caustic
         CVideoTexture(IGraphics *pGraphics);
         ~CVideoTexture();
 
+        void CreateFromWebcam(IGraphics* pGraphics);
+        void FromMediaSource(IMFSourceReader* pSourceReader, IGraphics* pGraphics);
         void LoadFromFile(const wchar_t *pFilename, IGraphics *pGraphics);
 
         //**********************************************************************

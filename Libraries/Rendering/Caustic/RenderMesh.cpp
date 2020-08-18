@@ -16,12 +16,15 @@ namespace Caustic
     // Method: Render
     // See <IRenderSubMesh::Render>
     //**********************************************************************
-    void CRenderSubMesh::Render(IRenderer* pRenderer, std::vector<CRefObj<IPointLight>>& lights)
+    void CRenderSubMesh::Render(IRenderer* pRenderer, IRenderMaterial* pFrontMaterialOverride, IRenderMaterial* pBackMaterialOverride, std::vector<CRefObj<IPointLight>>& lights)
     {
         ID3D11DeviceContext* pContext = pRenderer->GetContext();
         ID3D11Device* pDevice = pRenderer->GetDevice();
         pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-        m_spShader->BeginRender(pRenderer, m_spFrontMaterial, m_spBackMaterial, lights, nullptr);
+        m_spShader->BeginRender(pRenderer,
+            (pFrontMaterialOverride) ? pFrontMaterialOverride : m_spFrontMaterial,
+            (pBackMaterialOverride) ? pBackMaterialOverride : m_spBackMaterial,
+            lights, nullptr);
         uint32 vertexSize = m_spShader->GetShaderInfo()->GetVertexSize();
         uint32 numVertices = m_VB.m_numVertices;
         UINT offset = 0;
@@ -119,10 +122,10 @@ namespace Caustic
     // Method: Render
     // See <IRenderMesh::Render>
     //**********************************************************************
-    void CRenderMesh::Render(IRenderer* pRenderer, std::vector<CRefObj<IPointLight>>& lights)
+    void CRenderMesh::Render(IRenderer* pRenderer, IRenderMaterial* pFrontMaterialOverride, IRenderMaterial* pBackMaterialOverride, std::vector<CRefObj<IPointLight>>& lights)
     {
 		for (auto submesh : m_subMeshes)
-            submesh->Render(pRenderer, lights);
+            submesh->Render(pRenderer, pFrontMaterialOverride, pBackMaterialOverride, lights);
     }
 
     //**********************************************************************

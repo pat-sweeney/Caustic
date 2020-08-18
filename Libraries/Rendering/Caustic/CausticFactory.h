@@ -75,8 +75,9 @@ namespace Caustic
 		virtual CRefObj<ITexture> CreateTexture(IGraphics* pGraphics, IImage *pImage, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags) override;
 		virtual CRefObj<ITexture> CheckerboardTexture(IGraphics *pGraphics) override;
 		virtual CRefObj<ITexture> LoadTexture(const wchar_t *pFilename, IGraphics *pGraphics) override;
-		virtual CRefObj<ITexture> LoadVideoTexture(const wchar_t *pFilename, IGraphics *pGraphics) override;
-        virtual CRefObj<IShader> CreateShader(IRenderer *pRenderer, const wchar_t *pShaderName,
+		virtual CRefObj<ITexture> LoadVideoTexture(const wchar_t* pFilename, IGraphics* pGraphics) override;
+		virtual CRefObj<ITexture> VideoTextureFromWebcam(IGraphics* pGraphics) override;
+		virtual CRefObj<IShader> CreateShader(IRenderer *pRenderer, const wchar_t *pShaderName,
             ID3DBlob *pVertexShaderBlob, ID3DBlob* pPixelShaderBlob, ID3DBlob* pComputeShaderBlob,
 			IShaderInfo *pShaderInfo) override;
         virtual CRefObj<IShaderInfo> CreateShaderInfo(const wchar_t *pFilename) override;

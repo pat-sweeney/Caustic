@@ -6,6 +6,8 @@
 #pragma once
 #include "Base\Core\Core.h"
 
+#pragma warning(push)
+#pragma warning(disable:26495) // Turn off warnings about uninitialized variables
 namespace Caustic
 {
 	struct HLSColor;
@@ -229,3 +231,4 @@ namespace Caustic
 		b = (uint8)Caustic::Clamp(_b, 0, 255);
 	}
 }
+#pragma warning(pop)
