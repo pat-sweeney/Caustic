@@ -8,6 +8,8 @@
 #include "Base\Core\Core.h"
 #include "Base\Core\RefCount.h"
 #include "Rendering\RenderWindow\IRenderWindow.h"
+#include "Rendering\SceneGraph\ISceneGraph.h"
+#include "Rendering\SceneGraph\ISceneFactory.h"
 #include "Rendering\RenderGraph\IRenderGraph.h"
 #include "Rendering\RenderGraph\IRenderGraphFactory.h"
 
@@ -18,6 +20,8 @@ namespace Caustic
         CRefObj<IRendererMarshaller> m_spMarshaller;
         CRefObj<IRenderGraphFactory> m_spRenderGraphFactory;
         CRefObj<IRenderGraph> m_spRenderGraph;
+        CRefObj<ISceneFactory> m_spSceneFactory;
+        CRefObj<ISceneGraph> m_spSceneGraph;
         CRefObj<IPointLight> m_spPointLight;
         CRefObj<ICamera> m_spCamera;
         CRefObj<ITrackball> m_spTrackball;
@@ -31,8 +35,9 @@ namespace Caustic
         DirectX::XMMATRIX m_invview;
         int m_startx, m_starty;
         int m_winwidth, m_winheight;
+        bool m_useRenderGraph;
     public:
-        CRenderWindow(HWND hwnd, std::wstring &shaderFolder);
+        CRenderWindow(HWND hwnd, std::wstring &shaderFolder, bool useRenderGraph = false);
         ~CRenderWindow();
         
         //**********************************************************************
@@ -44,7 +49,7 @@ namespace Caustic
         //**********************************************************************
         // IRenderWindow
         //**********************************************************************
-        virtual CRefObj<IRenderGraph> GetRenderGraph() override { return m_spRenderGraph; }
+        virtual CRefObj<ISceneGraph> GetSceneGraph() override { return m_spSceneGraph; }
         virtual void MouseDown(int x, int y, uint32 button, uint32 flags) override;
         virtual void MouseMove(int x, int y, uint32 flags) override;
         virtual void MouseUp(int x, int y, uint32 button, uint32 flags) override;

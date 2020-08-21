@@ -18,7 +18,7 @@ namespace Caustic
 	// Mesh - Mesh element
 	// Group - Group element
 	// Renderable - Renderable element
-	// PointLight - a point light
+	// LightCollection - Collection of lights
 	// Material - material
 	//**********************************************************************
 	enum ESceneElemType
@@ -29,7 +29,7 @@ namespace Caustic
 		CustomRenderElem,
 		Group,
 		Renderable,
-		PointLight,
+		LightCollection,
 		Material,
 		ComputeShaderElem
 	};
@@ -56,7 +56,7 @@ namespace Caustic
 		// Property: m_lights
 		// Defines list of current lights effecting this portion of the scene graph
 		//**********************************************************************
-		std::vector<CRefObj<IPointLight>> m_lights;
+		std::vector<CRefObj<ILight>> m_lights;
 
 		//**********************************************************************
 		// Property: m_CurrentPass
@@ -259,6 +259,37 @@ namespace Caustic
 		// Defines the color of the light
 		//**********************************************************************
 		virtual void SetColor(Caustic::FRGBColor &clr) = 0;
+	};
+
+	//**********************************************************************
+	// Interface: ISceneLightCollectionElem
+	// Defines a collection of lights. These lights only effect the children of this group
+	//**********************************************************************
+	struct ISceneLightCollectionElem : public ISceneGroupElem
+	{
+		//**********************************************************************
+		// Method: AddLight
+		// Adds a light to the collection
+		//**********************************************************************
+		virtual void AddLight(ILight* pLight) = 0;
+
+		//**********************************************************************
+		// Method: RemoveLight
+		// Removes a light from the collection
+		//**********************************************************************
+		virtual void RemoveLight(ILight* pLight) = 0;
+
+		//**********************************************************************
+		// Method: NumberLights
+		// Returns the number of lights in the collection
+		//**********************************************************************
+		virtual uint32 NumberLights() = 0;
+
+		//**********************************************************************
+		// Method: GetLight
+		// Returns the Nth light from the collection
+		//**********************************************************************
+		virtual CRefObj<ILight> GetLight(int index) = 0;
 	};
 
 	//**********************************************************************

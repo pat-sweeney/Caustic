@@ -47,7 +47,7 @@ namespace Caustic
 		DirectX::XMMATRIX m_xform;
         CRefObj<IRenderSubMesh> m_spSubMesh;
 
-		void RenderMesh(IGraphics *pGraphics, std::vector<CRefObj<IPointLight>> &lights, IRenderCtx *pRenderCtx, IRenderMaterial *pRenderMaterial, D3D11_CULL_MODE cullmode);
+		void RenderMesh(IGraphics *pGraphics, std::vector<CRefObj<ILight>> &lights, IRenderCtx *pRenderCtx, IRenderMaterial *pRenderMaterial, D3D11_CULL_MODE cullmode);
 	public:
         CRenderable(IRenderSubMesh *pSubMesh, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat);
 		CRenderable() {}
@@ -63,7 +63,7 @@ namespace Caustic
 		// IRenderable
 		//**********************************************************************
 		virtual Vector3 GetPos() override { return Vector3(DirectX::XMVectorGetX(m_xform.r[3]), DirectX::XMVectorGetY(m_xform.r[3]), DirectX::XMVectorGetZ(m_xform.r[3])); }
-		virtual void Render(IGraphics *pGraphics, std::vector<CRefObj<IPointLight>> &lights, IRenderCtx *pRenderCtx);
+		virtual void Render(IGraphics *pGraphics, std::vector<CRefObj<ILight>> &lights, IRenderCtx *pRenderCtx);
 		virtual void SetTransform(DirectX::XMMATRIX &mat) override { m_xform = mat; }
 		virtual DirectX::XMMATRIX &GetTransform() override { return m_xform; }
 		virtual bool InPass(int pass) { return ((m_passes | (1 << Caustic::c_PassObjID)) & (1 << pass)) ? true : false; }

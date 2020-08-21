@@ -19,9 +19,6 @@
     <ClInclude Include="MeshElem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="PointLightElem.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="MaterialElem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -46,6 +43,9 @@
     <ClInclude Include="ComputeShaderElem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="LightCollectionElem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -60,9 +60,6 @@
     <ClCompile Include="MeshElem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PointLightElem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MaterialElem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -73,6 +70,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ComputeShaderElem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LightCollectionElem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

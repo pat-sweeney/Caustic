@@ -64,6 +64,6 @@ namespace Caustic
             std::map<std::wstring, CRenderTexture>::iterator it = m_textures.find(pName);
             return CRefObj<ITexture>(it->second.m_spTexture);
         }
-        virtual void Render(IGraphics *pGraphics, std::vector<CRefObj<IPointLight>> &lights, IRenderCtx *pRenderCtx, IShader *pOverrideShader) override;
+        virtual void Render(IGraphics *pGraphics, std::vector<CRefObj<ILight>> &lights, IRenderCtx *pRenderCtx, IShader *pOverrideShader) override;
     };
 }

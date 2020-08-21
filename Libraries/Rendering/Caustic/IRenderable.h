@@ -56,7 +56,7 @@ namespace Caustic
         // lights - List of current lights effecting this object
         // pRenderCtx - Current render context
         //**********************************************************************
-        virtual void Render(IGraphics *pGraphics, std::vector<CRefObj<IPointLight>> &lights, IRenderCtx *pRenderCtx) = 0;
+        virtual void Render(IGraphics *pGraphics, std::vector<CRefObj<ILight>> &lights, IRenderCtx *pRenderCtx) = 0;
 
         //**********************************************************************
         // Method: SetTransform

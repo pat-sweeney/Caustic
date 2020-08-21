@@ -20,7 +20,7 @@ namespace Caustic
     struct IMaterialAttrib;
     struct IGraphics;
     struct ITexture;
-    struct IPointLight;
+    struct ILight;
     struct IRenderCtx;
 
     //**********************************************************************
@@ -103,7 +103,7 @@ namespace Caustic
         // pRenderCtx - render context to use
         // pOverrideShader - shader override (shader to use instead of material's shader)
         //**********************************************************************
-        virtual void Render(IGraphics *pGraphics, std::vector<CRefObj<IPointLight>> &lights, IRenderCtx *pRenderCtx, IShader *pOverrideShader) = 0;
+        virtual void Render(IGraphics *pGraphics, std::vector<CRefObj<ILight>> &lights, IRenderCtx *pRenderCtx, IShader *pOverrideShader) = 0;
     };
 
     CAUSTICAPI CRefObj<IRenderMaterial> CreateRenderMaterial(IGraphics* pGraphics, IMaterialAttrib* pMaterialAttrib, IShader* pShader);

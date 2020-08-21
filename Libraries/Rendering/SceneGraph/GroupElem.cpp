@@ -13,11 +13,9 @@
 
 namespace Caustic
 {
-    CAUSTICAPI void CreateGroupElem(ISceneGroupElem **ppElem)
+    CAUSTICAPI CRefObj<ISceneGroupElem> CreateGroupElem()
     {
-        std::unique_ptr<CSceneGroupElem> spGroupObj(new CSceneGroupElem());
-        *ppElem = spGroupObj.release();
-        (*ppElem)->AddRef();
+        return CRefObj<ISceneGroupElem>(new CSceneGroupElem());
     }
 
     std::wstring &CSceneGroupElem::Name()
@@ -32,23 +30,10 @@ namespace Caustic
                 return;
         Matrix4x4 old = pSceneCtx->m_Transform;
         pSceneCtx->m_Transform = pSceneCtx->m_Transform * m_Transform;
-
-        std::vector<CRefObj<IPointLight>> lights = pSceneCtx->m_lights;
         for (size_t i = 0; i < m_Children.size(); i++)
         {
-            if (m_Children[i]->GetType() == ESceneElemType::PointLight)
-            {
-                m_Children[i]->Render(pRenderer, pRenderCtx, pSceneCtx);
-            }
+            m_Children[i]->Render(pRenderer, pRenderCtx, pSceneCtx);
         }
-        for (size_t i = 0; i < m_Children.size(); i++)
-        {
-            if (m_Children[i]->GetType() != ESceneElemType::PointLight)
-            {
-                m_Children[i]->Render(pRenderer, pRenderCtx, pSceneCtx);
-            }
-        }
-        pSceneCtx->m_lights = lights;
         DrawSelected(pRenderer, this, pSceneCtx);
         pSceneCtx->m_Transform = old;
         if (m_postrenderCallback)
@@ -109,6 +94,7 @@ namespace Caustic
 
     void CSceneGroupElem::Load(IStream *pStream, std::function<void(ISceneElem *pElem)> func)
     {
+        CRefObj<ISceneFactory> spSceneFactory = CSceneFactory::Instance();
         ULONG bytesRead;
         uint32 numChildren;
         CT(pStream->Read(&numChildren, sizeof(numChildren), &bytesRead));
@@ -122,30 +108,20 @@ namespace Caustic
             {
             case ESceneElemType::Group:
             {
-                CRefObj<ISceneGroupElem> spGroupElem;
-				Caustic::CSceneFactory::Instance()->CreateGroupElem(&spGroupElem);
+                CRefObj<ISceneGroupElem> spGroupElem = spSceneFactory->CreateGroupElem();
                 spElem = spGroupElem;
             }
             break;
             case ESceneElemType::Material:
             {
-                CRefObj<ISceneMaterialElem> spMaterialElem;
-				Caustic::CSceneFactory::Instance()->CreateMaterialElem(&spMaterialElem);
+                CRefObj<ISceneMaterialElem> spMaterialElem = spSceneFactory->CreateMaterialElem();
                 spElem = spMaterialElem;
             }
             break;
             case ESceneElemType::Mesh:
             {
-                CRefObj<ISceneMeshElem> spMeshElem;
-                Caustic::CSceneFactory::Instance()->CreateMeshElem(&spMeshElem);
+                CRefObj<ISceneMeshElem> spMeshElem = spSceneFactory->CreateMeshElem();
                 spElem = spMeshElem;
-            }
-            break;
-            case ESceneElemType::PointLight:
-            {
-                CRefObj<IScenePointLightElem> spPointLightElem;
-				Caustic::CSceneFactory::Instance()->CreatePointLightElem(&spPointLightElem);
-                spElem = spPointLightElem;
             }
             break;
             default:

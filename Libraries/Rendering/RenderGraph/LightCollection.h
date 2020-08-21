@@ -22,7 +22,7 @@ namespace Caustic
     //**********************************************************************
     class CLightCollection : public ILightCollection, public CRefCount
     {
-        std::vector<CRefObj<IPointLight>> m_lights;
+        std::vector<CRefObj<ILight>> m_lights;
     public:
         CLightCollection()
         {
@@ -37,8 +37,8 @@ namespace Caustic
         //**********************************************************************
         // ILightCollection
         //**********************************************************************
-        virtual void AddLight(IPointLight* pLight) override { m_lights.push_back(CRefObj<IPointLight>(pLight)); }
+        virtual void AddLight(ILight* pLight) override { m_lights.push_back(CRefObj<ILight>(pLight)); }
         virtual void Clear() override { m_lights.clear(); }
-        virtual std::vector<CRefObj<IPointLight>> ToVector() override { return m_lights; }
+        virtual std::vector<CRefObj<ILight>> ToVector() override { return m_lights; }
     };
 }

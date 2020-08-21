@@ -11,10 +11,8 @@
 
 namespace Caustic
 {
-    CAUSTICAPI void CreateCustomRenderElem(std::function<void(IRenderer * pRenderer, IRenderCtx * pRenderCtx, SceneCtx * pSceneCtx)> clientCallback, ISceneCustomRenderElem** ppElem)
+    CAUSTICAPI CRefObj<ISceneCustomRenderElem> CreateCustomRenderElem(std::function<void(IRenderer * pRenderer, IRenderCtx * pRenderCtx, SceneCtx * pSceneCtx)> clientCallback)
     {
-        std::unique_ptr<CSceneCustomRenderElem> spMeshObj(new CSceneCustomRenderElem(clientCallback));
-        *ppElem = spMeshObj.release();
-        (*ppElem)->AddRef();
+        return CRefObj<ISceneCustomRenderElem>(new CSceneCustomRenderElem(clientCallback));
     }
 }

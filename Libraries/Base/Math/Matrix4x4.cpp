@@ -600,4 +600,52 @@ namespace Caustic
         tm[indx].v[3][2] = translate.z;
         return;
     }
+
+    Matrix4x4 Matrix4x4::ScalingMatrix(float sx, float sy, float sz)
+    {
+        return Matrix4x4(
+            sx, 0.0f, 0.0f, 0.0f,
+            0.0f, sy, 0.0f, 0.0f,
+            0.0f, 0.0f, sz, 0.0f,
+            0.0f, 0.0f, 0.0f, 1.0f
+        );
+    }
+
+    Matrix4x4 Matrix4x4::RotationMatrix(float ax, float ay, float az)
+    {
+        float ca = cos(ax);
+        float sa = sin(ax);
+        Matrix4x4 xrot(
+            1.0f, 0.0f, 0.0f, 0.0f,
+            0.0f, ca, -sa, 0.0f,
+            0.0f, sa, ca, 0.0f,
+            0.0f, 0.0f, 0.0f, 1.0f
+        );
+        ca = cos(ay);
+        sa = sin(ay);
+        Matrix4x4 yrot(
+            ca, 0.0f, -sa, 0.0f,
+            0.0f, 1.0f, 0.0f, 0.0f,
+            sa, 0.0f, ca, 0.0f,
+            0.0f, 0.0f, 0.0f, 1.0f
+        );
+        ca = cos(az);
+        sa = sin(az);
+        Matrix4x4 zrot(
+            ca, -sa, 0.0f, 0.0f,
+            sa, ca, 0.0f, 0.0f,
+            0.0f, 0.0f, 1.0f, 0.0f,
+            0.0f, 0.0f, 0.0f, 1.0f
+        );
+        return xrot * yrot * zrot;
+    }
+    Matrix4x4 Matrix4x4::TranslationMatrix(float tx, float ty, float tz)
+    {
+        return Matrix4x4(
+            1.0f, 0.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 1.0f, 0.0f,
+            tx, ty, tz, 1.0f
+        );
+    }
 }

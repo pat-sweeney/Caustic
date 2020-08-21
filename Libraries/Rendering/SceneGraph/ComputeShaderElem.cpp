@@ -11,11 +11,9 @@
 
 namespace Caustic
 {
-    CAUSTICAPI void CreateComputeShaderElem(IShader *pComputeShader, ISceneComputeShaderElem** ppElem)
+    CAUSTICAPI CRefObj<ISceneComputeShaderElem> CreateComputeShaderElem(IShader *pComputeShader)
     {
-        std::unique_ptr<CSceneComputeShaderElem> spShaderElem(new CSceneComputeShaderElem(pComputeShader));
-        *ppElem = spShaderElem.release();
-        (*ppElem)->AddRef();
+        return CRefObj<ISceneComputeShaderElem>(new CSceneComputeShaderElem(pComputeShader));
     }
 
     void CSceneComputeShaderElem::SetInputThreads(uint32 width, uint32 height, uint32 depth /* = 1 */)

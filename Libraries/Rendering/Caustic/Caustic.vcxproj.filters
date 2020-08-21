@@ -148,6 +148,9 @@
     <ClInclude Include="Light.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="defs.h">
+      <Filter>Source Files\Shaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -290,6 +293,12 @@
       <Filter>Source Files\Shaders</Filter>
     </None>
     <None Include="Textured.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="ShadowMap.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="ShadowMap.vs">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>

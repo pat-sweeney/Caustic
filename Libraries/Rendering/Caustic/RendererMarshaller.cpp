@@ -80,6 +80,27 @@ namespace Caustic
         WaitForSingleObject(m_thread, INFINITE);
     }
 
+    void CRendererMarshaller::PushShadowmapRT(int whichShadowmap, bool clear, Vector3& lightPos)
+    {
+        Vector3 lp = lightPos;
+        m_renderQueue.AddLambda(
+            [this, whichShadowmap, clear, &lp]()
+            {
+                m_spRenderer->PushShadowmapRT(whichShadowmap, clear, lp);
+            }
+        );
+    }
+    
+    void CRendererMarshaller::PopShadowmapRT()
+    {
+        m_renderQueue.AddLambda(
+            [this]()
+            {
+                m_spRenderer->PopShadowmapRT();
+            }
+        );
+    }
+    
     void CRendererMarshaller::RunOnRenderer(std::function<void(IRenderer*, void* clientData)> callback, void* clientData)
     {
         m_renderQueue.AddLambda(

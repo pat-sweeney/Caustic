@@ -84,9 +84,9 @@
     <ClInclude Include="CustomRenderElem.h" />
     <ClInclude Include="GroupElem.h" />
     <ClInclude Include="ISceneFactory.h" />
+    <ClInclude Include="LightCollectionElem.h" />
     <ClInclude Include="MaterialElem.h" />
     <ClInclude Include="MeshElem.h" />
-    <ClInclude Include="PointLightElem.h" />
     <ClInclude Include="SceneFactory.h" />
     <ClInclude Include="SceneGraph.h" />
     <ClInclude Include="SceneGraphImpl.h" />
@@ -97,9 +97,9 @@
     <ClCompile Include="ComputeShaderElem.cpp" />
     <ClCompile Include="CustomRenderElem.cpp" />
     <ClCompile Include="GroupElem.cpp" />
+    <ClCompile Include="LightCollectionElem.cpp" />
     <ClCompile Include="MaterialElem.cpp" />
     <ClCompile Include="MeshElem.cpp" />
-    <ClCompile Include="PointLightElem.cpp" />
     <ClCompile Include="SceneFactory.cpp" />
     <ClCompile Include="SceneGraph.cpp" />
     <ClCompile Include="stdafx.cpp">

@@ -3,7 +3,18 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "defs.h"
+struct VSInput
+{
+    float3 posOS : POSITION; // Vertex position in object coordinates
+    float3 normOS : NORMAL; // Vertex normal in object coordinates
+    float2 uvs : TEXCOORD0; // Texture coordinates
+};
+
+struct VSOutput
+{
+    float4 posPS : SV_POSITION; // Position of vertex in projected coordinates
+    float depth : TEXCOORD0;
+};
 
 float4 PS(VSOutput p) : SV_Target
 {

@@ -9,9 +9,7 @@
 #include "Base\Core\IRefCount.h"
 #include "Rendering\RenderWindow\IRenderWindow.h"
 #include "Rendering\Caustic\ICausticFactory.h"
-#include "Rendering\RenderGraph\IRenderGraph.h"
-#include "Rendering\RenderGraph\IRenderGraphFactory.h"
-#include "Rendering\RenderGraph\RGNLightCollection.h"
+#include "Rendering\SceneGraph\ISceneFactory.h"
 #include "Geometry\MeshImport\MeshImport.h"
 #include <Windows.h>
 #include <commdlg.h>
@@ -23,11 +21,11 @@ using namespace Caustic;
 
 CRefObj<IRenderWindow> spRenderWindow;
 CRefObj<Caustic::ICausticFactory> spCausticFactory;
-CRefObj<Caustic::IRenderGraphFactory> spRenderGraphFactory;
+CRefObj<Caustic::ISceneFactory> spSceneFactory;
 
 void InitializeCaustic(HWND hwnd)
 {
-    spRenderGraphFactory = Caustic::CreateRenderGraphFactory();
+    spSceneFactory = Caustic::CreateSceneFactory();
     spCausticFactory = Caustic::CreateCausticFactory();
     std::wstring shaderFolder(SHADERPATH);
     spRenderWindow = CreateRenderWindow(hwnd, shaderFolder);
@@ -182,35 +180,54 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (GetOpenFileName(&ofn))
                     {
                         wchar_t *ext = StrRChrW(fn, nullptr, L'.');
-                        CRefObj<IRenderGraphNode_Mesh> spMeshElem = spRenderGraphFactory->CreateMeshNode();
+                        CRefObj<ISceneMeshElem> spMeshElem = spSceneFactory->CreateMeshElem();
                         CRefObj<IMesh> spMesh = nullptr;
                         if (StrCmpW(ext, L".obj") == 0)
                             spMesh = Caustic::MeshImport::LoadObj(fn);
                         else if (StrCmpW(ext, L".ply") == 0)
                             spMesh = Caustic::MeshImport::LoadPLY(fn);
-                        spMeshElem->FindInputPin("mesh")->SetDefaultValue(spMesh);
-                        spRenderWindow->GetRenderGraph()->AddChild(spMeshElem);
+                        spMeshElem->SetMesh(spMesh);
+                        CRefObj<ISceneGraph> spSceneGraph = spRenderWindow->GetSceneGraph();
                         CRefObj<IShader> spShader = spRenderWindow->GetRenderer()->GetShaderMgr()->FindShader(L"Textured");
-                        CRefObj<IRenderGraphNode_Material> spMaterialElem = spRenderGraphFactory->CreateMaterialNode();
+                        CRefObj<ISceneMaterialElem> spMaterialElem = spSceneFactory->CreateMaterialElem();
                         CRefObj<IMaterialAttrib> spMaterial = spCausticFactory->CreateMaterialAttrib();
                         FRGBColor ambient(0.2f, 0.2f, 0.2f);
                         FRGBColor diffuse(0.4f, 0.4f, 0.4f);
                         spMaterial->SetColor(L"ambientColor", ambient);
                         spMaterial->SetColor(L"diffuseColor", diffuse);
-                        spMaterialElem->FindInputPin("materialAttrib")->SetDefaultValue(spMaterial);
-                        spMaterialElem->FindOutputPin("material")->LinkTo(spMeshElem->FindInputPin("frontMaterial"));
-                        spRenderWindow->GetRenderGraph()->AddChild(spMaterialElem);
+                        spMaterialElem->SetMaterial(spMaterial);
+                        spMaterialElem->SetShader(spShader);
 
-                        CRefObj<IRenderGraphNode_LightCollection> spLightElem = spRenderGraphFactory->CreateLightCollectionNode();
-                        spRenderWindow->GetRenderGraph()->AddChild(spLightElem);
-                        spLightElem->FindOutputPin("lights")->LinkTo(spMeshElem->FindInputPin("lights"));
-
+                        auto spLightCollectionElem = spSceneFactory->CreateLightCollectionElem();
+                        
                         Vector3 lightPos(10.0f, 10.0f, 0.0f);
                         FRGBColor lightColor(1.0f, 1.0f, 1.0f);
-                        spLightElem->AddLight(spCausticFactory->CreatePointLight(lightPos, lightColor, 1.0f));
+                        CRefObj<ILight> spLight(spCausticFactory->CreatePointLight(lightPos, lightColor, 1.0f));
+                        spLightCollectionElem->AddLight(spLight);
+                        spLight->SetCastsShadows(true);
 
                         lightPos = Vector3(-10.0f, 10.0f, 0.0f);
-                        spLightElem->AddLight(spCausticFactory->CreatePointLight(lightPos, lightColor, 1.0f));
+                        spLightCollectionElem->AddLight(spCausticFactory->CreatePointLight(lightPos, lightColor, 1.0f));
+                        spMaterialElem->AddChild(spMeshElem);
+                        spLightCollectionElem->AddChild(spMaterialElem);
+                        spSceneGraph->AddChild(spLightCollectionElem);
+
+                        // Add plane to scene
+                        spMeshElem = spSceneFactory->CreateMeshElem();
+                        spMeshElem->SetMesh(CreateGrid(20));
+                        spShader = spRenderWindow->GetRenderer()->GetShaderMgr()->FindShader(L"Textured");
+                        spMaterialElem = spSceneFactory->CreateMaterialElem();
+                        spMaterial = spCausticFactory->CreateMaterialAttrib();
+                        ambient = FRGBColor(0.2f, 0.2f, 0.2f);
+                        diffuse = FRGBColor(0.4f, 0.4f, 0.4f);
+                        spMaterial->SetColor(L"ambientColor", ambient);
+                        spMaterial->SetColor(L"diffuseColor", diffuse);
+                        spMaterialElem->SetMaterial(spMaterial);
+                        spMaterialElem->SetShader(spShader);
+                        spMaterialElem->AddChild(spMeshElem);
+                        Matrix4x4 mat = Matrix4x4::TranslationMatrix(0.0f, -10.0f, 0.0f) * Matrix4x4::ScalingMatrix(20.0f, 20.0f, 20.0f);
+                        spMaterialElem->SetTransform(mat);
+                        spSceneGraph->AddChild(spMaterialElem);
                     }
                 }
                 break;

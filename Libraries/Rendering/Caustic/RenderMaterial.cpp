@@ -70,7 +70,7 @@ namespace Caustic
         return m_spShader;
     }
 
-    void CRenderMaterial::Render(IGraphics *pGraphics, std::vector<CRefObj<IPointLight>> &lights, IRenderCtx * /*pRenderCtx*/, IShader *spShader)
+    void CRenderMaterial::Render(IGraphics *pGraphics, std::vector<CRefObj<ILight>> &lights, IRenderCtx * /*pRenderCtx*/, IShader *spShader)
     {
         // First make sure defaults are set
         Float4 vAmbient(0.1f, 0.1f, 0.1f, 0.1f);

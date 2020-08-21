@@ -25,6 +25,39 @@ namespace Caustic
     struct IRenderSubMesh;
 
     //**********************************************************************
+    // Group: Pass Flags
+    // c_PassFirst - first pass
+    // c_PassObjID - renders pass writing object IDs to output texture
+    // c_PassShadow - pass that renders shadow maps
+    // c_PassOpaque - pass rendering the opaque objects
+    // c_PassTransparent - pass rendering transparent objects
+    // c_PassEnvironment - pass rendering environment maps
+    // c_PassLast - last pass
+    // c_PassAllPasses - combination of all the pass flags
+    //
+    // Group: Shadow map selection
+    // c_HiResShadowMap - selects the hi-res shadow map
+    // c_MidResShadowMap - selects the mid-res shadow map
+    // c_LowResShadowMap - selects the low-res shadow map
+    //
+    // Header:
+    // [Link:Rendering/Caustic/Renderer.h]
+    //**********************************************************************
+    const int c_PassFirst = 0;
+    const int c_PassObjID = 0;
+    const int c_PassShadow = 1;
+    const int c_PassOpaque = 2;
+    const int c_PassTransparent = 3;
+    const int c_PassEnvironment = 4;
+    const int c_PassLast = c_PassEnvironment;
+    const int c_PassAllPasses = (1 << c_PassLast) - 1;
+
+    const int c_HiResShadowMap = 0;
+    const int c_MidResShadowMap = 1;
+    const int c_LowResShadowMap = 2;
+    const int c_MaxShadowMaps = 3; // Hi-res, Mid-res, Low-res
+
+    //**********************************************************************
     // Interface: IRenderer 
     // Defines our basic renderer. IRenderer handles all rendering commands.
     // It is generally expected that this object is running on its own thread.
@@ -120,6 +153,32 @@ namespace Caustic
         // Returns the current graphics device the renderer is using
         //**********************************************************************
         virtual CRefObj<IGraphics> GetGraphics() = 0;
+
+        //**********************************************************************
+        // Method: PushShadowmapRT
+        // Setups up our shadow map as the current render target
+        //
+        // Parameters:
+        // whichShadowmap - constant indicating which shadow map to use (c_HiResShadow, ...)
+        // clear - whether the current shadow map should be cleared
+        // lightPos - position of the light to render from
+        //**********************************************************************
+        virtual void PushShadowmapRT(int whichShadowmap, bool clear, Vector3& lightPos) = 0;
+
+        //**********************************************************************
+        // Method: PopShadowmapRT
+        // Restores the default render target after PushShadowmapRT
+        //**********************************************************************
+        virtual void PopShadowmapRT() = 0;
+
+        //**********************************************************************
+        // Method: SelectShadowmap
+        // Selects which shadow map to use during shading
+        //
+        // Parameters:
+        // whichShadowmap - constant indicating which shadow map to use (c_HiResShadow, ...)
+        //**********************************************************************
+        virtual void SelectShadowmap(int whichShadowmap) = 0;
     };
 
     //**********************************************************************

@@ -11,11 +11,9 @@
 
 namespace Caustic
 {
-    CAUSTICAPI void CreateMeshElem(ISceneMeshElem **ppElem)
+    CAUSTICAPI CRefObj<ISceneMeshElem> CreateMeshElem()
     {
-        std::unique_ptr<CSceneMeshElem> spMeshObj(new CSceneMeshElem());
-        *ppElem = spMeshObj.release();
-        (*ppElem)->AddRef();
+        return CRefObj<ISceneMeshElem>(new CSceneMeshElem());
     }
 
     std::wstring &CSceneMeshElem::Name()
@@ -99,7 +97,13 @@ namespace Caustic
             m_spMesh->ToRenderMaterials(pRenderer, pSceneCtx->m_spCurrentShader, m_spRenderMesh);
             SetFlags(GetFlags() & ~ESceneElemFlags::MaterialDirty);
         }
-        m_spRenderMesh->Render(pRenderer, (IRenderMaterial*)nullptr, nullptr, pSceneCtx->m_lights);
+        DirectX::XMMATRIX xm(
+            pSceneCtx->m_Transform.v[0][0], pSceneCtx->m_Transform.v[0][1], pSceneCtx->m_Transform.v[0][2], pSceneCtx->m_Transform.v[0][3],
+            pSceneCtx->m_Transform.v[1][0], pSceneCtx->m_Transform.v[1][1], pSceneCtx->m_Transform.v[1][2], pSceneCtx->m_Transform.v[1][3],
+            pSceneCtx->m_Transform.v[2][0], pSceneCtx->m_Transform.v[2][1], pSceneCtx->m_Transform.v[2][2], pSceneCtx->m_Transform.v[2][3],
+            pSceneCtx->m_Transform.v[3][0], pSceneCtx->m_Transform.v[3][1], pSceneCtx->m_Transform.v[3][2], pSceneCtx->m_Transform.v[3][3]
+        );
+        m_spRenderMesh->Render(pRenderer, (IRenderMaterial*)nullptr, nullptr, pSceneCtx->m_lights, &xm);
         if (m_postrenderCallback)
             m_postrenderCallback(pRenderCtx->GetCurrentPass());
     }

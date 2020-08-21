@@ -192,8 +192,8 @@
       <SubType>Designer</SubType>
     </CustomBuild>
     <CustomBuild Include="ShadowMap.xml">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\ShadowMap.xml -o $(CausticRoot)\$(Configuration)\ShadowMap.shi</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\ShadowMap.xml -o $(CausticRoot)\$(Configuration)\ShadowMap.shi</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\ShadowMap.shi</Outputs>
@@ -217,6 +217,7 @@
     <ClInclude Include="Caustic.h" />
     <ClInclude Include="CausticFactory.h" />
     <ClInclude Include="ConstructBuffers.h" />
+    <ClInclude Include="defs.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="IBuffer.h" />
     <ClInclude Include="ICamera.h" />
@@ -299,6 +300,8 @@
     <None Include="Line.ps" />
     <None Include="Line.vs" />
     <None Include="Normal.ps" />
+    <None Include="ShadowMap.ps" />
+    <None Include="ShadowMap.vs" />
     <None Include="Textured.ps" />
   </ItemGroup>
   <ItemGroup>

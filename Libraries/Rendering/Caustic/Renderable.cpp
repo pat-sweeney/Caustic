@@ -52,7 +52,7 @@ namespace Caustic
     // pRenderMaterial - Material to apply
     // cullmode - Culling mode to apply
     //**********************************************************************
-    void CRenderable::RenderMesh(IGraphics *pGraphics, std::vector<CRefObj<IPointLight>> &lights,
+    void CRenderable::RenderMesh(IGraphics *pGraphics, std::vector<CRefObj<ILight>> &lights,
         IRenderCtx *pRenderCtx, IRenderMaterial *pRenderMaterial, D3D11_CULL_MODE cullmode)
     {
         CComPtr<ID3D11Device> spDevice = pGraphics->GetDevice();
@@ -124,21 +124,18 @@ namespace Caustic
     // Method: Render
     // See <IRenderable::Render>
     //**********************************************************************
-    void CRenderable::Render(IGraphics *pGraphics, std::vector<CRefObj<IPointLight>> &lights, IRenderCtx *pRenderCtx)
+    void CRenderable::Render(IGraphics *pGraphics, std::vector<CRefObj<ILight>> &lights, IRenderCtx *pRenderCtx)
     {
         CComPtr<ID3D11Device> spDevice = pGraphics->GetDevice();
         CComPtr<ID3D11DeviceContext> spContext = pGraphics->GetContext();
 
-        for (int j = 0; j < 2; j++)
+        if (m_spFrontMaterial)
         {
-            if (j == 0 && m_spFrontMaterial)
-            {
-                RenderMesh(pGraphics, lights, pRenderCtx, m_spFrontMaterial, D3D11_CULL_MODE::D3D11_CULL_BACK);
-            }
-            else if (j == 1 && m_spBackMaterial)
-            {
-                RenderMesh(pGraphics, lights, pRenderCtx, m_spBackMaterial, D3D11_CULL_MODE::D3D11_CULL_FRONT);
-            }
+            RenderMesh(pGraphics, lights, pRenderCtx, m_spFrontMaterial, D3D11_CULL_MODE::D3D11_CULL_BACK);
+        }
+        if (m_spBackMaterial)
+        {
+            RenderMesh(pGraphics, lights, pRenderCtx, m_spBackMaterial, D3D11_CULL_MODE::D3D11_CULL_FRONT);
         }
         if ((pRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayNormalsAsLines) ||
             (pRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayFaceNormals))
