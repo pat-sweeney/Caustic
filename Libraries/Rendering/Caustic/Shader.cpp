@@ -721,9 +721,11 @@ namespace Caustic
     void CShader::BeginRender(IGraphics* pGraphics, IRenderMaterial* pFrontMaterial, IRenderMaterial* pBackMaterial, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld)
     {
         CComPtr<ID3D11DeviceContext> spCtx = pGraphics->GetContext();
+#ifdef _DEBUG
         CComPtr<ID3DUserDefinedAnnotation> spAnnotations;
         CT(spCtx->QueryInterface(__uuidof(ID3DUserDefinedAnnotation), (void**)&spAnnotations));
         spAnnotations->BeginEvent(L"BeginRender");
+#endif
         
         bool hasVS = m_spShaderInfo->HasShader(EShaderType::TypeVertexShader);
         bool hasPS = m_spShaderInfo->HasShader(EShaderType::TypePixelShader);
@@ -773,7 +775,9 @@ namespace Caustic
             spCtx->CSSetUnorderedAccessViews(0, 1, uavNull, NULL);
             spCtx->CSSetShaderResources(0, 1, srvNull);
         }
+#ifdef _DEBUG
         spAnnotations->EndEvent();
+#endif
     }
 
     //**********************************************************************

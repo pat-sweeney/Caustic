@@ -47,5 +47,6 @@ namespace Caustic
 		virtual CRefObj<ISceneGroupElem> CreateGroupElem() override;
 		virtual CRefObj<ISceneMeshElem> CreateMeshElem() override;
 		virtual CRefObj<ISceneCustomRenderElem> CreateCustomRenderElem(std::function<void(IRenderer *pRender, IRenderCtx *pCtx, SceneCtx * pSceneCtx)> clientCallback) override;
+		virtual CRefObj<ISceneOverlay2DElem> CreateOverlay2DElem(IShader *pShader = nullptr) override;
 	};
 };

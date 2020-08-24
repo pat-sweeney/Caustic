@@ -289,6 +289,12 @@ namespace Caustic
         }
     }
     
+    CTexture::CTexture(ID3D11Texture2D* pD3DTexture, ID3D11ShaderResourceView* pD3DRV)
+    {
+        m_spTextureRV = pD3DRV;
+        m_spTexture = pD3DTexture;
+    }
+
     CTexture::~CTexture()
     {
     }

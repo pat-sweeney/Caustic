@@ -200,14 +200,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
                         auto spLightCollectionElem = spSceneFactory->CreateLightCollectionElem();
                         
-                        Vector3 lightPos(10.0f, 10.0f, 0.0f);
+                        Vector3 lightPos(1000.0f, 1000.0f, 0.0f);
                         FRGBColor lightColor(1.0f, 1.0f, 1.0f);
                         CRefObj<ILight> spLight(spCausticFactory->CreatePointLight(lightPos, lightColor, 1.0f));
                         spLightCollectionElem->AddLight(spLight);
-                        spLight->SetCastsShadows(true);
 
-                        lightPos = Vector3(-10.0f, 10.0f, 0.0f);
-                        spLightCollectionElem->AddLight(spCausticFactory->CreatePointLight(lightPos, lightColor, 1.0f));
+                        Vector3 lightDir(-1.0f, -1.0f, -1.0f);
+                        spLight = spCausticFactory->CreateDirectionalLight(lightPos, lightDir, lightColor, 1.0f);
+                        spLight->SetCastsShadows(true);
+                        spLightCollectionElem->AddLight(spLight);
                         spMaterialElem->AddChild(spMeshElem);
                         spLightCollectionElem->AddChild(spMaterialElem);
                         spSceneGraph->AddChild(spLightCollectionElem);
@@ -225,9 +226,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                         spMaterialElem->SetMaterial(spMaterial);
                         spMaterialElem->SetShader(spShader);
                         spMaterialElem->AddChild(spMeshElem);
-                        Matrix4x4 mat = Matrix4x4::TranslationMatrix(0.0f, -10.0f, 0.0f) * Matrix4x4::ScalingMatrix(20.0f, 20.0f, 20.0f);
+                        Matrix4x4 mat = Matrix4x4::RotationMatrix(Caustic::DegreesToRadians(90.0f), 0.0f, 0.0f) * Matrix4x4::ScalingMatrix(20.0f, 20.0f, 20.0f) * Matrix4x4::TranslationMatrix(0.0f, -10.0f, 0.0f);
                         spMaterialElem->SetTransform(mat);
                         spSceneGraph->AddChild(spMaterialElem);
+
+                        CRefObj<ISceneOverlay2DElem> spOverlay;
+                        spOverlay = spSceneFactory->CreateOverlay2DElem();
+                        auto spTexture = spCausticFactory->LoadTexture(L"c:\\users\\patri\\Pictures\\Capture.PNG", spRenderWindow->GetRenderer());
+                        BBox2 bb;
+                        bb.minPt = Vector2(0.0f, 0.0f);
+                        bb.maxPt = Vector2(0.1f, 0.1f);
+                        spOverlay->SetRect(bb);
+                        spOverlay->SetTexture(spTexture);
+                        spSceneGraph->AddChild(spOverlay);
+
+                        spOverlay = spSceneFactory->CreateOverlay2DElem();
+                        bb.minPt = Vector2(0.1f, 0.0f);
+                        bb.maxPt = Vector2(0.2f, 0.1f);
+                        spOverlay->SetRect(bb);
+                        spOverlay->SetTexture(spRenderWindow->GetRenderer()->GetShadowmapTexture(c_HiResShadowMap));
+                        spSceneGraph->AddChild(spOverlay);
                     }
                 }
                 break;

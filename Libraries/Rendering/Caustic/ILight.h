@@ -17,6 +17,14 @@
 
 namespace Caustic
 {
+    enum class ELightType
+    {
+        PointLight,
+        DirectionalLight,
+        SpotLight,
+        AreaLight
+    };
+
     //**********************************************************************
     // Interface: ILight
     // Defines a properties common to all lights
@@ -26,6 +34,12 @@ namespace Caustic
     //**********************************************************************
     struct ILight : public IRefCount
     {
+        //**********************************************************************
+        // Method: GetType
+        // Returns the type of light
+        //**********************************************************************
+        virtual ELightType GetType() = 0;
+
         //**********************************************************************
         // Method: TurnOn
         // Turns on the light
@@ -93,6 +107,26 @@ namespace Caustic
         // Position of the light in world coordinates
         //**********************************************************************
         virtual Vector3 GetPosition() = 0;
+
+        //**********************************************************************
+        // Method: GetDirection
+        // Gets the direction the light is pointing. For nondirectional lights
+        // this will return a zero vector
+        //
+        // Returns:
+        // Direction of the light in world coordinates
+        //**********************************************************************
+        virtual Vector3 GetDirection() = 0;
+
+        //**********************************************************************
+        // Method: SetDirection
+        // Sets the direction the light is pointing. For nondirectional lights
+        // this will be a zero vector
+        //
+        // Parameters:
+        // dir - Direction of the light in world coordinates
+        //**********************************************************************
+        virtual void SetDirection(Vector3& dir) = 0;
 
         //**********************************************************************
         // Method: SetColor

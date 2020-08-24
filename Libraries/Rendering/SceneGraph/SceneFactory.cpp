@@ -51,6 +51,12 @@ namespace Caustic
 		return Caustic::CreateGroupElem();
 	}
 
+	CAUSTICAPI CRefObj<ISceneOverlay2DElem> CreateOverlay2DElem(IShader *pShader = nullptr);
+	CRefObj<ISceneOverlay2DElem> CSceneFactory::CreateOverlay2DElem(IShader *pShader /* = nullptr */)
+	{
+		return Caustic::CreateOverlay2DElem(pShader);
+	}
+
 	CAUSTICAPI CRefObj<ISceneMeshElem> CreateMeshElem();
 	CRefObj<ISceneMeshElem> CSceneFactory::CreateMeshElem()
 	{

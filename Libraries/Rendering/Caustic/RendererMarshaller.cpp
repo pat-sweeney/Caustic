@@ -80,17 +80,26 @@ namespace Caustic
         WaitForSingleObject(m_thread, INFINITE);
     }
 
-    void CRendererMarshaller::PushShadowmapRT(int whichShadowmap, bool clear, Vector3& lightPos)
+    //**********************************************************************
+    // Method: PushShadowmapRT
+    // See <IRenderer::PushShadowmapRT>
+    //**********************************************************************
+    void CRendererMarshaller::PushShadowmapRT(int whichShadowmap, int lightMapIndex, Vector3& lightPos, Vector3 &lightDir)
     {
         Vector3 lp = lightPos;
+        Vector3 ld = lightDir;
         m_renderQueue.AddLambda(
-            [this, whichShadowmap, clear, &lp]()
+            [this, whichShadowmap, lightMapIndex, &lp, &ld]()
             {
-                m_spRenderer->PushShadowmapRT(whichShadowmap, clear, lp);
+                m_spRenderer->PushShadowmapRT(whichShadowmap, lightMapIndex, lp, ld);
             }
         );
     }
     
+    //**********************************************************************
+    // Method: PopShadowmapRT
+    // See <IRenderer::PopShadowmapRT>
+    //**********************************************************************
     void CRendererMarshaller::PopShadowmapRT()
     {
         m_renderQueue.AddLambda(
@@ -101,6 +110,26 @@ namespace Caustic
         );
     }
     
+    //**********************************************************************
+    // Method: GetShadowmapTexture
+    // See <IRenderer::GetShadowmapTexture>
+    //**********************************************************************
+    CRefObj<ITexture> CRendererMarshaller::GetShadowmapTexture(int whichShadowmap)
+    {
+        HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+        CRefObj<ITexture> spTexture;
+        m_renderQueue.AddLambda(
+            [this, evt, whichShadowmap , &spTexture]()
+            {
+                spTexture = m_spRenderer->GetShadowmapTexture(whichShadowmap);
+                SetEvent(evt);
+            }
+        );
+        WaitForSingleObject(evt, INFINITE);
+        CloseHandle(evt);
+        return spTexture;
+    }
+
     void CRendererMarshaller::RunOnRenderer(std::function<void(IRenderer*, void* clientData)> callback, void* clientData)
     {
         m_renderQueue.AddLambda(

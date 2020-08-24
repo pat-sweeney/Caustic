@@ -52,24 +52,6 @@ namespace Caustic
         // Returns the inner and out angles
         //**********************************************************************
         virtual float2 GetAngles() = 0;
-
-        //**********************************************************************
-        // Method: SetDirection
-        // Sets the direction of the light
-        //
-        // Parameters:
-        // dir - direction vector
-        //**********************************************************************
-        virtual void SetDirection(Vector3& dir) = 0;
-
-        //**********************************************************************
-        // Method: GetDirection
-        // Gets the direction of the light
-        //
-        // Returns:
-        // Returns the direction of the light
-        //**********************************************************************
-        virtual Vector3 GetDirection() = 0;
     };
 
     //**********************************************************************

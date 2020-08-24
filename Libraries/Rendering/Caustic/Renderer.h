@@ -134,7 +134,11 @@ namespace Caustic
         D3D11_TEXTURE2D_DESC m_BBDesc;                      // Description of our back buffer
         CRefObj<IShaderMgr> m_spShaderMgr;                  // Our shader manager
         CComPtr<ID3D11Texture2D> m_spShadowTexture[c_MaxShadowMaps];        // Texture for shadow map
-        CComPtr<ID3D11RenderTargetView> m_spShadowRTView[c_MaxShadowMaps];  // Render target view for m_spShadowTexture
+        CComPtr<ID3D11ShaderResourceView> m_spShadowSRView[c_MaxShadowMaps];  // Shader resource view for m_spShadowTexture
+        CComPtr<ID3D11DepthStencilView> m_spShadowMapStencilView[c_MaxShadowMaps];
+        int m_shadowMapWidth[c_MaxShadowMaps];
+        int m_shadowMapHeight[c_MaxShadowMaps];
+        D3D11_VIEWPORT m_viewport;
 
         friend CAUSTICAPI CRefObj<IGraphics> CreateGraphics(HWND hwnd);
 
@@ -179,6 +183,7 @@ namespace Caustic
         CRefObj<ICamera> m_spOldCamera;
         CComPtr<ID3D11RenderTargetView> m_spOldRT;
         CComPtr<ID3D11DepthStencilView> m_spOldStencil;
+        D3D11_VIEWPORT m_viewport;
     };
 
     //**********************************************************************
@@ -236,6 +241,7 @@ namespace Caustic
         CRefObj<IShaderInfo> LoadShaderInfo(std::wstring &filename);
         void RenderScene(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback);
         void DrawSceneObjects(int pass, std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback);
+        void SetShadowmapViewport(int whichShadowMap, int lightMapIndex);
     public:
         explicit CRenderer();
         virtual ~CRenderer();
@@ -267,8 +273,9 @@ namespace Caustic
         virtual CRefObj<IRenderCtx> GetRenderCtx() override;
         virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) override;
         virtual CRefObj<IGraphics> GetGraphics() override;
-        virtual void PushShadowmapRT(int whichShadowmap, bool clear, Vector3& lightPos) override;
+        virtual void PushShadowmapRT(int whichShadowmap, int lightMapIndex, Vector3& lightPos, Vector3& lightDir) override;
         virtual void PopShadowmapRT() override;
-        virtual void SelectShadowmap(int whichShadowmap) override {}
+        virtual void SelectShadowmap(int whichShadowMap, int lightMapIndex, IShader *pShader) override;
+        virtual CRefObj<ITexture> GetShadowmapTexture(int whichShadowMap) override;
     };
 }

@@ -613,24 +613,24 @@ namespace Caustic
 
     Matrix4x4 Matrix4x4::RotationMatrix(float ax, float ay, float az)
     {
-        float ca = cos(ax);
-        float sa = sin(ax);
+        float ca = (float)cos(ax);
+        float sa = (float)sin(ax);
         Matrix4x4 xrot(
             1.0f, 0.0f, 0.0f, 0.0f,
             0.0f, ca, -sa, 0.0f,
             0.0f, sa, ca, 0.0f,
             0.0f, 0.0f, 0.0f, 1.0f
         );
-        ca = cos(ay);
-        sa = sin(ay);
+        ca = (float)cos(ay);
+        sa = (float)sin(ay);
         Matrix4x4 yrot(
             ca, 0.0f, -sa, 0.0f,
             0.0f, 1.0f, 0.0f, 0.0f,
             sa, 0.0f, ca, 0.0f,
             0.0f, 0.0f, 0.0f, 1.0f
         );
-        ca = cos(az);
-        sa = sin(az);
+        ca = (float)cos(az);
+        sa = (float)sin(az);
         Matrix4x4 zrot(
             ca, -sa, 0.0f, 0.0f,
             sa, ca, 0.0f, 0.0f,

@@ -109,8 +109,9 @@ namespace Caustic
         virtual CRefObj<IRenderCtx> GetRenderCtx() override;
         virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) override;
         virtual CRefObj<IGraphics> GetGraphics() override { return CRefObj<IGraphics>(nullptr); }
-        virtual void PushShadowmapRT(int whichShadowmap, bool clear, Vector3& lightPos) override;
+        virtual void PushShadowmapRT(int whichShadowmap, int lightMapIndex, Vector3& lightPos, Vector3& lightDir) override;
         virtual void PopShadowmapRT() override;
-        virtual void SelectShadowmap(int whichShadowmap) override {}
+        virtual void SelectShadowmap(int whichShadowmap, int lightMapIndex, IShader* pShader) override {}
+        virtual CRefObj<ITexture> GetShadowmapTexture(int whichShadowmap) override;
     };
 }

@@ -132,9 +132,9 @@ namespace Caustic
     // Method: CreateDirectionalLight
     // See <ICausticFactory::CreateDirectionalLight>
     //**********************************************************************
-    CRefObj<IDirectionalLight> CCausticFactory::CreateDirectionalLight(Vector3& pos, FRGBColor& color, float intensity)
+    CRefObj<IDirectionalLight> CCausticFactory::CreateDirectionalLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity)
     {
-        return Caustic::CreateDirectionalLight(pos, color, intensity);
+        return Caustic::CreateDirectionalLight(pos, dir, color, intensity);
     }
 
     //**********************************************************************

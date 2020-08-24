@@ -31,7 +31,8 @@ namespace Caustic
 		Renderable,
 		LightCollection,
 		Material,
-		ComputeShaderElem
+		ComputeShaderElem,
+		Overlay2D
 	};
 
 	//**********************************************************************
@@ -157,6 +158,33 @@ namespace Caustic
 		// Returns the bounding box of this scene element
 		//**********************************************************************
 		virtual void GetBBox(BBox3 *pBBox) = 0;
+	};
+
+	//**********************************************************************
+	// Interface: ISceneOverlay2DElem
+	// Defines a overlay element in our scene graph. Overlays are used
+	// to draw 2D graphics in screen coordinates (e.g. for UI elements).
+	//**********************************************************************
+	struct ISceneOverlay2DElem : public ISceneElem
+	{
+		//**********************************************************************
+		// Method: SetRect
+		// Sets the screen extents for the element
+		//**********************************************************************
+		virtual void SetRect(BBox2& bbox) = 0;
+
+		//**********************************************************************
+		// Method: SetTexture
+		// Sets the texture to render as the 2D overlay
+		//**********************************************************************
+		virtual void SetTexture(ITexture* pTexture) = 0;
+
+		//**********************************************************************
+		// Method: SetShader
+		// Sets a shader to render the 2D overlay with. This is an override. If
+		// it isn't called the default shader is used.
+		//**********************************************************************
+		virtual void SetShader(IShader* pShader) = 0;
 	};
 
 	//**********************************************************************

@@ -52,6 +52,10 @@ namespace Caustic
     const int c_PassLast = c_PassEnvironment;
     const int c_PassAllPasses = (1 << c_PassLast) - 1;
 
+    // Each shadow map will support up to 16 lights in a single map.
+    // For instance, the hires map is 8096x8096. We divide this map
+    // into 16 2048x2048 shadow maps.
+    const int c_MaxLights = 16;
     const int c_HiResShadowMap = 0;
     const int c_MidResShadowMap = 1;
     const int c_LowResShadowMap = 2;
@@ -160,10 +164,10 @@ namespace Caustic
         //
         // Parameters:
         // whichShadowmap - constant indicating which shadow map to use (c_HiResShadow, ...)
-        // clear - whether the current shadow map should be cleared
         // lightPos - position of the light to render from
+        // lightDir - direction of the light to render from
         //**********************************************************************
-        virtual void PushShadowmapRT(int whichShadowmap, bool clear, Vector3& lightPos) = 0;
+        virtual void PushShadowmapRT(int whichShadowmap, int lightMapIndex, Vector3& lightPos, Vector3& lightDir) = 0;
 
         //**********************************************************************
         // Method: PopShadowmapRT
@@ -176,9 +180,20 @@ namespace Caustic
         // Selects which shadow map to use during shading
         //
         // Parameters:
+        // whichShadowMap - constant indicating which shadow map to use (c_HiResShadow, ...)
+        // lightMapIndex - which light is this for?
+        // pShader - shader to use selected shadow map
+        //**********************************************************************
+        virtual void SelectShadowmap(int whichShadowMap, int lightMapIndex, IShader *pShader) = 0;
+
+        //**********************************************************************
+        // Method: GetShadowmapTexture
+        // Returns the shadow map as a texture
+        //
+        // Parameters:
         // whichShadowmap - constant indicating which shadow map to use (c_HiResShadow, ...)
         //**********************************************************************
-        virtual void SelectShadowmap(int whichShadowmap) = 0;
+        virtual CRefObj<ITexture> GetShadowmapTexture(int whichShadowMap) = 0;
     };
 
     //**********************************************************************

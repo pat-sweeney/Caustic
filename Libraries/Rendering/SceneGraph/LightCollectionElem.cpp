@@ -49,11 +49,14 @@ namespace Caustic
             pSceneCtx->m_lights.push_back(m_lights[i]);
         if (pRenderCtx->GetCurrentPass() == Caustic::c_PassShadow)
         {
+            int totalLights = 0;
             for (int i = 0; i < (int)m_lights.size(); i++)
             {
-                if (m_lights[i]->GetCastsShadows())
+                if (totalLights >= c_MaxLights)
+                    break;
+                if (m_lights[i]->GetCastsShadows() && m_lights[i]->GetType() == ELightType::DirectionalLight)
                 {
-                    pRenderer->PushShadowmapRT(c_HiResShadowMap, false, m_lights[i]->GetPosition());
+                    pRenderer->PushShadowmapRT(c_HiResShadowMap, totalLights++, m_lights[i]->GetPosition(), m_lights[i]->GetDirection());
                     CSceneGroupElem::Render(pRenderer, pRenderCtx, pSceneCtx);
                     pRenderer->PopShadowmapRT();
                 }

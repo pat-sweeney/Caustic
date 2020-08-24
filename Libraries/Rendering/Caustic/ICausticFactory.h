@@ -85,6 +85,8 @@ namespace Caustic
 		//
 		// Parameters:
 		// pos - position of light source in world coordinates
+		// color - color of light
+		// intensity - light's intensity
 		//
 		// Returns:
 		// Returns the point light source
@@ -115,11 +117,14 @@ namespace Caustic
 		//
 		// Parameters:
 		// pos - position of light source in world coordinates
+		// dir - direction of light source in world coordinates
+		// color - color of light
+		// intensity - light's intensity
 		//
 		// Returns:
-		// Returns the point light source
+		// Returns the directional light source
 		//**********************************************************************
-		virtual CRefObj<IDirectionalLight> CreateDirectionalLight(Vector3& pos, FRGBColor& color, float intensity) = 0;
+		virtual CRefObj<IDirectionalLight> CreateDirectionalLight(Vector3 &pos, Vector3& dir, FRGBColor& color, float intensity) = 0;
 
 		//**********************************************************************
 		// Method: CreateTrackball

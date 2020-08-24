@@ -13,7 +13,6 @@ struct VSInput
 struct VSOutput
 {
     float4 posPS : SV_POSITION; // Position of vertex in projected coordinates
-    float depth : TEXCOORD0;
 };
 
 cbuffer VS_CONSTANT_BUFFER : register(b0)

@@ -6,6 +6,7 @@
 #include "stdafx.h"
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\CausticFactory.h"
+#include "Texture.h"
 #include "Renderer.h"
 #include "Renderable.h"
 #include "ShaderInfo.h"
@@ -229,10 +230,10 @@ namespace Caustic
         ID3D11DeviceContext *pContext = GetContext();
         pContext->IASetVertexBuffers(0, 1, &m_spLineVB.p, &vertexSize, &offset);
         Matrix m;
-        m.x[0] = p2.x - p1.x;    m.x[4] = 0.0f;            m.x[8] = 0.0f;            m.x[12] = 0.0f;
-        m.x[1] = 0.0f;            m.x[5] = p2.y - p1.y;    m.x[9] = 0.0f;            m.x[13] = 0.0f;
-        m.x[2] = 0.0f;            m.x[6] = 0.0f;            m.x[10] = p2.z - p1.z;    m.x[14] = 0.0f;
-        m.x[3] = p1.x;            m.x[7] = p1.y;            m.x[11] = p1.z;            m.x[15] = 1.0f;
+        m.x[0] = p2.x - p1.x;    m.x[4] = 0.0f;           m.x[8] = 0.0f;           m.x[12] = 0.0f;
+        m.x[1] = 0.0f;           m.x[5] = p2.y - p1.y;    m.x[9] = 0.0f;           m.x[13] = 0.0f;
+        m.x[2] = 0.0f;           m.x[6] = 0.0f;           m.x[10] = p2.z - p1.z;   m.x[14] = 0.0f;
+        m.x[3] = p1.x;           m.x[7] = p1.y;           m.x[11] = p1.z;          m.x[15] = 1.0f;
         m_spLineShader->SetVSParam(L"endpoints", std::any(m));
         Float4 color(clr.x, clr.y, clr.z, clr.w);
         m_spLineShader->SetPSParam(L"color", std::any(color));
@@ -269,11 +270,17 @@ namespace Caustic
         // Render any single objects
         if (pass == c_PassShadow)
         {
+            int totalLights = 0; // We will only take the first 16 lights
             for (int i = 0; i < (int)m_lights.size(); i++)
             {
+                if (totalLights >= c_MaxLights)
+                    break;
+                if (m_lights[i]->GetType() != ELightType::DirectionalLight)
+                    continue; // For the moment skip all light types except directional
+
                 if (m_lights[i]->GetCastsShadows())
                 {
-                    PushShadowmapRT(c_HiResShadowMap, true, m_lights[i]->GetPosition());
+                    PushShadowmapRT(c_HiResShadowMap, totalLights++, m_lights[i]->GetPosition(), m_lights[i]->GetDirection());
                     for (size_t i = 0; i < m_singleObjs.size(); i++)
                     {
                         if (m_singleObjs[i].m_passes & (1 << pass))
@@ -294,27 +301,88 @@ namespace Caustic
     }
     
     //**********************************************************************
-    void CRenderer::PushShadowmapRT(int whichShadowMap, bool clear, Vector3& lightPos)
+    CRefObj<ITexture> CRenderer::GetShadowmapTexture(int whichShadowMap)
+    {
+        return CRefObj<ITexture>(new CTexture(m_spShadowTexture[whichShadowMap], m_spShadowSRView[whichShadowMap]));
+    }
+
+    //**********************************************************************
+    void CRenderer::SetShadowmapViewport(int whichShadowMap, int lightMapIndex)
+    {
+        int lx = lightMapIndex % 4;
+        int ly = lightMapIndex / 4;
+        ZeroMemory(&m_viewport, sizeof(m_viewport));
+        m_viewport.TopLeftX = float(lx * m_shadowMapWidth[whichShadowMap] / 4);
+        m_viewport.TopLeftY = float(ly * m_shadowMapHeight[whichShadowMap] / 4);
+        m_viewport.Width = (float)(m_shadowMapWidth[whichShadowMap] / 4);
+        m_viewport.Height = (float)(m_shadowMapHeight[whichShadowMap] / 4);
+        m_viewport.MinDepth = 0.0f;
+        m_viewport.MaxDepth = 1.0f;
+        m_spContext->RSSetViewports(1, &m_viewport);
+    }
+
+    //**********************************************************************
+    // The total size of our shadow map is 8192x8192. This texture is further
+    // divided into 3 sections of hires, midres, and lowres shadow maps.
+    // There are 8 hi-res maps, 
+    //      2048         1024    1024
+    // +---------------+-------+-------+
+    // |               |       |       |
+    // |               |   2   |   3   |
+    // |               |       |       |
+    // |       1       +-------+-------+
+    // |               |       |       |
+    // |               |   4   |   5   |
+    // |               |       |       |
+    // +-------+-------+-------+---+---+
+    // |       |       |   |   |   |   |
+    // |   6   |   7   +---+---+---+---+
+    // |       |       |   |   |   |   |
+    // |-------+-------+---+---+---+---+
+    // |       |       |   |   |   |   |
+    // |   8   |   9   |---+---+---+---+
+    // |       |       |   |   |   |   |
+    // +-------+-------+---+---+---+---+
+    void CRenderer::SelectShadowmap(int whichShadowMap, int lightMapIndex, IShader *pShader)
+    {
+        pShader->SetPSParam(L"shadowMapTexture", std::any(m_spShadowTexture[whichShadowMap]));
+        int lx = lightMapIndex % 4;
+        int ly = lightMapIndex / 4;
+        Float4 bounds(
+            float(lx * m_shadowMapWidth[whichShadowMap] / 4),
+            float(ly * m_shadowMapHeight[whichShadowMap] / 4),
+            (float)(m_shadowMapWidth[whichShadowMap] / 4),
+            (float)(m_shadowMapHeight[whichShadowMap] / 4)
+            );
+        pShader->SetPSParam(L"shadowMapBounds", std::any(bounds));
+    }
+
+    //**********************************************************************
+    void CRenderer::PushShadowmapRT(int whichShadowMap, int lightMapIndex, Vector3& lightPos, Vector3 &lightDir)
     {
         ShadowMapRenderState rs;
         m_spContext->OMGetRenderTargets(1, &rs.m_spOldRT, &rs.m_spOldStencil);
         rs.m_spOldCamera = m_spCamera;
+        rs.m_viewport = m_viewport;
         m_cameras.push(rs);
-        m_spContext->OMSetRenderTargets(1, &m_spShadowRTView[whichShadowMap].p, nullptr);
+        m_spContext->OMSetRenderTargets(0, nullptr, m_spShadowMapStencilView[whichShadowMap].p);
         FLOAT bgClr[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-        //m_spContext->ClearDepthStencilView(m_spStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+        m_spContext->ClearDepthStencilView(m_spShadowMapStencilView[whichShadowMap], D3D11_CLEAR_DEPTH, 1.0f, 0);
+
         // Reset the camera to be from the lights perspective
         CRefObj<ICamera> spCamera = CreateCamera(true);
-        spCamera->SetPosition(lightPos, Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f));
+        spCamera->SetPosition(lightPos, lightDir, Vector3(0.0f, 1.0f, 0.0f));
         this->SetCamera(spCamera);
+        SetShadowmapViewport(whichShadowMap, lightMapIndex);
     }
     
-    //**********************************************************************
     void CRenderer::PopShadowmapRT()
     {
         // Restore default render targets
         ShadowMapRenderState rs = m_cameras.top();
         this->SetCamera(rs.m_spOldCamera);
+        m_viewport = rs.m_viewport;
+        m_spContext->RSSetViewports(1, &m_viewport);
         m_cameras.pop();
         m_spContext->OMSetRenderTargets(1, &rs.m_spOldRT.p, rs.m_spOldStencil);
     }
@@ -326,11 +394,14 @@ namespace Caustic
     //**********************************************************************
     void CRenderer::RenderScene(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback)
     {
+#ifdef _DEBUG
+        m_spRenderCtx->SetDebugFlags(RenderCtxFlags::c_DisplayWorldAxis);
+#endif
         if (m_spRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayWorldAxis)
         {
-            DrawLine(Vector3(0.0f, 0.0f, 0.0f), Vector3(10.0f, 0.0f, 0.0f), Vector4(1.0f, 0.0f, 0.0f, 1.0f));
-            DrawLine(Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 10.0f, 0.0f), Vector4(0.0f, 1.0f, 0.0f, 1.0f));
-            DrawLine(Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 10.0f), Vector4(0.0f, 0.0f, 1.0f, 1.0f));
+            DrawLine(Vector3(0.0f, 0.0f, 0.0f), Vector3(100.0f, 0.0f, 0.0f), Vector4(1.0f, 0.0f, 0.0f, 1.0f));
+            DrawLine(Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 100.0f, 0.0f), Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+            DrawLine(Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 100.0f), Vector4(0.0f, 0.0f, 1.0f, 1.0f));
         }
 
         if (m_spRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayLightDir &&
@@ -346,7 +417,9 @@ namespace Caustic
             pCtx->m_currentPass = pass;
             pCtx->m_passBlendable = true;
             if (pass == c_PassOpaque)
+            {
                 DrawSceneObjects(pass, renderCallback);
+            }
 #ifdef SUPPORT_OBJID
             else if (pass == c_PassObjID)
             {
@@ -523,13 +596,21 @@ namespace Caustic
                 shadowMapHeight = 512;
                 break;
             }
-            CD3D11_TEXTURE2D_DESC texObjID(DXGI_FORMAT_R32_FLOAT, shadowMapWidth, shadowMapHeight, 1, 1, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
-            CT(m_spDevice->CreateTexture2D(&texObjID, NULL, &m_spShadowTexture[i]));
-            D3D11_RENDER_TARGET_VIEW_DESC rtdesc;
-            rtdesc.Format = texObjID.Format;
-            rtdesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-            rtdesc.Texture2D.MipSlice = 0;
-            CT(m_spDevice->CreateRenderTargetView(m_spShadowTexture[i], &rtdesc, &m_spShadowRTView[i]));
+            m_shadowMapWidth[i] = shadowMapWidth;
+            m_shadowMapHeight[i] = shadowMapHeight;
+
+            // Create shadow map texture
+            CD3D11_TEXTURE2D_DESC texDesc(/*DXGI_FORMAT_R32_FLOAT*/DXGI_FORMAT_R32_TYPELESS, shadowMapWidth, shadowMapHeight,
+                1, 1, D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE);
+            CT(m_spDevice->CreateTexture2D(&texDesc, NULL, &m_spShadowTexture[i]));
+
+            // Create the view onto shadow map texture for use as depth buffer
+            CD3D11_DEPTH_STENCIL_VIEW_DESC stencilDesc(D3D11_DSV_DIMENSION_TEXTURE2D, DXGI_FORMAT_D32_FLOAT);
+            CT(m_spDevice->CreateDepthStencilView(m_spShadowTexture[i], &stencilDesc, &m_spShadowMapStencilView[i]));
+
+            // Create the view onto shadow map texture for use as shader resource
+            CD3D11_SHADER_RESOURCE_VIEW_DESC srvDesc(D3D11_SRV_DIMENSION_TEXTURE2D, DXGI_FORMAT_R32_FLOAT);
+            CT(m_spDevice->CreateShaderResourceView(m_spShadowTexture[i], &srvDesc, &m_spShadowSRView[i]));
         }
 
         // Create depth buffer
@@ -542,15 +623,14 @@ namespace Caustic
 
         RECT rect;
         ::GetClientRect(hwnd, &rect);
-        D3D11_VIEWPORT viewport;
-        ZeroMemory(&viewport, sizeof(viewport));
-        viewport.TopLeftX = 0;
-        viewport.TopLeftY = 0;
-        viewport.Width = (float)(rect.right - rect.left);
-        viewport.Height = (float)(rect.bottom - rect.top);
-        viewport.MinDepth = 0.0f;
-        viewport.MaxDepth = 1.0f;
-        m_spContext->RSSetViewports(1, &viewport);
+        ZeroMemory(&m_viewport, sizeof(m_viewport));
+        m_viewport.TopLeftX = 0;
+        m_viewport.TopLeftY = 0;
+        m_viewport.Width = (float)(rect.right - rect.left);
+        m_viewport.Height = (float)(rect.bottom - rect.top);
+        m_viewport.MinDepth = 0.0f;
+        m_viewport.MaxDepth = 1.0f;
+        m_spContext->RSSetViewports(1, &m_viewport);
     }
 
     //**********************************************************************

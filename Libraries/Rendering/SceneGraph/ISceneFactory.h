@@ -56,6 +56,15 @@ namespace Caustic
 		virtual CRefObj<ISceneCustomRenderElem> CreateCustomRenderElem(std::function<void(IRenderer* pRender, IRenderCtx* pCtx, SceneCtx* pSceneCtx)> clientCallback) = 0;
 
 		//**********************************************************************
+		// Method: CreateOverlay2DElem
+		// Create a overlay element used to render textures in screen space (e.g. UI)
+		//
+		// Parameters:
+		// pShader - override shader to use. If nullptr then default shader is used.
+		//**********************************************************************
+		virtual CRefObj<ISceneOverlay2DElem> CreateOverlay2DElem(IShader* pShader = nullptr) = 0;
+
+		//**********************************************************************
 		// Method: CreateSceneGraph
 		// Creates a new scene graph
 		//**********************************************************************

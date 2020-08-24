@@ -51,6 +51,7 @@ namespace Caustic
     // Creates a directional light
     //
     // Parameters:
+    // pos - position of light in world coordinates
     // dir - direction light is pointing in world coordinates
     // color - color of light
     // intensity - intensity of light
@@ -58,5 +59,5 @@ namespace Caustic
     // Header:
     // [Link:Rendering/Caustic/IPointLight.h]
     //**********************************************************************
-    CAUSTICAPI CRefObj<IDirectionalLight> CreateDirectionalLight(Vector3& dir, FRGBColor& color, float intensity = 1000.0f, bool casts = true);
+    CAUSTICAPI CRefObj<IDirectionalLight> CreateDirectionalLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity = 1000.0f, bool casts = true);
 }
