@@ -8,17 +8,13 @@
 #include "Rendering\Caustic\CausticFactory.h"
 #include "MeshElem.h"
 #include <string>
+#include <d3d11_4.h>
 
 namespace Caustic
 {
     CAUSTICAPI CRefObj<ISceneMeshElem> CreateMeshElem()
     {
         return CRefObj<ISceneMeshElem>(new CSceneMeshElem());
-    }
-
-    std::wstring &CSceneMeshElem::Name()
-    {
-        return CSceneElem::m_Name;
     }
 
     void CSceneElem::DrawSelected(IRenderer *pRenderer, ISceneElem *pElem, SceneCtx *pSceneCtx)
@@ -83,6 +79,11 @@ namespace Caustic
 
     void CSceneMeshElem::Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx)
     {
+        if (pSceneCtx->m_CurrentPass == c_PassShadow && !pSceneCtx->m_inShadowLightGroup)
+            return; // We are in the middle of a shadow pass, but we are not under any lights
+        if (pSceneCtx->m_CurrentPass == c_PassTransparent && !pSceneCtx->m_spCurrentMaterial->GetIsTransparent())
+            return; // In transparent pass but current material is not transparent
+
         if (m_prerenderCallback)
             if (!m_prerenderCallback(pRenderCtx->GetCurrentPass()))
                 return;
@@ -103,7 +104,19 @@ namespace Caustic
             pSceneCtx->m_Transform.v[2][0], pSceneCtx->m_Transform.v[2][1], pSceneCtx->m_Transform.v[2][2], pSceneCtx->m_Transform.v[2][3],
             pSceneCtx->m_Transform.v[3][0], pSceneCtx->m_Transform.v[3][1], pSceneCtx->m_Transform.v[3][2], pSceneCtx->m_Transform.v[3][3]
         );
+#ifdef _DEBUG
+        CComPtr<ID3D11DeviceContext4> spCtx;
+        if (!GetName().empty())
+        {
+            pRenderer->GetContext()->QueryInterface<ID3D11DeviceContext4>(&spCtx);
+            spCtx->BeginEventInt(GetName().c_str(), 0);
+        }
+#endif
         m_spRenderMesh->Render(pRenderer, (IRenderMaterial*)nullptr, nullptr, pSceneCtx->m_lights, &xm);
+#ifdef _DEBUG
+        if (spCtx)
+            spCtx->EndEvent();
+#endif
         if (m_postrenderCallback)
             m_postrenderCallback(pRenderCtx->GetCurrentPass());
     }

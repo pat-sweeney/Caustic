@@ -14,6 +14,7 @@
 #include <any>
 #include "Base\Core\CritSec.h"
 #include <d3d11.h>
+#include <d3d11_4.h>
 #include <d3dcommon.h>
 #include <d3dcompiler.h>
 #include <algorithm>
@@ -414,11 +415,21 @@ namespace Caustic
         for (uint32 pass = c_PassFirst; pass <= c_PassLast; pass++)
         {
             CRenderCtx *pCtx = (CRenderCtx*)m_spRenderCtx.p;
+#ifdef _DEBUG
+            CComPtr<ID3D11DeviceContext2> spCtx2;
+            CT(m_spContext->QueryInterface<ID3D11DeviceContext2>(&spCtx2));
+#endif
             pCtx->m_currentPass = pass;
             pCtx->m_passBlendable = true;
             if (pass == c_PassOpaque)
             {
+#ifdef _DEBUG
+                spCtx2->BeginEventInt(L"OpaquePass", 0);
+#endif
                 DrawSceneObjects(pass, renderCallback);
+#ifdef _DEBUG
+                spCtx2->EndEvent();
+#endif
             }
 #ifdef SUPPORT_OBJID
             else if (pass == c_PassObjID)
@@ -433,10 +444,19 @@ namespace Caustic
 #endif // SUPPORT_OBJID
             else if (pass == c_PassShadow)
             {
+#ifdef _DEBUG
+                spCtx2->BeginEventInt(L"ShadowPass", 0);
+#endif
                 DrawSceneObjects(pass, renderCallback);
+#ifdef _DEBUG
+                spCtx2->EndEvent();
+#endif
             }
             else if (pass == c_PassTransparent)
             {
+#ifdef _DEBUG
+                spCtx2->BeginEventInt(L"TransparentPass", 0);
+#endif
                 std::vector<int> order;
                 order.resize(m_singleObjs.size());
                 std::sort(m_singleObjs.begin(), m_singleObjs.end(),
@@ -452,6 +472,9 @@ namespace Caustic
                     }
                 );
                 DrawSceneObjects(pass, renderCallback);
+#ifdef _DEBUG
+                spCtx2->EndEvent();
+#endif
             }
 
 #ifdef SUPPORT_OBJID

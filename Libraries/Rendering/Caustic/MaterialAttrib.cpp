@@ -75,6 +75,8 @@ namespace Caustic
     
     void CMaterialAttrib::SetScalar(const wchar_t *pName, float s)
     {
+        if (s < 1.0f && _wcsicmp(pName, L"alpha") == 0)
+            SetIsTransparent(true);
         std::map<std::wstring, float>::iterator it = m_scalars.find(pName);
         if (it != m_scalars.end())
             it->second = s;
@@ -130,16 +132,19 @@ namespace Caustic
         for (auto x : m_colors)
             func(x.first.c_str(), x.second);
     }
+
     void CMaterialAttrib::EnumerateScalars(std::function<void(const wchar_t* pName, float s)> func)
     {
         for (auto x : m_scalars)
             func(x.first.c_str(), x.second);
     }
+
     void CMaterialAttrib::EnumerateTextures(std::function<void(const wchar_t*pName, IImage *pImage, EShaderAccess access)> func)
     {
         for (auto x : m_textures)
             func(x.first.c_str(), x.second.first, x.second.second);
     }
+
     //**********************************************************************
     // Method: Load
     // Loads an IMaterial object from the specified stream

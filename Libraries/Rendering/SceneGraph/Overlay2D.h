@@ -47,7 +47,8 @@ namespace Caustic
 		// ISceneElem
 		//**********************************************************************
 		virtual ESceneElemType GetType() override { return ESceneElemType::Overlay2D; }
-		virtual std::wstring& Name() override { return CSceneElem::Name(); }
+		virtual std::wstring GetName() override { return CSceneElem::GetName(); }
+		virtual void SetName(const wchar_t* name) override { return CSceneElem::SetName(name); }
 		virtual void SetPreRenderCallback(std::function<bool(int pass)> prerenderCallback) override
 		{
 			CSceneElem::SetPreRenderCallback(prerenderCallback);

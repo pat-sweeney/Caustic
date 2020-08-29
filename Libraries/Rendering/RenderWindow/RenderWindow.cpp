@@ -39,6 +39,7 @@ namespace Caustic
                 else
                 {
                     SceneCtx sceneCtx;
+                    sceneCtx.m_CurrentPass = pass;
                     m_spSceneGraph->Render(pRenderer, pRenderCtx, &sceneCtx);
                 }
         });

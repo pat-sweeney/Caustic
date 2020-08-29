@@ -57,7 +57,10 @@ namespace Caustic
                 if (m_lights[i]->GetCastsShadows() && m_lights[i]->GetType() == ELightType::DirectionalLight)
                 {
                     pRenderer->PushShadowmapRT(c_HiResShadowMap, totalLights++, m_lights[i]->GetPosition(), m_lights[i]->GetDirection());
+                    bool inShadowLightGroup = pSceneCtx->m_inShadowLightGroup;
+                    pSceneCtx->m_inShadowLightGroup = true;
                     CSceneGroupElem::Render(pRenderer, pRenderCtx, pSceneCtx);
+                    pSceneCtx->m_inShadowLightGroup = inShadowLightGroup;
                     pRenderer->PopShadowmapRT();
                 }
             }

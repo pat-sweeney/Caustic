@@ -65,10 +65,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_MESHVIEWER));
-
     MSG msg;
-
-    // Main message loop:
     while (GetMessage(&msg, nullptr, 0, 0))
     {
         if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
@@ -216,6 +213,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                         // Add plane to scene
                         spMeshElem = spSceneFactory->CreateMeshElem();
                         spMeshElem->SetMesh(CreateGrid(20));
+                        spMeshElem->SetName(L"GridMesh");
                         spShader = spRenderWindow->GetRenderer()->GetShaderMgr()->FindShader(L"Textured");
                         spMaterialElem = spSceneFactory->CreateMaterialElem();
                         spMaterial = spCausticFactory->CreateMaterialAttrib();
@@ -226,7 +224,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                         spMaterialElem->SetMaterial(spMaterial);
                         spMaterialElem->SetShader(spShader);
                         spMaterialElem->AddChild(spMeshElem);
-                        Matrix4x4 mat = Matrix4x4::RotationMatrix(Caustic::DegreesToRadians(90.0f), 0.0f, 0.0f) * Matrix4x4::ScalingMatrix(20.0f, 20.0f, 20.0f) * Matrix4x4::TranslationMatrix(0.0f, -10.0f, 0.0f);
+                        Matrix4x4 mat = Matrix4x4::RotationMatrix(
+                            Caustic::DegreesToRadians(90.0f), 0.0f, 0.0f) * 
+                            Matrix4x4::ScalingMatrix(250.0f, 250.0f, 250.0f) * 
+                            Matrix4x4::TranslationMatrix(0.0f, -10.0f, 0.0f);
                         spMaterialElem->SetTransform(mat);
                         spSceneGraph->AddChild(spMaterialElem);
 

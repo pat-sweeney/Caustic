@@ -29,9 +29,11 @@ namespace Caustic
         std::map<std::wstring, std::pair<CRefObj<IImage>, EShaderAccess>> m_textures;
         static CRefObj<IImage> s_spDefaultTexture;
         int m_materialID;                 // Defines the material ID associated with this material
+        bool m_isTransparent;
 
         CMaterialAttrib() :
-            m_materialID(0)
+            m_materialID(0),
+            m_isTransparent(false)
         {
         }
 
@@ -44,6 +46,8 @@ namespace Caustic
         //**********************************************************************
         // IMaterialAttrib
         //**********************************************************************
+        virtual bool GetIsTransparent() override { return m_isTransparent; }
+        virtual void SetIsTransparent(bool isTransparent) override { m_isTransparent = isTransparent; }
         virtual FRGBColor GetColor(const wchar_t* pName) override;
         virtual void SetColor(const wchar_t *pName, FRGBColor& v) override;
         virtual float GetScalar(const wchar_t* pName) override;

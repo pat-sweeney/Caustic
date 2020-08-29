@@ -20,11 +20,6 @@ namespace Caustic
         return CRefObj<ISceneMaterialElem>(spMaterialElem.release());
     }
 
-    std::wstring &CSceneMaterialElem::Name()
-    {
-        return CSceneElem::m_Name;
-    }
-
     void CSceneMaterialElem::Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx)
     {
         if (m_prerenderCallback)

@@ -18,11 +18,6 @@ namespace Caustic
         return CRefObj<ISceneGroupElem>(new CSceneGroupElem());
     }
 
-    std::wstring &CSceneGroupElem::Name()
-    {
-        return m_Name;
-    }
-
     void CSceneGroupElem::Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx)
     {
         if (m_prerenderCallback)

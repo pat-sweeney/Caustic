@@ -55,7 +55,7 @@ namespace Caustic
     // Each shadow map will support up to 16 lights in a single map.
     // For instance, the hires map is 8096x8096. We divide this map
     // into 16 2048x2048 shadow maps.
-    const int c_MaxLights = 16;
+    const int c_MaxLights = 4;
     const int c_HiResShadowMap = 0;
     const int c_MidResShadowMap = 1;
     const int c_LowResShadowMap = 2;

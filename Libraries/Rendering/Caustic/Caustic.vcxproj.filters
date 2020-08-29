@@ -254,6 +254,9 @@
     <CustomBuild Include="Textured.xml">
       <Filter>Source Files\Shaders\Definitions</Filter>
     </CustomBuild>
+    <CustomBuild Include="TexturedWithShadow.xml">
+      <Filter>Source Files\Shaders\Definitions</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <None Include="Brighten.cs">
@@ -299,6 +302,12 @@
       <Filter>Source Files\Shaders</Filter>
     </None>
     <None Include="ShadowMap.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="TexturedWithShadow.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="TexturedWithShadow.vs">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>

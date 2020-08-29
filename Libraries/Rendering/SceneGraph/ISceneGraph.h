@@ -41,6 +41,16 @@ namespace Caustic
 	//**********************************************************************
 	struct SceneCtx
 	{
+		SceneCtx()
+		{
+			m_Transform = Matrix4x4(1.0f, 0.0f, 0.0f, 0.0f,
+				0.0f, 1.0f, 0.0f, 0.0f,
+				0.0f, 0.0f, 1.0f, 0.0f,
+				0.0f, 0.0f, 0.0f, 1.0f);
+			m_CurrentPass = c_PassFirst;
+			m_inShadowLightGroup = false;
+		}
+		
 		//**********************************************************************
 		// Property: m_spDevice
 		// Defines our current rendering device
@@ -64,6 +74,13 @@ namespace Caustic
 		// Defines which render pass we are in
 		//**********************************************************************
 		int m_CurrentPass;
+
+		//**********************************************************************
+		// Property: m_inShadowLightGroup
+		// Indicates whether we are currently rendering a group of lights+children
+		// that cast shadows. Otherwise, during the shadow pass we will skip rendering.
+		//**********************************************************************
+		bool m_inShadowLightGroup;
 
 		//**********************************************************************
 		// Property: m_spCurrentMaterial
@@ -117,10 +134,22 @@ namespace Caustic
 		virtual ESceneElemType GetType() = 0;
 
 		//**********************************************************************
-		// Method: Name
+		// Method: GetName
 		// Returns the name of this scene element
+		//
+		// Returns:
+		// User-defined name for this element
 		//**********************************************************************
-		virtual std::wstring &Name() = 0;
+		virtual std::wstring GetName() = 0;
+
+		//**********************************************************************
+		// Method: SetName
+		// Sets the name of this scene element
+		//
+		// Parameters:
+		// name - user-defined name for this element
+		//**********************************************************************
+		virtual void SetName(const wchar_t *name) = 0;
 
 		//**********************************************************************
 		// Method: Name
