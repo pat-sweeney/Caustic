@@ -159,16 +159,16 @@ namespace Caustic
         std::vector<CRefObj<IGPUImageNode>> m_nodes; // List of interior graph nodes
         std::vector<CRefObj<IGPUImageSinkNode>> m_sinkNodes; // List of sink nodes (end of pipeline)
         std::vector<CRefObj<IGPUImageSourceNode>> m_sourceNodes; // List of source nodes (beginning of pipeline)
-        CRefObj<IGraphics> m_spGraphics;
+        CRefObj<IRenderer> m_spRenderer;
         CComPtr<ID3D11Buffer> m_spFullQuadVB;
         CComPtr<ID3D11Buffer> m_spFullQuadIB;
         
-        void Initialize(IGraphics *pGraphics);
+        void Initialize(IRenderer *pRenderer);
     public:
         CGPUPipeline()
         {
         }
-        friend void CreateGPUPipeline(IGraphics *pGraphics, IGPUPipeline **ppPipeline);
+        friend void CreateGPUPipeline(IRenderer *pRenderer, IGPUPipeline **ppPipeline);
 
         //**********************************************************************
         // IRefCount
@@ -179,7 +179,7 @@ namespace Caustic
         //**********************************************************************
         // IGPUPipeline
         //**********************************************************************
-        virtual void GetGraphics(IGraphics **ppGraphics) override;
+        virtual void GetGraphics(IRenderer **ppRenderer) override;
         virtual void RenderQuad(IShader *pShader) override;
         virtual void Process() override;
         virtual void CreateSourceNode(IImage *pImage, IGPUImageSourceNode **ppNewNode) override;

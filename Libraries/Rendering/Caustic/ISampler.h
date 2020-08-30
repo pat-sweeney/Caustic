@@ -78,11 +78,11 @@ namespace Caustic
         // Sets up the sampler for the current rendering
         //
         // Parameters:
-        // pGraphics - graphics device
+        // pRenderer - graphics device
         // slot - texture slot to which this sampler should be assigned
         // isPixelShader - is this sampler for a pixel or vertex shader?
         //**********************************************************************
-        virtual void Render(IGraphics *pGraphics, int slot, bool isPixelShader) = 0;
+        virtual void Render(IRenderer* pRenderer, int slot, bool isPixelShader) = 0;
 
         //**********************************************************************
         // Method: GetTexture
@@ -99,11 +99,11 @@ namespace Caustic
     // Creates a sampler. See <ISampler>
     //
     // Parameters:
-    // pGraphics - Renderer
+    // pRenderer - Renderer
     // pTexture - texture sampler is associated with
     //
     // Header:
     // [Link:Rendering/Caustic/ISampler.h]
     //**********************************************************************
-    CAUSTICAPI CRefObj<ISampler> CreateSampler(IGraphics* pGraphics, ITexture* pTexture);
+    CAUSTICAPI CRefObj<ISampler> CreateSampler(IRenderer* pRenderer, ITexture* pTexture);
 }

@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("rel",["Function"],[["Release",,[["CSceneGroupElem",,,,0,"File:Rendering/SceneGraph/GroupElem.h:CSceneGroupElem.Release","CClass:CSceneGroupElem:Release"],["IRefCount",,,,0,"File:Base/Core/IRefCount.h:IRefCount.Release","CClass:IRefCount:Release"]]]]);
+NDSearch.OnPrefixDataLoaded("rel",["Function"],[["Release",,[["IRefCount",,,,0,"File:Base/Core/IRefCount.h:IRefCount.Release","CClass:IRefCount:Release"]]]]);

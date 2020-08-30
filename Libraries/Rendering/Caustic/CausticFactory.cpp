@@ -84,15 +84,6 @@ namespace Caustic
 	}
 	
     //**********************************************************************
-    // Method: CreateGraphics
-    // See <ICausticFactory::CreateGraphics>
-    //**********************************************************************
-    CRefObj<IGraphics> CCausticFactory::CreateGraphics(HWND hwnd)
-	{
-		return Caustic::CreateGraphics(hwnd);
-	}
-
-    //**********************************************************************
     // Method: CreateRenderMesh
     // See <ICausticFactory::CreateRenderMesh>
     //**********************************************************************
@@ -168,9 +159,9 @@ namespace Caustic
     // Method: CreateRenderMaterial
     // See <ICausticFactory::CreateRenderMaterial>
     //**********************************************************************
-    CRefObj<IRenderMaterial> CCausticFactory::CreateRenderMaterial(IGraphics *pGraphics, IMaterialAttrib *pMaterialAttrib, IShader *pShader)
+    CRefObj<IRenderMaterial> CCausticFactory::CreateRenderMaterial(IRenderer *pRenderer, IMaterialAttrib *pMaterialAttrib, IShader *pShader)
 	{
-		return Caustic::CreateRenderMaterial(pGraphics, pMaterialAttrib, pShader);
+		return Caustic::CreateRenderMaterial(pRenderer, pMaterialAttrib, pShader);
 	}
 
     //**********************************************************************
@@ -186,9 +177,9 @@ namespace Caustic
     // Method: CreateSampler
     // See <ICausticFactory::CreateSampler>
     //**********************************************************************
-    CRefObj<ISampler> CCausticFactory::CreateSampler(IGraphics *pGraphics, ITexture *pTexture)
+    CRefObj<ISampler> CCausticFactory::CreateSampler(IRenderer *pRenderer, ITexture *pTexture)
 	{
-		return Caustic::CreateSampler(pGraphics, pTexture);
+		return Caustic::CreateSampler(pRenderer, pTexture);
 	}
 
     //**********************************************************************
@@ -204,54 +195,54 @@ namespace Caustic
     // Method: CreateTexture
     // See <ICausticFactory::CreateTexture>
     //**********************************************************************
-    CRefObj<ITexture> CCausticFactory::CreateTexture(IGraphics* pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags)
+    CRefObj<ITexture> CCausticFactory::CreateTexture(IRenderer* pRenderer, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags)
     {
-        return Caustic::CreateTexture(pGraphics, width, height, format, cpuFlags, bindFlags);
+        return Caustic::CreateTexture(pRenderer, width, height, format, cpuFlags, bindFlags);
     }
 
     //**********************************************************************
     // Method: CreateTexture
     // See <ICausticFactory::CreateTexture>
     //**********************************************************************
-    CRefObj<ITexture> CCausticFactory::CreateTexture(IGraphics* pGraphics, IImage* pImage, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags)
+    CRefObj<ITexture> CCausticFactory::CreateTexture(IRenderer* pRenderer, IImage* pImage, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags)
     {
-        return Caustic::CreateTexture(pGraphics, pImage, cpuFlags, bindFlags);
+        return Caustic::CreateTexture(pRenderer, pImage, cpuFlags, bindFlags);
     }
 
     //**********************************************************************
     // Method: CheckerboardTexture
     // See <ICausticFactory::CheckerboardTexture>
     //**********************************************************************
-    CRefObj<ITexture> CCausticFactory::CheckerboardTexture(IGraphics *pGraphics)
+    CRefObj<ITexture> CCausticFactory::CheckerboardTexture(IRenderer *pRenderer)
 	{
-		return Caustic::CheckerboardTexture(pGraphics);
+		return Caustic::CheckerboardTexture(pRenderer);
 	}
 
     //**********************************************************************
     // Method: LoadTexture
     // See <ICausticFactory::LoadTexture>
     //**********************************************************************
-    CRefObj<ITexture> CCausticFactory::LoadTexture(const wchar_t *pFilename, IGraphics *pGraphics)
+    CRefObj<ITexture> CCausticFactory::LoadTexture(const wchar_t *pFilename, IRenderer *pRenderer)
 	{
-		return Caustic::LoadTexture(pFilename, pGraphics);
+		return Caustic::LoadTexture(pFilename, pRenderer);
 	}
 
     //**********************************************************************
     // Method: LoadVideoTexture
     // See <ICausticFactory::LoadVideoTexture>
     //**********************************************************************
-    CRefObj<ITexture> CCausticFactory::LoadVideoTexture(const wchar_t* pFilename, IGraphics* pGraphics)
+    CRefObj<ITexture> CCausticFactory::LoadVideoTexture(const wchar_t* pFilename, IRenderer* pRenderer)
     {
-        return Caustic::LoadVideoTexture(pFilename, pGraphics);
+        return Caustic::LoadVideoTexture(pFilename, pRenderer);
     }
 
     //**********************************************************************
     // Method: VideoTextureFromWebcam
     // See <ICausticFactory::VideoTextureFromWebcam>
     //**********************************************************************
-    CRefObj<ITexture> CCausticFactory::VideoTextureFromWebcam(IGraphics* pGraphics)
+    CRefObj<ITexture> CCausticFactory::VideoTextureFromWebcam(IRenderer* pRenderer)
     {
-        return Caustic::VideoTextureFromWebcam(pGraphics);
+        return Caustic::VideoTextureFromWebcam(pRenderer);
     }
 
     //**********************************************************************

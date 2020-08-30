@@ -8,183 +8,183 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="Caustic"></a><a name="Topic390"></a><div class="CTopic TClass LC first">
+<a name="Caustic"></a><a name="Topic426"></a><div class="CTopic TClass LC first">
  <div class="CTitle">Caustic</div>
- <div class="NDClassPrototype" id="NDClassPrototype390"><div class="CPEntry TClass Current"><div class="CPModifiers"><span class="SHKeyword">namespace</span> </div><div class="CPName">Caustic</div></div></div>
+ <div class="NDClassPrototype" id="NDClassPrototype426"><div class="CPEntry TClass Current"><div class="CPModifiers"><span class="SHKeyword">namespace</span> </div><div class="CPName">Caustic</div></div></div>
 </div>
 
-<a name="EImageType"></a><a name="Topic391"></a><div class="CTopic TClass LC">
+<a name="EImageType"></a><a name="Topic427"></a><div class="CTopic TClass LC">
  <div class="CTitle">EImageType</div>
- <div class="NDClassPrototype" id="NDClassPrototype391"><div class="CPEntry TClass Current"><div class="CPModifiers"><span class="SHKeyword">enum</span></div><div class="CPName">EImageType</div></div></div>
+ <div class="NDClassPrototype" id="NDClassPrototype427"><div class="CPEntry TClass Current"><div class="CPModifiers"><span class="SHKeyword">enum</span></div><div class="CPName">EImageType</div></div></div>
  <div class="CBody"><p>Defines the types of images we currently support.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">Unknown</td><td class="CDLDefinition"><p>type is undefined</p></td></tr><tr><td class="CDLEntry">BW_1bpp</td><td class="CDLDefinition"><p>type is black/white image with 1 bit per pixel</p></td></tr><tr><td class="CDLEntry">Gray_8bpp</td><td class="CDLDefinition"><p>type is grayscale image with 8 bits per pixel</p></td></tr><tr><td class="CDLEntry">Gray_16bpp</td><td class="CDLDefinition"><p>type is grayscale image with 16 bits per pixel</p></td></tr><tr><td class="CDLEntry">RGB_24bpp</td><td class="CDLDefinition"><p>type is RGB image with 24 bits per pixel</p></td></tr><tr><td class="CDLEntry">RGBA_32bpp</td><td class="CDLDefinition"><p>type is RGBA image with 32 bits per pixel</p></td></tr><tr><td class="CDLEntry">RGBX_32bpp</td><td class="CDLDefinition"><p>type is RGBX image with 32 bits per pixel (X is ignored alpha)</p></td></tr><tr><td class="CDLEntry">Float_32bpp</td><td class="CDLDefinition"><p>type is floating point image</p></td></tr><tr><td class="CDLEntry">Float4_128bpp</td><td class="CDLDefinition"><p>type is floating point image with 4 channels</p></td></tr></table><div class="CHeading">Header</div><p><a href='../../../index.html#File:Imaging/Image/Image.h' target='_top'>Imaging/Image/Image.h</a></p></div>
 </div>
 
-<a name="IImageBase"></a><a name="Topic392"></a><div class="CTopic TInterface LC">
+<a name="IImageBase"></a><a name="Topic428"></a><div class="CTopic TInterface LC">
  <div class="CTitle">IImageBase</div>
  <div class="CBody"><p>Base interface shared across all image types</p><div class="CHeading">Header</div><p><a href='../../../index.html#File:Imaging/Image/Image.h' target='_top'>Imaging/Image/Image.h</a></p></div>
 </div>
 
-<a name="IImageBase.Functions"></a><a name="Topic393"></a><div class="CTopic TGroup LC">
+<a name="IImageBase.Functions"></a><a name="Topic429"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="IImageBase.GetImageType"></a><a name="Topic394"></a><div class="CTopic TFunction LC">
+<a name="IImageBase.GetImageType"></a><a name="Topic430"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetImageType</div>
- <div id="NDPrototype394" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <a href="../../../index.html#File:Imaging/Image/Image.h:EImageType" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,391);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >EImageType</a> GetImageType() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype430" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <a href="../../../index.html#File:Imaging/Image/Image.h:EImageType" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,427);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >EImageType</a> GetImageType() = <span class="SHNumber">0</span></div>
  <div class="CBody"><p>Returns the type of data stored in the image</p></div>
 </div>
 
-<a name="IImageBase.GetData"></a><a name="Topic395"></a><div class="CTopic TFunction LC">
+<a name="IImageBase.GetData"></a><a name="Topic431"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetData</div>
- <div id="NDPrototype395" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint8</span> *GetData() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype431" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint8</span> *GetData() = <span class="SHNumber">0</span></div>
  <div class="CBody"><p>Returns a pointer to the image data</p></div>
 </div>
 
-<a name="IImageBase.GetWidth"></a><a name="Topic396"></a><div class="CTopic TFunction LC">
+<a name="IImageBase.GetWidth"></a><a name="Topic432"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetWidth</div>
- <div id="NDPrototype396" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetWidth() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype432" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetWidth() = <span class="SHNumber">0</span></div>
  <div class="CBody"><p>Returns the image's width in pixels</p></div>
 </div>
 
-<a name="IImageBase.GetHeight"></a><a name="Topic397"></a><div class="CTopic TFunction LC">
+<a name="IImageBase.GetHeight"></a><a name="Topic433"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetHeight</div>
- <div id="NDPrototype397" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetHeight() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype433" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetHeight() = <span class="SHNumber">0</span></div>
  <div class="CBody"><p>Returns the image's height in pixels</p></div>
 </div>
 
-<a name="IImageBase.GetSubX"></a><a name="Topic398"></a><div class="CTopic TFunction LC">
+<a name="IImageBase.GetSubX"></a><a name="Topic434"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetSubX</div>
- <div id="NDPrototype398" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetSubX() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype434" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetSubX() = <span class="SHNumber">0</span></div>
  <div class="CBody"><p>Returns the X offset into our parent image (if this is a subimage)</p></div>
 </div>
 
-<a name="IImageBase.GetSubY"></a><a name="Topic399"></a><div class="CTopic TFunction LC">
+<a name="IImageBase.GetSubY"></a><a name="Topic435"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetSubY</div>
- <div id="NDPrototype399" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetSubY() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype435" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetSubY() = <span class="SHNumber">0</span></div>
  <div class="CBody"><p>Returns the Y offset into our parent image (if this is a subimage)</p></div>
 </div>
 
-<a name="IImageBase.GetBPP"></a><a name="Topic400"></a><div class="CTopic TFunction LC">
+<a name="IImageBase.GetBPP"></a><a name="Topic436"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetBPP</div>
- <div id="NDPrototype400" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetBPP() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype436" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetBPP() = <span class="SHNumber">0</span></div>
  <div class="CBody"><p>Returns the image's bites per pixel</p></div>
 </div>
 
-<a name="IImageBase.GetStride"></a><a name="Topic401"></a><div class="CTopic TFunction LC">
+<a name="IImageBase.GetStride"></a><a name="Topic437"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetStride</div>
- <div id="NDPrototype401" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetStride() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype437" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetStride() = <span class="SHNumber">0</span></div>
  <div class="CBody"><p>Returns the image's stride (bytes/scanline)</p></div>
 </div>
 
-<a name="IImageBase.GetBytesPerPixel"></a><a name="Topic402"></a><div class="CTopic TFunction LC">
+<a name="IImageBase.GetBytesPerPixel"></a><a name="Topic438"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetBytesPerPixel</div>
- <div id="NDPrototype402" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetBytesPerPixel() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype438" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetBytesPerPixel() = <span class="SHNumber">0</span></div>
  <div class="CBody"><p>Returns the number of bytes in each pixel</p></div>
 </div>
 
-<a name="IImage"></a><a name="Topic403"></a><div class="CTopic TInterface LC">
+<a name="IImage"></a><a name="Topic439"></a><div class="CTopic TInterface LC">
  <div class="CTitle">IImage</div>
  <div class="CBody"><p>Interface to an image (CPU based)</p><div class="CHeading">Header</div><p><a href='../../../index.html#File:Imaging/Image/Image.h' target='_top'>Imaging/Image/Image.h</a></p></div>
 </div>
 
-<a name="IImage.Functions"></a><a name="Topic404"></a><div class="CTopic TGroup LC">
+<a name="IImage.Functions"></a><a name="Topic440"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="IImage.Clear"></a><a name="Topic405"></a><div class="CTopic TFunction LC">
+<a name="IImage.Clear"></a><a name="Topic441"></a><div class="CTopic TFunction LC">
  <div class="CTitle">Clear</div>
- <div id="NDPrototype405" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> Clear() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype441" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> Clear() = <span class="SHNumber">0</span></div>
  <div class="CBody"><p>Erases the image (setting it to black with full alpha)</p></div>
 </div>
 
-<a name="IImage.Clone"></a><a name="Topic406"></a><div class="CTopic TFunction LC">
+<a name="IImage.Clone"></a><a name="Topic442"></a><div class="CTopic TFunction LC">
  <div class="CTitle">Clone</div>
- <div id="NDPrototype406" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <a href="../../../index.html#File:Base/Core/IRefCount.h:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,23);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Imaging/Image/Image.h:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,403);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>&gt; Clone() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype442" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <a href="../../../index.html#File:Base/Core/IRefCount.h:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,61);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Imaging/Image/Image.h:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,439);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>&gt; Clone() = <span class="SHNumber">0</span></div>
  <div class="CBody"><p>Makes a copy of the image</p><div class="CHeading">Returns</div><p>Copy of the image</p></div>
 </div>
 
-<a name="IImage.TakeDataOwnership"></a><a name="Topic407"></a><div class="CTopic TFunction LC">
+<a name="IImage.TakeDataOwnership"></a><a name="Topic443"></a><div class="CTopic TFunction LC">
  <div class="CTitle">TakeDataOwnership</div>
- <div id="NDPrototype407" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> TakeDataOwnership() = <span class="SHNumber">0</span></div>
+ <div id="NDPrototype443" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> TakeDataOwnership() = <span class="SHNumber">0</span></div>
  <div class="CBody"><p>If the image was created with a pre-existing block of image data, this function will transfer ownership of that data to the image class.&nbsp; After calling this the Image class will be responsible for deleting the data when the image is detroyed. Otherwise, the app will be responsible for freeing the data.</p></div>
 </div>
 
-<a name="IImage.SetPixel"></a><a name="Topic408"></a><div class="CTopic TFunction LC">
+<a name="IImage.SetPixel"></a><a name="Topic444"></a><div class="CTopic TFunction LC">
  <div class="CTitle">SetPixel</div>
- <div id="NDPrototype408" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetPixel(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">x,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">y,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint8</span>&nbsp;</td><td class="PName last">color4]</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div id="NDPrototype444" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetPixel(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">x,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">y,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint8</span>&nbsp;</td><td class="PName last">color4]</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
  <div class="CBody"><p>Sets a pixel in the image. This method assumes the underlying image is BGRA.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">x<div class="CDLParameterType"><span class="SHKeyword">uint32</span></div></td><td class="CDLDefinition"><p>pixel's X coordinate</p></td></tr><tr><td class="CDLEntry">y<div class="CDLParameterType"><span class="SHKeyword">uint32</span></div></td><td class="CDLDefinition"><p>pixel's Y coordinate</p></td></tr><tr><td class="CDLEntry">color<div class="CDLParameterType"><span class="SHKeyword">uint8</span><span class="SHNumber">4</span>]</div></td><td class="CDLDefinition"><p>color to set pixel to</p></td></tr></table></div>
 </div>
 
-<a name="IImage.SetPixel(2)"></a><a name="Topic409"></a><div class="CTopic TFunction LC">
+<a name="IImage.SetPixel(2)"></a><a name="Topic445"></a><div class="CTopic TFunction LC">
  <div class="CTitle">SetPixel</div>
- <div id="NDPrototype409" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetPixel(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">x,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">y,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint8</span>&nbsp;</td><td class="PName last">gray</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div id="NDPrototype445" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetPixel(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">x,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">y,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint8</span>&nbsp;</td><td class="PName last">gray</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
  <div class="CBody"><p>Sets a pixel in the image. This method assumes the underlying image is gray scale.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">x<div class="CDLParameterType"><span class="SHKeyword">uint32</span></div></td><td class="CDLDefinition"><p>pixel's X coordinate</p></td></tr><tr><td class="CDLEntry">y<div class="CDLParameterType"><span class="SHKeyword">uint32</span></div></td><td class="CDLDefinition"><p>pixel's Y coordinate</p></td></tr><tr><td class="CDLEntry">gray<div class="CDLParameterType"><span class="SHKeyword">uint8</span></div></td><td class="CDLDefinition"><p>color to set pixel to</p></td></tr></table></div>
 </div>
 
-<a name="IImage.SetPixel(3)"></a><a name="Topic410"></a><div class="CTopic TFunction LC">
+<a name="IImage.SetPixel(3)"></a><a name="Topic446"></a><div class="CTopic TFunction LC">
  <div class="CTitle">SetPixel</div>
- <div id="NDPrototype410" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetPixel(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">x,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">y,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint16</span>&nbsp;</td><td class="PName last">v</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div id="NDPrototype446" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetPixel(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">x,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">y,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint16</span>&nbsp;</td><td class="PName last">v</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
  <div class="CBody"><p>Sets a pixel in the image. This method assumes the underlying image is 16b grayscale.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">x<div class="CDLParameterType"><span class="SHKeyword">uint32</span></div></td><td class="CDLDefinition"><p>pixel's X coordinate</p></td></tr><tr><td class="CDLEntry">y<div class="CDLParameterType"><span class="SHKeyword">uint32</span></div></td><td class="CDLDefinition"><p>pixel's Y coordinate</p></td></tr><tr><td class="CDLEntry">v<div class="CDLParameterType"><span class="SHKeyword">uint16</span></div></td><td class="CDLDefinition"><p>color to set pixel to</p></td></tr></table></div>
 </div>
 
-<a name="IImage.DrawCircle"></a><a name="Topic411"></a><div class="CTopic TFunction LC">
+<a name="IImage.DrawCircle"></a><a name="Topic447"></a><div class="CTopic TFunction LC">
  <div class="CTitle">DrawCircle</div>
- <div id="NDPrototype411" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> DrawCircle(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Base/Math/Vector.h:Vector2" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,74);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector2</a>&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">center,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td></td><td class="PName last">radius,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint8</span>&nbsp;</td><td></td><td class="PName last">color4]</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
- <div class="CBody"><p>Renders a circle on the image</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">center<div class="CDLParameterType"><a href="../../../index.html#File:Base/Math/Vector.h:Vector2" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,74);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector2</a>&amp;</div></td><td class="CDLDefinition"><p>center of the circle in pixel coordinates</p></td></tr><tr><td class="CDLEntry">radius<div class="CDLParameterType"><span class="SHKeyword">uint32</span></div></td><td class="CDLDefinition"><p>radius of the circle (in pixels)</p></td></tr><tr><td class="CDLEntry">color<div class="CDLParameterType"><span class="SHKeyword">uint8</span><span class="SHNumber">4</span>]</div></td><td class="CDLDefinition"><p>color used for rendering the circle</p></td></tr></table></div>
+ <div id="NDPrototype447" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> DrawCircle(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Base/Math/Vector.h:Vector2" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,76);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector2</a>&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">center,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td></td><td class="PName last">radius,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint8</span>&nbsp;</td><td></td><td class="PName last">color4]</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Renders a circle on the image</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">center<div class="CDLParameterType"><a href="../../../index.html#File:Base/Math/Vector.h:Vector2" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,76);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector2</a>&amp;</div></td><td class="CDLDefinition"><p>center of the circle in pixel coordinates</p></td></tr><tr><td class="CDLEntry">radius<div class="CDLParameterType"><span class="SHKeyword">uint32</span></div></td><td class="CDLDefinition"><p>radius of the circle (in pixels)</p></td></tr><tr><td class="CDLEntry">color<div class="CDLParameterType"><span class="SHKeyword">uint8</span><span class="SHNumber">4</span>]</div></td><td class="CDLDefinition"><p>color used for rendering the circle</p></td></tr></table></div>
 </div>
 
-<a name="IImage.DrawLine"></a><a name="Topic1159"></a><div class="CTopic TFunction LC">
+<a name="IImage.DrawLine"></a><a name="Topic448"></a><div class="CTopic TFunction LC">
  <div class="CTitle">DrawLine</div>
- <div id="NDPrototype1159" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> DrawLine(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><a href="../../../index.html#File:Base/Math/Vector.h:Vector2" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,74);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector2</a>&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">v0,</td></tr><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><a href="../../../index.html#File:Base/Math/Vector.h:Vector2" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,74);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector2</a>&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">v1,</td></tr><tr><td class="first"></td><td class="PType"><span class="SHKeyword">uint8</span>&nbsp;</td><td></td><td class="PName last">color4]</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
- <div class="CBody"><p>Renders a line on the image</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">v0<div class="CDLParameterType"><span class="SHKeyword">const</span> <a href="../../../index.html#File:Base/Math/Vector.h:Vector2" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,74);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector2</a>&amp;</div></td><td class="CDLDefinition"><p>start of line (in pixel coordinates)</p></td></tr><tr><td class="CDLEntry">v1<div class="CDLParameterType"><span class="SHKeyword">const</span> <a href="../../../index.html#File:Base/Math/Vector.h:Vector2" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,74);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector2</a>&amp;</div></td><td class="CDLDefinition"><p>end of line (in pixel coordinates)</p></td></tr><tr><td class="CDLEntry">color<div class="CDLParameterType"><span class="SHKeyword">uint8</span><span class="SHNumber">4</span>]</div></td><td class="CDLDefinition"><p>color used for rendering the line</p></td></tr></table></div>
+ <div id="NDPrototype448" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> DrawLine(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><a href="../../../index.html#File:Base/Math/Vector.h:Vector2" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,76);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector2</a>&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">v0,</td></tr><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><a href="../../../index.html#File:Base/Math/Vector.h:Vector2" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,76);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector2</a>&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">v1,</td></tr><tr><td class="first"></td><td class="PType"><span class="SHKeyword">uint8</span>&nbsp;</td><td></td><td class="PName last">color4]</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Renders a line on the image</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">v0<div class="CDLParameterType"><span class="SHKeyword">const</span> <a href="../../../index.html#File:Base/Math/Vector.h:Vector2" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,76);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector2</a>&amp;</div></td><td class="CDLDefinition"><p>start of line (in pixel coordinates)</p></td></tr><tr><td class="CDLEntry">v1<div class="CDLParameterType"><span class="SHKeyword">const</span> <a href="../../../index.html#File:Base/Math/Vector.h:Vector2" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,76);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector2</a>&amp;</div></td><td class="CDLDefinition"><p>end of line (in pixel coordinates)</p></td></tr><tr><td class="CDLEntry">color<div class="CDLParameterType"><span class="SHKeyword">uint8</span><span class="SHNumber">4</span>]</div></td><td class="CDLDefinition"><p>color used for rendering the line</p></td></tr></table></div>
 </div>
 
-<a name="IImage.DrawPath"></a><a name="Topic1190"></a><div class="CTopic TFunction LC">
+<a name="IImage.DrawPath"></a><a name="Topic449"></a><div class="CTopic TFunction LC">
  <div class="CTitle">DrawPath</div>
- <div id="NDPrototype1190" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> DrawPath(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Geometry/GeomDS/IPath2.h:IPath2" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1154);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IPath2</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pPath</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
- <div class="CBody"><p>Renders a path on the image</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pPath<div class="CDLParameterType"><a href="../../../index.html#File:Geometry/GeomDS/IPath2.h:IPath2" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1154);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IPath2</a>*</div></td><td class="CDLDefinition"><p>path to render</p></td></tr></table></div>
+ <div id="NDPrototype449" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> DrawPath(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Geometry/GeomDS/IPath2.h:IPath2" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,219);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IPath2</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pPath</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Renders a path on the image</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pPath<div class="CDLParameterType"><a href="../../../index.html#File:Geometry/GeomDS/IPath2.h:IPath2" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,219);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IPath2</a>*</div></td><td class="CDLDefinition"><p>path to render</p></td></tr></table></div>
 </div>
 
-<a name="IIntegralImage"></a><a name="Topic413"></a><div class="CTopic TInterface LC">
+<a name="IIntegralImage"></a><a name="Topic450"></a><div class="CTopic TInterface LC">
  <div class="CTitle">IIntegralImage</div>
  <div class="CBody"><p>Interface to an integral image (see <a href="https://en.wikipedia.org/wiki/Summed-area_table" target="_top">https://&#8203;en&#8203;.wikipedia&#8203;.org&#8203;/wiki&#8203;/Summed-area_table</a>)</p><div class="CHeading">Header</div><p><a href='../../../index.html#File:Imaging/Image/Image.h' target='_top'>Imaging/Image/Image.h</a></p></div>
 </div>
 
-<a name="IIntegralImage.Functions"></a><a name="Topic414"></a><div class="CTopic TGroup LC">
+<a name="IIntegralImage.Functions"></a><a name="Topic451"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="IIntegralImage.GetSum"></a><a name="Topic415"></a><div class="CTopic TFunction LC">
+<a name="IIntegralImage.GetSum"></a><a name="Topic452"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetSum</div>
- <div id="NDPrototype415" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetSum(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td class="PName last">channel,</td></tr><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td class="PName last">x1,</td></tr><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td class="PName last">y1,</td></tr><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td class="PName last">x2,</td></tr><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td class="PName last">y2</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div id="NDPrototype452" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetSum(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td class="PName last">channel,</td></tr><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td class="PName last">x1,</td></tr><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td class="PName last">y1,</td></tr><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td class="PName last">x2,</td></tr><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td class="PName last">y2</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
  <div class="CBody"><p>Returns the sum of the requested area</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">channel<div class="CDLParameterType"><span class="SHKeyword">int</span></div></td><td class="CDLDefinition"><p>which color channel to sum</p></td></tr><tr><td class="CDLEntry">x1<div class="CDLParameterType"><span class="SHKeyword">int</span></div></td><td class="CDLDefinition"><p>top left corner's X coordinate (in pixel coordinates)</p></td></tr><tr><td class="CDLEntry">y1<div class="CDLParameterType"><span class="SHKeyword">int</span></div></td><td class="CDLDefinition"><p>top left corner's Y coordinate (in pixel coordinates)</p></td></tr><tr><td class="CDLEntry">x2<div class="CDLParameterType"><span class="SHKeyword">int</span></div></td><td class="CDLDefinition"><p>bottom right corner's X coordinate (in pixel coordinates)</p></td></tr><tr><td class="CDLEntry">y2<div class="CDLParameterType"><span class="SHKeyword">int</span></div></td><td class="CDLDefinition"><p>bottom right corner's Y coordinate (in pixel coordinates)</p></td></tr></table></div>
 </div>
 
-<a name="IIntegralImage.BoxBlur"></a><a name="Topic416"></a><div class="CTopic TFunction LC">
+<a name="IIntegralImage.BoxBlur"></a><a name="Topic453"></a><div class="CTopic TFunction LC">
  <div class="CTitle">BoxBlur</div>
- <div id="NDPrototype416" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <a href="../../../index.html#File:Base/Core/IRefCount.h:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,23);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Imaging/Image/Image.h:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,403);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>&gt; BoxBlur(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td class="PName last">width,</td></tr><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td class="PName last">height</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div id="NDPrototype453" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <a href="../../../index.html#File:Base/Core/IRefCount.h:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,61);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Imaging/Image/Image.h:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,439);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>&gt; BoxBlur(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td class="PName last">width,</td></tr><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td class="PName last">height</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
  <div class="CBody"><p>Blurs the image</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">width<div class="CDLParameterType"><span class="SHKeyword">int</span></div></td><td class="CDLDefinition"><p>width of box filter</p></td></tr><tr><td class="CDLEntry">height<div class="CDLParameterType"><span class="SHKeyword">int</span></div></td><td class="CDLDefinition"><p>height of box filter</p></td></tr></table><div class="CHeading">Returns</div><p>Returns the blurred image</p></div>
 </div>
 
-<a name="Caustic(2)"></a><a name="Topic417"></a><div class="CTopic TClass LC">
+<a name="Caustic(2)"></a><a name="Topic454"></a><div class="CTopic TClass LC">
  <div class="CTitle">Caustic</div>
- <div class="NDClassPrototype" id="NDClassPrototype417"><div class="CPEntry TClass Current"><div class="CPModifiers"><span class="SHKeyword">namespace</span> </div><div class="CPName">Caustic</div></div></div>
+ <div class="NDClassPrototype" id="NDClassPrototype454"><div class="CPEntry TClass Current"><div class="CPModifiers"><span class="SHKeyword">namespace</span> </div><div class="CPName">Caustic</div></div></div>
 </div>
 
-<a name="Caustic.Functions"></a><a name="Topic418"></a><div class="CTopic TGroup LC">
+<a name="Caustic.Functions"></a><a name="Topic455"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="Caustic.LoadImage"></a><a name="Topic419"></a><div class="CTopic TFunction LC">
+<a name="Caustic.LoadImage"></a><a name="Topic456"></a><div class="CTopic TFunction LC">
  <div class="CTitle">LoadImage</div>
- <div id="NDPrototype419" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><a href="../../../index.html#File:Base/Core/IRefCount.h:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,23);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Imaging/Image/Image.h:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,403);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>&gt; LoadImage(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><span class="SHKeyword">wchar_t</span>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pFilename</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div id="NDPrototype456" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><a href="../../../index.html#File:Base/Core/IRefCount.h:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,61);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Imaging/Image/Image.h:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,439);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>&gt; LoadImage(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><span class="SHKeyword">wchar_t</span>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pFilename</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
  <div class="CBody"><p>Loads an image from a file</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pFilename<div class="CDLParameterType"><span class="SHKeyword">const</span> <span class="SHKeyword">wchar_t</span>*</div></td><td class="CDLDefinition"><p>path to image file</p></td></tr></table><div class="CHeading">Returns</div><p>Returns the loaded image</p><div class="CHeading">Header</div><p><a href='../../../index.html#File:Imaging/Image/Image.h' target='_top'>Imaging/Image/Image.h</a></p></div>
 </div>
 
-<a name="Caustic.StoreImage"></a><a name="Topic420"></a><div class="CTopic TFunction LC last">
+<a name="Caustic.StoreImage"></a><a name="Topic457"></a><div class="CTopic TFunction LC last">
  <div class="CTitle">StoreImage</div>
- <div id="NDPrototype420" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> StoreImage(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><span class="SHKeyword">wchar_t</span>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pFilename,</td></tr><tr><td class="first"></td><td class="PType"><a href="../../../index.html#File:Imaging/Image/Image.h:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,403);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pImage</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
- <div class="CBody"><p>Saves an image from a file</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pFilename<div class="CDLParameterType"><span class="SHKeyword">const</span> <span class="SHKeyword">wchar_t</span>*</div></td><td class="CDLDefinition"><p>path to save image file</p></td></tr><tr><td class="CDLEntry">pImage<div class="CDLParameterType"><a href="../../../index.html#File:Imaging/Image/Image.h:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,403);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>*</div></td><td class="CDLDefinition"><p>Image to save</p></td></tr></table><div class="CHeading">Header</div><p><a href='../../../index.html#File:Imaging/Image/Image.h' target='_top'>Imaging/Image/Image.h</a></p></div>
+ <div id="NDPrototype457" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> StoreImage(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><span class="SHKeyword">wchar_t</span>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pFilename,</td></tr><tr><td class="first"></td><td class="PType"><a href="../../../index.html#File:Imaging/Image/Image.h:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,439);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pImage</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div class="CBody"><p>Saves an image from a file</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pFilename<div class="CDLParameterType"><span class="SHKeyword">const</span> <span class="SHKeyword">wchar_t</span>*</div></td><td class="CDLDefinition"><p>path to save image file</p></td></tr><tr><td class="CDLEntry">pImage<div class="CDLParameterType"><a href="../../../index.html#File:Imaging/Image/Image.h:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,439);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>*</div></td><td class="CDLDefinition"><p>Image to save</p></td></tr></table><div class="CHeading">Header</div><p><a href='../../../index.html#File:Imaging/Image/Image.h' target='_top'>Imaging/Image/Image.h</a></p></div>
 </div>
 
 </body></html>

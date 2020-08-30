@@ -23,9 +23,8 @@ namespace Caustic
         if (pPin == m_spTexturePin)
         {
             CRefObj<IImage> spImage = std::any_cast<CRefObj<IImage>>(m_spImagePin->GetValue(pRenderer, pRenderCtx));
-            CRefObj<IGraphics> spGraphics = pRenderer->GetGraphics();
             CRefObj<ICausticFactory> spCausticFactory = Caustic::CreateCausticFactory();
-            CRefObj<ITexture> spTexture = spCausticFactory->CreateTexture(spGraphics, spImage, D3D11_CPU_ACCESS_FLAG(0), D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
+            CRefObj<ITexture> spTexture = spCausticFactory->CreateTexture(pRenderer, spImage, D3D11_CPU_ACCESS_FLAG(0), D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
             return std::any(spTexture);
         }
         return std::any(nullptr);

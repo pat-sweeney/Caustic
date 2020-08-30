@@ -87,7 +87,6 @@ namespace Caustic
         if (m_prerenderCallback)
             if (!m_prerenderCallback(pRenderCtx->GetCurrentPass()))
                 return;
-        CRefObj<IGraphics> spGraphics = pRenderer->GetGraphics();
         if (GetFlags() & ESceneElemFlags::RenderableDirty)
         {
             m_spRenderMesh = m_spMesh->ToRenderMesh(pRenderer, pSceneCtx->m_spCurrentShader);

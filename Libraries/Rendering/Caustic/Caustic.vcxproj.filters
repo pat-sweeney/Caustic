@@ -85,9 +85,6 @@
     <ClInclude Include="ICausticFactory.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="IGraphics.h">
-      <Filter>Source Files\Interfaces</Filter>
-    </ClInclude>
     <ClInclude Include="IMaterialAttrib.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>

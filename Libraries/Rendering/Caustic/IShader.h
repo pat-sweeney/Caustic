@@ -5,9 +5,12 @@
 //**********************************************************************
 #pragma once
 
+#include <d3d11.h>
+#include <atlbase.h>
 #include "Base\Core\Core.h"
 #include "Base\Core\IRefCount.h"
-#include "IGraphics.h"
+#include "Base\Math\BBox.h"
+#include "IShaderMgr.h"
 #include <string>
 #include <any>
 #include <d3d11.h>
@@ -25,7 +28,7 @@ namespace Caustic
     struct IShaderInfo;
     struct IRenderMaterial;
     struct ILight;
-    struct IGraphics;
+    struct IRenderer;
 
     //**********************************************************************
     // Structure: ClientBuffer
@@ -86,13 +89,13 @@ namespace Caustic
         // Starts rendering.
         //
         // Parameters:
-        // pGraphics - graphics device
+        // pRenderer - graphics device
         // pFrontMaterial - material to use for front faces
         // pBackMaterial - material to use for back faces
         // lights - list of lights to use
         // pWorld - matrix to apply
         //**********************************************************************
-        virtual void BeginRender(IGraphics *pGraphics, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, std::vector<CRefObj<ILight>> &lights, DirectX::XMMATRIX *pWorld) = 0;
+        virtual void BeginRender(IRenderer *pRenderer, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, std::vector<CRefObj<ILight>> &lights, DirectX::XMMATRIX *pWorld) = 0;
 
         //**********************************************************************
         // Method: SetPSParam
@@ -162,9 +165,9 @@ namespace Caustic
         // Ends rendering. Called after the rendering using the shader has completed.
         //
         // Parameters:
-        // pGraphics - graphics device
+        // pRenderer - graphics device
         //**********************************************************************
-        virtual void EndRender(IGraphics *pGraphics) = 0;
+        virtual void EndRender(IRenderer* pRenderer) = 0;
 
         //**********************************************************************
         // Method: GetShaderInfo

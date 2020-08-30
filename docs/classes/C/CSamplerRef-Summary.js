@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:CSamplerRef","CSamplerRef");NDSummary.OnSummaryLoaded("CClass:CSamplerRef",[["C/C++","C"]],[["Structs","Struct"]],[[1086,0,0,"CSamplerRef"]]);
+NDFramePage.OnPageTitleLoaded("CClass:CSamplerRef","CSamplerRef");NDSummary.OnSummaryLoaded("CClass:CSamplerRef",[["C/C++","C"]],[["Structs","Struct"]],[[548,0,0,"CSamplerRef"]]);

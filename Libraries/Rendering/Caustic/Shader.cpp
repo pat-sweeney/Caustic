@@ -163,16 +163,16 @@ namespace Caustic
         return s;
     }
 
-    void CShader::ClearSamplers(IGraphics* pGraphics)
+    void CShader::ClearSamplers(IRenderer* pRenderer)
     {
         // Set deafult sampler
-        CComPtr<ID3D11DeviceContext> spCtx = pGraphics->GetContext();
+        CComPtr<ID3D11DeviceContext> spCtx = pRenderer->GetContext();
         spCtx->PSSetSamplers(0, 1, &m_spSamplerState.p);
         spCtx->VSSetSamplers(0, 1, &m_spSamplerState.p);
         
     }
 
-    void CShader::PushSamplers(IGraphics* pGraphics, std::vector<ShaderParamInstance>& params, bool isPixelShader)
+    void CShader::PushSamplers(IRenderer* pRenderer, std::vector<ShaderParamInstance>& params, bool isPixelShader)
     {
         // First push samplers
         for (size_t i = 0; i < params.size(); i++)
@@ -186,7 +186,7 @@ namespace Caustic
                     if (params[i].m_value.has_value())
                     {
                         CRefObj<ITexture> v = std::any_cast<CRefObj<ITexture>>(params[i].m_value);
-                        v->Render(pGraphics, params[i].m_offset, isPixelShader);
+                        v->Render(pRenderer, params[i].m_offset, isPixelShader);
                     }
                 }
                 break;
@@ -195,7 +195,7 @@ namespace Caustic
                     if (params[i].m_value.has_value())
                     {
                         Caustic::CSamplerRef v = std::any_cast<CSamplerRef>(params[i].m_value);
-                        v.m_spSampler->Render(pGraphics, params[i].m_offset, isPixelShader);
+                        v.m_spSampler->Render(pRenderer, params[i].m_offset, isPixelShader);
                     }
                 }
                 break;
@@ -208,17 +208,17 @@ namespace Caustic
     // Pushes each shader parameter into the D3D11 constant buffer.
     //
     // Parameters:
-    // pGraphics - D3D11 device/context to use
+    // pRenderer - D3D11 device/context to use
     // pBuffer - Constant buffer to push values into
     // params - List of parameters to push
     //**********************************************************************
-    void CShader::PushConstants(IGraphics* pGraphics, SBuffer* pBuffer, std::vector<ShaderParamInstance>& params)
+    void CShader::PushConstants(IRenderer* pRenderer, SBuffer* pBuffer, std::vector<ShaderParamInstance>& params)
     {
         if (pBuffer == nullptr || pBuffer->m_bufferSize == 0)
             return;
 
         D3D11_MAPPED_SUBRESOURCE ms;
-        CT(pGraphics->GetContext()->Map(pBuffer->m_spBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
+        CT(pRenderer->GetContext()->Map(pBuffer->m_spBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
         BYTE* pb = reinterpret_cast<BYTE*>(ms.pData);
         for (size_t i = 0; i < params.size(); i++)
         {
@@ -332,7 +332,7 @@ namespace Caustic
             break;
             }
         }
-        pGraphics->GetContext()->Unmap(pBuffer->m_spBuffer, 0);
+        pRenderer->GetContext()->Unmap(pBuffer->m_spBuffer, 0);
     }
 
     //**********************************************************************
@@ -341,11 +341,11 @@ namespace Caustic
     // has written to them).
     //
     // Parameters:
-    // pGraphics - D3D11 device/context to use
+    // pRenderer - D3D11 device/context to use
     //**********************************************************************
-    void CShader::PopBuffers(IGraphics* pGraphics)
+    void CShader::PopBuffers(IRenderer* pRenderer)
     {
-        CComPtr<ID3D11DeviceContext> spCtx = pGraphics->GetContext();
+        CComPtr<ID3D11DeviceContext> spCtx = pRenderer->GetContext();
         for (int bufferIndex = 0; bufferIndex < (int)m_csBuffers.size(); bufferIndex++)
         {
             SBuffer& s = m_csBuffers[bufferIndex];
@@ -368,14 +368,14 @@ namespace Caustic
     // from a CPU buffer to a GPU structured buffer).
     //
     // Parameters:
-    // pGraphics - D3D11 device/context to use
+    // pRenderer - D3D11 device/context to use
     // pBuffer - Constant buffer to push values into
     // params - List of parameters to push
     //**********************************************************************
-    void CShader::PushBuffers(IGraphics* pGraphics,
+    void CShader::PushBuffers(IRenderer* pRenderer,
         std::vector<ShaderParamInstance>& params)
     {
-        CComPtr<ID3D11DeviceContext> spCtx = pGraphics->GetContext();
+        CComPtr<ID3D11DeviceContext> spCtx = pRenderer->GetContext();
         for (size_t i = 0; i < params.size(); i++)
         {
             if (!params[i].m_value.has_value())
@@ -441,7 +441,7 @@ namespace Caustic
                     stride = params[i].m_elemSize;
                     alignment = 16;
                 }
-                CComPtr<ID3D11Device> spDevice = pGraphics->GetDevice();
+                CComPtr<ID3D11Device> spDevice = pRenderer->GetDevice();
                 CreateBuffer(spDevice, srcVal.m_dataSize, bind | D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE, access, usage, miscFlags, stride, alignment, &m_csBuffers[bufferIndex], &m_csBuffers[bufferIndex].m_spBuffer.p);
                 usage = D3D11_USAGE::D3D11_USAGE_STAGING;
                 access = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_READ;
@@ -670,10 +670,10 @@ namespace Caustic
         SetPSParam(L"numLights", std::any((Int)numLights));
     }
 
-    void CShader::PushMatrices(IGraphics *pGraphics, DirectX::XMMATRIX *pWorld)
+    void CShader::PushMatrices(IRenderer *pRenderer, DirectX::XMMATRIX *pWorld)
     {
-        DirectX::XMMATRIX view = pGraphics->GetCamera()->GetView();
-        DirectX::XMMATRIX proj = pGraphics->GetCamera()->GetProjection();
+        DirectX::XMMATRIX view = pRenderer->GetCamera()->GetView();
+        DirectX::XMMATRIX proj = pRenderer->GetCamera()->GetProjection();
 
         DirectX::XMMATRIX identity = DirectX::XMMatrixIdentity();
         if (pWorld == nullptr)
@@ -713,14 +713,14 @@ namespace Caustic
     //**********************************************************************
     // Method: BeginRender
     // BeginRender is called before rendering using this shader occurs.
-    // This call is responsible for setting up the pGraphics device to use the shader.
+    // This call is responsible for setting up the pRenderer device to use the shader.
     //
     // Parameters:
-    // pGraphics - D3D11 device/context to use
+    // pRenderer - D3D11 device/context to use
     //**********************************************************************
-    void CShader::BeginRender(IGraphics* pGraphics, IRenderMaterial* pFrontMaterial, IRenderMaterial* pBackMaterial, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld)
+    void CShader::BeginRender(IRenderer* pRenderer, IRenderMaterial* pFrontMaterial, IRenderMaterial* pBackMaterial, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld)
     {
-        CComPtr<ID3D11DeviceContext> spCtx = pGraphics->GetContext();
+        CComPtr<ID3D11DeviceContext> spCtx = pRenderer->GetContext();
 #ifdef _DEBUG
         CComPtr<ID3DUserDefinedAnnotation> spAnnotations;
         CT(spCtx->QueryInterface(__uuidof(ID3DUserDefinedAnnotation), (void**)&spAnnotations));
@@ -743,32 +743,32 @@ namespace Caustic
         if (hasVS || hasPS)
         {
             if (pFrontMaterial)
-                pFrontMaterial->Render(pGraphics, lights, nullptr, this);
+                pFrontMaterial->Render(pRenderer, lights, nullptr, this);
             PushLights(lights);
         }
 
-        PushMatrices(pGraphics, pWorld);
-        ClearSamplers(pGraphics);
+        PushMatrices(pRenderer, pWorld);
+        ClearSamplers(pRenderer);
         if (hasVS)
         {
-            PushSamplers(pGraphics, m_vsParams, false);
-            PushConstants(pGraphics, &m_vertexConstants, m_vsParams);
+            PushSamplers(pRenderer, m_vsParams, false);
+            PushConstants(pRenderer, &m_vertexConstants, m_vsParams);
             spCtx->VSSetConstantBuffers(0, 1, &m_vertexConstants.m_spBuffer.p);
         }
         if (hasPS)
         {
-            PushSamplers(pGraphics, m_psParams, true);
-            PushConstants(pGraphics, &m_pixelConstants, m_psParams);
+            PushSamplers(pRenderer, m_psParams, true);
+            PushConstants(pRenderer, &m_pixelConstants, m_psParams);
             spCtx->PSSetConstantBuffers(0, 1, &m_pixelConstants.m_spBuffer.p);
         }
         if (hasCS)
         {
-            PushSamplers(pGraphics, m_csParams, false);
-            PushConstants(pGraphics, &m_computeConstants, m_csParams);
+            PushSamplers(pRenderer, m_csParams, false);
+            PushConstants(pRenderer, &m_computeConstants, m_csParams);
             spCtx->CSSetConstantBuffers(0, 1, &m_computeConstants.m_spBuffer.p);
-            PushBuffers(pGraphics, m_csParams);
+            PushBuffers(pRenderer, m_csParams);
             spCtx->Dispatch(m_xThreads, m_yThreads, m_zThreads);
-            PopBuffers(pGraphics);
+            PopBuffers(pRenderer);
             spCtx->CSSetShader(nullptr, nullptr, 0);
             ID3D11UnorderedAccessView* uavNull[1] = { nullptr };
             ID3D11ShaderResourceView* srvNull[1] = { nullptr };
@@ -786,9 +786,9 @@ namespace Caustic
     // During this call the shader may clean up any state/memory it needed
     //
     // Parameters:
-    // pGraphics - D3D11 device/context to use
+    // pRenderer - D3D11 device/context to use
     //**********************************************************************
-    void CShader::EndRender(IGraphics * /*pGraphics*/)
+    void CShader::EndRender(IRenderer * /*pRenderer*/)
     {
     }
 
@@ -891,19 +891,19 @@ namespace Caustic
     // Creates a shader
     //
     // Parameters:
-    // pGraphics - Graphics device to use
+    // pRenderer - Graphics device to use
     // pShaderName - Name of shader
     // pShaderInfo - Shader description
     // pPSBlob - Compiled binary for the pixel shader
     // pVSBlob - Compiled binary for the vertex shader
     // pCSBlob - Compiled binary for the compute shader
     //**********************************************************************
-	void CShader::Create(IGraphics *pGraphics, const wchar_t *pShaderName, IShaderInfo *pShaderInfo, ID3DBlob *pPSBlob, ID3DBlob* pVSBlob, ID3DBlob* pCSBlob)
+	void CShader::Create(IRenderer *pRenderer, const wchar_t *pShaderName, IShaderInfo *pShaderInfo, ID3DBlob *pPSBlob, ID3DBlob* pVSBlob, ID3DBlob* pCSBlob)
     {
         if (pShaderName)
             m_name = std::wstring(pShaderName);
 
-        ID3D11Device* pDevice = pGraphics->GetDevice();
+        ID3D11Device* pDevice = pRenderer->GetDevice();
         m_spShaderInfo = pShaderInfo;
         if (pShaderInfo->HasShader(EShaderType::TypeVertexShader))
         {
@@ -945,7 +945,7 @@ namespace Caustic
     // A helper function to create a shader
     //
     // Parameters:
-    // pGraphics - Graphics device to use
+    // pRenderer - Graphics device to use
     // pShaderName - Name of shader
     // pShaderInfo - Shader description
     // pPSBlob - Compiled binary for the pixel shader
@@ -954,11 +954,11 @@ namespace Caustic
     // Returns:
     // Returns the created shader
     //**********************************************************************
-    CAUSTICAPI CRefObj<IShader> CreateShader(IGraphics *pGraphics, const wchar_t *pShaderName, IShaderInfo *pShaderInfo,
+    CAUSTICAPI CRefObj<IShader> CreateShader(IRenderer *pRenderer, const wchar_t *pShaderName, IShaderInfo *pShaderInfo,
         ID3DBlob *pPSBlob, ID3DBlob *pVSBlob, ID3DBlob *pCSBlob)
     {
         std::unique_ptr<CShader> spShader(new CShader());
-        spShader->Create(pGraphics, pShaderName, pShaderInfo, pPSBlob, pVSBlob, pCSBlob);
+        spShader->Create(pRenderer, pShaderName, pShaderInfo, pPSBlob, pVSBlob, pCSBlob);
         return CRefObj<IShader>(spShader.release());
     }
     

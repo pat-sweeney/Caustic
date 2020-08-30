@@ -58,7 +58,7 @@ namespace Caustic
 
     struct IGPUPipeline : public IRefCount
     {
-        virtual void GetGraphics(IGraphics **ppGraphics) = 0;
+        virtual void GetGraphics(IRenderer **ppRenderer) = 0;
         virtual void RenderQuad(IShader *pShader) = 0;
         virtual void Process() = 0;
         virtual void CreateSourceNode(IImage *pImage, IGPUImageSourceNode **ppNewNode) = 0;
@@ -67,5 +67,5 @@ namespace Caustic
         virtual void CreatePredefinedNode(wchar_t *pShaderName, IGPUImageNode **ppNewNode) = 0;
         virtual void CreateShader(BYTE *pShaderCode, uint32 shaderCodeSize, ShaderDefs *pShaderParams, uint32 shaderParamSize, IShader **ppShader) = 0;
     };
-    extern void CreateGPUPipeline(IGraphics *pGraphics, IGPUPipeline **ppPipeline);
+    extern void CreateGPUPipeline(IRenderer *pRenderer, IGPUPipeline **ppPipeline);
 }

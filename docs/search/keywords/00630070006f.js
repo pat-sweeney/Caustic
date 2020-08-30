@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("cpo",["Class"],[["CPointLight",,[[,,,,0,"File:Rendering/Caustic/PointLight.h:CPointLight","CClass:CPointLight"]]],["CPointLightElem",,[[,,,,0,"File:Rendering/SceneGraph/PointLightElem.h:CPointLightElem","CClass:CPointLightElem"]]]]);
+NDSearch.OnPrefixDataLoaded("cpo",["Class"],[["CPointLight",,[[,,,,0,"File:Rendering/Caustic/PointLight.h:CPointLight","CClass:CPointLight"]]]]);

@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:CSceneOverlay2DElem","CSceneOverlay2DElem");NDSummary.OnSummaryLoaded("CClass:CSceneOverlay2DElem",[["C/C++","C"]],[["Classes","Class"]],[[1071,0,0,"CSceneOverlay2DElem"]]);

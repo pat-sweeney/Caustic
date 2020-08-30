@@ -1,0 +1,1 @@
+NDSummary.OnToolTipsLoaded("CClass:CSceneOverlay2DElem",{1071:"<div class=\"NDToolTip TClass LC\"><div class=\"NDClassPrototype\" id=\"NDClassPrototype1071\"><div class=\"CPEntry TClass Current\"><div class=\"CPName\">CSceneOverlay2DElem</div></div></div><div class=\"TTSummary\">Defines a simple quad draw in screen coordinates</div></div>"});

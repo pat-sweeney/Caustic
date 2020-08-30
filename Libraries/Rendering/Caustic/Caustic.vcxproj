@@ -255,7 +255,6 @@
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Renderable.h" />
     <ClInclude Include="RendererMarshaller.h" />
-    <ClInclude Include="IGraphics.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderMaterial.h" />
     <ClInclude Include="RenderMesh.h" />
@@ -271,7 +270,10 @@
     <ClInclude Include="VideoTexture.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Camera.cpp">
+      <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</PreprocessToFile>
+      <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</PreprocessToFile>
+    </ClCompile>
     <ClCompile Include="CausticFactory.cpp" />
     <ClCompile Include="ConstructBuffers.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />

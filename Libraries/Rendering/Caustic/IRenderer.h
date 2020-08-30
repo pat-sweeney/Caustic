@@ -6,12 +6,7 @@
 #pragma once
 
 #include "Base\Core\Core.h"
-#include "Rendering\Caustic\IGraphics.h"
 #include "Geometry\Mesh\IMesh.h"
-#include "Rendering\Caustic\ITexture.h"
-#include "Rendering\Caustic\IRenderCtx.h"
-#include "Rendering\Caustic\IPointLight.h"
-#include "Rendering\Caustic\IShader.h"
 #include <functional>
 
 //**********************************************************************
@@ -23,6 +18,43 @@ namespace Caustic
 {
     struct ISceneGraph;
     struct IRenderSubMesh;
+    struct ITexture;
+    struct ITexture;
+    struct IRenderCtx;
+    struct IPointLight;
+    struct IShader;
+    struct ICamera;
+
+    //**********************************************************************
+    // Struct: MeshData
+    // Defines class for holding mesh data (i.e. vertices and indices)
+    //
+    // Members:
+    // m_spVB - The vertex buffer
+    // m_spIB - The index buffer (maybe null)
+    // m_vertexSize - Size in bytes of each vertex
+    // m_numVertices - Number of vertices
+    // m_numIndices - Number of indices. Maybe 0
+    //
+    // Header:
+    // [Link:Rendering/Caustic/IRenderer.h]
+    //**********************************************************************
+    struct MeshData
+    {
+        CComPtr<ID3D11Buffer> m_spVB;
+        CComPtr<ID3D11Buffer> m_spIB;
+        uint32 m_vertexSize;
+        uint32 m_numVertices;
+        uint32 m_numIndices;
+        BBox3 m_bbox;
+
+        MeshData() :
+            m_vertexSize(0),
+            m_numVertices(0),
+            m_numIndices(0)
+        {
+        }
+    };
 
     //**********************************************************************
     // Group: Pass Flags
@@ -69,8 +101,44 @@ namespace Caustic
     // Header:
     // [Link:Rendering/Caustic/IRenderer.h]
     //**********************************************************************
-    struct IRenderer : public IGraphics
+    struct IRenderer : public IRefCount
     {
+        //**********************************************************************
+        // Method: GetDevice
+        // Returns:
+        // The underlying D3D11 device
+        //**********************************************************************
+        virtual CComPtr<ID3D11Device> GetDevice() = 0;
+
+        //**********************************************************************
+        // Method: GetContext
+        // Returns:
+        // The underlying D3D11 device context
+        //**********************************************************************
+        virtual CComPtr<ID3D11DeviceContext> GetContext() = 0;
+
+        //**********************************************************************
+        // Method: GetCamera
+        // Returns:
+        // The camera associated with this device
+        //**********************************************************************
+        virtual CRefObj<ICamera> GetCamera() = 0;
+
+        //**********************************************************************
+        // Method: SetCamera
+        // Assigns a camera to the renderer
+        //
+        // Parameters:
+        // pCamera - camera to use when rendering
+        //**********************************************************************
+        virtual void SetCamera(ICamera* pCamera) = 0;
+
+        //**********************************************************************
+        // Method: GetShaderMgr
+        // Returns the shader manager being used by the renderer
+        //**********************************************************************
+        virtual CRefObj<IShaderMgr> GetShaderMgr() = 0;
+
         //**********************************************************************
         // Method: Setup
         // Initializes the renderer. Applications need to call this method at startup.
@@ -118,15 +186,6 @@ namespace Caustic
         virtual void RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) = 0;
 
         //**********************************************************************
-        // Method: SetCamera
-        // Assigns a camera to the renderer
-        //
-        // Parameters:
-        // pCamera - camera to use when rendering
-        //**********************************************************************
-        virtual void SetCamera(ICamera *pCamera) = 0;
-
-        //**********************************************************************
         // Method: AddPointLight
         // Adds a point light which the renderer uses
         //
@@ -151,12 +210,6 @@ namespace Caustic
         // clr - color to use while rendering line
         //**********************************************************************
         virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) = 0;
-
-        //**********************************************************************
-        // Method: GetGraphics
-        // Returns the current graphics device the renderer is using
-        //**********************************************************************
-        virtual CRefObj<IGraphics> GetGraphics() = 0;
 
         //**********************************************************************
         // Method: PushShadowmapRT

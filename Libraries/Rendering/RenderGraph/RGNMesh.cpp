@@ -35,7 +35,6 @@ namespace Caustic
         {
             CRefObj<IShaderMgr> spShaderMgr = pRenderer->GetShaderMgr();
             m_spDefaultShader = spShaderMgr->FindShader(L"Textured");
-            CRefObj<IGraphics> spGraphics = pRenderer->GetGraphics();
             CRefObj<IMaterialAttrib> spMaterialAttrib = m_spCausticFactory->CreateMaterialAttrib();
             FRGBColor clr(1.0f, 1.0f, 1.0f);
             spMaterialAttrib->SetColor(L"diffuse", clr);

@@ -9,7 +9,7 @@
 
 namespace Caustic
 {
-    CSampler::CSampler(IGraphics *pGraphics, ITexture *pTexture) :
+    CSampler::CSampler(IRenderer *pRenderer, ITexture *pTexture) :
         m_Filter(D3D11_FILTER::D3D11_FILTER_MIN_MAG_MIP_LINEAR),
         m_AddressU(D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_WRAP),
         m_AddressV(D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_WRAP)
@@ -19,19 +19,19 @@ namespace Caustic
         desc.AddressV = m_AddressV;
         desc.AddressW = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_CLAMP;
         desc.Filter = m_Filter;
-        CT(pGraphics->GetDevice()->CreateSamplerState(&desc, &m_spSamplerState));
+        CT(pRenderer->GetDevice()->CreateSamplerState(&desc, &m_spSamplerState));
         m_spTexture = pTexture;
     }
 
     
-    CAUSTICAPI CRefObj<ISampler> CreateSampler(IGraphics *pGraphics, ITexture *pTexture)
+    CAUSTICAPI CRefObj<ISampler> CreateSampler(IRenderer *pRenderer, ITexture *pTexture)
     {
-        return CRefObj<ISampler>(new CSampler(pGraphics, pTexture));
+        return CRefObj<ISampler>(new CSampler(pRenderer, pTexture));
     }
 
-    void CSampler::Render(IGraphics *pGraphics, int slot, bool isPixelShader)
+    void CSampler::Render(IRenderer *pRenderer, int slot, bool isPixelShader)
     {
-        auto ctx = pGraphics->GetContext();
+        auto ctx = pRenderer->GetContext();
         if (isPixelShader)
             ctx->PSSetSamplers(slot, 1, &m_spSamplerState.p);
         else

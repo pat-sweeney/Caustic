@@ -246,16 +246,6 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // Method: GetGraphics
-    // See <IRenderer::GetGraphics>
-    //**********************************************************************
-    CRefObj<IGraphics> CRenderer::GetGraphics()
-    {
-        CHECKTHREAD;
-        return CRefObj<IGraphics>(this);
-    }
-
-    //**********************************************************************
     // Method: DrawSceneObjects
     // First calls the renderCallback provided. Then renders each Renderable.
     //
@@ -529,26 +519,6 @@ namespace Caustic
             RenderFrame(renderCallback);
         }
         m_waitForShutdown.Set();
-    }
-
-    //**********************************************************************
-    // Function: CreateGraphics
-    // Creates a graphics device bound to the specified window
-    //
-    // Parameters:
-    // hwnd - window to attach renderer to
-    //
-    // Returns:
-    // Returns the created device
-    //**********************************************************************
-    CAUSTICAPI CRefObj<IGraphics> CreateGraphics(HWND hwnd)
-    {
-        std::unique_ptr<CGraphics> spGraphics(new CGraphics());
-        spGraphics->Setup(hwnd, true);
-
-        CRefObj<ICamera> spCamera = CCausticFactory::Instance()->CreateCamera(true);
-        spGraphics->SetCamera(spCamera);
-        return CRefObj<IGraphics>(spGraphics.release());
     }
 
     //**********************************************************************

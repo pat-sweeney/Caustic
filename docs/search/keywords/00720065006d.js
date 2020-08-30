@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("rem",["Function"],[["RemoveExteriorTriangles",,[[,,,,0,"File:Geometry/Mesh/Delaunay.cpp:RemoveExteriorTriangles"]]]]);
+NDSearch.OnPrefixDataLoaded("rem",["Function"],[["RemoveExteriorTriangles",,[[,,,,0,"File:Geometry/Mesh/Delaunay.cpp:RemoveExteriorTriangles"]]],["RemoveLight",,[["ISceneLightCollectionElem",,,,0,"File:Rendering/SceneGraph/ISceneGraph.h:ISceneLightCollectionElem.RemoveLight","CClass:ISceneLightCollectionElem:RemoveLight"]]]]);

@@ -43,7 +43,6 @@ namespace Caustic
                 CRefObj<IImage> spDiffuseImage = std::any_cast<CRefObj<IImage>>(diffuseTexVal);
                 if (spDiffuseImage)
                 {
-                    CRefObj<IGraphics> spGraphics = pRenderer->GetGraphics();
                     CRefObj<IMaterialAttrib> spMaterial = m_spCausticFactory->CreateMaterialAttrib();
                     spMaterial->SetTexture(L"diffuseTexture", spDiffuseImage, EShaderAccess::PixelShader);
                     m_spRenderMaterial = m_spCausticFactory->CreateRenderMaterial(pRenderer, spMaterial, m_spShader);

@@ -1,1 +1,1 @@
-NDSummary.OnToolTipsLoaded("CClass:IMesh",{260:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">IMesh is simply a collection of submesh objects (ISubMesh).</div></div>"});
+NDSummary.OnToolTipsLoaded("CClass:IMesh",{290:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">IMesh is simply a collection of submesh objects (ISubMesh).</div></div>"});

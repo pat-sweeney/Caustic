@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:CRenderMaterial","CRenderMaterial");NDSummary.OnSummaryLoaded("CClass:CRenderMaterial",[["C/C++","C"]],[["Classes","Class"]],[[512,0,0,"CRenderMaterial"]]);
+NDFramePage.OnPageTitleLoaded("CClass:CRenderMaterial","CRenderMaterial");NDSummary.OnSummaryLoaded("CClass:CRenderMaterial",[["C/C++","C"]],[["Classes","Class"]],[[590,0,0,"CRenderMaterial"]]);

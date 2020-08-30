@@ -1,1 +1,0 @@
-NDSearch.OnPrefixDataLoaded("igr",["Interface","File"],[["IGraphics",,[[,,,,0,"File:Rendering/Caustic/IGraphics.h:IGraphics","CClass:IGraphics"],[,"IGraphics.h",,,1,"File:Rendering/Caustic/IGraphics.h:IGraphics.h"]]]]);

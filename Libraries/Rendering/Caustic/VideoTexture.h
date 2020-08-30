@@ -71,12 +71,12 @@ namespace Caustic
 
         void GetVideoFormat(CVideoFormat *pFormat);
     public:
-        CVideoTexture(IGraphics *pGraphics);
+        CVideoTexture(IRenderer* pRenderer);
         ~CVideoTexture();
 
-        void CreateFromWebcam(IGraphics* pGraphics);
-        void FromMediaSource(IMFSourceReader* pSourceReader, IGraphics* pGraphics);
-        void LoadFromFile(const wchar_t *pFilename, IGraphics *pGraphics);
+        void CreateFromWebcam(IRenderer* pRenderer);
+        void FromMediaSource(IMFSourceReader* pSourceReader, IRenderer* pRenderer);
+        void LoadFromFile(const wchar_t *pFilename, IRenderer* pRenderer);
 
         //**********************************************************************
         // IRefCount
@@ -90,10 +90,10 @@ namespace Caustic
         virtual uint32 GetWidth() override;
         virtual uint32 GetHeight() override;
         virtual DXGI_FORMAT GetFormat() { return DXGI_FORMAT_B8G8R8A8_UNORM; }
-        virtual void Update(IGraphics *pGraphics) override;
+        virtual void Update(IRenderer *pRenderer) override;
         virtual CComPtr<ID3D11Texture2D> GetD3DTexture() override { return m_spTexture->GetD3DTexture(); }
         virtual CComPtr<ID3D11ShaderResourceView> GetD3DTextureRV() { return m_spTexture->GetD3DTextureRV(); }
-        virtual void GenerateMips(IGraphics* /*pGraphics*/) { _ASSERT(FALSE); return; }
-        virtual void Render(IGraphics* pGraphics, int slot, bool isPixelShader) override;
+        virtual void GenerateMips(IRenderer* /*pRenderer*/) { _ASSERT(FALSE); return; }
+        virtual void Render(IRenderer* pRenderer, int slot, bool isPixelShader) override;
     };
 };

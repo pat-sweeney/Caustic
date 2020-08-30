@@ -93,12 +93,6 @@ namespace Caustic
 		// Defines the current shader
 		//**********************************************************************
 		CRefObj<Caustic::IShader> m_spCurrentShader;
-
-		//**********************************************************************
-		// Property: m_spGraphics
-		// Defines our graphics renderer
-		//**********************************************************************
-		CRefObj<IGraphics> m_spGraphics;
 	};
 
 	//**********************************************************************

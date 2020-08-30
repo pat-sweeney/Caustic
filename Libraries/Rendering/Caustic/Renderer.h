@@ -49,7 +49,7 @@ namespace Caustic
     class CLight : public IPointLight, public CRefCount
     {
     public:
-        void Render(IGraphics* /*pGraphics*/) {}
+        void Render(IRenderer* /*pRenderer*/) {}
     };
 
     //**********************************************************************
@@ -140,7 +140,7 @@ namespace Caustic
         int m_shadowMapHeight[c_MaxShadowMaps];
         D3D11_VIEWPORT m_viewport;
 
-        friend CAUSTICAPI CRefObj<IGraphics> CreateGraphics(HWND hwnd);
+        friend CAUSTICAPI CRefObj<IRenderer> CreateGraphics(HWND hwnd);
 
         void InitializeD3D(HWND hwnd);
         void Setup(HWND hwnd, bool createDebugDevice);
@@ -149,32 +149,6 @@ namespace Caustic
         CComPtr<ID3D11DeviceContext> GetContext() { return m_spContext; }
         CRefObj<ICamera> GetCamera() { return m_spCamera; }
         CRefObj<IShaderMgr> GetShaderMgr() { return m_spShaderMgr; }
-    };
-
-    //**********************************************************************
-    // Class: CGraphics
-    // Implementation of <IGraphics>
-    //
-    // Header:
-    // [Link:Rendering/Caustic/Renderer.h]
-    //**********************************************************************
-    class CGraphics : public CGraphicsBase, public IGraphics
-    {
-    public:
-        //**********************************************************************
-        // IRefCount
-        //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
-
-        //**********************************************************************
-        // IGraphics
-        //**********************************************************************
-        virtual CComPtr<ID3D11Device> GetDevice() override { return CGraphicsBase::GetDevice(); }
-        virtual CComPtr<ID3D11DeviceContext> GetContext() override { return CGraphicsBase::GetContext(); }
-        virtual CRefObj<ICamera> GetCamera() override { return CGraphicsBase::GetCamera(); }
-        virtual void SetCamera(ICamera* pCamera) override { CGraphicsBase::SetCamera(pCamera); }
-        virtual CRefObj<IShaderMgr> GetShaderMgr() override { return CGraphicsBase::GetShaderMgr(); }
     };
 
     //**********************************************************************
@@ -256,7 +230,7 @@ namespace Caustic
         virtual uint32 Release() override { return CGraphicsBase::Release(); }
 
         //**********************************************************************
-        // IGraphics
+        // IRenderer
         //**********************************************************************
         virtual CComPtr<ID3D11Device> GetDevice() override { CHECKTHREAD;  return CGraphicsBase::GetDevice(); }
         virtual CComPtr<ID3D11DeviceContext> GetContext() override { CHECKTHREAD; return CGraphicsBase::GetContext(); }
@@ -272,7 +246,6 @@ namespace Caustic
         virtual void AddPointLight(IPointLight *pLight) override;
         virtual CRefObj<IRenderCtx> GetRenderCtx() override;
         virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) override;
-        virtual CRefObj<IGraphics> GetGraphics() override;
         virtual void PushShadowmapRT(int whichShadowmap, int lightMapIndex, Vector3& lightPos, Vector3& lightDir) override;
         virtual void PopShadowmapRT() override;
         virtual void SelectShadowmap(int whichShadowMap, int lightMapIndex, IShader *pShader) override;

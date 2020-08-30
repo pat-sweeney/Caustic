@@ -46,7 +46,7 @@ namespace Caustic
         CRefObj<ITexture> m_spTexture;
         CComPtr<ID3D11SamplerState> m_spSamplerState;
     public:
-        CSampler(IGraphics *pGraphics, ITexture *pTexture);
+        CSampler(IRenderer *pRenderer, ITexture *pTexture);
         
         //**********************************************************************
         // IRefCount
@@ -63,7 +63,7 @@ namespace Caustic
         virtual void SetAddressU(D3D11_TEXTURE_ADDRESS_MODE address) override { m_AddressU = address; }
         virtual D3D11_TEXTURE_ADDRESS_MODE GetAddressV() override { return m_AddressV; }
         virtual void SetAddressV(D3D11_TEXTURE_ADDRESS_MODE address) override { m_AddressV = address; }
-        virtual void Render(IGraphics *pGraphics, int slot, bool isPixelShader) override;
+        virtual void Render(IRenderer* pRenderer, int slot, bool isPixelShader) override;
         virtual CRefObj<ITexture> GetTexture() override;
     };
 };

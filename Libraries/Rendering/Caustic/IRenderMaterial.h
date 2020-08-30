@@ -18,10 +18,10 @@ namespace Caustic
 {
     struct IShader;
     struct IMaterialAttrib;
-    struct IGraphics;
     struct ITexture;
     struct ILight;
     struct IRenderCtx;
+    struct IRenderer;
 
     //**********************************************************************
     // Interface: IRenderMaterial
@@ -75,11 +75,11 @@ namespace Caustic
         // Sets a texture
         //
         // Parameters:
-        // pGraphics - graphics device
+        // pRenderer - graphics device
         // name - name of texture (as referenced by the shader)
         // pTexture - texture
         //**********************************************************************
-        virtual void SetTexture(IGraphics* pGraphics, const wchar_t *pName, ITexture* pTexture, EShaderAccess access) = 0;
+        virtual void SetTexture(IRenderer *pRenderer, const wchar_t *pName, ITexture* pTexture, EShaderAccess access) = 0;
 
         //**********************************************************************
         // Method: GetTexture
@@ -98,13 +98,13 @@ namespace Caustic
         // Renders the material (pushes it to the shader)
         //
         // Parameters:
-        // pGraphics - graphics device
+        // pRenderer - graphics device
         // lights - list of lights to use
         // pRenderCtx - render context to use
         // pOverrideShader - shader override (shader to use instead of material's shader)
         //**********************************************************************
-        virtual void Render(IGraphics *pGraphics, std::vector<CRefObj<ILight>> &lights, IRenderCtx *pRenderCtx, IShader *pOverrideShader) = 0;
+        virtual void Render(IRenderer* pRenderer, std::vector<CRefObj<ILight>> &lights, IRenderCtx *pRenderCtx, IShader *pOverrideShader) = 0;
     };
 
-    CAUSTICAPI CRefObj<IRenderMaterial> CreateRenderMaterial(IGraphics* pGraphics, IMaterialAttrib* pMaterialAttrib, IShader* pShader);
+    CAUSTICAPI CRefObj<IRenderMaterial> CreateRenderMaterial(IRenderer* pRenderer, IMaterialAttrib* pMaterialAttrib, IShader* pShader);
 }

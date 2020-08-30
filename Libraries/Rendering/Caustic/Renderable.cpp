@@ -46,17 +46,17 @@ namespace Caustic
     // Renders either the front or back faces of a mesh
     //
     // Parameters:
-    // pGraphics - graphics device
+    // pRenderer - graphics device
     // lights - List of lights to apply
     // pRenderCtx - Rendering context
     // pRenderMaterial - Material to apply
     // cullmode - Culling mode to apply
     //**********************************************************************
-    void CRenderable::RenderMesh(IGraphics *pGraphics, std::vector<CRefObj<ILight>> &lights,
+    void CRenderable::RenderMesh(IRenderer *pRenderer, std::vector<CRefObj<ILight>> &lights,
         IRenderCtx *pRenderCtx, IRenderMaterial *pRenderMaterial, D3D11_CULL_MODE cullmode)
     {
-        CComPtr<ID3D11Device> spDevice = pGraphics->GetDevice();
-        CComPtr<ID3D11DeviceContext> spContext = pGraphics->GetContext();
+        CComPtr<ID3D11Device> spDevice = pRenderer->GetDevice();
+        CComPtr<ID3D11DeviceContext> spContext = pRenderer->GetContext();
 
         CComPtr<ID3D11RasterizerState> spRasterState;
         D3D11_RASTERIZER_DESC rasDesc;
@@ -70,9 +70,9 @@ namespace Caustic
 
         CRefObj<IShader> spShader;
         if (pRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayNormalsAsColors)
-            spShader = pGraphics->GetShaderMgr()->FindShader(L"ColorNormal");
+            spShader = pRenderer->GetShaderMgr()->FindShader(L"ColorNormal");
         else if (pRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayUVsAsColors)
-            spShader = pGraphics->GetShaderMgr()->FindShader(L"ColorUVs");
+            spShader = pRenderer->GetShaderMgr()->FindShader(L"ColorUVs");
         else
             spShader = pRenderMaterial->GetShader();
 
@@ -82,7 +82,7 @@ namespace Caustic
         id++;
 
         // Setup the material
-        pRenderMaterial->Render(pGraphics, lights, pRenderCtx, spShader);
+        pRenderMaterial->Render(pRenderer, lights, pRenderCtx, spShader);
 
         UINT offsets = 0;
         const MeshData &md = m_spSubMesh->GetMeshData();
@@ -91,7 +91,7 @@ namespace Caustic
         if (md.m_numIndices > 0)
             spContext->IASetIndexBuffer(md.m_spIB, DXGI_FORMAT_R32_UINT, 0);
 
-        spShader->BeginRender(pGraphics, m_spFrontMaterial, m_spBackMaterial, lights, &m_xform);
+        spShader->BeginRender(pRenderer, m_spFrontMaterial, m_spBackMaterial, lights, &m_xform);
 
         if (pRenderCtx->PassBlendable())
         {
@@ -117,30 +117,30 @@ namespace Caustic
             spContext->DrawIndexedInstanced(md.m_numIndices, 1, 0, 0, 0);
         else
             spContext->DrawInstanced(md.m_numVertices, 1, 0, 0);
-        spShader->EndRender(pGraphics);
+        spShader->EndRender(pRenderer);
     }
 
     //**********************************************************************
     // Method: Render
     // See <IRenderable::Render>
     //**********************************************************************
-    void CRenderable::Render(IGraphics *pGraphics, std::vector<CRefObj<ILight>> &lights, IRenderCtx *pRenderCtx)
+    void CRenderable::Render(IRenderer *pRenderer, std::vector<CRefObj<ILight>> &lights, IRenderCtx *pRenderCtx)
     {
-        CComPtr<ID3D11Device> spDevice = pGraphics->GetDevice();
-        CComPtr<ID3D11DeviceContext> spContext = pGraphics->GetContext();
+        CComPtr<ID3D11Device> spDevice = pRenderer->GetDevice();
+        CComPtr<ID3D11DeviceContext> spContext = pRenderer->GetContext();
 
         if (m_spFrontMaterial)
         {
-            RenderMesh(pGraphics, lights, pRenderCtx, m_spFrontMaterial, D3D11_CULL_MODE::D3D11_CULL_BACK);
+            RenderMesh(pRenderer, lights, pRenderCtx, m_spFrontMaterial, D3D11_CULL_MODE::D3D11_CULL_BACK);
         }
         if (m_spBackMaterial)
         {
-            RenderMesh(pGraphics, lights, pRenderCtx, m_spBackMaterial, D3D11_CULL_MODE::D3D11_CULL_FRONT);
+            RenderMesh(pRenderer, lights, pRenderCtx, m_spBackMaterial, D3D11_CULL_MODE::D3D11_CULL_FRONT);
         }
         if ((pRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayNormalsAsLines) ||
             (pRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayFaceNormals))
         {
-            CRefObj<IShader> spShader = pGraphics->GetShaderMgr()->FindShader(L"DrawNormal");
+            CRefObj<IShader> spShader = pRenderer->GetShaderMgr()->FindShader(L"DrawNormal");
             UINT offset = 0;
             const MeshData &md = m_spSubMesh->GetMeshData(true);
             spContext->IASetVertexBuffers(0, 1, &md.m_spVB.p, &md.m_vertexSize, &offset);
@@ -150,10 +150,10 @@ namespace Caustic
             v = (pRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayNormalsAsLines) ? 1.0f : 0.0f;
             spShader->SetVSParam(L"drawNormals", std::any(v));
 
-            spShader->BeginRender(pGraphics, m_spFrontMaterial, m_spBackMaterial, lights, nullptr);
+            spShader->BeginRender(pRenderer, m_spFrontMaterial, m_spBackMaterial, lights, nullptr);
             spContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
             spContext->DrawInstanced(md.m_numVertices, 1, 0, 0);
-            spShader->EndRender(pGraphics);
+            spShader->EndRender(pRenderer);
         }
     }
 

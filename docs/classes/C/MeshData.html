@@ -8,9 +8,19 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="Topic817"></a><div class="CTopic TStruct LC first">
+<a name="Topic896"></a><div class="CTopic TStruct LC first">
  <div class="CTitle">MeshData</div>
- <div class="CBody"><p>Defines class for holding mesh data (i.e. vertices and indices)</p><div class="CHeading">Members</div><table class="CDefinitionList"><tr><td class="CDLEntry">m_spVB</td><td class="CDLDefinition"><p>The vertex buffer</p></td></tr><tr><td class="CDLEntry">m_spIB</td><td class="CDLDefinition"><p>The index buffer (maybe null)</p></td></tr><tr><td class="CDLEntry">m_vertexSize</td><td class="CDLDefinition"><p>Size in bytes of each vertex</p></td></tr><tr><td class="CDLEntry">m_numVertices</td><td class="CDLDefinition"><p>Number of vertices</p></td></tr><tr><td class="CDLEntry">m_numIndices</td><td class="CDLDefinition"><p>Number of indices. Maybe 0</p></td></tr></table><div class="CHeading">Header</div><p><a href='../../index.html#File:Rendering/Caustic/IGraphics.h' target='_top'>Rendering/Caustic/IGraphics.h</a></p></div>
+ <div class="CBody"><p>Defines class for holding mesh data (i.e. vertices and indices)</p><div class="CHeading">Members</div><table class="CDefinitionList"><tr><td class="CDLEntry">m_spVB</td><td class="CDLDefinition"><p>The vertex buffer</p></td></tr><tr><td class="CDLEntry">m_spIB</td><td class="CDLDefinition"><p>The index buffer (maybe null)</p></td></tr><tr><td class="CDLEntry">m_vertexSize</td><td class="CDLDefinition"><p>Size in bytes of each vertex</p></td></tr><tr><td class="CDLEntry">m_numVertices</td><td class="CDLDefinition"><p>Number of vertices</p></td></tr><tr><td class="CDLEntry">m_numIndices</td><td class="CDLDefinition"><p>Number of indices. Maybe 0</p></td></tr></table><div class="CHeading">Header</div><p><a href='../../index.html#File:Rendering/Caustic/IRenderer.h' target='_top'>Rendering/Caustic/IRenderer.h</a></p></div>
+</div>
+
+<a name="Pass_Flags"></a><a name="Topic787"></a><div class="CTopic TGroup LC">
+ <div class="CTitle">Pass Flags</div>
+ <div class="CBody"><table class="CDefinitionList"><tr><td class="CDLEntry">c_PassFirst</td><td class="CDLDefinition"><p>first pass</p></td></tr><tr><td class="CDLEntry">c_PassObjID</td><td class="CDLDefinition"><p>renders pass writing object IDs to output texture</p></td></tr><tr><td class="CDLEntry">c_PassShadow</td><td class="CDLDefinition"><p>pass that renders shadow maps</p></td></tr><tr><td class="CDLEntry">c_PassOpaque</td><td class="CDLDefinition"><p>pass rendering the opaque objects</p></td></tr><tr><td class="CDLEntry">c_PassTransparent</td><td class="CDLDefinition"><p>pass rendering transparent objects</p></td></tr><tr><td class="CDLEntry">c_PassEnvironment</td><td class="CDLDefinition"><p>pass rendering environment maps</p></td></tr><tr><td class="CDLEntry">c_PassLast</td><td class="CDLDefinition"><p>last pass</p></td></tr><tr><td class="CDLEntry">c_PassAllPasses</td><td class="CDLDefinition"><p>combination of all the pass flags</p></td></tr></table></div>
+</div>
+
+<a name="Shadow_map_selection"></a><a name="Topic788"></a><div class="CTopic TGroup LC last">
+ <div class="CTitle">Shadow map selection</div>
+ <div class="CBody"><table class="CDefinitionList"><tr><td class="CDLEntry">c_HiResShadowMap</td><td class="CDLDefinition"><p>selects the hi-res shadow map</p></td></tr><tr><td class="CDLEntry">c_MidResShadowMap</td><td class="CDLDefinition"><p>selects the mid-res shadow map</p></td></tr><tr><td class="CDLEntry">c_LowResShadowMap</td><td class="CDLDefinition"><p>selects the low-res shadow map</p></td></tr></table><div class="CHeading">Header</div><p><a href='../../index.html#File:Rendering/Caustic/Renderer.h' target='_top'>Rendering/Caustic/Renderer.h</a></p></div>
 </div>
 
 </body></html>

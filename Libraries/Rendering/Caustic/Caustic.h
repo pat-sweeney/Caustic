@@ -5,9 +5,12 @@
 //**********************************************************************
 #pragma once
 
+#include <d3d11.h>
+#include <atlbase.h>
 #include "Base\Core\Core.h"
 #include "Base\Math\Vector.h"
-#include "Rendering\Caustic\IGraphics.h"
+#include "Base\Math\BBox.h"
+#include "Rendering\Caustic\IShaderMgr.h"
 #include "Rendering\Caustic\ITexture.h"
 #include "Rendering\Caustic\ISampler.h"
 #include "Rendering\Caustic\ICamera.h"
@@ -15,7 +18,6 @@
 #include "Rendering\Caustic\IPointLight.h"
 #include "Rendering\Caustic\ISpotLight.h"
 #include "Rendering\Caustic\ITrackball.h"
-#include "Rendering\Caustic\IShaderMgr.h"
 #include "Rendering\Caustic\IShader.h"
 #include "Rendering\Caustic\IRenderer.h"
 #include "Rendering\Caustic\IRenderCtx.h"
