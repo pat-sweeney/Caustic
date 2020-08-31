@@ -111,6 +111,21 @@ namespace Caustic
     }
     
     //**********************************************************************
+    // Method: SelectShadowmap
+    // See <IRenderer::SelectShadowmap>
+    //**********************************************************************
+    void CRendererMarshaller::SelectShadowmap(int whichShadowmap, int lightMapIndex, std::vector<CRefObj<ILight>>& lights, IShader* pShader)
+    {
+        std::vector<CRefObj<ILight>> copyLights = lights;
+        m_renderQueue.AddLambda(
+            [this, whichShadowmap, lightMapIndex, &copyLights, pShader]()
+            {
+                m_spRenderer->SelectShadowmap(whichShadowmap, lightMapIndex, copyLights, pShader);
+            }
+        );
+    }
+
+    //**********************************************************************
     // Method: GetShadowmapTexture
     // See <IRenderer::GetShadowmapTexture>
     //**********************************************************************

@@ -63,6 +63,21 @@ namespace Caustic
 		virtual void SetIsTransparent(bool isTransparent) = 0;
 
 		//**********************************************************************
+		// Method: GetIsShadowReceiver
+		// Indicates whether the surface acts as a shadow receiver
+		//**********************************************************************
+		virtual bool GetIsShadowReceiver() = 0;
+
+		//**********************************************************************
+		// Method: SetIsShadowReceiver
+		// Allows client to set whether the surface is a shadow receiver
+		//
+		// Parameters:
+		// receivesShadow - If true material is acts as a shadow receiver. Otherwise, it doesn't
+		//**********************************************************************
+		virtual void SetIsShadowReceiver(bool receivesShadow) = 0;
+
+		//**********************************************************************
 		// Method: GetColor
 		// Returns the color associated with the specified name
 		//

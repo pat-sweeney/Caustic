@@ -15,7 +15,7 @@ struct VSOutput
 
 Texture2D diffuseTexture : register(t0);
 SamplerState diffuseSampler : register(s0);
-Texture2D shadowMapTexture[MAX_LIGHTS] : register(t1);
+Texture2D shadowMapTexture : register(t1);
 SamplerState shadowMapSampler : register(s1);
 
 cbuffer PS_CONSTANT_BUFFER
@@ -40,18 +40,18 @@ float4 PS(VSOutput p) : SV_Target
     float3 color = float3(0.0f, 0.0f, 0.0f);
     float3 normWS = normalize(p.normWS);
 
+    // Check if in shadow. For now only assume 1 light is shadow caster
+    float shadowDist = shadowMapTexture.Sample(shadowMapSampler, p.lightPS[0].xy).x;
+    float diffuseAttenuation = 1.0f;
+    float specularAttenuation = 1.0f;
+    if (p.lightPS[0].z > shadowDist)
+    {
+        diffuseAttenuation = 0.5f;
+        specularAttenuation = 0.0f;
+    }
+
     for (int i = 0; i < numLights; i++)
     {
-        // Check if in shadow. For now only assume 1 light is shadow caster
-        float shadowDist = shadowMapTexture[i].Sample(shadowMapSampler, p.lightPS[i].xy).x;
-        float diffuseAttenuation = 1.0f;
-        float specularAttenuation = 1.0f;
-        if (p.lightPS[i].z > shadowDist)
-        {
-            diffuseAttenuation = 0.5f;
-            specularAttenuation = 0.0f;
-        }
-
         float3 lightDirWS = normalize(lightPosWS[i].xyz - p.posWS);
 
         // L.N

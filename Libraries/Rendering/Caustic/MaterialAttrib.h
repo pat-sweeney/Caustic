@@ -30,10 +30,12 @@ namespace Caustic
         static CRefObj<IImage> s_spDefaultTexture;
         int m_materialID;                 // Defines the material ID associated with this material
         bool m_isTransparent;
+        bool m_isShadowReceiver;
 
         CMaterialAttrib() :
             m_materialID(0),
-            m_isTransparent(false)
+            m_isTransparent(false),
+            m_isShadowReceiver(true)
         {
         }
 
@@ -48,6 +50,8 @@ namespace Caustic
         //**********************************************************************
         virtual bool GetIsTransparent() override { return m_isTransparent; }
         virtual void SetIsTransparent(bool isTransparent) override { m_isTransparent = isTransparent; }
+        virtual bool GetIsShadowReceiver() override { return m_isShadowReceiver; }
+        virtual void SetIsShadowReceiver(bool receivesShadow) override { m_isShadowReceiver = receivesShadow; }
         virtual FRGBColor GetColor(const wchar_t* pName) override;
         virtual void SetColor(const wchar_t *pName, FRGBColor& v) override;
         virtual float GetScalar(const wchar_t* pName) override;

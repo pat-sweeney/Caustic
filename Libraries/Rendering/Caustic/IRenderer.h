@@ -237,7 +237,7 @@ namespace Caustic
         // lightMapIndex - which light is this for?
         // pShader - shader to use selected shadow map
         //**********************************************************************
-        virtual void SelectShadowmap(int whichShadowMap, int lightMapIndex, IShader *pShader) = 0;
+        virtual void SelectShadowmap(int whichShadowMap, int lightMapIndex, std::vector<CRefObj<ILight>>& lights, IShader *pShader) = 0;
 
         //**********************************************************************
         // Method: GetShadowmapTexture

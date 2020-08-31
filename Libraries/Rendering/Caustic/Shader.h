@@ -138,6 +138,7 @@ namespace Caustic
         uint8* m_wpOutputBuffer; // Weak reference to the output buffer
 
         SBuffer() :
+            m_wpOutputBuffer(nullptr),
             m_bufferSize(0),
             m_heapSize(0),
             m_isInput(true),

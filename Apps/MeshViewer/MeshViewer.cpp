@@ -214,7 +214,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                         spMeshElem = spSceneFactory->CreateMeshElem();
                         spMeshElem->SetMesh(CreateGrid(20));
                         spMeshElem->SetName(L"GridMesh");
-                        spShader = spRenderWindow->GetRenderer()->GetShaderMgr()->FindShader(L"Textured");
+                        spShader = spRenderWindow->GetRenderer()->GetShaderMgr()->FindShader(L"TexturedWithShadow");
                         spMaterialElem = spSceneFactory->CreateMaterialElem();
                         spMaterial = spCausticFactory->CreateMaterialAttrib();
                         ambient = FRGBColor(0.2f, 0.2f, 0.2f);

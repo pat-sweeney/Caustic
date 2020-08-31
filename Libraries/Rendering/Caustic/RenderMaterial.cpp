@@ -93,6 +93,11 @@ namespace Caustic
                 Float4 sv(v, v, v, 1.0);
                 spShader->SetPSParam(name, std::any(sv));
                 });
+            if (m_spMaterial->GetIsShadowReceiver())
+            {
+                // Push our shadow maps
+                pRenderer->SelectShadowmap(c_HiResShadowMap, 0, lights, spShader);
+            }
             for (auto t : m_textures)
             {
                 if (t.second.m_spTexture)

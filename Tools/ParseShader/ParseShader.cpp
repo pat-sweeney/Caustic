@@ -238,8 +238,15 @@ void ParseLoop(ID3D11ShaderReflection *pReflection, HANDLE oh, EShaderType shade
             pType->GetDesc(&typeDesc);
             D3D11_SHADER_VARIABLE_DESC varDesc;
             pVar->GetDesc(&varDesc);
-            if (typeDesc.Class == D3D_SHADER_VARIABLE_CLASS::D3D10_SVC_VECTOR && typeDesc.Elements > 1)
-                WriteStr(oh, "             <Property Name='%s' Type='%s[%d]'/>\n", varDesc.Name, typeDesc.Name, typeDesc.Elements);
+            if (typeDesc.Elements > 1)
+            {
+                if (typeDesc.Class == D3D_SHADER_VARIABLE_CLASS::D3D_SVC_MATRIX_ROWS)
+                    WriteStr(oh, "             <Property Name='%s' Order='RowMajor' Type='%s[%d]'/>\n", varDesc.Name, typeDesc.Name, typeDesc.Elements);
+                else if (typeDesc.Class == D3D_SHADER_VARIABLE_CLASS::D3D_SVC_MATRIX_COLUMNS)
+                    WriteStr(oh, "             <Property Name='%s' Order='ColumnMajor' Type='%s[%d]'/>\n", varDesc.Name, typeDesc.Name, typeDesc.Elements);
+                else if (typeDesc.Class == D3D_SHADER_VARIABLE_CLASS::D3D10_SVC_VECTOR)
+                    WriteStr(oh, "             <Property Name='%s' Type='%s[%d]'/>\n", varDesc.Name, typeDesc.Name, typeDesc.Elements);
+            }
             else
                 WriteStr(oh, "             <Property Name='%s' Type='%s'/>\n", varDesc.Name, typeDesc.Name);
         }

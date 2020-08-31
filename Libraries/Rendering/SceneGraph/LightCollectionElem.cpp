@@ -10,6 +10,7 @@
 #include "LightCollectionElem.h"
 #include <string>
 #include <functional>
+#include <d3d11_4.h>
 
 namespace Caustic
 {
@@ -44,6 +45,11 @@ namespace Caustic
 
     void CSceneLightCollectionElem::Render(IRenderer* pRenderer, IRenderCtx* pRenderCtx, SceneCtx* pSceneCtx)
     {
+#ifdef _DEBUG
+        CComPtr<ID3D11DeviceContext2> spCtx2;
+        CT(pRenderer->GetContext()->QueryInterface<ID3D11DeviceContext2>(&spCtx2));
+        spCtx2->BeginEventInt(L"LightCollection", 0);
+#endif
         std::vector<CRefObj<ILight>> lights = pSceneCtx->m_lights;
         for (int i = 0; i < (int)m_lights.size(); i++)
             pSceneCtx->m_lights.push_back(m_lights[i]);
@@ -70,6 +76,9 @@ namespace Caustic
             CSceneGroupElem::Render(pRenderer, pRenderCtx, pSceneCtx);
         }
         pSceneCtx->m_lights = lights;
+#ifdef _DEBUG
+        spCtx2->EndEvent();
+#endif
     }
 
     void CSceneLightCollectionElem::GetBBox(BBox3* pBBox)

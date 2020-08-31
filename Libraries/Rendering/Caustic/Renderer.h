@@ -186,7 +186,7 @@ namespace Caustic
         public IRenderer
     {
     protected:
-        std::stack<ShadowMapRenderState> m_cameras;             // Cameras from shadow mapping
+        std::stack<ShadowMapRenderState> m_cameras;         // Cameras from shadow mapping
         DWORD m_renderThreadId;                             // Render thread's ID
         std::vector<CRenderable> m_singleObjs;              // List of individual renderable objects (outside scene graph)
         std::vector<CRefObj<ILight>> m_lights;              // List of lights in this scene
@@ -248,7 +248,7 @@ namespace Caustic
         virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) override;
         virtual void PushShadowmapRT(int whichShadowmap, int lightMapIndex, Vector3& lightPos, Vector3& lightDir) override;
         virtual void PopShadowmapRT() override;
-        virtual void SelectShadowmap(int whichShadowMap, int lightMapIndex, IShader *pShader) override;
+        virtual void SelectShadowmap(int whichShadowMap, int lightMapIndex, std::vector<CRefObj<ILight>>& lights, IShader* pShader) override;
         virtual CRefObj<ITexture> GetShadowmapTexture(int whichShadowMap) override;
     };
 }

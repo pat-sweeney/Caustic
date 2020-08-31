@@ -334,7 +334,7 @@ namespace Caustic
     // |   8   |   9   |---+---+---+---+
     // |       |       |   |   |   |   |
     // +-------+-------+---+---+---+---+
-    void CRenderer::SelectShadowmap(int whichShadowMap, int lightMapIndex, IShader *pShader)
+    void CRenderer::SelectShadowmap(int whichShadowMap, int lightMapIndex, std::vector<CRefObj<ILight>>& lights, IShader* pShader)
     {
         pShader->SetPSParam(L"shadowMapTexture", std::any(m_spShadowTexture[whichShadowMap]));
         int lx = lightMapIndex % 4;
@@ -346,6 +346,20 @@ namespace Caustic
             (float)(m_shadowMapHeight[whichShadowMap] / 4)
             );
         pShader->SetPSParam(L"shadowMapBounds", std::any(bounds));
+
+        // TODO: Need to fix this. For now we assume only the first light casts shadows
+        // We will set our lightViewProj matrix based on that light.
+        // We also assume a left-handed coordinate system
+        Vector3 lightPos = lights[0]->GetPosition();
+        Vector3 lightDir = lights[0]->GetDirection();
+        DirectX::XMVECTOR vEye = DirectX::XMVectorSet(lightPos.x, lightPos.y, lightPos.z, 1.0f);
+        if (Caustic::IsZero(lightDir.x) && Caustic::IsZero(lightDir.y) && Caustic::IsZero(lightDir.z))
+            lightDir.x = 1000.0f;
+        DirectX::XMVECTOR vLook = DirectX::XMVectorSet(lightPos.x + lightDir.x, lightPos.y + lightDir.y, lightPos.z + lightDir.z, 1.0f);
+        DirectX::XMVECTOR vUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+        DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(vEye, vLook, vUp);
+        DirectX::XMMATRIX pers = DirectX::XMMatrixPerspectiveFovLH(DegreesToRadians(90.0F), 1.0F, 0.001F, 1000.0F);
+        pShader->SetVSParam(L"lightViewProj", std::any(view * pers));
     }
 
     //**********************************************************************
