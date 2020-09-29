@@ -57,3 +57,4 @@ Documentation/**
 /rendermarshallobj.txt
 /mesh.backup.txt
 *.backup
+/External/**
