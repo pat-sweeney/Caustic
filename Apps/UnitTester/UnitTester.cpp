@@ -9,6 +9,7 @@
 #include "Imaging\Image\UnitTest.h"
 #include "Base\Math\UnitTest.h"
 #include "Rendering\RenderWindow\UnitTest.h"
+#include "Parsers\Lex\UnitTest.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -36,6 +37,8 @@ int main(int argc, char** argv)
                     whichTests |= 0x8;
                 else if (_stricmp(argv[i], "-renderwindow") == 0)
                     whichTests |= 0x10;
+                else if (_stricmp(argv[i], "-lex") == 0)
+                    whichTests |= 0x20;
             }
         }
     }
@@ -49,5 +52,7 @@ int main(int argc, char** argv)
         (new CausticTestSuite::MathTests())->RunUnitTests();
     if (whichTests & 0x10)
         (new CausticTestSuite::RenderWindowTests())->RunUnitTests();
+    if (whichTests & 0x20)
+        (new CausticTestSuite::LexTests())->RunUnitTests();
     return 0;
 }
