@@ -183,6 +183,8 @@ namespace Caustic
 		} CharMap[] = {
 			{ '{', '\0', c_LexToken_LeftBrace },
 			{ '}', '\0', c_LexToken_RightBrace },
+			{ '[', '\0', c_LexToken_LeftBracket },
+			{ ']', '\0', c_LexToken_RightBracket },
 			{ '(', '\0', c_LexToken_LeftParen },
 			{ ')', '\0', c_LexToken_RightParen },
 			{ ':', '\0', c_LexToken_Colon },

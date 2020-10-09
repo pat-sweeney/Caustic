@@ -44,7 +44,9 @@ namespace Caustic
 	const int c_LexToken_LeadsTo = 23;
 	const int c_LexToken_Comment = 24;
 	const int c_LexToken_Identifier = 25;
-	const int c_LexToken_Last = 26;
+	const int c_LexToken_LeftBracket = 26;
+	const int c_LexToken_RightBracket = 27;
+	const int c_LexToken_Last = 28;
 
 	//**********************************************************************
 	// Struct: LexToken
