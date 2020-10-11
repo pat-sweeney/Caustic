@@ -17,9 +17,9 @@
 namespace Caustic
 {
     //**********************************************************************
-    CVideoTexture::CVideoTexture(IGraphics *pGraphics)
+    CVideoTexture::CVideoTexture(IRenderer *pRenderer)
     {
-        m_spTexture = CCausticFactory::Instance()->CreateTexture(pGraphics, 1, 1, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
+        m_spTexture = CCausticFactory::Instance()->CreateTexture(pRenderer, 1, 1, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
     }
 
     //**********************************************************************
@@ -111,7 +111,7 @@ namespace Caustic
     // Method: Update
     // Updates the underlying texture
     //**********************************************************************
-    void CVideoTexture::Update(IGraphics *pGraphics)
+    void CVideoTexture::Update(IRenderer* pRenderer)
     {
         DWORD streamIndex;
         DWORD flags;
@@ -125,13 +125,13 @@ namespace Caustic
         if (flags & MF_SOURCE_READERF_CURRENTMEDIATYPECHANGED)
         {
             GetVideoFormat(&m_format);
-            m_spTexture = CCausticFactory::Instance()->CreateTexture(pGraphics, m_Width, m_Height, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
+            m_spTexture = CCausticFactory::Instance()->CreateTexture(pRenderer, m_Width, m_Height, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
         }
         if (spSample)
         {
             CComPtr<ID3D11Texture2D> spD3DTexture = m_spTexture->GetD3DTexture();
             D3D11_MAPPED_SUBRESOURCE ms;
-            CT(pGraphics->GetContext()->Map(spD3DTexture, 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
+            CT(pRenderer->GetContext()->Map(spD3DTexture, 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
 
             UINT32 pitch = 4 * m_format.m_width;
             CComPtr<IMFMediaBuffer> spBuffer;
@@ -149,16 +149,16 @@ namespace Caustic
                 pSrc += pitch;
                 pDst += ms.RowPitch;
             }
-            pGraphics->GetContext()->Unmap(spD3DTexture, 0);
+            pRenderer->GetContext()->Unmap(spD3DTexture, 0);
             CT(spBuffer->Unlock());
         }
 
     }
 
     //**********************************************************************
-    void CVideoTexture::Render(IGraphics* pGraphics, int slot, bool isPixelShader)
+    void CVideoTexture::Render(IRenderer* pRenderer, int slot, bool isPixelShader)
     {
-        m_spTexture->Render(pGraphics, slot, isPixelShader);
+        m_spTexture->Render(pRenderer, slot, isPixelShader);
     }
 
     //**********************************************************************
@@ -183,7 +183,7 @@ namespace Caustic
     }
 
     //**********************************************************************
-    void CVideoTexture::CreateFromWebcam(IGraphics* pGraphics)
+    void CVideoTexture::CreateFromWebcam(IRenderer* pRenderer)
     {
         CComPtr<IMFAttributes> spAttributes;
         CT(MFCreateAttributes(&spAttributes, 1));
@@ -192,22 +192,22 @@ namespace Caustic
         CreateVideoCaptureDevice(&spMediaSource);
         CComPtr<IMFSourceReader> spSourceReader;
         MFCreateSourceReaderFromMediaSource(spMediaSource, spAttributes, &spSourceReader);
-        FromMediaSource(spSourceReader, pGraphics);
+        FromMediaSource(spSourceReader, pRenderer);
     }
 
     //**********************************************************************
-    void CVideoTexture::LoadFromFile(const wchar_t* pFilename, IGraphics* pGraphics)
+    void CVideoTexture::LoadFromFile(const wchar_t* pFilename, IRenderer* pRenderer)
     {
         CComPtr<IMFAttributes> spAttributes;
         CT(MFCreateAttributes(&spAttributes, 1));
         CT(spAttributes->SetUINT32(MF_SOURCE_READER_ENABLE_VIDEO_PROCESSING, TRUE));
         CComPtr<IMFSourceReader> spSourceReader;
         CT(MFCreateSourceReaderFromURL(pFilename, spAttributes, &spSourceReader));
-        FromMediaSource(spSourceReader, pGraphics);
+        FromMediaSource(spSourceReader, pRenderer);
     }
 
     //**********************************************************************
-    void CVideoTexture::FromMediaSource(IMFSourceReader *pSourceReader, IGraphics* pGraphics)
+    void CVideoTexture::FromMediaSource(IMFSourceReader *pSourceReader, IRenderer* pRenderer)
     {
         m_spSourceReader = pSourceReader;
         CComPtr<IMFMediaType> spType;
@@ -238,7 +238,7 @@ namespace Caustic
         GetVideoFormat(&m_format);
         m_Width = m_format.m_width;
         m_Height = m_format.m_height;
-        m_spTexture = CCausticFactory::Instance()->CreateTexture(pGraphics, m_Width, m_Height, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
+        m_spTexture = CCausticFactory::Instance()->CreateTexture(pRenderer, m_Width, m_Height, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
     }
 
     //**********************************************************************
@@ -247,15 +247,15 @@ namespace Caustic
     //
     // Parameters:
     // pFilename - Name of file to load
-    // pGraphics - Renderer
+    // pRenderer - Renderer
     //
     // Returns:
     // Returns the new texture
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> LoadVideoTexture(const wchar_t* pFilename, IGraphics* pGraphics)
+    CAUSTICAPI CRefObj<ITexture> LoadVideoTexture(const wchar_t* pFilename, IRenderer* pRenderer)
     {
-        std::unique_ptr<CVideoTexture> spTexture(new CVideoTexture(pGraphics));
-        spTexture->LoadFromFile(pFilename, pGraphics);
+        std::unique_ptr<CVideoTexture> spTexture(new CVideoTexture(pRenderer));
+        spTexture->LoadFromFile(pFilename, pRenderer);
         return CRefObj<ITexture>(spTexture.release());
     }
 
@@ -264,15 +264,15 @@ namespace Caustic
     // VideoTextureFromWebcam uses a webcam to receive a video texture
     //
     // Parameters:
-    // pGraphics - Renderer
+    // pRenderer - Renderer
     //
     // Returns:
     // Returns the new texture
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> VideoTextureFromWebcam(IGraphics* pGraphics)
+    CAUSTICAPI CRefObj<ITexture> VideoTextureFromWebcam(IRenderer* pRenderer)
     {
-        std::unique_ptr<CVideoTexture> spTexture(new CVideoTexture(pGraphics));
-        spTexture->CreateFromWebcam(pGraphics);
+        std::unique_ptr<CVideoTexture> spTexture(new CVideoTexture(pRenderer));
+        spTexture->CreateFromWebcam(pRenderer);
         return CRefObj<ITexture>(spTexture.release());
     }
 }

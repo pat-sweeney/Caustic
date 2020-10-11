@@ -10,13 +10,10 @@
 
 namespace Caustic
 {
-    CAUSTICAPI void CreateSceneGraph(ISceneGraph **ppGraph)
+    CAUSTICAPI CRefObj<ISceneGraph> CreateSceneGraph()
     {
-		CRefObj<ISceneGroupElem> spGroup;
-		CSceneFactory::Instance()->CreateGroupElem(&spGroup);
-		std::unique_ptr<CSceneGraph> spGraphObj(new CSceneGraph(spGroup));
-        *ppGraph = spGraphObj.release();
-        (*ppGraph)->AddRef();
+		CRefObj<ISceneGroupElem> spGroup = CSceneFactory::Instance()->CreateGroupElem();
+		return CRefObj<ISceneGraph>(new CSceneGraph(spGroup));
     }
 
     void CSceneGraph::Lock()

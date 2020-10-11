@@ -13,7 +13,7 @@
 
 namespace Caustic
 {
-    CAUSTICAPI CRefObj<IRenderMaterial> CreateRenderMaterial(IGraphics* pGraphics, IMaterialAttrib* pMaterialAttrib, IShader* pShader)
+    CAUSTICAPI CRefObj<IRenderMaterial> CreateRenderMaterial(IRenderer* pRenderer, IMaterialAttrib* pMaterialAttrib, IShader* pShader)
     {
         std::unique_ptr<CRenderMaterial> spRenderMaterial(new CRenderMaterial());
         CRenderMaterial* wpRenderMaterial = spRenderMaterial.get();
@@ -22,18 +22,18 @@ namespace Caustic
         if (pMaterialAttrib)
         {
             pMaterialAttrib->EnumerateTextures(
-                [pGraphics, wpRenderMaterial](const wchar_t* pName, IImage* pImage, EShaderAccess access) {
+                [pRenderer, wpRenderMaterial](const wchar_t* pName, IImage* pImage, EShaderAccess access) {
                     if (pImage != nullptr)
                     {
-                        CRefObj<ITexture> spTexture = Caustic::CCausticFactory::Instance()->CreateTexture(pGraphics, pImage, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_SHADER_RESOURCE);
-                        wpRenderMaterial->SetTexture(pGraphics, pName, spTexture, access);
+                        CRefObj<ITexture> spTexture = Caustic::CCausticFactory::Instance()->CreateTexture(pRenderer, pImage, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_SHADER_RESOURCE);
+                        wpRenderMaterial->SetTexture(pRenderer, pName, spTexture, access);
                     }
                 });
         }
         return CRefObj<IRenderMaterial>(spRenderMaterial.release());
     }
 
-    void CRenderMaterial::SetTexture(IGraphics* pGraphics, const wchar_t* pName, ITexture* pTexture, EShaderAccess access)
+    void CRenderMaterial::SetTexture(IRenderer* pRenderer, const wchar_t* pName, ITexture* pTexture, EShaderAccess access)
     {
         std::map<std::wstring, CRenderTexture>::iterator it = m_textures.find(pName);
         if (it != m_textures.end())
@@ -41,7 +41,7 @@ namespace Caustic
         CRenderTexture tex;
         tex.m_spTexture = pTexture;
         tex.m_access = access;
-        tex.m_spSampler = CCausticFactory::Instance()->CreateSampler(pGraphics, tex.m_spTexture);
+        tex.m_spSampler = CCausticFactory::Instance()->CreateSampler(pRenderer, tex.m_spTexture);
 
         // pName is the name of our texture. We don't push textures to the shader, we push samplers. So rename it.
         tex.m_samplerName = std::wstring(pName);
@@ -70,7 +70,7 @@ namespace Caustic
         return m_spShader;
     }
 
-    void CRenderMaterial::Render(IGraphics *pGraphics, std::vector<CRefObj<IPointLight>> &lights, IRenderCtx * /*pRenderCtx*/, IShader *spShader)
+    void CRenderMaterial::Render(IRenderer* pRenderer, std::vector<CRefObj<ILight>> &lights, IRenderCtx * /*pRenderCtx*/, IShader *spShader)
     {
         // First make sure defaults are set
         Float4 vAmbient(0.1f, 0.1f, 0.1f, 0.1f);
@@ -93,11 +93,16 @@ namespace Caustic
                 Float4 sv(v, v, v, 1.0);
                 spShader->SetPSParam(name, std::any(sv));
                 });
+            if (m_spMaterial->GetIsShadowReceiver())
+            {
+                // Push our shadow maps
+                pRenderer->SelectShadowmap(c_HiResShadowMap, 0, lights, spShader);
+            }
             for (auto t : m_textures)
             {
                 if (t.second.m_spTexture)
                 {
-                    t.second.m_spTexture->Update(pGraphics);
+                    t.second.m_spTexture->Update(pRenderer);
                     if (t.second.m_access == EShaderAccess::Both || t.second.m_access == EShaderAccess::PixelShader)
                         spShader->SetPSParam(t.first, std::any(t.second.m_spTexture));
                     if (t.second.m_access == EShaderAccess::Both || t.second.m_access == EShaderAccess::VertexShader)

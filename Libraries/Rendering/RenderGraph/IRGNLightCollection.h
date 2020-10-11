@@ -19,7 +19,7 @@ namespace Caustic
     {
         virtual void AddLight(IPointLight* pLight) = 0;
         virtual void Clear() = 0;
-        virtual std::vector<CRefObj<IPointLight>> ToVector() = 0;
+        virtual std::vector<CRefObj<ILight>> ToVector() = 0;
         virtual CRefObj<ILightCollection> GetLights() = 0;
     };
 }

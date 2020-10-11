@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("File:Rendering/SceneGraph/LightCollectionElem.h","LightCollectionElem.h");NDSummary.OnSummaryLoaded("File:Rendering/SceneGraph/LightCollectionElem.h",[["C/C++","C"]],[["Classes","Class"]],[[1078,0,0,"CSceneLightCollectionElem","CSceneLightCollectionElem"]]);

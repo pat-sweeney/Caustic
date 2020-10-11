@@ -45,7 +45,8 @@ namespace Caustic
         // ISceneElem
         //**********************************************************************
         virtual ESceneElemType GetType() { return ESceneElemType::ComputeShaderElem; }
-        virtual std::wstring& Name() override { return CSceneElem::Name(); };
+        virtual std::wstring GetName() override { return CSceneElem::GetName(); }
+        virtual void SetName(const wchar_t* name) override { return CSceneElem::SetName(name); }
         virtual void SetPreRenderCallback(std::function<bool(int pass)> prerenderCallback) override
         {
             CSceneElem::SetPreRenderCallback(prerenderCallback);
@@ -59,7 +60,7 @@ namespace Caustic
             if (m_prerenderCallback)
                 if (!m_prerenderCallback(pRenderCtx->GetCurrentPass()))
                     return;
-            std::vector<CRefObj<IPointLight>> lights;
+            std::vector<CRefObj<ILight>> lights;
             m_spComputeShader->BeginRender(pRenderer, nullptr, nullptr, lights, nullptr);
             m_spComputeShader->EndRender(pRenderer);
             if (m_postrenderCallback)

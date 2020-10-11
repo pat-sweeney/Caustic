@@ -23,43 +23,52 @@ namespace Caustic
 		// Method: CreateMaterialElem
 		// Creates a material element
 		//**********************************************************************
-		virtual void CreateMaterialElem(Caustic::ISceneMaterialElem **ppElem) = 0;
+		virtual CRefObj<ISceneMaterialElem> CreateMaterialElem() = 0;
 
 		//**********************************************************************
 		// Method: CreateMaterialElem
 		// Creates a material element
 		//**********************************************************************
-		virtual void CreateComputeShaderElem(IShader* pComputeShader, ISceneComputeShaderElem** ppElem) = 0;
+		virtual CRefObj<ISceneComputeShaderElem> CreateComputeShaderElem(IShader* pComputeShader) = 0;
 
 		//**********************************************************************
-		// Method: CreatePointLightElem
-		// Creates a point light element
+		// Method: CreateLightCollectionElem
+		// Creates a light collection element
 		//**********************************************************************
-		virtual void CreatePointLightElem(IScenePointLightElem **ppLight) = 0;
+		virtual CRefObj<ISceneLightCollectionElem> CreateLightCollectionElem() = 0;
 
 		//**********************************************************************
 		// Method: CreateGroupElem
 		// Creates a group element
 		//**********************************************************************
-		virtual void CreateGroupElem(ISceneGroupElem **ppGroup) = 0;
+		virtual CRefObj<ISceneGroupElem> CreateGroupElem() = 0;
 
 		//**********************************************************************
 		// Method: CreateMeshElem
 		// Creates a mesh element
 		//**********************************************************************
-		virtual void CreateMeshElem(ISceneMeshElem** ppMesh) = 0;
+		virtual CRefObj<ISceneMeshElem> CreateMeshElem() = 0;
 
 		//**********************************************************************
 		// Method: CreateCustomRenderElem
 		// Create a element that will use a callback for rendering
 		//**********************************************************************
-		virtual void CreateCustomRenderElem(std::function<void(IRenderer *pRenderer, IRenderCtx	 *pCtx, SceneCtx * pSceneCtx)> clientCallback, ISceneCustomRenderElem** ppMesh) = 0;
+		virtual CRefObj<ISceneCustomRenderElem> CreateCustomRenderElem(std::function<void(IRenderer* pRender, IRenderCtx* pCtx, SceneCtx* pSceneCtx)> clientCallback) = 0;
+
+		//**********************************************************************
+		// Method: CreateOverlay2DElem
+		// Create a overlay element used to render textures in screen space (e.g. UI)
+		//
+		// Parameters:
+		// pShader - override shader to use. If nullptr then default shader is used.
+		//**********************************************************************
+		virtual CRefObj<ISceneOverlay2DElem> CreateOverlay2DElem(IShader* pShader = nullptr) = 0;
 
 		//**********************************************************************
 		// Method: CreateSceneGraph
 		// Creates a new scene graph
 		//**********************************************************************
-		virtual void CreateSceneGraph(ISceneGraph **ppGraph) = 0;
+		virtual CRefObj<ISceneGraph> CreateSceneGraph() = 0;
 	};
 
 	//**********************************************************************
@@ -67,5 +76,5 @@ namespace Caustic
 	// Creates a scene factory. This factory is used to create elements in
 	// the scene graph.
 	//**********************************************************************
-	CAUSTICAPI void CreateSceneFactory(ISceneFactory **ppElem);
+	CAUSTICAPI CRefObj<ISceneFactory> CreateSceneFactory();
 };

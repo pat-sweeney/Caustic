@@ -58,25 +58,24 @@ namespace Caustic
 		// ICausticFactory
 		//**********************************************************************
 		virtual CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring &shaderFolder) override;
-		virtual CRefObj<IGraphics> CreateGraphics(HWND hwnd) override;
 		virtual CRefObj<IRenderMesh> CreateRenderMesh() override;
 		virtual CRefObj<IRenderSubMesh> CreateRenderSubMesh() override;
 		virtual CRefObj<IPointLight> CreatePointLight(Vector3& pos, FRGBColor& color, float intensity) override;
 		virtual CRefObj<ISpotLight> CreateSpotLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity = 1000.0f, float innerAngle = 30.0f, float outerAngle = 45.0f, bool casts = true) override;
-		virtual CRefObj<IDirectionalLight> CreateDirectionalLight(Vector3& pos, FRGBColor& color, float intensity) override;
+		virtual CRefObj<IDirectionalLight> CreateDirectionalLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity) override;
 		virtual CRefObj<ITrackball> CreateTrackball() override;
 		virtual CRefObj<IRendererMarshaller> CreateRendererMarshaller() override;
 		virtual CRefObj<IMaterialAttrib> CreateMaterialAttrib() override;
-		virtual CRefObj<IRenderMaterial> CreateRenderMaterial(IGraphics *pGraphics, IMaterialAttrib *pMaterialAttrib, IShader *pShader) override;
+		virtual CRefObj<IRenderMaterial> CreateRenderMaterial(IRenderer *pRenderer, IMaterialAttrib *pMaterialAttrib, IShader *pShader) override;
         virtual CRefObj<IRenderable> CreateRenderable(IRenderSubMesh *pSubMesh, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat) override;
-        virtual CRefObj<ISampler> CreateSampler(IGraphics *pGraphics, ITexture* pTexture) override;
+        virtual CRefObj<ISampler> CreateSampler(IRenderer *pRenderer, ITexture* pTexture) override;
 		virtual CRefObj<ICamera> CreateCamera(bool leftHanded) override;
-		virtual CRefObj<ITexture> CreateTexture(IGraphics* pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags) override;
-		virtual CRefObj<ITexture> CreateTexture(IGraphics* pGraphics, IImage *pImage, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags) override;
-		virtual CRefObj<ITexture> CheckerboardTexture(IGraphics *pGraphics) override;
-		virtual CRefObj<ITexture> LoadTexture(const wchar_t *pFilename, IGraphics *pGraphics) override;
-		virtual CRefObj<ITexture> LoadVideoTexture(const wchar_t* pFilename, IGraphics* pGraphics) override;
-		virtual CRefObj<ITexture> VideoTextureFromWebcam(IGraphics* pGraphics) override;
+		virtual CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags) override;
+		virtual CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, IImage *pImage, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags) override;
+		virtual CRefObj<ITexture> CheckerboardTexture(IRenderer *pRenderer) override;
+		virtual CRefObj<ITexture> LoadTexture(const wchar_t *pFilename, IRenderer *pRenderer) override;
+		virtual CRefObj<ITexture> LoadVideoTexture(const wchar_t* pFilename, IRenderer* pRenderer) override;
+		virtual CRefObj<ITexture> VideoTextureFromWebcam(IRenderer* pRenderer) override;
 		virtual CRefObj<IShader> CreateShader(IRenderer *pRenderer, const wchar_t *pShaderName,
             ID3DBlob *pVertexShaderBlob, ID3DBlob* pPixelShaderBlob, ID3DBlob* pComputeShaderBlob,
 			IShaderInfo *pShaderInfo) override;

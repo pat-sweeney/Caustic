@@ -44,7 +44,7 @@ namespace Caustic
         std::map<std::wstring, CRenderTexture> m_textures;
     public:
         friend class CRenderer;
-        friend CAUSTICAPI CRefObj<IRenderMaterial> CreateRenderMaterial(IGraphics *pGraphics, IMaterialAttrib *pMaterialAttrib, IShader *pShader);
+        friend CAUSTICAPI CRefObj<IRenderMaterial> CreateRenderMaterial(IRenderer* pRenderer, IMaterialAttrib *pMaterialAttrib, IShader *pShader);
 
         //**********************************************************************
         // IRefCount
@@ -59,11 +59,11 @@ namespace Caustic
         virtual CRefObj<IShader> GetShader() override;
         virtual void SetMaterial(IMaterialAttrib *pMaterial) override { m_spMaterial = pMaterial; }
         virtual CRefObj<IMaterialAttrib> GetMaterial() override { return m_spMaterial; }
-        virtual void SetTexture(IGraphics* pGraphics, const wchar_t *pName, ITexture* pTexture, EShaderAccess access) override;
+        virtual void SetTexture(IRenderer* pRenderer, const wchar_t *pName, ITexture* pTexture, EShaderAccess access) override;
         virtual CRefObj<ITexture> GetTexture(const wchar_t* pName) override {
             std::map<std::wstring, CRenderTexture>::iterator it = m_textures.find(pName);
             return CRefObj<ITexture>(it->second.m_spTexture);
         }
-        virtual void Render(IGraphics *pGraphics, std::vector<CRefObj<IPointLight>> &lights, IRenderCtx *pRenderCtx, IShader *pOverrideShader) override;
+        virtual void Render(IRenderer* pRenderer, std::vector<CRefObj<ILight>> &lights, IRenderCtx *pRenderCtx, IShader *pOverrideShader) override;
     };
 }

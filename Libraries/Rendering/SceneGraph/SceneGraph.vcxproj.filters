@@ -8,6 +8,9 @@
     <Filter Include="Source Files\Shaders">
       <UniqueIdentifier>{9e52d0b6-6d44-49cc-acda-839dd6cc06c4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Shaders\Definitions">
+      <UniqueIdentifier>{21c49b89-a9bf-43b0-af37-fb0a7eaaac42}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SceneGraphImpl.h">
@@ -17,9 +20,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="MeshElem.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PointLightElem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="MaterialElem.h">
@@ -46,6 +46,12 @@
     <ClInclude Include="ComputeShaderElem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="LightCollectionElem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Overlay2D.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -60,9 +66,6 @@
     <ClCompile Include="MeshElem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PointLightElem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MaterialElem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -75,5 +78,22 @@
     <ClCompile Include="ComputeShaderElem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LightCollectionElem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Overlay2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Overlay2D.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Overlay2D.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="Overlay2D.xml" />
   </ItemGroup>
 </Project>

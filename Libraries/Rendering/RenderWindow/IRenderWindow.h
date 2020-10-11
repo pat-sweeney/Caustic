@@ -27,7 +27,7 @@ namespace Caustic
 		// Method: GetSceneGraph
 		// Returns the scene graph associated with this render window
 		//**********************************************************************
-		virtual CRefObj<IRenderGraph> GetRenderGraph() = 0;
+		virtual CRefObj<ISceneGraph> GetSceneGraph() = 0;
 
 		//**********************************************************************
 		// Method: GetRenderer

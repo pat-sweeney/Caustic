@@ -8,6 +8,8 @@
 #include "Base\Core\Core.h"
 #include "Base\Core\IRefCount.h"
 #include "Imaging\Image\Image.h"
+#include "Rendering/Caustic/IRenderer.h"
+
 
 //**********************************************************************
 // File: ITexture.h
@@ -52,9 +54,9 @@ namespace Caustic
         // video textures.
         //
         // Parameters:
-        // pGraphics - graphics device
+        // pRenderer - graphics device
         //**********************************************************************
-        virtual void Update(IGraphics *pGraphics) = 0; // Called to update texture
+        virtual void Update(IRenderer *pRenderer) = 0; // Called to update texture
 
         //**********************************************************************
         // Method: GetD3DTexture
@@ -75,20 +77,20 @@ namespace Caustic
         // Generates a set of mipmaps for the texture
         //
         // Parameters:
-        // pGraphics - graphics device
+        // pRenderer - graphics device
         //**********************************************************************
-        virtual void GenerateMips(IGraphics *pGraphics) = 0;
+        virtual void GenerateMips(IRenderer *pRenderer) = 0;
 
         //**********************************************************************
         // Method: Render
         // Pushes the specified texture to the GPU
         //
         // Parameters:
-        // pGraphics - graphics device
+        // pRenderer - graphics device
         // slot - texture slot to assign texture to
         // isPixelShader - is texture being assigned to a pixel or vertex shader
         //**********************************************************************
-        virtual void Render(IGraphics* pGraphics, int slot, bool isPixelShader) = 0;
+        virtual void Render(IRenderer* pRenderer, int slot, bool isPixelShader) = 0;
     };
 
     //**********************************************************************
@@ -96,7 +98,7 @@ namespace Caustic
     // Creates an empty texture.
     //
     // Parameters:
-    // pGraphics - Renderer
+    // pRenderer - Renderer
     // width - width of texture in pixels
     // height - height of texture in pixels
     // format - image format
@@ -109,14 +111,14 @@ namespace Caustic
     // Header:
     // [Link:Rendering/Caustic/ITexture.h]
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> CreateTexture(IGraphics* pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags);
+    CAUSTICAPI CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags);
     
     //**********************************************************************
     // Function: CreateTexture
     // Creates an empty texture.
     //
     // Parameters:
-    // pGraphics - Renderer
+    // pRenderer - Renderer
     // width - width of texture in pixels
     // height - height of texture in pixels
     // format - image format
@@ -127,14 +129,14 @@ namespace Caustic
     // Header:
     // [Link:Rendering/Caustic/ITexture.h]
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> CreateTexture(IGraphics* pGraphics, uint32 width, uint32 height, DXGI_FORMAT format);
+    CAUSTICAPI CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, uint32 width, uint32 height, DXGI_FORMAT format);
     
     //**********************************************************************
     // Function: CreateTexture
     // Creates a texture from an <IImage at Caustic::IImage>.
     //
     // Parameters:
-    // pGraphics - Renderer
+    // pRenderer - Renderer
     // pImage - image to use
     // cpuFlags - Flags indicating allowed access to texture from CPU (see D3D11 documentation)
     // bindFlags - bind flags (see D3D11 documentation)
@@ -145,19 +147,19 @@ namespace Caustic
     // Header:
     // [Link:Rendering/Caustic/ITexture.h]
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> CreateTexture(IGraphics* pGraphics, IImage* pImage, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags);
+    CAUSTICAPI CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, IImage* pImage, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags);
     
     //**********************************************************************
     // Function: CheckerboardTexture
     // Creates a black and white checkboard texture
     //
     // Parameters:
-    // pGraphics - Renderer
+    // pRenderer - Renderer
     //
     // Header:
     // [Link:Rendering/Caustic/ITexture.h]
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> CheckerboardTexture(IGraphics* pGraphics);
+    CAUSTICAPI CRefObj<ITexture> CheckerboardTexture(IRenderer* pRenderer);
 
     //**********************************************************************
     // Function: LoadTexture
@@ -165,7 +167,7 @@ namespace Caustic
     //
     // Parameters:
     // pFilename - Name of file to load
-    // pGraphics - Renderer
+    // pRenderer - Renderer
     //
     // Returns:
     // Returns the new texture
@@ -173,7 +175,7 @@ namespace Caustic
     // Header:
     // [Link:Rendering/Caustic/ITexture.h]
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> LoadTexture(const wchar_t* pFilename, IGraphics* pGraphics);
+    CAUSTICAPI CRefObj<ITexture> LoadTexture(const wchar_t* pFilename, IRenderer* pRenderer);
 
     //**********************************************************************
     // Function: LoadVideoTexture
@@ -181,7 +183,7 @@ namespace Caustic
     //
     // Parameters:
     // pFilename - Name of file to load
-    // pGraphics - Renderer
+    // pRenderer - Renderer
     //
     // Returns:
     // Returns the new texture
@@ -189,14 +191,14 @@ namespace Caustic
     // Header:
     // [Link:Rendering/Caustic/ITexture.h]
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> LoadVideoTexture(const wchar_t* pFilename, IGraphics* pGraphics);
+    CAUSTICAPI CRefObj<ITexture> LoadVideoTexture(const wchar_t* pFilename, IRenderer* pRenderer);
 
     //**********************************************************************
     // Function: VideoTextureFromWebcam
     // VideoTextureFromWebcam loads a video texture using a webcam as its source
     //
     // Parameters:
-    // pGraphics - Renderer
+    // pRenderer - Renderer
     //
     // Returns:
     // Returns the new texture
@@ -204,5 +206,5 @@ namespace Caustic
     // Header:
     // [Link:Rendering/Caustic/ITexture.h]
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> VideoTextureFromWebcam(IGraphics* pGraphics);
+    CAUSTICAPI CRefObj<ITexture> VideoTextureFromWebcam(IRenderer* pRenderer);
 }

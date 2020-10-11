@@ -6,8 +6,8 @@
 #include "stdafx.h"
 #include "Base\Core\Core.h"
 #include "Rendering\RenderWindow\RenderWindow.h"
-#include "Rendering\SceneGraph\ISceneGraph.h"
-#include "Rendering\SceneGraph\SceneFactory.h"
+#include "Rendering\RenderGraph\RenderGraph.h"
+#include "Rendering\SceneGraph\SceneGraph.h"
 #include "Rendering\Caustic\CausticFactory.h"
 #include <Windows.h>
 
@@ -18,14 +18,30 @@ namespace Caustic
         return CRefObj<IRenderWindow>(new CRenderWindow(hwnd, shaderFolder));
     }
 
-    CRenderWindow::CRenderWindow(HWND hwnd, std::wstring &shaderFolder)
+    CRenderWindow::CRenderWindow(HWND hwnd, std::wstring &shaderFolder, bool useRenderGraph /* = false */)
     {
+        m_useRenderGraph = useRenderGraph;
         m_spMarshaller = Caustic::CCausticFactory::Instance()->CreateRendererMarshaller();
-        m_spRenderGraphFactory = Caustic::CreateRenderGraphFactory();
-        m_spRenderGraph = m_spRenderGraphFactory->CreateRenderGraph();
+        if (useRenderGraph)
+        {
+            m_spRenderGraphFactory = Caustic::CreateRenderGraphFactory();
+            m_spRenderGraph = m_spRenderGraphFactory->CreateRenderGraph();
+        }
+        else
+        {
+            m_spSceneFactory = Caustic::CreateSceneFactory();
+            m_spSceneGraph = m_spSceneFactory->CreateSceneGraph();
+        }
         m_spMarshaller->Initialize(hwnd, shaderFolder,
             [this](IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass) {
-                m_spRenderGraph->Render(pRenderer, pRenderCtx);
+                if (m_useRenderGraph)
+                    m_spRenderGraph->Render(pRenderer, pRenderCtx);
+                else
+                {
+                    SceneCtx sceneCtx;
+                    sceneCtx.m_CurrentPass = pass;
+                    m_spSceneGraph->Render(pRenderer, pRenderCtx, &sceneCtx);
+                }
         });
 
         Caustic::Vector3 pos(0.0f, 0.0f, 0.0f);

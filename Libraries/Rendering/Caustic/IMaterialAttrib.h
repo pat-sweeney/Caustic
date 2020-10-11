@@ -45,6 +45,39 @@ namespace Caustic
 	struct IMaterialAttrib : public ISerialize
 	{
 		//**********************************************************************
+		// Method: GetIsTransparent
+		// Indicates whether material is considered transparent
+		//
+		// Returns:
+		// Returns true if material is considered to be transparent. False otherwise.
+		//**********************************************************************
+		virtual bool GetIsTransparent() = 0;
+
+		//**********************************************************************
+		// Method: SetIsTransparent
+		// Allows client to override whether material is considered transparent
+		//
+		// Parameters:
+		// isTransparent - override whether material is transparent
+		//**********************************************************************
+		virtual void SetIsTransparent(bool isTransparent) = 0;
+
+		//**********************************************************************
+		// Method: GetIsShadowReceiver
+		// Indicates whether the surface acts as a shadow receiver
+		//**********************************************************************
+		virtual bool GetIsShadowReceiver() = 0;
+
+		//**********************************************************************
+		// Method: SetIsShadowReceiver
+		// Allows client to set whether the surface is a shadow receiver
+		//
+		// Parameters:
+		// receivesShadow - If true material is acts as a shadow receiver. Otherwise, it doesn't
+		//**********************************************************************
+		virtual void SetIsShadowReceiver(bool receivesShadow) = 0;
+
+		//**********************************************************************
 		// Method: GetColor
 		// Returns the color associated with the specified name
 		//

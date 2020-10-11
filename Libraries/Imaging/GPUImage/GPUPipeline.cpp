@@ -50,7 +50,7 @@ namespace Caustic
     void CGPUPipeline::CreateShader(BYTE *pShaderCode, uint32 shaderCodeSize, ShaderDefs *pShaderParams, uint32 shaderParamSize, IShader **ppShader)
     {
         CRefObj<IShader> spShader;
-        Caustic::CreateShader(m_spGraphics, nullptr,
+        Caustic::CreateShader(m_spRenderer, nullptr,
             pShaderParams, shaderParamSize,
             g_QuadVS_ParamTable, _countof(g_QuadVS_ParamTable),
             pShaderCode, shaderCodeSize,
@@ -158,11 +158,11 @@ namespace Caustic
     
     //**********************************************************************
     // \brief Returns the graphics device associated with this pipeline
-    // \param[out] ppDevice Returns the IGraphics device associated with this pipeline
+    // \param[out] ppDevice Returns the IRenderer device associated with this pipeline
     //**********************************************************************
-    void CGPUPipeline::GetGraphics(IGraphics **ppDevice)
+    void CGPUPipeline::GetGraphics(IRenderer **ppDevice)
     {
-        *ppDevice = m_spGraphics;
+        *ppDevice = m_spRenderer;
         (*ppDevice)->AddRef();
     }
 
@@ -177,13 +177,13 @@ namespace Caustic
 
     //**********************************************************************
     // \brief Setups our pipeline
-    // \param[in] pGraphics Graphics device to use. If null then a new device is created
+    // \param[in] pRenderer Graphics device to use. If null then a new device is created
     //**********************************************************************
-    void CGPUPipeline::Initialize(IGraphics *pGraphics)
+    void CGPUPipeline::Initialize(IRenderer *pRenderer)
     {
-        if (pGraphics == nullptr)
-			Caustic::CCausticFactory::Instance()->CreateGraphics(nullptr, &pGraphics);
-        m_spGraphics = pGraphics;
+        if (pRenderer == nullptr)
+			Caustic::CCausticFactory::Instance()->CreateGraphics(nullptr, &pRenderer);
+        m_spRenderer = pRenderer;
         // Setup vertex buffer
         CD3D11_BUFFER_DESC vbdesc(sizeof(GPUVertex) * 4, D3D11_BIND_VERTEX_BUFFER);
         GPUVertex quadPts[5] = {
@@ -196,7 +196,7 @@ namespace Caustic
         data.pSysMem = quadPts;
         data.SysMemPitch = 0;
         data.SysMemSlicePitch = 0;
-        CComPtr<ID3D11Device> spDevice = m_spGraphics->GetDevice();
+        CComPtr<ID3D11Device> spDevice = m_spRenderer->GetDevice();
         CT(spDevice->CreateBuffer(&vbdesc, &data, &m_spFullQuadVB));
 
         //**********************************************************************
@@ -215,13 +215,13 @@ namespace Caustic
 
     //**********************************************************************
     // \brief Allocates a new pipeline object
-    // \param[in] pGraphics Specifies the IGraphics object to be used. If null a new graphics device is created.
+    // \param[in] pRenderer Specifies the IRenderer object to be used. If null a new graphics device is created.
     // \param[out] pPipeline Returns the newly created pipeline object
     //**********************************************************************
-    void CreateGPUPipeline(IGraphics *pGraphics, IGPUPipeline **ppPipeline)
+    void CreateGPUPipeline(IRenderer *pRenderer, IGPUPipeline **ppPipeline)
     {
         std::unique_ptr<CGPUPipeline> spPipeline(new CGPUPipeline());
-        spPipeline->Initialize(pGraphics);
+        spPipeline->Initialize(pRenderer);
         *ppPipeline = spPipeline.release();
         (*ppPipeline)->AddRef();
     }
@@ -292,16 +292,16 @@ namespace Caustic
         rasDesc.CullMode = D3D11_CULL_NONE;
         rasDesc.DepthClipEnable = TRUE;
         rasDesc.FillMode = D3D11_FILL_SOLID;
-        CComPtr<ID3D11Device> spDevice = m_spGraphics->GetDevice();
-        CComPtr<ID3D11DeviceContext> spCtx = m_spGraphics->GetContext();
+        CComPtr<ID3D11Device> spDevice = m_spRenderer->GetDevice();
+        CComPtr<ID3D11DeviceContext> spCtx = m_spRenderer->GetContext();
         spDevice->CreateRasterizerState(&rasDesc, &spRasterState);
         spCtx->RSSetState(spRasterState);
         spCtx->IASetVertexBuffers(0, 1, &m_spFullQuadVB, &vertexSize, &offset);
         spCtx->IASetIndexBuffer(m_spFullQuadIB, DXGI_FORMAT_R32_UINT, 0);
-        pShader->BeginRender(m_spGraphics);
+        pShader->BeginRender(m_spRenderer);
         spCtx->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         spCtx->DrawIndexed(6, 0, 0);
-        pShader->EndRender(m_spGraphics);
+        pShader->EndRender(m_spRenderer);
     }
 
     //**********************************************************************
@@ -311,10 +311,10 @@ namespace Caustic
     //**********************************************************************
     void CGPUImageBase::Process(IGPUPipeline *pPipeline)
     {
-        CRefObj<IGraphics> spGraphics;
-        pPipeline->GetGraphics(&spGraphics);
-        CComPtr<ID3D11Device> spDevice = spGraphics->GetDevice();
-        CComPtr<ID3D11DeviceContext> spCtx = spGraphics->GetContext();
+        CRefObj<IRenderer> spRenderer;
+        pPipeline->GetGraphics(&spRenderer);
+        CComPtr<ID3D11Device> spDevice = spRenderer->GetDevice();
+        CComPtr<ID3D11DeviceContext> spCtx = spRenderer->GetContext();
 
         // Get the input textures from the earlier nodes in the pipeline
         std::vector<CRefObj<ITexture>> textures;
@@ -325,7 +325,7 @@ namespace Caustic
             m_sourceNodes[i]->GetOutputTexture(pPipeline, &spTexture);
             textures.push_back(spTexture);
             CRefObj<ISampler> spSampler;
-			Caustic::CCausticFactory::Instance()->CreateSampler(spGraphics, spTexture, &spSampler);
+			Caustic::CCausticFactory::Instance()->CreateSampler(spRenderer, spTexture, &spSampler);
             samplers.push_back(CSamplerRef(spSampler));
         }
 
@@ -347,7 +347,7 @@ namespace Caustic
                 m_width = textures[0]->GetWidth();
                 m_height = textures[0]->GetHeight();
             }
-            Caustic::CCausticFactory::Instance()->CreateTexture(spGraphics, m_width, m_height, DXGI_FORMAT_R8G8B8A8_UNORM, m_cpuFlags, m_bindFlags, &m_spOutputTexture);
+            Caustic::CCausticFactory::Instance()->CreateTexture(spRenderer, m_width, m_height, DXGI_FORMAT_R8G8B8A8_UNORM, m_cpuFlags, m_bindFlags, &m_spOutputTexture);
             CComPtr<ID3D11RenderTargetView> spRTView;
             CT(spDevice->CreateRenderTargetView(m_spOutputTexture->GetD3DTexture(), nullptr, &spRTView));
 
@@ -368,10 +368,10 @@ namespace Caustic
     //**********************************************************************
     void CGPUImageSourceNode::SetSource(IGPUPipeline *pPipeline, IImage *pSource)
     {
-        CRefObj<IGraphics> spGraphics;
-        pPipeline->GetGraphics(&spGraphics);
-		Caustic::CCausticFactory::Instance()->CreateTexture(spGraphics, pSource->GetWidth(), pSource->GetHeight(), DXGI_FORMAT_R8G8B8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE, &m_spOutputTexture);
-        CComPtr<ID3D11DeviceContext> spCtx = spGraphics->GetContext();
+        CRefObj<IRenderer> spRenderer;
+        pPipeline->GetGraphics(&spRenderer);
+		Caustic::CCausticFactory::Instance()->CreateTexture(spRenderer, pSource->GetWidth(), pSource->GetHeight(), DXGI_FORMAT_R8G8B8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE, &m_spOutputTexture);
+        CComPtr<ID3D11DeviceContext> spCtx = spRenderer->GetContext();
         CComPtr<ID3D11Texture2D> spTexture = m_spOutputTexture->GetD3DTexture();
         D3D11_MAPPED_SUBRESOURCE mapinfo;
         spCtx->Map(spTexture, 0, D3D11_MAP::D3D11_MAP_WRITE_DISCARD, 0, &mapinfo);
@@ -413,10 +413,10 @@ namespace Caustic
     //**********************************************************************
     void CGPUImageSinkNode::Process(IGPUPipeline *pPipeline)
     {
-        CRefObj<IGraphics> spGraphics;
-        pPipeline->GetGraphics(&spGraphics);
-        CComPtr<ID3D11Device> spDevice = spGraphics->GetDevice();
-        CComPtr<ID3D11DeviceContext> spCtx = spGraphics->GetContext();
+        CRefObj<IRenderer> spRenderer;
+        pPipeline->GetGraphics(&spRenderer);
+        CComPtr<ID3D11Device> spDevice = spRenderer->GetDevice();
+        CComPtr<ID3D11DeviceContext> spCtx = spRenderer->GetContext();
         _ASSERT(m_sourceNodes.size() == 1 && m_sourceNodes[0] != nullptr);
         CRefObj<ITexture> spTexture;
         m_sourceNodes[0]->GetOutputTexture(pPipeline, &spTexture);
@@ -425,7 +425,7 @@ namespace Caustic
             m_width = spTexture->GetWidth();
             m_height = spTexture->GetHeight();
         }
-		Caustic::CCausticFactory::Instance()->CreateTexture(spGraphics, m_width, m_height, DXGI_FORMAT_R8G8B8A8_UNORM, m_cpuFlags, m_bindFlags, &m_spOutputTexture);
+		Caustic::CCausticFactory::Instance()->CreateTexture(spRenderer, m_width, m_height, DXGI_FORMAT_R8G8B8A8_UNORM, m_cpuFlags, m_bindFlags, &m_spOutputTexture);
         spCtx->CopyResource(m_spOutputTexture->GetD3DTexture(), spTexture->GetD3DTexture());
     }
 
@@ -436,10 +436,10 @@ namespace Caustic
     //**********************************************************************
     void CGPUImageSinkNode::GetOutput(IGPUPipeline *pPipeline, IImage **ppSource)
     {
-        CRefObj<IGraphics> spGraphics;
-        pPipeline->GetGraphics(&spGraphics);
-        CComPtr<ID3D11Device> spDevice = spGraphics->GetDevice();
-        CComPtr<ID3D11DeviceContext> spCtx = spGraphics->GetContext();
+        CRefObj<IRenderer> spRenderer;
+        pPipeline->GetGraphics(&spRenderer);
+        CComPtr<ID3D11Device> spDevice = spRenderer->GetDevice();
+        CComPtr<ID3D11DeviceContext> spCtx = spRenderer->GetContext();
         spCtx->Flush();
         CRefObj<IImage> spImage;
         Caustic::CreateImage(m_width, m_height, &spImage);

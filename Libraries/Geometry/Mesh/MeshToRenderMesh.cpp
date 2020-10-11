@@ -41,15 +41,15 @@ namespace Caustic
 	// Creates a vertex buffer using the specified submesh.
 	//
 	// Parameters:
-	// pGraphics - Graphics device
+	// pRenderer - Graphics device
 	// pShaderInfo - Information about the shader
 	// vertexReferenced - List of vertices that are referenced
 	// MeshData - place to store created vertex buffer
 	//**********************************************************************
-	void CSubMesh::BuildVertexBuffer(IGraphics* pGraphics,
+	void CSubMesh::BuildVertexBuffer(IRenderer* pRenderer,
 		IShaderInfo* pShaderInfo, std::vector<int>& vertexReferenced, MeshData* pMeshData)
 	{
-		CComPtr<ID3D11Device> spDevice = pGraphics->GetDevice();
+		CComPtr<ID3D11Device> spDevice = pRenderer->GetDevice();
 		std::vector<D3D11_INPUT_ELEMENT_DESC> vertexLayout = pShaderInfo->VertexLayout();
 		uint32 numVerts = GetNumberVertices();
 		uint32 vertexSize = pShaderInfo->GetVertexSize();
@@ -126,13 +126,13 @@ namespace Caustic
     // Creates a index buffer using the specified submesh.
     //
     // Parameters:
-    // pGraphics - Graphics device
+    // pRenderer - Graphics device
     // vertexReferenced - List of vertices that are referenced
     // MeshData - place to store created index buffer
     //**********************************************************************
-    void CSubMesh::BuildIndexBuffer(IGraphics *pGraphics, std::vector<int> &vertexReferenced, MeshData *pMeshData)
+    void CSubMesh::BuildIndexBuffer(IRenderer *pRenderer, std::vector<int> &vertexReferenced, MeshData *pMeshData)
 	{
-        CComPtr<ID3D11Device> spDevice = pGraphics->GetDevice();
+        CComPtr<ID3D11Device> spDevice = pRenderer->GetDevice();
         uint32 numFaces = GetNumberFaces();
 		uint32 *pIndexBuffer = new uint32[numFaces * 6 /* 6 is worst case */];
 		std::unique_ptr<uint32> spIndexBuffer(pIndexBuffer);
@@ -255,15 +255,14 @@ namespace Caustic
 	//**********************************************************************
 	CRefObj<IRenderSubMesh> CSubMesh::ToRenderSubMesh(IRenderer *pRenderer, IShader *pShader)
 	{
-        CRefObj<IGraphics> spGraphics = pRenderer->GetGraphics();
         CRefObj<ICausticFactory> spFactory = Caustic::CreateCausticFactory();
 		CRefObj<IRenderSubMesh> spRenderSubMesh = spFactory->CreateRenderSubMesh();
 		std::vector<int> vertexReferenced(GetNumberVertices(), c_Vertex_Unreferenced);
 		BuildReferencedVertexList(vertexReferenced);
 		CRefObj<IShaderInfo> spShaderInfo = pShader->GetShaderInfo();
         MeshData md;
-		BuildVertexBuffer(spGraphics, spShaderInfo, vertexReferenced, &md);
-		BuildIndexBuffer(spGraphics, vertexReferenced, &md);
+		BuildVertexBuffer(pRenderer, spShaderInfo, vertexReferenced, &md);
+		BuildIndexBuffer(pRenderer, vertexReferenced, &md);
         spRenderSubMesh->SetMeshData(md);
 		spRenderSubMesh->SetShader(pShader);
 		return spRenderSubMesh;

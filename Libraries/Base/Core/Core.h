@@ -4,6 +4,7 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
+#define _USE_MATH_DEFINES
 #include <math.h>
 
 #ifdef CAUSTIC_EXPORT
@@ -131,6 +132,18 @@ namespace Caustic
 	// Returns the absolute value of 'x'
 	//**********************************************************************
 	inline float Abs(float x) { return (x < 0.0f) ? -x : x; }
+
+	//**********************************************************************
+	// Function: DegreesToRadians
+	// Converts degrees to radians
+	//**********************************************************************
+	inline float DegreesToRadians(float x) { return x * (float)M_PI / 180.0f; }
+
+	//**********************************************************************
+	// Function: RadiansToDegrees
+	// Converts radians to degrees
+	//**********************************************************************
+	inline float RadiansToDegrees(float x) { return x * 180.0f / (float)M_PI; }
 
 	//**********************************************************************
 	// Function: IsZero

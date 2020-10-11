@@ -49,18 +49,6 @@ namespace Caustic
 		//**********************************************************************
 		virtual CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring &shaderFolder) = 0;
 
-		//**********************************************************************
-		// Method: CreateGraphics
-		// Creates a wrapper around our D3D device.
-		//
-		// Paramters:
-		// hwnd - HWND to attach D3D renderer to
-		//
-		// Returns:
-		// Returns the graphics device
-		//**********************************************************************
-		virtual CRefObj<IGraphics> CreateGraphics(HWND hwnd) = 0;
-
         //**********************************************************************
 		// Method: CreateRenderMesh
 		// Creates a render mesh object
@@ -85,6 +73,8 @@ namespace Caustic
 		//
 		// Parameters:
 		// pos - position of light source in world coordinates
+		// color - color of light
+		// intensity - light's intensity
 		//
 		// Returns:
 		// Returns the point light source
@@ -115,11 +105,14 @@ namespace Caustic
 		//
 		// Parameters:
 		// pos - position of light source in world coordinates
+		// dir - direction of light source in world coordinates
+		// color - color of light
+		// intensity - light's intensity
 		//
 		// Returns:
-		// Returns the point light source
+		// Returns the directional light source
 		//**********************************************************************
-		virtual CRefObj<IDirectionalLight> CreateDirectionalLight(Vector3& pos, FRGBColor& color, float intensity) = 0;
+		virtual CRefObj<IDirectionalLight> CreateDirectionalLight(Vector3 &pos, Vector3& dir, FRGBColor& color, float intensity) = 0;
 
 		//**********************************************************************
 		// Method: CreateTrackball
@@ -154,14 +147,14 @@ namespace Caustic
 		// Creates a RenderMaterial object.
 		//
 		// Parameters:
-		// pGraphics - Graphics device
+		// pRenderer - Graphics device
 		// pMaterialAttrib - Material definition
 		// pShader - Vertex+Pixel shader
 		//
 		// Returns:
 		// Returns the created RenderMaterial object
 		//**********************************************************************
-		virtual CRefObj<IRenderMaterial> CreateRenderMaterial(IGraphics *pGraphics, IMaterialAttrib *pMaterialAttrib, IShader *pShader) = 0;
+		virtual CRefObj<IRenderMaterial> CreateRenderMaterial(IRenderer *pRenderer, IMaterialAttrib *pMaterialAttrib, IShader *pShader) = 0;
 		
 		//**********************************************************************
 		// Method: CreateRenderable
@@ -183,13 +176,13 @@ namespace Caustic
 		// Creates a new sampler. Samplers defined how shaders read from textures.
 		//
 		// Parameters:
-		// pGraphics - graphics device
+		// pRenderer - graphics device
 		// pTexture - texture to associate with sampler
 		//
 		// Returns:
 		// Returns the newly create sampler
 		//**********************************************************************
-		virtual CRefObj<ISampler> CreateSampler(IGraphics *pGraphics, ITexture *pTexture) = 0;
+		virtual CRefObj<ISampler> CreateSampler(IRenderer* pRenderer, ITexture *pTexture) = 0;
 
 		//**********************************************************************
 		// Function: CreateCamera
@@ -209,7 +202,7 @@ namespace Caustic
 		// Creates a new texture
 		//
 		// Parameters:
-		// pGraphics - graphics device
+		// pRenderer - graphics device
 		// width - width of texture in pixels
 		// height - height of texture in pixels
 		// format - pixel format for the texture
@@ -219,14 +212,14 @@ namespace Caustic
 		// Returns:
 		// Returns the newly created texture
 		//**********************************************************************
-		virtual CRefObj<ITexture> CreateTexture(IGraphics* pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags) = 0;
+		virtual CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags) = 0;
 
 		//**********************************************************************
 		// Method: CreateTexture
 		// Creates a new texture
 		//
 		// Parameters:
-		// pGraphics - graphics device
+		// pRenderer - graphics device
 		// pImage - image data to set texture to
 		// cpuFlags - DirectX cpu flags
 		// bindFlags - DirectX bind flags
@@ -234,16 +227,16 @@ namespace Caustic
 		// Returns:
 		// Returns the newly created texture
 		//**********************************************************************
-		virtual CRefObj<ITexture> CreateTexture(IGraphics* pGraphics, IImage *pImage, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags) = 0;
+		virtual CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, IImage *pImage, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags) = 0;
 
 		//**********************************************************************
 		// Method: CheckerboardTexture
 		// Creates a texture with a checkerboard pattern
 		//
 		// Parameters:
-		// pGraphics - graphics device
+		// pRenderer - graphics device
 		//**********************************************************************
-		virtual CRefObj<ITexture> CheckerboardTexture(IGraphics *pGraphics) = 0;
+		virtual CRefObj<ITexture> CheckerboardTexture(IRenderer* pRenderer) = 0;
 
 		//**********************************************************************
 		// Method: LoadTexture
@@ -251,12 +244,12 @@ namespace Caustic
 		//
 		// Parameters:
 		// pFilename - filename of the image file
-		// pGraphics - graphics device
+		// pRenderer - graphics device
 		//
 		// Returns:
 		// Returns the newly created texture
 		//**********************************************************************
-		virtual CRefObj<ITexture> LoadTexture(const wchar_t *pFilename, IGraphics *pGraphics) = 0;
+		virtual CRefObj<ITexture> LoadTexture(const wchar_t *pFilename, IRenderer* pRenderer) = 0;
 
 		//**********************************************************************
 		// Method: LoadVideoTexture
@@ -264,24 +257,24 @@ namespace Caustic
 		//
 		// Parameters:
 		// pFilename - filename of the image file
-		// pGraphics - graphics device
+		// pRenderer - graphics device
 		//
 		// Returns:
 		// Returns the newly created texture
 		//**********************************************************************
-		virtual CRefObj<ITexture> LoadVideoTexture(const wchar_t* pFilename, IGraphics* pGraphics) = 0;
+		virtual CRefObj<ITexture> LoadVideoTexture(const wchar_t* pFilename, IRenderer* pRenderer) = 0;
 
 		//**********************************************************************
 		// Method: VideoTextureFromWebcam
 		// Loads a video texture using a webcam as the source
 		//
 		// Parameters:
-		// pGraphics - graphics device
+		// pRenderer - graphics device
 		//
 		// Returns:
 		// Returns the newly created texture
 		//**********************************************************************
-		virtual CRefObj<ITexture> VideoTextureFromWebcam(IGraphics* pGraphics) = 0;
+		virtual CRefObj<ITexture> VideoTextureFromWebcam(IRenderer* pRenderer) = 0;
 
 		//**********************************************************************
         // Method: CreateShader

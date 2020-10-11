@@ -24,7 +24,7 @@
 
 namespace Caustic
 {
-    struct IGraphics;
+    struct IRenderer;
     struct IPointLight;
     struct IRenderCtx;
 
@@ -52,11 +52,11 @@ namespace Caustic
         // Called by the renderer to render this object
         //
         // Parameters:
-        // pGraphics - Graphics device
+        // pRenderer - Graphics device
         // lights - List of current lights effecting this object
         // pRenderCtx - Current render context
         //**********************************************************************
-        virtual void Render(IGraphics *pGraphics, std::vector<CRefObj<IPointLight>> &lights, IRenderCtx *pRenderCtx) = 0;
+        virtual void Render(IRenderer *pRenderer, std::vector<CRefObj<ILight>> &lights, IRenderCtx *pRenderCtx) = 0;
 
         //**********************************************************************
         // Method: SetTransform

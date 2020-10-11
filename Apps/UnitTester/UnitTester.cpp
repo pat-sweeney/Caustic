@@ -10,6 +10,9 @@
 #include "Base\Math\UnitTest.h"
 #include "Rendering\RenderWindow\UnitTest.h"
 #include "Parsers\Lex\UnitTest.h"
+#ifdef SUPPORT_SCHEME
+#include "Interpreter\Scheme\UnitTest.h"
+#endif // SUPPORT_SCHEME
 #include <stdlib.h>
 #include <string.h>
 
@@ -39,6 +42,10 @@ int main(int argc, char** argv)
                     whichTests |= 0x10;
                 else if (_stricmp(argv[i], "-lex") == 0)
                     whichTests |= 0x20;
+#ifdef SUPPORT_SCHEME
+                else if (_stricmp(argv[i], "-scheme") == 0)
+                    whichTests |= 0x40;
+#endif // SUPPORT_SCHEME
             }
         }
     }
@@ -54,5 +61,9 @@ int main(int argc, char** argv)
         (new CausticTestSuite::RenderWindowTests())->RunUnitTests();
     if (whichTests & 0x20)
         (new CausticTestSuite::LexTests())->RunUnitTests();
+#ifdef SUPPORT_SCHEME
+    if (whichTests & 0x40)
+        (new CausticTestSuite::SchemeTests())->RunUnitTests();
+#endif // SUPPORT_SCHEME
     return 0;
 }

@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/Texture.h","Texture.h");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/Texture.h",[["C/C++","C"]],[["Classes","Class"]],[[565,0,0,"CTexture","CTexture"]]);
+NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/Texture.h","Texture.h");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/Texture.h",[["C/C++","C"]],[["Classes","Class"]],[[517,0,0,"CTexture","CTexture"]]);

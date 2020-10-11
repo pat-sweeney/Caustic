@@ -22,6 +22,7 @@ namespace Caustic
     // Creates a directional light
     //
     // Parameters:
+    // pos - light's position in world coordinates
     // dir - direction vector
     // clr - color of light
     // intensity - intensity of light
@@ -29,8 +30,8 @@ namespace Caustic
     // Returns:
     // Returns the created directional light
     //**********************************************************************
-    CAUSTICAPI CRefObj<IDirectionalLight> CreateDirectionalLight(Vector3& dir, FRGBColor& color, float intensity, bool casts)
+    CAUSTICAPI CRefObj<IDirectionalLight> CreateDirectionalLight(Vector3 &pos, Vector3& dir, FRGBColor& color, float intensity, bool casts)
     {
-        return CRefObj<IDirectionalLight>(new CDirectionalLight(dir, color, intensity, casts));
+        return CRefObj<IDirectionalLight>(new CDirectionalLight(pos, dir, color, intensity, casts));
     }
 }

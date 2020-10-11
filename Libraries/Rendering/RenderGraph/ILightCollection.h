@@ -26,7 +26,7 @@ namespace Caustic
         // Parameters:
         // pLight - Light to add to the collection
         //**********************************************************************
-        virtual void AddLight(IPointLight* pLight) = 0;
+        virtual void AddLight(ILight* pLight) = 0;
 
         //**********************************************************************
         // Method: Clear
@@ -41,6 +41,6 @@ namespace Caustic
         // Returns:
         // Returns a vector of the lights in the collection
         //**********************************************************************
-        virtual std::vector<CRefObj<IPointLight>> ToVector() = 0;
+        virtual std::vector<CRefObj<ILight>> ToVector() = 0;
     };
 }

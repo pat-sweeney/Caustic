@@ -1,1 +1,1 @@
-NDContentPage.OnToolTipsLoaded({74:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines a simple vector with 2 components</div></div>"});
+NDContentPage.OnToolTipsLoaded({76:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines a simple vector with 2 components</div></div>"});

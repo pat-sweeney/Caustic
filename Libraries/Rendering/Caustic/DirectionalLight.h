@@ -32,8 +32,9 @@ namespace Caustic
         {
         }
 
-        CDirectionalLight(Vector3& dir, FRGBColor& color, float intensity, bool casts)
+        CDirectionalLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity, bool casts)
         {
+            m_pos = pos;
             m_dir = dir;
             m_color = color;
             m_intensity = intensity;
@@ -49,6 +50,7 @@ namespace Caustic
         //**********************************************************************
         // ILight
         //**********************************************************************
+        virtual ELightType GetType() override { return ELightType::DirectionalLight; }
         virtual void TurnOn() override { m_enabled = true; }
         virtual void TurnOff() override { m_enabled = false; }
         virtual void SetIntensity(float intensity) override { m_intensity = intensity; }
@@ -56,14 +58,14 @@ namespace Caustic
         virtual void SetCastsShadows(bool casts) override { m_casts = casts; }
         virtual bool GetCastsShadows() override { return m_casts; }
         virtual void SetPosition(Vector3& pos) override { m_pos = pos; }
-        virtual Vector3 GetPosition() override { return m_pos; }
+        virtual Vector3 GetPosition() override { return Vector3(100.0f, 100.0f, 100.0f); }
+        virtual void SetDirection(Vector3& dir) override { m_dir = dir; }
+        virtual Vector3 GetDirection() override { return m_dir; }
         virtual void SetColor(FRGBColor& color) override { m_color = color; }
         virtual FRGBColor GetColor() override { return m_color; }
 
         //**********************************************************************
         // IDirectionalLight
         //**********************************************************************
-        virtual void SetDirection(Vector3& dir) { m_dir = dir; }
-        virtual Vector3 GetDirection() { return m_dir; }
     };
 }

@@ -90,16 +90,12 @@ namespace Caustic
         virtual CRefObj<IRenderer> GetRenderer() { return m_spRenderer; }
 
         //**********************************************************************
-        // IGraphics methods
+        // IRenderer methods
         //**********************************************************************
         virtual CComPtr<ID3D11Device> GetDevice() override;
         virtual CComPtr<ID3D11DeviceContext> GetContext() override;
         virtual CRefObj<ICamera> GetCamera() override;
         virtual CRefObj<IShaderMgr> GetShaderMgr() override { return m_spRenderer->GetShaderMgr(); }
-
-        //**********************************************************************
-        // IRenderer methods
-        //**********************************************************************
         virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice) override;
         virtual void DrawMesh(IRenderSubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) override; // Draws a mesh
         virtual void RenderLoop(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) override; // Renderer entry point
@@ -108,6 +104,9 @@ namespace Caustic
         virtual void AddPointLight(IPointLight *pLight) override;
         virtual CRefObj<IRenderCtx> GetRenderCtx() override;
         virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) override;
-        virtual CRefObj<IGraphics> GetGraphics() override { return CRefObj<IGraphics>(nullptr); }
+        virtual void PushShadowmapRT(int whichShadowmap, int lightMapIndex, Vector3& lightPos, Vector3& lightDir) override;
+        virtual void PopShadowmapRT() override;
+        virtual void SelectShadowmap(int whichShadowmap, int lightMapIndex, std::vector<CRefObj<ILight>>& lights, IShader* pShader) override;
+        virtual CRefObj<ITexture> GetShadowmapTexture(int whichShadowmap) override;
     };
 }

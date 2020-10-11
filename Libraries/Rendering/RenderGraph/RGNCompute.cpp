@@ -68,8 +68,7 @@ namespace Caustic
             }
         }
 
-        std::vector<CRefObj<IPointLight>> lights;
-        CRefObj<IGraphics> spGraphics = pRenderer->GetGraphics();
+        std::vector<CRefObj<ILight>> lights;
         m_spComputeShader->BeginRender(pRenderer, nullptr, nullptr, lights, nullptr);
         m_spComputeShader->EndRender(pRenderer);
         return std::any(nullptr); // TODO: Return output buffer

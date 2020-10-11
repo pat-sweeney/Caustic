@@ -184,5 +184,23 @@ namespace Caustic
 		void Decompose(Vector3 *scale, Vector3 *shear, Vector3 *rotate, Vector3 *translate);
 
 		void Decompose(std::vector<Matrix4x4> &tm, bool undoshear);
-	};
+
+        //**********************************************************************
+        // Method: ScalingMatrix
+        // Creates a scaling matrix
+        //**********************************************************************
+        static Matrix4x4 ScalingMatrix(float sx, float sy, float sz);
+
+        //**********************************************************************
+        // Method: RotationMatrix
+        // Creates a rotation matrix
+        //**********************************************************************
+        static Matrix4x4 RotationMatrix(float ax, float ay, float az);
+
+        //**********************************************************************
+        // Method: TranslationMatrix
+        // Creates a translation matrix
+        //**********************************************************************
+        static Matrix4x4 TranslationMatrix(float tx, float ty, float tz);
+    };
 }

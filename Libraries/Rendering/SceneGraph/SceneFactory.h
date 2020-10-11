@@ -40,12 +40,13 @@ namespace Caustic
 		//**********************************************************************
 		// ISceneFactory
 		//**********************************************************************
-		virtual void CreateSceneGraph(ISceneGraph **ppGraph) override;
-		virtual void CreateComputeShaderElem(IShader* pComputeShader, ISceneComputeShaderElem** ppElem) override;
-		virtual void CreateMaterialElem(ISceneMaterialElem **ppElem) override;
-		virtual void CreatePointLightElem(IScenePointLightElem **ppLight) override;
-		virtual void CreateGroupElem(ISceneGroupElem **ppGroup) override;
-		virtual void CreateMeshElem(ISceneMeshElem** ppMesh) override;
-		virtual void CreateCustomRenderElem(std::function<void(IRenderer *pRender, IRenderCtx *pCtx, SceneCtx * pSceneCtx)> clientCallback, ISceneCustomRenderElem** ppRenderElem) override;
+		virtual CRefObj<ISceneGraph> CreateSceneGraph() override;
+		virtual CRefObj<ISceneComputeShaderElem> CreateComputeShaderElem(IShader* pComputeShader) override;
+		virtual CRefObj<ISceneMaterialElem> CreateMaterialElem() override;
+		virtual CRefObj<ISceneLightCollectionElem> CreateLightCollectionElem() override;
+		virtual CRefObj<ISceneGroupElem> CreateGroupElem() override;
+		virtual CRefObj<ISceneMeshElem> CreateMeshElem() override;
+		virtual CRefObj<ISceneCustomRenderElem> CreateCustomRenderElem(std::function<void(IRenderer *pRender, IRenderCtx *pCtx, SceneCtx * pSceneCtx)> clientCallback) override;
+		virtual CRefObj<ISceneOverlay2DElem> CreateOverlay2DElem(IShader *pShader = nullptr) override;
 	};
 };

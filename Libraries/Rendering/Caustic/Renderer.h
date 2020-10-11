@@ -13,6 +13,7 @@
 #include <memory>
 #include <any>
 #include <vector>
+#include <stack>
 #include <atlbase.h>
 #include <d3d11.h>
 
@@ -23,36 +24,6 @@
 
 namespace Caustic
 {
-    //**********************************************************************
-    // Group: Constants
-    // c_RenderCmd_DrawMesh - Command ID for rendering a mesh
-    // c_RenderCmd_SetCamera  - Command ID for setting the camera
-    //
-    // Group: Pass Flags
-    // c_PassFirst - first pass
-    // c_PassObjID - renders pass writing object IDs to output texture
-    // c_PassShadow - pass that renders shadow maps
-    // c_PassOpaque - pass rendering the opaque objects
-    // c_PassTransparent - pass rendering transparent objects
-    // c_PassEnvironment - pass rendering environment maps
-    // c_PassLast - last pass
-    // c_PassAllPasses - combination of all the pass flags
-    //
-    // Header:
-    // [Link:Rendering/Caustic/Renderer.h]
-    //**********************************************************************
-
-    const int c_RenderCmd_DrawMesh = 0; // Command ID for rendering a mesh
-    const int c_RenderCmd_SetCamera = 1; // Command ID for setting the camera
-
-    const int c_PassFirst = 0;
-    const int c_PassObjID = 0;
-    const int c_PassShadow = 1;
-    const int c_PassOpaque = 2;
-    const int c_PassTransparent = 3;
-    const int c_PassEnvironment = 4;
-    const int c_PassLast = c_PassEnvironment;
-    const int c_PassAllPasses = (1 << c_PassLast) - 1;
 
     struct IRenderMaterial;
 
@@ -78,7 +49,7 @@ namespace Caustic
     class CLight : public IPointLight, public CRefCount
     {
     public:
-        void Render(IGraphics* /*pGraphics*/) {}
+        void Render(IRenderer* /*pRenderer*/) {}
     };
 
     //**********************************************************************
@@ -141,8 +112,6 @@ namespace Caustic
         virtual void SetMostRecentEpoch(uint32 v) override { m_mostRecentEpoch = v; }
     };
 
-    const int c_MaxShadowMaps = 4;
-
     //**********************************************************************
     // Class: CGraphicsBase
     // Defines the data shared between our CGraphics and CRenderer objects
@@ -165,9 +134,13 @@ namespace Caustic
         D3D11_TEXTURE2D_DESC m_BBDesc;                      // Description of our back buffer
         CRefObj<IShaderMgr> m_spShaderMgr;                  // Our shader manager
         CComPtr<ID3D11Texture2D> m_spShadowTexture[c_MaxShadowMaps];        // Texture for shadow map
-        CComPtr<ID3D11RenderTargetView> m_spShadowRTView[c_MaxShadowMaps];  // Render target view for m_spShadowTexture
+        CComPtr<ID3D11ShaderResourceView> m_spShadowSRView[c_MaxShadowMaps];  // Shader resource view for m_spShadowTexture
+        CComPtr<ID3D11DepthStencilView> m_spShadowMapStencilView[c_MaxShadowMaps];
+        int m_shadowMapWidth[c_MaxShadowMaps];
+        int m_shadowMapHeight[c_MaxShadowMaps];
+        D3D11_VIEWPORT m_viewport;
 
-        friend CAUSTICAPI CRefObj<IGraphics> CreateGraphics(HWND hwnd);
+        friend CAUSTICAPI CRefObj<IRenderer> CreateGraphics(HWND hwnd);
 
         void InitializeD3D(HWND hwnd);
         void Setup(HWND hwnd, bool createDebugDevice);
@@ -179,29 +152,12 @@ namespace Caustic
     };
 
     //**********************************************************************
-    // Class: CGraphics
-    // Implementation of <IGraphics>
-    //
-    // Header:
-    // [Link:Rendering/Caustic/Renderer.h]
-    //**********************************************************************
-    class CGraphics : public CGraphicsBase, public IGraphics
+    struct ShadowMapRenderState
     {
-    public:
-        //**********************************************************************
-        // IRefCount
-        //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
-
-        //**********************************************************************
-        // IGraphics
-        //**********************************************************************
-        virtual CComPtr<ID3D11Device> GetDevice() override { return CGraphicsBase::GetDevice(); }
-        virtual CComPtr<ID3D11DeviceContext> GetContext() override { return CGraphicsBase::GetContext(); }
-        virtual CRefObj<ICamera> GetCamera() override { return CGraphicsBase::GetCamera(); }
-        virtual void SetCamera(ICamera* pCamera) override { CGraphicsBase::SetCamera(pCamera); }
-        virtual CRefObj<IShaderMgr> GetShaderMgr() override { return CGraphicsBase::GetShaderMgr(); }
+        CRefObj<ICamera> m_spOldCamera;
+        CComPtr<ID3D11RenderTargetView> m_spOldRT;
+        CComPtr<ID3D11DepthStencilView> m_spOldStencil;
+        D3D11_VIEWPORT m_viewport;
     };
 
     //**********************************************************************
@@ -230,9 +186,10 @@ namespace Caustic
         public IRenderer
     {
     protected:
+        std::stack<ShadowMapRenderState> m_cameras;         // Cameras from shadow mapping
         DWORD m_renderThreadId;                             // Render thread's ID
         std::vector<CRenderable> m_singleObjs;              // List of individual renderable objects (outside scene graph)
-        std::vector<CRefObj<IPointLight>> m_lights;         // List of lights in this scene
+        std::vector<CRefObj<ILight>> m_lights;              // List of lights in this scene
         CComPtr<ID3D11Texture2D> m_spObjIDTexture;          // Texture for rendering object IDs
         CComPtr<ID3D11RenderTargetView> m_spObjIDRTView;    // Render target view for m_spObjIDTexture
         CEvent m_waitForShutdown;                           // Event to control shutdown (waits for render thread to exit)
@@ -258,6 +215,7 @@ namespace Caustic
         CRefObj<IShaderInfo> LoadShaderInfo(std::wstring &filename);
         void RenderScene(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback);
         void DrawSceneObjects(int pass, std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback);
+        void SetShadowmapViewport(int whichShadowMap, int lightMapIndex);
     public:
         explicit CRenderer();
         virtual ~CRenderer();
@@ -272,7 +230,7 @@ namespace Caustic
         virtual uint32 Release() override { return CGraphicsBase::Release(); }
 
         //**********************************************************************
-        // IGraphics
+        // IRenderer
         //**********************************************************************
         virtual CComPtr<ID3D11Device> GetDevice() override { CHECKTHREAD;  return CGraphicsBase::GetDevice(); }
         virtual CComPtr<ID3D11DeviceContext> GetContext() override { CHECKTHREAD; return CGraphicsBase::GetContext(); }
@@ -288,6 +246,9 @@ namespace Caustic
         virtual void AddPointLight(IPointLight *pLight) override;
         virtual CRefObj<IRenderCtx> GetRenderCtx() override;
         virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) override;
-        virtual CRefObj<IGraphics> GetGraphics() override;
+        virtual void PushShadowmapRT(int whichShadowmap, int lightMapIndex, Vector3& lightPos, Vector3& lightDir) override;
+        virtual void PopShadowmapRT() override;
+        virtual void SelectShadowmap(int whichShadowMap, int lightMapIndex, std::vector<CRefObj<ILight>>& lights, IShader* pShader) override;
+        virtual CRefObj<ITexture> GetShadowmapTexture(int whichShadowMap) override;
     };
 }

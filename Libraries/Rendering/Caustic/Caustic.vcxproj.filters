@@ -85,9 +85,6 @@
     <ClInclude Include="ICausticFactory.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="IGraphics.h">
-      <Filter>Source Files\Interfaces</Filter>
-    </ClInclude>
     <ClInclude Include="IMaterialAttrib.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
@@ -147,6 +144,9 @@
     </ClInclude>
     <ClInclude Include="Light.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="defs.h">
+      <Filter>Source Files\Shaders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -251,6 +251,9 @@
     <CustomBuild Include="Textured.xml">
       <Filter>Source Files\Shaders\Definitions</Filter>
     </CustomBuild>
+    <CustomBuild Include="TexturedWithShadow.xml">
+      <Filter>Source Files\Shaders\Definitions</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <None Include="Brighten.cs">
@@ -290,6 +293,18 @@
       <Filter>Source Files\Shaders</Filter>
     </None>
     <None Include="Textured.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="ShadowMap.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="ShadowMap.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="TexturedWithShadow.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="TexturedWithShadow.vs">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>

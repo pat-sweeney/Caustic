@@ -35,7 +35,6 @@ namespace Caustic
         {
             CRefObj<IShaderMgr> spShaderMgr = pRenderer->GetShaderMgr();
             m_spDefaultShader = spShaderMgr->FindShader(L"Textured");
-            CRefObj<IGraphics> spGraphics = pRenderer->GetGraphics();
             CRefObj<IMaterialAttrib> spMaterialAttrib = m_spCausticFactory->CreateMaterialAttrib();
             FRGBColor clr(1.0f, 1.0f, 1.0f);
             spMaterialAttrib->SetColor(L"diffuse", clr);
@@ -78,9 +77,9 @@ namespace Caustic
             }
             m_lastEpochModified = pRenderCtx->GetEpoch();
         }
-        m_spRenderMesh->Render(pRenderer, spFrontMaterial, spBackMaterial, m_lights);
+        m_spRenderMesh->Render(pRenderer, spFrontMaterial, spBackMaterial, m_lights, nullptr);
         if (spBackMaterial)
-            m_spRenderMesh->Render(pRenderer, spFrontMaterial, spBackMaterial, m_lights);
+            m_spRenderMesh->Render(pRenderer, spFrontMaterial, spBackMaterial, m_lights, nullptr);
         return std::any();
     }
 }

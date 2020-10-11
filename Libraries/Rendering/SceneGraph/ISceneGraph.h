@@ -18,7 +18,7 @@ namespace Caustic
 	// Mesh - Mesh element
 	// Group - Group element
 	// Renderable - Renderable element
-	// PointLight - a point light
+	// LightCollection - Collection of lights
 	// Material - material
 	//**********************************************************************
 	enum ESceneElemType
@@ -29,9 +29,10 @@ namespace Caustic
 		CustomRenderElem,
 		Group,
 		Renderable,
-		PointLight,
+		LightCollection,
 		Material,
-		ComputeShaderElem
+		ComputeShaderElem,
+		Overlay2D
 	};
 
 	//**********************************************************************
@@ -40,6 +41,16 @@ namespace Caustic
 	//**********************************************************************
 	struct SceneCtx
 	{
+		SceneCtx()
+		{
+			m_Transform = Matrix4x4(1.0f, 0.0f, 0.0f, 0.0f,
+				0.0f, 1.0f, 0.0f, 0.0f,
+				0.0f, 0.0f, 1.0f, 0.0f,
+				0.0f, 0.0f, 0.0f, 1.0f);
+			m_CurrentPass = c_PassFirst;
+			m_inShadowLightGroup = false;
+		}
+		
 		//**********************************************************************
 		// Property: m_spDevice
 		// Defines our current rendering device
@@ -56,13 +67,20 @@ namespace Caustic
 		// Property: m_lights
 		// Defines list of current lights effecting this portion of the scene graph
 		//**********************************************************************
-		std::vector<CRefObj<IPointLight>> m_lights;
+		std::vector<CRefObj<ILight>> m_lights;
 
 		//**********************************************************************
 		// Property: m_CurrentPass
 		// Defines which render pass we are in
 		//**********************************************************************
 		int m_CurrentPass;
+
+		//**********************************************************************
+		// Property: m_inShadowLightGroup
+		// Indicates whether we are currently rendering a group of lights+children
+		// that cast shadows. Otherwise, during the shadow pass we will skip rendering.
+		//**********************************************************************
+		bool m_inShadowLightGroup;
 
 		//**********************************************************************
 		// Property: m_spCurrentMaterial
@@ -75,12 +93,6 @@ namespace Caustic
 		// Defines the current shader
 		//**********************************************************************
 		CRefObj<Caustic::IShader> m_spCurrentShader;
-
-		//**********************************************************************
-		// Property: m_spGraphics
-		// Defines our graphics renderer
-		//**********************************************************************
-		CRefObj<IGraphics> m_spGraphics;
 	};
 
 	//**********************************************************************
@@ -116,10 +128,22 @@ namespace Caustic
 		virtual ESceneElemType GetType() = 0;
 
 		//**********************************************************************
-		// Method: Name
+		// Method: GetName
 		// Returns the name of this scene element
+		//
+		// Returns:
+		// User-defined name for this element
 		//**********************************************************************
-		virtual std::wstring &Name() = 0;
+		virtual std::wstring GetName() = 0;
+
+		//**********************************************************************
+		// Method: SetName
+		// Sets the name of this scene element
+		//
+		// Parameters:
+		// name - user-defined name for this element
+		//**********************************************************************
+		virtual void SetName(const wchar_t *name) = 0;
 
 		//**********************************************************************
 		// Method: Name
@@ -157,6 +181,33 @@ namespace Caustic
 		// Returns the bounding box of this scene element
 		//**********************************************************************
 		virtual void GetBBox(BBox3 *pBBox) = 0;
+	};
+
+	//**********************************************************************
+	// Interface: ISceneOverlay2DElem
+	// Defines a overlay element in our scene graph. Overlays are used
+	// to draw 2D graphics in screen coordinates (e.g. for UI elements).
+	//**********************************************************************
+	struct ISceneOverlay2DElem : public ISceneElem
+	{
+		//**********************************************************************
+		// Method: SetRect
+		// Sets the screen extents for the element
+		//**********************************************************************
+		virtual void SetRect(BBox2& bbox) = 0;
+
+		//**********************************************************************
+		// Method: SetTexture
+		// Sets the texture to render as the 2D overlay
+		//**********************************************************************
+		virtual void SetTexture(ITexture* pTexture) = 0;
+
+		//**********************************************************************
+		// Method: SetShader
+		// Sets a shader to render the 2D overlay with. This is an override. If
+		// it isn't called the default shader is used.
+		//**********************************************************************
+		virtual void SetShader(IShader* pShader) = 0;
 	};
 
 	//**********************************************************************
@@ -259,6 +310,37 @@ namespace Caustic
 		// Defines the color of the light
 		//**********************************************************************
 		virtual void SetColor(Caustic::FRGBColor &clr) = 0;
+	};
+
+	//**********************************************************************
+	// Interface: ISceneLightCollectionElem
+	// Defines a collection of lights. These lights only effect the children of this group
+	//**********************************************************************
+	struct ISceneLightCollectionElem : public ISceneGroupElem
+	{
+		//**********************************************************************
+		// Method: AddLight
+		// Adds a light to the collection
+		//**********************************************************************
+		virtual void AddLight(ILight* pLight) = 0;
+
+		//**********************************************************************
+		// Method: RemoveLight
+		// Removes a light from the collection
+		//**********************************************************************
+		virtual void RemoveLight(ILight* pLight) = 0;
+
+		//**********************************************************************
+		// Method: NumberLights
+		// Returns the number of lights in the collection
+		//**********************************************************************
+		virtual uint32 NumberLights() = 0;
+
+		//**********************************************************************
+		// Method: GetLight
+		// Returns the Nth light from the collection
+		//**********************************************************************
+		virtual CRefObj<ILight> GetLight(int index) = 0;
 	};
 
 	//**********************************************************************

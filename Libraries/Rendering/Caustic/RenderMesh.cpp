@@ -16,34 +16,44 @@ namespace Caustic
     // Method: Render
     // See <IRenderSubMesh::Render>
     //**********************************************************************
-    void CRenderSubMesh::Render(IRenderer* pRenderer, IRenderMaterial* pFrontMaterialOverride, IRenderMaterial* pBackMaterialOverride, std::vector<CRefObj<IPointLight>>& lights)
+    void CRenderSubMesh::Render(IRenderer* pRenderer, IRenderMaterial* pFrontMaterialOverride,
+        IRenderMaterial* pBackMaterialOverride, std::vector<CRefObj<ILight>>& lights,
+        DirectX::XMMATRIX *pWorld)
     {
         ID3D11DeviceContext* pContext = pRenderer->GetContext();
         ID3D11Device* pDevice = pRenderer->GetDevice();
         pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-        m_spShader->BeginRender(pRenderer,
-            (pFrontMaterialOverride) ? pFrontMaterialOverride : m_spFrontMaterial,
-            (pBackMaterialOverride) ? pBackMaterialOverride : m_spBackMaterial,
-            lights, nullptr);
-        uint32 vertexSize = m_spShader->GetShaderInfo()->GetVertexSize();
-        uint32 numVertices = m_VB.m_numVertices;
-        UINT offset = 0;
-        pContext->IASetVertexBuffers(0, 1, &m_VB.m_spVB.p, &vertexSize, &offset);
-        pContext->IASetIndexBuffer(m_VB.m_spIB, DXGI_FORMAT::DXGI_FORMAT_R32_UINT, 0);
-        pContext->DrawIndexed(m_VB.m_numIndices, 0, 0);
-        m_spShader->EndRender(pRenderer);
+        CRefObj<IShader> spShader;
+        if (pRenderer->GetRenderCtx()->GetCurrentPass() == c_PassShadow)
+            spShader = pRenderer->GetShaderMgr()->FindShader(L"ShadowMap");
+        else
+            spShader = m_spShader;
+        if (spShader)
+        {
+            spShader->BeginRender(pRenderer,
+                (pFrontMaterialOverride) ? pFrontMaterialOverride : m_spFrontMaterial,
+                (pBackMaterialOverride) ? pBackMaterialOverride : m_spBackMaterial,
+                lights, pWorld);
+            uint32 vertexSize = m_spShader->GetShaderInfo()->GetVertexSize();
+            uint32 numVertices = m_VB.m_numVertices;
+            UINT offset = 0;
+            pContext->IASetVertexBuffers(0, 1, &m_VB.m_spVB.p, &vertexSize, &offset);
+            pContext->IASetIndexBuffer(m_VB.m_spIB, DXGI_FORMAT::DXGI_FORMAT_R32_UINT, 0);
+            pContext->DrawIndexed(m_VB.m_numIndices, 0, 0);
+            spShader->EndRender(pRenderer);
+        }
     }
 
     //**********************************************************************
     // Method: Render
     // See <IRenderSubMesh::Render>
     //**********************************************************************
-    void CRenderSubMesh::Render(IRenderer* pRenderer, IShader *pShader, IRenderMaterial *pMaterial, std::vector<CRefObj<IPointLight>>& lights)
+    void CRenderSubMesh::Render(IRenderer* pRenderer, IShader *pShader, IRenderMaterial *pMaterial, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld)
     {
         ID3D11DeviceContext* pContext = pRenderer->GetContext();
         ID3D11Device* pDevice = pRenderer->GetDevice();
         pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-        pShader->BeginRender(pRenderer, pMaterial, pMaterial, lights, nullptr);
+        pShader->BeginRender(pRenderer, pMaterial, pMaterial, lights, pWorld);
         uint32 vertexSize = pShader->GetShaderInfo()->GetVertexSize();
         uint32 numVertices = m_VB.m_numVertices;
         UINT offset = 0;
@@ -122,20 +132,20 @@ namespace Caustic
     // Method: Render
     // See <IRenderMesh::Render>
     //**********************************************************************
-    void CRenderMesh::Render(IRenderer* pRenderer, IRenderMaterial* pFrontMaterialOverride, IRenderMaterial* pBackMaterialOverride, std::vector<CRefObj<IPointLight>>& lights)
+    void CRenderMesh::Render(IRenderer* pRenderer, IRenderMaterial* pFrontMaterialOverride, IRenderMaterial* pBackMaterialOverride, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX *pWorld)
     {
 		for (auto submesh : m_subMeshes)
-            submesh->Render(pRenderer, pFrontMaterialOverride, pBackMaterialOverride, lights);
+            submesh->Render(pRenderer, pFrontMaterialOverride, pBackMaterialOverride, lights, pWorld);
     }
 
     //**********************************************************************
     // Method: Render
     // See <IRenderMesh::Render>
     //**********************************************************************
-    void CRenderMesh::Render(IRenderer* pRenderer, IShader* pShader, IRenderMaterial* pMaterial, std::vector<CRefObj<IPointLight>>& lights)
+    void CRenderMesh::Render(IRenderer* pRenderer, IShader* pShader, IRenderMaterial* pMaterial, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX *pWorld)
     {
         for (auto submesh : m_subMeshes)
-            submesh->Render(pRenderer, pShader, pMaterial, lights);
+            submesh->Render(pRenderer, pShader, pMaterial, lights, pWorld);
     }
 
     CAUSTICAPI CRefObj<IRenderSubMesh> CreatePointCloudSubMesh(IRenderer *pRenderer, IShader *pShader, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, std::vector<CGeomVertex>& verts)

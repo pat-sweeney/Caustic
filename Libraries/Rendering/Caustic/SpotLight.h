@@ -53,6 +53,7 @@ namespace Caustic
         //**********************************************************************
         // ILight
         //**********************************************************************
+        virtual ELightType GetType() override { return ELightType::SpotLight; }
         virtual void TurnOn() override { m_enabled = true; }
         virtual void TurnOff() override { m_enabled = false; }
         virtual void SetIntensity(float intensity) override { m_intensity = intensity; }
@@ -61,6 +62,8 @@ namespace Caustic
         virtual bool GetCastsShadows() override { return m_casts; }
         virtual void SetPosition(Vector3& pos) override { m_pos = pos; }
         virtual Vector3 GetPosition() override { return m_pos; }
+        virtual void SetDirection(Vector3& dir) override { m_dir = dir; }
+        virtual Vector3 GetDirection() override { return m_dir; }
         virtual void SetColor(FRGBColor& color) override { m_color = color; }
         virtual FRGBColor GetColor() override { return m_color; }
 
@@ -69,7 +72,5 @@ namespace Caustic
         //**********************************************************************
         virtual void SetAngles(float2 angles) { m_innerAngle = angles.x; m_outerAngle = angles.y; }
         virtual float2 GetAngles() { return float2(m_innerAngle, m_outerAngle); }
-        virtual void SetDirection(Vector3& dir) { m_dir = dir; }
-        virtual Vector3 GetDirection() { return m_dir; }
     };
 }

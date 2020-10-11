@@ -64,7 +64,7 @@ namespace Caustic
 	{
 		int K = 256;
 		int maxIterations = 5;
-		int maxPercent = 0.05f;
+		float maxPercent = 0.05f;
 		if (pParams != nullptr)
 		{
 			std::map<std::string, std::any>::iterator it;
@@ -76,7 +76,7 @@ namespace Caustic
 				maxIterations = std::any_cast<int>(it->second);
 			it = pParams->params.find("PercentChange");
 			if (it != pParams->params.end())
-				maxPercent = std::any_cast<int>(it->second);
+				maxPercent = std::any_cast<float>(it->second);
 		}
 		if (K > 256)
 			CT(E_UNEXPECTED);

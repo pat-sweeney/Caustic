@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Shader>
+  <PixelShader Filename="$(CausticRoot)\Libraries\Rendering\Caustic\TexturedWithShadow.ps" Output="$(CausticRoot)\$(Configuration)\TexturedWithShadow_PS.cso"/>
+  <VertexShader Filename="$(CausticRoot)\Libraries\Rendering\Caustic\TexturedWithShadow.vs" Output="$(CausticRoot)\$(Configuration)\TexturedWithShadow_VS.cso"/>
+</Shader>

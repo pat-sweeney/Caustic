@@ -8,19 +8,13 @@
 #include "Rendering\Caustic\CausticFactory.h"
 #include "MeshElem.h"
 #include <string>
+#include <d3d11_4.h>
 
 namespace Caustic
 {
-    CAUSTICAPI void CreateMeshElem(ISceneMeshElem **ppElem)
+    CAUSTICAPI CRefObj<ISceneMeshElem> CreateMeshElem()
     {
-        std::unique_ptr<CSceneMeshElem> spMeshObj(new CSceneMeshElem());
-        *ppElem = spMeshObj.release();
-        (*ppElem)->AddRef();
-    }
-
-    std::wstring &CSceneMeshElem::Name()
-    {
-        return CSceneElem::m_Name;
+        return CRefObj<ISceneMeshElem>(new CSceneMeshElem());
     }
 
     void CSceneElem::DrawSelected(IRenderer *pRenderer, ISceneElem *pElem, SceneCtx *pSceneCtx)
@@ -85,10 +79,14 @@ namespace Caustic
 
     void CSceneMeshElem::Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx)
     {
+        if (pSceneCtx->m_CurrentPass == c_PassShadow && !pSceneCtx->m_inShadowLightGroup)
+            return; // We are in the middle of a shadow pass, but we are not under any lights
+        if (pSceneCtx->m_CurrentPass == c_PassTransparent && !pSceneCtx->m_spCurrentMaterial->GetIsTransparent())
+            return; // In transparent pass but current material is not transparent
+
         if (m_prerenderCallback)
             if (!m_prerenderCallback(pRenderCtx->GetCurrentPass()))
                 return;
-        CRefObj<IGraphics> spGraphics = pRenderer->GetGraphics();
         if (GetFlags() & ESceneElemFlags::RenderableDirty)
         {
             m_spRenderMesh = m_spMesh->ToRenderMesh(pRenderer, pSceneCtx->m_spCurrentShader);
@@ -99,7 +97,25 @@ namespace Caustic
             m_spMesh->ToRenderMaterials(pRenderer, pSceneCtx->m_spCurrentShader, m_spRenderMesh);
             SetFlags(GetFlags() & ~ESceneElemFlags::MaterialDirty);
         }
-        m_spRenderMesh->Render(pRenderer, (IRenderMaterial*)nullptr, nullptr, pSceneCtx->m_lights);
+        DirectX::XMMATRIX xm(
+            pSceneCtx->m_Transform.v[0][0], pSceneCtx->m_Transform.v[0][1], pSceneCtx->m_Transform.v[0][2], pSceneCtx->m_Transform.v[0][3],
+            pSceneCtx->m_Transform.v[1][0], pSceneCtx->m_Transform.v[1][1], pSceneCtx->m_Transform.v[1][2], pSceneCtx->m_Transform.v[1][3],
+            pSceneCtx->m_Transform.v[2][0], pSceneCtx->m_Transform.v[2][1], pSceneCtx->m_Transform.v[2][2], pSceneCtx->m_Transform.v[2][3],
+            pSceneCtx->m_Transform.v[3][0], pSceneCtx->m_Transform.v[3][1], pSceneCtx->m_Transform.v[3][2], pSceneCtx->m_Transform.v[3][3]
+        );
+#ifdef _DEBUG
+        CComPtr<ID3D11DeviceContext4> spCtx;
+        if (!GetName().empty())
+        {
+            pRenderer->GetContext()->QueryInterface<ID3D11DeviceContext4>(&spCtx);
+            spCtx->BeginEventInt(GetName().c_str(), 0);
+        }
+#endif
+        m_spRenderMesh->Render(pRenderer, (IRenderMaterial*)nullptr, nullptr, pSceneCtx->m_lights, &xm);
+#ifdef _DEBUG
+        if (spCtx)
+            spCtx->EndEvent();
+#endif
         if (m_postrenderCallback)
             m_postrenderCallback(pRenderCtx->GetCurrentPass());
     }

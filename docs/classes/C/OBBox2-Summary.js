@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:OBBox2","OBBox2");NDSummary.OnSummaryLoaded("CClass:OBBox2",[["C/C++","C"]],[["Structs","Struct"]],[[130,0,0,"OBBox2"]]);
+NDFramePage.OnPageTitleLoaded("CClass:OBBox2","OBBox2");NDSummary.OnSummaryLoaded("CClass:OBBox2",[["C/C++","C"]],[["Structs","Struct"]],[[126,0,0,"OBBox2"]]);

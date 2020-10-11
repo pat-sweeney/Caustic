@@ -29,7 +29,8 @@ namespace Caustic
         CComPtr<ID3D11Texture2D> m_spTexture;
         CComPtr<ID3D11ShaderResourceView> m_spTextureRV;
     public:
-        CTexture(IGraphics *pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags);
+        CTexture(IRenderer* pRenderer, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags);
+        CTexture(ID3D11Texture2D *pD3DTexture, ID3D11ShaderResourceView *pD3DRV);
         ~CTexture();
 
         //**********************************************************************
@@ -44,10 +45,10 @@ namespace Caustic
 		virtual uint32 GetWidth() override;
         virtual uint32 GetHeight() override;
         virtual DXGI_FORMAT GetFormat() override;
-        virtual void Update(IGraphics * /*pGraphics*/) override {}
+        virtual void Update(IRenderer * /*pRenderer*/) override {}
         virtual CComPtr<ID3D11Texture2D> GetD3DTexture() override { return m_spTexture; }
         virtual CComPtr<ID3D11ShaderResourceView> GetD3DTextureRV() { return m_spTextureRV; }
-        virtual void GenerateMips(IGraphics *pGraphics) override;
-        virtual void Render(IGraphics* pGraphics, int slot, bool isPixelShader) override;
+        virtual void GenerateMips(IRenderer* pRenderer) override;
+        virtual void Render(IRenderer* pRenderer, int slot, bool isPixelShader) override;
     };
 };

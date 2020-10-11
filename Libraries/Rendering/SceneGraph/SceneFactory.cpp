@@ -14,54 +14,58 @@
 
 namespace Caustic
 {
-	CAUSTICAPI void CreateSceneFactory(ISceneFactory **ppElem)
+	CAUSTICAPI CRefObj<ISceneFactory> CreateSceneFactory()
 	{
-		CSceneFactory *pFactory = new CSceneFactory();
-		*ppElem = pFactory;
-		(*ppElem)->AddRef();
+		return CRefObj<ISceneFactory>(new CSceneFactory());
 	}
 	
 	CRefObj<ISceneFactory> CSceneFactory::s_factory;
 
-	CAUSTICAPI void CreateSceneGraph(ISceneGraph **ppGraph);
-	void CSceneFactory::CreateSceneGraph(ISceneGraph **ppGraph)
+	CAUSTICAPI CRefObj<ISceneGraph> CreateSceneGraph();
+	CRefObj<ISceneGraph> CSceneFactory::CreateSceneGraph()
 	{
-		Caustic::CreateSceneGraph(ppGraph);
+		return Caustic::CreateSceneGraph();
 	}
 
-	CAUSTICAPI void CreateComputeShaderElem(IShader* pComputeShader, ISceneComputeShaderElem** ppElem);
-	void CSceneFactory::CreateComputeShaderElem(IShader *pComputeShader, ISceneComputeShaderElem** ppElem)
+	CAUSTICAPI CRefObj<ISceneComputeShaderElem> CreateComputeShaderElem(IShader* pComputeShader);
+	CRefObj<ISceneComputeShaderElem> CSceneFactory::CreateComputeShaderElem(IShader *pComputeShader)
 	{
-		Caustic::CreateComputeShaderElem(pComputeShader, ppElem);
+		return Caustic::CreateComputeShaderElem(pComputeShader);
 	}
 
-	CAUSTICAPI void CreateMaterialElem(ISceneMaterialElem **ppElem);
-	void CSceneFactory::CreateMaterialElem(ISceneMaterialElem **ppElem)
+	CAUSTICAPI CRefObj<ISceneMaterialElem> CreateMaterialElem();
+	CRefObj<ISceneMaterialElem> CSceneFactory::CreateMaterialElem()
 	{
-		Caustic::CreateMaterialElem(ppElem);
+		return Caustic::CreateMaterialElem();
 	}
 
-	CAUSTICAPI void CreatePointLightElem(IScenePointLightElem **ppLight);
-	void CSceneFactory::CreatePointLightElem(IScenePointLightElem **ppLight)
+	CAUSTICAPI CRefObj<ISceneLightCollectionElem> CreateLightCollectionElem();
+	CRefObj<ISceneLightCollectionElem> CSceneFactory::CreateLightCollectionElem()
 	{
-		Caustic::CreatePointLightElem(ppLight);
+		return Caustic::CreateLightCollectionElem();
 	}
 
-	CAUSTICAPI void CreateGroupElem(ISceneGroupElem **ppGroup);
-	void CSceneFactory::CreateGroupElem(ISceneGroupElem **ppGroup)
+	CAUSTICAPI CRefObj<ISceneGroupElem> CreateGroupElem();
+	CRefObj<ISceneGroupElem> CSceneFactory::CreateGroupElem()
 	{
-		Caustic::CreateGroupElem(ppGroup);
+		return Caustic::CreateGroupElem();
 	}
 
-	CAUSTICAPI void CreateMeshElem(ISceneMeshElem** ppMesh);
-	void CSceneFactory::CreateMeshElem(ISceneMeshElem** ppMesh)
+	CAUSTICAPI CRefObj<ISceneOverlay2DElem> CreateOverlay2DElem(IShader *pShader = nullptr);
+	CRefObj<ISceneOverlay2DElem> CSceneFactory::CreateOverlay2DElem(IShader *pShader /* = nullptr */)
 	{
-		Caustic::CreateMeshElem(ppMesh);
+		return Caustic::CreateOverlay2DElem(pShader);
 	}
 
-	CAUSTICAPI void CreateCustomRenderElem(std::function<void(IRenderer *pRenderer, IRenderCtx *pCtx, SceneCtx * pSceneCtx)> clientCallback, ISceneCustomRenderElem** ppRenderElem);
-	void CSceneFactory::CreateCustomRenderElem(std::function<void(IRenderer * pRenderer, IRenderCtx * pCtx, SceneCtx * pSceneCtx)> clientCallback, ISceneCustomRenderElem** ppRenderElem)
+	CAUSTICAPI CRefObj<ISceneMeshElem> CreateMeshElem();
+	CRefObj<ISceneMeshElem> CSceneFactory::CreateMeshElem()
 	{
-		Caustic::CreateCustomRenderElem(clientCallback, ppRenderElem);
+		return Caustic::CreateMeshElem();
+	}
+
+	CAUSTICAPI CRefObj<ISceneCustomRenderElem> CreateCustomRenderElem(std::function<void(IRenderer *pRenderer, IRenderCtx *pCtx, SceneCtx * pSceneCtx)> clientCallback);
+	CRefObj<ISceneCustomRenderElem> CSceneFactory::CreateCustomRenderElem(std::function<void(IRenderer * pRenderer, IRenderCtx * pCtx, SceneCtx * pSceneCtx)> clientCallback)
+	{
+		return Caustic::CreateCustomRenderElem(clientCallback);
 	}
 };

@@ -1,13 +1,13 @@
-Generated on 5/23/2020 10:31:08 PM
+Generated on 8/29/2020 9:24:18 PM
 
 Crash Message:
 
-   Object reference not set to an instance of an object. (Finalizer Thread 1)
+   Object reference not set to an instance of an object. (Finalizer Thread 3)
    (System.NullReferenceException)
 
 Stack Trace:
 
-   ----- Finalizer Thread 1 -----
+   ----- Finalizer Thread 3 -----
    at CodeClear.NaturalDocs.Engine.Files.Manager.FileSourceOf(File file)
    at CodeClear.NaturalDocs.Engine.Output.Menu.FindOrCreateFileSourceEntryOf(File file)
    at CodeClear.NaturalDocs.Engine.Output.Menu.AddFile(File file)
@@ -22,13 +22,13 @@ Stack Trace:
 
 Command Line:
 
-   "c:\Program Files (x86)\Natural Docs\NaturalDocs.exe"  .
+   "C:\Program Files (x86)\Natural Docs\NaturalDocs.exe"  j:\github\Caustic\docs
 
 Versions:
 
    Natural Docs 2.0.2
 
-   .NET 4.8.4180.0
+   .NET 4.8.4200.0
    Microsoft Windows NT 6.2.9200.0 (Win32NT)
 
    SQLite 3.13.0

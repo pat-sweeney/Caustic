@@ -49,8 +49,8 @@ namespace Caustic
         void LinkEdges(CHalfEdge *pPrev, CHalfEdge *pCur);
         void TriangulateViaEarClipping();
         void TriangulateViaPointInsertion();
-        void BuildVertexBuffer(IGraphics *pGraphics, IShaderInfo *pShaderInfo, std::vector<int> &vertexReferenced, MeshData *pMeshData);
-        void BuildIndexBuffer(IGraphics *pGraphics, std::vector<int> &vertexReferenced, MeshData *pMeshData);
+        void BuildVertexBuffer(IRenderer *pRenderer, IShaderInfo *pShaderInfo, std::vector<int> &vertexReferenced, MeshData *pMeshData);
+        void BuildIndexBuffer(IRenderer *pRenderer, std::vector<int> &vertexReferenced, MeshData *pMeshData);
         void BuildReferencedVertexList(std::vector<int> &vertexReferenced);
     public:
         friend class CMeshConstructor;

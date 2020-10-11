@@ -1,0 +1,19 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2015-2019
+// Licensed under the MIT license.
+// See file LICENSE for details.
+//**********************************************************************
+Texture2D diffuseTexture : register(t0);
+SamplerState diffuseSampler : register(s0);
+
+struct VSOutput
+{
+    float4 posPS : SV_POSITION; // Position of vertex in projected coordinates
+    float2 uvs : TEXCOORD0; // UV coordinates
+};
+
+float4 PS(VSOutput p) : SV_Target
+{
+    float4 clr = diffuseTexture.Sample(diffuseSampler, p.uvs);
+    return float4(clr.zyx, 1.0);
+}

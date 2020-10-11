@@ -4,10 +4,13 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
+#include <d3d11.h>
+#include <atlbase.h>
 #include "Base\Core\Core.h"
 #include "Base\Core\error.h"
 #include "Base\Core\RefCount.h"
-#include "Rendering\Caustic\IGraphics.h"
+#include "Base\Core\IRefCount.h"
+#include "Base\Math\BBox.h"
 #include "Rendering\Caustic\Caustic.h"
 #include <string>
 #include <atlbase.h>
@@ -135,6 +138,7 @@ namespace Caustic
         uint8* m_wpOutputBuffer; // Weak reference to the output buffer
 
         SBuffer() :
+            m_wpOutputBuffer(nullptr),
             m_bufferSize(0),
             m_heapSize(0),
             m_isInput(true),
@@ -175,19 +179,19 @@ namespace Caustic
         int m_zThreads;
     protected:
         void PushMatrix(const wchar_t *name, std::any mat);
-        void PushLights(std::vector<CRefObj<IPointLight>>& lights);
-        void PushMatrices(IGraphics *pGraphics, DirectX::XMMATRIX *pWorld);
+        void PushLights(std::vector<CRefObj<ILight>>& lights);
+        void PushMatrices(IRenderer* pRenderer, DirectX::XMMATRIX *pWorld);
         uint32 ComputeParamSize(ShaderParamDef *pParams, uint32 numParams, std::vector<ShaderParamInstance> &params);
         uint32 ShaderTypeSize(ShaderParamDef& paramDef);
-        void PushConstants(IGraphics *pGraphics, SBuffer *pBuffer, std::vector<ShaderParamInstance> &params);
-        void ClearSamplers(IGraphics* pGraphics);
-        void PushSamplers(IGraphics* pGraphics, std::vector<ShaderParamInstance>& params, bool isPixelShader);
-        void PushBuffers(IGraphics* pGraphics, std::vector<ShaderParamInstance>& params);
-        void PopBuffers(IGraphics* pGraphics);
+        void PushConstants(IRenderer* pRenderer, SBuffer *pBuffer, std::vector<ShaderParamInstance> &params);
+        void ClearSamplers(IRenderer* pRenderer);
+        void PushSamplers(IRenderer* pRenderer, std::vector<ShaderParamInstance>& params, bool isPixelShader);
+        void PushBuffers(IRenderer* pRenderer, std::vector<ShaderParamInstance>& params);
+        void PopBuffers(IRenderer* pRenderer);
         void SetParam(std::wstring paramName, std::any &value, std::vector<ShaderParamInstance> &params);
         void SetParam(std::wstring paramName, int index, std::any &value, std::vector<ShaderParamInstance> &params);
     public:
-        void Create(IGraphics *pGraphics, const wchar_t *pShaderName, IShaderInfo *pShaderInfo, ID3DBlob *pPSBlob, ID3DBlob* pVSBlob, ID3DBlob* pCSBlob);
+        void Create(IRenderer *pRenderer, const wchar_t *pShaderName, IShaderInfo *pShaderInfo, ID3DBlob *pPSBlob, ID3DBlob* pVSBlob, ID3DBlob* pCSBlob);
         void CreateBuffer(ID3D11Device* pDevice, uint32 bufSize, uint32 bindFlags, uint32 cpuAccessFlags, D3D11_USAGE usage, uint32 miscFlags, uint32 stride, uint32 alignment, SBuffer* pBuffer, ID3D11Buffer **ppBuffer);
         void CreateBuffers(ID3D11Device* pDevice, ShaderParamDef* pDefs, uint32 paramsSize, std::vector<ShaderParamInstance>& params);
         void CreateConstantBuffer(ID3D11Device *pDevice, ShaderParamDef *pDefs, uint32 paramsSize, std::vector<ShaderParamInstance> &params, SBuffer *pConstantBuffer);
@@ -209,14 +213,14 @@ namespace Caustic
         // IShader
         //**********************************************************************
         virtual std::wstring &Name() override { return m_name; }
-        virtual void BeginRender(IGraphics* pGraphics, IRenderMaterial* pFrontMaterial, IRenderMaterial* pBackMaterial, std::vector<CRefObj<IPointLight>>& lights, DirectX::XMMATRIX* pWorld) override;
+        virtual void BeginRender(IRenderer* pRenderer, IRenderMaterial* pFrontMaterial, IRenderMaterial* pBackMaterial, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld) override;
         virtual void SetPSParam(std::wstring paramName, std::any &value) override;
         virtual void SetPSParam(std::wstring paramName, int index, std::any &value) override;
         virtual void SetVSParam(std::wstring paramName, std::any &value) override;
         virtual void SetVSParam(std::wstring paramName, int index, std::any& value) override;
         virtual void SetCSParam(std::wstring paramName, std::any& value) override;
         virtual void SetCSParam(std::wstring paramName, int index, std::any& value) override;
-        virtual void EndRender(IGraphics *pGraphics) override;
+        virtual void EndRender(IRenderer* pRenderer) override;
         virtual CRefObj<IShaderInfo> GetShaderInfo() override;
         virtual void SetThreadCounts(int xThreads, int yThreads, int zThreads) override;
     };

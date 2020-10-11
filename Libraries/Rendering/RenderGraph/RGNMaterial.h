@@ -65,7 +65,6 @@ namespace Caustic
                 {
                     CRefObj<IMaterialAttrib> spMaterial = std::any_cast<CRefObj<IMaterialAttrib>>(materialVal);
                     CRefObj<IShader> spShader = std::any_cast<CRefObj<IShader>>(shaderVal);
-                    CRefObj<IGraphics> spGraphics = pRenderer->GetGraphics();
                     if (pRenderCtx->GetMostRecentEpoch() > m_lastEpochModified || // Somebody preceeding us was modified
                         m_lastEpochModified == 0)
                     {

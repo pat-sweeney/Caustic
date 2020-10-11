@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Shader>
+  <PixelShader Filename="$(CausticRoot)\Libraries\Rendering\SceneGraph\Overlay2D.ps" Output="$(CausticRoot)\$(Configuration)\Overlay2D_PS.cso"/>
+  <VertexShader Filename="$(CausticRoot)\Libraries\Rendering\SceneGraph\Overlay2D.vs" Output="$(CausticRoot)\$(Configuration)\Overlay2D_VS.cso"/>
+</Shader>

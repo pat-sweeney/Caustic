@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:MeshData","MeshData");NDSummary.OnSummaryLoaded("CClass:MeshData",[["C/C++","C"]],[["Structs","Struct"]],[[817,0,0,"MeshData"]]);
+NDFramePage.OnPageTitleLoaded("CClass:MeshData","MeshData");NDSummary.OnSummaryLoaded("CClass:MeshData",[["C/C++","C"]],[["Groups","Group"],["Structs","Struct"]],[[896,0,1,"MeshData"],[787,0,0,"Pass Flags","Pass_Flags"],[788,0,0,"Shadow map selection","Shadow_map_selection"]]);

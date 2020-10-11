@@ -119,6 +119,9 @@
     <ProjectReference Include="..\..\Libraries\Parsers\Lex\Lex.vcxproj">
       <Project>{e96c27e0-989e-4fd1-af44-06c378e1794e}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Interpreter\Scheme\Scheme.vcxproj">
+      <Project>{ccee5d4d-8fa4-4e20-a1dc-a7b450d68353}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Rendering\Caustic\Caustic.vcxproj">
       <Project>{60a04400-10f9-4c6d-b34c-d5c7ebafa262}</Project>
     </ProjectReference>

@@ -20,7 +20,7 @@ namespace Caustic
     // Creates an empty texture.
     //
     // Parameters:
-    // pGraphics - Renderer
+    // pRenderer - Renderer
     // width - width of texture in pixels
     // height - height of texture in pixels
     // format - image format
@@ -30,9 +30,9 @@ namespace Caustic
     // Returns:
     // Returns the created texture
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> CreateTexture(IGraphics* pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags)
+    CAUSTICAPI CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags)
     {
-        return CRefObj<ITexture>(new CTexture(pGraphics, width, height, format, cpuFlags, bindFlags));
+        return CRefObj<ITexture>(new CTexture(pRenderer, width, height, format, cpuFlags, bindFlags));
     }
 
     //**********************************************************************
@@ -40,7 +40,7 @@ namespace Caustic
     // Creates an empty texture.
     //
     // Parameters:
-    // pGraphics - Renderer
+    // pRenderer - Renderer
     // width - width of texture in pixels
     // height - height of texture in pixels
     // format - image format
@@ -48,9 +48,9 @@ namespace Caustic
     // Returns:
     // Returns the created texture
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> CreateTexture(IGraphics* pGraphics, uint32 width, uint32 height, DXGI_FORMAT format)
+    CAUSTICAPI CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, uint32 width, uint32 height, DXGI_FORMAT format)
     {
-        return CreateTexture(pGraphics, width, height, format, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
+        return CreateTexture(pRenderer, width, height, format, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
     }
 
     //**********************************************************************
@@ -58,7 +58,7 @@ namespace Caustic
     // Creates a texture from an <IImage at Caustic::IImage>.
     //
     // Parameters:
-    // pGraphics - Renderer
+    // pRenderer - Renderer
     // pImage - image to use
     // cpuFlags - Flags indicating allowed access to texture from CPU (see D3D11 documentation)
     // bindFlags - bind flags (see D3D11 documentation)
@@ -66,7 +66,7 @@ namespace Caustic
     // Returns:
     // Returns the created texture
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> CreateTexture(IGraphics* pGraphics, IImage* pImage, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags)
+    CAUSTICAPI CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, IImage* pImage, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags)
     {
         DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM;
         bool fastCopy = false;
@@ -95,9 +95,9 @@ namespace Caustic
             fastCopy = true;
             break;
         }
-        CRefObj<ITexture> spTexture = CreateTexture(pGraphics, pImage->GetWidth(), pImage->GetHeight(), format, cpuFlags, bindFlags);
+        CRefObj<ITexture> spTexture = CreateTexture(pRenderer, pImage->GetWidth(), pImage->GetHeight(), format, cpuFlags, bindFlags);
         D3D11_MAPPED_SUBRESOURCE ms;
-        CT(pGraphics->GetContext()->Map(spTexture->GetD3DTexture(), 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
+        CT(pRenderer->GetContext()->Map(spTexture->GetD3DTexture(), 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
         if (fastCopy)
         {
             BYTE* pDst = reinterpret_cast<BYTE*>(ms.pData);
@@ -145,9 +145,9 @@ namespace Caustic
                 srcRow.Step(CImageIter::Down);
             }
         }
-        pGraphics->GetContext()->Unmap(spTexture->GetD3DTexture(), 0);
+        pRenderer->GetContext()->Unmap(spTexture->GetD3DTexture(), 0);
         if (format == DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM)
-            spTexture->GenerateMips(pGraphics);
+            spTexture->GenerateMips(pRenderer);
         return spTexture;
     }
 
@@ -156,17 +156,17 @@ namespace Caustic
     // Creates a black and white checkboard texture
     //
     // Parameters:
-    // pGraphics - Renderer
+    // pRenderer - Renderer
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> CheckerboardTexture(IGraphics* pGraphics)
+    CAUSTICAPI CRefObj<ITexture> CheckerboardTexture(IRenderer* pRenderer)
     {
         static CRefObj<ITexture> s_spCheckerBoard;
         if (s_spCheckerBoard == nullptr)
         {
-            s_spCheckerBoard = CreateTexture(pGraphics, 32, 32, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
+            s_spCheckerBoard = CreateTexture(pRenderer, 32, 32, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
             CComPtr<ID3D11Texture2D> spTexture = s_spCheckerBoard->GetD3DTexture();
             D3D11_MAPPED_SUBRESOURCE ms;
-            CT(pGraphics->GetContext()->Map(spTexture, 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
+            CT(pRenderer->GetContext()->Map(spTexture, 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
             BYTE* pr = reinterpret_cast<BYTE*>(ms.pData);
             for (int i = 0; i < 32; i++)
             {
@@ -191,7 +191,7 @@ namespace Caustic
                 }
                 pr += ms.RowPitch;
             }
-            pGraphics->GetContext()->Unmap(spTexture, 0);
+            pRenderer->GetContext()->Unmap(spTexture, 0);
         }
         return s_spCheckerBoard;
     }
@@ -202,19 +202,19 @@ namespace Caustic
     //
     // Parameters:
     // pFilename - Name of file to load
-    // pGraphics - Renderer
+    // pRenderer - Renderer
     //
     // Returns:
     // Returns the new texture
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> LoadTexture(const wchar_t* pFilename, IGraphics* pGraphics)
+    CAUSTICAPI CRefObj<ITexture> LoadTexture(const wchar_t* pFilename, IRenderer* pRenderer)
     {
         static std::map<std::wstring, CRefObj<ITexture>> cache;
         std::map<std::wstring, CRefObj<ITexture>>::iterator it;
         if ((it = cache.find(pFilename)) != cache.end())
             return CRefObj<ITexture>(it->second);
         CRefObj<IImage> spImage = LoadImage(pFilename);
-        CRefObj<ITexture> spTexture = CreateTexture(pGraphics, spImage, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
+        CRefObj<ITexture> spTexture = CreateTexture(pRenderer, spImage, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
         cache[pFilename] = spTexture;
         return spTexture;
     }
@@ -224,9 +224,9 @@ namespace Caustic
     // Generates the MIPMAP chain for a texture
     //
     // Parameters:
-    // pGraphics - Renderer
+    // pRenderer - Renderer
     //**********************************************************************
-    void CTexture::GenerateMips(IGraphics *pGraphics)
+    void CTexture::GenerateMips(IRenderer *pRenderer)
     {
         CD3D11_TEXTURE2D_DESC desc(m_Format, m_Width, m_Height);
         desc.Usage = D3D11_USAGE_DEFAULT;
@@ -235,9 +235,9 @@ namespace Caustic
         desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
         desc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
         CComPtr<ID3D11Texture2D> spTexture;
-        CT(pGraphics->GetDevice()->CreateTexture2D(&desc, nullptr, &spTexture));
+        CT(pRenderer->GetDevice()->CreateTexture2D(&desc, nullptr, &spTexture));
 
-        pGraphics->GetContext()->CopySubresourceRegion(spTexture, 0, 0, 0, 0, m_spTexture, 0, NULL);
+        pRenderer->GetContext()->CopySubresourceRegion(spTexture, 0, 0, 0, 0, m_spTexture, 0, NULL);
 
         m_spTexture = spTexture;
 
@@ -246,8 +246,8 @@ namespace Caustic
         srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
         srvDesc.Texture2D.MipLevels = (UINT)-1;
         m_spTextureRV = nullptr;
-        CT(pGraphics->GetDevice()->CreateShaderResourceView(m_spTexture, &srvDesc, &m_spTextureRV));
-        pGraphics->GetContext()->GenerateMips(m_spTextureRV);
+        CT(pRenderer->GetDevice()->CreateShaderResourceView(m_spTexture, &srvDesc, &m_spTextureRV));
+        pRenderer->GetContext()->GenerateMips(m_spTextureRV);
     }
 
     //**********************************************************************
@@ -255,14 +255,14 @@ namespace Caustic
     // Ctor for our texture wrapper object
     //
     // Parameters:
-    // pGraphics - Graphics renderer
+    // pRenderer - Graphics renderer
     // width - Width of image in pixels
     // height - Height of image in pixels
     // format - Defines the pixel format for the image
     // cpuFlags - Flags indicating allowed access to texture from CPU (see D3D11 documentation)
     // bindFlags - bind flags (see D3D11 documentation)
     //**********************************************************************
-    CTexture::CTexture(IGraphics *pGraphics, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags) :
+    CTexture::CTexture(IRenderer *pRenderer, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags) :
         m_Format(format),
         m_Width(width),
         m_Height(height)
@@ -277,7 +277,7 @@ namespace Caustic
         desc.CPUAccessFlags = cpuFlags;
         desc.MipLevels = 1;
         desc.BindFlags = bindFlags;
-        CT(pGraphics->GetDevice()->CreateTexture2D(&desc, nullptr, &m_spTexture));
+        CT(pRenderer->GetDevice()->CreateTexture2D(&desc, nullptr, &m_spTexture));
 
         if (desc.Usage == D3D11_USAGE_DYNAMIC || desc.Usage == D3D11_USAGE_DEFAULT)
         {
@@ -285,10 +285,16 @@ namespace Caustic
             srvDesc.Format = desc.Format;
             srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
             srvDesc.Texture2D.MipLevels = 1;
-            CT(pGraphics->GetDevice()->CreateShaderResourceView(m_spTexture, &srvDesc, &m_spTextureRV));
+            CT(pRenderer->GetDevice()->CreateShaderResourceView(m_spTexture, &srvDesc, &m_spTextureRV));
         }
     }
     
+    CTexture::CTexture(ID3D11Texture2D* pD3DTexture, ID3D11ShaderResourceView* pD3DRV)
+    {
+        m_spTextureRV = pD3DRV;
+        m_spTexture = pD3DTexture;
+    }
+
     CTexture::~CTexture()
     {
     }
@@ -308,9 +314,9 @@ namespace Caustic
         return m_Format;
     }
 
-    void CTexture::Render(IGraphics* pGraphics, int slot, bool isPixelShader)
+    void CTexture::Render(IRenderer* pRenderer, int slot, bool isPixelShader)
     {
-        auto ctx = pGraphics->GetContext();
+        auto ctx = pRenderer->GetContext();
         if (m_spTexture != nullptr)
         {
             CComPtr<ID3D11ShaderResourceView> spResource = m_spTextureRV;
@@ -322,7 +328,7 @@ namespace Caustic
         else
         {
             // No valid texture?! Checkerboard it
-            CRefObj<ITexture> spTexture = CheckerboardTexture(pGraphics);
+            CRefObj<ITexture> spTexture = CheckerboardTexture(pRenderer);
             CComPtr<ID3D11ShaderResourceView> spResource = spTexture->GetD3DTextureRV();
             if (isPixelShader)
                 ctx->PSSetShaderResources(slot, 1, &spResource.p);

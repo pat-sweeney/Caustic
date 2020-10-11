@@ -46,6 +46,7 @@ struct Vertex
 
 void CApp::InitializeCaustic(HWND hwnd)
 {
+#ifdef SUPPORT_RENDERGRAPH
     // First create our underlying Caustic factory.
     // I have not yet made counter parts to all the Caustic objects
     // in the render graph (and probably won't since they are unnecessary
@@ -144,6 +145,7 @@ void CApp::InitializeCaustic(HWND hwnd)
    //     //spMeshElem->SetFlags(spMeshElem->GetFlags() | ESceneElemFlags::MaterialDirty);
    //     //spMaterial->SetTexture(L"diffuseTexture", spOutputImage, EShaderAccess::PixelShader);
    //     });
+#endif // SUPPORT_RENDERGRAPH
 }
 
 #define MAX_LOADSTRING 100

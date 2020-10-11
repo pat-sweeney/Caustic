@@ -6,6 +6,8 @@
 
 Texture2D diffuseTexture : register(t0);
 SamplerState diffuseSampler : register(s0);
+Texture2D shadowMapTexture : register(t1);
+SamplerState shadowMapSampler : register(s1);
 
 cbuffer PS_CONSTANT_BUFFER
 {
@@ -19,6 +21,7 @@ cbuffer PS_CONSTANT_BUFFER
     float4 transparency;
     matrix viewInv; // View => World
     int numLights;
+    float4 shadowMapBounds;
 };
 
 float4 PS(VSOutput p) : SV_Target
@@ -26,15 +29,28 @@ float4 PS(VSOutput p) : SV_Target
     float3 viewPosWS = mul(float4(0.0f, 0.0f, 0.0f, 1.0f), viewInv).xyz;
     float3 viewDirWS = normalize(viewPosWS - p.posWS);
     float3 color = float3(0.0f, 0.0f, 0.0f);
+    float3 normWS = normalize(p.normWS);
+
+    // Check if point is in shadow
+    //float shadowDist = shadowMapTexture.Sample(shadowMapSampler, p.uvs);
+
     for (int i = 0; i < numLights; i++)
     {
         float3 lightDirWS = normalize(lightPosWS[i].xyz - p.posWS);
-        float dp = saturate(dot(normalize(p.normWS), lightDirWS));
-        lightDirWS = reflect(lightDirWS, p.normWS);
-        float specdp = saturate(dot(lightDirWS, -viewDirWS));
+
+        // L.N
+        float dp = saturate(dot(normWS, lightDirWS));
+        
+        // Diffuse
+        float4 clr = diffuseTexture.Sample(diffuseSampler, p.uvs);
+        color.xyz += clr.zyx * dp * lightColor[i].xyz;
+
+        // specular
+        float3 reflectWS = reflect(lightDirWS, normWS);
+        float specdp = saturate(dot(reflectWS, -viewDirWS));
         float spec = pow(specdp, specularExp.x);
-        return float4(diffuseTexture.Sample(diffuseSampler, p.uvs).zyx * lightColor[i].xyz,1.0);
-        color.xyz += specularColor.xyz * lightColor[i].xyz * spec;
+        color.xyz += specularColor.xyz * spec * lightColor[i].xyz;
     }
-    return float4(ambientColor.xyz + color, transparency.x);
+    color.xyz += ambientColor.xyz;
+    return float4(color.xyz, transparency.x);
 }

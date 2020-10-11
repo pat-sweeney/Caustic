@@ -472,8 +472,7 @@ while(*p)//        for (int i = 0; i < pPolylist->m_count; i++)
         std::wstring url;
         ParseAttribute(spAttributes, L"url", url);
 
-        CRefObj<ISceneGraph> spSceneGraph;
-		Caustic::CSceneFactory::Instance()->CreateSceneGraph(&spSceneGraph);
+        CRefObj<ISceneGraph> spSceneGraph = Caustic::CSceneFactory::Instance()->CreateSceneGraph();
 
         Collada::SVisualScene *pScene = pCollada->m_visualScenes[url.substr(1)];
         std::map<std::wstring, Collada::SNode*>::iterator it = pScene->m_nodes.begin();
@@ -486,23 +485,19 @@ while(*p)//        for (int i = 0; i < pPolylist->m_count; i++)
                 break;
             case Collada::c_NodeType_Light:
                 {
-                    CRefObj<Caustic::ISceneGroupElem> spXform;
-					Caustic::CSceneFactory::Instance()->CreateGroupElem(&spXform);
+                    CRefObj<Caustic::ISceneGroupElem> spXform = CSceneFactory::Instance()->CreateGroupElem();
                     spXform->SetTransform(pNode->m_mat);
-                    CRefObj<Caustic::IScenePointLightElem> spLight;
-					Caustic::CSceneFactory::Instance()->CreatePointLightElem(&spLight);
+                    CRefObj<Caustic::ISceneLightCollectionElem> spLight = CSceneFactory::Instance()->CreateLightCollectionElem();
                     spXform->AddChild(spLight);
                     spSceneGraph->AddChild(spXform);
                 }
                 break;
             case Collada::c_NodeType_Geometry:
                 {
-                    CRefObj<Caustic::ISceneGroupElem> spXform;
-					Caustic::CSceneFactory::Instance()->CreateGroupElem(&spXform);
+                    CRefObj<Caustic::ISceneGroupElem> spXform = CSceneFactory::Instance()->CreateGroupElem();
                     spXform->SetTransform(pNode->m_mat);
                     
-                    CRefObj<Caustic::ISceneMeshElem> spMeshElem;
-					Caustic::CSceneFactory::Instance()->CreateMeshElem(&spMeshElem);
+                    CRefObj<Caustic::ISceneMeshElem> spMeshElem = CSceneFactory::Instance()->CreateMeshElem();
 
                     Collada::SGeometry *pGeometry = pCollada->m_geometries[pNode->m_url.substr(1)];
                     CRefObj<IMeshConstructor> spMeshConstructor = CreateMeshConstructor();

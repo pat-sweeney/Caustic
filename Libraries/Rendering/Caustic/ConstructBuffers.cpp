@@ -16,9 +16,9 @@
 namespace Caustic
 {
 	// TODO: This sort of sucks. This functionality is currently duplicated in the mesh library. Need to go back and clean this all up.
-	void BuildVertexBuffer(IGraphics *pGraphics, IShaderInfo *pShaderInfo, std::vector<CGeomVertex> &pts, MeshData *pMeshData)
+	void BuildVertexBuffer(IRenderer *pRenderer, IShaderInfo *pShaderInfo, std::vector<CGeomVertex> &pts, MeshData *pMeshData)
 	{
-		CComPtr<ID3D11Device> spDevice = pGraphics->GetDevice();
+		CComPtr<ID3D11Device> spDevice = pRenderer->GetDevice();
 		std::vector<D3D11_INPUT_ELEMENT_DESC> vertexLayout = pShaderInfo->VertexLayout();
 		uint32 numVerts = (uint32)pts.size();
 		uint32 vertexSize = pShaderInfo->GetVertexSize();
@@ -89,13 +89,13 @@ namespace Caustic
 	// Creates a index buffer using the specified submesh.
 	//
 	// Parameters:
-	// pGraphics - Graphics device
+	// pRenderer - Graphics device
 	// faces - List of vertices that are referenced
 	// MeshData - place to store created index buffer
 	//**********************************************************************
-	void BuildIndexBuffer(IGraphics* pGraphics, std::vector<uint32>& faces, MeshData* pMeshData)
+	void BuildIndexBuffer(IRenderer* pRenderer, std::vector<uint32>& faces, MeshData* pMeshData)
 	{
-		CComPtr<ID3D11Device> spDevice = pGraphics->GetDevice();
+		CComPtr<ID3D11Device> spDevice = pRenderer->GetDevice();
 		UINT ibSize = (UINT)(faces.size() * sizeof(uint32));
 		D3D11_BUFFER_DESC desc = { 0 };
 		desc.ByteWidth = ibSize;

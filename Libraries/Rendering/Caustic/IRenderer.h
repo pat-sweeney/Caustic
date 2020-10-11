@@ -6,12 +6,7 @@
 #pragma once
 
 #include "Base\Core\Core.h"
-#include "Rendering\Caustic\IGraphics.h"
 #include "Geometry\Mesh\IMesh.h"
-#include "Rendering\Caustic\ITexture.h"
-#include "Rendering\Caustic\IRenderCtx.h"
-#include "Rendering\Caustic\IPointLight.h"
-#include "Rendering\Caustic\IShader.h"
 #include <functional>
 
 //**********************************************************************
@@ -23,6 +18,80 @@ namespace Caustic
 {
     struct ISceneGraph;
     struct IRenderSubMesh;
+    struct ITexture;
+    struct ITexture;
+    struct IRenderCtx;
+    struct IPointLight;
+    struct IShader;
+    struct ICamera;
+
+    //**********************************************************************
+    // Struct: MeshData
+    // Defines class for holding mesh data (i.e. vertices and indices)
+    //
+    // Members:
+    // m_spVB - The vertex buffer
+    // m_spIB - The index buffer (maybe null)
+    // m_vertexSize - Size in bytes of each vertex
+    // m_numVertices - Number of vertices
+    // m_numIndices - Number of indices. Maybe 0
+    //
+    // Header:
+    // [Link:Rendering/Caustic/IRenderer.h]
+    //**********************************************************************
+    struct MeshData
+    {
+        CComPtr<ID3D11Buffer> m_spVB;
+        CComPtr<ID3D11Buffer> m_spIB;
+        uint32 m_vertexSize;
+        uint32 m_numVertices;
+        uint32 m_numIndices;
+        BBox3 m_bbox;
+
+        MeshData() :
+            m_vertexSize(0),
+            m_numVertices(0),
+            m_numIndices(0)
+        {
+        }
+    };
+
+    //**********************************************************************
+    // Group: Pass Flags
+    // c_PassFirst - first pass
+    // c_PassObjID - renders pass writing object IDs to output texture
+    // c_PassShadow - pass that renders shadow maps
+    // c_PassOpaque - pass rendering the opaque objects
+    // c_PassTransparent - pass rendering transparent objects
+    // c_PassEnvironment - pass rendering environment maps
+    // c_PassLast - last pass
+    // c_PassAllPasses - combination of all the pass flags
+    //
+    // Group: Shadow map selection
+    // c_HiResShadowMap - selects the hi-res shadow map
+    // c_MidResShadowMap - selects the mid-res shadow map
+    // c_LowResShadowMap - selects the low-res shadow map
+    //
+    // Header:
+    // [Link:Rendering/Caustic/Renderer.h]
+    //**********************************************************************
+    const int c_PassFirst = 0;
+    const int c_PassObjID = 0;
+    const int c_PassShadow = 1;
+    const int c_PassOpaque = 2;
+    const int c_PassTransparent = 3;
+    const int c_PassEnvironment = 4;
+    const int c_PassLast = c_PassEnvironment;
+    const int c_PassAllPasses = (1 << c_PassLast) - 1;
+
+    // Each shadow map will support up to 16 lights in a single map.
+    // For instance, the hires map is 8096x8096. We divide this map
+    // into 16 2048x2048 shadow maps.
+    const int c_MaxLights = 4;
+    const int c_HiResShadowMap = 0;
+    const int c_MidResShadowMap = 1;
+    const int c_LowResShadowMap = 2;
+    const int c_MaxShadowMaps = 3; // Hi-res, Mid-res, Low-res
 
     //**********************************************************************
     // Interface: IRenderer 
@@ -32,8 +101,44 @@ namespace Caustic
     // Header:
     // [Link:Rendering/Caustic/IRenderer.h]
     //**********************************************************************
-    struct IRenderer : public IGraphics
+    struct IRenderer : public IRefCount
     {
+        //**********************************************************************
+        // Method: GetDevice
+        // Returns:
+        // The underlying D3D11 device
+        //**********************************************************************
+        virtual CComPtr<ID3D11Device> GetDevice() = 0;
+
+        //**********************************************************************
+        // Method: GetContext
+        // Returns:
+        // The underlying D3D11 device context
+        //**********************************************************************
+        virtual CComPtr<ID3D11DeviceContext> GetContext() = 0;
+
+        //**********************************************************************
+        // Method: GetCamera
+        // Returns:
+        // The camera associated with this device
+        //**********************************************************************
+        virtual CRefObj<ICamera> GetCamera() = 0;
+
+        //**********************************************************************
+        // Method: SetCamera
+        // Assigns a camera to the renderer
+        //
+        // Parameters:
+        // pCamera - camera to use when rendering
+        //**********************************************************************
+        virtual void SetCamera(ICamera* pCamera) = 0;
+
+        //**********************************************************************
+        // Method: GetShaderMgr
+        // Returns the shader manager being used by the renderer
+        //**********************************************************************
+        virtual CRefObj<IShaderMgr> GetShaderMgr() = 0;
+
         //**********************************************************************
         // Method: Setup
         // Initializes the renderer. Applications need to call this method at startup.
@@ -81,15 +186,6 @@ namespace Caustic
         virtual void RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) = 0;
 
         //**********************************************************************
-        // Method: SetCamera
-        // Assigns a camera to the renderer
-        //
-        // Parameters:
-        // pCamera - camera to use when rendering
-        //**********************************************************************
-        virtual void SetCamera(ICamera *pCamera) = 0;
-
-        //**********************************************************************
         // Method: AddPointLight
         // Adds a point light which the renderer uses
         //
@@ -116,10 +212,41 @@ namespace Caustic
         virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) = 0;
 
         //**********************************************************************
-        // Method: GetGraphics
-        // Returns the current graphics device the renderer is using
+        // Method: PushShadowmapRT
+        // Setups up our shadow map as the current render target
+        //
+        // Parameters:
+        // whichShadowmap - constant indicating which shadow map to use (c_HiResShadow, ...)
+        // lightPos - position of the light to render from
+        // lightDir - direction of the light to render from
         //**********************************************************************
-        virtual CRefObj<IGraphics> GetGraphics() = 0;
+        virtual void PushShadowmapRT(int whichShadowmap, int lightMapIndex, Vector3& lightPos, Vector3& lightDir) = 0;
+
+        //**********************************************************************
+        // Method: PopShadowmapRT
+        // Restores the default render target after PushShadowmapRT
+        //**********************************************************************
+        virtual void PopShadowmapRT() = 0;
+
+        //**********************************************************************
+        // Method: SelectShadowmap
+        // Selects which shadow map to use during shading
+        //
+        // Parameters:
+        // whichShadowMap - constant indicating which shadow map to use (c_HiResShadow, ...)
+        // lightMapIndex - which light is this for?
+        // pShader - shader to use selected shadow map
+        //**********************************************************************
+        virtual void SelectShadowmap(int whichShadowMap, int lightMapIndex, std::vector<CRefObj<ILight>>& lights, IShader *pShader) = 0;
+
+        //**********************************************************************
+        // Method: GetShadowmapTexture
+        // Returns the shadow map as a texture
+        //
+        // Parameters:
+        // whichShadowmap - constant indicating which shadow map to use (c_HiResShadow, ...)
+        //**********************************************************************
+        virtual CRefObj<ITexture> GetShadowmapTexture(int whichShadowMap) = 0;
     };
 
     //**********************************************************************

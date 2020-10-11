@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/PointLight.h","PointLight.h");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/PointLight.h",[["C/C++","C"]],[["Classes","Class"],["Files","File"]],[[626,0,1,"PointLight.h","PointLight.h"],[1147,0,0,"CPointLight","CPointLight"]]);
+NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/PointLight.h","PointLight.h");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/PointLight.h",[["C/C++","C"]],[["Classes","Class"],["Files","File"]],[[630,0,1,"PointLight.h","PointLight.h"],[631,0,0,"CPointLight","CPointLight"]]);

@@ -64,7 +64,7 @@ namespace Caustic
         //**********************************************************************
         virtual void AddLight(IPointLight* pLight) override { m_spLights->AddLight(pLight); }
         virtual void Clear() override { m_spLights->Clear(); }
-        virtual std::vector<CRefObj<IPointLight>> ToVector() override { return m_spLights->ToVector(); }
+        virtual std::vector<CRefObj<ILight>> ToVector() override { return m_spLights->ToVector(); }
         virtual CRefObj<ILightCollection> GetLights() override { return m_spLights; }
     };
 }

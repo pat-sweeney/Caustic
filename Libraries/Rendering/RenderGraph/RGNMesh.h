@@ -25,7 +25,7 @@ namespace Caustic
         CRefObj<IMesh> m_spMesh;
         CRefObj<IRenderMesh> m_spRenderMesh;
         CRefObj<ILightCollection> m_spLights;
-        std::vector<CRefObj<IPointLight>> m_lights;
+        std::vector<CRefObj<ILight>> m_lights;
         CRefObj<IRenderGraphPin> m_spRenderPin;
         CRefObj<IRenderGraphPin> m_spMeshPin;
         CRefObj<IRenderGraphPin> m_spFrontMatPin;

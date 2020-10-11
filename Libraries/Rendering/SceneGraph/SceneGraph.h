@@ -38,7 +38,8 @@ namespace Caustic
         // ISceneElem base implementation
         //**********************************************************************
         ESceneElemType GetType() { return ESceneElemType::Unknown; }
-        std::wstring& Name() { return CSceneElem::m_Name; };
+        std::wstring GetName() { return m_Name; }
+        void SetName(const wchar_t *name) { m_Name = name; }
         void SetPreRenderCallback(std::function<bool(int pass)> prerenderCallback)
         {
             m_prerenderCallback = prerenderCallback;
@@ -90,7 +91,8 @@ namespace Caustic
         // ISceneElem
         //**********************************************************************
         virtual ESceneElemType GetType() override { return ESceneElemType::SceneGraph; }
-        virtual std::wstring &Name() override { static std::wstring wstr(L"SceneGraph"); return wstr; }
+        virtual std::wstring GetName() override { return CSceneElem::GetName(); }
+        virtual void SetName(const wchar_t* name) override { return CSceneElem::SetName(name); }
         virtual void SetPreRenderCallback(std::function<bool(int pass)> prerenderCallback) override
         {
             CSceneElem::SetPreRenderCallback(prerenderCallback);
