@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("par",["Struct"],[["ParseTableEntry",,[[,,,,0,"File:Parsers/Lex/ILex.h:ParseTableEntry","CClass:ParseTableEntry"]]]]);

@@ -65,10 +65,28 @@
  <div class="CBody"><p>Returns the image's stride (bytes/scanline)</p></div>
 </div>
 
-<a name="GetBytesPerPixel"></a><a name="Topic438"></a><div class="CTopic TFunction LC last">
+<a name="GetBytesPerPixel"></a><a name="Topic438"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetBytesPerPixel</div>
  <div id="NDPrototype438" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetBytesPerPixel() = <span class="SHNumber">0</span></div>
  <div class="CBody"><p>Returns the number of bytes in each pixel</p></div>
+</div>
+
+<a name="PeekToken"></a><a name="Topic1206"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">PeekToken</div>
+ <div id="NDPrototype1206" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <a href="../../index.html#CClass:LexToken" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1202);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >LexToken</a> PeekToken() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><p>Returns the next token without advancing the reader</p></div>
+</div>
+
+<a name="ReadToken"></a><a name="Topic1207"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">ReadToken</div>
+ <div id="NDPrototype1207" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <a href="../../index.html#CClass:LexToken" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1202);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >LexToken</a> ReadToken() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><p>Returns the next token.</p></div>
+</div>
+
+<a name="SetParseTable"></a><a name="Topic1208"></a><div class="CTopic TFunction LC last">
+ <div class="CTitle">SetParseTable</div>
+ <div id="NDPrototype1208" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetParseTable(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:ParseTableEntry" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1203);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ParseTableEntry</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pTable</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Set the list of keywords that the parser will isolate as individual tokens.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pTable<div class="CDLParameterType"><a href="../../index.html#CClass:ParseTableEntry" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1203);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ParseTableEntry</a>*</div></td><td class="CDLDefinition"><p>list of token strings with associated ids.</p></td></tr></table></div>
 </div>
 
 </body></html>

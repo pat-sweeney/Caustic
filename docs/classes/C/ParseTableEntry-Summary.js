@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:ParseTableEntry","ParseTableEntry");NDSummary.OnSummaryLoaded("CClass:ParseTableEntry",[["C/C++","C"]],[["Structs","Struct"]],[[1203,0,0,"ParseTableEntry"]]);

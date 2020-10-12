@@ -59,7 +59,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>SHADERPATH=LR"foo($(CausticRoot)\$(Configuration))foo";"_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SHADERPATH=LR"foo($(CausticRoot)\$(Configuration))foo";_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(CausticRoot)\Libraries;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>

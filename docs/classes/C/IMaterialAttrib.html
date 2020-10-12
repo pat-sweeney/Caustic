@@ -29,6 +29,18 @@
  <div class="CBody"><p>Allows client to override whether material is considered transparent</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">isTransparent<div class="CDLParameterType"><span class="SHKeyword">bool</span></div></td><td class="CDLDefinition"><p>override whether material is transparent</p></td></tr></table></div>
 </div>
 
+<a name="GetIsShadowReceiver"></a><a name="Topic805"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetIsShadowReceiver</div>
+ <div id="NDPrototype805" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">bool</span> GetIsShadowReceiver() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><p>Indicates whether the surface acts as a shadow receiver</p></div>
+</div>
+
+<a name="SetIsShadowReceiver"></a><a name="Topic1211"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">SetIsShadowReceiver</div>
+ <div id="NDPrototype1211" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetIsShadowReceiver(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">bool</span>&nbsp;</td><td class="PName last">receivesShadow</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Allows client to set whether the surface is a shadow receiver</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">receivesShadow<div class="CDLParameterType"><span class="SHKeyword">bool</span></div></td><td class="CDLDefinition"><p>If true material is acts as a shadow receiver. Otherwise, it doesn't</p></td></tr></table></div>
+</div>
+
 <a name="GetColor"></a><a name="Topic882"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetColor</div>
  <div id="NDPrototype882" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <a href="../../index.html#CClass:FRGBColor" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,348);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >FRGBColor</a> GetColor(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><span class="SHKeyword">wchar_t</span>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pName</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>

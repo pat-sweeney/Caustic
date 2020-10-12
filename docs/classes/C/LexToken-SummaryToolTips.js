@@ -1,0 +1,1 @@
+NDSummary.OnToolTipsLoaded("CClass:LexToken",{1202:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines a token returned by the parser</div></div>"});

@@ -1,0 +1,1 @@
+NDSummary.OnToolTipsLoaded("CClass:ParseTableEntry",{1203:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines a string to be treated as a token along with its associated Id</div></div>"});
