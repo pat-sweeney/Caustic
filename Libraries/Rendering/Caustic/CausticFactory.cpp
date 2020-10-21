@@ -84,6 +84,15 @@ namespace Caustic
 	}
 	
     //**********************************************************************
+    // Method: CreatePointCloud
+    // See <ICausticFactory::CreatePointCloud>
+    //**********************************************************************
+    CRefObj<IPointCloud> CCausticFactory::CreatePointCloud(IRenderer* pRenderer, uint32 width, uint32 height)
+    {
+        return CRefObj<IPointCloud>(Caustic::CreatePointCloud(pRenderer, width, height));
+    }
+
+    //**********************************************************************
     // Method: CreateRenderMesh
     // See <ICausticFactory::CreateRenderMesh>
     //**********************************************************************

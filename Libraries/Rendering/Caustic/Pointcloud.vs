@@ -32,15 +32,17 @@ cbuffer VS_CONSTANT_BUFFER : register(b0)
     float4x4 worldViewProj; // Model => Projected
     float4x4 viewInv; // View => World
     float4 lightPosWS;
+    float width;
+    float height;
 };
 
 VSOutput VS(VSInput p)
 {
     VSOutput v;
 
-    int3 pc = int3(p.uvs.x * 512, p.uvs.y * 512, 0);
+    int3 pc = int3(p.uvs.x * width, p.uvs.y * height, 0);
     v.depth = depthTexture.Load(pc);
-    int3 rp = int3(int(p.posOS.x*512),int(p.posOS.y*512),0);
+    int3 rp = int3(int(p.uvs.x*width),int(p.uvs.y*height),0);
     float4 ray = rayTexture.Load(rp);
     float4 pos = float4(ray.xyz * float(v.depth) / 1000.0, 1.0);
     // convert depth to point

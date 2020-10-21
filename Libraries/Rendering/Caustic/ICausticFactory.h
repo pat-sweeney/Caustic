@@ -49,7 +49,24 @@ namespace Caustic
 		//**********************************************************************
 		virtual CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring &shaderFolder) = 0;
 
-        //**********************************************************************
+		//**********************************************************************
+		// Method: CreatePointCloud
+		// Creates a point cloud
+		//
+		// Parameters:
+		// pRenderer - renderer
+		// width - width of depth map that generates the point cloud
+		// height - height of depth map that generates the point cloud
+		// pFrontMaterial - material for front side of points
+		// pBackMaterial - material for back side of points
+		// mat - transformation to apply to points
+		//
+		// Returns:
+		// Returns the created point cloud
+		//**********************************************************************
+		virtual CRefObj<IPointCloud> CreatePointCloud(IRenderer* pRenderer, uint32 width, uint32 height) = 0;
+		
+		//**********************************************************************
 		// Method: CreateRenderMesh
 		// Creates a render mesh object
 		//

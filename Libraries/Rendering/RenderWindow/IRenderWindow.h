@@ -8,6 +8,7 @@
 #include "Base\Core\IRefCount.h"
 #include "Rendering\RenderGraph\IRenderGraph.h"
 #include <Windows.h>
+#include <functional>
 
 namespace Caustic
 {
@@ -100,5 +101,5 @@ namespace Caustic
     // shaderFolder - Path to folder containing shaders
 	// ppRenderWindow - returns the created render window
 	//**********************************************************************
-	CAUSTICAPI CRefObj<IRenderWindow> CreateRenderWindow(HWND hwnd, std::wstring &shaderFolder);
-}
+	CAUSTICAPI CRefObj<IRenderWindow> CreateRenderWindow(HWND hwnd, std::wstring &shaderFolder, std::function<void(IRenderer*,IRenderCtx*,int)> callback);
+} 

@@ -188,7 +188,7 @@ namespace Caustic
     protected:
         std::stack<ShadowMapRenderState> m_cameras;         // Cameras from shadow mapping
         DWORD m_renderThreadId;                             // Render thread's ID
-        std::vector<CRenderable> m_singleObjs;              // List of individual renderable objects (outside scene graph)
+        std::vector<CRefObj<IRenderable>> m_singleObjs;              // List of individual renderable objects (outside scene graph)
         std::vector<CRefObj<ILight>> m_lights;              // List of lights in this scene
         CComPtr<ID3D11Texture2D> m_spObjIDTexture;          // Texture for rendering object IDs
         CComPtr<ID3D11RenderTargetView> m_spObjIDRTView;    // Render target view for m_spObjIDTexture
@@ -241,6 +241,7 @@ namespace Caustic
         //**********************************************************************
         // IRenderer
         //**********************************************************************
+        virtual void AddRenderable(IRenderable* pRenderable) override;
         virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice) override;
         virtual void DrawMesh(IRenderSubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) override;
         virtual void AddPointLight(IPointLight *pLight) override;

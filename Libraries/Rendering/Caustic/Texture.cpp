@@ -69,85 +69,17 @@ namespace Caustic
     CAUSTICAPI CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, IImage* pImage, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags)
     {
         DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM;
-        bool fastCopy = false;
         switch (pImage->GetBPP())
         {
-        case 1:
-            format = DXGI_FORMAT::DXGI_FORMAT_R8_UNORM;
-            break;
-        case 8:
-            format = DXGI_FORMAT::DXGI_FORMAT_R8_UNORM;
-            fastCopy = true;
-            break;
-        case 16:
-            format = DXGI_FORMAT::DXGI_FORMAT_R16_UINT;
-            fastCopy = true;
-            break;
-        case 24:
-            format = DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM;
-            break;
-        case 32:
-            format = DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM;
-            fastCopy = true;
-            break;
-        case 128: // Image with 4 floats per pixel
-            format = DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT;
-            fastCopy = true;
-            break;
+        case 1: format = DXGI_FORMAT::DXGI_FORMAT_R8_UNORM; break;
+        case 8: format = DXGI_FORMAT::DXGI_FORMAT_R8_UNORM; break;
+        case 16: format = DXGI_FORMAT::DXGI_FORMAT_R16_UINT; break;
+        case 24: format = DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM; break;
+        case 32: format = DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM; break;
+        case 128: format = DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT; break;
         }
         CRefObj<ITexture> spTexture = CreateTexture(pRenderer, pImage->GetWidth(), pImage->GetHeight(), format, cpuFlags, bindFlags);
-        D3D11_MAPPED_SUBRESOURCE ms;
-        CT(pRenderer->GetContext()->Map(spTexture->GetD3DTexture(), 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
-        if (fastCopy)
-        {
-            BYTE* pDst = reinterpret_cast<BYTE*>(ms.pData);
-            BYTE* pSrc = pImage->GetData();
-            for (int y = 0; y < (int)pImage->GetHeight(); y++)
-            {
-                memcpy(pDst, pSrc, pImage->GetWidth() * pImage->GetBPP() / 8);
-                pSrc += pImage->GetStride();
-                pDst += ms.RowPitch;
-            }
-        }
-        else
-        {
-            CImageIterGeneric srcRow(pImage, 0, 0);
-            BYTE* pr = reinterpret_cast<BYTE*>(ms.pData);
-            for (int y = 0; y < (int)pImage->GetHeight(); y++)
-            {
-                CImageIterGeneric srcCol = srcRow;
-                BYTE* pc = pr;
-                for (int x = 0; x < (int)pImage->GetWidth(); x++)
-                {
-                    switch (format)
-                    {
-                    case DXGI_FORMAT::DXGI_FORMAT_R8_UNORM:
-                        pc[0] = srcCol.GetRed();
-                        pc++;
-                        break;
-                    case DXGI_FORMAT::DXGI_FORMAT_R16_UINT:
-                        ((uint16*)pc)[0] = (uint16)srcCol.GetGray();
-                        pc += 2;
-                        break;
-                    case DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM:
-                        pc[0] = srcCol.GetRed();
-                        pc[1] = srcCol.GetGreen();
-                        pc[2] = srcCol.GetBlue();
-                        pc[3] = srcCol.GetAlpha();
-                        pc += 4;
-                        break;
-                    case DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT:
-                        break;
-                    }
-                    srcCol.Step(CImageIter::Right);
-                }
-                pr += ms.RowPitch;
-                srcRow.Step(CImageIter::Down);
-            }
-        }
-        pRenderer->GetContext()->Unmap(spTexture->GetD3DTexture(), 0);
-        if (format == DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM)
-            spTexture->GenerateMips(pRenderer);
+        spTexture->CopyFromImage(pRenderer, pImage);
         return spTexture;
     }
 
@@ -217,6 +149,102 @@ namespace Caustic
         CRefObj<ITexture> spTexture = CreateTexture(pRenderer, spImage, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
         cache[pFilename] = spTexture;
         return spTexture;
+    }
+
+    //**********************************************************************
+    // Function: CreateTexture
+    // Copies an image's pixels into a texture
+    //
+    // Parameters:
+    // pRenderer - Renderer
+    // pImage - image to use
+    //**********************************************************************
+    void CTexture::CopyFromImage(IRenderer* pRenderer, IImage* pImage, bool generateMipMap /* = false */)
+    {
+        DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        bool fastCopy = false;
+        switch (pImage->GetBPP())
+        {
+        case 1:
+            format = DXGI_FORMAT::DXGI_FORMAT_R8_UNORM;
+            break;
+        case 8:
+            format = DXGI_FORMAT::DXGI_FORMAT_R8_UNORM;
+            fastCopy = true;
+            break;
+        case 16:
+            format = DXGI_FORMAT::DXGI_FORMAT_R16_UINT;
+            fastCopy = true;
+            break;
+        case 24:
+            format = DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM;
+            break;
+        case 32:
+            format = DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM;
+            fastCopy = true;
+            break;
+        case 128: // Image with 4 floats per pixel
+            format = DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT;
+            fastCopy = true;
+            break;
+        }
+        D3D11_MAPPED_SUBRESOURCE ms;
+        auto ctx = pRenderer->GetContext();
+        CT(ctx->Map(GetD3DTexture(), 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
+        if (fastCopy)
+        {
+            BYTE* pDst = reinterpret_cast<BYTE*>(ms.pData);
+            BYTE* pSrc = pImage->GetData();
+            int h = pImage->GetHeight();
+            int w = pImage->GetWidth();
+            int bpp = pImage->GetBPP();
+            int stride = pImage->GetStride();
+            for (int y = 0; y < (int)h; y++)
+            {
+                memcpy(pDst, pSrc, w * bpp / 8);
+                pSrc += stride;
+                pDst += ms.RowPitch;
+            }
+        }
+        else
+        {
+            CImageIterGeneric srcRow(pImage, 0, 0);
+            BYTE* pr = reinterpret_cast<BYTE*>(ms.pData);
+            for (int y = 0; y < (int)pImage->GetHeight(); y++)
+            {
+                CImageIterGeneric srcCol = srcRow;
+                BYTE* pc = pr;
+                for (int x = 0; x < (int)pImage->GetWidth(); x++)
+                {
+                    switch (format)
+                    {
+                    case DXGI_FORMAT::DXGI_FORMAT_R8_UNORM:
+                        pc[0] = srcCol.GetRed();
+                        pc++;
+                        break;
+                    case DXGI_FORMAT::DXGI_FORMAT_R16_UINT:
+                        ((uint16*)pc)[0] = (uint16)srcCol.GetGray();
+                        pc += 2;
+                        break;
+                    case DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM:
+                        pc[0] = srcCol.GetRed();
+                        pc[1] = srcCol.GetGreen();
+                        pc[2] = srcCol.GetBlue();
+                        pc[3] = srcCol.GetAlpha();
+                        pc += 4;
+                        break;
+                    case DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT:
+                        break;
+                    }
+                    srcCol.Step(CImageIter::Right);
+                }
+                pr += ms.RowPitch;
+                srcRow.Step(CImageIter::Down);
+            }
+        }
+        ctx->Unmap(GetD3DTexture(), 0);
+        if (generateMipMap && format == DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM)
+            GenerateMips(pRenderer);
     }
 
     //**********************************************************************

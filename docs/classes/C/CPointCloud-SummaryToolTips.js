@@ -1,0 +1,1 @@
+NDSummary.OnToolTipsLoaded("CClass:CPointCloud",{1214:"<div class=\"NDToolTip TClass LC\"><div class=\"NDClassPrototype\" id=\"NDClassPrototype1214\"><div class=\"CPEntry TClass Current\"><div class=\"CPName\">CPointCloud</div></div></div><div class=\"TTSummary\">Implements IRenderable</div></div>"});

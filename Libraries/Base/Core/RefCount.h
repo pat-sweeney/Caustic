@@ -20,6 +20,7 @@ namespace Caustic
     //**********************************************************************
     class CRefCount
     {
+    protected:
         ULONG m_RefCnt; // Current reference count
     public:
         CRefCount() :

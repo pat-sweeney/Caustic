@@ -13,13 +13,15 @@
 
 namespace Caustic
 {
-    CAUSTICAPI CRefObj<IRenderWindow> CreateRenderWindow(HWND hwnd, std::wstring &shaderFolder)
+    CAUSTICAPI CRefObj<IRenderWindow> CreateRenderWindow(HWND hwnd, std::wstring &shaderFolder, std::function<void(IRenderer*,IRenderCtx*,int)> callback)
     {
-        return CRefObj<IRenderWindow>(new CRenderWindow(hwnd, shaderFolder));
+        return CRefObj<IRenderWindow>(new CRenderWindow(hwnd, shaderFolder, callback));
     }
 
-    CRenderWindow::CRenderWindow(HWND hwnd, std::wstring &shaderFolder, bool useRenderGraph /* = false */)
+    CRenderWindow::CRenderWindow(HWND hwnd, std::wstring &shaderFolder,
+        std::function<void(Caustic::IRenderer*, Caustic::IRenderCtx*, int)> callback, bool useRenderGraph /* = false */)
     {
+        m_callback = callback;
         m_useRenderGraph = useRenderGraph;
         m_spMarshaller = Caustic::CCausticFactory::Instance()->CreateRendererMarshaller();
         if (useRenderGraph)
@@ -34,6 +36,8 @@ namespace Caustic
         }
         m_spMarshaller->Initialize(hwnd, shaderFolder,
             [this](IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass) {
+                if (m_callback)
+                    m_callback(pRenderer, pRenderCtx, pass);
                 if (m_useRenderGraph)
                     m_spRenderGraph->Render(pRenderer, pRenderCtx);
                 else

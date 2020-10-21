@@ -92,6 +92,7 @@ namespace Caustic
         //**********************************************************************
         // IRenderer methods
         //**********************************************************************
+        virtual void AddRenderable(IRenderable* pRenderable) override;
         virtual CComPtr<ID3D11Device> GetDevice() override;
         virtual CComPtr<ID3D11DeviceContext> GetContext() override;
         virtual CRefObj<ICamera> GetCamera() override;

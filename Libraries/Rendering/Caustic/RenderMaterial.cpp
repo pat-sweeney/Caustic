@@ -22,7 +22,7 @@ namespace Caustic
         if (pMaterialAttrib)
         {
             pMaterialAttrib->EnumerateTextures(
-                [pRenderer, wpRenderMaterial](const wchar_t* pName, IImage* pImage, EShaderAccess access) {
+                [pRenderer, wpRenderMaterial ](const wchar_t* pName, IImage* pImage, EShaderAccess access) {
                     if (pImage != nullptr)
                     {
                         CRefObj<ITexture> spTexture = Caustic::CCausticFactory::Instance()->CreateTexture(pRenderer, pImage, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_SHADER_RESOURCE);

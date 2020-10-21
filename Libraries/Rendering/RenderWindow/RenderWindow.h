@@ -12,6 +12,7 @@
 #include "Rendering\SceneGraph\ISceneFactory.h"
 #include "Rendering\RenderGraph\IRenderGraph.h"
 #include "Rendering\RenderGraph\IRenderGraphFactory.h"
+#include <functional>
 
 namespace Caustic
 {
@@ -36,8 +37,9 @@ namespace Caustic
         int m_startx, m_starty;
         int m_winwidth, m_winheight;
         bool m_useRenderGraph;
+        std::function<void(Caustic::IRenderer*, Caustic::IRenderCtx*, int)> m_callback;
     public:
-        CRenderWindow(HWND hwnd, std::wstring &shaderFolder, bool useRenderGraph = false);
+        CRenderWindow(HWND hwnd, std::wstring &shaderFolder, std::function<void(Caustic::IRenderer*, Caustic::IRenderCtx*, int)> callback, bool useRenderGraph = false);
         ~CRenderWindow();
         
         //**********************************************************************

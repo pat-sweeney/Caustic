@@ -39,4 +39,13 @@ namespace Caustic
         Vector2 uvs[4];     // Defines UV coordinates
         int index;          // Index (used for serialization)
     };
+
+    //**********************************************************************
+    // Struct: CGeomFace
+    // Defines a face (triangle) on our mesh as a tuple of vertex indices.
+    //**********************************************************************
+    struct CGeomFace
+    {
+        int indices[3];
+    };
 }

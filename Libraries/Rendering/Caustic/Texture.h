@@ -50,5 +50,6 @@ namespace Caustic
         virtual CComPtr<ID3D11ShaderResourceView> GetD3DTextureRV() { return m_spTextureRV; }
         virtual void GenerateMips(IRenderer* pRenderer) override;
         virtual void Render(IRenderer* pRenderer, int slot, bool isPixelShader) override;
+        virtual void CopyFromImage(IRenderer* pRenderer, IImage* pImage, bool generateMipMap = false) override;
     };
 };

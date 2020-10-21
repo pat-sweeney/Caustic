@@ -91,6 +91,16 @@ namespace Caustic
         // isPixelShader - is texture being assigned to a pixel or vertex shader
         //**********************************************************************
         virtual void Render(IRenderer* pRenderer, int slot, bool isPixelShader) = 0;
+
+        //**********************************************************************
+        // Method: CopyFromImage
+        // Copies an image into an existing ITexture
+        //
+        // Parameters:
+        // pRenderer - graphics device
+        // pImage - image to copy pixels from
+        //**********************************************************************
+        virtual void CopyFromImage(IRenderer* pRenderer, IImage* pImage, bool generateMipMap = false) = 0;
     };
 
     //**********************************************************************

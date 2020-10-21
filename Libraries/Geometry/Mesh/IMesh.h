@@ -264,4 +264,5 @@ namespace Caustic
     CAUSTICAPI CRefObj<IMesh> CreateSphere(uint32 subdivisions);
     CAUSTICAPI CRefObj<IMesh> CreateTetrahedron();
     CAUSTICAPI CRefObj<IMesh> CreateGrid(uint32 subdivisions);
+    CAUSTICAPI CRefObj<IMesh> CreateGrid(uint32 width, uint32 height);
 }

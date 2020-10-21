@@ -207,6 +207,12 @@ namespace Caustic
     }
 
     //**********************************************************************
+    void CVideoTexture::CopyFromImage(IRenderer* pRenderer, IImage* pImage, bool generateMipMap /* = false */)
+    {
+        CT(E_NOTIMPL);
+    }
+
+    //**********************************************************************
     void CVideoTexture::FromMediaSource(IMFSourceReader *pSourceReader, IRenderer* pRenderer)
     {
         m_spSourceReader = pSourceReader;

@@ -7,6 +7,7 @@
 
 #include "Base\Core\Core.h"
 #include "Geometry\Mesh\IMesh.h"
+#include "Rendering\Caustic\IRenderable.h"
 #include <functional>
 
 //**********************************************************************
@@ -116,6 +117,13 @@ namespace Caustic
         // The underlying D3D11 device context
         //**********************************************************************
         virtual CComPtr<ID3D11DeviceContext> GetContext() = 0;
+
+        //**********************************************************************
+        // Method: AddRenderable
+        // Returns:
+        // Adds a renderable object to the renderer
+        //**********************************************************************
+        virtual void AddRenderable(IRenderable* pRenderable) = 0;
 
         //**********************************************************************
         // Method: GetCamera

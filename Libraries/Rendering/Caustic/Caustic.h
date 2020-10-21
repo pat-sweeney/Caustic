@@ -18,6 +18,7 @@
 #include "Rendering\Caustic\IPointLight.h"
 #include "Rendering\Caustic\ISpotLight.h"
 #include "Rendering\Caustic\ITrackball.h"
+#include "Rendering\Caustic\IPointCloud.h"
 #include "Rendering\Caustic\IShader.h"
 #include "Rendering\Caustic\IRenderer.h"
 #include "Rendering\Caustic\IRenderCtx.h"

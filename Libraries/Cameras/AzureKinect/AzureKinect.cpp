@@ -80,6 +80,7 @@ namespace Caustic
         }
 
         k4a_color_resolution_t ak_colorMode = K4A_COLOR_RESOLUTION_OFF;
+        uint32 colorW = 0, colorH = 0;
         switch (colorMode)
         {
         case AzureKinect::ColorMode::ColorOff:
@@ -87,27 +88,40 @@ namespace Caustic
             break;
         case AzureKinect::ColorMode::Color720p:
             ak_colorMode = K4A_COLOR_RESOLUTION_720P;
+            colorW = 1280;
+            colorH = 720;
             break;
         case AzureKinect::ColorMode::Color1080p:
             ak_colorMode = K4A_COLOR_RESOLUTION_1080P;
+            colorW = 1920;
+            colorH = 1080;
             break;
         case AzureKinect::ColorMode::Color1440p:
             ak_colorMode = K4A_COLOR_RESOLUTION_1440P;
+            colorW = 2560;
+            colorH = 1440;
             break;
         case AzureKinect::ColorMode::Color1536p:
             ak_colorMode = K4A_COLOR_RESOLUTION_1536P;
+            colorW = 2048;
+            colorH = 1536;
             break;
         case AzureKinect::ColorMode::Color2160p:
             ak_colorMode = K4A_COLOR_RESOLUTION_2160P;
+            colorW = 3840;
+            colorH = 2160;
             break;
         case AzureKinect::ColorMode::Color3072p:
             if (ak_fps == K4A_FRAMES_PER_SECOND_30)
                 ak_fps = K4A_FRAMES_PER_SECOND_15;
             ak_colorMode = K4A_COLOR_RESOLUTION_3072P;
+            colorW = 4906;
+            colorH = 3072;
             break;
         }
 
         k4a_depth_mode_t ak_depthMode = K4A_DEPTH_MODE_OFF;
+        int depthW = 0, depthH = 0;
         switch (depthMode)
         {
         case AzureKinect::DepthMode::DepthOff:
@@ -115,20 +129,30 @@ namespace Caustic
             break;
         case AzureKinect::DepthMode::Depth320x288:
             ak_depthMode = K4A_DEPTH_MODE_NFOV_2X2BINNED;
+            depthW = 320;
+            depthH = 288;
             break;
         case AzureKinect::DepthMode::Depth640x576:
             ak_depthMode = K4A_DEPTH_MODE_NFOV_UNBINNED;
+            depthW = 640;
+            depthH = 576;
             break;
         case AzureKinect::DepthMode::Depth512x512:
             ak_depthMode = K4A_DEPTH_MODE_WFOV_2X2BINNED;
+            depthW = 512;
+            depthH = 512;
             break;
         case AzureKinect::DepthMode::Depth1024x1024:
             if (ak_fps == K4A_FRAMES_PER_SECOND_30)
                 ak_fps = K4A_FRAMES_PER_SECOND_15;
             ak_depthMode = K4A_DEPTH_MODE_WFOV_UNBINNED;
+            depthW = 1024;
+            depthH = 1024;
             break;
         case AzureKinect::DepthMode::DepthIROnly:
             ak_depthMode = K4A_DEPTH_MODE_PASSIVE_IR;
+            depthW = 1024;
+            depthH = 1024;
             break;
         }
 
@@ -146,6 +170,10 @@ namespace Caustic
             CT(E_FAIL);
         if (K4A_RESULT_SUCCEEDED != k4a_device_start_cameras(m_device, &m_config))
             CT(E_FAIL);
+
+        m_spColorImagePool = Caustic::CreateImagePool(20, colorW, colorH, 32);
+        m_spDepthImagePool = Caustic::CreateImagePool(20, depthW, depthH, 16);
+
         m_cameraStarted = true;
     }
     
@@ -154,8 +182,17 @@ namespace Caustic
         return NextFrame(ppColorImage, nullptr, nullptr);
     }
     
+    class ImagePool
+    {
+
+    };
+
     bool CAzureKinectDevice::NextFrame(IImage** ppColorImage, IImage** ppDepthImage, IImage** ppIRImage)
     {
+        if (ppColorImage)
+            *ppColorImage = nullptr;
+        if (ppDepthImage)
+            *ppDepthImage = nullptr;
         bool captured = false;
         if (k4a_device_get_capture(m_device, &m_capture, 3000) == K4A_RESULT_SUCCEEDED)
         {
@@ -170,7 +207,7 @@ namespace Caustic
                         int w = k4a_image_get_width_pixels(colorimage);
                         int h = k4a_image_get_height_pixels(colorimage);
                         int stride = k4a_image_get_stride_bytes(colorimage);
-                        CRefObj<IImage> spImage = CreateImage(w, h, 32);
+                        CRefObj<IImage> spImage = m_spColorImagePool->Acquire(w, h, 32);
                         uint8* pRow = spImage->GetData();
                         for (int y = 0; y < h; y++)
                         {
@@ -194,7 +231,7 @@ namespace Caustic
                         int w = k4a_image_get_width_pixels(depthimage);
                         int h = k4a_image_get_height_pixels(depthimage);
                         size_t s = k4a_image_get_size(depthimage);
-                        CRefObj<IImage> spImage = CreateImage(w, h, 16);
+                        CRefObj<IImage> spImage = m_spDepthImagePool->Acquire(w, h, 16);
                         memcpy(spImage->GetData(), buffer, spImage->GetHeight() * spImage->GetStride());
                         *ppDepthImage = spImage.Detach();
                         captured = true;

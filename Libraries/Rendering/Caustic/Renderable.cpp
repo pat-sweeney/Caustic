@@ -38,7 +38,7 @@ namespace Caustic
         m_spSubMesh = pSubMesh;
         m_spFrontMaterial = pFrontMaterial;
         m_spBackMaterial = pBackMaterial;
-        m_passes = 1 << c_PassTransparent;
+        m_passes = 1 << Caustic::c_PassOpaque;
     }
 
     //**********************************************************************

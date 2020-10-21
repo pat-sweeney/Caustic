@@ -50,7 +50,10 @@ namespace Caustic
 		void RenderMesh(IRenderer* pRenderer, std::vector<CRefObj<ILight>> &lights, IRenderCtx *pRenderCtx, IRenderMaterial *pRenderMaterial, D3D11_CULL_MODE cullmode);
 	public:
         CRenderable(IRenderSubMesh *pSubMesh, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat);
-		CRenderable() {}
+		CRenderable() : m_passes(1 << Caustic::c_PassOpaque)
+		{
+			m_xform = DirectX::XMMatrixIdentity();
+		}
 		friend class CRenderer;
 
 		//**********************************************************************

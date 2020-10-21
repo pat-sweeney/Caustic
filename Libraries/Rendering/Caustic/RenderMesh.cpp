@@ -50,17 +50,17 @@ namespace Caustic
     //**********************************************************************
     void CRenderSubMesh::Render(IRenderer* pRenderer, IShader *pShader, IRenderMaterial *pMaterial, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld)
     {
-        ID3D11DeviceContext* pContext = pRenderer->GetContext();
-        ID3D11Device* pDevice = pRenderer->GetDevice();
-        pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-        pShader->BeginRender(pRenderer, pMaterial, pMaterial, lights, pWorld);
-        uint32 vertexSize = pShader->GetShaderInfo()->GetVertexSize();
-        uint32 numVertices = m_VB.m_numVertices;
-        UINT offset = 0;
-        pContext->IASetVertexBuffers(0, 1, &m_VB.m_spVB.p, &vertexSize, &offset);
-        pContext->IASetIndexBuffer(m_VB.m_spIB, DXGI_FORMAT::DXGI_FORMAT_R32_UINT, 0);
-        pContext->DrawIndexed(m_VB.m_numIndices, 0, 0);
-        pShader->EndRender(pRenderer);
+ID3D11DeviceContext* pContext = pRenderer->GetContext();
+ID3D11Device* pDevice = pRenderer->GetDevice();
+pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+pShader->BeginRender(pRenderer, pMaterial, pMaterial, lights, pWorld);
+uint32 vertexSize = pShader->GetShaderInfo()->GetVertexSize();
+uint32 numVertices = m_VB.m_numVertices;
+UINT offset = 0;
+pContext->IASetVertexBuffers(0, 1, &m_VB.m_spVB.p, &vertexSize, &offset);
+pContext->IASetIndexBuffer(m_VB.m_spIB, DXGI_FORMAT::DXGI_FORMAT_R32_UINT, 0);
+pContext->DrawIndexed(m_VB.m_numIndices, 0, 0);
+pShader->EndRender(pRenderer);
     }
 
     //**********************************************************************
@@ -68,73 +68,73 @@ namespace Caustic
     // Ctor for CRenderMesh
     //**********************************************************************
     CRenderMesh::CRenderMesh()
-	{
-	}
-	
+    {
+    }
+
     //**********************************************************************
     // Method: GetSubMesh
     // See <IRenderMesh::GetSubMesh>
     //**********************************************************************
     CRefObj<IRenderSubMesh> CRenderMesh::GetSubMesh(uint32 index)
-	{
-		return m_subMeshes[index];
-	}
+    {
+        return m_subMeshes[index];
+    }
 
     //**********************************************************************
     // Method: AddSubMesh
     // See <IRenderMesh::AddSubMesh>
     //**********************************************************************
-    void CRenderMesh::AddSubMesh(IRenderSubMesh *pSubMesh)
-	{
-		m_subMeshes.push_back(pSubMesh);
-	}
+    void CRenderMesh::AddSubMesh(IRenderSubMesh* pSubMesh)
+    {
+        m_subMeshes.push_back(pSubMesh);
+    }
 
     //**********************************************************************
     // Method: GetBBox
     // See <IRenderMesh::GetBBox>
     //**********************************************************************
-    void CRenderMesh::GetBBox(Caustic::BBox3 *pBBox)
-	{
-		pBBox->minPt = Vector3(FLT_MAX, FLT_MAX, FLT_MAX);
-		pBBox->maxPt = Vector3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
-		for (size_t i = 0; i < m_subMeshes.size(); i++)
-		{
-			BBox3 bb;
-			m_subMeshes[i]->GetBBox(&bb);
-			pBBox->AddPoint(bb.minPt.x, bb.minPt.y, bb.minPt.z);
-			pBBox->AddPoint(bb.maxPt.x, bb.maxPt.y, bb.maxPt.z);
-		}
-	}
-	
+    void CRenderMesh::GetBBox(Caustic::BBox3* pBBox)
+    {
+        pBBox->minPt = Vector3(FLT_MAX, FLT_MAX, FLT_MAX);
+        pBBox->maxPt = Vector3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+        for (size_t i = 0; i < m_subMeshes.size(); i++)
+        {
+            BBox3 bb;
+            m_subMeshes[i]->GetBBox(&bb);
+            pBBox->AddPoint(bb.minPt.x, bb.minPt.y, bb.minPt.z);
+            pBBox->AddPoint(bb.maxPt.x, bb.maxPt.y, bb.maxPt.z);
+        }
+    }
+
     //**********************************************************************
     // Method: SetMaterials
     // See <IRenderMesh::SetMaterials>
     //**********************************************************************
-    void CRenderMesh::SetMaterials(std::vector<CRefObj<IMaterialAttrib>> &materials)
-	{
-		m_materials.clear();
-		for (auto p : materials)
-			m_materials.push_back(p);
-	}
+    void CRenderMesh::SetMaterials(std::vector<CRefObj<IMaterialAttrib>>& materials)
+    {
+        m_materials.clear();
+        for (auto p : materials)
+            m_materials.push_back(p);
+    }
 
     //**********************************************************************
     // Method: GetMaterial
     // See <IRenderMesh::GetMaterial>
     //**********************************************************************
     CRefObj<IMaterialAttrib> CRenderMesh::GetMaterial(uint32 materialID)
-	{
-		if (materialID < m_materials.size())
-			return m_materials[materialID];
+    {
+        if (materialID < m_materials.size())
+            return m_materials[materialID];
         return CRefObj<IMaterialAttrib>(nullptr);
-	}
+    }
 
     //**********************************************************************
     // Method: Render
     // See <IRenderMesh::Render>
     //**********************************************************************
-    void CRenderMesh::Render(IRenderer* pRenderer, IRenderMaterial* pFrontMaterialOverride, IRenderMaterial* pBackMaterialOverride, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX *pWorld)
+    void CRenderMesh::Render(IRenderer* pRenderer, IRenderMaterial* pFrontMaterialOverride, IRenderMaterial* pBackMaterialOverride, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld)
     {
-		for (auto submesh : m_subMeshes)
+        for (auto submesh : m_subMeshes)
             submesh->Render(pRenderer, pFrontMaterialOverride, pBackMaterialOverride, lights, pWorld);
     }
 
@@ -142,13 +142,13 @@ namespace Caustic
     // Method: Render
     // See <IRenderMesh::Render>
     //**********************************************************************
-    void CRenderMesh::Render(IRenderer* pRenderer, IShader* pShader, IRenderMaterial* pMaterial, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX *pWorld)
+    void CRenderMesh::Render(IRenderer* pRenderer, IShader* pShader, IRenderMaterial* pMaterial, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld)
     {
         for (auto submesh : m_subMeshes)
             submesh->Render(pRenderer, pShader, pMaterial, lights, pWorld);
     }
 
-    CAUSTICAPI CRefObj<IRenderSubMesh> CreatePointCloudSubMesh(IRenderer *pRenderer, IShader *pShader, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, std::vector<CGeomVertex>& verts)
+    CAUSTICAPI CRefObj<IRenderSubMesh> CreatePointCloudSubMesh(IRenderer *pRenderer, IShader *pShader, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, std::vector<CGeomVertex>& verts, bool useUVs /* = false */)
     {
         if (verts.size() == 0)
             return CRefObj<IRenderSubMesh>(nullptr);

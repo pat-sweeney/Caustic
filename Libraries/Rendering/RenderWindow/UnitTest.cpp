@@ -22,7 +22,7 @@ namespace CausticTestSuite
         auto spRenderGraphFactory = Caustic::CreateRenderGraphFactory();
         auto spCausticFactory = Caustic::CreateCausticFactory();
         std::wstring shaderFolder; // Intentionally left empty
-        auto spRenderWindow = CreateRenderWindow(GetDesktopWindow(), shaderFolder);
+        auto spRenderWindow = CreateRenderWindow(GetDesktopWindow(), shaderFolder, [](IRenderer*, IRenderCtx*, int) {});
         return true;
     }
 
@@ -63,7 +63,7 @@ namespace CausticTestSuite
         auto spRenderGraphFactory = Caustic::CreateRenderGraphFactory();
         auto spCausticFactory = Caustic::CreateCausticFactory();
         std::wstring shaderFolder; // Intentionally left empty
-        auto spRenderWindow = CreateRenderWindow(hwnd, shaderFolder);
+        auto spRenderWindow = CreateRenderWindow(hwnd, shaderFolder, [](IRenderer*, IRenderCtx*, int) {});
         auto spRenderer = spRenderWindow->GetRenderer();
         auto spRenderGraph = spRenderWindow->GetRenderGraph();
         auto spMeshNode = CreateRenderGraphFactory()->CreateMeshNode(Caustic::CreateCube());

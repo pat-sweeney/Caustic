@@ -9,6 +9,7 @@
 #include "Base\Math\Vector.h"
 #include "Base\Math\BBox.h"
 #include "Imaging\Image\Image.h"
+#include "Imaging\Image\IImagePool.h"
 #include "Cameras\AzureKinect\IAzureKinect.h"
 #include <vector>
 
@@ -20,6 +21,8 @@ namespace Caustic
     // Defines the implementation for the Azure Kinect.
     //
     // Members:
+    // <CRefObj> < <IImagePool> > m_spColorImagePool - image pool to get color image from
+    // <CRefObj> < <IImagePool> > m_spDepthImagePool - image pool to get depth image from
     // int m_deviceIndex - index of device to use
     // k4a_device_t m_device - Azure Kinect device
     // k4a_device_configuration_t m_config - Azure Kinect configuration
@@ -34,6 +37,8 @@ namespace Caustic
     //**********************************************************************
     class CAzureKinectDevice : public IAzureKinect, public CRefCount
     {
+        CRefObj<IImagePool> m_spColorImagePool;
+        CRefObj<IImagePool> m_spDepthImagePool;
         int m_deviceIndex;
         k4a_device_t m_device;
         k4a_device_configuration_t m_config;

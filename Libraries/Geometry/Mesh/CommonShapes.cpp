@@ -262,42 +262,42 @@ namespace Caustic
     // spanning the entire mesh from 0..1
     //
     // Parameters:
-    // subdivisions - Number of times to subdivide the grid
+    // width - number of vertices in X direction
+    // height - number of vertices in Y direction
     //
     // Returns:
     // Returns the created mesh
     //**********************************************************************
-    CAUSTICAPI CRefObj<IMesh> CreateGrid(uint32 subdivisions)
+    CAUSTICAPI CRefObj<IMesh> CreateGrid(uint32 width, uint32 height)
     {
         CRefObj<IMeshConstructor> spMeshConstructor = Caustic::CreateMeshConstructor();
 
         spMeshConstructor->MeshOpen();
         spMeshConstructor->SubMeshOpen();
-        float dx = 2.0f / subdivisions;
-        float dy = 2.0f / subdivisions;
-        float cy = -1.0f;
-        float dv = 1.0f / subdivisions;
-        float cv = 0.0f;
+        float dx = 2.0f / float(width);
+        float dy = 2.0f / float(height);
+        float dv = 1.0f / float(width);
+        float du = 1.0f / float(height);
         Vector3 normal(0.0f, 1.0f, 0.0f);
-        for (uint32 y = 0; y < subdivisions; y++)
+        float cy = -1.0f;
+        float cv = 0.0f;
+        for (uint32 y = 0; y < height; y++)
         {
-            float tcy = cy;
             float cx = -1.0f;
-            float du = 1.0f / subdivisions;
             float cu = 0.0f;
-            for (uint32 x = 0; x < subdivisions; x++)
+            for (uint32 x = 0; x < width; x++)
             {
                 spMeshConstructor->FaceOpen();
                 Vector3 vpos;
                 Vector2 vuv;
-                spMeshConstructor->VertexAdd(vpos = Vector3(cx, tcy, 0.0f), normal, vuv = Vector2(cu, cv));
-                spMeshConstructor->VertexAdd(vpos = Vector3(cx + dx, tcy, 0.0f), normal, vuv = Vector2(cu + du, cv));
-                spMeshConstructor->VertexAdd(vpos = Vector3(cx + dx, tcy + dy, 0.0f), normal, vuv = Vector2(cu + du, cv + dv));
+                spMeshConstructor->VertexAdd(vpos = Vector3(cx, cy, 0.0f), normal, vuv = Vector2(cu, cv));
+                spMeshConstructor->VertexAdd(vpos = Vector3(cx + dx, cy, 0.0f), normal, vuv = Vector2(cu + du, cv));
+                spMeshConstructor->VertexAdd(vpos = Vector3(cx + dx, cy + dy, 0.0f), normal, vuv = Vector2(cu + du, cv + dv));
                 spMeshConstructor->FaceClose();
                 spMeshConstructor->FaceOpen();
-                spMeshConstructor->VertexAdd(vpos = Vector3(cx, tcy, 0.0f), normal, vuv = Vector2(cu, cv));
-                spMeshConstructor->VertexAdd(vpos = Vector3(cx + dx, tcy + dy, 0.0f), normal, vuv = Vector2(cu + du, cv + dv));
-                spMeshConstructor->VertexAdd(vpos = Vector3(cx, tcy + dy, 0.0f), normal, vuv = Vector2(cu, cv + dv));
+                spMeshConstructor->VertexAdd(vpos = Vector3(cx, cy, 0.0f), normal, vuv = Vector2(cu, cv));
+                spMeshConstructor->VertexAdd(vpos = Vector3(cx + dx, cy + dy, 0.0f), normal, vuv = Vector2(cu + du, cv + dv));
+                spMeshConstructor->VertexAdd(vpos = Vector3(cx, cy + dy, 0.0f), normal, vuv = Vector2(cu, cv + dv));
                 spMeshConstructor->FaceClose();
                 cx += dx;
                 cu += du;
@@ -308,6 +308,22 @@ namespace Caustic
         CRefObj<ISubMesh> spSubMesh = spMeshConstructor->SubMeshClose();
         spSubMesh->SetMeshFlags(EMeshFlags::TwoSided);
         return spMeshConstructor->MeshClose();
+    }
+
+    //**********************************************************************
+    // Function: CreateGrid
+    // Generates a grid mesh of size -1..+1,-1..+1 with texture coordinates
+    // spanning the entire mesh from 0..1
+    //
+    // Parameters:
+    // subdivisions - Number of times to subdivide the grid
+    //
+    // Returns:
+    // Returns the created mesh
+    //**********************************************************************
+    CAUSTICAPI CRefObj<IMesh> CreateGrid(uint32 subdivisions)
+    {
+        return CreateGrid(subdivisions, subdivisions);
     }
 
     //**********************************************************************

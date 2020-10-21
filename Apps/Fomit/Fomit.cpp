@@ -55,7 +55,7 @@ void CApp::InitializeCaustic(HWND hwnd)
 
     // Next create our output window
     std::wstring shaderFolder(SHADERPATH);
-    m_spRenderWindow = CreateRenderWindow(hwnd, shaderFolder);
+    m_spRenderWindow = CreateRenderWindow(hwnd, shaderFolder, [](IRenderer*, IRenderCtx*, int) {});
 
     m_spCamera = CreateAzureKinect(0, AzureKinect::ColorMode::Color1080p, AzureKinect::Depth512x512, AzureKinect::FPS30);
 

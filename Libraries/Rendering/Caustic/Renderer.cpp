@@ -195,8 +195,8 @@ namespace Caustic
             spBackMaterial = CCausticFactory::Instance()->CreateRenderMaterial(this, pMaterial, pShader);
             spBackMaterial->SetTexture(this, L"diffuseTexture", pTexture, EShaderAccess::PixelShader);
         }
-        CRenderable renderable(pSubMesh, spFrontMaterial, spBackMaterial, mat);
-        m_singleObjs.push_back(renderable);
+        std::unique_ptr<CRenderable> spRenderable(new CRenderable(pSubMesh, spFrontMaterial, spBackMaterial, mat));
+        m_singleObjs.push_back(spRenderable.release());
     }
 
     //**********************************************************************
@@ -274,8 +274,8 @@ namespace Caustic
                     PushShadowmapRT(c_HiResShadowMap, totalLights++, m_lights[i]->GetPosition(), m_lights[i]->GetDirection());
                     for (size_t i = 0; i < m_singleObjs.size(); i++)
                     {
-                        if (m_singleObjs[i].m_passes & (1 << pass))
-                            m_singleObjs[i].Render(this, m_lights, m_spRenderCtx);
+                        if (m_singleObjs[i]->InPass(pass))
+                            m_singleObjs[i]->Render(this, m_lights, m_spRenderCtx);
                     }
                     PopShadowmapRT();
                 }
@@ -285,8 +285,8 @@ namespace Caustic
         {
             for (size_t i = 0; i < m_singleObjs.size(); i++)
             {
-                if (m_singleObjs[i].m_passes & (1 << pass))
-                    m_singleObjs[i].Render(this, m_lights, m_spRenderCtx);
+                if (m_singleObjs[i]->InPass(pass))
+                    m_singleObjs[i]->Render(this, m_lights, m_spRenderCtx);
             }
         }
     }
@@ -336,6 +336,8 @@ namespace Caustic
     // +-------+-------+---+---+---+---+
     void CRenderer::SelectShadowmap(int whichShadowMap, int lightMapIndex, std::vector<CRefObj<ILight>>& lights, IShader* pShader)
     {
+        if (lights.size() == 0)
+            return;
         pShader->SetPSParam(L"shadowMapTexture", std::any(m_spShadowTexture[whichShadowMap]));
         int lx = lightMapIndex % 4;
         int ly = lightMapIndex / 4;
@@ -392,6 +394,11 @@ namespace Caustic
         m_spContext->OMSetRenderTargets(1, &rs.m_spOldRT.p, rs.m_spOldStencil);
     }
     
+    void CRenderer::AddRenderable(IRenderable* pRenderable)
+    {
+        m_singleObjs.push_back(pRenderable);
+    }
+
     //**********************************************************************
     // Method: RenderScene
     // Renders current scene (both scene graph and any renderables currently
@@ -464,12 +471,12 @@ namespace Caustic
                 std::vector<int> order;
                 order.resize(m_singleObjs.size());
                 std::sort(m_singleObjs.begin(), m_singleObjs.end(),
-                    [&](CRenderable &left, CRenderable &right)->bool
+                    [&](IRenderable *left, IRenderable *right)->bool
                     {
                         Vector3 cameraPos;
                         GetCamera()->GetPosition(&cameraPos, nullptr, nullptr, nullptr, nullptr, nullptr);
-                        float dist1 = (left.GetPos() - cameraPos).Length();
-                        float dist2 = (right.GetPos() - cameraPos).Length();
+                        float dist1 = (left->GetPos() - cameraPos).Length();
+                        float dist2 = (right->GetPos() - cameraPos).Length();
                         if (dist1 < dist2)
                             return true;
                         return false;

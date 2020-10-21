@@ -294,6 +294,20 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Method: AddRenderable
+    // See <IRenderer::AddRenderable>
+    //**********************************************************************
+    void CRendererMarshaller::AddRenderable(IRenderable* pRenderable)
+    {
+        m_renderQueue.AddLambda(
+            [this, pRenderable]()
+            {
+                m_spRenderer->AddRenderable(pRenderable);
+            }
+        );
+    }
+
+    //**********************************************************************
     // Method: Setup
     // See <IRenderer::Setup>
     //**********************************************************************
