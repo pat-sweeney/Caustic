@@ -396,6 +396,17 @@ namespace Caustic
 							param.m_members = std::stoi(wstr.substr(9).c_str());
 							offset += sizeof(float) * 16 * param.m_members;
 						}
+						else if (wstr == L"float3x3")
+						{
+							param.m_type = ShaderType_Matrix3x3;
+							offset += sizeof(float) * 9;
+						}
+						else if (wstr.substr(0, 9) == L"float3x3[")
+						{
+							param.m_type = ShaderType_Matrix3x3_Array;
+							param.m_members = std::stoi(wstr.substr(9).c_str());
+							offset += sizeof(float) * 9 * param.m_members;
+						}
 						else if (wstr == L"float")
 						{
 							param.m_type = ShaderType_Float;

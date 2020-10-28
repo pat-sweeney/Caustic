@@ -41,6 +41,10 @@ namespace Caustic
             return 16 * sizeof(float);
         else if (paramDef.m_type == EShaderParamType::ShaderType_Matrix_Array)
             return paramDef.m_members * 16 * sizeof(float);
+        else if (paramDef.m_type == EShaderParamType::ShaderType_Matrix3x3)
+            return 9 * sizeof(float);
+        else if (paramDef.m_type == EShaderParamType::ShaderType_Matrix3x3_Array)
+            return paramDef.m_members * 9 * sizeof(float);
         else if (paramDef.m_type == EShaderParamType::ShaderType_StructuredBuffer ||
             paramDef.m_type == EShaderParamType::ShaderType_AppendStructuredBuffer ||
             paramDef.m_type == EShaderParamType::ShaderType_RWByteAddressBuffer ||
@@ -143,6 +147,27 @@ namespace Caustic
                     0.0f, 0.0f, 0.0f, 1.0f
                 };
                 Matrix m(v);
+                for (size_t j = 0; j < params[i].m_members; j++)
+                    params[i].m_values.push_back(m);
+            }
+            else if (pDefs[i].m_type == EShaderParamType::ShaderType_Matrix3x3)
+            {
+                float v[9] = {
+                    1.0f, 0.0f, 0.0f,
+                    0.0f, 1.0f, 0.0f,
+                    0.0f, 0.0f, 1.0f
+                };
+                Matrix_3x3 m(v);
+                params[i].m_value = std::any(m);
+            }
+            else if (pDefs[i].m_type == EShaderParamType::ShaderType_Matrix3x3_Array)
+            {
+                float v[9] = {
+                    1.0f, 0.0f, 0.0f,
+                    0.0f, 1.0f, 0.0f,
+                    0.0f, 0.0f, 1.0f
+                };
+                Matrix_3x3 m(v);
                 for (size_t j = 0; j < params[i].m_members; j++)
                     params[i].m_values.push_back(m);
             }
@@ -327,6 +352,23 @@ namespace Caustic
                     Matrix m = (params[i].m_values[j].has_value()) ? std::any_cast<Matrix>(params[i].m_values[j]) : Matrix();
                     memcpy(pb, m.x, 16 * sizeof(float));
                     pb += 16 * sizeof(float);
+                }
+            }
+            break;
+            case EShaderParamType::ShaderType_Matrix3x3:
+            {
+                Matrix_3x3 m = (params[i].m_value.has_value()) ? std::any_cast<Matrix_3x3>(params[i].m_value) : Matrix_3x3();
+                memcpy(pb, m.x, 9 * sizeof(float));
+                pb += 9 * sizeof(float);
+            }
+            break;
+            case EShaderParamType::ShaderType_Matrix3x3_Array:
+            {
+                for (size_t j = 0; j < params[i].m_members; j++)
+                {
+                    Matrix_3x3 m = (params[i].m_values[j].has_value()) ? std::any_cast<Matrix_3x3>(params[i].m_values[j]) : Matrix_3x3();
+                    memcpy(pb, m.x, 9 * sizeof(float));
+                    pb += 9 * sizeof(float);
                 }
             }
             break;

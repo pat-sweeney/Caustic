@@ -21,6 +21,10 @@ namespace Caustic
     CRenderWindow::CRenderWindow(HWND hwnd, std::wstring &shaderFolder,
         std::function<void(Caustic::IRenderer*, Caustic::IRenderCtx*, int)> callback, bool useRenderGraph /* = false */)
     {
+        m_snapPosHome = { 10.0f, 10.0f, 10.0f };
+        m_snapPosX = { 1000.0f, 0.0f, 0.0f };
+        m_snapPosY = { 0.0f, 1000.0f, 0.0f };
+        m_snapPosZ = { 0.0f, 0.0f, 1000.0f };
         m_callback = callback;
         m_useRenderGraph = useRenderGraph;
         m_spMarshaller = Caustic::CCausticFactory::Instance()->CreateRendererMarshaller();
@@ -149,6 +153,14 @@ namespace Caustic
         }
     }
 
+    void CRenderWindow::SetSnapPositions(const Vector3& home, const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis)
+    {
+        m_snapPosHome = home;
+        m_snapPosX = xAxis;
+        m_snapPosY = yAxis;
+        m_snapPosZ = zAxis;
+    }
+
     void CRenderWindow::MouseUp(int x, int y, uint32 button, uint32 flags)
     {
         if (button == c_LeftButton)
@@ -174,27 +186,43 @@ namespace Caustic
     {
         switch (wParam)
         {
-        case VK_HOME:
+        case 'X':
         {
-            static int axis = 0;
             Vector3 eye, look, up, u, v, n;
             m_spCamera->GetPosition(&eye, &look, &up, &u, &v, &n);
             up = Vector3(0.0f, 1.0f, 0.0f);
-            eye = Vector3(0.0f, 0.0f, 0.0f);
-            switch (axis)
-            {
-            case 0:
-                look = Vector3(1.0f, 0.0f, 0.0f);
-                break;
-            case 1:
-                look = Vector3(0.0f, 1.0f, 0.0f);
-                up = Vector3(0.0f, 0.0f, 1.0f);
-                break;
-            case 2:
-                look = Vector3(0.0f, 0.0f, 1.0f);
-                break;
-            }
-            axis++; if (axis > 2)axis = 0;
+            eye = m_snapPosX;
+            look = Vector3(0.0f, 0.0f, 0.0f);
+            m_spCamera->SetPosition(eye, look, up);
+        }
+        break;
+        case 'Y':
+        {
+            Vector3 eye, look, up, u, v, n;
+            m_spCamera->GetPosition(&eye, &look, &up, &u, &v, &n);
+            up = Vector3(1.0f, 0.0f, 0.0f);
+            eye = m_snapPosY;
+            look = Vector3(0.0f, 0.0f, 0.0f);
+            m_spCamera->SetPosition(eye, look, up);
+        }
+        break;
+        case 'Z':
+        {
+            Vector3 eye, look, up, u, v, n;
+            m_spCamera->GetPosition(&eye, &look, &up, &u, &v, &n);
+            up = Vector3(0.0f, 1.0f, 0.0f);
+            eye = m_snapPosZ;
+            look = Vector3(0.0f, 0.0f, 0.0f);
+            m_spCamera->SetPosition(eye, look, up);
+        }
+        break;
+        case VK_HOME:
+        {
+            Vector3 eye, look, up, u, v, n;
+            m_spCamera->GetPosition(&eye, &look, &up, &u, &v, &n);
+            up = Vector3(0.0f, 1.0f, 0.0f);
+            eye = m_snapPosHome;
+            look = Vector3(0.0f, 0.0f, 0.0f);
             m_spCamera->SetPosition(eye, look, up);
         }
         break;

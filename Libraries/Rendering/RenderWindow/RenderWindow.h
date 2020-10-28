@@ -37,6 +37,10 @@ namespace Caustic
         int m_startx, m_starty;
         int m_winwidth, m_winheight;
         bool m_useRenderGraph;
+        Vector3 m_snapPosHome;
+        Vector3 m_snapPosX;
+        Vector3 m_snapPosY;
+        Vector3 m_snapPosZ;
         std::function<void(Caustic::IRenderer*, Caustic::IRenderCtx*, int)> m_callback;
     public:
         CRenderWindow(HWND hwnd, std::wstring &shaderFolder, std::function<void(Caustic::IRenderer*, Caustic::IRenderCtx*, int)> callback, bool useRenderGraph = false);
@@ -51,6 +55,7 @@ namespace Caustic
         //**********************************************************************
         // IRenderWindow
         //**********************************************************************
+        virtual void SetSnapPositions(const Vector3& home, const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis) override;
         virtual CRefObj<ISceneGraph> GetSceneGraph() override { return m_spSceneGraph; }
         virtual void MouseDown(int x, int y, uint32 button, uint32 flags) override;
         virtual void MouseMove(int x, int y, uint32 flags) override;

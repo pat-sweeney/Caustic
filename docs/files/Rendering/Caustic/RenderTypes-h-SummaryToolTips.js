@@ -1,1 +1,1 @@
-NDSummary.OnToolTipsLoaded("File:Rendering/Caustic/RenderTypes.h",{550:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines a vertex in our mesh.</div></div>"});
+NDSummary.OnToolTipsLoaded("File:Rendering/Caustic/RenderTypes.h",{550:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines a vertex in our mesh.</div></div>",1241:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines a face (triangle) on our mesh as a tuple of vertex indices.</div></div>"});

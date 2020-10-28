@@ -177,15 +177,110 @@ namespace Caustic
         m_cameraStarted = true;
     }
     
+    //**********************************************************************
+    // Method: Nextframe
+    // See <IDepthCameraDevice::NextFrame>
+    //**********************************************************************
     bool CAzureKinectDevice::NextFrame(IImage** ppColorImage)
     {
         return NextFrame(ppColorImage, nullptr, nullptr);
     }
     
-    class ImagePool
+    //**********************************************************************
+    // Method: ColorExtrinsics
+    // See <IDepthCameraDevice::ColorExtrinsics>
+    //**********************************************************************
+    Matrix4x4 CAzureKinectDevice::ColorExtrinsics()
     {
-
-    };
+        if (!m_cameraStarted)
+            CT(E_FAIL); // Camera not started
+        Matrix4x4 mat;
+        mat[0][0] = m_calibration.color_camera_calibration.extrinsics.rotation[0];
+        mat[0][1] = m_calibration.color_camera_calibration.extrinsics.rotation[1];
+        mat[0][2] = m_calibration.color_camera_calibration.extrinsics.rotation[2];
+        mat[0][3] = 0.0f;
+        mat[1][0] = m_calibration.color_camera_calibration.extrinsics.rotation[3];
+        mat[1][1] = m_calibration.color_camera_calibration.extrinsics.rotation[4];
+        mat[1][2] = m_calibration.color_camera_calibration.extrinsics.rotation[5];
+        mat[1][3] = 0.0f;
+        mat[2][0] = m_calibration.color_camera_calibration.extrinsics.rotation[6];
+        mat[2][1] = m_calibration.color_camera_calibration.extrinsics.rotation[7];
+        mat[2][2] = m_calibration.color_camera_calibration.extrinsics.rotation[8];
+        mat[2][3] = 0.0f;
+        mat[3][0] = m_calibration.color_camera_calibration.extrinsics.translation[0];
+        mat[3][1] = m_calibration.color_camera_calibration.extrinsics.translation[0];
+        mat[3][2] = m_calibration.color_camera_calibration.extrinsics.translation[0];
+        mat[3][3] = 1.0f;
+        return mat;
+    }
+    //**********************************************************************
+    // Method: ColorIntrinsics
+    // See <IDepthCameraDevice::ColorIntrinsics>
+    //**********************************************************************
+    Matrix3x3 CAzureKinectDevice::ColorIntrinsics()
+    {
+        if (!m_cameraStarted)
+            CT(E_FAIL); // Camera not started
+        Matrix3x3 mat;
+        mat[0][0] = m_calibration.color_camera_calibration.intrinsics.parameters.param.fx;
+        mat[1][1] = m_calibration.color_camera_calibration.intrinsics.parameters.param.fy;
+        mat[2][2] = 1.0f;
+        mat[2][0] = m_calibration.color_camera_calibration.intrinsics.parameters.param.cx;
+        mat[2][1] = m_calibration.color_camera_calibration.intrinsics.parameters.param.cy;
+        mat[0][1] = 0.0f;
+        mat[0][2] = 0.0f;
+        mat[1][0] = 0.0f;
+        mat[1][2] = 0.0f;
+        return mat;
+    }
+    //**********************************************************************
+    // Method: DepthExtrinsics
+    // See <IDepthCameraDevice::DepthExtrinsics>
+    //**********************************************************************
+    Matrix4x4 CAzureKinectDevice::DepthExtrinsics()
+    {
+        if (!m_cameraStarted)
+            CT(E_FAIL); // Camera not started
+        Matrix4x4 mat;
+        mat[0][0] = m_calibration.color_camera_calibration.extrinsics.rotation[0];
+        mat[0][1] = m_calibration.color_camera_calibration.extrinsics.rotation[1];
+        mat[0][2] = m_calibration.color_camera_calibration.extrinsics.rotation[2];
+        mat[0][3] = 0.0f;
+        mat[1][0] = m_calibration.color_camera_calibration.extrinsics.rotation[3];
+        mat[1][1] = m_calibration.color_camera_calibration.extrinsics.rotation[4];
+        mat[1][2] = m_calibration.color_camera_calibration.extrinsics.rotation[5];
+        mat[1][3] = 0.0f;
+        mat[2][0] = m_calibration.color_camera_calibration.extrinsics.rotation[6];
+        mat[2][1] = m_calibration.color_camera_calibration.extrinsics.rotation[7];
+        mat[2][2] = m_calibration.color_camera_calibration.extrinsics.rotation[8];
+        mat[2][3] = 0.0f;
+        mat[3][0] = m_calibration.color_camera_calibration.extrinsics.translation[0];
+        mat[3][1] = m_calibration.color_camera_calibration.extrinsics.translation[0];
+        mat[3][2] = m_calibration.color_camera_calibration.extrinsics.translation[0];
+        mat[3][3] = 1.0f;
+        return mat;
+    }
+    
+    //**********************************************************************
+    // Method: DepthIntrinsics
+    // See <IDepthCameraDevice::DepthIntrinsics>
+    //**********************************************************************
+    Matrix3x3 CAzureKinectDevice::DepthIntrinsics()
+    {
+        if (!m_cameraStarted)
+            CT(E_FAIL); // Camera not started
+        Matrix3x3 mat;
+        mat[0][0] = m_calibration.depth_camera_calibration.intrinsics.parameters.param.fx;
+        mat[1][1] = m_calibration.depth_camera_calibration.intrinsics.parameters.param.fy;
+        mat[2][2] = 1.0f;
+        mat[2][0] = m_calibration.depth_camera_calibration.intrinsics.parameters.param.cx;
+        mat[2][1] = m_calibration.depth_camera_calibration.intrinsics.parameters.param.cy;
+        mat[0][1] = 0.0f;
+        mat[0][2] = 0.0f;
+        mat[1][0] = 0.0f;
+        mat[1][2] = 0.0f;
+        return mat;
+    }
 
     bool CAzureKinectDevice::NextFrame(IImage** ppColorImage, IImage** ppDepthImage, IImage** ppIRImage)
     {

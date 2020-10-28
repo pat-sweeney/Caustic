@@ -43,12 +43,14 @@ namespace Caustic
         ShaderType_Float4,
         ShaderType_Int,
         ShaderType_Matrix,
+        ShaderType_Matrix3x3,
         ShaderType_Float_Array,
         ShaderType_Float2_Array,
         ShaderType_Float3_Array,
         ShaderType_Float4_Array,
         ShaderType_Int_Array,
         ShaderType_Matrix_Array,
+        ShaderType_Matrix3x3_Array,
         ShaderType_StructuredBuffer,
         ShaderType_RWStructuredBuffer,
         ShaderType_AppendStructuredBuffer,
@@ -107,7 +109,8 @@ namespace Caustic
     struct Float3 { float x; float y; float z; Float3(float _x, float _y, float _z) { x = _x; y = _y; z = _z; } };
     struct Float4 { float x; float y; float z; float w; Float4(float _x, float _y, float _z, float _w) { x = _x; y = _y; z = _z; w = _w; } };
     struct Matrix { float x[16]; Matrix() { ZeroMemory(x, sizeof(x)); } Matrix(float _x[16]) { memcpy(x, _x, sizeof(float) * 16); } };
-    
+    struct Matrix_3x3 { float x[9]; Matrix_3x3() { ZeroMemory(x, sizeof(x)); } Matrix_3x3(float _x[9]) { memcpy(x, _x, sizeof(float) * 9); } };
+
     //**********************************************************************
     // Class: SBuffer
     // Defines a buffer (which may be either a constant buffer or

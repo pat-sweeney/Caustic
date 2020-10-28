@@ -46,11 +46,23 @@ namespace Caustic
         m_spRenderMaterial->SetTexture(pRenderer, L"depthTexture", m_spDepthMap, Caustic::EShaderAccess::VertexShader);
     }
 
+    void CPointCloud::SetColorExtrinsics(Matrix4x4& mat)
+    {
+        m_extrinsics = mat;
+    }
+
+    void CPointCloud::SetColorIntrinsics(Matrix3x3& mat)
+    {
+        m_intrinsics = mat;
+    }
+
 	CPointCloud::CPointCloud(IRenderer *pRenderer, uint32 width, uint32 height)
 	{
         m_spShader = pRenderer->GetShaderMgr()->FindShader(L"PointCloud");
         m_spShader->SetVSParam(L"width", std::any(float(width)));
-        m_spShader->SetVSParam(L"height", std::any(float(width)));
+        m_spShader->SetVSParam(L"height", std::any(float(height)));
+        m_spShader->SetPSParam(L"width", std::any(float(width)));
+        m_spShader->SetPSParam(L"height", std::any(float(height)));
 
         auto inst = Caustic::CCausticFactory::Instance()->CreateMaterialAttrib();
 
@@ -99,6 +111,17 @@ namespace Caustic
         m_spRayMap = Caustic::CreateTexture(pRenderer, width, height, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT);
         m_spShader->SetVSParam(L"rayTexture", std::any(m_spRayMap));
         m_spShader->SetVSParam(L"depthTexture", std::any(m_spDepthMap));
+        m_spShader->SetPSParam(L"depthTexture", std::any(m_spDepthMap));
+        m_spDepthSampler = Caustic::CreateSampler(pRenderer, m_spDepthMap);
+        m_spShader->SetVSParam(L"depthSampler", std::any(m_spDepthSampler));
+        m_spShader->SetPSParam(L"depthSampler", std::any(m_spDepthSampler));
+
+        Matrix m;
+        memcpy(m.x, m_extrinsics.v, sizeof(float) * 16);
+        m_spShader->SetPSParam(L"colorExt", std::any(m));
+        Matrix_3x3 m1;
+        memcpy(m1.x, m_intrinsics.v, sizeof(float) * 9);
+        m_spShader->SetPSParam(L"colorInt", std::any(m1));
 
         m_spColorMap = Caustic::CreateTexture(pRenderer, 1920, 1080, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
         m_spShader->SetPSParam(L"colorTexture", std::any(m_spColorMap));

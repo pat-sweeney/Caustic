@@ -6,6 +6,8 @@
 
 Texture2D colorTexture : register(t0);
 SamplerState colorSampler : register(s0);
+Texture2D<uint> depthTexture : register(t1);
+SamplerState depthSampler : register(s1);
 
 struct VSInput
 {
@@ -21,9 +23,34 @@ struct VSOutput
     float3 normWS : TEXCOORD1; // Normal vector in world coordinates
     float2 uvs : TEXCOORD2; // UV coordinates
     float depth : TEXCOORD3;
+    float3 posDS : TEXCOORD4; // Position of point in depth camera space
 };
 
+cbuffer VS_CONSTANT_BUFFER : register(b0)
+{
+    float4x4 world; // Model => World
+    float4x4 worldInvTranspose; // Inverse transpose of world matrix
+    float4x4 worldViewProj; // Model => Projected
+    float4x4 viewInv; // View => World
+    float4x4 colorExt;
+    float4 lightPosWS;
+    float width;
+    float height;
+    float dummy1;
+    float dummy2;
+    float3x3 colorInt;
+};
 float4 PS(VSOutput p) : SV_Target
 {
-    return colorTexture.Sample(colorSampler, p.uvs);
+    // Check if our position matches what the depth map claims
+    int3 pc = int3(p.uvs.x * width, p.uvs.y * height, 0);
+    float depth = depthTexture.Load(pc);
+    if (abs(depth - p.depth) > 10)
+       return float4(1,0,0,1);
+    // Project point into color map
+    float4 posCS = mul(float4(p.posDS, 1.0f),colorExt); // position of point in color camera space
+    float3 posCP = mul(posCS.xyz,colorInt);
+    posCP.x /= posCP.z;
+    posCP.y /= posCP.z;
+    return colorTexture.Sample(colorSampler, posCP.xy);
 }

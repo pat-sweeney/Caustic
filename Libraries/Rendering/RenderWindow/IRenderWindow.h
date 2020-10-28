@@ -25,6 +25,18 @@ namespace Caustic
 	struct IRenderWindow : public IRefCount
     {
 		//**********************************************************************
+		// Method: SetSnapPositions
+		// Sets the world positions for snapping the camera to when certain keys are pressed
+		//
+		// Parameters:
+		// home - Position to snap to when Home key is pressed
+		// xAxis - Position to snap to when X key is pressed
+		// yAxis - Position to snap to when Y key is pressed
+		// zAxis - Position to snap to when Z key is pressed
+		//**********************************************************************
+		virtual void SetSnapPositions(const Vector3& home, const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis) = 0;
+
+		//**********************************************************************
 		// Method: GetSceneGraph
 		// Returns the scene graph associated with this render window
 		//**********************************************************************

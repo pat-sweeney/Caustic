@@ -8,6 +8,7 @@
 #include "Base\Core\Core.h"
 #include "Base\Core\IRefCount.h"
 #include "Base\Math\Vector.h"
+#include "Base\Math\Matrix.h"
 #include "Renderable.h"
 #include <d3d11.h>
 #include <DirectXMath.h>
@@ -54,7 +55,6 @@ namespace Caustic
         //**********************************************************************
         virtual void SetRayMap(IRenderer* pRenderer, IImage* pImage) = 0;
 
-
         //**********************************************************************
         // Method: SetColorMap
         // Sets the color map (image data to color the cloud with) from an <IImage>
@@ -64,6 +64,24 @@ namespace Caustic
         // pImage - Color image
         //**********************************************************************
         virtual void SetColorMap(IRenderer* pRenderer, IImage* pImage) = 0;
+
+        //**********************************************************************
+        // Method: SetColorExtrinsics
+        // Sets the extrinsics matrix for the depth camera from which the depth map was obtained.
+        //
+        // Parameters:
+        // mat - extrinsics matrix
+        //**********************************************************************
+        virtual void SetColorExtrinsics(Matrix4x4& mat) = 0;
+
+        //**********************************************************************
+        // Method: SetColorIntrinsics
+        // Sets the intrinsics matrix for the depth camera from which the depth map was obtained.
+        //
+        // Parameters:
+        // mat - intrinsics matrix
+        //**********************************************************************
+        virtual void SetColorIntrinsics(Matrix3x3& mat) = 0;
     };
 
     //**********************************************************************

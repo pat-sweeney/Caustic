@@ -1,0 +1,1 @@
+NDSummary.OnToolTipsLoaded("CClass:CGeomFace",{1241:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines a face (triangle) on our mesh as a tuple of vertex indices.</div></div>"});

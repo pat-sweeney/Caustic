@@ -51,6 +51,9 @@ namespace Caustic
 		CRefObj<IShader> m_spShader;
 		CRefObj<IRenderSubMesh> m_spRenderMesh;
 		CRefObj<ISampler> m_spColorSampler;
+		CRefObj<ISampler> m_spDepthSampler;
+		Matrix4x4 m_extrinsics;
+		Matrix3x3 m_intrinsics;
 	public:
 		CPointCloud(IRenderer* pRenderer, uint32 width, uint32 height);
 		CPointCloud() {}
@@ -83,5 +86,7 @@ namespace Caustic
 		virtual void SetDepthMap(IRenderer* pRenderer, IImage* pImage) override;
 		virtual void SetRayMap(IRenderer* pRenderer, IImage* pImage) override;
 		virtual void SetColorMap(IRenderer* pRenderer, IImage* pImage) override;
+		virtual void SetColorExtrinsics(Matrix4x4& mat) override;
+		virtual void SetColorIntrinsics(Matrix3x3& mat) override;
 	};
 }

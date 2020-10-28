@@ -23,6 +23,7 @@ struct VSOutput
     float3 normWS : TEXCOORD1; // Normal vector in world coordinates
     float2 uvs : TEXCOORD2; // UV coordinates
     float depth : TEXCOORD3;
+    float3 posDS : TEXCOORD4; // Position of point in depth camera space
 };
 
 cbuffer VS_CONSTANT_BUFFER : register(b0)
@@ -30,8 +31,6 @@ cbuffer VS_CONSTANT_BUFFER : register(b0)
     float4x4 world; // Model => World
     float4x4 worldInvTranspose; // Inverse transpose of world matrix
     float4x4 worldViewProj; // Model => Projected
-    float4x4 viewInv; // View => World
-    float4 lightPosWS;
     float width;
     float height;
 };
@@ -45,6 +44,7 @@ VSOutput VS(VSInput p)
     int3 rp = int3(int(p.uvs.x*width),int(p.uvs.y*height),0);
     float4 ray = rayTexture.Load(rp);
     float4 pos = float4(ray.xyz * float(v.depth) / 1000.0, 1.0);
+    v.posDS = pos.xyz;
     // convert depth to point
     // Transform our vertex normal from object space to world space
     v.normWS = normalize(mul(float4(p.normOS,1.0f), worldInvTranspose).xyz);

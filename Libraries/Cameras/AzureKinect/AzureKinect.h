@@ -8,6 +8,7 @@
 #include "Base\Core\RefCount.h"
 #include "Base\Math\Vector.h"
 #include "Base\Math\BBox.h"
+#include "Base\Math\Matrix.h"
 #include "Imaging\Image\Image.h"
 #include "Imaging\Image\IImagePool.h"
 #include "Cameras\AzureKinect\IAzureKinect.h"
@@ -68,6 +69,10 @@ namespace Caustic
         // IDepthCameraDevice
         //**********************************************************************
         virtual bool NextFrame(IImage** ppColorImage, IImage** ppDepthImage, IImage** ppIRImage) override;
+        virtual Matrix4x4 ColorExtrinsics() override;
+        virtual Matrix3x3 ColorIntrinsics() override;
+        virtual Matrix4x4 DepthExtrinsics() override;
+        virtual Matrix3x3 DepthIntrinsics() override;
 
         //**********************************************************************
         // IAzureKinect

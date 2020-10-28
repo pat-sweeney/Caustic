@@ -99,6 +99,7 @@
     <ClCompile Include="BBox3.cpp" />
     <ClCompile Include="Covariance.cpp" />
     <ClCompile Include="Helper.cpp" />
+    <ClCompile Include="Matrix3x3.cpp" />
     <ClCompile Include="Matrix4x3.cpp" />
     <ClCompile Include="Matrix4x4.cpp" />
     <ClCompile Include="NewtonsMethod.cpp" />
