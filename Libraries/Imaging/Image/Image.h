@@ -107,6 +107,24 @@ namespace Caustic
 		// Returns the number of bytes in each pixel
 		//**********************************************************************
 		virtual uint32 GetBytesPerPixel() = 0;
+
+		//**********************************************************************
+		// Method: GetRGBOrder
+		// Returns whethers the pixel component layout in memory is Red/Green/Blue.
+		// This is the default. Otherwise, it's in Blue/Green/Red ordering.
+		//**********************************************************************
+		virtual bool GetRGBOrder() = 0;
+
+		//**********************************************************************
+		// Method: SetRGBOrder
+		// Sets whethers the pixel component layout in memory is Red/Green/Blue.
+		// This is the default. Otherwise, it's in Blue/Green/Red ordering.
+		//
+		// Parameters:
+		// isRGB - bool indicating whether memory is layed out in RGB order. Otherwise,
+		// it is in BGR order.
+		//**********************************************************************
+		virtual void SetRGBOrder(bool isRGB) = 0;
 	};
 
 	//**********************************************************************

@@ -139,13 +139,13 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // Method: LoadDefaultShaders
+    // Method: LoadShaders
     // Loads all the shaders found in the specified folder.
     //
     // Parameters:
     // pFolder - path to shaders to load
     //**********************************************************************
-    void CRenderer::LoadDefaultShaders(const wchar_t *pFolder)
+    void CRenderer::LoadShaders(const wchar_t* pFolder)
     {
         WIN32_FIND_DATA findData;
         std::wstring fn(pFolder);

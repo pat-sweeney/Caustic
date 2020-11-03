@@ -242,21 +242,21 @@ namespace Caustic
         if (!m_cameraStarted)
             CT(E_FAIL); // Camera not started
         Matrix4x4 mat;
-        mat[0][0] = m_calibration.color_camera_calibration.extrinsics.rotation[0];
-        mat[0][1] = m_calibration.color_camera_calibration.extrinsics.rotation[1];
-        mat[0][2] = m_calibration.color_camera_calibration.extrinsics.rotation[2];
+        mat[0][0] = m_calibration.depth_camera_calibration.extrinsics.rotation[0];
+        mat[0][1] = m_calibration.depth_camera_calibration.extrinsics.rotation[1];
+        mat[0][2] = m_calibration.depth_camera_calibration.extrinsics.rotation[2];
         mat[0][3] = 0.0f;
-        mat[1][0] = m_calibration.color_camera_calibration.extrinsics.rotation[3];
-        mat[1][1] = m_calibration.color_camera_calibration.extrinsics.rotation[4];
-        mat[1][2] = m_calibration.color_camera_calibration.extrinsics.rotation[5];
+        mat[1][0] = m_calibration.depth_camera_calibration.extrinsics.rotation[3];
+        mat[1][1] = m_calibration.depth_camera_calibration.extrinsics.rotation[4];
+        mat[1][2] = m_calibration.depth_camera_calibration.extrinsics.rotation[5];
         mat[1][3] = 0.0f;
-        mat[2][0] = m_calibration.color_camera_calibration.extrinsics.rotation[6];
-        mat[2][1] = m_calibration.color_camera_calibration.extrinsics.rotation[7];
-        mat[2][2] = m_calibration.color_camera_calibration.extrinsics.rotation[8];
+        mat[2][0] = m_calibration.depth_camera_calibration.extrinsics.rotation[6];
+        mat[2][1] = m_calibration.depth_camera_calibration.extrinsics.rotation[7];
+        mat[2][2] = m_calibration.depth_camera_calibration.extrinsics.rotation[8];
         mat[2][3] = 0.0f;
-        mat[3][0] = m_calibration.color_camera_calibration.extrinsics.translation[0];
-        mat[3][1] = m_calibration.color_camera_calibration.extrinsics.translation[0];
-        mat[3][2] = m_calibration.color_camera_calibration.extrinsics.translation[0];
+        mat[3][0] = m_calibration.depth_camera_calibration.extrinsics.translation[0];
+        mat[3][1] = m_calibration.depth_camera_calibration.extrinsics.translation[0];
+        mat[3][2] = m_calibration.depth_camera_calibration.extrinsics.translation[0];
         mat[3][3] = 1.0f;
         return mat;
     }
@@ -303,6 +303,7 @@ namespace Caustic
                         int h = k4a_image_get_height_pixels(colorimage);
                         int stride = k4a_image_get_stride_bytes(colorimage);
                         CRefObj<IImage> spImage = m_spColorImagePool->Acquire(w, h, 32);
+                        spImage->SetRGBOrder(false);
                         uint8* pRow = spImage->GetData();
                         for (int y = 0; y < h; y++)
                         {

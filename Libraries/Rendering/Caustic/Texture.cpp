@@ -152,7 +152,7 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // Function: CreateTexture
+    // Function: CopyFromImage
     // Copies an image's pixels into a texture
     //
     // Parameters:
@@ -177,10 +177,14 @@ namespace Caustic
             fastCopy = true;
             break;
         case 24:
-            format = DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM;
+            format = (pImage->GetRGBOrder()) ?
+                DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM :
+                DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM;
             break;
         case 32:
-            format = DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM;
+            format = (pImage->GetRGBOrder()) ?
+                DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM :
+                DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM;
             fastCopy = true;
             break;
         case 128: // Image with 4 floats per pixel
@@ -230,6 +234,13 @@ namespace Caustic
                         pc[0] = srcCol.GetRed();
                         pc[1] = srcCol.GetGreen();
                         pc[2] = srcCol.GetBlue();
+                        pc[3] = srcCol.GetAlpha();
+                        pc += 4;
+                        break;
+                    case DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM:
+                        pc[0] = srcCol.GetBlue();
+                        pc[1] = srcCol.GetGreen();
+                        pc[2] = srcCol.GetRed();
                         pc[3] = srcCol.GetAlpha();
                         pc += 4;
                         break;

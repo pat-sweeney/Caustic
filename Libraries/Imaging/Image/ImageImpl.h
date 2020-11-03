@@ -26,6 +26,7 @@ namespace Caustic
     // <uint32 at Caustic::uint32> m_width - width of image in pixels
     // <uint32 at Caustic::uint32> m_height - height of image in pixels
     // <uint32 at Caustic::uint32> m_bytesPerPixel - width of each pixel in bytes
+    // bool m_isRGB - Order pixel data is layed out in memory
     //
     // Header:
     // [Link:Imaging/Image/ImageImpl.h]
@@ -41,6 +42,7 @@ namespace Caustic
         uint32 m_width;                 // width of image in pixels
         uint32 m_height;                // height of image in pixels
         uint32 m_bytesPerPixel;         // width of each pixel in bytes
+        bool m_isRGB;                   // Is pixel memory layed out in RGB or BGR order?
 
         friend class CImageIter;
         friend CRefObj<IImage> LoadImage(const wchar_t *pFilename);
@@ -97,6 +99,8 @@ namespace Caustic
         virtual uint32 GetBPP() override { return m_bytesPerPixel * 8; }
         virtual uint32 GetStride() override { return m_width * GetBytesPerPixel(); }
         virtual uint32 GetBytesPerPixel() override { return m_bytesPerPixel; }
+        virtual bool GetRGBOrder() override { return m_isRGB; }
+        virtual void SetRGBOrder(bool isRGB) override { m_isRGB = isRGB; }
 
         //**********************************************************************
         // IImage
@@ -150,6 +154,8 @@ namespace Caustic
         virtual uint32 GetSubX() override { return 0; }
         virtual uint32 GetSubY() override { return 0; }
         virtual uint32 GetBPP() override { return 24; }
+        virtual bool GetRGBOrder() override { return m_spImage->GetRGBOrder(); }
+        virtual void SetRGBOrder(bool isRGB) override { /* do nothing */ }
 
         //**********************************************************************
         // IIntegralImage

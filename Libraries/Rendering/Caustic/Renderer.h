@@ -210,7 +210,6 @@ namespace Caustic
 #else
 #define CHECKTHREAD
 #endif
-        void LoadDefaultShaders(const wchar_t *pFolder);
         void LoadShaderBlob(std::wstring &filename, ID3DBlob **ppBlob);
         CRefObj<IShaderInfo> LoadShaderInfo(std::wstring &filename);
         void RenderScene(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback);
@@ -233,6 +232,7 @@ namespace Caustic
         // IRenderer
         //**********************************************************************
         virtual CComPtr<ID3D11Device> GetDevice() override { CHECKTHREAD;  return CGraphicsBase::GetDevice(); }
+        virtual void LoadShaders(const wchar_t* pFolder) overload;
         virtual CComPtr<ID3D11DeviceContext> GetContext() override { CHECKTHREAD; return CGraphicsBase::GetContext(); }
         virtual CRefObj<ICamera> GetCamera() override { CHECKTHREAD; return CGraphicsBase::GetCamera(); }
         virtual void SetCamera(ICamera* pCamera) override { CHECKTHREAD; CGraphicsBase::SetCamera(pCamera); }

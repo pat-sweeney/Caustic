@@ -112,6 +112,15 @@ namespace Caustic
         virtual CComPtr<ID3D11Device> GetDevice() = 0;
 
         //**********************************************************************
+        // Method: LoadShaders
+        // Loads into our shader manager all the shaders in the specified folder
+        //
+        // Parameters:
+        // pFolder - folder from which to load shaders
+        //**********************************************************************
+        virtual void LoadShaders(const wchar_t* pFolder) = 0;
+
+        //**********************************************************************
         // Method: GetContext
         // Returns:
         // The underlying D3D11 device context

@@ -116,14 +116,7 @@ namespace Caustic
         m_spShader->SetVSParam(L"depthSampler", std::any(m_spDepthSampler));
         m_spShader->SetPSParam(L"depthSampler", std::any(m_spDepthSampler));
 
-        Matrix m;
-        memcpy(m.x, m_extrinsics.v, sizeof(float) * 16);
-        m_spShader->SetPSParam(L"colorExt", std::any(m));
-        Matrix_3x3 m1;
-        memcpy(m1.x, m_intrinsics.v, sizeof(float) * 9);
-        m_spShader->SetPSParam(L"colorInt", std::any(m1));
-
-        m_spColorMap = Caustic::CreateTexture(pRenderer, 1920, 1080, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
+        m_spColorMap = Caustic::CreateTexture(pRenderer, 1920, 1080, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM);
         m_spShader->SetPSParam(L"colorTexture", std::any(m_spColorMap));
         m_spColorSampler = Caustic::CreateSampler(pRenderer, m_spColorMap);
         m_spShader->SetPSParam(L"colorSampler", std::any(m_spColorSampler));
@@ -135,6 +128,13 @@ namespace Caustic
 
     void CPointCloud::Render(IRenderer* pRenderer, std::vector<CRefObj<ILight>>& lights, IRenderCtx* pRenderCtx)
     {
+        Matrix m;
+        memcpy(m.x, m_extrinsics.v, sizeof(float) * 16);
+        m_spShader->SetPSParam(L"colorExt", std::any(m));
+        Matrix_3x3 m1;
+        memcpy(m1.x, m_intrinsics.v, sizeof(float) * 9);
+        m_spShader->SetPSParam(L"colorInt", std::any(m1));
+
         m_renderable.Render(pRenderer, lights, pRenderCtx);
     }
 

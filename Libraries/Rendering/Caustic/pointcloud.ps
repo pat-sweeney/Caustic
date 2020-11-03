@@ -45,12 +45,12 @@ float4 PS(VSOutput p) : SV_Target
     // Check if our position matches what the depth map claims
     int3 pc = int3(p.uvs.x * width, p.uvs.y * height, 0);
     float depth = depthTexture.Load(pc);
-    if (abs(depth - p.depth) > 10)
-       return float4(1,0,0,1);
+    if (abs(depth - p.depth) > 30)
+        discard;
     // Project point into color map
     float4 posCS = mul(float4(p.posDS, 1.0f),colorExt); // position of point in color camera space
     float3 posCP = mul(posCS.xyz,colorInt);
     posCP.x /= posCP.z;
     posCP.y /= posCP.z;
-    return colorTexture.Sample(colorSampler, posCP.xy);
+    return colorTexture.Sample(colorSampler, (posCP.xy+1)/2);
 }

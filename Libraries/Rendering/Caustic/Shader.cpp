@@ -42,9 +42,9 @@ namespace Caustic
         else if (paramDef.m_type == EShaderParamType::ShaderType_Matrix_Array)
             return paramDef.m_members * 16 * sizeof(float);
         else if (paramDef.m_type == EShaderParamType::ShaderType_Matrix3x3)
-            return 9 * sizeof(float);
+            return 12 * sizeof(float); // Each row is float4 in HLSL, hence 12 instead of 9
         else if (paramDef.m_type == EShaderParamType::ShaderType_Matrix3x3_Array)
-            return paramDef.m_members * 9 * sizeof(float);
+            return paramDef.m_members * 12 * sizeof(float); // Each row is float4 in HLSL, hence 12 instead of 9
         else if (paramDef.m_type == EShaderParamType::ShaderType_StructuredBuffer ||
             paramDef.m_type == EShaderParamType::ShaderType_AppendStructuredBuffer ||
             paramDef.m_type == EShaderParamType::ShaderType_RWByteAddressBuffer ||
@@ -357,9 +357,18 @@ namespace Caustic
             break;
             case EShaderParamType::ShaderType_Matrix3x3:
             {
+                // D3D is so dumb. Apparently it will pack a float3x3 as if
+                // it is 3 float4s where the W component is a packing value.
+                // So stupid.
+                // So here I need to pack the values appropriately.
                 Matrix_3x3 m = (params[i].m_value.has_value()) ? std::any_cast<Matrix_3x3>(params[i].m_value) : Matrix_3x3();
-                memcpy(pb, m.x, 9 * sizeof(float));
-                pb += 9 * sizeof(float);
+                for (int i = 0; i < 3; i++)
+                {
+                    memcpy(pb, &m.x[i * 3], 3 * sizeof(float));
+                    pb += 3 * sizeof(float);
+                    *(float*)pb = 0.0f;
+                    pb += sizeof(float);
+                }
             }
             break;
             case EShaderParamType::ShaderType_Matrix3x3_Array:
@@ -367,8 +376,17 @@ namespace Caustic
                 for (size_t j = 0; j < params[i].m_members; j++)
                 {
                     Matrix_3x3 m = (params[i].m_values[j].has_value()) ? std::any_cast<Matrix_3x3>(params[i].m_values[j]) : Matrix_3x3();
-                    memcpy(pb, m.x, 9 * sizeof(float));
-                    pb += 9 * sizeof(float);
+                    // D3D is so dumb. Apparently it will pack a float3x3 as if
+                    // it is 3 float4s where the W component is a packing value.
+                    // So stupid.
+                    // So here I need to pack the values appropriately.
+                    for (int i = 0; i < 3; i++)
+                    {
+                        memcpy(pb, &m.x[i * 3], 3 * sizeof(float));
+                        pb += 3 * sizeof(float);
+                        *(float*)pb = 0.0f;
+                        pb += sizeof(float);
+                    }
                 }
             }
             break;

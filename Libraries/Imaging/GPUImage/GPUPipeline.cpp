@@ -4,7 +4,6 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "stdafx.h"
-#if 0
 #include "Base\Core\error.h"
 #include "Rendering\Caustic\Shader.h"
 #include "Rendering\Caustic\Caustic.h"
@@ -18,13 +17,6 @@
 // Namespace: Caustic
 namespace Caustic
 {
-#include "QuadVS.h"
-#include "QuadVS.tbl"
-#include "GaussianPS.h"
-#include "GaussianPS.tbl"
-#include "RawCopyPS.h"
-#include "RawCopyPS.tbl"
-
     //**********************************************************************
     // Variable: s_defaultVSLayout
     // s_defaultVSLayout defines the default layout for our default vertex
@@ -36,138 +28,94 @@ namespace Caustic
     };
 
     //**********************************************************************
-    // Method: CreateShader
-    // Creates a new shader using the specified byte code and list
-    // of shader parameters.
-    //
-    // Parameters:
-    // pShaderCode - Pointer to byte array containing the shader executable
-    // shaderCodeSize - Size of pShaderCode in bytes
-    // pShaderParams - List of parameters to set on the shader
-    // shaderParamSize - Number of parameters in pShaderParams
-    // ppShader - Returns the newly created shader object
+    // Method: CreateSourceNode
+    // See <IGPUPipeline::CreateSourceNode>
     //**********************************************************************
-    void CGPUPipeline::CreateShader(BYTE *pShaderCode, uint32 shaderCodeSize, ShaderDefs *pShaderParams, uint32 shaderParamSize, IShader **ppShader)
+    CRefObj<IGPUPipelineSourceNode> CGPUPipeline::CreateSourceNode(IImage *pImage)
     {
-        CRefObj<IShader> spShader;
-        Caustic::CreateShader(m_spRenderer, nullptr,
-            pShaderParams, shaderParamSize,
-            g_QuadVS_ParamTable, _countof(g_QuadVS_ParamTable),
-            pShaderCode, shaderCodeSize,
-            g_QuadVS, sizeof(g_QuadVS),
-            s_VSLayout, _countof(s_VSLayout), &spShader);
-        *ppShader = spShader.Detach();
-    }
-
-    //**********************************************************************
-    // \brief Creates a source node. Source nodes read IImage and make them
-    // available to the rest of the GPU imaging pipeline.
-    // \param[in] pImage Image to use as source data
-    // \param[out] ppNewNode Returns the new source node
-    //**********************************************************************
-    void CGPUPipeline::CreateSourceNode(IImage *pImage, IGPUImageSourceNode **ppNewNode)
-    {
-        std::unique_ptr<CGPUImageSourceNode> spSource(new CGPUImageSourceNode());
+        std::unique_ptr<CGPUPipelineSourceNode> spSource(new CGPUPipelineSourceNode());
         spSource->SetSource(this, pImage);
-        m_sourceNodes.push_back(CRefObj<IGPUImageSourceNode>(spSource.get()));
-        *ppNewNode = spSource.release();
-        (*ppNewNode)->AddRef();
+        m_sourceNodes.push_back(CRefObj<IGPUPipelineSourceNode>(spSource.get()));
+        return CRefObj<IGPUPipelineSourceNode>(spSource.release());
     }
 
     //**********************************************************************
-    // \brief Creates a sink node. Sink nodes are the final stage in a GPU
-    // imaging pipeline and are responsible for converting the D3D texture
-    // back into an IImage.
-    // \param[in] numInputs Number of source textures that feed this node
-    // \param[in] pShader Shader to run before returning result
-    // \param[out] ppNewNode Returns the newly created node
+    // Method: CreateSinkNode
+    // See <IGPUPipeline::CreateSinkNode>
     //**********************************************************************
-    void CGPUPipeline::CreateSinkNode(uint32 numInputs, IShader *pShader, IGPUImageSinkNode **ppNewNode)
+    CRefObj<IGPUPipelineSinkNode> CGPUPipeline::CreateSinkNode(uint32 numInputs, IShader *pShader)
     {
-        std::unique_ptr<CGPUImageSinkNode> spSource(new CGPUImageSinkNode(numInputs));
-        m_sinkNodes.push_back(CRefObj<IGPUImageSinkNode>(spSource.get()));
-        *ppNewNode = spSource.release();
-        (*ppNewNode)->AddRef();
+        std::unique_ptr<CGPUPipelineSinkNode> spSource(new CGPUPipelineSinkNode(numInputs));
+        m_sinkNodes.push_back(CRefObj<IGPUPipelineSinkNode>(spSource.get()));
+        return CRefObj<IGPUPipelineSinkNode>(spSource.release());
     }
 
     //**********************************************************************
-    // \brief Creates an internal GPU pipeline node. These nodes do the bulk
-    // of the processing.
-    // \param[in] numInputs Number of source texture that feed this node
-    // \param[in] pShader Pixel shader to run on this data
-    // \param[out] ppNewNode Returns the new node
+    // Method: CreateNode
+    // See <IGPUPipeline::CreateNode>
     //**********************************************************************
-    void CGPUPipeline::CreateNode(uint32 numInputs, IShader *pShader, IGPUImageNode **ppNewNode)
+    CRefObj<IGPUPipelineNode> CGPUPipeline::CreateNode(uint32 numInputs, IShader *pShader)
     {
-        std::unique_ptr<CGPUImageNode> spSource(new CGPUImageNode(numInputs));
-        m_nodes.push_back(CRefObj<IGPUImageNode>(spSource.get()));
-        *ppNewNode = spSource.release();
-        (*ppNewNode)->AddRef();
+        std::unique_ptr<CGPUPipelineNode> spSource(new CGPUPipelineNode(numInputs));
+        m_nodes.push_back(CRefObj<IGPUPipelineNode>(spSource.get()));
+        return CRefObj<IGPUPipelineNode>(spSource.release());
     }
 
     struct SPredefinedNodes
     {
         const wchar_t *m_pNodeName;
         bool m_flipUVs;
-        BYTE *m_pShaderCode;
-        uint32 m_shaderSize; // Number of bytes in m_pShaderCode
-        ShaderDefs *m_pParams;
-        uint32 m_paramSize; // Number of parameters in m_pParams
     } _SPredefinedNodes[] = {
-        { g_GaussianVerticalFilter, true, (BYTE*)g_GaussianPS, sizeof(g_GaussianPS), g_GaussianPS_ParamTable, _countof(g_GaussianPS_ParamTable) },
-        { g_GaussianHorizontalFilter, false, (BYTE*)g_GaussianPS, sizeof(g_GaussianPS), g_GaussianPS_ParamTable, _countof(g_GaussianPS_ParamTable) },
-        { g_RawCopyFilter, false, (BYTE*)g_RawCopyPS, sizeof(g_RawCopyPS), g_RawCopyPS_ParamTable, _countof(g_RawCopyPS_ParamTable) }
+        { g_GaussianVerticalFilter, true },
+        { g_GaussianHorizontalFilter, false },
+        { g_RawCopyFilter, false }
     };
 
     //**********************************************************************
-    // \brief Creates an predefined GPU pipeline node. These nodes are
-    // already associated with some shader (for instance a Gaussian blur filter)
-    // \param[in] pShaderName Name of GPU graph node to create
-    // \param[out] Returns the newly created node
+    // Method: CreatePredefinedNode
+    // See <IGPUPipeline::CreatePredefinedNode>
     //**********************************************************************
-    void CGPUPipeline::CreatePredefinedNode(wchar_t *pShaderName, IGPUImageNode **ppNewNode)
+    CRefObj<IGPUPipelineNode> CGPUPipeline::CreatePredefinedNode(wchar_t *pNodeName)
     {
-        *ppNewNode = nullptr;
         for (SPredefinedNodes &pNode : _SPredefinedNodes)
         {
-            if (_wcsicmp(pNode.m_pNodeName, pShaderName) == 0)
+            if (_wcsicmp(pNode.m_pNodeName, pNodeName) == 0)
             {
-                std::unique_ptr<CGPUImageNode> spNode(new CGPUImageNode(1));
-                CRefObj<IShader> spShader;
-                CreateShader(pNode.m_pShaderCode, pNode.m_shaderSize, pNode.m_pParams, pNode.m_paramSize, &spShader);
+                std::unique_ptr<CGPUPipelineNode> spNode(new CGPUPipelineNode(1));
+                CRefObj<IShader> spShader = GetRenderer()->GetShaderMgr()->FindShader(pNodeName);
                 spNode->SetShader(spShader);
-                m_nodes.push_back(CRefObj<IGPUImageNode>(spNode.get()));
-                *ppNewNode = spNode.release();
-                (*ppNewNode)->AddRef();
-                break;
+                m_nodes.push_back(CRefObj<IGPUPipelineNode>(spNode.get()));
+                return CRefObj<IGPUPipelineNode>(spNode.release());
             }
         }
+        CT(E_INVALIDARG); // Couldn't find node
+        return CRefObj<IGPUPipelineNode>(nullptr);
     }
 
     //**********************************************************************
-    // \brief Starts processing of a GPU graph. Data is processed using a
-    // a pull model starting at each sink node.
+    // Method: Process
+    // See <IGPUPipeline::Process>
     //**********************************************************************
     void CGPUPipeline::Process()
     {
-        for (CRefObj<IGPUImageSinkNode> &pCurNode : m_sinkNodes)
+        for (CRefObj<IGPUPipelineSinkNode> &pCurNode : m_sinkNodes)
         {
-            pCurNode->GetOutputTexture(this, nullptr);
+            pCurNode->GetOutputTexture(this);
         }
     }
     
     //**********************************************************************
-    // \brief Returns the graphics device associated with this pipeline
-    // \param[out] ppDevice Returns the IRenderer device associated with this pipeline
+    // Method: Process
+    // See <IGPUPipeline::GetRenderer>
     //**********************************************************************
-    void CGPUPipeline::GetGraphics(IRenderer **ppDevice)
+    CRefObj<IRenderer> CGPUPipeline::GetRenderer()
     {
-        *ppDevice = m_spRenderer;
-        (*ppDevice)->AddRef();
+        return m_spRenderer;
     }
 
     //**********************************************************************
-    // \brief Defines a vertex used by the quad rendering
+    // Struct: GPUVertex
+    // GPU vertex used for the fullscreen quad.
     //**********************************************************************
     struct GPUVertex
     {
@@ -176,14 +124,15 @@ namespace Caustic
     };
 
     //**********************************************************************
-    // \brief Setups our pipeline
-    // \param[in] pRenderer Graphics device to use. If null then a new device is created
-    //**********************************************************************
     void CGPUPipeline::Initialize(IRenderer *pRenderer)
     {
         if (pRenderer == nullptr)
-			Caustic::CCausticFactory::Instance()->CreateGraphics(nullptr, &pRenderer);
+			pRenderer = Caustic::CCausticFactory::Instance()->CreateRenderer(nullptr, std::wstring(L""));
         m_spRenderer = pRenderer;
+
+        // Make sure the shaders required are loaded
+        m_spRenderer->LoadShaders(L"");
+
         // Setup vertex buffer
         CD3D11_BUFFER_DESC vbdesc(sizeof(GPUVertex) * 4, D3D11_BIND_VERTEX_BUFFER);
         GPUVertex quadPts[5] = {
@@ -214,73 +163,68 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Allocates a new pipeline object
-    // \param[in] pRenderer Specifies the IRenderer object to be used. If null a new graphics device is created.
-    // \param[out] pPipeline Returns the newly created pipeline object
+    // Function: CreateCPUPipeline
+    // Allocates a new GPUPipeline object
+    //
+    // Parameters:
+    // pRenderer - renderer to use
     //**********************************************************************
-    void CreateGPUPipeline(IRenderer *pRenderer, IGPUPipeline **ppPipeline)
+    CRefObj<IGPUPipeline> CreateGPUPipeline(IRenderer *pRenderer)
     {
         std::unique_ptr<CGPUPipeline> spPipeline(new CGPUPipeline());
         spPipeline->Initialize(pRenderer);
-        *ppPipeline = spPipeline.release();
-        (*ppPipeline)->AddRef();
+        return CRefObj<IGPUPipeline>(spPipeline.release());
     }
 
     //**********************************************************************
-    // \brief Sets the shader associated with this graph node
-    // \param[in] pShader Specifies the shader to use for this node
+    // Method: SetShader
+    // See <IGPUPipelineNode::SetShader>
     //**********************************************************************
-    void CGPUImageBase::SetShader(IShader *pShader)
+    void CGPUPipelineNodeBase::SetShader(IShader *pShader)
     {
         m_spShader = pShader;
     }
 
     //**********************************************************************
-    // \brief Returns the shader associated with this graph node
-    // \param[out] ppShader Returns the shader associated with this node
+    // Method: GetShader
+    // See <IGPUPipelineNode::GetShader>
     //**********************************************************************
-    void CGPUImageBase::GetShader(IShader **ppShader)
+    CRefObj<IShader> CGPUPipelineNodeBase::GetShader()
     {
-        *ppShader = m_spShader;
-        (*ppShader)->AddRef();
+        return CRefObj<IShader>(m_spShader);
     }
     
     //**********************************************************************
-    // \brief Returns the node that is the Nth input into this node
-    // \param[in] index Input slot to return
-    // \param[out] ppNode Returns the node used as input in slot 'index'
+    // Method: GetInput
+    // See <IGPUPipelineNode::GetInput>
     //**********************************************************************
-    void CGPUImageBase::GetInput(uint32 index, IGPUImageNode **ppNode)
+    CRefObj<IGPUPipelineNode> CGPUPipelineNodeBase::GetInput(uint32 index)
     {
-        *ppNode = m_sourceNodes[index];
-        (*ppNode)->AddRef();
+        return CRefObj<IGPUPipelineNode>(m_sourceNodes[index]);
     }
 
     //**********************************************************************
-    // \brief Sets the Nth input node (i.e. this node gets input from the specified node)
-    // \param[in] index Slot pNode is used as input to
-    // \param[in] pNode Node to set as input in slot 'index'
+    // Method: SetInput
+    // See <IGPUPipelineNode::SetInput>
     //**********************************************************************
-    void CGPUImageBase::SetInput(uint32 index, IGPUImageNode *pNode)
+    void CGPUPipelineNodeBase::SetInput(uint32 index, IGPUPipelineNode *pNode)
     {
         m_sourceNodes[index] = pNode;
     }
 
     //**********************************************************************
-    // \brief Retrieves the output from this node (after processing has been performed)
-    // \param[in] pPipeline Pipeline this node is part of
-    // \param[out] ppTexture The output texture for this node
+    // Method: GetOutputTexture
+    // See <IGPUPipelineNode::GetOutputTexture>
     //**********************************************************************
-    void CGPUImageBase::GetOutputTexture(IGPUPipeline *pPipeline, ITexture **ppTexture)
+    CRefObj<ITexture> CGPUPipelineNodeBase::GetOutputTexture(IGPUPipeline *pPipeline)
     {
         Process(pPipeline);
-        if (ppTexture)
-            *ppTexture = m_spOutputTexture.Detach();
+        return m_spOutputTexture;
     }
 
     //**********************************************************************
-    // \brief Renders a full screen quad on which the node's shader will be run
-    // \param[in] pShader Renders a quad using the specified pixel shader
+    // Method: GetOutputTexture
+    // See <IGPUPipelineNode::GetOutputTexture>
     //**********************************************************************
     void CGPUPipeline::RenderQuad(IShader *pShader)
     {
@@ -298,21 +242,20 @@ namespace Caustic
         spCtx->RSSetState(spRasterState);
         spCtx->IASetVertexBuffers(0, 1, &m_spFullQuadVB, &vertexSize, &offset);
         spCtx->IASetIndexBuffer(m_spFullQuadIB, DXGI_FORMAT_R32_UINT, 0);
-        pShader->BeginRender(m_spRenderer);
+        std::vector<CRefObj<ILight>> lights;
+        pShader->BeginRender(m_spRenderer, nullptr, nullptr, lights, nullptr);
         spCtx->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         spCtx->DrawIndexed(6, 0, 0);
         pShader->EndRender(m_spRenderer);
     }
 
     //**********************************************************************
-    // \brief Process first obtains the inputs for this node and then runs
-    // the node's shader resulting in a final output texture
-    // \param[in] pPipeline Pipeline this node is a part of
+    // Method: Process
+    // See <IGPUPipelineNode::Process>
     //**********************************************************************
-    void CGPUImageBase::Process(IGPUPipeline *pPipeline)
+    void CGPUPipelineNodeBase::Process(IGPUPipeline *pPipeline)
     {
-        CRefObj<IRenderer> spRenderer;
-        pPipeline->GetGraphics(&spRenderer);
+        CRefObj<IRenderer> spRenderer = pPipeline->GetRenderer();
         CComPtr<ID3D11Device> spDevice = spRenderer->GetDevice();
         CComPtr<ID3D11DeviceContext> spCtx = spRenderer->GetContext();
 
@@ -321,11 +264,9 @@ namespace Caustic
         std::vector<CSamplerRef> samplers;
         for (int i = 0; i < m_sourceNodes.size(); i++)
         {
-            CRefObj<ITexture> spTexture;
-            m_sourceNodes[i]->GetOutputTexture(pPipeline, &spTexture);
+            CRefObj<ITexture> spTexture = m_sourceNodes[i]->GetOutputTexture(pPipeline);
             textures.push_back(spTexture);
-            CRefObj<ISampler> spSampler;
-			Caustic::CCausticFactory::Instance()->CreateSampler(spRenderer, spTexture, &spSampler);
+            CRefObj<ISampler> spSampler = Caustic::CCausticFactory::Instance()->CreateSampler(spRenderer, spTexture);
             samplers.push_back(CSamplerRef(spSampler));
         }
 
@@ -347,7 +288,7 @@ namespace Caustic
                 m_width = textures[0]->GetWidth();
                 m_height = textures[0]->GetHeight();
             }
-            Caustic::CCausticFactory::Instance()->CreateTexture(spRenderer, m_width, m_height, DXGI_FORMAT_R8G8B8A8_UNORM, m_cpuFlags, m_bindFlags, &m_spOutputTexture);
+            m_spOutputTexture = Caustic::CCausticFactory::Instance()->CreateTexture(spRenderer, m_width, m_height, DXGI_FORMAT_R8G8B8A8_UNORM, m_cpuFlags, m_bindFlags);
             CComPtr<ID3D11RenderTargetView> spRTView;
             CT(spDevice->CreateRenderTargetView(m_spOutputTexture->GetD3DTexture(), nullptr, &spRTView));
 
@@ -362,15 +303,13 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Assigns an image to be used as a source texture
-    // \param[in] pPipeline Pipeline this node is a part of
-    // \param[in] pSource Image to use as source data into this node
+    // Method: SetSource
+    // See <IGPUPipelineSourceNode::SetSource>
     //**********************************************************************
-    void CGPUImageSourceNode::SetSource(IGPUPipeline *pPipeline, IImage *pSource)
+    void CGPUPipelineSourceNode::SetSource(IGPUPipeline *pPipeline, IImage *pSource)
     {
-        CRefObj<IRenderer> spRenderer;
-        pPipeline->GetGraphics(&spRenderer);
-		Caustic::CCausticFactory::Instance()->CreateTexture(spRenderer, pSource->GetWidth(), pSource->GetHeight(), DXGI_FORMAT_R8G8B8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE, &m_spOutputTexture);
+        CRefObj<IRenderer> spRenderer = pPipeline->GetRenderer();
+        m_spOutputTexture = Caustic::CCausticFactory::Instance()->CreateTexture(spRenderer, pSource->GetWidth(), pSource->GetHeight(), DXGI_FORMAT_R8G8B8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
         CComPtr<ID3D11DeviceContext> spCtx = spRenderer->GetContext();
         CComPtr<ID3D11Texture2D> spTexture = m_spOutputTexture->GetD3DTexture();
         D3D11_MAPPED_SUBRESOURCE mapinfo;
@@ -397,52 +336,45 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // \brief Retrieves the output texture
-    // \param[in] pPipeline Pipeline this node is a part of
-    // \param[out] ppTexture Returns the texture this node outputs
+    // Method: GetOutputTexture
+    // See <IGPUPipelineSourceNode::GetOutputTexture>
     //**********************************************************************
-    void CGPUImageSourceNode::GetOutputTexture(IGPUPipeline *pPipeline, ITexture **ppTexture)
+    CRefObj<ITexture> CGPUPipelineSourceNode::GetOutputTexture(IGPUPipeline *pPipeline)
     {
-        if (ppTexture)
-        {
-            *ppTexture = m_spOutputTexture;
-            (*ppTexture)->AddRef();
-        }
+        return m_spOutputTexture;
     }
 
     //**********************************************************************
-    void CGPUImageSinkNode::Process(IGPUPipeline *pPipeline)
+    // Method: Process
+    // See <IGPUPipelineNode::Process>
+    //**********************************************************************
+    void CGPUPipelineSinkNode::Process(IGPUPipeline *pPipeline)
     {
-        CRefObj<IRenderer> spRenderer;
-        pPipeline->GetGraphics(&spRenderer);
+        CRefObj<IRenderer> spRenderer = pPipeline->GetRenderer();
         CComPtr<ID3D11Device> spDevice = spRenderer->GetDevice();
         CComPtr<ID3D11DeviceContext> spCtx = spRenderer->GetContext();
         _ASSERT(m_sourceNodes.size() == 1 && m_sourceNodes[0] != nullptr);
-        CRefObj<ITexture> spTexture;
-        m_sourceNodes[0]->GetOutputTexture(pPipeline, &spTexture);
+        CRefObj<ITexture> spTexture = m_sourceNodes[0]->GetOutputTexture(pPipeline);
         if (m_width == 0 || m_height == 0)
         {
             m_width = spTexture->GetWidth();
             m_height = spTexture->GetHeight();
         }
-		Caustic::CCausticFactory::Instance()->CreateTexture(spRenderer, m_width, m_height, DXGI_FORMAT_R8G8B8A8_UNORM, m_cpuFlags, m_bindFlags, &m_spOutputTexture);
+        m_spOutputTexture = Caustic::CCausticFactory::Instance()->CreateTexture(spRenderer, m_width, m_height, DXGI_FORMAT_R8G8B8A8_UNORM, m_cpuFlags, m_bindFlags);
         spCtx->CopyResource(m_spOutputTexture->GetD3DTexture(), spTexture->GetD3DTexture());
     }
 
     //**********************************************************************
-    // \brief Retrieves the output texture as an image
-    // \param[in] pPipeline Pipeline this node is a part of
-    // \param[out] ppSource Returns the output from this node as an Image (CPU based)
+    // Method: GetOutput
+    // See <IGPUPipelineSinkNode::GetOutput>
     //**********************************************************************
-    void CGPUImageSinkNode::GetOutput(IGPUPipeline *pPipeline, IImage **ppSource)
+    CRefObj<IImage> CGPUPipelineSinkNode::GetOutput(IGPUPipeline *pPipeline)
     {
-        CRefObj<IRenderer> spRenderer;
-        pPipeline->GetGraphics(&spRenderer);
+        CRefObj<IRenderer> spRenderer = pPipeline->GetRenderer();
         CComPtr<ID3D11Device> spDevice = spRenderer->GetDevice();
         CComPtr<ID3D11DeviceContext> spCtx = spRenderer->GetContext();
         spCtx->Flush();
-        CRefObj<IImage> spImage;
-        Caustic::CreateImage(m_width, m_height, &spImage);
+        CRefObj<IImage> spImage = CreateImage(m_width, m_height, 32);
         D3D11_MAPPED_SUBRESOURCE mapinfo;
         CComPtr<ID3D11Texture2D> spTexture = m_spOutputTexture->GetD3DTexture();
         spCtx->Map(spTexture, 0, D3D11_MAP::D3D11_MAP_READ, 0, &mapinfo);
@@ -465,7 +397,6 @@ namespace Caustic
             pDstRow += spImage->GetStride();
         }
         spCtx->Unmap(spTexture, 0);
-        *ppSource = spImage.Detach();
+        return CRefObj<IImage>(spImage.Detach());
     }
 }
-#endif

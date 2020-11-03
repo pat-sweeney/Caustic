@@ -57,6 +57,8 @@ namespace Caustic
         virtual uint32 GetBPP() override { return m_spImage->GetBPP(); }
         virtual uint32 GetStride() override { return m_spImage->GetStride(); }
         virtual uint32 GetBytesPerPixel() override { return m_spImage->GetBytesPerPixel(); }
+        virtual bool GetRGBOrder() override { return m_spImage->GetRGBOrder(); }
+        virtual void SetRGBOrder(bool isRGB) override { m_spImage->SetRGBOrder(isRGB); }
 
         //**********************************************************************
         // IImage
