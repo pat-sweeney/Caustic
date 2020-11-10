@@ -92,8 +92,12 @@ namespace Caustic
         //**********************************************************************
         // IRenderer methods
         //**********************************************************************
+        virtual void Freeze() override;
+        virtual void Unfreeze() override;
         virtual void AddRenderable(IRenderable* pRenderable) override;
         virtual CComPtr<ID3D11Device> GetDevice() override;
+        virtual void DrawScreenQuad(float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler* pSampler) override;
+        virtual void LoadShaders(const wchar_t* pFolder) override;
         virtual CComPtr<ID3D11DeviceContext> GetContext() override;
         virtual CRefObj<ICamera> GetCamera() override;
         virtual CRefObj<IShaderMgr> GetShaderMgr() override { return m_spRenderer->GetShaderMgr(); }

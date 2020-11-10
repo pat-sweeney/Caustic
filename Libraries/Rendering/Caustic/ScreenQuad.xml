@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Shader>
+  <PixelShader Filename="$(CausticRoot)\Libraries\Rendering\Caustic\ScreenQuad.ps" Output="$(CausticRoot)\$(Configuration)\ScreenQuad_PS.cso"/>
+  <VertexShader Filename="$(CausticRoot)\Libraries\Rendering\Caustic\ScreenQuad.vs" Output="$(CausticRoot)\$(Configuration)\ScreenQuad_VS.cso"/>
+</Shader>

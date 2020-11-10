@@ -266,6 +266,7 @@
     <CustomBuild Include="TexturedWithShadow.xml">
       <Filter>Source Files\Shaders\Definitions</Filter>
     </CustomBuild>
+    <CustomBuild Include="ScreenQuad.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Brighten.cs">
@@ -317,6 +318,12 @@
       <Filter>Source Files\Shaders</Filter>
     </None>
     <None Include="TexturedWithShadow.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="ScreenQuad.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="ScreenQuad.vs">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>

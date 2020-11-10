@@ -108,8 +108,74 @@ namespace Caustic
     struct Float2 { float x; float y; Float2(float _x, float _y) { x = _x; y = _y; } };
     struct Float3 { float x; float y; float z; Float3(float _x, float _y, float _z) { x = _x; y = _y; z = _z; } };
     struct Float4 { float x; float y; float z; float w; Float4(float _x, float _y, float _z, float _w) { x = _x; y = _y; z = _z; w = _w; } };
-    struct Matrix { float x[16]; Matrix() { ZeroMemory(x, sizeof(x)); } Matrix(float _x[16]) { memcpy(x, _x, sizeof(float) * 16); } };
-    struct Matrix_3x3 { float x[9]; Matrix_3x3() { ZeroMemory(x, sizeof(x)); } Matrix_3x3(float _x[9]) { memcpy(x, _x, sizeof(float) * 9); } };
+    struct Matrix
+    { 
+        float x[16]; 
+        Matrix() 
+        { 
+            ZeroMemory(x, sizeof(x));
+        }
+    
+        Matrix(Matrix4x4& m)
+        {
+            int index = 0;
+            for (int col = 0; col < 4; col++)
+                for (int row = 0; row < 4; row++)
+                    x[index++] = m[row][col];
+        }
+
+        Matrix(Matrix3x3& m)
+        {
+            int index = 0;
+            x[index++] = m[0][0];
+            x[index++] = m[1][0];
+            x[index++] = 0.0f;
+            x[index++] = m[2][0];
+            x[index++] = m[0][1];
+            x[index++] = m[1][1];
+            x[index++] = 0.0f;
+            x[index++] = m[2][1];
+            x[index++] = m[0][2];
+            x[index++] = m[1][2];
+            x[index++] = 0.0f;
+            x[index++] = m[2][2];
+            x[index++] = 0.0f;
+            x[index++] = 0.0f;
+            x[index++] = 0.0f;
+            x[index++] = 1.0f;
+        }
+
+        Matrix(float _x[16])
+        {
+            memcpy(x, _x, sizeof(float) * 16);
+        }
+    };
+    
+    struct Matrix_3x3
+    {
+        float x[16];
+
+        Matrix_3x3()
+        {
+            ZeroMemory(x, sizeof(x));
+        }
+        
+        Matrix_3x3(Matrix3x3& m)
+        {
+            int index = 0;
+            for (int col = 0; col < 4; col++)
+                for (int row = 0; row < 4; row++)
+                    if (row == 3 || col == 3)
+                        x[index++] = 0.0f;
+                    else
+                        x[index++] = m[row][col];
+        }
+
+        Matrix_3x3(float _x[16])
+        {
+            memcpy(x, _x, sizeof(float) * 16);
+        }
+    };
 
     //**********************************************************************
     // Class: SBuffer

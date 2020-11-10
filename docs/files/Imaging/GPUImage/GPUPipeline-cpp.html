@@ -13,23 +13,116 @@
  <div class="NDClassPrototype" id="NDClassPrototype367"><div class="CPEntry TClass Current"><div class="CPModifiers"><span class="SHKeyword">namespace</span> </div><div class="CPName">Caustic</div></div></div>
 </div>
 
-<a name="Caustic.Variables"></a><a name="Topic368"></a><div class="CTopic TGroup LC">
- <div class="CTitle">Variables</div>
-</div>
-
-<a name="Caustic.s_defaultVSLayout"></a><a name="Topic369"></a><div class="CTopic TVariable LC">
- <div class="CTitle">s_defaultVSLayout</div>
- <div class="CBody"><p>s_defaultVSLayout defines the default layout for our default vertex</p></div>
-</div>
-
 <a name="Caustic.Functions"></a><a name="Topic370"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="Caustic.CreateShader"></a><a name="Topic371"></a><div class="CTopic TFunction LC last">
- <div class="CTitle">CreateShader</div>
- <div id="NDPrototype371" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CGPUPipeline::CreateShader(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first">BYTE&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pShaderCode,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td></td><td class="PName last">shaderCodeSize,</td></tr><tr><td class="PType first">ShaderDefs&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pShaderParams,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td></td><td class="PName last">shaderParamSize,</td></tr><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/IShader.h:IShader" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,704);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IShader</a>&nbsp;</td><td class="PNamePrefix">**</td><td class="PName last">ppShader</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
- <div class="CBody"><p>Creates a new shader using the specified byte code and list of shader parameters.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pShaderCode<div class="CDLParameterType">BYTE*</div></td><td class="CDLDefinition"><p>Pointer to byte array containing the shader executable</p></td></tr><tr><td class="CDLEntry">shaderCodeSize<div class="CDLParameterType"><span class="SHKeyword">uint32</span></div></td><td class="CDLDefinition"><p>Size of pShaderCode in bytes</p></td></tr><tr><td class="CDLEntry">pShaderParams<div class="CDLParameterType">ShaderDefs*</div></td><td class="CDLDefinition"><p>List of parameters to set on the shader</p></td></tr><tr><td class="CDLEntry">shaderParamSize<div class="CDLParameterType"><span class="SHKeyword">uint32</span></div></td><td class="CDLDefinition"><p>Number of parameters in pShaderParams</p></td></tr><tr><td class="CDLEntry">ppShader<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/Caustic/IShader.h:IShader" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,704);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IShader</a>**</div></td><td class="CDLDefinition"><p>Returns the newly created shader object</p></td></tr></table></div>
+<a name="Caustic.CreateSourceNode"></a><a name="Topic1291"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">CreateSourceNode</div>
+ <div id="NDPrototype1291" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><a href="../../../index.html#File:Base/Core/IRefCount.h:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,61);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Imaging/GPUImage/GPUPipeline.h:IGPUPipelineSourceNode" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1279);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipelineSourceNode</a>&gt; CGPUPipeline::CreateSourceNode(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Imaging/Image/Image.h:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,439);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pImage,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td></td><td class="PName last">outputWidth,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td></td><td class="PName last">outputHeight,</td></tr><tr><td class="PType first">DXGI_FORMAT&nbsp;</td><td></td><td class="PName last">format</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div class="CBody"><p>See <a href="../../../index.html#File:Imaging/GPUImage/GPUPipeline.h:IGPUPipeline.CreateSourceNode" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1288);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipeline::CreateSourceNode</a></p></div>
+</div>
+
+<a name="Caustic.CreateSinkNode"></a><a name="Topic1292"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">CreateSinkNode</div>
+ <div id="NDPrototype1292" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><a href="../../../index.html#File:Base/Core/IRefCount.h:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,61);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Imaging/GPUImage/GPUPipeline.h:IGPUPipelineSinkNode" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1280);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipelineSinkNode</a>&gt; CGPUPipeline::CreateSinkNode(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/IShader.h:IShader" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,704);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IShader</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pShader,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td></td><td class="PName last">outputWidth,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td></td><td class="PName last">outputHeight,</td></tr><tr><td class="PType first">DXGI_FORMAT&nbsp;</td><td></td><td class="PName last">format</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div class="CBody"><p>See <a href="../../../index.html#File:Imaging/GPUImage/GPUPipeline.h:IGPUPipeline.CreateSinkNode" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1289);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipeline::CreateSinkNode</a></p></div>
+</div>
+
+<a name="Caustic.CreateNode"></a><a name="Topic1293"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">CreateNode</div>
+ <div id="NDPrototype1293" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><a href="../../../index.html#File:Base/Core/IRefCount.h:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,61);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Imaging/GPUImage/GPUPipeline.h:IGPUPipelineNode" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1278);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipelineNode</a>&gt; CGPUPipeline::CreateNode(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/IShader.h:IShader" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,704);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IShader</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pShader,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td></td><td class="PName last">outputWidth,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td></td><td class="PName last">outputHeight,</td></tr><tr><td class="PType first">DXGI_FORMAT&nbsp;</td><td></td><td class="PName last">format</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div class="CBody"><p>See <a href="../../../index.html#File:Imaging/GPUImage/GPUPipeline.h:IGPUPipeline.CreateNode" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1290);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipeline::CreateNode</a></p></div>
+</div>
+
+<a name="Caustic.Process"></a><a name="Topic1294"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">Process</div>
+ <div id="NDPrototype1294" class="NDPrototype NoParameterForm"><span class="SHKeyword">void</span> CGPUPipeline::Process()</div>
+ <div class="CBody"><p>See <a href="../../../index.html#File:Imaging/GPUImage/GPUPipeline.h:IGPUPipeline.Process" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1287);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipeline::Process</a></p></div>
+</div>
+
+<a name="Caustic.Process(2)"></a><a name="Topic1295"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">Process</div>
+ <div class="CBody"><p>See <a href="../../../index.html#File:Imaging/GPUImage/GPUPipeline.h:IGPUPipeline.GetRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1285);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipeline::GetRenderer</a></p></div>
+</div>
+
+<a name="GPUVertex"></a><a name="Topic1296"></a><div class="CTopic TStruct LC">
+ <div class="CTitle">GPUVertex</div>
+ <div class="CBody"><p>GPU vertex used for the fullscreen quad.</p></div>
+</div>
+
+<a name="GPUVertex.Functions"></a><a name="Topic1297"></a><div class="CTopic TGroup LC">
+ <div class="CTitle">Functions</div>
+</div>
+
+<a name="GPUVertex.CreateCPUPipeline"></a><a name="Topic1298"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">CreateCPUPipeline</div>
+ <div class="CBody"><p>Allocates a new GPUPipeline object</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pRenderer</td><td class="CDLDefinition"><p>renderer to use</p></td></tr></table></div>
+</div>
+
+<a name="GPUVertex.SetShader"></a><a name="Topic1299"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">SetShader</div>
+ <div id="NDPrototype1299" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CGPUPipelineNodeBase::SetShader(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/IShader.h:IShader" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,704);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IShader</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pShader</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div class="CBody"><p>See &lt;IGPUPipelineNode::SetShader&gt;</p></div>
+</div>
+
+<a name="GPUVertex.GetShader"></a><a name="Topic1300"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetShader</div>
+ <div id="NDPrototype1300" class="NDPrototype NoParameterForm"><a href="../../../index.html#File:Base/Core/IRefCount.h:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,61);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Rendering/Caustic/IShader.h:IShader" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,704);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IShader</a>&gt; CGPUPipelineNodeBase::GetShader()</div>
+ <div class="CBody"><p>See &lt;IGPUPipelineNode::GetShader&gt;</p></div>
+</div>
+
+<a name="GPUVertex.GetInput"></a><a name="Topic1301"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetInput</div>
+ <div id="NDPrototype1301" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><a href="../../../index.html#File:Base/Core/IRefCount.h:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,61);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Imaging/GPUImage/GPUPipeline.h:IGPUPipelineNode" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1278);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipelineNode</a>&gt; CGPUPipelineNodeBase::GetInput(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><span class="SHKeyword">wchar_t</span>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pName</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div class="CBody"><p>See &lt;IGPUPipelineNode::GetInput&gt;</p></div>
+</div>
+
+<a name="GPUVertex.SetInput"></a><a name="Topic1302"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">SetInput</div>
+ <div id="NDPrototype1302" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CGPUPipelineNodeBase::SetInput(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><span class="SHKeyword">wchar_t</span>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pName,</td></tr><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><span class="SHKeyword">wchar_t</span>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pSamplerName,</td></tr><tr><td class="first"></td><td class="PType"><a href="../../../index.html#File:Imaging/GPUImage/GPUPipeline.h:IGPUPipelineNode" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1278);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipelineNode</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pNode</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div class="CBody"><p>See &lt;IGPUPipelineNode::SetInput&gt;</p></div>
+</div>
+
+<a name="GPUVertex.GetOutputTexture"></a><a name="Topic1303"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetOutputTexture</div>
+ <div id="NDPrototype1303" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><a href="../../../index.html#File:Base/Core/IRefCount.h:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,61);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Rendering/Caustic/ITexture.h:ITexture" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,730);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ITexture</a>&gt; CGPUPipelineNodeBase::GetOutputTexture(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Imaging/GPUImage/GPUPipeline.h:IGPUPipeline" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1283);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipeline</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pPipeline</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div class="CBody"><p>See &lt;IGPUPipelineNode::GetOutputTexture&gt;</p></div>
+</div>
+
+<a name="GPUVertex.GetOutputTexture(2)"></a><a name="Topic1304"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetOutputTexture</div>
+ <div class="CBody"><p>See &lt;IGPUPipelineNode::GetOutputTexture&gt;</p></div>
+</div>
+
+<a name="GPUVertex.Process"></a><a name="Topic1305"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">Process</div>
+ <div id="NDPrototype1305" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CGPUPipelineNodeBase::Process(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Imaging/GPUImage/GPUPipeline.h:IGPUPipeline" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1283);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipeline</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pPipeline</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div class="CBody"><p>See &lt;IGPUPipelineNode::Process&gt;</p></div>
+</div>
+
+<a name="GPUVertex.SetSource"></a><a name="Topic1306"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">SetSource</div>
+ <div id="NDPrototype1306" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CGPUPipelineSourceNode::SetSource(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Imaging/GPUImage/GPUPipeline.h:IGPUPipeline" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1283);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipeline</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pPipeline,</td></tr><tr><td class="PType first"><a href="../../../index.html#File:Imaging/Image/Image.h:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,439);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pSource</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div class="CBody"><p>See &lt;IGPUPipelineSourceNode::SetSource&gt;</p></div>
+</div>
+
+<a name="GPUVertex.GetOutputTexture(3)"></a><a name="Topic1307"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetOutputTexture</div>
+ <div id="NDPrototype1307" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><a href="../../../index.html#File:Base/Core/IRefCount.h:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,61);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Rendering/Caustic/ITexture.h:ITexture" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,730);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ITexture</a>&gt; CGPUPipelineSourceNode::GetOutputTexture(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Imaging/GPUImage/GPUPipeline.h:IGPUPipeline" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1283);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipeline</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pPipeline</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div class="CBody"><p>See &lt;IGPUPipelineSourceNode::GetOutputTexture&gt;</p></div>
+</div>
+
+<a name="GPUVertex.Process(2)"></a><a name="Topic1308"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">Process</div>
+ <div id="NDPrototype1308" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CGPUPipelineSinkNode::Process(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Imaging/GPUImage/GPUPipeline.h:IGPUPipeline" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1283);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipeline</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pPipeline</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div class="CBody"><p>See &lt;IGPUPipelineNode::Process&gt;</p></div>
+</div>
+
+<a name="GPUVertex.GetOutput"></a><a name="Topic1309"></a><div class="CTopic TFunction LC last">
+ <div class="CTitle">GetOutput</div>
+ <div id="NDPrototype1309" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><a href="../../../index.html#File:Base/Core/IRefCount.h:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,61);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Imaging/Image/Image.h:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,439);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>&gt; CGPUPipelineSinkNode::GetOutput(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Imaging/GPUImage/GPUPipeline.h:IGPUPipeline" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1283);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipeline</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pPipeline</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div class="CBody"><p>See <a href="../../../index.html#File:Imaging/GPUImage/GPUPipeline.h:IGPUPipelineSinkNode.GetOutput" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1282);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipelineSinkNode::GetOutput</a></p></div>
 </div>
 
 </body></html>

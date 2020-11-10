@@ -40,6 +40,19 @@ namespace Caustic
     };
 
     //**********************************************************************
+    // Class: CQuadVertex
+    // Vertex structure for drawing screen space quads
+    //
+    // Header:
+    // [Link:Rendering/Caustic/Renderer.h]
+    //**********************************************************************
+    struct CQuadVertex
+    {
+        float x, y, z;
+        float u, v;
+    };
+
+    //**********************************************************************
     // Class: CLight
     // Class implementing <IPointLight>
     //
@@ -142,7 +155,7 @@ namespace Caustic
 
         friend CAUSTICAPI CRefObj<IRenderer> CreateGraphics(HWND hwnd);
 
-        void InitializeD3D(HWND hwnd);
+        virtual void InitializeD3D(HWND hwnd);
         void Setup(HWND hwnd, bool createDebugDevice);
         void SetCamera(ICamera* pCamera);
         CComPtr<ID3D11Device> GetDevice() { return m_spDevice; }
@@ -177,6 +190,8 @@ namespace Caustic
     // m_exitThread - Controls whether we are exiting the render thread
     // m_spLineVB - Vertex buffer used to draw lines
     // m_spLineShader - Shader used to draw lines
+    // m_spQuadVB - Vertex buffer used to draw screen space quads
+    // m_spQuadShader - Shader used to draw screen space quads
     //
     // Header:
     // [Link:Rendering/Caustic/Renderer.h]
@@ -186,6 +201,8 @@ namespace Caustic
         public IRenderer
     {
     protected:
+        HANDLE m_freezeEvent;
+        bool m_freeze;
         std::stack<ShadowMapRenderState> m_cameras;         // Cameras from shadow mapping
         DWORD m_renderThreadId;                             // Render thread's ID
         std::vector<CRefObj<IRenderable>> m_singleObjs;              // List of individual renderable objects (outside scene graph)
@@ -196,6 +213,9 @@ namespace Caustic
         bool m_exitThread;                                  // Controls whether we are exiting the render thread
         CComPtr<ID3D11Buffer> m_spLineVB;                   // Vertex buffer used to draw lines
         CRefObj<IShader> m_spLineShader;                    // Shader used to draw lines
+        CComPtr<ID3D11Buffer> m_spQuadVB;                   // Vertex buffer used to draw screen space quads
+        CComPtr<ID3D11Buffer> m_spQuadIB;                   // Index buffer used to draw screen space quads
+        CRefObj<IShader> m_spQuadShader;                    // Shader used to draw screen space quads
 
 #ifdef DIAGNOSTICS
         void CheckThread()
@@ -220,7 +240,7 @@ namespace Caustic
         virtual ~CRenderer();
         void RenderLoop(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback);
         void RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback);
-        void InitializeD3D(HWND hwnd);
+        virtual void InitializeD3D(HWND hwnd) override;
         
         //**********************************************************************
         // IRefCount
@@ -232,15 +252,14 @@ namespace Caustic
         // IRenderer
         //**********************************************************************
         virtual CComPtr<ID3D11Device> GetDevice() override { CHECKTHREAD;  return CGraphicsBase::GetDevice(); }
-        virtual void LoadShaders(const wchar_t* pFolder) overload;
+        virtual void Freeze() override;
+        virtual void Unfreeze() override;
+        virtual void DrawScreenQuad(float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler *pSampler) override;
+        virtual void LoadShaders(const wchar_t* pFolder) override;
         virtual CComPtr<ID3D11DeviceContext> GetContext() override { CHECKTHREAD; return CGraphicsBase::GetContext(); }
         virtual CRefObj<ICamera> GetCamera() override { CHECKTHREAD; return CGraphicsBase::GetCamera(); }
         virtual void SetCamera(ICamera* pCamera) override { CHECKTHREAD; CGraphicsBase::SetCamera(pCamera); }
         virtual CRefObj<IShaderMgr> GetShaderMgr() override { CHECKTHREAD; return CGraphicsBase::GetShaderMgr(); }
-
-        //**********************************************************************
-        // IRenderer
-        //**********************************************************************
         virtual void AddRenderable(IRenderable* pRenderable) override;
         virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice) override;
         virtual void DrawMesh(IRenderSubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) override;

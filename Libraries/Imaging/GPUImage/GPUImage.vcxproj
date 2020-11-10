@@ -94,31 +94,40 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Quad.vs">
-      <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS Quad</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd VS Quad</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">QuadVS.h;QuadVS.tbl</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">QuadVS.h;QuadVS.tbl</Outputs>
-    </None>
+    <CustomBuild Include="Gaussian.xml">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Imaging\GPUImage\Gaussian.xml -o $(CausticRoot)\$(Configuration)\Gaussian.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Imaging\GPUImage\Gaussian.xml -o $(CausticRoot)\$(Configuration)\Gaussian.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\Gaussian.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\Gaussian.shi</Outputs>
+      <SubType>Designer</SubType>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Gaussian.ps">
-      <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS Gaussian</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS Gaussian</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">GaussianPS.h;GaussianPS.tbl</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">GaussianPS.h;GaussianPS.tbl</Outputs>
-    </None>
+    <CustomBuild Include="RawCopy.xml">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Imaging\GPUImage\RawCopy.xml -o $(CausticRoot)\$(Configuration)\RawCopy.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Imaging\GPUImage\RawCopy.xml -o $(CausticRoot)\$(Configuration)\RawCopy.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\RawCopy.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\RawCopy.shi</Outputs>
+      <SubType>Designer</SubType>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <None Include="RawCopy.ps">
-      <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS RawCopy</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(CausticRoot)\Tools\CompileShader\CompileShader.cmd PS RawCopy</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">RawCopyPS.h;RawCopyPS.tbl</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">RawCopyPS.h;RawCopyPS.tbl</Outputs>
-    </None>
+    <None Include="DepthSel.ps" />
+    <None Include="Gaussian.ps" />
+    <None Include="Quad.vs" />
+    <None Include="RawCopy.ps" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="DepthSel.xml">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Imaging\GPUImage\DepthSel.xml -o $(CausticRoot)\$(Configuration)\DepthSel.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Imaging\GPUImage\DepthSel.xml -o $(CausticRoot)\$(Configuration)\DepthSel.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\DepthSel.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\DepthSel.shi</Outputs>
+    </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

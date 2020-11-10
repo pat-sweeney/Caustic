@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:CDepthOfFieldFilter","CDepthOfFieldFilter");NDSummary.OnSummaryLoaded("CClass:CDepthOfFieldFilter",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[1272,0,0,"CDepthOfFieldFilter"],[1273,0,2,"Functions","Functions"],[1274,0,1,"CreateDepthOfFieldFilter","CreateDepthOfFieldFilter"],[1275,0,1,"Apply","Apply"]]);

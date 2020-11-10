@@ -45,6 +45,33 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Method: Freeze
+    // See <IRenderer::Freeze>
+    //**********************************************************************
+    void CRendererMarshaller::Freeze()
+    {
+        m_renderQueue.AddLambda(
+            [this]()
+            {
+                m_spRenderer->Freeze();
+            }
+        );
+    }
+    //**********************************************************************
+    // Method: Unfreeze
+    // See <IRenderer::Unfreeze>
+    //**********************************************************************
+    void CRendererMarshaller::Unfreeze()
+    {
+        m_renderQueue.AddLambda(
+            [this]()
+            {
+                m_spRenderer->Unfreeze();
+            }
+        );
+    }
+
+    //**********************************************************************
     // Method: RenderThreadProc
     // Entry point for the render thread.
     //
@@ -267,12 +294,40 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Method: DrawScreenQuad
+    // See <IRenderer::DrawScreenQuad>
+    //**********************************************************************
+    void CRendererMarshaller::DrawScreenQuad(float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler *pSampler)
+    {
+        m_renderQueue.AddLambda(
+            [this, minU, minV, maxU, maxV, pTexture, pSampler]()
+            {
+                m_spRenderer->DrawScreenQuad(minU, minV, maxU, maxV, pTexture, pSampler);
+            }
+        );
+    }
+
+    //**********************************************************************
     // Method: GetDevice
     // See <IRenderer::GetDevice>
     //**********************************************************************
     CComPtr<ID3D11Device> CRendererMarshaller::GetDevice()
     {
         return CComPtr<ID3D11Device>(nullptr); // We don't allow the client access to the D3D device
+    }
+
+    //**********************************************************************
+    // Method: LoadShaders
+    // See <IRenderer::LoadShaders>
+    //**********************************************************************
+    void CRendererMarshaller::LoadShaders(const wchar_t* pFolder)
+    {
+        m_renderQueue.AddLambda(
+            [this, pFolder]()
+            {
+                m_spRenderer->LoadShaders(pFolder);
+            }
+        );
     }
 
     //**********************************************************************

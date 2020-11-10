@@ -1,0 +1,18 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2015-2020
+// All Rights Reserved
+//**********************************************************************
+Texture2D tex : register(t0);
+SamplerState s : register(s0);
+
+struct VSOutput
+{
+    float4 posPS : SV_POSITION; // Position of vertex in projected coordinates
+    float2 uvs : TEXCOORD0; // UV coordinates
+};
+
+float4 PS(VSOutput p) : SV_Target
+{
+    float4 clr = tex.Sample(s, p.uvs);
+    return float4(clr.xyz, 1.0f);
+}

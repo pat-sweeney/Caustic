@@ -58,11 +58,11 @@ namespace Caustic
         // ISampler
         //**********************************************************************
         virtual D3D11_FILTER GetFilter() override { return m_Filter; }
-        virtual void SetFilter(D3D11_FILTER filter) override { m_Filter = filter; }
+        virtual void SetFilter(IRenderer* pRenderer, D3D11_FILTER filter) override;
         virtual D3D11_TEXTURE_ADDRESS_MODE GetAddressU() override { return m_AddressU; }
-        virtual void SetAddressU(D3D11_TEXTURE_ADDRESS_MODE address) override { m_AddressU = address; }
+        virtual void SetAddressU(IRenderer* pRenderer, D3D11_TEXTURE_ADDRESS_MODE address) override;
         virtual D3D11_TEXTURE_ADDRESS_MODE GetAddressV() override { return m_AddressV; }
-        virtual void SetAddressV(D3D11_TEXTURE_ADDRESS_MODE address) override { m_AddressV = address; }
+        virtual void SetAddressV(IRenderer* pRenderer, D3D11_TEXTURE_ADDRESS_MODE address) override;
         virtual void Render(IRenderer* pRenderer, int slot, bool isPixelShader) override;
         virtual CRefObj<ITexture> GetTexture() override;
     };

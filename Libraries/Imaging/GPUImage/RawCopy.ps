@@ -3,7 +3,11 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "defs.h"
+struct VSOutput
+{
+    float4 pos : SV_POSITION;
+    float2 uvs : TEXCOORD0;
+};
 
 Texture2D sourceTexture1 : register(t0);
 SamplerState sourceSampler1 : register(s0);

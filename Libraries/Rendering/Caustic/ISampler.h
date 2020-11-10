@@ -37,9 +37,10 @@ namespace Caustic
         // Set the current filter state
         //
         // Parameters:
+        // pRenderer - Renderer
         // filter - filter state to set
         //**********************************************************************
-        virtual void SetFilter(D3D11_FILTER filter) = 0;
+        virtual void SetFilter(IRenderer* pRenderer, D3D11_FILTER filter) = 0;
 
         //**********************************************************************
         // Method: GetAddressU
@@ -53,9 +54,10 @@ namespace Caustic
         // Set the current addressing mode in the U direction
         //
         // Parameters:
+        // pRenderer - Renderer
         // mode - addressing mode to set
         //**********************************************************************
-        virtual void SetAddressU(D3D11_TEXTURE_ADDRESS_MODE mode) = 0;
+        virtual void SetAddressU(IRenderer* pRenderer, D3D11_TEXTURE_ADDRESS_MODE mode) = 0;
 
         //**********************************************************************
         // Method: GetAddressV
@@ -69,9 +71,10 @@ namespace Caustic
         // Set the current addressing mode in the V direction
         //
         // Parameters:
+        // pRenderer - Renderer
         // mode - addressing mode to set
         //**********************************************************************
-        virtual void SetAddressV(D3D11_TEXTURE_ADDRESS_MODE mode) = 0;
+        virtual void SetAddressV(IRenderer* pRenderer, D3D11_TEXTURE_ADDRESS_MODE mode) = 0;
 
         //**********************************************************************
         // Method: Render

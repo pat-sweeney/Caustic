@@ -1055,9 +1055,5 @@ namespace Caustic
         {
             m_shaders[std::wstring(pShaderName)] = CRefObj<IShader>(pShader);
         }
-        else
-        {
-            CT(E_FAIL);
-        }
     }
 };

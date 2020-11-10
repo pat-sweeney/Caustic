@@ -35,6 +35,17 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <CustomBuild Include="RawCopy.xml">
+      <Filter>Source Files\Shaders</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Gaussian.xml">
+      <Filter>Source Files\Shaders</Filter>
+    </CustomBuild>
+    <CustomBuild Include="DepthSel.xml">
+      <Filter>Source Files\Shaders</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Gaussian.ps">
       <Filter>Source Files\Shaders</Filter>
     </None>
@@ -42,6 +53,9 @@
       <Filter>Source Files\Shaders</Filter>
     </None>
     <None Include="RawCopy.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="DepthSel.ps">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>

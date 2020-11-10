@@ -10,6 +10,7 @@
 #include "Renderer.h"
 #include "Renderable.h"
 #include "ShaderInfo.h"
+#include "Sampler.h"
 #include <vector>
 #include <any>
 #include "Base\Core\CritSec.h"
@@ -33,6 +34,8 @@ namespace Caustic
         m_waitForShutdown(true, true),
         m_exitThread(false)
     {
+        m_freezeEvent = CreateEvent(nullptr, true, false, nullptr);
+        m_freeze = false;
     }
 
     //**********************************************************************
@@ -56,6 +59,7 @@ namespace Caustic
     {
         CGraphicsBase::InitializeD3D(hwnd);
 
+#ifdef SUPPORT_OBJECT_IDS
         // Create texture for rendering object IDs
         CD3D11_TEXTURE2D_DESC texObjID(DXGI_FORMAT_R32_UINT, m_BBDesc.Width, m_BBDesc.Height, 1, 1, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
         CT(m_spDevice->CreateTexture2D(&texObjID, NULL, &m_spObjIDTexture));
@@ -64,6 +68,25 @@ namespace Caustic
         objIDRVDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
         objIDRVDesc.Texture2D.MipSlice = 0;
         CT(m_spDevice->CreateRenderTargetView(m_spObjIDTexture, &objIDRVDesc, &m_spObjIDRTView));
+#endif // SUPPORT_OBJECT_IDS
+
+        // Make sure rasterizer is setup the way we expect it to be
+        //   - BackFace Culling on
+        //   - Front Faces are counter clockwise
+        CComPtr<ID3D11RasterizerState> spRasterizerState;
+        D3D11_RASTERIZER_DESC desc;
+        desc.FrontCounterClockwise = true;
+        desc.CullMode = D3D11_CULL_BACK;
+        desc.AntialiasedLineEnable = false;
+        desc.DepthBias = 0;
+        desc.DepthBiasClamp = 0.0f;
+        desc.DepthClipEnable = true;
+        desc.FillMode = D3D11_FILL_MODE::D3D11_FILL_SOLID;
+        desc.MultisampleEnable = true;
+        desc.SlopeScaledDepthBias = 0.0f;
+        desc.ScissorEnable = false;
+        CT(m_spDevice->CreateRasterizerState(&desc, &spRasterizerState));
+        m_spContext->RSSetState(spRasterizerState);
     }
 
     //**********************************************************************
@@ -78,9 +101,10 @@ namespace Caustic
         if (shaderFolder.empty())
             shaderFolder = std::wstring(DEFAULT_SHADER_PATH);
         m_spShaderMgr = CRefObj<IShaderMgr>(new CShaderMgr());
-        LoadDefaultShaders(shaderFolder.c_str());
+        LoadShaders(shaderFolder.c_str());
 
         m_spLineShader = m_spShaderMgr->FindShader(L"Line");
+        m_spQuadShader = m_spShaderMgr->FindShader(L"ScreenQuad");
 
         //**********************************************************************
         // Create vertex buffer used to draw lines
@@ -100,6 +124,54 @@ namespace Caustic
             data.SysMemSlicePitch = 0;
             CT(m_spDevice->CreateBuffer(&bufdesc, &data, &m_spLineVB));
         }
+
+        //**********************************************************************
+        // Create vertex buffer used to draw screen space quads
+        //**********************************************************************
+        {
+            CD3D11_BUFFER_DESC bufdesc(sizeof(CQuadVertex) * 4, D3D11_BIND_VERTEX_BUFFER);
+            CQuadVertex quadPts[4] = {
+                { -1.0f, -1.0f, 0.9f, 0.0f, 1.0f },
+                { -1.0f, +1.0f, 0.9f, 0.0f, 0.0f, },
+                { +1.0f, +1.0f, 0.9f, 1.0f, 0.0f, },
+                { +1.0f, -1.0f, 0.9f, 1.0f, 1.0f },
+            };
+            D3D11_SUBRESOURCE_DATA data;
+            data.pSysMem = quadPts;
+            data.SysMemPitch = 0;
+            data.SysMemSlicePitch = 0;
+            CT(m_spDevice->CreateBuffer(&bufdesc, &data, &m_spQuadVB));
+
+            CD3D11_BUFFER_DESC indexbufdesc(sizeof(UINT) * 6, D3D11_BIND_INDEX_BUFFER);
+            UINT quadIndices[2][3] = {
+                { 0, 2, 1 },
+                { 0, 3, 2 },
+            };
+            data.pSysMem = quadIndices;
+            data.SysMemPitch = 0;
+            data.SysMemSlicePitch = 0;
+            CT(m_spDevice->CreateBuffer(&indexbufdesc, &data, &m_spQuadIB));
+        }
+    }
+
+    //**********************************************************************
+    // Method: Freeze
+    // See <IRenderer::Freeze>
+    //**********************************************************************
+    void CRenderer::Freeze()
+    {
+        m_freeze = true;
+        ResetEvent(m_freezeEvent);
+    }
+
+    //**********************************************************************
+    // Method: Unfreeze
+    // See <IRenderer::Unfreeze>
+    //**********************************************************************
+    void CRenderer::Unfreeze()
+    {
+        m_freeze = false;
+        SetEvent(m_freezeEvent);
     }
 
     //**********************************************************************
@@ -136,6 +208,45 @@ namespace Caustic
     CRefObj<IShaderInfo> CRenderer::LoadShaderInfo(std::wstring &filename)
     {
         return CCausticFactory::Instance()->CreateShaderInfo(filename.c_str());
+    }
+
+    //**********************************************************************
+    // Method: DrawScreenQuad
+    // See <IRenderer::DrawScreenQuad>
+    //**********************************************************************
+    void CRenderer::DrawScreenQuad(float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler *pSampler)
+    {
+        CHECKTHREAD;
+#ifdef _DEBUG
+        CComPtr<ID3D11DeviceContext2> spCtx2;
+        CT(m_spContext->QueryInterface<ID3D11DeviceContext2>(&spCtx2));
+#endif
+#ifdef _DEBUG
+        spCtx2->BeginEventInt(L"ScreenQuad", 0);
+#endif
+        UINT offset = 0;
+        UINT vertexSize = sizeof(CQuadVertex);
+        ID3D11DeviceContext* pContext = GetContext();
+        pContext->IASetVertexBuffers(0, 1, &m_spQuadVB.p, &vertexSize, &offset);
+        pContext->IASetIndexBuffer(m_spQuadIB, DXGI_FORMAT::DXGI_FORMAT_R32_UINT, 0);
+        m_spQuadShader->SetPSParam(L"tex", std::any(CRefObj<ITexture>(pTexture)));
+        std::vector<CRefObj<ILight>> lights;
+
+        CRefObj<ISampler> spSampler;
+        if (pSampler == nullptr)
+        {
+            spSampler = CCausticFactory::Instance()->CreateSampler(this, pTexture);
+            pSampler = spSampler.p;
+        }
+        m_spQuadShader->SetPSParam(L"s", std::any(CSamplerRef(pSampler)));
+
+        m_spQuadShader->BeginRender(this, nullptr, nullptr, lights, nullptr);
+        pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        pContext->DrawIndexed(6, 0, 0);
+        m_spQuadShader->EndRender(this);
+#ifdef _DEBUG
+        spCtx2->EndEvent();
+#endif
     }
 
     //**********************************************************************
@@ -507,6 +618,9 @@ namespace Caustic
     //**********************************************************************
     void CRenderer::RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback)
     {
+        if (m_freeze)
+            WaitForSingleObject(m_freezeEvent, INFINITE);
+
         ID3D11RenderTargetView *pView = m_spRTView;
         m_spContext->OMSetRenderTargets(1, &pView, nullptr);
 

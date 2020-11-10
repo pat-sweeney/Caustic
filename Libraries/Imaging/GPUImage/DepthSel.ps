@@ -1,0 +1,105 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2015-2020
+// Licensed under the MIT license.
+// See file LICENSE for details.
+//**********************************************************************
+struct VSOutput
+{
+    float4 pos : SV_POSITION;
+    float2 uvs : TEXCOORD0;
+};
+
+Texture2D colorTex : register(t0); // Color texture
+Texture2D blurTex : register(t1); // Blurred color texture
+SamplerState colorSampler : register(s0);
+Texture2D<uint> depthTex : register(t2); // Depth texture
+Texture2D<float4> rayTexture : register(t3);
+
+cbuffer VS_CONSTANT_BUFFER : register(b0)
+{
+    float4x4 colorExt;
+    float4x4 colorInt;
+    float cx;
+    float cy;
+    float fx;
+    float fy;
+    float k1;
+    float k2;
+    float k3;
+    float k4;
+    float k5;
+    float k6;
+    float p1;
+    float p2;
+    float codx;
+    float cody;
+    float metricRadius;
+    float dummy;
+    int type;
+};
+
+float2 Project3D(float3 p)
+{
+    if (abs(p.z) < 0.001)
+        return float2(0.0f, 0.0f);
+    p.x /= p.z;
+    p.y /= p.z;
+    float xp = p.x - codx;
+    float yp = p.y - cody;
+    float xp2 = xp * xp;
+    float yp2 = yp * yp;
+    float xyp = xp * yp;
+    float rs = xp2 + yp2;
+    if (rs > metricRadius * metricRadius)
+        return float4(0.0f, 0.0f, 0.0f, 1.0f);
+    float rss = rs * rs;
+    float rsc = rss * rs;
+    float a = 1.f + k1 * rs + k2 * rss + k3 * rsc;
+    float b = 1.f + k4 * rs + k5 * rss + k6 * rsc;
+    float bi;
+    if (b != 0.f)
+        bi = 1.0f / b;
+    else
+        bi = 1.0f;
+    float d = a * bi;
+    float xp_d = xp * d;
+    float yp_d = yp * d;
+    float rs_2xp2 = rs + 2.0f * xp2;
+    float rs_2yp2 = rs + 2.0f * yp2;
+    if (type == 3)
+    {
+        xp_d += rs_2xp2 * p2 + xyp * p1;
+        yp_d += rs_2yp2 * p1 + xyp * p2;
+    }
+    else
+    {
+        // the only difference from Rational6ktCameraModel is 2 multiplier for the tangential coefficient term xyp*p1
+        // and xyp*p2
+        xp_d += rs_2xp2 * p2 + 2.0f * xyp * p1;
+        yp_d += rs_2yp2 * p1 + 2.0f * xyp * p2;
+    }
+    float xp_d_cx = xp_d + codx;
+    float yp_d_cy = yp_d + cody;
+    return float2(xp_d_cx * fx + cx, yp_d_cy * fy + cy);
+}
+
+float4 PS(VSOutput p) : SV_Target
+{
+    float ux = p.uvs.x;
+    float uy = p.uvs.y;
+    int3 pc = int3(ux * 1024, uy * 1024, 0);
+    int depth = depthTex.Load(pc);
+
+    int3 rp = int3(ux * 1024, uy * 1024, 0);
+    float4 ray = rayTexture.Load(rp);
+    float4 pos = float4(ray.xyz * float(depth), 1.0);
+    float3 posDS = pos.xyz;
+
+    posDS = mul(float4(posDS, 1.0f),colorExt);
+    float2 posCP = Project3D(posDS.xyz);
+    posCP.x /= 1920.0f;
+    posCP.y /= 1080.0f;
+    if (depth == 0 || depth > 1000 || posCP.x < 0.0f || posCP.x > 1.0f || posCP.y < 0.0f || posCP.y > 1.0f)
+        return float4(blurTex.Sample(colorSampler, posCP.xy).xyz, 1.0f);
+    return float4(colorTex.Sample(colorSampler, posCP.xy).xyz, 1.0f);
+}

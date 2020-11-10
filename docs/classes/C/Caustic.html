@@ -29,6 +29,18 @@
  <div class="CBody"><p>Converts a UTF16 string into a UTF8 string</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">str</td><td class="CDLDefinition"><p>String to convert</p></td></tr></table><div class="CHeading">Returns</div><p>Returns the converted string</p><div class="CHeading">Header</div><p><a href='../../index.html#File:Base/Core/convertStr.h' target='_top'>Base/Core/convertStr.h</a></p></div>
 </div>
 
+<a name="GetCausticRootDirectory"></a><a name="Topic1267"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetCausticRootDirectory</div>
+ <div id="NDPrototype1267" class="NDPrototype NoParameterForm">std::wstring GetCausticRootDirectory()</div>
+ <div class="CBody"><p>Returns the default folder for the Caustic library</p></div>
+</div>
+
+<a name="GetCausticShaderDirectory"></a><a name="Topic1268"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetCausticShaderDirectory</div>
+ <div id="NDPrototype1268" class="NDPrototype NoParameterForm">std::wstring GetCausticShaderDirectory()</div>
+ <div class="CBody"><p>Returns the default folder for the Caustic shaders</p></div>
+</div>
+
 <a name="Abs"></a><a name="Topic40"></a><div class="CTopic TFunction LC">
  <div class="CTitle">Abs</div>
  <div id="NDPrototype40" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">inline</span> <span class="SHKeyword">float</span> Abs(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">float</span>&nbsp;</td><td class="PName last">x</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
@@ -95,6 +107,18 @@
  <div class="CBody"><p>Swaps value t1 with t2</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">t1<div class="CDLParameterType">T&amp;</div></td><td class="CDLDefinition"><p>first value</p></td></tr><tr><td class="CDLEntry">t2<div class="CDLParameterType">T&amp;</div></td><td class="CDLDefinition"><p>second value</p></td></tr></table></div>
 </div>
 
+<a name="GetCausticRootDirectory"></a><a name="Topic1269"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetCausticRootDirectory</div>
+ <div id="NDPrototype1269" class="NDPrototype NoParameterForm">std::wstring GetCausticRootDirectory()</div>
+ <div class="CBody"><p>Returns the default folder for the Caustic library</p></div>
+</div>
+
+<a name="GetCausticShaderDirectory"></a><a name="Topic1270"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetCausticShaderDirectory</div>
+ <div id="NDPrototype1270" class="NDPrototype NoParameterForm">std::wstring GetCausticShaderDirectory()</div>
+ <div class="CBody"><p>Returns the default folder for the Caustic shaders</p></div>
+</div>
+
 <a name="Covariance"></a><a name="Topic166"></a><div class="CTopic TFunction LC">
  <div class="CTitle">Covariance</div>
  <div id="NDPrototype166" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">double</span> Covariance(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first">std::</td><td class="PType">vector&lt;<span class="SHKeyword">double</span>&gt;&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">xdata,</td></tr><tr><td class="PModifierQualifier first">std::</td><td class="PType">vector&lt;<span class="SHKeyword">double</span>&gt;&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">ydata,</td></tr><tr><td class="first"></td><td class="PType"><span class="SHKeyword">bool</span>&nbsp;</td><td></td><td class="PName last">useSampleVariance</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
@@ -137,10 +161,33 @@
  <div class="CBody"><p>Tests if a point is inside the specified circumcircle</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">p0<div class="CDLParameterType"><a href="../../index.html#CClass:Vector2" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,76);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector2</a>&amp;</div></td><td class="CDLDefinition"><p>first point on circle</p></td></tr><tr><td class="CDLEntry">p1<div class="CDLParameterType"><a href="../../index.html#CClass:Vector2" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,76);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector2</a>&amp;</div></td><td class="CDLDefinition"><p>second point on circle</p></td></tr><tr><td class="CDLEntry">p2<div class="CDLParameterType"><a href="../../index.html#CClass:Vector2" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,76);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector2</a>&amp;</div></td><td class="CDLDefinition"><p>third point on circle</p></td></tr><tr><td class="CDLEntry">pt<div class="CDLParameterType"><a href="../../index.html#CClass:Vector2" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,76);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector2</a>&amp;</div></td><td class="CDLDefinition"><p>Point to test</p></td></tr></table><div class="CHeading">Returns</div><p>True if point is in circumcircle. False otherwise.</p><div class="CHeading">Header</div><p><a href='../../index.html#File:Base/Math/Helper.h' target='_top'>Base/Math/Helper.h</a></p></div>
 </div>
 
-<a name="CreateShader"></a><a name="Topic371"></a><div class="CTopic TFunction LC">
- <div class="CTitle">CreateShader</div>
- <div id="NDPrototype371" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CGPUPipeline::CreateShader(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first">BYTE&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pShaderCode,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td></td><td class="PName last">shaderCodeSize,</td></tr><tr><td class="PType first">ShaderDefs&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pShaderParams,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td></td><td class="PName last">shaderParamSize,</td></tr><tr><td class="PType first"><a href="../../index.html#CClass:IShader" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,704);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IShader</a>&nbsp;</td><td class="PNamePrefix">**</td><td class="PName last">ppShader</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
- <div class="CBody"><p>Creates a new shader using the specified byte code and list of shader parameters.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pShaderCode<div class="CDLParameterType">BYTE*</div></td><td class="CDLDefinition"><p>Pointer to byte array containing the shader executable</p></td></tr><tr><td class="CDLEntry">shaderCodeSize<div class="CDLParameterType"><span class="SHKeyword">uint32</span></div></td><td class="CDLDefinition"><p>Size of pShaderCode in bytes</p></td></tr><tr><td class="CDLEntry">pShaderParams<div class="CDLParameterType">ShaderDefs*</div></td><td class="CDLDefinition"><p>List of parameters to set on the shader</p></td></tr><tr><td class="CDLEntry">shaderParamSize<div class="CDLParameterType"><span class="SHKeyword">uint32</span></div></td><td class="CDLDefinition"><p>Number of parameters in pShaderParams</p></td></tr><tr><td class="CDLEntry">ppShader<div class="CDLParameterType"><a href="../../index.html#CClass:IShader" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,704);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IShader</a>**</div></td><td class="CDLDefinition"><p>Returns the newly created shader object</p></td></tr></table></div>
+<a name="CreateSourceNode"></a><a name="Topic1291"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">CreateSourceNode</div>
+ <div id="NDPrototype1291" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><a href="../../index.html#CClass:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,61);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../index.html#CClass:IGPUPipelineSourceNode" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1279);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipelineSourceNode</a>&gt; CGPUPipeline::CreateSourceNode(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,439);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pImage,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td></td><td class="PName last">outputWidth,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td></td><td class="PName last">outputHeight,</td></tr><tr><td class="PType first">DXGI_FORMAT&nbsp;</td><td></td><td class="PName last">format</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div class="CBody"><p>See <a href="../../index.html#CClass:IGPUPipeline:CreateSourceNode" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1288);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipeline::CreateSourceNode</a></p></div>
+</div>
+
+<a name="CreateSinkNode"></a><a name="Topic1292"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">CreateSinkNode</div>
+ <div id="NDPrototype1292" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><a href="../../index.html#CClass:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,61);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../index.html#CClass:IGPUPipelineSinkNode" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1280);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipelineSinkNode</a>&gt; CGPUPipeline::CreateSinkNode(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:IShader" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,704);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IShader</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pShader,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td></td><td class="PName last">outputWidth,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td></td><td class="PName last">outputHeight,</td></tr><tr><td class="PType first">DXGI_FORMAT&nbsp;</td><td></td><td class="PName last">format</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div class="CBody"><p>See <a href="../../index.html#CClass:IGPUPipeline:CreateSinkNode" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1289);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipeline::CreateSinkNode</a></p></div>
+</div>
+
+<a name="CreateNode"></a><a name="Topic1293"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">CreateNode</div>
+ <div id="NDPrototype1293" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><a href="../../index.html#CClass:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,61);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../index.html#CClass:IGPUPipelineNode" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1278);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipelineNode</a>&gt; CGPUPipeline::CreateNode(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:IShader" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,704);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IShader</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pShader,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td></td><td class="PName last">outputWidth,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td></td><td class="PName last">outputHeight,</td></tr><tr><td class="PType first">DXGI_FORMAT&nbsp;</td><td></td><td class="PName last">format</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div class="CBody"><p>See <a href="../../index.html#CClass:IGPUPipeline:CreateNode" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1290);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipeline::CreateNode</a></p></div>
+</div>
+
+<a name="Process"></a><a name="Topic1294"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">Process</div>
+ <div id="NDPrototype1294" class="NDPrototype NoParameterForm"><span class="SHKeyword">void</span> CGPUPipeline::Process()</div>
+ <div class="CBody"><p>See <a href="../../index.html#CClass:IGPUPipeline:Process" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1287);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipeline::Process</a></p></div>
+</div>
+
+<a name="Process(2)"></a><a name="Topic1295"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">Process</div>
+ <div class="CBody"><p>See <a href="../../index.html#CClass:IGPUPipeline:GetRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1285);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipeline::GetRenderer</a></p></div>
 </div>
 
 <a name="LoadImage"></a><a name="Topic456"></a><div class="CTopic TFunction LC">
@@ -223,18 +270,9 @@
  <div class="CTitle">Constants</div>
 </div>
 
-<a name="c_Epsilon"></a><a name="Topic38"></a><div class="CTopic TConstant LC">
+<a name="c_Epsilon"></a><a name="Topic38"></a><div class="CTopic TConstant LC last">
  <div class="CTitle">c_Epsilon</div>
  <div class="CBody"><p>Value considered close to 0.0</p></div>
-</div>
-
-<a name="Variables"></a><a name="Topic368"></a><div class="CTopic TGroup LC">
- <div class="CTitle">Variables</div>
-</div>
-
-<a name="s_defaultVSLayout"></a><a name="Topic369"></a><div class="CTopic TVariable LC last">
- <div class="CTitle">s_defaultVSLayout</div>
- <div class="CBody"><p>s_defaultVSLayout defines the default layout for our default vertex</p></div>
 </div>
 
 </body></html>

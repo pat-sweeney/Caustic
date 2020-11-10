@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("cgp",["Class"],[["CGPUPipelineNode",,[[,,,,0,"File:Imaging/GPUImage/GPUPipelineImpl.h:CGPUPipelineNode","CClass:CGPUPipelineNode"]]],["CGPUPipelineNodeBase",,[[,,,,0,"File:Imaging/GPUImage/GPUPipelineImpl.h:CGPUPipelineNodeBase","CClass:CGPUPipelineNodeBase"]]]]);

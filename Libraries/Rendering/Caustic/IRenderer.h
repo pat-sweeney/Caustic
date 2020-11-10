@@ -25,6 +25,7 @@ namespace Caustic
     struct IPointLight;
     struct IShader;
     struct ICamera;
+    struct ISampler;
 
     //**********************************************************************
     // Struct: MeshData
@@ -112,6 +113,18 @@ namespace Caustic
         virtual CComPtr<ID3D11Device> GetDevice() = 0;
 
         //**********************************************************************
+        // Method: Freeze
+        // Freezes the renderer
+        //**********************************************************************
+        virtual void Freeze() = 0;
+
+        //**********************************************************************
+        // Method: Unfreeze
+        // Unfreezes the renderer
+        //**********************************************************************
+        virtual void Unfreeze() = 0;
+
+        //**********************************************************************
         // Method: LoadShaders
         // Loads into our shader manager all the shaders in the specified folder
         //
@@ -119,6 +132,31 @@ namespace Caustic
         // pFolder - folder from which to load shaders
         //**********************************************************************
         virtual void LoadShaders(const wchar_t* pFolder) = 0;
+
+        //**********************************************************************
+        // Method: SetPostEffect
+        // Assigns a GPUImaging pipeline that is to run as a series of post effects
+        // on the final render buffer.
+        //
+        // Parameters:
+        // pPipeline - defines a GPU pipeline to run on the final rendered image
+        //**********************************************************************
+        // virtual void SetPostEffect(IGPUPipeline* pPipeline) = 0;
+
+        //**********************************************************************
+        // Method: DrawScreenQuad
+        // Renders a quad on the display at the specified uv coordinates.
+        // A full screen quad runs from 0.0,0.0 => 1.0,1.0
+        //
+        // Parameters:
+        // minU - minimum U
+        // minV - minimum V
+        // maxU - maximum U
+        // maxV - maximum V
+        // pTexture - Texture to render on quad
+        // pSampler - Sampler to use. Maybe nullptr
+        //**********************************************************************
+        virtual void DrawScreenQuad(float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler *pSampler) = 0;
 
         //**********************************************************************
         // Method: GetContext

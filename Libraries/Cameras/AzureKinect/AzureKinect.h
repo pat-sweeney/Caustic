@@ -48,6 +48,9 @@ namespace Caustic
         k4a_image_t m_depthImage;
         k4a_capture_t m_capture;
         bool m_cameraStarted;
+
+        CameraIntrinsics GetAzureIntrinsics(k4a_calibration_intrinsic_parameters_t& params);
+        Matrix4x4 BuildExtrinsics(k4a_calibration_extrinsics_t ext);
     public:
         CAzureKinectDevice();
         ~CAzureKinectDevice();
@@ -79,5 +82,7 @@ namespace Caustic
         //**********************************************************************
         virtual bool NextFrame(IImage** ppColorImage, std::vector<Vector3>& pts, std::vector<Vector3>& normals, BBox3 &bbox) override;
         virtual CRefObj<IImage> BuildRayMap(uint32 w, uint32 h) override;
+        virtual CameraIntrinsics GetAzureColorIntrinsics() override;
+        virtual CameraIntrinsics GetAzureDepthIntrinsics() override;
     };
 }

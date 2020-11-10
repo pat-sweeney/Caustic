@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:IGPUPipelineSourceNode","IGPUPipelineSourceNode");NDSummary.OnSummaryLoaded("CClass:IGPUPipelineSourceNode",[["C/C++","C"]],[["Interfaces","Interface"]],[[1279,0,0,"IGPUPipelineSourceNode"]]);

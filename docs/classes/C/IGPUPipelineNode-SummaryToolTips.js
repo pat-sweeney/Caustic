@@ -1,0 +1,1 @@
+NDSummary.OnToolTipsLoaded("CClass:IGPUPipelineNode",{1278:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines the base class for each node in a GPU pipeline</div></div>"});

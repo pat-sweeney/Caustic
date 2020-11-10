@@ -19,6 +19,7 @@ cbuffer PS_CONSTANT_BUFFER
 
 float4 PS(VSOutput p) : SV_Target
 {
+return sourceTexture1.Sample(sourceSampler1, p.uvs);
     float3 color = float3(0.0f, 0.0f, 0.0f);
     float2 deltauv = float2(1.0f / imageDims.x, 1.0f / imageDims.y);
     float2 uv = p.uvs - deltauv * numWeights / 2.0f;

@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("cde",["Class"],[["CDelaunay2",,[[,,,,0,"File:Geometry/Mesh/Delaunay.h:CDelaunay2","CClass:CDelaunay2"]]]]);
+NDSearch.OnPrefixDataLoaded("cde",["Class"],[["CDelaunay2",,[[,,,,0,"File:Geometry/Mesh/Delaunay.h:CDelaunay2","CClass:CDelaunay2"]]],["CDepthOfFieldFilter",,[[,,,,0,"File:Imaging/Image/DepthOfField.cpp:CDepthOfFieldFilter","CClass:CDepthOfFieldFilter"]]]]);

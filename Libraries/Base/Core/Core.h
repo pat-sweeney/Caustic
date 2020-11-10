@@ -6,6 +6,7 @@
 #pragma once
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <string>
 
 #ifdef CAUSTIC_EXPORT
 #define CAUSTICAPI __declspec(dllexport)
@@ -217,4 +218,16 @@ namespace Caustic
         t1 = t2;
         t2 = tmp;
     }
+
+	//**********************************************************************
+	// Function: GetCausticRootDirectory
+	// Returns the default folder for the Caustic library
+	//**********************************************************************
+	std::wstring GetCausticRootDirectory();
+
+	//**********************************************************************
+	// Function: GetCausticShaderDirectory
+	// Returns the default folder for the Caustic shaders
+	//**********************************************************************
+	std::wstring GetCausticShaderDirectory();
 }

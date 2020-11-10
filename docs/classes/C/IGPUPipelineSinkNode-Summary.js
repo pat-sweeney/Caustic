@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("CClass:IGPUPipelineSinkNode","IGPUPipelineSinkNode");NDSummary.OnSummaryLoaded("CClass:IGPUPipelineSinkNode",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Interfaces","Interface"]],[[1280,0,2,"IGPUPipelineSinkNode"],[1281,0,1,"Functions","Functions"],[1282,0,0,"GetOutput","GetOutput"]]);

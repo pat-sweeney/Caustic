@@ -19,11 +19,10 @@ namespace Caustic
     //**********************************************************************
     struct IGPUPipelineNode : public IRefCount
     {
-        virtual uint32 GetNumberInputs() = 0;
         virtual void SetShader(IShader *pShader) = 0;
         virtual CRefObj<IShader> GetShader() = 0;
-        virtual CRefObj<IGPUPipelineNode> GetInput(uint32 index) = 0;
-        virtual void SetInput(uint32 index, IGPUPipelineNode*pNode) = 0;
+        virtual CRefObj<IGPUPipelineNode> GetInput(const wchar_t *pName) = 0;
+        virtual void SetInput(const wchar_t* pName, const wchar_t* pSamplerName, IGPUPipelineNode*pNode) = 0;
         virtual void SetOutputSize(uint32 width, uint32 height) = 0;
         virtual uint32 GetOutputWidth() = 0;
         virtual uint32 GetOutputHeight() = 0;
@@ -103,37 +102,29 @@ namespace Caustic
         //
         // Parameters:
         // pImage - image to feed through pipeline
+        // format - format of output texture
         //**********************************************************************
-        virtual CRefObj<IGPUPipelineSourceNode> CreateSourceNode(IImage *pImage) = 0;
+        virtual CRefObj<IGPUPipelineSourceNode> CreateSourceNode(IImage *pImage, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM) = 0;
 
         //**********************************************************************
         // Method: CreateSinkNode
         // Returns a sink node.
         //
         // Parameters:
-        // numInputs - number of inputs into the sink node
         // pShader - shader to run on inputs
+        // format - format of output texture
         //**********************************************************************
-        virtual CRefObj<IGPUPipelineSinkNode> CreateSinkNode(uint32 numInputs, IShader *pShader) = 0;
+        virtual CRefObj<IGPUPipelineSinkNode> CreateSinkNode(IShader *pShader, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM) = 0;
 
         //**********************************************************************
         // Method: CreateNode
         // Returns a GPU node that makes up part of the pipeline.
         //
         // Parameters:
-        // numInputs - number of inputs into the node
         // pShader - shader to run on inputs
+        // format - format of output texture
         //**********************************************************************
-        virtual CRefObj<IGPUPipelineNode> CreateNode(uint32 numInputs, IShader *pShader) = 0;
-
-        //**********************************************************************
-        // Method: CreatePredefinedNode
-        // Returns a GPU node that has a predefined name (e.g. "GaussianBlur")
-        //
-        // Parameters:
-        // pNodeName - name of the node
-        //**********************************************************************
-        virtual CRefObj<IGPUPipelineNode> CreatePredefinedNode(wchar_t *pNodeName) = 0;
+        virtual CRefObj<IGPUPipelineNode> CreateNode(IShader *pShader, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM) = 0;
     };
     CAUSTICAPI CRefObj<IGPUPipeline> CreateGPUPipeline(IRenderer *pRenderer);
 }

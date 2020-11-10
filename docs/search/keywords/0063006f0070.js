@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("cop",["Function"],[["CopyFromImage",,[["ITexture",,,,0,"File:Rendering/Caustic/ITexture.h:ITexture.CopyFromImage","CClass:ITexture:CopyFromImage"]]]]);
+NDSearch.OnPrefixDataLoaded("cop",["Function"],[["CopyFromImage",,[[,,,,0,"File:Rendering/Caustic/Texture.cpp:CopyFromImage"],["ITexture",,,,0,"File:Rendering/Caustic/ITexture.h:ITexture.CopyFromImage","CClass:ITexture:CopyFromImage"]]]]);

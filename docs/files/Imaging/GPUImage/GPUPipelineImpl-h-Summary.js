@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("File:Imaging/GPUImage/GPUPipelineImpl.h","GPUPipelineImpl.h");NDSummary.OnSummaryLoaded("File:Imaging/GPUImage/GPUPipelineImpl.h",[["C/C++","C"]],[["Classes","Class"]],[[1276,0,0,"CGPUPipelineNodeBase","CGPUPipelineNodeBase"],[1277,0,0,"CGPUPipelineNode","CGPUPipelineNode"]]);
