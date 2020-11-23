@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Shader>
+  <PixelShader Filename="$(CausticRoot)\Libraries\Imaging\GPUImage\DepthSel2.ps" Output="$(CausticRoot)\$(Configuration)\DepthSel2_PS.cso"/>
+  <VertexShader Filename="$(CausticRoot)\Libraries\Imaging\GPUImage\Quad.vs" Output="$(CausticRoot)\$(Configuration)\DepthSel2_VS.cso"/>
+</Shader>

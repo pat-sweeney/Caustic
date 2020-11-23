@@ -116,7 +116,10 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <None Include="DepthMesh.ps" />
+    <None Include="DepthMesh.vs" />
     <None Include="DepthSel.ps" />
+    <None Include="DepthSel2.ps" />
     <None Include="Gaussian.ps" />
     <None Include="Quad.vs" />
     <None Include="RawCopy.ps" />
@@ -127,6 +130,22 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Imaging\GPUImage\DepthSel.xml -o $(CausticRoot)\$(Configuration)\DepthSel.shi</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\DepthSel.shi</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\DepthSel.shi</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="DepthSel2.xml">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Imaging\GPUImage\DepthSel2.xml -o $(CausticRoot)\$(Configuration)\DepthSel2.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Imaging\GPUImage\DepthSel2.xml -o $(CausticRoot)\$(Configuration)\DepthSel2.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\DepthSel2.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\DepthSel2.shi</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="DepthMesh.xml">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Imaging\GPUImage\DepthMesh.xml -o $(CausticRoot)\$(Configuration)\DepthMesh.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Imaging\GPUImage\DepthMesh.xml -o $(CausticRoot)\$(Configuration)\DepthMesh.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\DepthMesh.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\DepthMesh.shi</Outputs>
     </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

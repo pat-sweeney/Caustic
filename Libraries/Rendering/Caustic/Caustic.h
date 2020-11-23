@@ -34,3 +34,11 @@
 // This file defines the published interface for talking to the Caustic Renderer.
 // This include is usually the top level include that clients will use.
 //**********************************************************************
+namespace Caustic
+{
+	CAUSTICAPI CRefObj<IRenderSubMesh> BuildRenderSubMesh(IRenderer* pRenderer,
+		std::vector<CGeomFace>& faces, std::vector<CGeomVertex>& verts,
+		IShader* pShader);
+	CAUSTICAPI CRefObj<IRenderSubMesh> CreateDepthGridMesh(IRenderer* pRenderer,
+		uint32 width, uint32 height, IShader* pShader);
+}

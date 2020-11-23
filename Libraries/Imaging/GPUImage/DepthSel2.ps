@@ -1,0 +1,26 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2015-2020
+// Licensed under the MIT license.
+// See file LICENSE for details.
+//**********************************************************************
+struct VSOutput
+{
+    float4 pos : SV_POSITION;
+    float2 uvs : TEXCOORD0;
+};
+
+Texture2D colorTex : register(t0); // Color texture
+Texture2D blurTex : register(t1); // Blurred color texture
+SamplerState colorSampler : register(s0);
+Texture2D<float> depthTex : register(t2); // Depth texture
+
+float4 PS(VSOutput p) : SV_Target
+{
+    float ux = p.uvs.x;
+    float uy = p.uvs.y;
+    int3 pc = int3(ux * 1920, uy * 1080, 0);
+    float depth = depthTex.Load(pc);
+    if (depth == 0 || depth > 1000)
+        return float4(blurTex.Sample(colorSampler, p.uvs.xy).xyz, 1.0f);
+    return float4(colorTex.Sample(colorSampler, p.uvs.xy).xyz, 1.0f);
+}

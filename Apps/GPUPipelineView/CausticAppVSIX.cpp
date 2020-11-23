@@ -9,6 +9,7 @@
 #include "Rendering\Caustic\ICausticFactory.h"
 #include "Rendering\Caustic\IShader.h"
 #include "Imaging\GPUImage\GPUPipeline.h"
+#include "Imaging\GPUImage\GPUPipelineImpl.h"
 #include "Cameras\AzureKinect\IAzureKinect.h"
 #include <string>
 
@@ -25,6 +26,7 @@ struct CApp
     CRefObj<IGPUPipeline> spGPUPipeline;
     CRefObj<IGPUPipelineSourceNode> spSourceColorNode;
     CRefObj<IGPUPipelineSourceNode> spSourceDepthNode;
+    CRefObj<IGPUPipelineNode> spDepthMeshNode;
     CRefObj<IGPUPipelineNode> spNode;
     CRefObj<ITexture> spOutputTexture;
     CRefObj<IShader> spShader;
@@ -40,8 +42,106 @@ struct CApp
     Matrix3x3 cameraInt;
 
     void InitializeCaustic(HWND hwnd);
+    void InitializeCaustic2(HWND hwnd);
 };
 CApp app;
+
+void CApp::InitializeCaustic2(HWND hwnd)
+{
+    app.hwnd = hwnd;
+    spCausticFactory = Caustic::CreateCausticFactory();
+    std::wstring shaderFolder(SHADERPATH);
+    spRenderWindow = CreateRenderWindow(hwnd, shaderFolder,
+        [](IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)
+        {
+            if (pass != Caustic::c_PassOpaque)
+                return;
+            CRefObj<IImage> spColorImage;
+            CRefObj<IImage> spDepthImage;
+            if (app.spCamera)
+            {
+                if (app.spCamera->NextFrame(&spColorImage, &spDepthImage, nullptr))
+                {
+                    if (spColorImage)
+                        app.spLastColorImage = spColorImage;
+                    if (spDepthImage)
+                        app.spLastDepthImage = spDepthImage;
+                }
+                if (app.spSourceColorNode && app.spLastColorImage && app.spLastDepthImage)
+                {
+                    app.spSourceColorNode->SetSource(app.spGPUPipeline, app.spLastColorImage);
+                    app.spSourceDepthNode->SetSource(app.spGPUPipeline, app.spLastDepthImage);
+                    app.spNode->Process(app.spGPUPipeline);
+                    auto spTexture = app.spNode->GetOutputTexture(app.spGPUPipeline);
+                    if (spTexture)
+                        app.spRenderer->DrawScreenQuad(0.0f, 0.0f, 1.0f, 1.0f, spTexture, nullptr);
+                }
+            }
+        });
+    app.spRenderer = app.spRenderWindow->GetRenderer();
+    app.spRenderer->Freeze();
+
+    app.spCamera = Caustic::AzureKinect::CreateAzureKinect(1, AzureKinect::Color1080p, AzureKinect::Depth1024x1024, AzureKinect::FPS30);
+    app.cameraExt = app.spCamera->ColorExtrinsics();
+    app.cameraInt = app.spCamera->ColorIntrinsics();
+
+    app.spGPUPipeline = Caustic::CreateGPUPipeline(app.spRenderer);
+
+    //**********************************************************************
+    // Overall our pipeline looks like:
+    //    +-------------+      +-------------+
+    //    | Depth Image | ---> | Depth2Color | ---+
+    //    +-------------+      +-------------+    |    +----------+
+    //    +-------------+      +--------------+   +--> |          |
+    //    | Color Image | -+-> | BlurredColor | -----> | DepthSel |
+    //    +-------------+  |   +--------------+   +--> |          |
+    //                     |                      |    +----------+
+    //                     +----------------------+
+    // We have a color+depth image in. We then convert the depth to match
+    // the color image dimensions. We then select between a blurred version
+    // of the color image and pristine color image based on the depth.
+    //**********************************************************************
+
+    //**********************************************************************
+    // Create source nodes for color/depth images from camera
+    //**********************************************************************
+    app.spSourceColorNode = app.spGPUPipeline->CreateSourceNode(nullptr, 1920, 1080, DXGI_FORMAT_B8G8R8A8_UNORM);
+    app.spSourceDepthNode = app.spGPUPipeline->CreateSourceNode(nullptr, 1024, 1024, DXGI_FORMAT_R16_UINT);
+
+    //**********************************************************************
+    // Create node for blurred texture
+    //**********************************************************************
+    app.spShader = app.spRenderer->GetShaderMgr()->FindShader(L"RawCopy");
+    auto spDownSample = app.spGPUPipeline->CreateNode(app.spShader, 1920 / 32, 1080 / 32, DXGI_FORMAT_B8G8R8A8_UNORM);
+    spDownSample->SetInput(L"sourceTexture1", L"sourceSampler1", app.spSourceColorNode);
+
+    //**********************************************************************
+    // Create texture that maps depth pixels into rays
+    //**********************************************************************
+    app.spRayMap = app.spCamera->BuildRayMap(1024, 1024);
+    app.spRayTex = Caustic::CreateTexture(app.spRenderer, 1024, 1024, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT);
+    app.spRayTex->CopyFromImage(app.spRenderer, app.spRayMap);
+
+    //**********************************************************************
+    // Create node that generates depth texture matching color texture
+    //**********************************************************************
+    auto extrinsics = app.spCamera->ColorExtrinsics();
+    auto intrinsics = app.spCamera->GetAzureColorIntrinsics();
+    app.spDepthMeshNode = app.spGPUPipeline->CreatePredefinedNode(c_CustomNode_DepthMeshNode, 1024, 1024, 1920, 1080,
+        app.spRayTex, extrinsics, intrinsics, 10.0f, 8000.0f,
+        DXGI_FORMAT_R32_FLOAT);
+    app.spDepthMeshNode->SetInput(L"depthTex", nullptr, app.spSourceDepthNode);
+
+    //**********************************************************************
+    // Create node for selecting between blurred and pristine color image
+    //**********************************************************************
+    app.spDepthSelShader = app.spRenderer->GetShaderMgr()->FindShader(L"DepthSel2");
+    app.spNode = app.spGPUPipeline->CreateNode(app.spDepthSelShader, 1920, 1080, DXGI_FORMAT_B8G8R8A8_UNORM);
+    app.spNode->SetInput(L"colorTex", L"colorSampler", app.spSourceColorNode);
+    app.spNode->SetInput(L"blurTex", L"colorSampler", spDownSample);
+    app.spNode->SetInput(L"depthTex", nullptr, app.spDepthMeshNode);
+    app.spRenderer->Unfreeze();
+}
 
 void CApp::InitializeCaustic(HWND hwnd)
 {
@@ -248,7 +348,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
     }
 
     // Setup our renderer
-    app.InitializeCaustic(hWnd);
+    app.InitializeCaustic2(hWnd);
 
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);

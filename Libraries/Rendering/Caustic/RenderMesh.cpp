@@ -50,17 +50,17 @@ namespace Caustic
     //**********************************************************************
     void CRenderSubMesh::Render(IRenderer* pRenderer, IShader *pShader, IRenderMaterial *pMaterial, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld)
     {
-ID3D11DeviceContext* pContext = pRenderer->GetContext();
-ID3D11Device* pDevice = pRenderer->GetDevice();
-pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-pShader->BeginRender(pRenderer, pMaterial, pMaterial, lights, pWorld);
-uint32 vertexSize = pShader->GetShaderInfo()->GetVertexSize();
-uint32 numVertices = m_VB.m_numVertices;
-UINT offset = 0;
-pContext->IASetVertexBuffers(0, 1, &m_VB.m_spVB.p, &vertexSize, &offset);
-pContext->IASetIndexBuffer(m_VB.m_spIB, DXGI_FORMAT::DXGI_FORMAT_R32_UINT, 0);
-pContext->DrawIndexed(m_VB.m_numIndices, 0, 0);
-pShader->EndRender(pRenderer);
+        ID3D11DeviceContext* pContext = pRenderer->GetContext();
+        ID3D11Device* pDevice = pRenderer->GetDevice();
+        pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        pShader->BeginRender(pRenderer, pMaterial, pMaterial, lights, pWorld);
+        uint32 vertexSize = pShader->GetShaderInfo()->GetVertexSize();
+        uint32 numVertices = m_VB.m_numVertices;
+        UINT offset = 0;
+        pContext->IASetVertexBuffers(0, 1, &m_VB.m_spVB.p, &vertexSize, &offset);
+        pContext->IASetIndexBuffer(m_VB.m_spIB, DXGI_FORMAT::DXGI_FORMAT_R32_UINT, 0);
+        pContext->DrawIndexed(m_VB.m_numIndices, 0, 0);
+        pShader->EndRender(pRenderer);
     }
 
     //**********************************************************************

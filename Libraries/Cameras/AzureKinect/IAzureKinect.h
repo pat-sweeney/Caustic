@@ -15,26 +15,6 @@
 // Namespace: Caustic
 namespace Caustic
 {
-    struct CameraIntrinsics
-    {
-        float cx;
-        float cy;
-        float fx;
-        float fy;
-        float k1;
-        float k2;
-        float k3;
-        float k4;
-        float k5;
-        float k6;
-        float p1;
-        float p2;
-        float codx;
-        float cody;
-        float metricRadius;
-        int type;
-    };
-
     //**********************************************************************
     // Interface: IAzureKinect
     // Base interface shared across all image types

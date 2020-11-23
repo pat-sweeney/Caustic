@@ -64,48 +64,16 @@ namespace Caustic
         m_spShader->SetPSParam(L"width", std::any(float(width)));
         m_spShader->SetPSParam(L"height", std::any(float(height)));
 
-        auto inst = Caustic::CCausticFactory::Instance()->CreateMaterialAttrib();
-
-        std::vector<CGeomVertex> verts;
-        std::vector<CGeomFace> faces;
-        float dx = 2.0f / float(width);
-        float dy = 2.0f / float(height);
-        float cx = -1.0f;
-        float cy = -1.0f;
-        Vector3 normal(0.0f, 1.0f, 0.0f);
-        for (uint32 y = 0; y < height; y++)
-        {
-            for (uint32 x = 0; x < width; x++)
-            {
-                CGeomVertex vertex;
-                vertex.pos = Vector3(cx, cy, 0.0f);
-                vertex.norm = normal;
-                vertex.uvs[0] = Vector2(float(x) / float(width - 1), float(y) / float(height - 1));
-                verts.push_back(vertex);
-                cx += dx;
-                if (x > 0 && y > 0)
-                {
-                    CGeomFace face;
-                    face.indices[0] = (y - 1) * width + (x - 1);
-                    face.indices[1] = y * width + (x - 1);
-                    face.indices[2] = (y - 1) * width + x;
-                    faces.push_back(face);
-                    face.indices[0] = y * width + x;
-                    face.indices[1] = (y - 1) * width + x;
-                    face.indices[2] = y * width + (x - 1);
-                    faces.push_back(face);
-                }
-            }
-            cy += dy;
-        }
-
         auto spCausticFactory = Caustic::CCausticFactory::Instance();
+
+        m_spRenderMesh = CreateDepthGridMesh(pRenderer, width, height, m_spShader);
+        
+        auto inst = spCausticFactory->CreateMaterialAttrib();
         m_spMaterialAttrib = spCausticFactory->CreateMaterialAttrib();
         m_spMaterialAttrib->SetTexture(L"depthTexture", nullptr, Caustic::EShaderAccess::VertexShader);
         m_spMaterialAttrib->SetTexture(L"rayTexture", nullptr, Caustic::EShaderAccess::VertexShader);
         m_spMaterialAttrib->SetTexture(L"colorTexture", nullptr, Caustic::EShaderAccess::PixelShader);
         m_spRenderMaterial = spCausticFactory->CreateRenderMaterial(pRenderer, m_spMaterialAttrib, m_spShader);
-        m_spRenderMesh = Caustic::BuildRenderSubMesh(pRenderer, faces, verts, m_spShader);
 
         m_spDepthMap = Caustic::CreateTexture(pRenderer, width, height, DXGI_FORMAT::DXGI_FORMAT_R16_UINT);
         m_spRayMap = Caustic::CreateTexture(pRenderer, width, height, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT);

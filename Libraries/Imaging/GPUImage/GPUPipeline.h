@@ -8,6 +8,7 @@
 #include "Imaging\Image\Image.h"
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\Shader.h"
+#include <varargs.h>
 
 namespace Caustic
 {
@@ -125,6 +126,34 @@ namespace Caustic
         // format - format of output texture
         //**********************************************************************
         virtual CRefObj<IGPUPipelineNode> CreateNode(IShader *pShader, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM) = 0;
+
+        //**********************************************************************
+        // Method: CreatePredefinedNode
+        // Returns a GPU node that makes up part of the pipeline. This method is
+        // for specific nodes that have a custom Process() step beyond just running
+        // some shader.
+        //
+        // Parameters:
+        // pName - name of prefined node
+        // ... - list of parameters specific to the requested node
+        //**********************************************************************
+        virtual CRefObj<IGPUPipelineNode> CreatePredefinedNode(const wchar_t* pName, ...) = 0;
     };
+
+    //**********************************************************************
+    // Constant: c_CustomNode_DepthMeshNode
+    // Defines name for a GPU node that creates a mesh from a depth map and
+    // renders that depth data into a render target. This is used primarily
+    // to map the depth to its corresponding color camera.
+    //
+    // Arguments:
+    // <uint32> depthWidth - width in pixels of depth map
+    // <uint32> depthHeight - height in pixels of depth map
+    // <uint32> colorWidth - width in pixels of color map
+    // <uint32> colorHeight - height in pixels of color map
+    // <DXGI_FORMAT> colorFormat - pixel format for color image
+    //**********************************************************************
+    static const wchar_t* c_CustomNode_DepthMeshNode = L"DepthMeshNode";
+
     CAUSTICAPI CRefObj<IGPUPipeline> CreateGPUPipeline(IRenderer *pRenderer);
 }

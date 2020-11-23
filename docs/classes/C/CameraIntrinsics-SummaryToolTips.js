@@ -1,0 +1,1 @@
+NDSummary.OnToolTipsLoaded("CClass:CameraIntrinsics",{1230:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines intrinsics for a camera</div></div>"});

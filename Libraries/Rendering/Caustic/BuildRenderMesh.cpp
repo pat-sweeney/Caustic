@@ -126,7 +126,7 @@ namespace Caustic
 
 	//**********************************************************************
 	// Method: BuildIndexBuffer
-	// Creates a index buffer using the specified submesh.
+	// Creates a index buffer using the specified vertex and face lists.
 	//
 	// Parameters:
 	// pRenderer - Graphics device
@@ -179,6 +179,16 @@ namespace Caustic
 		pMeshData->m_spIB = spIB;
 	}
 
+	//**********************************************************************
+	// Method: BuildReferencedVertexList
+	// Determines which vertices are part of non-degenerate faces. This function
+	// is used to prune out degenerate faces when building the vertex/index buffers.
+	//
+	// Parameters:
+	// faces - list of faces
+	// verts - list of vertices
+	// vertexReferenced - List indicating which vertices were referenced by the face list
+	//**********************************************************************
 	static void BuildReferencedVertexList(std::vector<CGeomFace> &faces,
 		std::vector<CGeomVertex> &verts,
 		std::vector<int>& vertexReferenced)
@@ -200,19 +210,17 @@ namespace Caustic
 	}
 
 	//**********************************************************************
-	// Method: ToRenderMesh
-	// Converts a CMesh object into a renderable form. NOTE: The client will
-	// also have to convert the mesh's materials to a RenderMaterial via
-	// <ToRenderMaterial>. The reason this is split out as a separate call
-	// (versus just being part of this call) is to allow the client to update
-	// the materials without having to completely rebuild the mesh.
+	// Method: BuildRenderSubMesh
+	// Converts a list of faces and vertices into a IRenderSubMesh.
 	//
 	// Parameters:
 	// pRenderer - Renderer
+	// faces - list of faces
+	// verts - list of vertices
 	// pShader - shader
 	//
 	// Returns:
-	// Returns the new mesh
+	// Returns the new render submesh
 	//**********************************************************************
 	CAUSTICAPI CRefObj<IRenderSubMesh> BuildRenderSubMesh(IRenderer* pRenderer, 
 		std::vector<CGeomFace> &faces, std::vector<CGeomVertex> &verts,
@@ -229,5 +237,56 @@ namespace Caustic
 		spRenderSubMesh->SetMeshData(md);
 		spRenderSubMesh->SetShader(pShader);
 		return spRenderSubMesh;
+	}
+
+	//**********************************************************************
+	// Method: CreateDepthGridMesh
+	// Creates a render submesh that is a grid. This is used for rendering
+	// a depth map as a mesh.
+	//
+	// Parameters:
+	// pRenderer - Renderer
+	// width - width of depth map
+	// height - height of depth map
+	// pShader - shader
+	//
+	// Returns:
+	// Returns the new render submesh
+	//**********************************************************************
+	CAUSTICAPI CRefObj<IRenderSubMesh> CreateDepthGridMesh(IRenderer* pRenderer, uint32 width, uint32 height, IShader* pShader)
+	{
+		std::vector<CGeomVertex> verts;
+		std::vector<CGeomFace> faces;
+		float dx = 2.0f / float(width);
+		float dy = 2.0f / float(height);
+		float cy = -1.0f;
+		Vector3 normal(0.0f, 1.0f, 0.0f);
+		for (uint32 y = 0; y < height; y++)
+		{
+			float cx = -1.0f;
+			for (uint32 x = 0; x < width; x++)
+			{
+				CGeomVertex vertex;
+				vertex.pos = Vector3(cx, cy, 0.0f);
+				vertex.norm = normal;
+				vertex.uvs[0] = Vector2(float(x) / float(width - 1), float(y) / float(height - 1));
+				verts.push_back(vertex);
+				cx += dx;
+				if (x > 0 && y > 0)
+				{
+					CGeomFace face;
+					face.indices[0] = (y - 1) * width + (x - 1);
+					face.indices[1] = y * width + (x - 1);
+					face.indices[2] = (y - 1) * width + x;
+					faces.push_back(face);
+					face.indices[0] = y * width + x;
+					face.indices[1] = (y - 1) * width + x;
+					face.indices[2] = y * width + (x - 1);
+					faces.push_back(face);
+				}
+			}
+			cy += dy;
+		}
+		return Caustic::BuildRenderSubMesh(pRenderer, faces, verts, pShader);
 	}
 };

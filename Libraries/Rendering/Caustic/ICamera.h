@@ -33,7 +33,7 @@ namespace Caustic
         // Sets the camera parameters
         //
         // Parameters:
-        // fov - field of view
+        // fov - field of view in radians
         // aspectRatio - Camera's aspect ratio
         // nearZ - distance to near plane
         // farZ - distance to far plane

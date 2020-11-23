@@ -9,6 +9,7 @@
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\Sampler.h"
 #include "Rendering\Caustic\CausticFactory.h"
+#include "Cameras\CameraBase\ICamera.h"
 #include <memory>
 #include <Windows.h>
 #include "GPUPipelineImpl.h"
@@ -16,6 +17,7 @@
 #include <d3d11.h>
 #include <d3d11_4.h>
 #include <d3dcommon.h>
+#include <varargs.h>
 
 // Namespace: Caustic
 namespace Caustic
@@ -42,6 +44,40 @@ namespace Caustic
         std::unique_ptr<CGPUPipelineSinkNode> spSource(new CGPUPipelineSinkNode(outputWidth, outputHeight, format));
         m_sinkNodes.push_back(CRefObj<IGPUPipelineSinkNode>(spSource.get()));
         return CRefObj<IGPUPipelineSinkNode>(spSource.release());
+    }
+
+    //**********************************************************************
+    // Method: CreatePredefinedNode
+    // See <IGPUPipeline::CreatePredefinedNode>
+    //**********************************************************************
+    CRefObj<IGPUPipelineNode> CGPUPipeline::CreatePredefinedNode(const wchar_t* pName, ...)
+    {
+        if (wcscmp(pName, c_CustomNode_DepthMeshNode) == 0)
+        {
+            va_list argptr;
+            va_start(argptr, pName);
+            uint32 depthWidth = va_arg(argptr, uint32);
+            uint32 depthHeight = va_arg(argptr, uint32);
+            uint32 colorWidth = va_arg(argptr, uint32);
+            uint32 colorHeight = va_arg(argptr, uint32);
+            CRefObj<ITexture> spRayTex = va_arg(argptr, CRefObj<ITexture>);
+            Matrix4x4 extrinsics = va_arg(argptr, Matrix4x4);
+            CameraIntrinsics intrinsics = va_arg(argptr, CameraIntrinsics);
+            float minDepth = va_arg(argptr, float);
+            float maxDepth = va_arg(argptr, float);
+            DXGI_FORMAT colorFormat = va_arg(argptr, DXGI_FORMAT);
+            va_end(argptr);
+
+            auto spShader = m_spRenderer->GetShaderMgr()->FindShader(L"DepthMesh");
+            std::unique_ptr<CGPUPipelineDepthMeshNode> spSource(
+                new CGPUPipelineDepthMeshNode(m_spRenderer, spShader, depthWidth, depthHeight,
+                    colorWidth, colorHeight, spRayTex, extrinsics, intrinsics, minDepth, maxDepth,
+                    colorFormat));
+            m_nodes.push_back(CRefObj<IGPUPipelineNode>(spSource.get()));
+            return CRefObj<IGPUPipelineNode>(spSource.release());
+        }
+        CT(E_INVALIDARG);
+        return CRefObj<IGPUPipelineNode>(nullptr);
     }
 
     //**********************************************************************
@@ -227,8 +263,6 @@ namespace Caustic
 #ifdef _DEBUG
         CComPtr<ID3D11DeviceContext2> spCtx2;
         CT(spCtx->QueryInterface<ID3D11DeviceContext2>(&spCtx2));
-#endif
-#ifdef _DEBUG
         wchar_t buf[1024];
         swprintf_s(buf, L"%d", rand());
         std::wstring s(buf);
@@ -293,6 +327,162 @@ namespace Caustic
 
             // Draw full screen quad using shader
             pPipeline->RenderQuad(m_spShader);
+
+            spCtx->RSSetViewports(numViewports, &oldViewport);
+            spCtx->OMSetRenderTargets(1, &spOldRTV.p, spOldDSV);
+        }
+#ifdef _DEBUG
+        spCtx2->EndEvent();
+#endif
+    }
+
+    //**********************************************************************
+    CGPUPipelineDepthMeshNode::CGPUPipelineDepthMeshNode(
+        IRenderer *pRenderer, IShader *pShader,
+        uint32 depthInputWidth, uint32 depthInputHeight,
+        uint32 outputColorWidth, uint32 outputColorHeight,
+        CRefObj<ITexture> spRayTex, Matrix4x4 &extrinsics, CameraIntrinsics& intrinsics,
+        float minDepth, float maxDepth,
+        DXGI_FORMAT format) :
+        CGPUPipelineNodeBase(outputColorWidth, outputColorHeight, format)
+    {
+        CRefObj<ICausticFactory> spFactory = Caustic::CreateCausticFactory();
+        SetShader(pShader);
+        m_spMesh = Caustic::CreateDepthGridMesh(pRenderer, depthInputWidth, depthInputWidth, pShader);
+        m_cpuFlags = (D3D11_CPU_ACCESS_FLAG)0;
+        m_bindFlags = (D3D11_BIND_FLAG)(D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET | D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
+
+        pRenderer->Freeze();
+        std::any raymap = std::any(spRayTex);
+        pShader->SetVSParam(L"rayTexture", raymap);
+        std::any f1 = std::any(intrinsics.codx);
+        std::any f2 = std::any(intrinsics.cody);
+        std::any f3 = std::any(intrinsics.cx);
+        std::any f4 = std::any(intrinsics.cy);
+        std::any f5 = std::any(intrinsics.fx);
+        std::any f6 = std::any(intrinsics.fy);
+        std::any f7 = std::any(intrinsics.k1);
+        std::any f8 = std::any(intrinsics.k2);
+        std::any f9 = std::any(intrinsics.k3);
+        std::any f10 = std::any(intrinsics.k4);
+        std::any f11 = std::any(intrinsics.k5);
+        std::any f12 = std::any(intrinsics.k6);
+        std::any f13 = std::any(intrinsics.metricRadius);
+        std::any f14 = std::any(intrinsics.p1);
+        std::any f15 = std::any(intrinsics.p2);
+        pShader->SetVSParam(L"codx", f1);
+        pShader->SetVSParam(L"cody", f2);
+        pShader->SetVSParam(L"cx", f3);
+        pShader->SetVSParam(L"cy", f4);
+        pShader->SetVSParam(L"fx", f5);
+        pShader->SetVSParam(L"fy", f6);
+        pShader->SetVSParam(L"k1", f7);
+        pShader->SetVSParam(L"k2", f8);
+        pShader->SetVSParam(L"k3", f9);
+        pShader->SetVSParam(L"k4", f10);
+        pShader->SetVSParam(L"k5", f11);
+        pShader->SetVSParam(L"k6", f12);
+        pShader->SetVSParam(L"metricRadius", f13);
+        pShader->SetVSParam(L"p1", f14);
+        pShader->SetVSParam(L"p2", f15);
+        std::any v(Int(intrinsics.type));
+        pShader->SetVSParam(L"type", v);
+        Matrix m(extrinsics);
+        std::any mat = std::any(m);
+        pShader->SetVSParam(L"colorExt", mat);
+        std::any dw(Int(1024));
+        pShader->SetVSParam(L"depthWidth", dw);
+        std::any dh(Int(1024));
+        pShader->SetVSParam(L"depthHeight", dh);
+        std::any cw(Int(1920));
+        pShader->SetVSParam(L"colorWidth", cw);
+        std::any ch(Int(1080));
+        pShader->SetVSParam(L"colorHeight", ch);
+        std::any mind(10.0f);
+        pShader->SetVSParam(L"minDepth", mind);
+        std::any maxd(8000.0f);
+        pShader->SetVSParam(L"maxDepth", maxd);
+        pRenderer->Unfreeze();
+    }
+
+    //**********************************************************************
+    // Method: Process
+    // See <CGPUPipelineDepthMeshNode::Process>
+    //**********************************************************************
+    void CGPUPipelineDepthMeshNode::Process(IGPUPipeline* pPipeline)
+    {
+        CRefObj<IRenderer> spRenderer = pPipeline->GetRenderer();
+        CComPtr<ID3D11Device> spDevice = spRenderer->GetDevice();
+        CComPtr<ID3D11DeviceContext> spCtx = spRenderer->GetContext();
+
+#ifdef _DEBUG
+        CComPtr<ID3D11DeviceContext2> spCtx2;
+        CT(spCtx->QueryInterface<ID3D11DeviceContext2>(&spCtx2));
+        wchar_t buf[1024];
+        swprintf_s(buf, L"%d", rand());
+        std::wstring s(buf);
+        spCtx2->BeginEventInt((std::wstring(L"GPUPipeline:") + m_spShader->Name() + L"-" + s).c_str(), 0);
+#endif
+
+        if (m_spOutputTexture == nullptr)
+            m_spOutputTexture = CCausticFactory::Instance()->CreateTexture(spRenderer, m_width, m_height, m_outputFormat, m_cpuFlags, m_bindFlags);
+
+        // Get the input textures from the earlier nodes in the pipeline
+        std::vector<CRefObj<ITexture>> textures;
+        for (auto spSourceNode : m_sourceNodes)
+        {
+            CRefObj<ITexture> spTexture = spSourceNode.second.first->GetOutputTexture(pPipeline);
+            textures.push_back(spTexture);
+        }
+
+        if (m_spShader)
+        {
+            // Set the input from earlier nodes as our source textures in our shader
+            int i = 0;
+            for (auto spSourceNode : m_sourceNodes)
+            {
+                CRefObj<ITexture> spTexture = textures[i++];
+                m_spShader->SetVSParam(spSourceNode.first, std::any(spTexture));
+                if (spSourceNode.second.second.length() > 0)
+                {
+                    CRefObj<ISampler> spSampler = Caustic::CCausticFactory::Instance()->CreateSampler(spRenderer, spTexture);
+                    spSampler->SetAddressU(spRenderer, D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_BORDER);
+                    spSampler->SetAddressV(spRenderer, D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_BORDER);
+                    m_spShader->SetVSParam(spSourceNode.second.second, std::any(CSamplerRef(spSampler)));
+                }
+            }
+
+            CComPtr<ID3D11RenderTargetView> spRTView;
+            CT(spDevice->CreateRenderTargetView(m_spOutputTexture->GetD3DTexture(), nullptr, &spRTView));
+
+            CComPtr<ID3D11RenderTargetView> spOldRTV;
+            CComPtr<ID3D11DepthStencilView> spOldDSV;
+            spCtx->OMGetRenderTargets(1, &spOldRTV, &spOldDSV);
+
+            // Setup render target
+            spCtx->OMSetRenderTargets(1, &spRTView.p, nullptr);
+
+            UINT numViewports = 1;
+            D3D11_VIEWPORT oldViewport;
+            spCtx->RSGetViewports(&numViewports, &oldViewport);
+
+            // Set viewport
+            D3D11_VIEWPORT viewport;
+            ZeroMemory(&viewport, sizeof(viewport));
+            viewport.TopLeftX = 0;
+            viewport.TopLeftY = 0;
+            viewport.Width = (float)m_spOutputTexture->GetWidth();
+            viewport.Height = (float)m_spOutputTexture->GetHeight();
+            viewport.MinDepth = 0.0f;
+            viewport.MaxDepth = 1.0f;
+            spCtx->RSSetViewports(1, &viewport);
+
+            FLOAT bgClr[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+            spCtx->ClearRenderTargetView(spRTView, bgClr);
+
+            DirectX::XMMATRIX mat = DirectX::XMMatrixIdentity();
+            std::vector<CRefObj<ILight>> lights;
+            m_spMesh->Render(spRenderer, m_spShader, nullptr, lights, nullptr);
 
             spCtx->RSSetViewports(numViewports, &oldViewport);
             spCtx->OMSetRenderTargets(1, &spOldRTV.p, spOldDSV);

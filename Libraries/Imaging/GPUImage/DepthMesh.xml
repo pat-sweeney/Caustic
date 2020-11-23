@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Shader>
+  <PixelShader Filename="$(CausticRoot)\Libraries\Imaging\GPUImage\DepthMesh.ps" Output="$(CausticRoot)\$(Configuration)\DepthMesh_PS.cso"/>
+  <VertexShader Filename="$(CausticRoot)\Libraries\Imaging\GPUImage\DepthMesh.vs" Output="$(CausticRoot)\$(Configuration)\DepthMesh_VS.cso"/>
+</Shader>

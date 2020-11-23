@@ -7,6 +7,7 @@
 #include "GPUPipeline.h"
 #include "Base\Core\RefCount.h"
 #include "Rendering\Caustic\Caustic.h"
+#include "Cameras\CameraBase\ICamera.h"
 #include <vector>
 #include <atlbase.h>
 #include <d3d11.h>
@@ -17,7 +18,7 @@ namespace Caustic
     // Class: CGPUPipelineNodeBase
     // Define the base class for nodes in our pipeline
     //**********************************************************************
-    class CGPUPipelineNodeBase : public CRefCount
+    class CGPUPipelineNodeBase : public CRefCount, public IGPUPipelineNode
     {
     protected:
         std::map<std::wstring, std::pair<IGPUPipelineNode*, std::wstring>> m_sourceNodes; // Weak reference to IGPUPipelineNode
@@ -39,26 +40,27 @@ namespace Caustic
             m_outputFormat = outputFormat;
         }
         
+        uint32 GetNumberInputs();
+
         //**********************************************************************
         // IGPUPipelineNode
         //**********************************************************************
-        void SetShader(IShader* pShader);
-        CRefObj<IShader> GetShader();
-        uint32 GetNumberInputs();
-        CRefObj<IGPUPipelineNode> GetInput(const wchar_t *pName);
-        void SetInput(const wchar_t* pName, const wchar_t* pSamplerName, IGPUPipelineNode*pNode);
-        void SetOutputSize(uint32 width, uint32 height) { m_width = width; m_height = height; };
-        uint32 GetOutputWidth() { return m_width; }
-        uint32 GetOutputHeight() { return m_height; }
-        CRefObj<ITexture> GetOutputTexture(IGPUPipeline* pPipeline);
-        void Process(IGPUPipeline* pPipeline);
+        virtual void SetShader(IShader* pShader) override;
+        virtual CRefObj<IShader> GetShader() override;
+        virtual CRefObj<IGPUPipelineNode> GetInput(const wchar_t *pName) override;
+        virtual void SetInput(const wchar_t* pName, const wchar_t* pSamplerName, IGPUPipelineNode*pNode) override;
+        virtual void SetOutputSize(uint32 width, uint32 height) override { m_width = width; m_height = height; }
+        virtual uint32 GetOutputWidth() override { return m_width; }
+        virtual uint32 GetOutputHeight() override { return m_height; }
+        virtual CRefObj<ITexture> GetOutputTexture(IGPUPipeline* pPipeline) override;
+        virtual void Process(IGPUPipeline* pPipeline) override;
     };
 
     //**********************************************************************
     // Class: CGPUPipelineNode
     // Define class that implement IGPUPipelineNode
     //**********************************************************************
-    class CGPUPipelineNode : public CGPUPipelineNodeBase, public IGPUPipelineNode
+    class CGPUPipelineNode : public CGPUPipelineNodeBase
     {
     public:
         CGPUPipelineNode(uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM) : CGPUPipelineNodeBase(outputWidth, outputHeight, format)
@@ -85,6 +87,38 @@ namespace Caustic
         virtual uint32 GetOutputHeight() override { return CGPUPipelineNodeBase::GetOutputHeight(); }
         virtual CRefObj<ITexture> GetOutputTexture(IGPUPipeline *pPipeline) override { return CGPUPipelineNodeBase::GetOutputTexture(pPipeline); }
         virtual void Process(IGPUPipeline *pPipeline) override { CGPUPipelineNodeBase::Process(pPipeline); }
+    };
+
+    //**********************************************************************
+    // Class: CGPUPipelineDepthMeshNode
+    // Creates a mesh used for rendering a depth map as a mesh
+    //**********************************************************************
+    class CGPUPipelineDepthMeshNode : public CGPUPipelineNodeBase
+    {
+        CRefObj<IRenderSubMesh> m_spMesh;
+    public:
+        CGPUPipelineDepthMeshNode(IRenderer* pRenderer, IShader *pShader, uint32 depthInputWidth, uint32 depthInputHeight,
+            uint32 outputColorWidth, uint32 outputColorHeight, CRefObj<ITexture> spRayTex, Matrix4x4& extrinsics, CameraIntrinsics& intrinsics,
+            float minDepth, float maxDepth, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM);
+
+        //**********************************************************************
+        // IRefCount
+        //**********************************************************************
+        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32 Release() override { return CRefCount::Release(); }
+
+        //**********************************************************************
+        // IGPUPipelineNode
+        //**********************************************************************
+        virtual void SetShader(IShader* pShader) override { CGPUPipelineNodeBase::SetShader(pShader); }
+        virtual CRefObj<IShader> GetShader() override { return CGPUPipelineNodeBase::GetShader(); }
+        virtual CRefObj<IGPUPipelineNode> GetInput(const wchar_t* pName) override { return CGPUPipelineNodeBase::GetInput(pName); }
+        virtual void SetInput(const wchar_t* pName, const wchar_t* pSamplerName, IGPUPipelineNode* pNode) override { CGPUPipelineNodeBase::SetInput(pName, pSamplerName, pNode); }
+        virtual void SetOutputSize(uint32 width, uint32 height) override { CGPUPipelineNodeBase::SetOutputSize(width, height); }
+        virtual uint32 GetOutputWidth() override { return CGPUPipelineNodeBase::GetOutputWidth(); }
+        virtual uint32 GetOutputHeight() override { return CGPUPipelineNodeBase::GetOutputHeight(); }
+        virtual CRefObj<ITexture> GetOutputTexture(IGPUPipeline* pPipeline) override { return CGPUPipelineNodeBase::GetOutputTexture(pPipeline); }
+        virtual void Process(IGPUPipeline* pPipeline) override;
     };
 
     //**********************************************************************
@@ -194,5 +228,6 @@ namespace Caustic
         virtual CRefObj<IGPUPipelineSourceNode> CreateSourceNode(IImage *pImage, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM) override;
         virtual CRefObj<IGPUPipelineSinkNode> CreateSinkNode(IShader *pShader, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM) override;
         virtual CRefObj<IGPUPipelineNode> CreateNode(IShader *pShader, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM) override;
+        virtual CRefObj<IGPUPipelineNode> CreatePredefinedNode(const wchar_t* pName, ...) override;
     };
 }

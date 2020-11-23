@@ -44,6 +44,12 @@
     <CustomBuild Include="DepthSel.xml">
       <Filter>Source Files\Shaders</Filter>
     </CustomBuild>
+    <CustomBuild Include="DepthMesh.xml">
+      <Filter>Source Files\Shaders</Filter>
+    </CustomBuild>
+    <CustomBuild Include="DepthSel2.xml">
+      <Filter>Source Files\Shaders</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <None Include="Gaussian.ps">
@@ -56,6 +62,15 @@
       <Filter>Source Files\Shaders</Filter>
     </None>
     <None Include="DepthSel.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="DepthMesh.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="DepthMesh.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="DepthSel2.ps">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>

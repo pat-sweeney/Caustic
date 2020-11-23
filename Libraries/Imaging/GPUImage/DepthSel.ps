@@ -99,7 +99,9 @@ float4 PS(VSOutput p) : SV_Target
     float2 posCP = Project3D(posDS.xyz);
     posCP.x /= 1920.0f;
     posCP.y /= 1080.0f;
-    if (depth == 0 || depth > 1000 || posCP.x < 0.0f || posCP.x > 1.0f || posCP.y < 0.0f || posCP.y > 1.0f)
+    if (depth == 0 || posCP.x < 0.0f || posCP.x > 1.0f || posCP.y < 0.0f || posCP.y > 1.0f)
+        return float4(blurTex.Sample(colorSampler, p.uvs.xy).xyz, 1.0f);
+    if (depth > 1000)
         return float4(blurTex.Sample(colorSampler, posCP.xy).xyz, 1.0f);
     return float4(colorTex.Sample(colorSampler, posCP.xy).xyz, 1.0f);
 }

@@ -1,0 +1,15 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2020
+// Licensed under the MIT license.
+// See file LICENSE for details.
+// File: DepthMesh.ps
+//**********************************************************************
+struct VSOutput
+{
+    float4 pos : SV_POSITION;
+};
+
+float4 PS(VSOutput p) : SV_Target
+{
+    return float4(p.pos.zzz, 1.0f);
+}
