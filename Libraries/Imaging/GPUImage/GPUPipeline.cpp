@@ -355,6 +355,7 @@ namespace Caustic
         pRenderer->Freeze();
         std::any raymap = std::any(spRayTex);
         pShader->SetVSParam(L"rayTexture", raymap);
+        pShader->SetPSParam(L"rayTexture", raymap);
         std::any f1 = std::any(intrinsics.codx);
         std::any f2 = std::any(intrinsics.cody);
         std::any f3 = std::any(intrinsics.cx);
@@ -443,12 +444,14 @@ namespace Caustic
             {
                 CRefObj<ITexture> spTexture = textures[i++];
                 m_spShader->SetVSParam(spSourceNode.first, std::any(spTexture));
+                m_spShader->SetPSParam(spSourceNode.first, std::any(spTexture));
                 if (spSourceNode.second.second.length() > 0)
                 {
                     CRefObj<ISampler> spSampler = Caustic::CCausticFactory::Instance()->CreateSampler(spRenderer, spTexture);
                     spSampler->SetAddressU(spRenderer, D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_BORDER);
                     spSampler->SetAddressV(spRenderer, D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_BORDER);
                     m_spShader->SetVSParam(spSourceNode.second.second, std::any(CSamplerRef(spSampler)));
+                    m_spShader->SetPSParam(spSourceNode.second.second, std::any(CSamplerRef(spSampler)));
                 }
             }
 

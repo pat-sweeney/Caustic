@@ -39,11 +39,13 @@ struct VSInput
 {
     float3 pos : POSITION;
     float2 uvs : TEXCOORD0;
+    float2 pixcoords : TEXCOORD1;
 };
 
 struct VSOutput
 {
     float4 pos : SV_POSITION;
+    float2 uvs : TEXCOORD0;
 };
 
 float2 Project3D(float3 p)
@@ -59,7 +61,15 @@ float2 Project3D(float3 p)
     float xyp = xp * yp;
     float rs = xp2 + yp2;
     if (rs > metricRadius * metricRadius)
-        return float4(0.0f, 0.0f, 0.0f, 1.0f);
+    {
+    return float2(0.0f/0.0f, 0.0f/0.0f);
+//        float xp_d_cx = p.x + codx;
+//        float yp_d_cy = p.y + cody;
+//        float2 uvs = float2((xp_d_cx * fx + cx) / colorWidth, (yp_d_cy * fy + cy) / colorHeight);
+//        uvs.x = 2.0f * uvs.x - 1.0f;
+//        uvs.y = 2.0f * uvs.y - 1.0f;
+//        return uvs;
+    }
     float rss = rs * rs;
     float rsc = rss * rs;
     float a = 1.f + k1 * rs + k2 * rss + k3 * rsc;
@@ -104,13 +114,9 @@ VSOutput VS(VSInput p)
     float4 pos = float4(ray.xyz * float(depth), 1.0);
     float3 posDS = mul(float4(pos.xyz, 1.0f),colorExt);
     VSOutput vs;
-    if (depth == 0)
-        vs.pos = float4(-1.0f, -1.0f, 10000.0f, 1.0f);
-    else
-    {
-        vs.pos.xy = Project3D(posDS.xyz);
-        vs.pos.z = (depth - minDepth) / (maxDepth - minDepth);
-        vs.pos.w = 1.0f;
-    }
+    vs.uvs = p.pixcoords;
+    vs.pos.xy = Project3D(posDS.xyz);
+    vs.pos.z = (depth - minDepth) / (maxDepth - minDepth);
+    vs.pos.w = 1.0f;
     return vs;
 }

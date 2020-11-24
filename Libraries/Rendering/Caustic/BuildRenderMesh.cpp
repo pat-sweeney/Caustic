@@ -86,8 +86,8 @@ namespace Caustic
 					{
 						_ASSERT(vertexLayout[j].Format == DXGI_FORMAT_R32G32_FLOAT);
 						float* fp = (float*)pVB;
-						fp[0] = pVertex->uvs[0].x;
-						fp[1] = pVertex->uvs[0].y;
+						fp[0] = pVertex->uvs[vertexLayout[j].SemanticIndex].x;
+						fp[1] = pVertex->uvs[vertexLayout[j].SemanticIndex].y;
 						pVB += sizeof(float) * 2;
 					}
 					else if (_strnicmp(vertexLayout[j].SemanticName, "NORMAL", 6) == 0)
@@ -270,6 +270,7 @@ namespace Caustic
 				vertex.pos = Vector3(cx, cy, 0.0f);
 				vertex.norm = normal;
 				vertex.uvs[0] = Vector2(float(x) / float(width - 1), float(y) / float(height - 1));
+				vertex.uvs[1] = Vector2(float(x), float(y));
 				verts.push_back(vertex);
 				cx += dx;
 				if (x > 0 && y > 0)

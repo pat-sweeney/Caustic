@@ -4,12 +4,59 @@
 // See file LICENSE for details.
 // File: DepthMesh.ps
 //**********************************************************************
+Texture2D<uint> depthTex : register(t2); // Depth texture
+
 struct VSOutput
 {
     float4 pos : SV_POSITION;
+    float2 uvs : TEXCOORD0;
 };
 
 float4 PS(VSOutput p) : SV_Target
 {
+    float fx = frac(p.uvs.x);
+    float fy = frac(p.uvs.y);
+    if (fx < 1.0f - fy)
+    {
+        int x = floor(p.uvs.x);
+        int y = floor(p.uvs.y);
+        int3 pc0 = int3(x, y, 0);
+        int depth0 = depthTex.Load(pc0);
+        if (depth0 == 0)
+            discard;
+        int3 pc1 = int3(x + 1, y, 0);
+        int depth1 = depthTex.Load(pc1);
+        if (depth1 == 0)
+            discard;
+        int3 pc2 = int3(x, y + 1, 0);
+        int depth2 = depthTex.Load(pc2);
+        if (depth2 == 0)
+            discard;
+        int d0 = abs(depth0 - depth1);
+        int d1 = abs(depth0 - depth2);
+        if (d0 > 100 || d1 > 100)
+            discard;
+    }
+    else
+    {
+        int x = ceil(p.uvs.x);
+        int y = ceil(p.uvs.y);
+        int3 pc0 = int3(x, y, 0);
+        int depth0 = depthTex.Load(pc0);
+        if (depth0 == 0)
+            discard;
+        int3 pc1 = int3(x - 1, y, 0);
+        int depth1 = depthTex.Load(pc1);
+        if (depth1 == 0)
+            discard;
+        int3 pc2 = int3(x, y - 1, 0);
+        int depth2 = depthTex.Load(pc2);
+        if (depth2   == 0)
+            discard;
+        int d0 = abs(depth0 - depth1);
+        int d1 = abs(depth0 - depth2);
+        if (d0 > 100 || d1 > 100)
+            discard;
+    }
     return float4(p.pos.zzz, 1.0f);
 }
