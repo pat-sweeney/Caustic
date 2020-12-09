@@ -3,10 +3,36 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
     <AzureKinectSDKDir Condition="'$(AzureKinectSDKDir)'==''">C:\Program Files\Azure Kinect SDK v1.4.0</AzureKinectSDKDir>
+    <AzureBodySDKDir Condition="'$(AzureBodySDKDir)'==''">c:\Program Files\Azure Kinect Body Tracking SDK</AzureBodySDKDir>
     <CausticRoot Condition="'$(CausticRoot)'==''">j:\github\Caustic</CausticRoot>
     <CausticFXCPath Condition="'$(CausticFXCPath)'==''">C:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x64\fxc.exe</CausticFXCPath>
-    <CausticDefaultExtLibs>windowscodecs.lib;msxml6.lib;d3dcompiler.lib;d3d11.lib;mf.lib;mfplat.lib;mfuuid.lib;mfreadwrite.lib;k4a.lib;msxml6.lib;d3dcompiler.lib;d3d11.lib</CausticDefaultExtLibs>
-    <CausticDefaultExtLibDirs>$(AzureKinectSDKDir)\sdk\windows-desktop\amd64\release\lib</CausticDefaultExtLibDirs>
+    <CausticDefaultExtLibs>windowscodecs.lib;msxml6.lib;d3dcompiler.lib;d3d11.lib;mf.lib;mfplat.lib;mfuuid.lib;mfreadwrite.lib;k4abt.lib;k4a.lib;msxml6.lib;d3dcompiler.lib;d3d11.lib</CausticDefaultExtLibs>
+    <CausticDefaultExtLibDirs>$(AzureBodySDKDir)\sdk\windows-desktop\amd64\release\lib;$(AzureKinectSDKDir)\sdk\windows-desktop\amd64\release\lib</CausticDefaultExtLibDirs>
+    <WXWidgetsDir>J:\GitHub\Caustic\External\wxWidgets</WXWidgetsDir>
+    <WXWidgetsInclude>J:\GitHub\Caustic\External\wxWidgets\include</WXWidgetsInclude>
+    <WXWidgetsLibs>
+      J:\GitHub\Caustic\External\wxWidgets\lib\vc_x64_lib\wxbase31ud.lib;
+    J:\GitHub\Caustic\External\wxWidgets\lib\vc_x64_lib\wxexpatd.lib;
+    J:\GitHub\Caustic\External\wxWidgets\lib\vc_x64_lib\wxjpegd.lib;
+    J:\GitHub\Caustic\External\wxWidgets\lib\vc_x64_lib\wxmsw31ud_adv.lib;
+    J:\GitHub\Caustic\External\wxWidgets\lib\vc_x64_lib\wxmsw31ud_aui.lib;
+    J:\GitHub\Caustic\External\wxWidgets\lib\vc_x64_lib\wxmsw31ud_core.lib;
+    J:\GitHub\Caustic\External\wxWidgets\lib\vc_x64_lib\wxmsw31ud_gl.lib;
+    J:\GitHub\Caustic\External\wxWidgets\lib\vc_x64_lib\wxmsw31ud_html.lib;
+    J:\GitHub\Caustic\External\wxWidgets\lib\vc_x64_lib\wxmsw31ud_media.lib;
+    J:\GitHub\Caustic\External\wxWidgets\lib\vc_x64_lib\wxmsw31ud_propgrid.lib;
+    J:\GitHub\Caustic\External\wxWidgets\lib\vc_x64_lib\wxmsw31ud_qa.lib;
+    J:\GitHub\Caustic\External\wxWidgets\lib\vc_x64_lib\wxmsw31ud_ribbon.lib;
+    J:\GitHub\Caustic\External\wxWidgets\lib\vc_x64_lib\wxmsw31ud_richtext.lib;
+    J:\GitHub\Caustic\External\wxWidgets\lib\vc_x64_lib\wxmsw31ud_stc.lib;
+    J:\GitHub\Caustic\External\wxWidgets\lib\vc_x64_lib\wxmsw31ud_webview.lib;
+    J:\GitHub\Caustic\External\wxWidgets\lib\vc_x64_lib\wxmsw31ud_xrc.lib;
+    J:\GitHub\Caustic\External\wxWidgets\lib\vc_x64_lib\wxpngd.lib;
+    J:\GitHub\Caustic\External\wxWidgets\lib\vc_x64_lib\wxregexud.lib;
+    J:\GitHub\Caustic\External\wxWidgets\lib\vc_x64_lib\wxscintillad.lib;
+    J:\GitHub\Caustic\External\wxWidgets\lib\vc_x64_lib\wxtiffd.lib;
+    J:\GitHub\Caustic\External\wxWidgets\lib\vc_x64_lib\wxzlibd.lib
+    </WXWidgetsLibs>
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup>

@@ -78,7 +78,22 @@ namespace Caustic
     struct IShader : public IRefCount
     {
         //**********************************************************************
+        // Method: Clone
+        // Clones the shader. This is useful when you want to reuse a shader
+        // (such as those returned by IShaderMgr::FindShader) but want the shader
+        // to have its own set of parameters.
+        //
+        // Parameters:
+        // pDevice - device
+        //
+        // Returns:
+        // Copy of shader
+        //**********************************************************************
+        virtual CRefObj<IShader> Clone(ID3D11Device* pDevice) = 0;
+
+        //**********************************************************************
         // Method: Name
+        //
         // Returns:
         // Name of shader
         //**********************************************************************

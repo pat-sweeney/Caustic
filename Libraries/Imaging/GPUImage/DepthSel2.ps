@@ -10,9 +10,22 @@ struct VSOutput
 };
 
 Texture2D colorTex : register(t0); // Color texture
-Texture2D blurTex : register(t1); // Blurred color texture
+Texture2D blurTex1 : register(t1); // Blurred color texture
+Texture2D blurTex2 : register(t2); // Blurred color texture
+Texture2D blurTex3 : register(t3); // Blurred color texture
+Texture2D blurTex4 : register(t4); // Blurred color texture
+Texture2D blurTex5 : register(t5); // Blurred color texture
 SamplerState colorSampler : register(s0);
-Texture2D<float> depthTex : register(t2); // Depth texture
+Texture2D<float> depthTex : register(t6); // Depth texture
+
+cbuffer VS_CONSTANT_BUFFER : register(b0)
+{
+    float depth1;
+    float depth2;
+    float depth3;
+    float depth4;
+    float colored;
+}
 
 float4 PS(VSOutput p) : SV_Target
 {
@@ -20,7 +33,34 @@ float4 PS(VSOutput p) : SV_Target
     float uy = p.uvs.y;
     int3 pc = int3(ux * 1920, (1-uy) * 1080, 0);
     float depth = depthTex.Load(pc);
-    if (depth == 0 || depth > 0.125)
-        return float4(blurTex.Sample(colorSampler, p.uvs.xy).xyz, 1.0f);
+//    float focusDistance = 1000.0f/8000.0f;
+//    float focusRange = 100.0f/8000.0f;
+//    float x = clamp((depth - focusDistance) / focusRange, -1.0f, +1.0f);
+//    if (x < 0)
+//        return float4(x.x, 0.0f, 0.0f, 1.0f);
+//    return float4(x.xxx, 1.0f);
+if (colored > 0.5f)
+{
+    if (depth == 0 || depth > depth1)
+        return float4(blurTex5.Sample(colorSampler, p.uvs.xy).xyz, 1.0f);
+    if (depth > depth2)
+        return float4(blurTex4.Sample(colorSampler, p.uvs.xy).xyz, 1.0f);
+    if (depth > depth3)
+        return float4(blurTex3.Sample(colorSampler, p.uvs.xy).xyz, 1.0f);
+    if (depth > depth4)
+        return float4(blurTex2.Sample(colorSampler, p.uvs.xy).xyz, 1.0f);
     return float4(colorTex.Sample(colorSampler, p.uvs.xy).xyz, 1.0f);
+}
+else
+{
+    if (depth == 0 || depth > depth1)
+        return float4(1,0,0,1);
+    if (depth > depth2)
+        return float4(0,1,0,1);
+    if (depth > depth3)
+        return float4(0,0,1,1);
+    if (depth > depth4)
+        return float4(1,1,0,1);
+    return float4(colorTex.Sample(colorSampler, p.uvs.xy).xyz, 1.0f);
+}
 }

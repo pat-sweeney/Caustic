@@ -443,6 +443,20 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Method: ClearDepth
+    // See <IRenderer::ClearDepth>
+    //**********************************************************************
+    void CRendererMarshaller::ClearDepth()
+    {
+        m_renderQueue.AddLambda(
+            [this]()
+            {
+                m_spRenderer->ClearDepth();
+            }
+        );
+    }
+    
+    //**********************************************************************
     // Method: AddPointLight
     // See <IRenderer::AddPointLight>
     //**********************************************************************

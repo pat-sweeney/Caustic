@@ -331,6 +331,16 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Method: ClearDepth
+    // See <IRenderer::ClearDepth>
+    //**********************************************************************
+    void CRenderer::ClearDepth()
+    {
+        CHECKTHREAD;
+        m_spContext->ClearDepthStencilView(m_spStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+    }
+
+    //**********************************************************************
     // Method: DrawLine
     // See <IRenderer::DrawLine>
     //**********************************************************************

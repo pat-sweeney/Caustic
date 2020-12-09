@@ -9,7 +9,6 @@
 #include "Base\Math\Vector.h"
 #include "Base\Math\BBox.h"
 #include "Cameras\CameraBase\ICamera.h"
-#include <k4a/k4a.h>
 #include <vector>
 
 // Namespace: Caustic
@@ -31,10 +30,51 @@ namespace Caustic
         virtual CRefObj<IImage> BuildRayMap(uint32 w, uint32 h) = 0;
         virtual CameraIntrinsics GetAzureColorIntrinsics() = 0;
         virtual CameraIntrinsics GetAzureDepthIntrinsics() = 0;
+
+        virtual bool BodyTrackingOn() = 0;
+        virtual int NumberBodiesDetected() = 0;
+        virtual Matrix4x4 GetJoint(int bodyIndex, int jointIndex) = 0;
     };
 
     namespace AzureKinect
     {
+        enum Joints
+        {
+            Pelvis = 0,
+            SpineNavel,
+            SpineChest,
+            Neck,
+            ClavicleLeft,
+            ShoulderLeft,
+            ElbowLeft,
+            WriseLeft,
+            HandLeft,
+            HandTipLeft,
+            ThumbLeft,
+            ClavicleRight,
+            ShoulderRight,
+            ElbowRight,
+            WristRight,
+            HandRight,
+            HandTipRight,
+            ThumbRight,
+            HipLeft,
+            KneeLeft,
+            AnkleLeft,
+            FootLeft,
+            HipRight,
+            KneeRight,
+            AnkleRight,
+            FootRight,
+            Head,
+            Nose,
+            EyeLeft,
+            EarLeft,
+            EyeRight,
+            EarRight,
+            Count
+        };
+
         enum DepthMode
         {
             DepthOff,
@@ -70,6 +110,7 @@ namespace Caustic
         // colorMode - color mode for the device
         // depthMode - depth mode for the device
         // fpsMode - frames per second mode
+        // captureBodies - should skeleton tracking be used
         //
         // Returns:
         // Returns the newly created camera
@@ -77,6 +118,6 @@ namespace Caustic
         // Header:
         // [Link:Cameras/AzureKinect/IAzureKinect.h]
         //**********************************************************************
-        CAUSTICAPI CRefObj<IAzureKinect> CreateAzureKinect(int deviceId, ColorMode colorMode, DepthMode depthMode, FPSMode fpsMode);
+        CAUSTICAPI CRefObj<IAzureKinect> CreateAzureKinect(int deviceId, ColorMode colorMode, DepthMode depthMode, FPSMode fpsMode, bool captureBodies = false);
     }
 }

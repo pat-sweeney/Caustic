@@ -62,6 +62,33 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Method: Clone
+    // See <IShader::Clone>
+    //**********************************************************************
+    CRefObj<IShader> CShader::Clone(ID3D11Device *pDevice)
+    {
+        std::unique_ptr<CShader> spShader(new CShader());
+        spShader->m_name = this->m_name;
+        spShader->m_layout = this->m_layout;
+        spShader->m_spSamplerState = this->m_spSamplerState;
+        spShader->m_spLayout = this->m_spLayout;
+        spShader->m_spPixelShader = this->m_spPixelShader;
+        spShader->m_spVertexShader = this->m_spVertexShader;
+        spShader->m_spComputeShader = this->m_spComputeShader;
+        spShader->m_spShaderInfo = this->m_spShaderInfo;
+        spShader->m_xThreads = this->m_xThreads;
+        spShader->m_yThreads = this->m_yThreads;
+        spShader->m_zThreads = this->m_zThreads;
+        CreateConstantBuffer(pDevice, m_spShaderInfo->VertexShaderParameterDefs().data(),
+            (uint32)m_spShaderInfo->VertexShaderParameterDefs().size(), m_vsParams, &m_vertexConstants);
+        CreateConstantBuffer(pDevice, m_spShaderInfo->PixelShaderParameterDefs().data(),
+            (uint32)m_spShaderInfo->PixelShaderParameterDefs().size(), m_psParams, &m_pixelConstants);
+        CreateConstantBuffer(pDevice, m_spShaderInfo->ComputeShaderParameterDefs().data(),
+            (uint32)m_spShaderInfo->ComputeShaderParameterDefs().size(), m_csParams, &m_computeConstants);
+        return CRefObj<IShader>(spShader.release());
+    }
+
+    //**********************************************************************
     // Method: ComputeParamSize
     // Parses the definitions of each shader parameter that was read from
     // the HLSL (using ParseShader.exe). For each definition we will compute
@@ -815,7 +842,7 @@ namespace Caustic
             PushConstants(pRenderer, &m_vertexConstants, m_vsParams);
             spCtx->VSSetConstantBuffers(0, 1, &m_vertexConstants.m_spBuffer.p);
         }
-        if (hasPS)
+         if (hasPS)
         {
             PushSamplers(pRenderer, m_psParams, true);
             PushConstants(pRenderer, &m_pixelConstants, m_psParams);

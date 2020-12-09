@@ -12,6 +12,8 @@
 #include "Imaging\Image\Image.h"
 #include "Imaging\Image\IImagePool.h"
 #include "Cameras\AzureKinect\IAzureKinect.h"
+#include <k4a/k4a.h>
+#include <k4abt.h>
 #include <vector>
 
 // Namespace: Caustic
@@ -44,18 +46,22 @@ namespace Caustic
         k4a_device_t m_device;
         k4a_device_configuration_t m_config;
         k4a_calibration_t m_calibration;
+        k4abt_tracker_t m_tracker;
         k4a_image_t m_colorImage;
         k4a_image_t m_depthImage;
         k4a_capture_t m_capture;
         bool m_cameraStarted;
+        bool m_captureBodies;
+        k4abt_frame_t m_bodyFrame;
 
         CameraIntrinsics GetAzureIntrinsics(k4a_calibration_intrinsic_parameters_t& params);
         Matrix4x4 BuildExtrinsics(k4a_calibration_extrinsics_t ext);
+        bool BodyTracking();
     public:
         CAzureKinectDevice();
         ~CAzureKinectDevice();
 
-        void Startup(int deviceId, AzureKinect::ColorMode colorMode, AzureKinect::DepthMode depthMode, AzureKinect::FPSMode fpsMode);
+        void Startup(int deviceId, AzureKinect::ColorMode colorMode, AzureKinect::DepthMode depthMode, AzureKinect::FPSMode fpsMode, bool captureBodies = false);
 
         //**********************************************************************
         // IRefCount
@@ -84,5 +90,8 @@ namespace Caustic
         virtual CRefObj<IImage> BuildRayMap(uint32 w, uint32 h) override;
         virtual CameraIntrinsics GetAzureColorIntrinsics() override;
         virtual CameraIntrinsics GetAzureDepthIntrinsics() override;
+        virtual bool BodyTrackingOn() override { return m_captureBodies; }
+        virtual int NumberBodiesDetected() override;
+        virtual Matrix4x4 GetJoint(int bodyIndex, int jointIndex) override;
     };
 }

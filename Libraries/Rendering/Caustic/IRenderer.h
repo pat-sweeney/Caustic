@@ -256,6 +256,12 @@ namespace Caustic
         virtual CRefObj<IRenderCtx> GetRenderCtx() = 0;
 
         //**********************************************************************
+        // Method: ClearDepth
+        // Erases the depth buffer
+        //**********************************************************************
+        virtual void ClearDepth() = 0;
+
+        //**********************************************************************
         // Method: DrawLine
         // Renders a line
         //

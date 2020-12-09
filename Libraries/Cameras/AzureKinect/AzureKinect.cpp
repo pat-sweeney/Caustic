@@ -24,14 +24,15 @@ namespace Caustic
         // colorMode - output size of color images
         // depthMode - output size of depth images
         // fpsMode - requested frame rate
+        // captureBodies - should skeleton tracking be used
         //
         // Returns:
         // Returns the created Azure Kinect device
         //**********************************************************************
-        CRefObj<IAzureKinect> CreateAzureKinect(int deviceId, ColorMode colorMode, DepthMode depthMode, FPSMode fpsMode)
+        CRefObj<IAzureKinect> CreateAzureKinect(int deviceId, ColorMode colorMode, DepthMode depthMode, FPSMode fpsMode, bool captureBodies /* = false */)
         {
             std::unique_ptr<CAzureKinectDevice> pCamera(new CAzureKinectDevice());
-            pCamera->Startup(deviceId, colorMode, depthMode, fpsMode);
+            pCamera->Startup(deviceId, colorMode, depthMode, fpsMode, captureBodies);
             return CRefObj<IAzureKinect>(pCamera.release());
         }
     }
@@ -42,7 +43,9 @@ namespace Caustic
         m_colorImage(nullptr),
         m_depthImage(nullptr),
         m_capture(nullptr),
-        m_cameraStarted(false)
+        m_cameraStarted(false),
+        m_captureBodies(false),
+        m_bodyFrame(nullptr)
     {
         m_config = K4A_DEVICE_CONFIG_INIT_DISABLE_ALL;
         m_config.depth_mode = K4A_DEPTH_MODE_WFOV_2X2BINNED;
@@ -52,14 +55,21 @@ namespace Caustic
 
     CAzureKinectDevice::~CAzureKinectDevice()
     {
+        if (m_tracker)
+        {
+            k4abt_tracker_shutdown(m_tracker);
+            k4abt_tracker_destroy(m_tracker);
+        }
         if (m_cameraStarted)
             k4a_device_stop_cameras(m_device);
         if (m_device != nullptr)
             k4a_device_close(m_device);
     }
 
-    void CAzureKinectDevice::Startup(int deviceId, AzureKinect::ColorMode colorMode, AzureKinect::DepthMode depthMode, AzureKinect::FPSMode fpsMode)
+    void CAzureKinectDevice::Startup(int deviceId, AzureKinect::ColorMode colorMode, AzureKinect::DepthMode depthMode, AzureKinect::FPSMode fpsMode, bool captureBodies /* = false */)
     {
+        m_captureBodies = captureBodies;
+        
         if (deviceId >= (int)k4a_device_get_installed_count())
             CT(E_FAIL);
         if (k4a_device_open(deviceId, &m_device) != K4A_RESULT_SUCCEEDED)
@@ -166,11 +176,27 @@ namespace Caustic
         m_config.subordinate_delay_off_master_usec = 0;
         m_config.disable_streaming_indicator = false;
 
+        if (captureBodies)
+        {
+            m_config.depth_mode = K4A_DEPTH_MODE_NFOV_UNBINNED;
+            depthW = 640;
+            depthH = 576;
+            //m_config.color_resolution = K4A_COLOR_RESOLUTION_OFF;
+        }
+
         if (k4a_device_get_calibration(m_device, m_config.depth_mode, m_config.color_resolution, &m_calibration) != K4A_RESULT_SUCCEEDED)
             CT(E_FAIL);
         if (K4A_RESULT_SUCCEEDED != k4a_device_start_cameras(m_device, &m_config))
             CT(E_FAIL);
 
+        if (captureBodies)
+        {
+            k4abt_tracker_configuration_t tracker_config = K4ABT_TRACKER_CONFIG_DEFAULT;
+            auto rslt = k4abt_tracker_create(&m_calibration, tracker_config, &m_tracker);
+            if (rslt != K4A_RESULT_SUCCEEDED)
+                CT(E_FAIL);
+        }
+        
         m_spColorImagePool = Caustic::CreateImagePool(20, colorW, colorH, 32);
         m_spDepthImagePool = Caustic::CreateImagePool(20, depthW, depthH, 16);
 
@@ -313,6 +339,20 @@ namespace Caustic
         return mat;
     }
 
+    bool CAzureKinectDevice::BodyTracking()
+    {
+        if (k4abt_tracker_enqueue_capture(m_tracker, m_capture, K4A_WAIT_INFINITE) != K4A_WAIT_RESULT_SUCCEEDED)
+            return false;
+
+        if (m_bodyFrame)
+            k4abt_frame_release(m_bodyFrame);
+
+        if (k4abt_tracker_pop_result(m_tracker, &m_bodyFrame, K4A_WAIT_INFINITE) != K4A_WAIT_RESULT_SUCCEEDED)
+            return false;
+
+        return true;
+    }
+
     bool CAzureKinectDevice::NextFrame(IImage** ppColorImage, IImage** ppDepthImage, IImage** ppIRImage)
     {
         if (ppColorImage)
@@ -322,6 +362,9 @@ namespace Caustic
         bool captured = false;
         if (k4a_device_get_capture(m_device, &m_capture, 3000) == K4A_RESULT_SUCCEEDED)
         {
+            if (m_captureBodies)
+                BodyTracking();
+
             if (ppColorImage != nullptr)
             {
                 auto colorimage = k4a_capture_get_color_image(m_capture);
@@ -376,6 +419,31 @@ namespace Caustic
         return captured;
     }
     
+    int CAzureKinectDevice::NumberBodiesDetected()
+    {
+        return (int)k4abt_frame_get_num_bodies(m_bodyFrame);
+    }
+
+    Matrix4x4 CAzureKinectDevice::GetJoint(int bodyIndex, int jointIndex)
+    {
+        k4abt_skeleton_t skeleton;
+        k4abt_frame_get_body_skeleton(m_bodyFrame, bodyIndex, &skeleton);
+        Quaternion q;
+        q.x = skeleton.joints[jointIndex].orientation.wxyz.x;
+        q.y = skeleton.joints[jointIndex].orientation.wxyz.y;
+        q.z = skeleton.joints[jointIndex].orientation.wxyz.z;
+        q.w = skeleton.joints[jointIndex].orientation.wxyz.w;
+        Matrix4x4 mat(q);
+        mat.v[3][0] = skeleton.joints[jointIndex].position.xyz.x / 1000.0f;
+        mat.v[3][1] = skeleton.joints[jointIndex].position.xyz.y / 1000.0f;
+        mat.v[3][2] = skeleton.joints[jointIndex].position.xyz.z / 1000.0f;
+
+        wchar_t buf[1024];
+        swprintf_s(buf, L"%f %f %f\n", mat.v[3][0], mat.v[3][1], mat.v[3][2]);
+        OutputDebugString(buf);
+        return mat;
+    }
+
     CRefObj<IImage> CAzureKinectDevice::BuildRayMap(uint32 w, uint32 h)
     {
         CRefObj<IImage> spImage = CreateImage(w, h, 128);

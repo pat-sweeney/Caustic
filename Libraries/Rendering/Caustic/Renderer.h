@@ -265,6 +265,7 @@ namespace Caustic
         virtual void DrawMesh(IRenderSubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) override;
         virtual void AddPointLight(IPointLight *pLight) override;
         virtual CRefObj<IRenderCtx> GetRenderCtx() override;
+        virtual void ClearDepth() override;
         virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) override;
         virtual void PushShadowmapRT(int whichShadowmap, int lightMapIndex, Vector3& lightPos, Vector3& lightDir) override;
         virtual void PopShadowmapRT() override;

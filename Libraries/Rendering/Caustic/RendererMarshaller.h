@@ -99,6 +99,7 @@ namespace Caustic
         virtual void DrawScreenQuad(float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler* pSampler) override;
         virtual void LoadShaders(const wchar_t* pFolder) override;
         virtual CComPtr<ID3D11DeviceContext> GetContext() override;
+        virtual void ClearDepth() override;
         virtual CRefObj<ICamera> GetCamera() override;
         virtual CRefObj<IShaderMgr> GetShaderMgr() override { return m_spRenderer->GetShaderMgr(); }
         virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice) override;
