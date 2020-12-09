@@ -2,10 +2,6 @@
 //
 
 #include "pch.h"
-#include "wx\wxprec.h"
-#include "wx\sizer.h"
-#include "wx\sizer.h"
-#include "wx\wx.h"
 #include "CausticAppVSIX.h"
 #include "Base\Core\Core.h"
 #include "Base\Core\IRefCount.h"
@@ -30,7 +26,7 @@
 
 using namespace Caustic;
 
-class CApp : public wxApp
+class CApp
 {
 public:
     CRefObj<ISceneLightCollectionElem> m_spLightCollectionElem;
@@ -57,227 +53,14 @@ public:
     Matrix3x3 cameraInt;
     float depth[4];
     bool colored;
-    
-    virtual bool OnInit();
+    bool guiInited;
+
+    CApp() : guiInited(false) {}
+
     void InitializeCaustic2(HWND hwnd);
     void Setup3DScene(IRenderWindow* pRenderWindow);
 };
 CApp app;
-
-class CD3DPanel : public wxPanel
-{
-public:
-    CD3DPanel() {}
-    CD3DPanel(wxWindow* parent, wxWindowID winid, const wxPoint& pt, const wxSize& size) : wxPanel(parent, winid, pt, size) {}
-    
-    void OnMouseDown(wxMouseEvent& event)
-    {
-        app.spRenderWindow->MouseDown(event.GetX(), event.GetY(), c_LeftButton, (uint32)event.ControlDown() ? MK_CONTROL : 0);
-        event.Skip();
-    }
-
-    void OnMouseUp(wxMouseEvent& event)
-    {
-        app.spRenderWindow->MouseUp(event.GetX(), event.GetY(), c_LeftButton, (uint32)event.ControlDown() ? MK_CONTROL : 0);
-        event.Skip();
-    }
-
-    void OnMouseMove(wxMouseEvent& event)
-    {
-            app.spRenderWindow->MouseMove(event.GetX(), event.GetY(), (uint32)event.ControlDown() ? MK_CONTROL : 0);
-        event.Skip();
-    }
-
-    void OnMouseWheel(wxMouseEvent& event)
-    {
-        app.spRenderWindow->MouseWheel(event.GetWheelDelta());
-        event.Skip();
-    }
-
-    void OnKeyDown(wxKeyEvent& event)
-    {
-        app.spRenderWindow->MapKey((uint32)event.GetKeyCode(), (uint32)0);
-    }
-
-private:
-    wxDECLARE_EVENT_TABLE();
-};
-
-class CAppFrame : public wxFrame
-{
-    wxPanel *m_wpD3DPanel;
-    bool initialized;
-public:
-    CAppFrame();
-    ~CAppFrame();
-    void OnExit(wxCommandEvent& event);
-    void OnAbout(wxCommandEvent& event);
-    void OnWindowShow(wxShowEvent& event);
-    
-    void OnWindowCreate(wxWindowCreateEvent& event);
-    void OnColorChanged(wxCommandEvent& event);
-    void OnSliderChange1(wxCommandEvent& event);
-    void OnSliderChange2(wxCommandEvent& event);
-    void OnSliderChange3(wxCommandEvent& event);
-    void OnSliderChange4(wxCommandEvent& event);
-private:
-    wxDECLARE_EVENT_TABLE();
-};
-const int DepthSliderID1 = wxID_HIGHEST + 1;
-const int DepthSliderID2 = wxID_HIGHEST + 2;
-const int DepthSliderID3 = wxID_HIGHEST + 3;
-const int DepthSliderID4 = wxID_HIGHEST + 4;
-const int ColorCheckedID = wxID_HIGHEST + 5;
-wxBEGIN_EVENT_TABLE(CAppFrame, wxFrame)
-    EVT_MENU(wxID_EXIT, CAppFrame::OnExit)
-    EVT_MENU(wxID_ABOUT, CAppFrame::OnAbout)
-    EVT_CHECKBOX(ColorCheckedID, CAppFrame::OnColorChanged)
-    EVT_SLIDER(DepthSliderID1, CAppFrame::OnSliderChange1)
-    EVT_SLIDER(DepthSliderID2, CAppFrame::OnSliderChange2)
-    EVT_SLIDER(DepthSliderID3, CAppFrame::OnSliderChange3)
-    EVT_SLIDER(DepthSliderID4, CAppFrame::OnSliderChange4)
-    EVT_SHOW(CAppFrame::OnWindowShow)
-wxEND_EVENT_TABLE()
-
-wxBEGIN_EVENT_TABLE(CD3DPanel, wxPanel)
-//    EVT_MOUSEWHEEL(CD3DPanel::OnMouseWheel)
-//    EVT_LEFT_DOWN(CD3DPanel::OnMouseDown)
-//    EVT_LEFT_UP(CD3DPanel::OnMouseUp)
-//    EVT_MOTION(CD3DPanel::OnMouseMove)
-//    EVT_KEY_DOWN(CD3DPanel::OnKeyDown)
-wxEND_EVENT_TABLE()
-
-wxIMPLEMENT_APP(CApp);
-
-bool CApp::OnInit()
-{
-    CAppFrame *frame = new CAppFrame();
-    frame->Show(true);
-    return true;
-}
-
-CAppFrame::~CAppFrame()
-{
-    ImGui_ImplDX11_Shutdown();
-    ImGui_ImplWin32_Shutdown();
-    ImGui::DestroyContext();
-}
-
-CAppFrame::CAppFrame() :
-    wxFrame(NULL, wxID_ANY, "GPUPipeline", wxDefaultPosition, wxSize(1920, 1080)),
-    initialized(false)
-{
-    std::unique_ptr<wxPanel> spD3DPanel(new CD3DPanel(this, wxID_ANY, wxDefaultPosition, wxSize(1920, 1080)));
-    m_wpD3DPanel = spD3DPanel.get();
-
-    std::unique_ptr<wxBoxSizer> spTopSizer(new wxBoxSizer(wxHORIZONTAL));
-    std::unique_ptr<wxBoxSizer> spSliderGroup(new wxBoxSizer(wxVERTICAL));
-
-    std::unique_ptr<wxBoxSizer> spCheckBoxSizer(new wxBoxSizer(wxHORIZONTAL));
-    spCheckBoxSizer->Add(new wxCheckBox(this, ColorCheckedID, "Color"));
-    spSliderGroup->Add(spCheckBoxSizer.release(), 0, wxALIGN_LEFT);
-
-    std::unique_ptr<wxBoxSizer> spSliderSizer1(new wxBoxSizer(wxHORIZONTAL));
-    spSliderSizer1->Add(new wxStaticText(this, wxID_ANY, "Depth 1:", wxDefaultPosition, wxSize(100, 60)));
-    spSliderSizer1->Add(new wxSlider(this, DepthSliderID1, 1, 1, 100, wxDefaultPosition, wxSize(200, 20)));
-    spSliderGroup->Add(spSliderSizer1.release(), 0, wxALIGN_LEFT);
-
-    std::unique_ptr<wxBoxSizer> spSliderSizer2(new wxBoxSizer(wxHORIZONTAL));
-    spSliderSizer2->Add(new wxStaticText(this, wxID_ANY, "Depth 2:", wxDefaultPosition, wxSize(100, 60)));
-    spSliderSizer2->Add(new wxSlider(this, DepthSliderID2, 1, 1, 100, wxDefaultPosition, wxSize(200, 20)));
-    spSliderGroup->Add(spSliderSizer2.release(), 0, wxALIGN_LEFT);
-
-    std::unique_ptr<wxBoxSizer> spSliderSizer3(new wxBoxSizer(wxHORIZONTAL));
-    spSliderSizer3->Add(new wxStaticText(this, wxID_ANY, "Depth 3:", wxDefaultPosition, wxSize(100, 60)));
-    spSliderSizer3->Add(new wxSlider(this, DepthSliderID3, 1, 1, 100, wxDefaultPosition, wxSize(200, 20)));
-    spSliderGroup->Add(spSliderSizer3.release(), 0, wxALIGN_LEFT);
-
-    std::unique_ptr<wxBoxSizer> spSliderSizer4(new wxBoxSizer(wxHORIZONTAL));
-    spSliderSizer4->Add(new wxStaticText(this, wxID_ANY, "Depth 4:", wxDefaultPosition, wxSize(100, 60)));
-    spSliderSizer4->Add(new wxSlider(this, DepthSliderID4, 1, 1, 100, wxDefaultPosition, wxSize(200, 20)));
-    spSliderGroup->Add(spSliderSizer4.release(), 0, wxALIGN_LEFT);
-
-    spTopSizer->Add(spSliderGroup.release(), 0, wxALIGN_TOP);
-
-    spD3DPanel->SetBackgroundColour(wxColor(0xff77ffff));
-    spTopSizer->Add(spD3DPanel.release(), 1, wxSHAPED | wxALL | wxALIGN_CENTER, 2);
-    SetSizer(spTopSizer.release());
-
-    wxMenu *menuFile = new wxMenu;
-    //menuFile->Append(ID_Hello, "&Hello...\tCtrl-H",
-    //                 "Help string shown in status bar for this menu item");
-    menuFile->AppendSeparator();
-    menuFile->Append(wxID_EXIT);
-    wxMenu *menuHelp = new wxMenu;
-    menuHelp->Append(wxID_ABOUT);
-    wxMenuBar *menuBar = new wxMenuBar;
-    menuBar->Append(menuFile, "&File");
-    menuBar->Append(menuHelp, "&Help");
-    SetMenuBar(menuBar);
-    CreateStatusBar();
-    SetStatusText("Welcome to wxWidgets!");
-}
-
-void CAppFrame::OnColorChanged(wxCommandEvent& event)
-{
-    app.colored = event.GetInt() ? true : false;
-}
-
-void CAppFrame::OnSliderChange1(wxCommandEvent& event)
-{
-    app.depth[0] = (float)event.GetInt() / 100.0f;
-}
-
-void CAppFrame::OnSliderChange2(wxCommandEvent& event)
-{
-    app.depth[1] = (float)event.GetInt() / 100.0f;
-}
-
-void CAppFrame::OnSliderChange3(wxCommandEvent& event)
-{
-    app.depth[2] = (float)event.GetInt() / 100.0f;
-}
-
-void CAppFrame::OnSliderChange4(wxCommandEvent& event)
-{
-    app.depth[3] = (float)event.GetInt() / 100.0f;
-}
-
-static WNDPROC s_wxWndProc;
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
-LRESULT CALLBACK ImGuiOverride(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-    ImGui_ImplWin32_WndProcHandler(hwnd, uMsg, wParam, lParam);
-    return CallWindowProc(s_wxWndProc, hwnd, uMsg, wParam, lParam);
-}
-
-void CAppFrame::OnWindowShow(wxShowEvent& event)
-{
-    if (!initialized)
-    {
-        s_wxWndProc = (WNDPROC)SetWindowLongPtr(m_wpD3DPanel->GetHWND(), GWLP_WNDPROC, (LONG_PTR)ImGuiOverride);
-        app.InitializeCaustic2(m_wpD3DPanel->GetHWND());
-        auto ctx = ImGui::CreateContext();
-        ImGui_ImplWin32_Init(m_wpD3DPanel->GetHWND());
-        ImGui_ImplDX11_Init(app.spRenderer->GetDevice(), app.spRenderer->GetContext());
-        initialized = true;
-    }
-}
-
-void CAppFrame::OnWindowCreate(wxWindowCreateEvent& event)
-{
-}
-
-void CAppFrame::OnExit(wxCommandEvent& event)
-{
-    Close(true);
-}
-void CAppFrame::OnAbout(wxCommandEvent& event)
-{
-    wxMessageBox("This is a wxWidgets Hello World example",
-                 "About Hello World", wxOK | wxICON_INFORMATION);
-}
 
 void CApp::Setup3DScene(IRenderWindow *pRenderWindow)
 {
@@ -334,10 +117,12 @@ void CApp::InitializeCaustic2(HWND hwnd)
             ImGui_ImplDX11_NewFrame();
             ImGui_ImplWin32_NewFrame();
             ImGui::NewFrame();
-            static float v = 0.0f;
-            static bool open = true;
-            ImGui::ShowAboutWindow(&open);
-            ImGui::SliderFloat("Depth #1:", &v, 0.0f, 1.0f, "%f", 1.0f);
+            ImGui::Checkbox("Color", &app.colored);
+            ImGui::SliderFloat("Depth #1", &app.depth[0], 0.0f, 1.0f, "%f", 1.0f);
+            ImGui::SliderFloat("Depth #2", &app.depth[1], 0.0f, 1.0f, "%f", 1.0f);
+            ImGui::SliderFloat("Depth #3", &app.depth[2], 0.0f, 1.0f, "%f", 1.0f);
+            ImGui::SliderFloat("Depth #4", &app.depth[3], 0.0f, 1.0f, "%f", 1.0f);
+
             CRefObj<IImage> spColorImage;
             CRefObj<IImage> spDepthImage;
             if (app.spCamera)
@@ -376,7 +161,6 @@ void CApp::InitializeCaustic2(HWND hwnd)
                     app.spRenderer->ClearDepth();
                 }
             }
-            ImGui::Text("Testing");
             ImGui::Render();
             ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
         });
@@ -466,15 +250,188 @@ void CApp::InitializeCaustic2(HWND hwnd)
     app.spNode->SetInput(L"depthTex", nullptr, app.spDepthMeshNode);
     app.spRenderer->Unfreeze();
 }
+// Global Variables:
+HINSTANCE hInst;                                // current instance
+WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
+WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 
-#if 0
+// Forward declarations of functions included in this code module:
+ATOM                MyRegisterClass(HINSTANCE hInstance);
+BOOL                InitInstance(HINSTANCE, int);
+LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+
+int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
+    _In_opt_ HINSTANCE hPrevInstance,
+    _In_ LPWSTR    lpCmdLine,
+    _In_ int       nCmdShow)
+{
+    UNREFERENCED_PARAMETER(hPrevInstance);
+    UNREFERENCED_PARAMETER(lpCmdLine);
+
+    // TODO: Place code here.
+
+    // Initialize global strings
+    LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDC_CAUSTICAPPVSIX, szWindowClass, MAX_LOADSTRING);
+    MyRegisterClass(hInstance);
+
+    // Perform application initialization:
+    if (!InitInstance(hInstance, nCmdShow))
+    {
+        return FALSE;
+    }
+
+    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CAUSTICAPPVSIX));
+
+    MSG msg;
+
+    // Main message loop:
+    while (GetMessage(&msg, nullptr, 0, 0))
+    {
+        if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+        {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+    }
+
+    return (int)msg.wParam;
+}
+
+
+
+//
+//  FUNCTION: MyRegisterClass()
+//
+//  PURPOSE: Registers the window class.
+//
+ATOM MyRegisterClass(HINSTANCE hInstance)
+{
+    WNDCLASSEXW wcex;
+
+    wcex.cbSize = sizeof(WNDCLASSEX);
+
+    wcex.style = CS_HREDRAW | CS_VREDRAW;
+    wcex.lpfnWndProc = WndProc;
+    wcex.cbClsExtra = 0;
+    wcex.cbWndExtra = 0;
+    wcex.hInstance = hInstance;
+    wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_CAUSTICAPPVSIX));
+    wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+    wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+    wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_CAUSTICAPPVSIX);
+    wcex.lpszClassName = szWindowClass;
+    wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+
+    return RegisterClassExW(&wcex);
+}
+
+//
+//   FUNCTION: InitInstance(HINSTANCE, int)
+//
+//   PURPOSE: Saves instance handle and creates main window
+//
+//   COMMENTS:
+//
+//        In this function, we save the instance handle in a global variable and
+//        create and display the main program window.
+//
+BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
+{
+    hInst = hInstance; // Store instance handle in our global variable
+
+    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+        CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+
+    if (!hWnd)
+    {
+        return FALSE;
+    }
+
+    // Setup our renderer
+    app.InitializeCaustic2(hWnd);
+    auto ctx = ImGui::CreateContext();
+    ImGui_ImplWin32_Init(hWnd);
+    ImGui_ImplDX11_Init(app.spRenderer->GetDevice(), app.spRenderer->GetContext());
+    app.guiInited = true;
+
+    ShowWindow(hWnd, nCmdShow);
+    UpdateWindow(hWnd);
+    return TRUE;
+}
+//
+//  FUNCTION: WndProc(HWND, UINT, WPARAM, LPARAM)
+//
+//  PURPOSE: Processes messages for the main window.
+//
+//  WM_COMMAND  - process the application menu
+//  WM_PAINT    - Paint the main window
+//  WM_DESTROY  - post a quit message and return
+//
+//
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    static bool captureKeyboard = false;
+    static bool captureMouse = false;
+    if (app.guiInited)
+    {
+        ImGui::CaptureKeyboardFromApp(&captureKeyboard);
+        ImGui::CaptureMouseFromApp(&captureMouse);
+        ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam);
+    }
+    switch (message)
+    {
+    case WM_COMMAND:
+    {
+        int wmId = LOWORD(wParam);
+        // Parse the menu selections:
+        switch (wmId)
+        {
+        case IDM_EXIT:
+            DestroyWindow(hWnd);
+            break;
+        default:
+            return DefWindowProc(hWnd, message, wParam, lParam);
+        }
+    }
+    break;
+    case WM_PAINT:
+    {
+        PAINTSTRUCT ps;
+        HDC hdc = BeginPaint(hWnd, &ps);
+        EndPaint(hWnd, &ps);
+    }
+    break;
     case WM_DESTROY:
+        ImGui_ImplDX11_Shutdown();
+        ImGui_ImplWin32_Shutdown();
+        ImGui::DestroyContext();
         PostQuitMessage(0);
         break;
+    case WM_LBUTTONDOWN:
+        if (!captureMouse)
+            app.spRenderWindow->MouseDown((int)LOWORD(lParam), (int)HIWORD(lParam), c_LeftButton, (uint32)wParam);
+        break;
+    case WM_LBUTTONUP:
+        if (!captureMouse)
+            app.spRenderWindow->MouseUp((int)LOWORD(lParam), (int)HIWORD(lParam), c_LeftButton, (uint32)wParam);
+        break;
+    case WM_MOUSEMOVE:
+        if (!captureMouse)
+            app.spRenderWindow->MouseMove((int)LOWORD(lParam), (int)HIWORD(lParam), (uint32)wParam);
+        break;
+    case WM_MOUSEWHEEL:
+        if (!captureMouse)
+            app.spRenderWindow->MouseWheel((int)wParam);
+        break;
+    case WM_KEYDOWN:
+        if (!captureKeyboard)
+            app.spRenderWindow->MapKey((uint32)wParam, (uint32)lParam);
         break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
     return 0;
 }
-#endif
