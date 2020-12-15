@@ -1,0 +1,100 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2015-2020
+// Licensed under the MIT license.
+// See file LICENSE for details.
+//**********************************************************************
+struct VSOutput
+{
+    float4 pos : SV_POSITION;
+    float2 uvs : TEXCOORD0;
+};
+
+Texture2D colorTex : register(t0); // Color texture
+SamplerState colorSampler : register(s0);
+Texture2D<float> depthTex : register(t1); // Depth texture
+Texture2D backgroundTexture : register(t2);
+
+cbuffer VS_CONSTANT_BUFFER : register(b0)
+{
+    float focusDistance; // Distance to focal plane
+    float focusMaxWidth; // Delta where max blur occurs
+    float focusWidth; // Delta where everything is in focus
+	float BokehRadius;
+	float colored;
+	float useBackground;
+	float renderCOC;
+	float showInFocus;
+};
+
+float4 PS(VSOutput p) : SV_Target
+{
+	static const int kernelSampleCount = 16;
+	const float2 kernel[kernelSampleCount] = {
+		float2(0, 0),
+		float2(0.54545456, 0),
+		float2(0.16855472, 0.5187581),
+		float2(-0.44128203, 0.3206101),
+		float2(-0.44128197, -0.3206102),
+		float2(0.1685548, -0.5187581),
+		float2(1, 0),
+		float2(0.809017, 0.58778524),
+		float2(0.30901697, 0.95105654),
+		float2(-0.30901703, 0.9510565),
+		float2(-0.80901706, 0.5877852),
+		float2(-1, 0),
+		float2(-0.80901694, -0.58778536),
+		float2(-0.30901664, -0.9510566),
+		float2(0.30901712, -0.9510565),
+		float2(0.80901694, -0.5877853),
+	};
+
+	float4 bgcolor = backgroundTexture.Sample(colorSampler, p.uvs);
+
+	// Compute circle of confusion
+    float ux = p.uvs.x;
+    float uy = p.uvs.y;
+    int3 pc = int3(ux * 1920, (1-uy) * 1080, 0);
+    float depth = depthTex.Load(pc);
+
+	// We want to map our depth such that
+	// depth+focusMaxWidth  ... inFocusMinDist ... 0 ... inFocusMaxDist ... depth+focusMaxWidth
+	//       -1          ...        0       ... 0 ...        0       ...        +1
+	float coc;
+	float inFocusMaxDist = focusDistance + focusWidth;
+	float inFocusMinDist = focusDistance - focusWidth;
+	if (depth > inFocusMaxDist)
+		coc = (depth - inFocusMaxDist) / focusMaxWidth;
+	else
+		coc = (depth - inFocusMinDist) / focusMaxWidth;
+	if (renderCOC)
+	{
+		coc = clamp(coc,-1.0f, +1.0f);
+		if (coc < 0.0f)
+		  return float4(0.0f,coc,0.0f,1.0f);
+		return float4(coc,0.0f,0.0f,1.0f);
+	}
+	if (depth < focusDistance + focusWidth &&
+	    depth > focusDistance - focusWidth)
+	{
+		if (showInFocus)
+			return float4(1.0f,1.0f,0.0f,1.0f);
+		return float4(colorTex.Sample(colorSampler, p.uvs).xyz,1.0f);
+	}
+	if (depth < 0.001f && useBackground > 0)
+		return bgcolor;
+	if (depth > focusDistance + focusMaxWidth && useBackground > 0)
+		return bgcolor;
+	if (colored && coc > 0.0f)
+		return float4(1,0,0,1);
+    coc = clamp(coc,-1.0f, +1.0f);
+	coc = BokehRadius * coc;
+    float3 color = float3(0.0f, 0.0f, 0.0f);
+	for (int k = 0; k < kernelSampleCount; k++)
+	{
+		float2 o = float2(kernel[k].x * coc / 1920.0f, kernel[k].y * coc / 1080.0f);
+		color += colorTex.Sample(colorSampler, p.uvs + o).xyz;
+	}
+	color *= 1.0 / kernelSampleCount;
+
+    return float4(color.xyz, 1.0f);
+}

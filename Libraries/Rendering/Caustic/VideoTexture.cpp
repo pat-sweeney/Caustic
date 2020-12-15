@@ -120,11 +120,17 @@ namespace Caustic
         CT(m_spSourceReader->ReadSample((DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, 0, &streamIndex, &flags, &timestamp, &spSample));
         if (flags & MF_SOURCE_READERF_ENDOFSTREAM)
         {
+            PROPVARIANT v;
+            v.vt = VT_I8;
+            v.hVal.QuadPart = 0L;
+            m_spSourceReader->SetCurrentPosition(GUID_NULL, v);
             return;
         }
         if (flags & MF_SOURCE_READERF_CURRENTMEDIATYPECHANGED)
         {
             GetVideoFormat(&m_format);
+            m_Width = m_format.m_width;
+            m_Height = m_format.m_height;
             m_spTexture = CCausticFactory::Instance()->CreateTexture(pRenderer, m_Width, m_Height, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
         }
         if (spSample)

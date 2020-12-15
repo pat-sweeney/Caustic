@@ -92,6 +92,7 @@ namespace Caustic
         virtual CameraIntrinsics GetAzureDepthIntrinsics() override;
         virtual bool BodyTrackingOn() override { return m_captureBodies; }
         virtual int NumberBodiesDetected() override;
-        virtual Matrix4x4 GetJoint(int bodyIndex, int jointIndex) override;
+        virtual AzureKinect::Joint GetParentJoint(AzureKinect::Joint joint) override;
+        virtual Matrix4x4 GetJointMatrix(int bodyIndex, AzureKinect::Joint joint) override;
     };
 }

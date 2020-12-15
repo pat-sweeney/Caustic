@@ -14,31 +14,9 @@
 // Namespace: Caustic
 namespace Caustic
 {
-    //**********************************************************************
-    // Interface: IAzureKinect
-    // Base interface shared across all image types
-    //
-    // Header:
-    // [Link:Cameras/AzureKinect/IAzureKinect.h]
-    //**********************************************************************
-    struct IAzureKinect : public Caustic::IDepthCameraDevice
-    {
-        using ICameraDevice::NextFrame;
-        using IDepthCameraDevice::NextFrame;
-
-        virtual bool NextFrame(IImage** ppColorImage, std::vector<Vector3>& pts, std::vector<Vector3>& normals, BBox3 &bbox) = 0;
-        virtual CRefObj<IImage> BuildRayMap(uint32 w, uint32 h) = 0;
-        virtual CameraIntrinsics GetAzureColorIntrinsics() = 0;
-        virtual CameraIntrinsics GetAzureDepthIntrinsics() = 0;
-
-        virtual bool BodyTrackingOn() = 0;
-        virtual int NumberBodiesDetected() = 0;
-        virtual Matrix4x4 GetJoint(int bodyIndex, int jointIndex) = 0;
-    };
-
     namespace AzureKinect
     {
-        enum Joints
+        enum Joint
         {
             Pelvis = 0,
             SpineNavel,
@@ -47,7 +25,7 @@ namespace Caustic
             ClavicleLeft,
             ShoulderLeft,
             ElbowLeft,
-            WriseLeft,
+            WristLeft,
             HandLeft,
             HandTipLeft,
             ThumbLeft,
@@ -84,6 +62,7 @@ namespace Caustic
             Depth1024x1024,
             DepthIROnly
         };
+
         enum ColorMode
         {
             ColorOff,
@@ -94,13 +73,40 @@ namespace Caustic
             Color2160p,
             Color3072p
         };
+
         enum FPSMode
         {
             FPS5,
             FPS15,
             FPS30
         };
+    }
 
+    //**********************************************************************
+    // Interface: IAzureKinect
+    // Base interface shared across all image types
+    //
+    // Header:
+    // [Link:Cameras/AzureKinect/IAzureKinect.h]
+    //**********************************************************************
+    struct IAzureKinect : public Caustic::IDepthCameraDevice
+    {
+        using ICameraDevice::NextFrame;
+        using IDepthCameraDevice::NextFrame;
+
+        virtual bool NextFrame(IImage** ppColorImage, std::vector<Vector3>& pts, std::vector<Vector3>& normals, BBox3 &bbox) = 0;
+        virtual CRefObj<IImage> BuildRayMap(uint32 w, uint32 h) = 0;
+        virtual CameraIntrinsics GetAzureColorIntrinsics() = 0;
+        virtual CameraIntrinsics GetAzureDepthIntrinsics() = 0;
+
+        virtual bool BodyTrackingOn() = 0;
+        virtual int NumberBodiesDetected() = 0;
+        virtual AzureKinect::Joint GetParentJoint(AzureKinect::Joint joint) = 0;
+        virtual Matrix4x4 GetJointMatrix(int bodyIndex, AzureKinect::Joint joint) = 0;
+    };
+
+    namespace AzureKinect
+    {
         //**********************************************************************
         // Function: CreateAzureKinect
         // Creates a new instance of the Azure Kinect.

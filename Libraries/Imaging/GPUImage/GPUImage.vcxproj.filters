@@ -50,6 +50,9 @@
     <CustomBuild Include="DepthSel2.xml">
       <Filter>Source Files\Shaders</Filter>
     </CustomBuild>
+    <CustomBuild Include="Bokeh.xml">
+      <Filter>Source Files\Shaders</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <None Include="Gaussian.ps">
@@ -71,6 +74,9 @@
       <Filter>Source Files\Shaders</Filter>
     </None>
     <None Include="DepthSel2.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Bokeh.ps">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>

@@ -424,7 +424,47 @@ namespace Caustic
         return (int)k4abt_frame_get_num_bodies(m_bodyFrame);
     }
 
-    Matrix4x4 CAzureKinectDevice::GetJoint(int bodyIndex, int jointIndex)
+    static AzureKinect::Joint Parents[] =
+    {
+        AzureKinect::Joint::Pelvis, /* Pelvis => Pelvis */
+        AzureKinect::Joint::Pelvis, /* SpineNavel => Pelvis */
+        AzureKinect::Joint::SpineNavel, /* SpineChest => SpineNavel */
+        AzureKinect::Joint::SpineChest, /* Neck => SpineChest */
+        AzureKinect::Joint::SpineChest, /* ClavicleLeft => SpineChest */
+        AzureKinect::Joint::ClavicleLeft, /* ShoulderLeft => ClavicleLeft */
+        AzureKinect::Joint::ShoulderLeft, /* ElbowLeft => ShoulderLeft */
+        AzureKinect::Joint::ElbowLeft, /* WristLeft => ElbowLeft */
+        AzureKinect::Joint::WristLeft, /* HandLeft => WristLeft */
+        AzureKinect::Joint::HandLeft, /* HandTipLeft => HandLeft */
+        AzureKinect::Joint::WristLeft, /* ThumbLeft => WristLeft */
+        AzureKinect::Joint::ClavicleRight, /* ShoulderRight => ClavicleRight */
+        AzureKinect::Joint::ShoulderRight, /* ElbowRight => ShoulderRight */
+        AzureKinect::Joint::ElbowRight, /* WristRight => ElbowRight */
+        AzureKinect::Joint::WristRight, /* HandRight => WristRight */
+        AzureKinect::Joint::HandRight, /* HandTipRight => HandRight */
+        AzureKinect::Joint::WristRight, /* ThumbRight => WristRight */
+        AzureKinect::Joint::Pelvis, /* HipLeft => Pelvis */
+        AzureKinect::Joint::HipLeft, /* KneeLeft => HipLeft */
+        AzureKinect::Joint::KneeLeft, /* AnkleLeft => KneeLeft */
+        AzureKinect::Joint::AnkleLeft, /* FootLeft => AnkleLeft */
+        AzureKinect::Joint::Pelvis, /* HipRight => Pelvis */
+        AzureKinect::Joint::HipRight, /* KneeRight => HipRight */
+        AzureKinect::Joint::KneeRight, /* AnkleRight => KneeRight */
+        AzureKinect::Joint::AnkleRight, /* FootRight => AnkleRight */
+        AzureKinect::Joint::Neck, /* Head => Neck */
+        AzureKinect::Joint::Nose, /* Nose => Nose */
+        AzureKinect::Joint::EyeLeft, /* EyeLeft => EyeLeft */
+        AzureKinect::Joint::EarLeft, /* EarLeft => EarLeft */
+        AzureKinect::Joint::EyeRight, /* EyeRight => EyeRight */
+        AzureKinect::Joint::EarRight, /* EarRight => EarRight */
+    };
+
+    AzureKinect::Joint CAzureKinectDevice::GetParentJoint(AzureKinect::Joint joint)
+    {
+        return Parents[(int)joint];
+    }
+
+    Matrix4x4 CAzureKinectDevice::GetJointMatrix(int bodyIndex, AzureKinect::Joint jointIndex)
     {
         k4abt_skeleton_t skeleton;
         k4abt_frame_get_body_skeleton(m_bodyFrame, bodyIndex, &skeleton);

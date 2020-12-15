@@ -27,6 +27,8 @@ namespace Caustic
         pSceneCtx->m_Transform = pSceneCtx->m_Transform * m_Transform;
         for (size_t i = 0; i < m_Children.size(); i++)
         {
+            if (m_Children[i]->GetFlags() & ESceneElemFlags::Hidden)
+                continue;
             m_Children[i]->Render(pRenderer, pRenderCtx, pSceneCtx);
         }
         DrawSelected(pRenderer, this, pSceneCtx);
