@@ -202,7 +202,7 @@ namespace Caustic
     {
     protected:
         HANDLE m_freezeEvent;
-        bool m_freeze;
+        int m_freeze;
         std::stack<ShadowMapRenderState> m_cameras;         // Cameras from shadow mapping
         DWORD m_renderThreadId;                             // Render thread's ID
         std::vector<CRefObj<IRenderable>> m_singleObjs;              // List of individual renderable objects (outside scene graph)

@@ -51,7 +51,7 @@ float4 PS(VSOutput p) : SV_Target
             discard;
         int3 pc2 = int3(x, y - 1, 0);
         int depth2 = depthTex.Load(pc2);
-        if (depth2   == 0)
+        if (depth2 == 0)
             discard;
         int d0 = abs(depth0 - depth1);
         int d1 = abs(depth0 - depth2);

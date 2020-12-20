@@ -73,6 +73,8 @@ namespace Caustic
         // ICameraDevice
         //**********************************************************************
         virtual bool NextFrame(IImage** ppColorImage) override;
+        virtual uint32 GetColorWidth() override;
+        virtual uint32 GetColorHeight() override;
 
         //**********************************************************************
         // IDepthCameraDevice
@@ -82,6 +84,8 @@ namespace Caustic
         virtual Matrix3x3 ColorIntrinsics() override;
         virtual Matrix4x4 DepthExtrinsics() override;
         virtual Matrix3x3 DepthIntrinsics() override;
+        virtual uint32 GetDepthWidth() override;
+        virtual uint32 GetDepthHeight() override;
 
         //**********************************************************************
         // IAzureKinect

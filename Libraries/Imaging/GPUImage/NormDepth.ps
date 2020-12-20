@@ -1,0 +1,25 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2015-2020
+// Licensed under the MIT license.
+// See file LICENSE for details.
+// File: NormDepth.ps
+//**********************************************************************
+struct VSOutput
+{
+    float4 pos : SV_POSITION;
+    float2 uvs : TEXCOORD0;
+};
+
+Texture2D<uint> depthTex : register(t1); // Depth texture
+
+cbuffer VS_CONSTANT_BUFFER : register(b0)
+{
+    float _depthTexWidth;
+    float _depthTexHeight;
+};
+
+float PS(VSOutput p) : SV_Target
+{
+    uint depth = depthTex.Load(int3(p.uvs.x * _depthTexWidth, p.uvs.y * _depthTexHeight, 0));
+    return  float(depth) / 8000.0f;
+}

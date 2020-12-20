@@ -1,0 +1,70 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2015-2020
+// Licensed under the MIT license.
+// See file LICENSE for details.
+// File: MediaDepth.ps
+//**********************************************************************
+struct VSOutput
+{
+    float4 pos : SV_POSITION;
+    float2 uvs : TEXCOORD0;
+};
+
+Texture2D<uint> depthTex : register(t1); // Depth texture
+
+cbuffer VS_CONSTANT_BUFFER : register(b0)
+{
+    float _depthTexWidth;
+    float _depthTexHeight;
+};
+
+uint PS(VSOutput p) : SV_Target
+{
+    float2 epsUV = float2(1.0f / _depthTexWidth, 1.0f / _depthTexHeight);
+    int xL = p.uvs.x * _depthTexWidth;
+    int yT = p.uvs.y * _depthTexHeight;
+    float depths[4];
+    depths[0] = depthTex.Load(int3(xL, yT, 0));
+    depths[1] = depthTex.Load(int3(xL + 1, yT, 0));
+    depths[2] = depthTex.Load(int3(xL, y + 1, 0));
+    depths[3] = depthTex.Load(int3(xL + 1, y + 1, 0));
+
+    float tmp;
+    if (depths[0] > depths[2])
+    {
+        tmp = depths[2];
+        depths[2] = depths[0];
+        depths[0] = tmp;
+    }
+    if (depths[1] > depths[3])
+    {
+        tmp = depths[3];
+        depths[3] = depths[1];
+        depths[1] = tmp;
+    }
+    if (depths[0] > depths[1])
+    {
+        tmp = depths[1];
+        depths[1] = depths[0];
+        depths[0] = tmp;
+    }
+    if (depths[2] > depths[3])
+    {
+        tmp = depths[3];
+        depths[3] = depths[2];
+        depths[2] = tmp;
+    }
+    if (depths[1] > depths[2])
+    {
+        tmp = depths[2];
+        depths[2] = depths[1];
+        depths[1] = tmp;
+    }
+    if (depths[2] == 0)
+        return uint(depths[3]);
+    if (depths[1] == 0)
+        return uint((depths[2] + depths[3]) / 2.0f);
+    else if (depths[0] == 0)
+        return uint(depths[2]);
+    return uint((depths[1] + depths[2]) / 2.0f);
+}

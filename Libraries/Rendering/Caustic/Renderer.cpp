@@ -35,7 +35,7 @@ namespace Caustic
         m_exitThread(false)
     {
         m_freezeEvent = CreateEvent(nullptr, true, false, nullptr);
-        m_freeze = false;
+        m_freeze = 0;
     }
 
     //**********************************************************************
@@ -160,8 +160,9 @@ namespace Caustic
     //**********************************************************************
     void CRenderer::Freeze()
     {
-        m_freeze = true;
-        ResetEvent(m_freezeEvent);
+        m_freeze++;
+        if (m_freeze == 1)
+            ResetEvent(m_freezeEvent);
     }
 
     //**********************************************************************
@@ -170,8 +171,12 @@ namespace Caustic
     //**********************************************************************
     void CRenderer::Unfreeze()
     {
-        m_freeze = false;
-        SetEvent(m_freezeEvent);
+        if (m_freeze > 0)
+        {
+            m_freeze--;
+            if (m_freeze == 0)
+                SetEvent(m_freezeEvent);
+        }
     }
 
     //**********************************************************************
@@ -628,7 +633,7 @@ namespace Caustic
     //**********************************************************************
     void CRenderer::RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback)
     {
-        if (m_freeze)
+        if (m_freeze > 0)
             WaitForSingleObject(m_freezeEvent, INFINITE);
 
         ID3D11RenderTargetView *pView = m_spRTView;

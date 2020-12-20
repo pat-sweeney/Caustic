@@ -236,6 +236,76 @@ namespace Caustic
     }
     
     //**********************************************************************
+    // Method: GetDepthWidth
+    // See <IDepthCameraDevice::GetDepthWidth>
+    //**********************************************************************
+    uint32 CAzureKinectDevice::GetDepthWidth()
+    {
+        switch (m_calibration.depth_mode)
+        {
+        case K4A_DEPTH_MODE_NFOV_2X2BINNED: return 320;
+        case K4A_DEPTH_MODE_NFOV_UNBINNED: return 640;
+        case K4A_DEPTH_MODE_WFOV_2X2BINNED: return 512;
+        case K4A_DEPTH_MODE_WFOV_UNBINNED: return 1024;
+        case K4A_DEPTH_MODE_PASSIVE_IR: return 1024;
+        }
+        return 0;
+    }
+
+    //**********************************************************************
+    // Method: GetDepthHeight
+    // See <IDepthCameraDevice::GetDepthHeight>
+    //**********************************************************************
+    uint32 CAzureKinectDevice::GetDepthHeight()
+    {
+        switch (m_calibration.depth_mode)
+        {
+        case K4A_DEPTH_MODE_NFOV_2X2BINNED: return 288;
+        case K4A_DEPTH_MODE_NFOV_UNBINNED: return 576;
+        case K4A_DEPTH_MODE_WFOV_2X2BINNED: return 512;
+        case K4A_DEPTH_MODE_WFOV_UNBINNED: return 1024;
+        case K4A_DEPTH_MODE_PASSIVE_IR: return 1024;
+        }
+        return 0;
+    }
+
+    //**********************************************************************
+    // Method: GetColorWidth
+    // See <IDepthCameraDevice::GetColorHeight>
+    //**********************************************************************
+    uint32 CAzureKinectDevice::GetColorWidth()
+    {
+        switch (m_calibration.color_resolution)
+        {
+        case K4A_COLOR_RESOLUTION_720P: return 1280;
+        case K4A_COLOR_RESOLUTION_1080P: return 1920;
+        case K4A_COLOR_RESOLUTION_1440P: return 2560;
+        case K4A_COLOR_RESOLUTION_1536P: return 2048;
+        case K4A_COLOR_RESOLUTION_2160P: return 3840;
+        case K4A_COLOR_RESOLUTION_3072P: return 4096;
+        }
+        return 0;
+    }
+
+    //**********************************************************************
+    // Method: GetColorHeight
+    // See <IDepthCameraDevice::GetColorHeight>
+    //**********************************************************************
+    uint32 CAzureKinectDevice::GetColorHeight()
+    {
+        switch (m_calibration.color_resolution)
+        {
+        case K4A_COLOR_RESOLUTION_720P: return 720;
+        case K4A_COLOR_RESOLUTION_1080P: return 1080;
+        case K4A_COLOR_RESOLUTION_1440P: return 1440;
+        case K4A_COLOR_RESOLUTION_1536P: return 1536;
+        case K4A_COLOR_RESOLUTION_2160P: return 2160;
+        case K4A_COLOR_RESOLUTION_3072P: return 3072;
+        }
+        return 0;
+    }
+
+    //**********************************************************************
     // Method: ColorExtrinsics
     // See <IDepthCameraDevice::ColorExtrinsics>
     //**********************************************************************
@@ -477,10 +547,6 @@ namespace Caustic
         mat.v[3][0] = skeleton.joints[jointIndex].position.xyz.x / 1000.0f;
         mat.v[3][1] = skeleton.joints[jointIndex].position.xyz.y / 1000.0f;
         mat.v[3][2] = skeleton.joints[jointIndex].position.xyz.z / 1000.0f;
-
-        wchar_t buf[1024];
-        swprintf_s(buf, L"%f %f %f\n", mat.v[3][0], mat.v[3][1], mat.v[3][2]);
-        OutputDebugString(buf);
         return mat;
     }
 

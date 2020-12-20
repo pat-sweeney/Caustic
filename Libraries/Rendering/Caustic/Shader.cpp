@@ -222,6 +222,11 @@ namespace Caustic
         spCtx->PSSetSamplers(0, 1, &m_spSamplerState.p);
         spCtx->VSSetSamplers(0, 1, &m_spSamplerState.p);
         
+        // Clear the old textures
+        ID3D11ShaderResourceView* const nullref[1] = { NULL };
+        for (int i = 0; i < m_maxTextureSlot; i++)
+            spCtx->PSSetShaderResources(i, 1, nullref);
+        m_maxTextureSlot = 0;
     }
 
     void CShader::PushSamplers(IRenderer* pRenderer, std::vector<ShaderParamInstance>& params, bool isPixelShader)
@@ -239,6 +244,8 @@ namespace Caustic
                     {
                         CRefObj<ITexture> v = std::any_cast<CRefObj<ITexture>>(params[i].m_value);
                         v->Render(pRenderer, params[i].m_offset, isPixelShader);
+                        if (params[i].m_offset > (uint32)m_maxTextureSlot)
+                            m_maxTextureSlot = params[i].m_offset;
                     }
                 }
                 break;

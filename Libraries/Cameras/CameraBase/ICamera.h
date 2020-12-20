@@ -55,6 +55,24 @@ namespace Caustic
 		// ppColorImage - returns the next color image retrieved from the camera. Maybe nullptr.
 		//**********************************************************************
 		virtual bool NextFrame(IImage** ppColorImage) = 0;
+		
+		//**********************************************************************
+		// Method: GetColorWidth
+		// Returns the width in pixels of the color image returned by the camera
+		//
+		// Returns:
+		// Width of the color image in pixels
+		//**********************************************************************
+		virtual uint32 GetColorWidth() = 0;
+
+		//**********************************************************************
+		// Method: GetColorHeight
+		// Returns the height in pixels of the color image returned by the camera
+		//
+		// Returns:
+		// Height of the color image in pixels
+		//**********************************************************************
+		virtual uint32 GetColorHeight() = 0;
 	};
 
 	//**********************************************************************
@@ -75,6 +93,24 @@ namespace Caustic
 		// ppIRImage - returns the next infrared image retrieved from the camera. Maybe nullptr.
 		//**********************************************************************
 		virtual bool NextFrame(IImage** ppColorImage, IImage** ppDepthImage, IImage** ppIRImage) = 0;
+
+		//**********************************************************************
+		// Method: GetDepthWidth
+		// Returns the width in pixels of the depth image returned by the camera
+		//
+		// Returns:
+		// Width of the depth image in pixels
+		//**********************************************************************
+		virtual uint32 GetDepthWidth() = 0;
+
+		//**********************************************************************
+		// Method: GetDepthHeight
+		// Returns the height in pixels of the depth image returned by the camera
+		//
+		// Returns:
+		// Height of the depthimage in pixels
+		//**********************************************************************
+		virtual uint32 GetDepthHeight() = 0;
 
 		//**********************************************************************
 		// Method: ColorExtrinsics

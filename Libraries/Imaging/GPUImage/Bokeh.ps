@@ -55,6 +55,8 @@ float4 PS(VSOutput p) : SV_Target
     float uy = p.uvs.y;
     int3 pc = int3(ux * 1920, (1-uy) * 1080, 0);
     float depth = depthTex.Load(pc);
+	if (depth == 0) // TODO: Displaying holes
+	return float4(1,0,0,1);
 
 	// We want to map our depth such that
 	// depth+focusMaxWidth  ... inFocusMinDist ... 0 ... inFocusMaxDist ... depth+focusMaxWidth

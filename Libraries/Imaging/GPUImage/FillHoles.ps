@@ -1,0 +1,67 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2015-2020
+// Licensed under the MIT license.
+// See file LICENSE for details.
+// File: FillHoles.ps
+//**********************************************************************
+struct VSOutput
+{
+    float4 pos : SV_POSITION;
+    float2 uvs : TEXCOORD0;
+};
+
+Texture2D<uint> depthTex0 : register(t0);
+Texture2D<uint> depthTex1 : register(t1);
+Texture2D<uint> depthTex2 : register(t2);
+Texture2D<uint> depthTex3 : register(t3);
+Texture2D<uint> depthTex4 : register(t4);
+Texture2D<uint> depthTex5 : register(t5);
+Texture2D<uint> depthTex6 : register(t6);
+Texture2D<uint> depthTex7 : register(t7);
+Texture2D<uint> depthTex8 : register(t8);
+
+cbuffer VS_CONSTANT_BUFFER : register(b0)
+{
+    float _depthTex0Width;
+    float _depthTex0Height;
+    float _depthTex1Width;
+    float _depthTex1Height;
+    float _depthTex2Width;
+    float _depthTex2Height;
+    float _depthTex3Width;
+    float _depthTex3Height;
+    float _depthTex4Width;
+    float _depthTex4Height;
+    float _depthTex5Width;
+    float _depthTex5Height;
+    float _depthTex6Width;
+    float _depthTex6Height;
+    float _depthTex7Width;
+    float _depthTex7Height;
+    float _depthTex8Width;
+    float _depthTex8Height;
+};
+
+uint PS(VSOutput p) : SV_Target
+{
+    uint depth = depthTex0.Load(int3(p.uvs.x * _depthTex0Width, p.uvs.y * _depthTex0Height, 0));
+    if (depth == 0)
+        depth = depthTex1.Load(int3(p.uvs.x * _depthTex1Width, p.uvs.y * _depthTex1Height, 0));
+    if (depth == 0)
+        depth = depthTex2.Load(int3(p.uvs.x * _depthTex2Width, p.uvs.y * _depthTex2Height, 0));
+    if (depth == 0)
+        depth = depthTex3.Load(int3(p.uvs.x * _depthTex3Width, p.uvs.y * _depthTex3Height, 0));
+    if (depth == 0)
+        depth = depthTex4.Load(int3(p.uvs.x * _depthTex4Width, p.uvs.y * _depthTex4Height, 0));
+    if (depth == 0)
+        depth = depthTex5.Load(int3(p.uvs.x * _depthTex5Width, p.uvs.y * _depthTex5Height, 0));
+    if (depth == 0)
+        depth = depthTex6.Load(int3(p.uvs.x * _depthTex6Width, p.uvs.y * _depthTex6Height, 0));
+    if (depth == 0)
+        depth = depthTex7.Load(int3(p.uvs.x * _depthTex7Width, p.uvs.y * _depthTex7Height, 0));
+    if (depth == 0)
+        depth = depthTex8.Load(int3(p.uvs.x * _depthTex8Width, p.uvs.y * _depthTex8Height, 0));
+        if (depth < 100)
+        depth = 10000;
+    return depth;
+}

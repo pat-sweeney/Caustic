@@ -53,6 +53,15 @@
     <CustomBuild Include="Bokeh.xml">
       <Filter>Source Files\Shaders</Filter>
     </CustomBuild>
+    <CustomBuild Include="MedianDepth.xml">
+      <Filter>Source Files\Shaders</Filter>
+    </CustomBuild>
+    <CustomBuild Include="NormDepth.xml">
+      <Filter>Source Files\Shaders</Filter>
+    </CustomBuild>
+    <CustomBuild Include="FillHoles.xml">
+      <Filter>Source Files\Shaders</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <None Include="Gaussian.ps">
@@ -77,6 +86,15 @@
       <Filter>Source Files\Shaders</Filter>
     </None>
     <None Include="Bokeh.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="MedianDepth.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="NormDepth.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="FillHoles.ps">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>

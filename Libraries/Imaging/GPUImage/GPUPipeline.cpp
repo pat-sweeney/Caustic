@@ -56,15 +56,15 @@ namespace Caustic
         {
             va_list argptr;
             va_start(argptr, pName);
-            uint32 depthWidth = va_arg(argptr, uint32);
-            uint32 depthHeight = va_arg(argptr, uint32);
-            uint32 colorWidth = va_arg(argptr, uint32);
-            uint32 colorHeight = va_arg(argptr, uint32);
+            uint32 depthWidth = (uint32)va_arg(argptr, unsigned int);
+            uint32 depthHeight = (uint32)va_arg(argptr, unsigned int);
+            uint32 colorWidth = (uint32)va_arg(argptr, unsigned int);
+            uint32 colorHeight = (uint32)va_arg(argptr, unsigned int);
             CRefObj<ITexture> spRayTex = va_arg(argptr, CRefObj<ITexture>);
             Matrix4x4 extrinsics = va_arg(argptr, Matrix4x4);
             CameraIntrinsics intrinsics = va_arg(argptr, CameraIntrinsics);
-            float minDepth = va_arg(argptr, float);
-            float maxDepth = va_arg(argptr, float);
+            float minDepth = (float)va_arg(argptr, double);
+            float maxDepth = (float)va_arg(argptr, double);
             DXGI_FORMAT colorFormat = va_arg(argptr, DXGI_FORMAT);
             va_end(argptr);
 
@@ -288,6 +288,10 @@ namespace Caustic
             {
                 CRefObj<ITexture> spTexture = textures[i++];
                 m_spShader->SetPSParam(spSourceNode.first, std::any(spTexture));
+                std::wstring wName = std::wstring(L"_") + spSourceNode.first + std::wstring(L"Width");
+                m_spShader->SetPSParam(wName, std::any(float(spTexture->GetWidth())));
+                std::wstring hName = std::wstring(L"_") + spSourceNode.first + std::wstring(L"Height");
+                m_spShader->SetPSParam(hName, std::any(float(spTexture->GetHeight())));
                 if (spSourceNode.second.second.length() > 0)
                 {
                     CRefObj<ISampler> spSampler = Caustic::CCausticFactory::Instance()->CreateSampler(spRenderer, spTexture);
@@ -325,6 +329,11 @@ namespace Caustic
             FLOAT bgClr[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
             spCtx->ClearRenderTargetView(spRTView, bgClr);
 
+            std::any w(viewport.Width);
+            m_spShader->SetPSParam(L"_imageWidth", w);
+            std::any h(viewport.Height);
+            m_spShader->SetPSParam(L"_imageHeight", h);
+
             // Draw full screen quad using shader
             pPipeline->RenderQuad(m_spShader);
 
@@ -348,7 +357,7 @@ namespace Caustic
     {
         CRefObj<ICausticFactory> spFactory = Caustic::CreateCausticFactory();
         SetShader(pShader);
-        m_spMesh = Caustic::CreateDepthGridMesh(pRenderer, depthInputWidth, depthInputWidth, pShader);
+        m_spMesh = Caustic::CreateDepthGridMesh(pRenderer, depthInputWidth, depthInputHeight, pShader);
         m_cpuFlags = (D3D11_CPU_ACCESS_FLAG)0;
         m_bindFlags = (D3D11_BIND_FLAG)(D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET | D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
 
@@ -391,17 +400,17 @@ namespace Caustic
         Matrix m(extrinsics);
         std::any mat = std::any(m);
         pShader->SetVSParam(L"colorExt", mat);
-        std::any dw(Int(1024));
+        std::any dw(Int((int)depthInputWidth));
         pShader->SetVSParam(L"depthWidth", dw);
-        std::any dh(Int(1024));
+        std::any dh(Int((int)depthInputHeight));
         pShader->SetVSParam(L"depthHeight", dh);
-        std::any cw(Int(1920));
+        std::any cw(Int((int)outputColorWidth));
         pShader->SetVSParam(L"colorWidth", cw);
-        std::any ch(Int(1080));
+        std::any ch(Int((int)outputColorHeight));
         pShader->SetVSParam(L"colorHeight", ch);
-        std::any mind(10.0f);
+        std::any mind(minDepth);
         pShader->SetVSParam(L"minDepth", mind);
-        std::any maxd(8000.0f);
+        std::any maxd(maxDepth);
         pShader->SetVSParam(L"maxDepth", maxd);
         pRenderer->Unfreeze();
     }

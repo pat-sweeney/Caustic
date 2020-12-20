@@ -246,6 +246,7 @@ namespace Caustic
         int m_xThreads;
         int m_yThreads;
         int m_zThreads;
+        int m_maxTextureSlot;
     protected:
         void PushMatrix(const wchar_t *name, std::any mat);
         void PushLights(std::vector<CRefObj<ILight>>& lights);
@@ -268,7 +269,8 @@ namespace Caustic
         CShader() :
             m_xThreads(32),
             m_yThreads(32),
-            m_zThreads(1)
+            m_zThreads(1),
+            m_maxTextureSlot(0)
         {
         }
 
