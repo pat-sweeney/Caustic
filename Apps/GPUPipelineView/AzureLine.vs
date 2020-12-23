@@ -1,41 +1,50 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2020
-// Licensed under the MIT license.
-// See file LICENSE for details.
+// Copyright Patrick Sweeney 2020
+// All Rights Reserved
+// File: AzureLine.vs
 //**********************************************************************
+struct VSInput
+{
+    float3 pos : POSITION;
+};
+
 struct VSOutput
 {
     float4 pos : SV_POSITION;
-    float2 uvs : TEXCOORD0;
 };
-
-Texture2D colorTex : register(t0); // Color texture
-Texture2D blurTex : register(t1); // Blurred color texture
-SamplerState colorSampler : register(s0);
-Texture2D<uint> depthTex : register(t2); // Depth texture
-Texture2D<float4> rayTexture : register(t3);
 
 cbuffer VS_CONSTANT_BUFFER : register(b0)
 {
+    matrix endpoints;
     float4x4 colorExt;
-    float4x4 colorInt;
     float cx;
     float cy;
     float fx;
     float fy;
+
     float k1;
     float k2;
     float k3;
     float k4;
+
     float k5;
     float k6;
     float p1;
     float p2;
+
     float codx;
     float cody;
     float metricRadius;
-    float dummy;
+    float maxDepth;
+
+    float minDepth;
+    float dummy1;
+    float dummy2;
+    float dummy3;
+    
     int type;
+    int colorWidth;
+    int colorHeight;
 };
 
 float2 Project3D(float3 p)
@@ -51,7 +60,7 @@ float2 Project3D(float3 p)
     float xyp = xp * yp;
     float rs = xp2 + yp2;
     if (rs > metricRadius * metricRadius)
-        return float2(0.0f, 0.0f);
+        return float2(0.0f / 0.0f, 0.0f / 0.0f);
     float rss = rs * rs;
     float rsc = rss * rs;
     float a = 1.f + k1 * rs + k2 * rss + k3 * rsc;
@@ -80,28 +89,19 @@ float2 Project3D(float3 p)
     }
     float xp_d_cx = xp_d + codx;
     float yp_d_cy = yp_d + cody;
-    return float2(xp_d_cx * fx + cx, yp_d_cy * fy + cy);
+    float2 uvs = float2((xp_d_cx * fx + cx) / colorWidth, (yp_d_cy * fy + cy) / colorHeight);
+    uvs.x = 2.0f * uvs.x - 1.0f;
+    uvs.y = 2.0f * (1.0f - uvs.y) - 1.0f;
+    return uvs;
 }
 
-float4 PS(VSOutput p) : SV_Target
+VSOutput VS(VSInput p)
 {
-    float ux = p.uvs.x;
-    float uy = p.uvs.y;
-    int3 pc = int3(ux * 1024, uy * 1024, 0);
-    int depth = depthTex.Load(pc);
-
-    int3 rp = int3(ux * 1024, uy * 1024, 0);
-    float4 ray = rayTexture.Load(rp);
-    float4 pos = float4(ray.xyz * float(depth), 1.0);
-    float3 posDS = pos.xyz;
-
-    posDS = mul(float4(posDS, 1.0f),colorExt);
-    float2 posCP = Project3D(posDS.xyz);
-    posCP.x /= 1920.0f;
-    posCP.y /= 1080.0f;
-    if (depth == 0 || posCP.x < 0.0f || posCP.x > 1.0f || posCP.y < 0.0f || posCP.y > 1.0f)
-        return float4(blurTex.Sample(colorSampler, p.uvs.xy).xyz, 1.0f);
-    if (depth > 1000)
-        return float4(blurTex.Sample(colorSampler, posCP.xy).xyz, 1.0f);
-    return float4(colorTex.Sample(colorSampler, posCP.xy).xyz, 1.0f);
+    VSOutput v;
+    float4 wpos = mul(float4(p.pos, 1.0f), endpoints);
+    float3 posDS = mul(float4(wpos.xyz, 1.0f), colorExt);
+    v.pos.xy = Project3D(posDS.xyz);
+    v.pos.z = 0.01f;//(depth - minDepth) / (maxDepth - minDepth);
+    v.pos.w = 1.0f;
+    return v;
 }

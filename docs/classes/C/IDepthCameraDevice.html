@@ -23,6 +23,18 @@
  <div class="CBody"><p>Retrieves the next color/depth/ir image from the camera</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">ppColorImage<div class="CDLParameterType"><a href="../../index.html#CClass:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,439);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>**</div></td><td class="CDLDefinition"><p>returns the next color image retrieved from the camera. Maybe nullptr.</p></td></tr><tr><td class="CDLEntry">ppDepthImage<div class="CDLParameterType"><a href="../../index.html#CClass:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,439);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>**</div></td><td class="CDLDefinition"><p>returns the next depth image retrieved from the camera. Maybe nullptr.</p></td></tr><tr><td class="CDLEntry">ppIRImage<div class="CDLParameterType"><a href="../../index.html#CClass:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,439);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>**</div></td><td class="CDLDefinition"><p>returns the next infrared image retrieved from the camera. Maybe nullptr.</p></td></tr></table></div>
 </div>
 
+<a name="GetDepthWidth"></a><a name="Topic1333"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetDepthWidth</div>
+ <div id="NDPrototype1333" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetDepthWidth() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><p>Returns the width in pixels of the depth image returned by the camera</p><div class="CHeading">Returns</div><p>Width of the depth image in pixels</p></div>
+</div>
+
+<a name="GetDepthHeight"></a><a name="Topic1334"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetDepthHeight</div>
+ <div id="NDPrototype1334" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetDepthHeight() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><p>Returns the height in pixels of the depth image returned by the camera</p><div class="CHeading">Returns</div><p>Height of the depthimage in pixels</p></div>
+</div>
+
 <a name="ColorExtrinsics"></a><a name="Topic1243"></a><div class="CTopic TFunction LC">
  <div class="CTitle">ColorExtrinsics</div>
  <div id="NDPrototype1243" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <a href="../../index.html#CClass:Matrix4x4" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,137);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Matrix4x4</a> ColorExtrinsics() = <span class="SHNumber">0</span></div>

@@ -149,6 +149,17 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <CustomBuild Include="FillHolesSP.xml">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Imaging\GPUImage\FillHolesSP.xml -o $(CausticRoot)\$(Configuration)\FillHolesSP.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Imaging\GPUImage\FillHolesSP.xml -o $(CausticRoot)\$(Configuration)\FillHolesSP.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\FillHolesSP.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\FillHolesSP.shi</Outputs>
+      <SubType>Designer</SubType>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="DepthMesh.ps" />
     <None Include="DepthMesh.vs" />
     <None Include="DepthSel.ps" />
@@ -160,6 +171,7 @@
     <None Include="MedianDepth.ps" />
     <None Include="NormDepth.ps" />
     <None Include="FillHoles.ps" />
+    <None Include="FillHolesSP.ps" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="DepthSel.xml">

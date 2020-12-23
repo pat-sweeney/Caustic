@@ -120,7 +120,27 @@ namespace Caustic
         // paramName - name of parameter
         // value - value to set
         //**********************************************************************
-        virtual void SetPSParam(std::wstring paramName, std::any &value) = 0;
+        virtual void SetPSParam(std::wstring paramName, std::any& value) = 0;
+
+        //**********************************************************************
+        // Method: SetPSParamFloat
+        // Sets a pixel shader float parameter
+        //
+        // Parameters:
+        // paramName - name of parameter
+        // value - value to set
+        //**********************************************************************
+        virtual void SetPSParamFloat(std::wstring paramName, float value) = 0;
+
+        //**********************************************************************
+        // Method: SetPSParamInt
+        // Sets a pixel shader int parameter
+        //
+        // Parameters:
+        // paramName - name of parameter
+        // value - value to set
+        //**********************************************************************
+        virtual void SetPSParamInt(std::wstring paramName, int value) = 0;
 
         //**********************************************************************
         // Method: SetVSParam
@@ -130,7 +150,27 @@ namespace Caustic
         // paramName - name of parameter
         // value - value to set
         //**********************************************************************
-        virtual void SetVSParam(std::wstring paramName, std::any &value) = 0;
+        virtual void SetVSParam(std::wstring paramName, std::any& value) = 0;
+
+        //**********************************************************************
+        // Method: SetVSParamFloat
+        // Sets a vertex shader float parameter
+        //
+        // Parameters:
+        // paramName - name of parameter
+        // value - value to set
+        //**********************************************************************
+        virtual void SetVSParamFloat(std::wstring paramName, float value) = 0;
+
+        //**********************************************************************
+        // Method: SetVSParamInt
+        // Sets a pixel shader int parameter
+        //
+        // Parameters:
+        // paramName - name of parameter
+        // value - value to set
+        //**********************************************************************
+        virtual void SetVSParamInt(std::wstring paramName, int value) = 0;
 
         //**********************************************************************
         // Method: SetCSParam
@@ -141,6 +181,26 @@ namespace Caustic
         // value - value to set
         //**********************************************************************
         virtual void SetCSParam(std::wstring paramName, std::any& value) = 0;
+
+        //**********************************************************************
+        // Method: SetCSParamFloat
+        // Sets a vertex shader float parameter
+        //
+        // Parameters:
+        // paramName - name of parameter
+        // value - value to set
+        //**********************************************************************
+        virtual void SetCSParamFloat(std::wstring paramName, float value) = 0;
+
+        //**********************************************************************
+        // Method: SetCSParamInt
+        // Sets a pixel shader int parameter
+        //
+        // Parameters:
+        // paramName - name of parameter
+        // value - value to set
+        //**********************************************************************
+        virtual void SetCSParamInt(std::wstring paramName, int value) = 0;
 
         //**********************************************************************
         // Method: SetPSParam

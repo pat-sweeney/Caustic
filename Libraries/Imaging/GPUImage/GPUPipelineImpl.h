@@ -99,7 +99,7 @@ namespace Caustic
     public:
         CGPUPipelineDepthMeshNode(IRenderer* pRenderer, IShader *pShader, uint32 depthInputWidth, uint32 depthInputHeight,
             uint32 outputColorWidth, uint32 outputColorHeight, CRefObj<ITexture> spRayTex, Matrix4x4& extrinsics, CameraIntrinsics& intrinsics,
-            float minDepth, float maxDepth, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM);
+            float minDepth, float maxDepth, DXGI_FORMAT format = DXGI_FORMAT_R16_UINT);
 
         //**********************************************************************
         // IRefCount

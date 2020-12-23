@@ -70,6 +70,14 @@ namespace Caustic
     {
         return m_Pers;
     }
+    void CCamera::SetView(DirectX::XMMATRIX& mat)
+    {
+        m_View = mat;
+    }
+    void CCamera::SetProjection(DirectX::XMMATRIX& mat)
+    {
+        m_Pers = mat;
+    }
 
     //**********************************************************************
     // Method: GetView

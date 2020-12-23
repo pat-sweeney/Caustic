@@ -12,7 +12,13 @@ struct VSOutput
     float2 uvs : TEXCOORD0;
 };
 
-float4 PS(VSOutput p) : SV_Target
+cbuffer VS_CONSTANT_BUFFER : register(b0)
+{
+    float maxDepth;
+    float minDepth;
+};
+
+uint PS(VSOutput p) : SV_Target
 {
     float fx = frac(p.uvs.x);
     float fy = frac(p.uvs.y);
@@ -58,5 +64,5 @@ float4 PS(VSOutput p) : SV_Target
         if (d0 > 100 || d1 > 100)
             discard;
     }
-    return float4(p.pos.zzz, 1.0f);
+    return p.pos.z * (maxDepth - minDepth) + minDepth;
 }

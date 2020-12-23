@@ -65,7 +65,7 @@ namespace Caustic
     // Method: Clone
     // See <IShader::Clone>
     //**********************************************************************
-    CRefObj<IShader> CShader::Clone(ID3D11Device *pDevice)
+    CRefObj<IShader> CShader::Clone(ID3D11Device* pDevice)
     {
         std::unique_ptr<CShader> spShader(new CShader());
         spShader->m_name = this->m_name;
@@ -221,7 +221,7 @@ namespace Caustic
         CComPtr<ID3D11DeviceContext> spCtx = pRenderer->GetContext();
         spCtx->PSSetSamplers(0, 1, &m_spSamplerState.p);
         spCtx->VSSetSamplers(0, 1, &m_spSamplerState.p);
-        
+
         // Clear the old textures
         ID3D11ShaderResourceView* const nullref[1] = { NULL };
         for (int i = 0; i < m_maxTextureSlot; i++)
@@ -239,25 +239,25 @@ namespace Caustic
             switch (params[i].m_type)
             {
             case EShaderParamType::ShaderType_Texture:
+            {
+                if (params[i].m_value.has_value())
                 {
-                    if (params[i].m_value.has_value())
-                    {
-                        CRefObj<ITexture> v = std::any_cast<CRefObj<ITexture>>(params[i].m_value);
-                        v->Render(pRenderer, params[i].m_offset, isPixelShader);
-                        if (params[i].m_offset > (uint32)m_maxTextureSlot)
-                            m_maxTextureSlot = params[i].m_offset;
-                    }
+                    CRefObj<ITexture> v = std::any_cast<CRefObj<ITexture>>(params[i].m_value);
+                    v->Render(pRenderer, params[i].m_offset, isPixelShader);
+                    if (params[i].m_offset > (uint32)m_maxTextureSlot)
+                        m_maxTextureSlot = params[i].m_offset;
                 }
-                break;
+            }
+            break;
             case EShaderParamType::ShaderType_Sampler:
+            {
+                if (params[i].m_value.has_value())
                 {
-                    if (params[i].m_value.has_value())
-                    {
-                        Caustic::CSamplerRef v = std::any_cast<CSamplerRef>(params[i].m_value);
-                        v.m_spSampler->Render(pRenderer, params[i].m_offset, isPixelShader);
-                    }
+                    Caustic::CSamplerRef v = std::any_cast<CSamplerRef>(params[i].m_value);
+                    v.m_spSampler->Render(pRenderer, params[i].m_offset, isPixelShader);
                 }
-                break;
+            }
+            break;
             }
         }
     }
@@ -497,7 +497,7 @@ namespace Caustic
                 bind = D3D11_BIND_FLAG::D3D11_BIND_UNORDERED_ACCESS;
                 break;
             }
-            
+
             // Check if our underlying buffer has been created
             int bufferIndex = 0;
             for (; bufferIndex < (int)m_csBuffers.size(); bufferIndex++)
@@ -573,7 +573,7 @@ namespace Caustic
                 }
 
                 m_csBuffers[bufferIndex].m_isInput = (srcVal.m_spInputData != nullptr);
-                
+
                 if (srcVal.m_spInputData)
                 {
                     // Copy the data from the CPU memory to the buffer
@@ -605,7 +605,7 @@ namespace Caustic
     // value - Value of parameter
     // params - List of parameters to update
     //**********************************************************************
-    void CShader::SetParam(std::wstring paramName, std::any &value, std::vector<ShaderParamInstance> &params)
+    void CShader::SetParam(std::wstring paramName, std::any& value, std::vector<ShaderParamInstance>& params)
     {
         for (size_t i = 0; i < params.size(); i++)
         {
@@ -627,7 +627,7 @@ namespace Caustic
     // value - Value of parameter
     // params - List of parameters to update
     //**********************************************************************
-    void CShader::SetParam(std::wstring paramName, int index, std::any &value, std::vector<ShaderParamInstance> &params)
+    void CShader::SetParam(std::wstring paramName, int index, std::any& value, std::vector<ShaderParamInstance>& params)
     {
         for (size_t i = 0; i < params.size(); i++)
         {
@@ -648,9 +648,29 @@ namespace Caustic
     // paramName - Name of the parameter
     // value - Value of parameter
     //**********************************************************************
-    void CShader::SetPSParam(std::wstring paramName, std::any &value)
+    void CShader::SetPSParam(std::wstring paramName, std::any& value)
     {
         SetParam(paramName, value, m_psParams);
+    }
+
+    //**********************************************************************
+    // Method: SetPSParamFloat
+    // See <IShader::SetPSParamFloat>
+    //**********************************************************************
+    void CShader::SetPSParamFloat(std::wstring paramName, float value)
+    {
+        std::any v(value);
+        SetPSParam(paramName, v);
+    }
+
+    //**********************************************************************
+    // Method: SetPSParamInt
+    // See <IShader::SetPSParamInt>
+    //**********************************************************************
+    void CShader::SetPSParamInt(std::wstring paramName, int value)
+    {
+        std::any v(Int((int)value));
+        SetPSParam(paramName, v);
     }
 
     //**********************************************************************
@@ -662,7 +682,7 @@ namespace Caustic
     // index - Index into array
     // value - Value of parameter
     //**********************************************************************
-    void CShader::SetPSParam(std::wstring paramName, int index, std::any &value)
+    void CShader::SetPSParam(std::wstring paramName, int index, std::any& value)
     {
         SetParam(paramName, index, value, m_psParams);
     }
@@ -679,7 +699,27 @@ namespace Caustic
     {
         SetParam(paramName, value, m_vsParams);
     }
-    
+
+    //**********************************************************************
+    // Method: SetVSParamFloat
+    // See <IShader::SetVSParamFloat>
+    //**********************************************************************
+    void CShader::SetVSParamFloat(std::wstring paramName, float value)
+    {
+        std::any v(value);
+        SetVSParam(paramName, v);
+    }
+
+    //**********************************************************************
+    // Method: SetVSParamInt
+    // See <IShader::SetVSParamInt>
+    //**********************************************************************
+    void CShader::SetVSParamInt(std::wstring paramName, int value)
+    {
+        std::any v(Int((int)value));
+        SetVSParam(paramName, v);
+    }
+
     //**********************************************************************
     // Method: SetVSParam
     // Sets a vertex shader array element parameter
@@ -707,6 +747,25 @@ namespace Caustic
         SetParam(paramName, value, m_csParams);
     }
 
+    //**********************************************************************
+    // Method: SetCSParamFloat
+    // See <IShader::SetCSParamFloat>
+    //**********************************************************************
+    void CShader::SetCSParamFloat(std::wstring paramName, float value)
+    {
+        std::any v(value);
+        SetCSParam(paramName, v);
+    }
+
+    //**********************************************************************
+    // Method: SetCSParamInt
+    // See <IShader::SetCSParamInt>
+    //**********************************************************************
+    void CShader::SetCSParamInt(std::wstring paramName, int value)
+    {
+        std::any v(Int((int)value));
+        SetCSParam(paramName, v);
+    }
     //**********************************************************************
     // Method: SetCSParam
     // Sets a compute shader array element parameter

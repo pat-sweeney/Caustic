@@ -1,0 +1,71 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2015-2020
+// Licensed under the MIT license.
+// See file LICENSE for details.
+// File: FillHolesSP.ps
+// Fills holes in a depth map in a single pass (versus FillHoles.ps which
+// relies on a pyramid of depth maps)
+//**********************************************************************
+struct VSOutput
+{
+    float4 pos : SV_POSITION;
+    float2 uvs : TEXCOORD0;
+};
+
+Texture2D<uint> depthTex : register(t1); // Depth texture
+
+cbuffer VS_CONSTANT_BUFFER : register(b0)
+{
+    float _depthTexWidth;
+    float _depthTexHeight;
+};
+
+uint PS(VSOutput p) : SV_Target
+{
+    int xL = p.uvs.x * _depthTexWidth;
+    int yT = p.uvs.y * _depthTexHeight;
+    float depth = depthTex.Load(int3(xL, yT, 0));
+    if (depth != 0)
+        return depth;
+    for (int offset = 1; offset < 16; offset++)
+    {
+        float maxdepth = 0.0f;
+        int sx = xL - offset;
+        int sy = yT - offset;
+        for (int x = 0; x < 2*offset+1; x++)
+        {
+            float depth = depthTex.Load(int3(sx, sy, 0));
+            maxdepth = max(depth, maxdepth);
+            sx++;
+        }
+        sx = xL - offset;
+        sy = yT + offset;
+        for (int x = 0; x < 2*offset+1; x++)
+        {
+            float depth = depthTex.Load(int3(sx, sy, 0));
+            maxdepth = max(depth, maxdepth);
+            sx++;
+        }
+
+        sx = xL - offset;
+        sy = yT - offset + 1;
+        for (int x = 0; x < 2*offset-1; x++)
+        {
+            float depth = depthTex.Load(int3(sx, sy, 0));
+            maxdepth = max(depth, maxdepth);
+            sy++;
+        }
+        
+        sx = xL + offset;
+        sy = yT - offset + 1;
+        for (int x = 0; x < 2*offset-1; x++)
+        {
+            float depth = depthTex.Load(int3(sx, sy, 0));
+            maxdepth = max(depth, maxdepth);
+            sx++;
+        }
+        if (maxdepth > 0.0f)
+            return maxdepth;
+    }
+    return 0.0f;
+}

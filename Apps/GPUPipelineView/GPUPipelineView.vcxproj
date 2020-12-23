@@ -123,6 +123,18 @@ $(CausticRoot)\x64\Debug\RenderGraph.lib;
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="AzureLine.ps" />
+    <None Include="AzureLine.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="AzureLine.xml">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Apps\GPUPipelineView\AzureLine.xml -o $(CausticRoot)\$(Configuration)\AzureLine.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Apps\GPUPipelineView\AzureLine.xml -o $(CausticRoot)\$(Configuration)\AzureLine.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\AzureLine.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\AzureLine.shi</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="CausticAppVSIX.cpp">
       <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</PreprocessToFile>
     </ClCompile>

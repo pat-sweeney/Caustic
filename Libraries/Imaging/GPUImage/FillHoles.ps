@@ -61,7 +61,5 @@ uint PS(VSOutput p) : SV_Target
         depth = depthTex7.Load(int3(p.uvs.x * _depthTex7Width, p.uvs.y * _depthTex7Height, 0));
     if (depth == 0)
         depth = depthTex8.Load(int3(p.uvs.x * _depthTex8Width, p.uvs.y * _depthTex8Height, 0));
-        if (depth < 100)
-        depth = 10000;
     return depth;
 }

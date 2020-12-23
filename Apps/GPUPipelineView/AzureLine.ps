@@ -1,24 +1,14 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2020
+// Copyright Patrick Sweeney 2020
 // All Rights Reserved
-// File: Line.ps
+// File: AzureLine.ps
 //**********************************************************************
-struct VSInput
-{
-    float3 pos : POSITION;
-};
-
 struct VSOutput
 {
     float4 pos : SV_POSITION;
 };
 
-cbuffer VS_CONSTANT_BUFFER : register(b0)
-{
-    float4 color;
-};
-
 float4 PS(VSOutput p) : SV_Target
 {
-    return color;
+    return float4(1.0f, 0.0f, 0.0f, 1.0f);
 }

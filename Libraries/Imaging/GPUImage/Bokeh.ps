@@ -24,6 +24,9 @@ cbuffer VS_CONSTANT_BUFFER : register(b0)
 	float useBackground;
 	float renderCOC;
 	float showInFocus;
+	float showDepth;
+	float showHoles;
+	float checkDepth;
 };
 
 float4 PS(VSOutput p) : SV_Target
@@ -55,8 +58,10 @@ float4 PS(VSOutput p) : SV_Target
     float uy = p.uvs.y;
     int3 pc = int3(ux * 1920, (1-uy) * 1080, 0);
     float depth = depthTex.Load(pc);
-	if (depth == 0) // TODO: Displaying holes
-	return float4(1,0,0,1);
+	if (showHoles > 0 && depth == 0)
+		return float4(1,0,0,1);
+	if (showDepth > 0)
+		return float4(depth.xxx,1);
 
 	// We want to map our depth such that
 	// depth+focusMaxWidth  ... inFocusMinDist ... 0 ... inFocusMaxDist ... depth+focusMaxWidth
@@ -91,12 +96,26 @@ float4 PS(VSOutput p) : SV_Target
     coc = clamp(coc,-1.0f, +1.0f);
 	coc = BokehRadius * coc;
     float3 color = float3(0.0f, 0.0f, 0.0f);
+	int count = 0;
 	for (int k = 0; k < kernelSampleCount; k++)
 	{
 		float2 o = float2(kernel[k].x * coc / 1920.0f, kernel[k].y * coc / 1080.0f);
-		color += colorTex.Sample(colorSampler, p.uvs + o).xyz;
+		float2 uvs = p.uvs + o;
+		int3 pc = int3(uvs.x * 1920, (1-uvs.y) * 1080, 0);
+		float cdepth = depthTex.Load(pc);
+		if (checkDepth < 1.0f || abs(cdepth - depth) < 0.05)
+		{
+			color += colorTex.Sample(colorSampler, uvs).xyz;
+			count++;
+		}
+		else
+		{
+			color += colorTex.Sample(colorSampler, p.uvs).xyz;
+			count++;
+		}
 	}
-	color *= 1.0 / kernelSampleCount;
+	if (count > 0)
+		color *= 1.0 / count;
 
     return float4(color.xyz, 1.0f);
 }

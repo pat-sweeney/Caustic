@@ -61,15 +61,7 @@ float2 Project3D(float3 p)
     float xyp = xp * yp;
     float rs = xp2 + yp2;
     if (rs > metricRadius * metricRadius)
-    {
-    return float2(0.0f/0.0f, 0.0f/0.0f);
-//        float xp_d_cx = p.x + codx;
-//        float yp_d_cy = p.y + cody;
-//        float2 uvs = float2((xp_d_cx * fx + cx) / colorWidth, (yp_d_cy * fy + cy) / colorHeight);
-//        uvs.x = 2.0f * uvs.x - 1.0f;
-//        uvs.y = 2.0f * uvs.y - 1.0f;
-//        return uvs;
-    }
+        return float2(0.0f / 0.0f, 0.0f / 0.0f);
     float rss = rs * rs;
     float rsc = rss * rs;
     float a = 1.f + k1 * rs + k2 * rss + k3 * rsc;

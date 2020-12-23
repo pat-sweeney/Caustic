@@ -65,14 +65,14 @@ namespace Caustic
             CameraIntrinsics intrinsics = va_arg(argptr, CameraIntrinsics);
             float minDepth = (float)va_arg(argptr, double);
             float maxDepth = (float)va_arg(argptr, double);
-            DXGI_FORMAT colorFormat = va_arg(argptr, DXGI_FORMAT);
+            DXGI_FORMAT outputFormat = va_arg(argptr, DXGI_FORMAT);
             va_end(argptr);
 
             auto spShader = m_spRenderer->GetShaderMgr()->FindShader(L"DepthMesh");
             std::unique_ptr<CGPUPipelineDepthMeshNode> spSource(
                 new CGPUPipelineDepthMeshNode(m_spRenderer, spShader, depthWidth, depthHeight,
                     colorWidth, colorHeight, spRayTex, extrinsics, intrinsics, minDepth, maxDepth,
-                    colorFormat));
+                    outputFormat));
             m_nodes.push_back(CRefObj<IGPUPipelineNode>(spSource.get()));
             return CRefObj<IGPUPipelineNode>(spSource.release());
         }
@@ -410,8 +410,10 @@ namespace Caustic
         pShader->SetVSParam(L"colorHeight", ch);
         std::any mind(minDepth);
         pShader->SetVSParam(L"minDepth", mind);
+        pShader->SetPSParam(L"minDepth", mind);
         std::any maxd(maxDepth);
         pShader->SetVSParam(L"maxDepth", maxd);
+        pShader->SetPSParam(L"maxDepth", maxd);
         pRenderer->Unfreeze();
     }
 

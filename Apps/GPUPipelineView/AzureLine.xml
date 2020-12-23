@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Shader>
+  <PixelShader Filename="$(CausticRoot)\Apps\GPUPipelineView\AzureLine.ps" Output="$(CausticRoot)\$(Configuration)\AzureLine_PS.cso"/>
+  <VertexShader Filename="$(CausticRoot)\Apps\GPUPipelineView\AzureLine.vs" Output="$(CausticRoot)\$(Configuration)\AzureLine_VS.cso"/>
+</Shader>

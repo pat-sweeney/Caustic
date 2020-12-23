@@ -94,6 +94,8 @@ namespace Caustic
         // Returns the camera's view matrix
         //**********************************************************************
         virtual DirectX::XMMATRIX GetView() = 0;
+        virtual void SetView(DirectX::XMMATRIX& mat) = 0;
+        virtual void SetProjection(DirectX::XMMATRIX& mat) = 0;
 
         //**********************************************************************
         // Method: GetNear
