@@ -259,6 +259,50 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Function: CopyToImage
+    // Copies an texture's pixels into an <IImage>
+    //
+    // Parameters:
+    // pRenderer - Renderer
+    //**********************************************************************
+    CRefObj<IImage> CTexture::CopyToImage(IRenderer* pRenderer)
+    {
+        int bpp = 32;
+        switch (m_Format)
+        {
+        case DXGI_FORMAT::DXGI_FORMAT_R8_UNORM:
+            bpp = 8;
+            break;
+        case DXGI_FORMAT::DXGI_FORMAT_R16_UINT:
+            bpp = 16;
+            break;
+        case DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM:
+        case DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM:
+            bpp = 32;
+            break;
+        case DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT:
+            bpp = 128;
+            break;
+        }
+        CRefObj<IImage> spImage = CreateImage(m_Width, m_Height, bpp);
+        D3D11_MAPPED_SUBRESOURCE ms;
+        auto ctx = pRenderer->GetContext();
+        CComPtr<ID3D11Texture2D> spTex = GetD3DTexture();
+        CT(ctx->Map(spTex, 0, D3D11_MAP_READ, 0, &ms));
+        BYTE* pSrc = reinterpret_cast<BYTE*>(ms.pData);
+        BYTE* pDst = spImage->GetData();
+        int stride = spImage->GetStride();
+        for (int y = 0; y < (int)m_Height; y++)
+        {
+            memcpy(pDst, pSrc, m_Width * bpp / 8);
+            pSrc += ms.RowPitch;
+            pDst += stride;
+        }
+        ctx->Unmap(spTex, 0);
+        return spImage;
+    }
+
+    //**********************************************************************
     // Function: GenerateMips
     // Generates the MIPMAP chain for a texture
     //

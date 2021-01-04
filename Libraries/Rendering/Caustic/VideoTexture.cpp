@@ -219,6 +219,13 @@ namespace Caustic
     }
 
     //**********************************************************************
+    CRefObj<IImage> CVideoTexture::CopyToImage(IRenderer* pRenderer)
+    {
+        CT(E_NOTIMPL);
+        return CRefObj<IImage>(nullptr);
+    }
+
+    //**********************************************************************
     void CVideoTexture::FromMediaSource(IMFSourceReader *pSourceReader, IRenderer* pRenderer)
     {
         m_spSourceReader = pSourceReader;

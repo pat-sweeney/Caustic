@@ -44,6 +44,7 @@ public:
     CRefObj<IGPUPipelineSourceNode> spSourceDepthNode;
     CRefObj<IGPUPipelineNode> spNode;
     CRefObj<IGPUPipelineNode> spNodeSmooth;
+    CRefObj<IGPUPipelineSinkNode> spCameraReadyNode;
     CRefObj<ITexture> spOutputTexture;
     CRefObj<IShader> spShader;
     CRefObj<IShader> spBokehShader;
@@ -227,6 +228,8 @@ void CApp::DrawLine(Vector3 p1, Vector3 p2)
     spCtx2->EndEvent();
 }
 
+HANDLE hCanRead = nullptr;
+HANDLE hCanWrite = nullptr;
 void CApp::InitializeCaustic(HWND hwnd)
 {
     app.hwnd = hwnd;
@@ -293,10 +296,31 @@ void CApp::InitializeCaustic(HWND hwnd)
                      app.spBokehShader->SetPSParamFloat(L"checkDepth", (app.checkDepth) ? 1.0f : 0.0f);
                      app.spSourceColorNode->SetSource(app.spGPUPipeline, app.spLastColorImage);
                      app.spSourceDepthNode->SetSource(app.spGPUPipeline, app.spLastDepthImage);
-                     ((app.smooth) ? app.spNodeSmooth : app.spNode)->Process(app.spGPUPipeline);
+                     //app.spCameraReadyNode->Process(app.spGPUPipeline);
+                     //((app.smooth) ? app.spNodeSmooth : app.spNode)->Process(app.spGPUPipeline);
                      auto spTexture = ((app.smooth) ? app.spNodeSmooth : app.spNode)->GetOutputTexture(app.spGPUPipeline);
                      if (spTexture)
                          app.spRenderer->DrawScreenQuad(0.0f, 0.0f, 1.0f, 1.0f, spTexture, nullptr);
+
+                     auto finalTex = app.spCameraReadyNode->GetOutputTexture(app.spGPUPipeline);
+                     auto spImage = finalTex->CopyToImage(app.spRenderer);
+                     DWORD res = WaitForSingleObject(hCanWrite, 10);
+                     if (res == WAIT_OBJECT_0)
+                     {
+                         ResetEvent(hCanWrite);
+                         auto hMapFile = OpenFileMapping(FILE_MAP_READ | FILE_MAP_WRITE, FALSE, L"Global\\VirtualCameraImage");
+                         if (hMapFile)
+                         {
+                             auto pBuf = (LPTSTR)MapViewOfFile(hMapFile, FILE_MAP_WRITE, 0, 0, 1920 * 1080 * 4);
+                             if (pBuf)
+                             {
+                                 CopyMemory((PVOID)pBuf, spImage->GetData(), 1920 * 1080 * 4);
+                                 UnmapViewOfFile(pBuf);
+                             }
+                             CloseHandle(hMapFile);
+                             SetEvent(hCanRead);
+                         }
+                     }
 
                      app.spRenderer->ClearDepth();
                  }
@@ -343,6 +367,10 @@ void CApp::InitializeCaustic(HWND hwnd)
     app.spRenderer->Freeze();
 
     app.spBackgroundTexture = Caustic::LoadVideoTexture(L"j:\\github\\caustic\\background.mp4", app.spRenderer);
+
+    hCanRead = OpenEvent(SYNCHRONIZE |EVENT_MODIFY_STATE, TRUE, L"Global\\VirtualCameraMutexRead");
+    hCanWrite = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, TRUE, L"Global\\VirtualCameraMutexWrite");
+    SetEvent(hCanWrite);
 
     app.spCamera = Caustic::AzureKinect::CreateAzureKinect(1, AzureKinect::Color1080p, AzureKinect::Depth1024x1024, AzureKinect::FPS30, true);
     app.cameraExt = app.spCamera->ColorExtrinsics();
@@ -467,6 +495,9 @@ void CApp::InitializeCaustic(HWND hwnd)
 
     app.spNodeSmooth = app.spGPUPipeline->CreateNode(app.spShader, colorW, colorH, DXGI_FORMAT_B8G8R8A8_UNORM);
     app.spNodeSmooth->SetInput(L"sourceTexture1", L"sourceSampler1", bokehSmooth);
+
+    app.spCameraReadyNode = app.spGPUPipeline->CreateSinkNode(app.spShader, 1920, 1080, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
+    app.spCameraReadyNode->SetInput(L"sourceTexture1", L"sourceSampler1", app.spNode);
     app.spRenderer->Unfreeze();
 }
 
