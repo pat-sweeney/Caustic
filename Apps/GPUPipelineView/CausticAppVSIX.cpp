@@ -45,6 +45,7 @@ public:
     CRefObj<IGPUPipelineNode> spNode;
     CRefObj<IGPUPipelineNode> spNodeSmooth;
     CRefObj<IGPUPipelineSinkNode> spCameraReadyNode;
+    CRefObj<IGPUPipelineSinkNode> spCameraReadyNodeSmooth;
     CRefObj<ITexture> spOutputTexture;
     CRefObj<IShader> spShader;
     CRefObj<IShader> spBokehShader;
@@ -305,13 +306,14 @@ void CApp::InitializeCaustic(HWND hwnd)
                      app.spBokehShader->SetPSParamFloat(L"checkDepth", (app.checkDepth) ? 1.0f : 0.0f);
                      app.spSourceColorNode->SetSource(app.spGPUPipeline, app.spLastColorImage);
                      app.spSourceDepthNode->SetSource(app.spGPUPipeline, app.spLastDepthImage);
-                     //app.spCameraReadyNode->Process(app.spGPUPipeline);
-                     //((app.smooth) ? app.spNodeSmooth : app.spNode)->Process(app.spGPUPipeline);
+
+                     // Run the pipeline
+                     ((app.smooth) ? app.spCameraReadyNodeSmooth : app.spCameraReadyNode)->Process(app.spGPUPipeline);
                      auto spTexture = ((app.smooth) ? app.spNodeSmooth : app.spNode)->GetOutputTexture(app.spGPUPipeline);
                      if (spTexture)
                          app.spRenderer->DrawScreenQuad(0.0f, 0.0f, 1.0f, 1.0f, spTexture, nullptr);
 
-                     auto finalTex = app.spCameraReadyNode->GetOutputTexture(app.spGPUPipeline);
+                     auto finalTex = ((app.smooth) ? app.spCameraReadyNodeSmooth : app.spCameraReadyNode)->GetOutputTexture(app.spGPUPipeline);
                      auto spImage = finalTex->CopyToImage(app.spRenderer);
                      DWORD res = WaitForSingleObject(hCanWrite, 10);
                      if (res == WAIT_OBJECT_0)
@@ -516,6 +518,9 @@ void CApp::InitializeCaustic(HWND hwnd)
 
     app.spCameraReadyNode = app.spGPUPipeline->CreateSinkNode(app.spShader, 1920, 1080, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
     app.spCameraReadyNode->SetInput(L"sourceTexture1", L"sourceSampler1", app.spNode);
+    
+    app.spCameraReadyNodeSmooth = app.spGPUPipeline->CreateSinkNode(app.spShader, 1920, 1080, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
+    app.spCameraReadyNodeSmooth->SetInput(L"sourceTexture1", L"sourceSampler1", app.spNodeSmooth);
     app.spRenderer->Unfreeze();
 }
 

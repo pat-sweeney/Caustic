@@ -100,7 +100,7 @@ namespace Caustic
     {
         for (CRefObj<IGPUPipelineSinkNode> &pCurNode : m_sinkNodes)
         {
-            pCurNode->GetOutputTexture(this);
+            pCurNode->Process(this);
         }
     }
     
@@ -219,7 +219,6 @@ namespace Caustic
     //**********************************************************************
     CRefObj<ITexture> CGPUPipelineNodeBase::GetOutputTexture(IGPUPipeline *pPipeline)
     {
-        Process(pPipeline);
         return m_spOutputTexture;
     }
 
@@ -276,6 +275,7 @@ namespace Caustic
         std::vector<CRefObj<ITexture>> textures;
         for (auto spSourceNode : m_sourceNodes)
         {
+            spSourceNode.second.first->Process(pPipeline);
             CRefObj<ITexture> spTexture = spSourceNode.second.first->GetOutputTexture(pPipeline);
             textures.push_back(spTexture);
         }
@@ -534,6 +534,7 @@ namespace Caustic
         CRefObj<IRenderer> spRenderer = pPipeline->GetRenderer();
         CComPtr<ID3D11Device> spDevice = spRenderer->GetDevice();
         CComPtr<ID3D11DeviceContext> spCtx = spRenderer->GetContext();
+        m_sourceNodes.begin()->second.first->Process(pPipeline);
         CRefObj<ITexture> spTexture = m_sourceNodes.begin()->second.first->GetOutputTexture(pPipeline);
         if (m_width == 0 || m_height == 0)
         {
