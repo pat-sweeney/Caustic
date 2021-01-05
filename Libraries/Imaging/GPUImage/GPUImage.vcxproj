@@ -160,6 +160,28 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <CustomBuild Include="FillHolesVP.xml">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Imaging\GPUImage\FillHolesVP.xml -o $(CausticRoot)\$(Configuration)\FillHolesVP.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Imaging\GPUImage\FillHolesVP.xml -o $(CausticRoot)\$(Configuration)\FillHolesVP.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\FillHolesVP.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\FillHolesVP.shi</Outputs>
+      <SubType>Designer</SubType>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="FillHolesHP.xml">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Imaging\GPUImage\FillHolesHP.xml -o $(CausticRoot)\$(Configuration)\FillHolesHP.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Imaging\GPUImage\FillHolesHP.xml -o $(CausticRoot)\$(Configuration)\FillHolesHP.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\FillHolesHP.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\FillHolesHP.shi</Outputs>
+      <SubType>Designer</SubType>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="DepthMesh.ps" />
     <None Include="DepthMesh.vs" />
     <None Include="DepthSel.ps" />
@@ -172,6 +194,8 @@
     <None Include="NormDepth.ps" />
     <None Include="FillHoles.ps" />
     <None Include="FillHolesSP.ps" />
+    <None Include="FillHolesVP.ps" />
+    <None Include="FillHolesHP.ps" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="DepthSel.xml">

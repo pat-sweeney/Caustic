@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Shader>
+  <PixelShader Filename="$(CausticRoot)\Libraries\Imaging\GPUImage\FillHolesVP.ps" Output="$(CausticRoot)\$(Configuration)\FillHolesVP_PS.cso"/>
+  <VertexShader Filename="$(CausticRoot)\Libraries\Imaging\GPUImage\Quad.vs" Output="$(CausticRoot)\$(Configuration)\FillHolesVP_VS.cso"/>
+</Shader>

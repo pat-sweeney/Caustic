@@ -49,6 +49,8 @@ public:
     CRefObj<IShader> spShader;
     CRefObj<IShader> spBokehShader;
     CRefObj<IShader> spDepthSelShader;
+    CRefObj<IShader> spHoleFillShaderV;
+    CRefObj<IShader> spHoleFillShaderH;
     CRefObj<IImage> spLastColorImage;
     CRefObj<IImage> spLastDepthImage;
     CRefObj<IImage> spRayMap;
@@ -77,6 +79,7 @@ public:
     float BokehRadius;
     bool smooth;
     bool checkDepth;
+    int holeSize;
 
     CApp() :
         smooth(false),
@@ -94,7 +97,8 @@ public:
         focusDistance(0.0f),
         focusMaxWidth(0.057f),
         focusWidth(0.0f),
-        BokehRadius(10.0f)
+        BokehRadius(10.0f),
+        holeSize(16)
     {
     }
 
@@ -265,6 +269,7 @@ void CApp::InitializeCaustic(HWND hwnd)
              ImGui::SliderFloat("FocusWidth", &app.focusWidth, 0.0f, 3.0f, "%f", 1.0f);
              ImGui::SliderFloat("FocusMaxWidth", &app.focusMaxWidth, 0.0f, 3.0f, "%f", 1.0f);
              ImGui::SliderFloat("BokehRadius", &app.BokehRadius, 0.0f, 30.0f, "%f", 1.0f);
+             ImGui::DragInt("HoleSize", &app.holeSize, 1.0f, 0, 128);
 
              CRefObj<IImage> spColorImage;
              CRefObj<IImage> spDepthImage;
@@ -280,6 +285,10 @@ void CApp::InitializeCaustic(HWND hwnd)
                  if (app.spSourceColorNode && app.spLastColorImage && app.spLastDepthImage)
                  {
                      app.spBackgroundTexture->Update(app.spRenderer);
+
+                     std::any holeSize((float)app.holeSize);
+                     app.spHoleFillShaderH->SetPSParam(L"holeSize", holeSize);
+                     app.spHoleFillShaderV->SetPSParam(L"holeSize", holeSize);
 
                      app.spBokehShader->SetPSParamFloat(L"BokehRadius", app.BokehRadius);
                      std::any bt(app.spBackgroundTexture);
@@ -462,9 +471,18 @@ void CApp::InitializeCaustic(HWND hwnd)
     spFillHoles->SetInput(L"depthTex7", nullptr, spMedian7);
     spFillHoles->SetInput(L"depthTex8", nullptr, spMedian8);
 #else
+#ifdef SINGLE_PASS_HOLEFILLING
     auto spsh = app.spRenderer->GetShaderMgr()->FindShader(L"FillHolesSP");
     auto spFillHoles = app.spGPUPipeline->CreateNode(spsh, colorW, colorH, DXGI_FORMAT_R16_UINT);
     spFillHoles->SetInput(L"depthTex", nullptr, spDepthMeshNode);
+#else
+    app.spHoleFillShaderH = app.spRenderer->GetShaderMgr()->FindShader(L"FillHolesHP");
+    app.spHoleFillShaderV = app.spRenderer->GetShaderMgr()->FindShader(L"FillHolesVP");
+    auto spFillHolesH = app.spGPUPipeline->CreateNode(app.spHoleFillShaderH, colorW, colorH, DXGI_FORMAT_R16_UINT);
+    spFillHolesH->SetInput(L"depthTex", nullptr, spDepthMeshNode);
+    auto spFillHolesV = app.spGPUPipeline->CreateNode(app.spHoleFillShaderV, colorW, colorH, DXGI_FORMAT_R16_UINT);
+    spFillHolesV->SetInput(L"depthTex", nullptr, spFillHolesH);
+#endif
 #endif
 
     //**********************************************************************
@@ -472,7 +490,7 @@ void CApp::InitializeCaustic(HWND hwnd)
     //**********************************************************************
     auto spnd = app.spRenderer->GetShaderMgr()->FindShader(L"NormDepth");
     auto spNormSmooth = app.spGPUPipeline->CreateNode(spnd, colorW, colorH, DXGI_FORMAT_R32_FLOAT);
-    spNormSmooth->SetInput(L"depthTex", nullptr, spFillHoles);
+    spNormSmooth->SetInput(L"depthTex", nullptr, spFillHolesV);
 
     auto spNorm = app.spGPUPipeline->CreateNode(spnd, colorW, colorH, DXGI_FORMAT_R32_FLOAT);
     spNorm->SetInput(L"depthTex", nullptr, spDepthMeshNode);

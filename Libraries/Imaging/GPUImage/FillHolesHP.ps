@@ -1,0 +1,38 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2015-2020
+// Licensed under the MIT license.
+// See file LICENSE for details.
+// File: FillHolesHP.ps
+// Fills holes in a depth map in a single pass (versus FillHoles.ps which
+// relies on a pyramid of depth maps)
+//**********************************************************************
+struct VSOutput
+{
+    float4 pos : SV_POSITION;
+    float2 uvs : TEXCOORD0;
+};
+
+Texture2D<uint> depthTex : register(t1); // Depth texture
+
+cbuffer VS_CONSTANT_BUFFER : register(b0)
+{
+    float _depthTexWidth;
+    float _depthTexHeight;
+    float holeSize;
+};
+
+uint PS(VSOutput p) : SV_Target
+{
+    int xL = p.uvs.x * _depthTexWidth;
+    int yT = p.uvs.y * _depthTexHeight;
+    float depth = depthTex.Load(int3(xL, yT, 0));
+    if (depth != 0)
+        return depth;
+    float maxdepth = 0.0f;
+    for (int offset = -holeSize; offset <= holeSize; offset++)
+    {
+        depth = depthTex.Load(int3(xL + offset, yT, 0));
+        maxdepth = max(depth, maxdepth);
+    }
+    return maxdepth;
+}
