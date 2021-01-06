@@ -43,7 +43,7 @@ namespace Caustic
         // shaderFolder - path to directory containing shaders
         // renderCallback - callback function that is called each time a new frame is rendered
         //**********************************************************************
-        virtual void Initialize(HWND hwnd, std::wstring &shaderFolder, std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) = 0;
+        virtual void Initialize(HWND hwnd, std::wstring &shaderFolder, std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback, bool startFrozen = false) = 0;
 
         //**********************************************************************
         // Method: Shutdown

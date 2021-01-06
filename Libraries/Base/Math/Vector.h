@@ -5,6 +5,7 @@
 //**********************************************************************
 #pragma once
 #include "Base\Core\Core.h"
+#include "Base\Core\Property.h"
 
 namespace Caustic
 {
@@ -148,7 +149,33 @@ namespace Caustic
 		//**********************************************************************
         Vector3(const float _x, const float _y, const float _z) { x = _x; y = _y; z = _z; }
 
-		//**********************************************************************
+        // Define swizzle operators
+        Property<Vector3> xyz = Property<Vector3>(
+            [this]() -> Vector3 { return Vector3(x, y, z); },
+            [this](const Vector3& v) { x = v.x; y = v.y; z = v.z; });
+        Property<Vector3> zyx = Property<Vector3>(
+            [this]() -> Vector3 { return Vector3(z, y, x); },
+            [this](const Vector3& v) { z = v.x; y = v.y; x = v.z; });
+        Property<Vector3> xxx = Property<Vector3>(
+            [this]() -> Vector3 { return Vector3(x, x, x); },
+            [this](const Vector3& v) { x = v.x; });
+        Property<Vector3> yyy = Property<Vector3>(
+            [this]() -> Vector3 { return Vector3(y, y, y); },
+            [this](const Vector3& v) { y = v.x; });
+        Property<Vector3> zzz = Property<Vector3>(
+            [this]() -> Vector3 { return Vector3(z, z, z); },
+            [this](const Vector3& v) { z = v.x; });
+        Property<Vector2> xy = Property<Vector2>(
+            [this]() -> Vector2 { return Vector2(x, y); },
+            [this](const Vector2& v) { x = v.x; y = v.y; });
+        Property<Vector2> xz = Property<Vector2>(
+            [this]() -> Vector2 { return Vector2(x, z); },
+            [this](const Vector2& v) { x = v.x; z = v.y; });
+        Property<Vector2> yz = Property<Vector2>(
+            [this]() -> Vector2 { return Vector2(y, z); },
+            [this](const Vector2& v) { y = v.x; z = v.y; });
+
+        //**********************************************************************
 		// Method: Sign
 		// Returns -1 or +1 depending on direction vector is pointing
 		//**********************************************************************
@@ -275,6 +302,52 @@ namespace Caustic
 
         Vector4() : x(0.0f), y(0.0f), z(0.0f), w(0.0f) {}
         Vector4(const float _x, const float _y, const float _z, const float _w) { x = _x; y = _y; z = _z; w = _w; }
+
+        // Define swizzle operators
+        Property<Vector4> xyzw = Property<Vector4>(
+            [this]() -> Vector4 { return Vector4(x, y, z, w); },
+            [this](const Vector4& v) { x = v.x; y = v.y; z = v.z; w = v.w; });
+        Property<Vector4> wzyx = Property<Vector4>(
+            [this]() -> Vector4 { return Vector4(w, z, y, x); },
+            [this](const Vector4& v) { w = v.x; z = v.y; y = v.z; x = v.w; });
+        Property<Vector4> xxxx = Property<Vector4>(
+            [this]() -> Vector4 { return Vector4(x, x, x, x); },
+            [this](const Vector4& v) { x = v.x; });
+        Property<Vector4> yyyy = Property<Vector4>(
+            [this]() -> Vector4 { return Vector4(y, y, y, y); },
+            [this](const Vector4& v) { y = v.x; });
+        Property<Vector4> zzzz = Property<Vector4>(
+            [this]() -> Vector4 { return Vector4(z, z, z, z); },
+            [this](const Vector4& v) { z = v.x; });
+        Property<Vector4> wwww = Property<Vector4>(
+            [this]() -> Vector4 { return Vector4(w, w, w, w); },
+            [this](const Vector4& v) { w = v.x; });
+
+        Property<Vector3> xyz = Property<Vector3>(
+            [this]() -> Vector3 { return Vector3(x, y, z); },
+            [this](const Vector3& v) { x = v.x; y = v.y; z = v.z; });
+        Property<Vector3> zyx = Property<Vector3>(
+            [this]() -> Vector3 { return Vector3(z, y, x); },
+            [this](const Vector3& v) { z = v.x; y = v.y; x = v.z; });
+        Property<Vector3> xxx = Property<Vector3>(
+            [this]() -> Vector3 { return Vector3(x, x, x); },
+            [this](const Vector3& v) { x = v.x; });
+        Property<Vector3> yyy = Property<Vector3>(
+            [this]() -> Vector3 { return Vector3(y, y, y); },
+            [this](const Vector3& v) { y = v.x; });
+        Property<Vector3> zzz = Property<Vector3>(
+            [this]() -> Vector3 { return Vector3(z, z, z); },
+            [this](const Vector3& v) { z = v.x; });
+
+        Property<Vector2> xy = Property<Vector2>(
+            [this]() -> Vector2 { return Vector2(x, y); },
+            [this](const Vector2& v) { x = v.x; y = v.y; });
+        Property<Vector2> xz = Property<Vector2>(
+            [this]() -> Vector2 { return Vector2(x, z); },
+            [this](const Vector2& v) { x = v.x; z = v.y; });
+        Property<Vector2> yz = Property<Vector2>(
+            [this]() -> Vector2 { return Vector2(y, z); },
+            [this](const Vector2& v) { y = v.x; z = v.y; });
 
         //**********************************************************************
         // Method: IsEq

@@ -260,6 +260,8 @@ namespace Caustic
 		float dx = 2.0f / float(width);
 		float dy = 2.0f / float(height);
 		float cy = -1.0f;
+		faces.reserve(2 * (width - 1) * (height - 1));
+		verts.reserve(width * height);
 		Vector3 normal(0.0f, 1.0f, 0.0f);
 		for (uint32 y = 0; y < height; y++)
 		{

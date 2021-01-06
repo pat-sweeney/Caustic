@@ -171,10 +171,8 @@ void CApp::Setup3DScene(IRenderWindow *pRenderWindow)
 
     auto spCamera = spCausticFactory->CreateCamera(true);
     Vector3 eye(app.cameraExt[3][0], app.cameraExt[3][1], app.cameraExt[3][2]);
-    Vector3 look(
-        app.cameraExt[0][0] + app.cameraExt[3][0],
-        app.cameraExt[1][1] + app.cameraExt[3][1],
-        app.cameraExt[2][2] + app.cameraExt[3][2]);
+    Vector4 lookDir = Vector4(0.0f, 0.0f, 1.0f, 0.0f) * app.cameraExt;
+    Vector3 look = eye + lookDir.xyz;
     Vector3 up(0.0f, 1.0f, 0.0f);
     spCamera->SetPosition(eye, look, up);
 }
@@ -246,9 +244,9 @@ void CApp::InitializeCaustic(HWND hwnd)
 {
     app.hwnd = hwnd;
     spCausticFactory = Caustic::CreateCausticFactory();
-     std::wstring shaderFolder(SHADERPATH);
-     spRenderWindow = CreateRenderWindow(hwnd, shaderFolder,
-         [](IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)
+    std::wstring shaderFolder(SHADERPATH);
+    spRenderWindow = CreateRenderWindow(hwnd, shaderFolder,
+        [](IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)
          {
              if (pass != Caustic::c_PassOpaque)
                  return;
@@ -362,13 +360,13 @@ void CApp::InitializeCaustic(HWND hwnd)
                              finalTex->CopyToImage(app.spRenderer, app.spFinalImage);
                              imageToSend = app.spFinalImage;
                          }
-                         DWORD res = WaitForSingleObject(hCanWrite, 10);
-                         if (res == WAIT_OBJECT_0)
-                         {
-                             ResetEvent(hCanWrite);
+                         //DWORD res = WaitForSingleObject(hCanWrite, 10);
+                         //if (res == WAIT_OBJECT_0)
+                         //{
+                         //    ResetEvent(hCanWrite);
                              CopyMemory((PVOID)app.pMemBuf, imageToSend->GetData(), 1920 * 1080 * 4);
                              SetEvent(hCanRead);
-                         }
+                         //}
                      }
 #endif
 
@@ -411,14 +409,14 @@ void CApp::InitializeCaustic(HWND hwnd)
              }
              ImGui::Render();
              ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-         });
-     app.spRenderer = app.spRenderWindow->GetRenderer();
+         }, true);
+    app.spRenderer = app.spRenderWindow->GetRenderer();
 
-    app.spRenderer->Freeze();
+//    app.spRenderer->Freeze();
 
     app.spBackgroundTexture = Caustic::LoadVideoTexture(L"j:\\github\\caustic\\background.mp4", app.spRenderer);
 
-    hCanRead = OpenEvent(SYNCHRONIZE |EVENT_MODIFY_STATE, TRUE, L"Global\\VirtualCameraMutexRead");
+    hCanRead = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, TRUE, L"Global\\VirtualCameraMutexRead");
     hCanWrite = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, TRUE, L"Global\\VirtualCameraMutexWrite");
     SetEvent(hCanWrite);
 

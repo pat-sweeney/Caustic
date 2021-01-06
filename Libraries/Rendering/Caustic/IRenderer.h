@@ -202,8 +202,9 @@ namespace Caustic
         // hwnd - window to bind renderer to
         // shaderFolder - path to shader folder
         // createDebugDevice - True if application wants the debug D3D device. False otherwise.
+        // startFrozen - start renderer in a frozen state.
         //**********************************************************************
-        virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice) = 0;
+        virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice, bool startFrozen = false) = 0;
 
         //**********************************************************************
         // Method: DrawMesh
@@ -324,5 +325,5 @@ namespace Caustic
     // Header:
     // [Link:Rendering/Caustic/IRenderer.h]
     //**********************************************************************
-    CAUSTICAPI CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring& shaderFolder);
+    CAUSTICAPI CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring& shaderFolder, bool startFrozen = false);
 }

@@ -93,8 +93,10 @@ namespace Caustic
     // Method: Setup
     // See <IRenderer::Setup>.
     //**********************************************************************
-    void CRenderer::Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice)
+    void CRenderer::Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice, bool startFrozen)
     {
+        if (startFrozen)
+            Freeze();
         m_renderThreadId = GetCurrentThreadId();
         CGraphicsBase::Setup(hwnd, createDebugDevice);
 
@@ -682,10 +684,10 @@ namespace Caustic
     // Returns:
     // Returns the created renderer
     //**********************************************************************
-    CAUSTICAPI CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring &shaderFolder)
+    CAUSTICAPI CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring &shaderFolder, bool startFrozen /* = false */)
     {
         std::unique_ptr<CRenderer> spRenderer(new CRenderer());
-        spRenderer->Setup(hwnd, shaderFolder, true);
+        spRenderer->Setup(hwnd, shaderFolder, true, startFrozen);
 
         CRefObj<ICamera> spCamera = CCausticFactory::Instance()->CreateCamera(true);
         spRenderer->SetCamera(spCamera);

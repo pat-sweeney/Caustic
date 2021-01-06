@@ -89,9 +89,9 @@ namespace Caustic
     // Method: Initialize
     // See <IRenderer::Initialize>
     //**********************************************************************
-    void CRendererMarshaller::Initialize(HWND hwnd, std::wstring &shaderFolder, std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback)
+    void CRendererMarshaller::Initialize(HWND hwnd, std::wstring &shaderFolder, std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback, bool startFrozen /* = false */)
     {
-        m_spRenderer = CCausticFactory::Instance()->CreateRenderer(hwnd, shaderFolder);
+        m_spRenderer = CCausticFactory::Instance()->CreateRenderer(hwnd, shaderFolder, startFrozen);
         InitializeCriticalSection(&m_renderQueue.m_cs);
         m_thread = CreateThread(nullptr, 0, RenderThreadProc, this, 0, nullptr);
         m_renderCallback = renderCallback;
@@ -366,13 +366,13 @@ namespace Caustic
     // Method: Setup
     // See <IRenderer::Setup>
     //**********************************************************************
-    void CRendererMarshaller::Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice)
+    void CRendererMarshaller::Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice, bool startFrozen /* = false */)
     {
         m_renderQueue.AddLambda(
-            [this, hwnd, shaderFolder, createDebugDevice]()
+            [this, hwnd, shaderFolder, createDebugDevice, startFrozen]()
             {
                 std::wstring sh = shaderFolder;
-                m_spRenderer->Setup(hwnd, sh, createDebugDevice);
+                m_spRenderer->Setup(hwnd, sh, createDebugDevice, startFrozen);
             }
         );
     }

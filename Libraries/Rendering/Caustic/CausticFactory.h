@@ -57,7 +57,7 @@ namespace Caustic
 		//**********************************************************************
 		// ICausticFactory
 		//**********************************************************************
-		virtual CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring &shaderFolder) override;
+		virtual CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring &shaderFolder, bool startFrozen = false) override;
 		virtual CRefObj<IPointCloud> CreatePointCloud(IRenderer* pRenderer, uint32 width, uint32 height) override;
 		virtual CRefObj<IRenderMesh> CreateRenderMesh() override;
 		virtual CRefObj<IRenderSubMesh> CreateRenderSubMesh() override;

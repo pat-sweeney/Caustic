@@ -99,7 +99,7 @@ VSOutput VS(VSInput p)
 {
     VSOutput v;
     float4 wpos = mul(float4(p.pos, 1.0f), endpoints);
-    float3 posDS = mul(float4(wpos.xyz, 1.0f), colorExt);
+    float3 posDS = mul(float4(wpos.xyz, 1.0f), colorExt).xyz;
     v.pos.xy = Project3D(posDS.xyz);
     v.pos.z = 0.01f;//(depth - minDepth) / (maxDepth - minDepth);
     v.pos.w = 1.0f;

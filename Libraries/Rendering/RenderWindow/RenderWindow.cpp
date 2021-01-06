@@ -13,13 +13,13 @@
 
 namespace Caustic
 {
-    CAUSTICAPI CRefObj<IRenderWindow> CreateRenderWindow(HWND hwnd, std::wstring &shaderFolder, std::function<void(IRenderer*,IRenderCtx*,int)> callback)
+    CAUSTICAPI CRefObj<IRenderWindow> CreateRenderWindow(HWND hwnd, std::wstring &shaderFolder, std::function<void(IRenderer*,IRenderCtx*,int)> callback, bool startFrozen /* = false */)
     {
-        return CRefObj<IRenderWindow>(new CRenderWindow(hwnd, shaderFolder, callback));
+        return CRefObj<IRenderWindow>(new CRenderWindow(hwnd, shaderFolder, callback, false, startFrozen));
     }
 
     CRenderWindow::CRenderWindow(HWND hwnd, std::wstring &shaderFolder,
-        std::function<void(Caustic::IRenderer*, Caustic::IRenderCtx*, int)> callback, bool useRenderGraph /* = false */)
+        std::function<void(Caustic::IRenderer*, Caustic::IRenderCtx*, int)> callback, bool useRenderGraph /* = false */, bool startFrozen /* = false */)
     {
         m_snapPosHome = { 10.0f, 10.0f, 10.0f };
         m_snapPosX = { 1000.0f, 0.0f, 0.0f };
@@ -50,7 +50,7 @@ namespace Caustic
                     sceneCtx.m_CurrentPass = pass;
                     m_spSceneGraph->Render(pRenderer, pRenderCtx, &sceneCtx);
                 }
-        });
+        }, startFrozen);
 
         Caustic::Vector3 pos(0.0f, 0.0f, 0.0f);
         Caustic::FRGBColor clr(1.0f, 1.0f, 1.0f);

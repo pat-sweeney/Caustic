@@ -78,9 +78,9 @@ namespace Caustic
     // Method: CreateRenderer
     // See <ICausticFactory::CreateRenderer>
     //**********************************************************************
-    CRefObj<IRenderer> CCausticFactory::CreateRenderer(HWND hwnd, std::wstring &shaderFolder)
+    CRefObj<IRenderer> CCausticFactory::CreateRenderer(HWND hwnd, std::wstring &shaderFolder, bool startFrozen /* = false */)
 	{
-		return Caustic::CreateRenderer(hwnd, shaderFolder);
+		return Caustic::CreateRenderer(hwnd, shaderFolder, startFrozen);
 	}
 	
     //**********************************************************************

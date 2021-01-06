@@ -19,6 +19,7 @@
     <ClInclude Include="Event.h" />
     <ClInclude Include="IRefCount.h" />
     <ClInclude Include="ISerialize.h" />
+    <ClInclude Include="Property.h" />
     <ClInclude Include="RefCount.h" />
     <ClInclude Include="UnitTests.h" />
   </ItemGroup>

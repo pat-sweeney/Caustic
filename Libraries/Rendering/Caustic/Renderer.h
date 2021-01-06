@@ -261,7 +261,7 @@ namespace Caustic
         virtual void SetCamera(ICamera* pCamera) override { CHECKTHREAD; CGraphicsBase::SetCamera(pCamera); }
         virtual CRefObj<IShaderMgr> GetShaderMgr() override { CHECKTHREAD; return CGraphicsBase::GetShaderMgr(); }
         virtual void AddRenderable(IRenderable* pRenderable) override;
-        virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice) override;
+        virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice, bool startFrozen = false) override;
         virtual void DrawMesh(IRenderSubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) override;
         virtual void AddPointLight(IPointLight *pLight) override;
         virtual CRefObj<IRenderCtx> GetRenderCtx() override;

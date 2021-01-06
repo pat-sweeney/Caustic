@@ -47,7 +47,7 @@ namespace Caustic
 		// talk to the renderer. This object runs on the clients thread and acts
 		// only as a proxy for marshalling commands+data over to the renderer thread.
 		//**********************************************************************
-		virtual CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring &shaderFolder) = 0;
+		virtual CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring &shaderFolder, bool startFrozen = false) = 0;
 
 		//**********************************************************************
 		// Method: CreatePointCloud

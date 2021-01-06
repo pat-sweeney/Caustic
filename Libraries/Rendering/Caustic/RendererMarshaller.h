@@ -80,7 +80,7 @@ namespace Caustic
         //**********************************************************************
         // IRendererMarshaller methods
         //**********************************************************************
-        virtual void Initialize(HWND hwnd, std::wstring &shaderFolder, std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) override;
+        virtual void Initialize(HWND hwnd, std::wstring &shaderFolder, std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback, bool startFrozen = false) override;
         virtual void Shutdown() override;
         virtual CRefObj<ITexture> LoadTexture(const wchar_t *pPath) override;
         virtual CRefObj<ITexture> LoadVideoTexture(const wchar_t *pPath) override;
@@ -102,7 +102,7 @@ namespace Caustic
         virtual void ClearDepth() override;
         virtual CRefObj<ICamera> GetCamera() override;
         virtual CRefObj<IShaderMgr> GetShaderMgr() override { return m_spRenderer->GetShaderMgr(); }
-        virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice) override;
+        virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice, bool startFrozen = false) override;
         virtual void DrawMesh(IRenderSubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) override; // Draws a mesh
         virtual void RenderLoop(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) override; // Renderer entry point
         virtual void RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) override; // Have renderer draw and present next frame
