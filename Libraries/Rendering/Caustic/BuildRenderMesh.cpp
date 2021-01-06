@@ -260,33 +260,33 @@ namespace Caustic
 		float dx = 2.0f / float(width);
 		float dy = 2.0f / float(height);
 		float cy = -1.0f;
-		faces.reserve(2 * (width - 1) * (height - 1));
-		verts.reserve(width * height);
+		faces.resize(2 * (width - 1) * (height - 1));
+		verts.resize(width * height);
 		Vector3 normal(0.0f, 1.0f, 0.0f);
+		int vertIndex = 0;
+		int faceIndex = 0;
 		for (uint32 y = 0; y < height; y++)
 		{
 			float cx = -1.0f;
 			for (uint32 x = 0; x < width; x++)
 			{
-				CGeomVertex vertex;
-				vertex.pos = Vector3(cx, cy, 0.0f);
-				vertex.norm = normal;
-				vertex.uvs[0] = Vector2(float(x) / float(width - 1), float(y) / float(height - 1));
-				vertex.uvs[1] = Vector2(float(x), float(y));
-				verts.push_back(vertex);
+				verts[vertIndex].pos = Vector3(cx, cy, 0.0f);
+				verts[vertIndex].norm = normal;
+				verts[vertIndex].uvs[0] = Vector2(float(x) / float(width - 1), float(y) / float(height - 1));
+				verts[vertIndex].uvs[1] = Vector2(float(x), float(y));
 				cx += dx;
 				if (x > 0 && y > 0)
 				{
-					CGeomFace face;
-					face.indices[0] = (y - 1) * width + (x - 1);
-					face.indices[1] = y * width + (x - 1);
-					face.indices[2] = (y - 1) * width + x;
-					faces.push_back(face);
-					face.indices[0] = y * width + x;
-					face.indices[1] = (y - 1) * width + x;
-					face.indices[2] = y * width + (x - 1);
-					faces.push_back(face);
+					faces[faceIndex].indices[0] = vertIndex - width - 1;
+					faces[faceIndex].indices[1] = vertIndex - 1;
+					faces[faceIndex].indices[2] = vertIndex - width;
+					faceIndex++;
+					faces[faceIndex].indices[0] = vertIndex;
+					faces[faceIndex].indices[1] = vertIndex - width;
+					faces[faceIndex].indices[2] = vertIndex - 1;
+					faceIndex++;
 				}
+				vertIndex++;
 			}
 			cy += dy;
 		}
