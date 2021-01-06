@@ -52,5 +52,6 @@ namespace Caustic
         virtual void Render(IRenderer* pRenderer, int slot, bool isPixelShader) override;
         virtual void CopyFromImage(IRenderer* pRenderer, IImage* pImage, bool generateMipMap = false) override;
         virtual CRefObj<IImage> CopyToImage(IRenderer* pRenderer) override;
+        virtual void CopyToImage(IRenderer* pRenderer, IImage *pImage) override;
     };
 };

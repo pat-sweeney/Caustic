@@ -541,7 +541,8 @@ namespace Caustic
             m_width = spTexture->GetWidth();
             m_height = spTexture->GetHeight();
         }
-        m_spOutputTexture = Caustic::CCausticFactory::Instance()->CreateTexture(spRenderer, m_width, m_height, DXGI_FORMAT_B8G8R8A8_UNORM, m_cpuFlags, m_bindFlags);
+        if (m_spOutputTexture == nullptr)
+            m_spOutputTexture = Caustic::CCausticFactory::Instance()->CreateTexture(spRenderer, m_width, m_height, DXGI_FORMAT_B8G8R8A8_UNORM, m_cpuFlags, m_bindFlags);
         spCtx->CopyResource(m_spOutputTexture->GetD3DTexture(), spTexture->GetD3DTexture());
     }
 

@@ -103,7 +103,7 @@ namespace Caustic
         virtual void CopyFromImage(IRenderer* pRenderer, IImage* pImage, bool generateMipMap = false) = 0;
 
         //**********************************************************************
-        // Method: CopyFromImage
+        // Method: CopyToImage
         // Copies an texture into an IImage
         //
         // Parameters:
@@ -113,6 +113,16 @@ namespace Caustic
         // Image containing texture pixels
         //**********************************************************************
         virtual CRefObj<IImage> CopyToImage(IRenderer* pRenderer) = 0;
+
+        //**********************************************************************
+        // Method: CopyToImage
+        // Copies an texture into an existing IImage
+        //
+        // Parameters:
+        // pRenderer - graphics device
+        // pImage - image to copy data to
+        //**********************************************************************
+        virtual void  CopyToImage(IRenderer* pRenderer, IImage *pImage) = 0;
     };
 
     //**********************************************************************

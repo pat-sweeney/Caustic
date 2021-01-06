@@ -56,8 +56,11 @@ public:
     CRefObj<IImage> spLastDepthImage;
     CRefObj<IImage> spRayMap;
     CRefObj<ITexture> spRayTex;
+    CRefObj<IImage> spFinalImage;
     CComPtr<ID3D11Buffer> spLineVB;                   // Vertex buffer used to draw lines
     CRefObj<IShader> spLineShader;
+    HANDLE hMapFile;
+    LPTSTR pMemBuf;
     HBITMAP imgbitmap = nullptr;
     int imgwidth, imgheight;
     HWND hwnd;
@@ -66,6 +69,8 @@ public:
     float depth[4];
     bool colored;
     bool useBackground;
+    bool sendToCamera;
+    bool sendOrigToCamera;
     bool renderModel;
     bool renderSkeleton;
     bool focusTracking;
@@ -89,6 +94,8 @@ public:
         renderModel(false),
         renderSkeleton(false),
         useBackground(true),
+        sendToCamera(true),
+        sendOrigToCamera(false),
         focusTracking(true),
         renderCOC(false),
         showInFocus(false),
@@ -248,6 +255,12 @@ void CApp::InitializeCaustic(HWND hwnd)
              ImGui_ImplDX11_NewFrame();
              ImGui_ImplWin32_NewFrame();
              ImGui::NewFrame();
+             ImGui::Checkbox("SendToCamera", &app.sendToCamera);
+             if (ImGui::IsItemHovered())
+                 ImGui::SetTooltip("Should we send image to camera driver?");
+             ImGui::Checkbox("SendOrigToCamera", &app.sendOrigToCamera);
+             if (ImGui::IsItemHovered())
+                 ImGui::SetTooltip("Sends original (unprocessed image) to camera driver");
              ImGui::Checkbox("UseDynamicBackground", &app.useBackground);
              ImGui::Checkbox("RenderCircleConfusion", &app.renderCOC);
              ImGui::Checkbox("ColorInFocus", &app.showInFocus);
@@ -313,25 +326,51 @@ void CApp::InitializeCaustic(HWND hwnd)
                      if (spTexture)
                          app.spRenderer->DrawScreenQuad(0.0f, 0.0f, 1.0f, 1.0f, spTexture, nullptr);
 
-                     auto finalTex = ((app.smooth) ? app.spCameraReadyNodeSmooth : app.spCameraReadyNode)->GetOutputTexture(app.spGPUPipeline);
-                     auto spImage = finalTex->CopyToImage(app.spRenderer);
-                     DWORD res = WaitForSingleObject(hCanWrite, 10);
-                     if (res == WAIT_OBJECT_0)
+#define WRITE_TO_CAMERA
+#ifdef WRITE_TO_CAMERA
+                     if (app.sendToCamera)
                      {
-                         ResetEvent(hCanWrite);
-                         auto hMapFile = OpenFileMapping(FILE_MAP_READ | FILE_MAP_WRITE, FALSE, L"Global\\VirtualCameraImage");
-                         if (hMapFile)
+                         CRefObj<IImage> imageToSend;
+                         if (app.sendOrigToCamera)
                          {
-                             auto pBuf = (LPTSTR)MapViewOfFile(hMapFile, FILE_MAP_WRITE, 0, 0, 1920 * 1080 * 4);
-                             if (pBuf)
+                             imageToSend = spColorImage;
+                         }
+                         else
+                         {
+                             auto finalTex = ((app.smooth) ? app.spCameraReadyNodeSmooth : app.spCameraReadyNode)->GetOutputTexture(app.spGPUPipeline);
+                             if (app.spFinalImage == nullptr)
                              {
-                                 CopyMemory((PVOID)pBuf, spImage->GetData(), 1920 * 1080 * 4);
-                                 UnmapViewOfFile(pBuf);
+                                 int bpp = 32;
+                                 switch (finalTex->GetFormat())
+                                 {
+                                 case DXGI_FORMAT::DXGI_FORMAT_R8_UNORM:
+                                     bpp = 8;
+                                     break;
+                                 case DXGI_FORMAT::DXGI_FORMAT_R16_UINT:
+                                     bpp = 16;
+                                     break;
+                                 case DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM:
+                                 case DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM:
+                                     bpp = 32;
+                                     break;
+                                 case DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT:
+                                     bpp = 128;
+                                     break;
+                                 }
+                                 app.spFinalImage = CreateImage(finalTex->GetWidth(), finalTex->GetHeight(), bpp);
                              }
-                             CloseHandle(hMapFile);
+                             finalTex->CopyToImage(app.spRenderer, app.spFinalImage);
+                             imageToSend = app.spFinalImage;
+                         }
+                         DWORD res = WaitForSingleObject(hCanWrite, 10);
+                         if (res == WAIT_OBJECT_0)
+                         {
+                             ResetEvent(hCanWrite);
+                             CopyMemory((PVOID)app.pMemBuf, imageToSend->GetData(), 1920 * 1080 * 4);
                              SetEvent(hCanRead);
                          }
                      }
+#endif
 
                      app.spRenderer->ClearDepth();
                  }
@@ -393,6 +432,11 @@ void CApp::InitializeCaustic(HWND hwnd)
 
     Setup3DScene(app.spRenderWindow);
     SetupLineDrawing(depthW, depthH, colorW, colorH);
+
+    // Create shared memory that we will use for sending image to virtual camera driver
+    app.hMapFile = OpenFileMapping(FILE_MAP_READ | FILE_MAP_WRITE, FALSE, L"Global\\VirtualCameraImage");
+    if (app.hMapFile)
+        app.pMemBuf = (LPTSTR)MapViewOfFile(hMapFile, FILE_MAP_WRITE, 0, 0, 1920 * 1080 * 4);
 
     app.spGPUPipeline = Caustic::CreateGPUPipeline(app.spRenderer);
 
@@ -634,6 +678,18 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
     UpdateWindow(hWnd);
     return TRUE;
 }
+
+void Shutdown()
+{
+    ImGui_ImplDX11_Shutdown();
+    ImGui_ImplWin32_Shutdown();
+    ImGui::DestroyContext();
+    if (app.pMemBuf)
+        UnmapViewOfFile(app.pMemBuf);
+    if (app.hMapFile)
+        CloseHandle(app.hMapFile);
+}
+
 //
 //  FUNCTION: WndProc(HWND, UINT, WPARAM, LPARAM)
 //
@@ -679,9 +735,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
     break;
     case WM_DESTROY:
-        ImGui_ImplDX11_Shutdown();
-        ImGui_ImplWin32_Shutdown();
-        ImGui::DestroyContext();
+        Shutdown();
         PostQuitMessage(0);
         break;
 //    case WM_LBUTTONDOWN:
