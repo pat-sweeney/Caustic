@@ -45,17 +45,17 @@ namespace Caustic
             return *this;
         }
 
-        operator const T& () const
+        operator const T () const
         {
             return getter();
         }
         
-        T& operator() ()
+        T operator() ()
         {
             return getter();
         }
         
-        T const& operator() () const
+        T const operator() () const
         {
             return getter();
         }

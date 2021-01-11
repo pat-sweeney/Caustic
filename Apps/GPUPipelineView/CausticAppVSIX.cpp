@@ -86,6 +86,9 @@ public:
     bool smooth;
     bool checkDepth;
     int holeSize;
+    float modelScale;
+    Caustic::BBox3 modelBbox;
+    CRefObj<IShader> spModelShader;
 
     CApp() :
         smooth(false),
@@ -106,14 +109,15 @@ public:
         focusMaxWidth(0.057f),
         focusWidth(0.0f),
         BokehRadius(10.0f),
-        holeSize(16)
+        holeSize(16),
+        modelScale(1.0f)
     {
     }
 
     void InitializeCaustic(HWND hwnd);
     void Setup3DScene(IRenderWindow* pRenderWindow);
     void DrawLine(Vector3 p1, Vector3 p2);
-    void SetupLineDrawing(uint32 depthW, uint32 depthH, uint32 colorW, uint32 colorH);
+    void SetupAzureCameraParameters(IShader *pShader, uint32 depthW, uint32 depthH, uint32 colorW, uint32 colorH);
 };
 CApp app;
 
@@ -145,7 +149,12 @@ void CApp::Setup3DScene(IRenderWindow *pRenderWindow)
     auto spMeshElem = spSceneFactory->CreateMeshElem();
     spMeshElem->SetMesh(spMesh);
 
-    CRefObj<IShader> spShader = spRenderWindow->GetRenderer()->GetShaderMgr()->FindShader(L"Textured");
+    auto spSphere = Caustic::CreateCube();
+    spSphere->GetBBox(&app.modelBbox);
+    auto spSphereElem = spSceneFactory->CreateMeshElem();
+    spSphereElem->SetMesh(spSphere);
+
+    app.spModelShader = spRenderWindow->GetRenderer()->GetShaderMgr()->FindShader(L"ModelMesh");
     CRefObj<ISceneMaterialElem> spMaterialElem = spSceneFactory->CreateMaterialElem();
     CRefObj<IMaterialAttrib> spMaterial = spCausticFactory->CreateMaterialAttrib();
     FRGBColor ambient(0.2f, 0.2f, 0.2f);
@@ -153,7 +162,7 @@ void CApp::Setup3DScene(IRenderWindow *pRenderWindow)
     spMaterial->SetColor(L"ambientColor", ambient);
     spMaterial->SetColor(L"diffuseColor", diffuse);
     spMaterialElem->SetMaterial(spMaterial);
-    spMaterialElem->SetShader(spShader);
+    spMaterialElem->SetShader(app.spModelShader);
 
     app.m_spLightCollectionElem = spSceneFactory->CreateLightCollectionElem();
 
@@ -166,6 +175,7 @@ void CApp::Setup3DScene(IRenderWindow *pRenderWindow)
     spLight = spCausticFactory->CreateDirectionalLight(lightPos, lightDir, lightColor, 1.0f);
     app.m_spLightCollectionElem->AddLight(spLight);
     spMaterialElem->AddChild(spMeshElem);
+    spMaterialElem->AddChild(spSphereElem);
     app.m_spLightCollectionElem->AddChild(spMaterialElem);
     spSceneGraph->AddChild(app.m_spLightCollectionElem);
 
@@ -173,39 +183,39 @@ void CApp::Setup3DScene(IRenderWindow *pRenderWindow)
     Vector3 eye(app.cameraExt[3][0], app.cameraExt[3][1], app.cameraExt[3][2]);
     Vector4 lookDir = Vector4(0.0f, 0.0f, 1.0f, 0.0f) * app.cameraExt;
     Vector3 look = eye + lookDir.xyz;
-    Vector3 up(0.0f, 1.0f, 0.0f);
-    spCamera->SetPosition(eye, look, up);
+    Vector3 upDir = (Vector4(0.0f, 1.0f, 0.0f, 0.0f) * app.cameraExt).xyz;
+    spCamera->SetPosition(eye, look, upDir);
 }
 
-void CApp::SetupLineDrawing(uint32 depthW, uint32 depthH, uint32 colorW, uint32 colorH)
+void CApp::SetupAzureCameraParameters(IShader *pShader, uint32 depthW, uint32 depthH, uint32 colorW, uint32 colorH)
 {
     app.spRenderer->Freeze();
     auto intrinsics = app.spCamera->GetAzureColorIntrinsics();
-    app.spLineShader->SetVSParamFloat(L"codx", intrinsics.codx);
-    app.spLineShader->SetVSParamFloat(L"cody", intrinsics.cody);
-    app.spLineShader->SetVSParamFloat(L"cx", intrinsics.cx);
-    app.spLineShader->SetVSParamFloat(L"cy", intrinsics.cy);
-    app.spLineShader->SetVSParamFloat(L"fx", intrinsics.fx);
-    app.spLineShader->SetVSParamFloat(L"fy", intrinsics.fy);
-    app.spLineShader->SetVSParamFloat(L"k1", intrinsics.k1);
-    app.spLineShader->SetVSParamFloat(L"k2", intrinsics.k2);
-    app.spLineShader->SetVSParamFloat(L"k3", intrinsics.k3);
-    app.spLineShader->SetVSParamFloat(L"k4", intrinsics.k4);
-    app.spLineShader->SetVSParamFloat(L"k5", intrinsics.k5);
-    app.spLineShader->SetVSParamFloat(L"k6", intrinsics.k6);
-    app.spLineShader->SetVSParamFloat(L"metricRadius", intrinsics.metricRadius);
-    app.spLineShader->SetVSParamFloat(L"p1", intrinsics.p1);
-    app.spLineShader->SetVSParamFloat(L"p2", intrinsics.p2);
-    app.spLineShader->SetVSParamInt(L"type", intrinsics.type);
+    pShader->SetVSParamFloat(L"codx", intrinsics.codx);
+    pShader->SetVSParamFloat(L"cody", intrinsics.cody);
+    pShader->SetVSParamFloat(L"cx", intrinsics.cx);
+    pShader->SetVSParamFloat(L"cy", intrinsics.cy);
+    pShader->SetVSParamFloat(L"fx", intrinsics.fx);
+    pShader->SetVSParamFloat(L"fy", intrinsics.fy);
+    pShader->SetVSParamFloat(L"k1", intrinsics.k1);
+    pShader->SetVSParamFloat(L"k2", intrinsics.k2);
+    pShader->SetVSParamFloat(L"k3", intrinsics.k3);
+    pShader->SetVSParamFloat(L"k4", intrinsics.k4);
+    pShader->SetVSParamFloat(L"k5", intrinsics.k5);
+    pShader->SetVSParamFloat(L"k6", intrinsics.k6);
+    pShader->SetVSParamFloat(L"metricRadius", intrinsics.metricRadius);
+    pShader->SetVSParamFloat(L"p1", intrinsics.p1);
+    pShader->SetVSParamFloat(L"p2", intrinsics.p2);
+    pShader->SetVSParamInt(L"type", intrinsics.type);
     Matrix m(app.cameraExt);
     std::any mat = std::any(m);
-    app.spLineShader->SetVSParam(L"colorExt", mat);
-    app.spLineShader->SetVSParamInt(L"colorWidth", colorW);
-    app.spLineShader->SetVSParamInt(L"colorHeight", colorH);
-    app.spLineShader->SetVSParamFloat(L"minDepth", 10.0f);
-    app.spLineShader->SetPSParamFloat(L"minDepth", 10.0f);
-    app.spLineShader->SetVSParamFloat(L"maxDepth", 8000.0f);
-    app.spLineShader->SetPSParamFloat(L"maxDepth", 8000.0f);
+    pShader->SetVSParam(L"colorExt", mat);
+    pShader->SetVSParamInt(L"colorWidth", colorW);
+    pShader->SetVSParamInt(L"colorHeight", colorH);
+    pShader->SetVSParamFloat(L"minDepth", 10.0f);
+    pShader->SetPSParamFloat(L"minDepth", 10.0f);
+    pShader->SetVSParamFloat(L"maxDepth", 8000.0f);
+    pShader->SetPSParamFloat(L"maxDepth", 8000.0f);
     app.spRenderer->Unfreeze();
 }
 
@@ -250,6 +260,14 @@ void CApp::InitializeCaustic(HWND hwnd)
          {
              if (pass != Caustic::c_PassOpaque)
                  return;
+             app.cameraExt = app.spCamera->ColorExtrinsics();
+             app.cameraInt = app.spCamera->ColorIntrinsics();
+             uint32 depthW = app.spCamera->GetDepthWidth();
+             uint32 depthH = app.spCamera->GetDepthHeight();
+             uint32 colorW = app.spCamera->GetColorWidth();
+             uint32 colorH = app.spCamera->GetColorHeight();
+             app.SetupAzureCameraParameters(app.spModelShader, depthW, depthH, colorW, colorH);
+
              ImGui_ImplDX11_NewFrame();
              ImGui_ImplWin32_NewFrame();
              ImGui::NewFrame();
@@ -282,6 +300,7 @@ void CApp::InitializeCaustic(HWND hwnd)
              ImGui::SliderFloat("FocusMaxWidth", &app.focusMaxWidth, 0.0f, 3.0f, "%f", 1.0f);
              ImGui::SliderFloat("BokehRadius", &app.BokehRadius, 0.0f, 30.0f, "%f", 1.0f);
              ImGui::DragInt("HoleSize", &app.holeSize, 1.0f, 0, 128);
+             ImGui::DragFloat("ModelScale", &app.modelScale, 0.1f, 0.5f, 1000.0f);
 
              CRefObj<IImage> spColorImage;
              CRefObj<IImage> spDepthImage;
@@ -326,7 +345,7 @@ void CApp::InitializeCaustic(HWND hwnd)
 
 #define WRITE_TO_CAMERA
 #ifdef WRITE_TO_CAMERA
-                     if (app.sendToCamera)
+                     if (app.sendToCamera && app.pMemBuf)
                      {
                          CRefObj<IImage> imageToSend;
                          if (app.sendOrigToCamera)
@@ -365,7 +384,7 @@ void CApp::InitializeCaustic(HWND hwnd)
                          //{
                          //    ResetEvent(hCanWrite);
                              CopyMemory((PVOID)app.pMemBuf, imageToSend->GetData(), 1920 * 1080 * 4);
-                             SetEvent(hCanRead);
+                         //  SetEvent(hCanRead);
                          //}
                      }
 #endif
@@ -401,10 +420,15 @@ void CApp::InitializeCaustic(HWND hwnd)
                          }
                      }
                      auto mat = app.spCamera->GetJointMatrix(0, Caustic::AzureKinect::Joint::HandLeft);
-                     mat.v[3][0] *= 1000.0f;
-                     mat.v[3][1] *= 1000.0f;
-                     mat.v[3][2] *= 1000.0f;
-                     app.m_spLightCollectionElem->SetTransform(mat);
+                     Vector3 headPos(mat[3][0] * 1000.0f, mat[3][1] * 1000.0f, mat[3][2] * 1000.0f);
+                     Vector3 center = (app.modelBbox.maxPt + app.modelBbox.minPt) / 2.0f;
+                     Matrix4x4 m(app.modelScale, 0.0f, 0.0f, 0.0f,
+                                 0.0f, app.modelScale, 0.0f, 0.0f,
+                                 0.0f, 0.0f, app.modelScale, 0.0f,
+                                 app.modelScale * -center.x + headPos.x, 
+                                 app.modelScale * -center.y + headPos.y, 
+                                 app.modelScale * -center.z + headPos.z, 1.0f);
+                     app.m_spLightCollectionElem->SetTransform(m);
                  }
              }
              ImGui::Render();
@@ -420,7 +444,7 @@ void CApp::InitializeCaustic(HWND hwnd)
     hCanWrite = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, TRUE, L"Global\\VirtualCameraMutexWrite");
     SetEvent(hCanWrite);
 
-    app.spCamera = Caustic::AzureKinect::CreateAzureKinect(1, AzureKinect::Color1080p, AzureKinect::Depth1024x1024, AzureKinect::FPS30, true);
+    app.spCamera = Caustic::AzureKinect::CreateAzureKinect(0, AzureKinect::Color1080p, AzureKinect::Depth1024x1024, AzureKinect::FPS30, true);
     app.cameraExt = app.spCamera->ColorExtrinsics();
     app.cameraInt = app.spCamera->ColorIntrinsics();
     uint32 depthW = app.spCamera->GetDepthWidth();
@@ -429,7 +453,7 @@ void CApp::InitializeCaustic(HWND hwnd)
     uint32 colorH = app.spCamera->GetColorHeight();
 
     Setup3DScene(app.spRenderWindow);
-    SetupLineDrawing(depthW, depthH, colorW, colorH);
+    SetupAzureCameraParameters(app.spLineShader, depthW, depthH, colorW, colorH);
 
     // Create shared memory that we will use for sending image to virtual camera driver
     app.hMapFile = OpenFileMapping(FILE_MAP_READ | FILE_MAP_WRITE, FALSE, L"Global\\VirtualCameraImage");

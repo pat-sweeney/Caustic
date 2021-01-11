@@ -62,9 +62,18 @@
     <None Include="AzureLine.vs">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="ModelMesh.ps">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="ModelMesh.vs">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="AzureLine.xml">
+      <Filter>Shaders</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ModelMesh.xml">
       <Filter>Shaders</Filter>
     </CustomBuild>
   </ItemGroup>
