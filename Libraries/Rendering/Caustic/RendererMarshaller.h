@@ -9,6 +9,7 @@
 #include <functional>
 #include <queue>
 #include <type_traits>
+#include <dxgi1_6.h>
 
 //**********************************************************************
 // File: RendererMarshaller.h
@@ -43,6 +44,7 @@ namespace Caustic
     };
 
     //**********************************************************************
+    // Class: CRendererMarshaller
     // Class: CRendererMarshaller
     // Implements <IRendererMarshaller>
     //
@@ -85,7 +87,7 @@ namespace Caustic
             std::wstring &shaderFolder, 
             std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)> renderCallback,
             std::function<void(IRenderer* pRenderer)> prePresentCallback,
-            bool startFrozen = false) override;
+            bool startFrozen = false, int desktopIndex = 0) override;
         virtual void Shutdown() override;
         virtual CRefObj<ITexture> LoadTexture(const wchar_t *pPath) override;
         virtual CRefObj<ITexture> LoadVideoTexture(const wchar_t *pPath) override;
@@ -101,13 +103,14 @@ namespace Caustic
         virtual void Unfreeze() override;
         virtual void AddRenderable(IRenderable* pRenderable) override;
         virtual CComPtr<ID3D11Device> GetDevice() override;
+        virtual CComPtr<IDXGIOutputDuplication> GetDuplication() override;
         virtual void DrawScreenQuad(float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler* pSampler) override;
         virtual void LoadShaders(const wchar_t* pFolder) override;
         virtual CComPtr<ID3D11DeviceContext> GetContext() override;
         virtual void ClearDepth() override;
         virtual CRefObj<ICamera> GetCamera() override;
         virtual CRefObj<IShaderMgr> GetShaderMgr() override { return m_spRenderer->GetShaderMgr(); }
-        virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice, bool startFrozen = false) override;
+        virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice, bool startFrozen = false, int desktopIndex = 0) override;
         virtual void DrawMesh(IRenderSubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) override; // Draws a mesh
         virtual void RenderLoop(
             std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)> renderCallback,

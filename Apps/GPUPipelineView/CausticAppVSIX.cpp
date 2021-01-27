@@ -32,8 +32,7 @@ using namespace Caustic;
 class CApp
 {
 public:
-    CRefObj<IImage> spBackgroundImage;                  // Image to display as background texture
-    CRefObj<ITexture> spBackgroundTexture;              // Textured version of spBackgroundImage
+    CRefObj<ITexture> spBackgroundTexture;              // Background image
     CRefObj<ISceneLightCollectionElem> m_spLightCollectionElem; // List of 3D objects in scene effected by the light
     CRefObj<IRenderWindow> spRenderWindow;              // Window that renderer draws to
     CRefObj<Caustic::ICausticFactory> spCausticFactory; // Factory used to create Caustic objects

@@ -57,7 +57,7 @@ namespace Caustic
 		//**********************************************************************
 		// ICausticFactory
 		//**********************************************************************
-		virtual CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring &shaderFolder, bool startFrozen = false) override;
+		virtual CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring &shaderFolder, bool startFrozen = false, int desktopIndex = 0) override;
 		virtual CRefObj<IPointCloud> CreatePointCloud(IRenderer* pRenderer, uint32 width, uint32 height) override;
 		virtual CRefObj<IRenderMesh> CreateRenderMesh() override;
 		virtual CRefObj<IRenderSubMesh> CreateRenderSubMesh() override;
@@ -77,6 +77,7 @@ namespace Caustic
 		virtual CRefObj<ITexture> LoadTexture(const wchar_t *pFilename, IRenderer *pRenderer) override;
 		virtual CRefObj<ITexture> LoadVideoTexture(const wchar_t* pFilename, IRenderer* pRenderer) override;
 		virtual CRefObj<ITexture> VideoTextureFromWebcam(IRenderer* pRenderer) override;
+		virtual CRefObj<ITexture> CreateDesktopTexture(IRenderer* pRenderer) override;
 		virtual CRefObj<IShader> CreateShader(IRenderer *pRenderer, const wchar_t *pShaderName,
             ID3DBlob *pVertexShaderBlob, ID3DBlob* pPixelShaderBlob, ID3DBlob* pComputeShaderBlob,
 			IShaderInfo *pShaderInfo) override;

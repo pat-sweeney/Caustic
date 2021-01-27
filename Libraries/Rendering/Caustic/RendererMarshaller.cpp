@@ -92,9 +92,9 @@ namespace Caustic
     void CRendererMarshaller::Initialize(HWND hwnd, std::wstring &shaderFolder,
         std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)> renderCallback,
         std::function<void(IRenderer* pRenderer)> prePresentCallback,
-        bool startFrozen /* = false */)
+        bool startFrozen /* = false */, int desktopIndex /* = 0 */)
     {
-        m_spRenderer = CCausticFactory::Instance()->CreateRenderer(hwnd, shaderFolder, startFrozen);
+        m_spRenderer = CCausticFactory::Instance()->CreateRenderer(hwnd, shaderFolder, startFrozen, desktopIndex);
         InitializeCriticalSection(&m_renderQueue.m_cs);
         m_thread = CreateThread(nullptr, 0, RenderThreadProc, this, 0, nullptr);
         m_renderCallback = renderCallback;
@@ -321,6 +321,15 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Method: GetDuplication
+    // See <IRenderer::GetDuplication>
+    //**********************************************************************
+    CComPtr<IDXGIOutputDuplication> CRendererMarshaller::GetDuplication()
+    {
+        return CComPtr<IDXGIOutputDuplication>(nullptr); // We don't allow the client access to the duplication service
+    }
+
+    //**********************************************************************
     // Method: LoadShaders
     // See <IRenderer::LoadShaders>
     //**********************************************************************
@@ -370,13 +379,13 @@ namespace Caustic
     // Method: Setup
     // See <IRenderer::Setup>
     //**********************************************************************
-    void CRendererMarshaller::Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice, bool startFrozen /* = false */)
+    void CRendererMarshaller::Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice, bool startFrozen /* = false */, int desktopIndex /* = 0 */)
     {
         m_renderQueue.AddLambda(
-            [this, hwnd, shaderFolder, createDebugDevice, startFrozen]()
+            [this, hwnd, shaderFolder, createDebugDevice, startFrozen, desktopIndex]()
             {
                 std::wstring sh = shaderFolder;
-                m_spRenderer->Setup(hwnd, sh, createDebugDevice, startFrozen);
+                m_spRenderer->Setup(hwnd, sh, createDebugDevice, startFrozen, desktopIndex);
             }
         );
     }

@@ -238,6 +238,7 @@
     <ClInclude Include="CausticFactory.h" />
     <ClInclude Include="ConstructBuffers.h" />
     <ClInclude Include="defs.h" />
+    <ClInclude Include="DesktopTexture.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="IBuffer.h" />
     <ClInclude Include="ICamera.h" />
@@ -288,6 +289,7 @@
     </ClCompile>
     <ClCompile Include="CausticFactory.cpp" />
     <ClCompile Include="ConstructBuffers.cpp" />
+    <ClCompile Include="DesktopTexture.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="MaterialAttrib.cpp" />
     <ClCompile Include="PointCloud.cpp" />

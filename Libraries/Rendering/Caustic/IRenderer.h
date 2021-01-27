@@ -9,6 +9,7 @@
 #include "Geometry\Mesh\IMesh.h"
 #include "Rendering\Caustic\IRenderable.h"
 #include <functional>
+#include <dxgi1_6.h>
 
 //**********************************************************************
 // File: IRenderer.h
@@ -113,6 +114,13 @@ namespace Caustic
         virtual CComPtr<ID3D11Device> GetDevice() = 0;
 
         //**********************************************************************
+        // Method: GetDuplication
+        // Returns:
+        // The underlying windows duplication service
+        //**********************************************************************
+        virtual CComPtr<IDXGIOutputDuplication> GetDuplication() = 0;
+
+        //**********************************************************************
         // Method: Freeze
         // Freezes the renderer
         //**********************************************************************
@@ -203,8 +211,9 @@ namespace Caustic
         // shaderFolder - path to shader folder
         // createDebugDevice - True if application wants the debug D3D device. False otherwise.
         // startFrozen - start renderer in a frozen state.
+        // desktopIndex - index indicating which desktop duplication service will use
         //**********************************************************************
-        virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice, bool startFrozen = false) = 0;
+        virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice, bool startFrozen = false, int desktopIndex = 0) = 0;
 
         //**********************************************************************
         // Method: DrawMesh
@@ -347,6 +356,8 @@ namespace Caustic
     // Parameters:
     // hwnd - window to attach renderer to
     // shaderFolder - path to directory containing shaders
+    // startFrozen - should renderer be started in a frozen state?
+    // desktopIndex - index of desktop to use with duplication service
     //
     // Returns:
     // Returns the created renderer
@@ -354,5 +365,5 @@ namespace Caustic
     // Header:
     // [Link:Rendering/Caustic/IRenderer.h]
     //**********************************************************************
-    CAUSTICAPI CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring& shaderFolder, bool startFrozen = false);
+    CAUSTICAPI CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring& shaderFolder, bool startFrozen = false, int desktopIndex = 0);
 }

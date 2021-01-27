@@ -39,6 +39,10 @@ namespace Caustic
 		//
 		// Parameters:
 		// hwnd - HWND to attach D3D renderer to
+		// shaderFolder - folder in which to search for shaders
+		// startFrozen - should renderer start in frozen state
+		// desktopIndex - index indicating which desktop should duplication service use
+		//    (this is for Caustic::CreateDesktopTexture())
 		//
 		// Returns:
 		// Returns the created renderer
@@ -47,7 +51,7 @@ namespace Caustic
 		// talk to the renderer. This object runs on the clients thread and acts
 		// only as a proxy for marshalling commands+data over to the renderer thread.
 		//**********************************************************************
-		virtual CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring &shaderFolder, bool startFrozen = false) = 0;
+		virtual CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring &shaderFolder, bool startFrozen = false, int desktopIndex = 0) = 0;
 
 		//**********************************************************************
 		// Method: CreatePointCloud
@@ -254,6 +258,15 @@ namespace Caustic
 		// pRenderer - graphics device
 		//**********************************************************************
 		virtual CRefObj<ITexture> CheckerboardTexture(IRenderer* pRenderer) = 0;
+
+		//**********************************************************************
+		// Method: CreateDesktopTexture
+		// Creates a texture displaying the windows desktop
+		//
+		// Parameters:
+		// pRenderer - graphics device
+		//**********************************************************************
+		virtual CRefObj<ITexture> CreateDesktopTexture(IRenderer* pRenderer) = 0;
 
 		//**********************************************************************
 		// Method: LoadTexture

@@ -19,6 +19,7 @@
 #include <d3dcommon.h>
 #include <d3dcompiler.h>
 #include <algorithm>
+#include <dxgi1_6.h>
 
 //**********************************************************************
 // File: Renderer.cpp
@@ -93,12 +94,12 @@ namespace Caustic
     // Method: Setup
     // See <IRenderer::Setup>.
     //**********************************************************************
-    void CRenderer::Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice, bool startFrozen)
+    void CRenderer::Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice, bool startFrozen /* = false */, int desktopIndex /* = 0 */)
     {
         if (startFrozen)
             Freeze();
         m_renderThreadId = GetCurrentThreadId();
-        CGraphicsBase::Setup(hwnd, createDebugDevice);
+        CGraphicsBase::Setup(hwnd, createDebugDevice, desktopIndex);
 
         if (shaderFolder.empty())
             shaderFolder = std::wstring(DEFAULT_SHADER_PATH);
@@ -767,14 +768,17 @@ namespace Caustic
     // Parameters:
     // hwnd - window to attach renderer to
     // shaderFolder - path to directory containing shaders
+    // startFrozen - should renderer be started in a frozen state?
+    // desktopIndex - index indicating which desktop should be used with duplication service
+    //      (used by Caustic::CreateDesktopTexture())
     //
     // Returns:
     // Returns the created renderer
     //**********************************************************************
-    CAUSTICAPI CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring &shaderFolder, bool startFrozen /* = false */)
+    CAUSTICAPI CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring &shaderFolder, bool startFrozen /* = false */, int desktopIndex /* = 0 */)
     {
         std::unique_ptr<CRenderer> spRenderer(new CRenderer());
-        spRenderer->Setup(hwnd, shaderFolder, true, startFrozen);
+        spRenderer->Setup(hwnd, shaderFolder, true, startFrozen, desktopIndex);
 
         CRefObj<ICamera> spCamera = CCausticFactory::Instance()->CreateCamera(true);
         spRenderer->SetCamera(spCamera);
@@ -867,7 +871,7 @@ namespace Caustic
     // Method: Setup
     // See <IRenderer::Setup>
     //**********************************************************************
-    void CGraphicsBase::Setup(HWND hwnd, bool createDebugDevice)
+    void CGraphicsBase::Setup(HWND hwnd, bool createDebugDevice, int desktopIndex)
     {
         DXGI_SWAP_CHAIN_DESC desc = { 0 };
         desc.BufferDesc.Width = 0;
@@ -894,6 +898,32 @@ namespace Caustic
             0, // numFeatureLevels
             D3D11_SDK_VERSION,
             &desc, &m_spSwapChain, &m_spDevice, &m_featureLevel, &m_spContext));
+
+        //**********************************************************************
+        // Setup Windows Duplication service
+        //**********************************************************************
+        CComPtr<IDXGIDevice> spDXGIDevice;
+        CT(m_spDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)&spDXGIDevice));
+        CComPtr<IDXGIAdapter> spDXGIAdapter;
+        CT(spDXGIDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&spDXGIAdapter));
+        CComPtr<IDXGIFactory1> spDXGIFactory;
+        CT(spDXGIAdapter->GetParent(__uuidof(IDXGIFactory1), (void**)&spDXGIFactory));
+
+        // Walk our list of adapters and find the correct display
+        int outputIndex = 0;
+        CComPtr<IDXGIOutput> spOutput;
+        while (spDXGIAdapter->EnumOutputs(outputIndex, &spOutput) != DXGI_ERROR_NOT_FOUND)
+        {
+            if (outputIndex == desktopIndex)
+            {
+                CComPtr<IDXGIOutput6> spOutput6;
+                CT(spOutput->QueryInterface(__uuidof(IDXGIOutput6), (void**)&spOutput6));
+                CT(spOutput6->DuplicateOutput(m_spDevice, &m_spDuplication));
+                break;
+            }
+            outputIndex++;
+            spOutput = nullptr;
+        }
 
         InitializeD3D(hwnd);
 

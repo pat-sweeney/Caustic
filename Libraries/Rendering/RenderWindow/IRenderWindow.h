@@ -116,5 +116,5 @@ namespace Caustic
 	CAUSTICAPI CRefObj<IRenderWindow> CreateRenderWindow(HWND hwnd, std::wstring &shaderFolder, 
 		std::function<void(IRenderer*, IRenderCtx*, int)> callback,
 		std::function<void(IRenderer*)> prePresentCallback,
-		bool startFrozen = false);
+		bool startFrozen = false, int desktopIndex = 0);
 } 

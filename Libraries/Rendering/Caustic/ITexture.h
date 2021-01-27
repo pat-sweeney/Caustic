@@ -239,4 +239,19 @@ namespace Caustic
     // [Link:Rendering/Caustic/ITexture.h]
     //**********************************************************************
     CAUSTICAPI CRefObj<ITexture> VideoTextureFromWebcam(IRenderer* pRenderer);
+
+    //**********************************************************************
+    // Function: CreateDesktopTexture
+    // CreateDesktopTexture creates a texture containing a copy of the windows desktop
+    //
+    // Parameters:
+    // pRenderer - Renderer
+    //
+    // Returns:
+    // Returns the new texture
+    //
+    // Header:
+    // [Link:Rendering/Caustic/ITexture.h]
+    //**********************************************************************
+    CAUSTICAPI CRefObj<ITexture> CreateDesktopTexture(IRenderer* pRenderer);
 }

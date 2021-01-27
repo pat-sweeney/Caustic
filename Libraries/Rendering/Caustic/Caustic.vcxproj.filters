@@ -154,6 +154,9 @@
     <ClInclude Include="IPointCloud.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="DesktopTexture.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -217,6 +220,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BuildRenderMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DesktopTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

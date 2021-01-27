@@ -139,6 +139,7 @@ namespace Caustic
         CComPtr<ID3D11DeviceContext> m_spContext;           // D3D Device context
         CComPtr<IDXGISwapChain> m_spSwapChain;              // D3D Swap chain
         D3D_FEATURE_LEVEL m_featureLevel;                   // D3D feature level
+        CComPtr<IDXGIOutputDuplication> m_spDuplication;    // Windows Duplication service
         CComPtr<ID3D11Texture2D> m_spBackBuffer;
         CComPtr<ID3D11Texture2D> m_spCPUBackBuffer;         // Version of back buffer with CPU access
         CRefObj<ICamera> m_spCamera;                        // Camera to use for rendering
@@ -158,9 +159,10 @@ namespace Caustic
         friend CAUSTICAPI CRefObj<IRenderer> CreateGraphics(HWND hwnd);
 
         virtual void InitializeD3D(HWND hwnd);
-        void Setup(HWND hwnd, bool createDebugDevice);
+        void Setup(HWND hwnd, bool createDebugDevice, int desktopIndex);
         void SetCamera(ICamera* pCamera);
         CComPtr<ID3D11Device> GetDevice() { return m_spDevice; }
+        CComPtr<IDXGIOutputDuplication> GetDuplication() { return m_spDuplication; }
         CComPtr<ID3D11DeviceContext> GetContext() { return m_spContext; }
         CRefObj<ICamera> GetCamera() { return m_spCamera; }
         CRefObj<IShaderMgr> GetShaderMgr() { return m_spShaderMgr; }
@@ -252,6 +254,7 @@ namespace Caustic
         // IRenderer
         //**********************************************************************
         virtual CComPtr<ID3D11Device> GetDevice() override { CHECKTHREAD;  return CGraphicsBase::GetDevice(); }
+        virtual CComPtr<IDXGIOutputDuplication> GetDuplication() override { CHECKTHREAD;  return m_spDuplication; }
         virtual void Freeze() override;
         virtual void Unfreeze() override;
         virtual void RenderLoop(std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)> renderCallback,
@@ -271,7 +274,7 @@ namespace Caustic
         virtual void SetCamera(ICamera* pCamera) override { CHECKTHREAD; CGraphicsBase::SetCamera(pCamera); }
         virtual CRefObj<IShaderMgr> GetShaderMgr() override { CHECKTHREAD; return CGraphicsBase::GetShaderMgr(); }
         virtual void AddRenderable(IRenderable* pRenderable) override;
-        virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice, bool startFrozen = false) override;
+        virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice, bool startFrozen = false, int desktopIndex = 0) override;
         virtual void DrawMesh(IRenderSubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) override;
         virtual void AddPointLight(IPointLight *pLight) override;
         virtual CRefObj<IRenderCtx> GetRenderCtx() override;

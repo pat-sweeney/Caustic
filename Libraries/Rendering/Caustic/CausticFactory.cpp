@@ -78,9 +78,9 @@ namespace Caustic
     // Method: CreateRenderer
     // See <ICausticFactory::CreateRenderer>
     //**********************************************************************
-    CRefObj<IRenderer> CCausticFactory::CreateRenderer(HWND hwnd, std::wstring &shaderFolder, bool startFrozen /* = false */)
+    CRefObj<IRenderer> CCausticFactory::CreateRenderer(HWND hwnd, std::wstring &shaderFolder, bool startFrozen /* = false */, int desktopIndex /* = 0 */)
 	{
-		return Caustic::CreateRenderer(hwnd, shaderFolder, startFrozen);
+		return Caustic::CreateRenderer(hwnd, shaderFolder, startFrozen, desktopIndex);
 	}
 	
     //**********************************************************************
@@ -222,11 +222,20 @@ namespace Caustic
     // Method: CheckerboardTexture
     // See <ICausticFactory::CheckerboardTexture>
     //**********************************************************************
-    CRefObj<ITexture> CCausticFactory::CheckerboardTexture(IRenderer *pRenderer)
-	{
-		return Caustic::CheckerboardTexture(pRenderer);
-	}
+    CRefObj<ITexture> CCausticFactory::CheckerboardTexture(IRenderer* pRenderer)
+    {
+        return Caustic::CheckerboardTexture(pRenderer);
+    }
 
+    //**********************************************************************
+    // Method: CreateDesktopTexture
+    // See <ICausticFactory::CreateDesktopTexture>
+    //**********************************************************************
+    CRefObj<ITexture> CCausticFactory::CreateDesktopTexture(IRenderer* pRenderer)
+    {
+        return Caustic::CreateDesktopTexture(pRenderer);
+    }
+    
     //**********************************************************************
     // Method: LoadTexture
     // See <ICausticFactory::LoadTexture>

@@ -47,7 +47,7 @@ namespace Caustic
         CRenderWindow(HWND hwnd, std::wstring &shaderFolder,
             std::function<void(Caustic::IRenderer*, Caustic::IRenderCtx*, int)> callback,
             std::function<void(Caustic::IRenderer*)> prePresentCallback,
-            bool useRenderGraph = false, bool startFrozen = false);
+            bool useRenderGraph = false, bool startFrozen = false, int desktopIndex = 0);
         ~CRenderWindow();
         
         //**********************************************************************
