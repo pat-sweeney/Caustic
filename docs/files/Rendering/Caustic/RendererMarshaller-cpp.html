@@ -47,9 +47,9 @@
  <div class="CBody"><p>Entry point for the render thread.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">lpParameter<div class="CDLParameterType">LPVOID</div></td><td class="CDLDefinition"><p>CRendererMarshaller object</p></td></tr></table></div>
 </div>
 
-<a name="Initialize"></a><a name="Topic1360"></a><div class="CTopic TFunction LC">
+<a name="Initialize"></a><a name="Topic960"></a><div class="CTopic TFunction LC">
  <div class="CTitle">Initialize</div>
- <div id="NDPrototype1360" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CRendererMarshaller::Initialize(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="first"></td><td class="PType">HWND&nbsp;</td><td></td><td class="PName last">hwnd,</td></tr><tr><td class="PModifierQualifier first">std::</td><td class="PType">wstring&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">shaderFolder,</td></tr><tr><td class="PModifierQualifier first">std::</td><td class="PType"><span class="SHKeyword">function</span>&lt;<span class="SHKeyword">void</span>(IRenderer *pRenderer, IRenderCtx *pRenderCtx, <span class="SHKeyword">int</span> pass)&gt;&nbsp;</td><td></td><td class="PName last">renderCallback,</td></tr><tr><td class="first"></td><td class="PType"><span class="SHKeyword">bool</span>&nbsp;</td><td></td><td class="PName last">startFrozen&nbsp;</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div id="NDPrototype960" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CRendererMarshaller::Initialize(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="first"></td><td class="PType">HWND&nbsp;</td><td></td><td class="PName last">hwnd,</td></tr><tr><td class="PModifierQualifier first">std::</td><td class="PType">wstring&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">shaderFolder,</td></tr><tr><td class="PModifierQualifier first">std::</td><td class="PType"><span class="SHKeyword">function</span>&lt;<span class="SHKeyword">void</span>(IRenderer* pRenderer, IRenderCtx* pRenderCtx, <span class="SHKeyword">int</span> pass)&gt;&nbsp;</td><td></td><td class="PName last">renderCallback,</td></tr><tr><td class="PModifierQualifier first">std::</td><td class="PType"><span class="SHKeyword">function</span>&lt;<span class="SHKeyword">void</span>(IRenderer* pRenderer)&gt;&nbsp;</td><td></td><td class="PName last">prePresentCallback,</td></tr><tr><td class="first"></td><td class="PType"><span class="SHKeyword">bool</span>&nbsp;</td><td></td><td class="PName last">startFrozen&nbsp;</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
  <div class="CBody"><p>See &lt;IRenderer::Initialize&gt;</p></div>
 </div>
 
@@ -185,16 +185,34 @@
  <div class="CBody"><p>See <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer.AddPointLight" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,800);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer::AddPointLight</a></p></div>
 </div>
 
-<a name="RenderLoop"></a><a name="Topic619"></a><div class="CTopic TFunction LC">
+<a name="RenderLoop"></a><a name="Topic1224"></a><div class="CTopic TFunction LC">
  <div class="CTitle">RenderLoop</div>
- <div id="NDPrototype619" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CRendererMarshaller::RenderLoop(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first">std::</td><td class="PType"><span class="SHKeyword">function</span>&lt;<span class="SHKeyword">void</span>(IRenderer *pRenderer, IRenderCtx *pRenderCtx, <span class="SHKeyword">int</span> pass)&gt;&nbsp;</td><td class="PName last">renderCallback</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
- <div class="CBody"><p>See <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer.RenderLoop" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,798);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer::RenderLoop</a>. It is not valid for the client to call this method.</p></div>
+ <div id="NDPrototype1224" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CRendererMarshaller::RenderLoop(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first">std::</td><td class="PType"><span class="SHKeyword">function</span>&lt;<span class="SHKeyword">void</span>(IRenderer* pRenderer, IRenderCtx* pRenderCtx, <span class="SHKeyword">int</span> pass)&gt;&nbsp;</td><td class="PName last">renderCallback,</td></tr><tr><td class="PModifierQualifier first">std::</td><td class="PType"><span class="SHKeyword">function</span>&lt;<span class="SHKeyword">void</span>(IRenderer* pRenderer)&gt;&nbsp;</td><td class="PName last">prePresentCallback&nbsp;</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div class="CBody"><p>See <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer.RenderLoop" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,647);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer::RenderLoop</a>. It is not valid for the client to call this method.</p></div>
 </div>
 
-<a name="RenderFrame"></a><a name="Topic620"></a><div class="CTopic TFunction LC">
+<a name="RenderFrame"></a><a name="Topic1362"></a><div class="CTopic TFunction LC">
  <div class="CTitle">RenderFrame</div>
- <div id="NDPrototype620" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CRendererMarshaller::RenderFrame(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first">std::</td><td class="PType"><span class="SHKeyword">function</span>&lt;<span class="SHKeyword">void</span>(IRenderer *pRenderer, IRenderCtx *pRenderCtx, <span class="SHKeyword">int</span> pass)&gt;&nbsp;</td><td class="PName last">renderCallback</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
- <div class="CBody"><p>See <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer.RenderFrame" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,799);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer::RenderFrame</a></p></div>
+ <div id="NDPrototype1362" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CRendererMarshaller::RenderFrame(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first">std::</td><td class="PType"><span class="SHKeyword">function</span>&lt;<span class="SHKeyword">void</span>(IRenderer* pRenderer, IRenderCtx* pRenderCtx, <span class="SHKeyword">int</span> pass)&gt;&nbsp;</td><td class="PName last">renderCallback,</td></tr><tr><td class="PModifierQualifier first">std::</td><td class="PType"><span class="SHKeyword">function</span>&lt;<span class="SHKeyword">void</span>(IRenderer* pRenderer)&gt;&nbsp;</td><td class="PName last">prePresentCallback&nbsp;</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div class="CBody"><p>See <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer.RenderFrame" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,648);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer::RenderFrame</a></p></div>
+</div>
+
+<a name="GetBackBufferWidth"></a><a name="Topic1363"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetBackBufferWidth</div>
+ <div id="NDPrototype1363" class="NDPrototype NoParameterForm"><span class="SHKeyword">uint32</span> CRendererMarshaller::GetBackBufferWidth()</div>
+ <div class="CBody"><p>See <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer.GetBackBufferWidth" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1366);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer::GetBackBufferWidth</a></p></div>
+</div>
+
+<a name="GetBackBufferHeight"></a><a name="Topic1364"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetBackBufferHeight</div>
+ <div id="NDPrototype1364" class="NDPrototype NoParameterForm"><span class="SHKeyword">uint32</span> CRendererMarshaller::GetBackBufferHeight()</div>
+ <div class="CBody"><p>See <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer.GetBackBufferHeight" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1367);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer::GetBackBufferHeight</a></p></div>
+</div>
+
+<a name="CopyFrameBackbuffer"></a><a name="Topic1365"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">CopyFrameBackbuffer</div>
+ <div id="NDPrototype1365" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CRendererMarshaller::CopyFrameBackBuffer(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Imaging/Image/Image.h:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,439);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pImage</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
+ <div class="CBody"><p>See <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer.CopyFrameBackBuffer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1368);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer::CopyFrameBackbuffer</a></p></div>
 </div>
 
 <a name="SetCamera"></a><a name="Topic621"></a><div class="CTopic TFunction LC last">

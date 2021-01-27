@@ -13,9 +13,11 @@ Texture2D colorTex : register(t0); // Color texture
 SamplerState colorSampler : register(s0);
 Texture2D<float> depthTex : register(t1); // Depth texture
 Texture2D backgroundTexture : register(t2);
+Texture2D<float4> rayTexture : register(t3);
 
 cbuffer VS_CONSTANT_BUFFER : register(b0)
 {
+    float4x4 colorExt;
     float focusDistance; // Distance to focal plane
     float focusMaxWidth; // Delta where max blur occurs
     float focusWidth; // Delta where everything is in focus
@@ -103,7 +105,8 @@ float4 PS(VSOutput p) : SV_Target
 		float2 uvs = p.uvs + o;
 		int3 pc = int3(uvs.x * 1920, (1-uvs.y) * 1080, 0);
 		float cdepth = depthTex.Load(pc);
-		if (checkDepth < 1.0f || abs(cdepth - depth) < 0.05)
+		float deltaDepth = cdepth - depth;
+		if (checkDepth < 1.0f || abs(deltaDepth) < 0.05)
 		{
 			color += colorTex.Sample(colorSampler, uvs).xyz;
 			count++;
@@ -114,8 +117,9 @@ float4 PS(VSOutput p) : SV_Target
 			count++;
 		}
 	}
+	
 	if (count > 0)
 		color *= 1.0 / count;
-
+			
     return float4(color.xyz, 1.0f);
 }

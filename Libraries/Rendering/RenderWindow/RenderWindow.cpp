@@ -13,19 +13,25 @@
 
 namespace Caustic
 {
-    CAUSTICAPI CRefObj<IRenderWindow> CreateRenderWindow(HWND hwnd, std::wstring &shaderFolder, std::function<void(IRenderer*,IRenderCtx*,int)> callback, bool startFrozen /* = false */)
+    CAUSTICAPI CRefObj<IRenderWindow> CreateRenderWindow(HWND hwnd, std::wstring &shaderFolder,
+        std::function<void(IRenderer*,IRenderCtx*,int)> callback,
+        std::function<void(IRenderer*)> prePresentCallback,
+        bool startFrozen /* = false */)
     {
-        return CRefObj<IRenderWindow>(new CRenderWindow(hwnd, shaderFolder, callback, false, startFrozen));
+        return CRefObj<IRenderWindow>(new CRenderWindow(hwnd, shaderFolder, callback, prePresentCallback, false, startFrozen));
     }
 
     CRenderWindow::CRenderWindow(HWND hwnd, std::wstring &shaderFolder,
-        std::function<void(Caustic::IRenderer*, Caustic::IRenderCtx*, int)> callback, bool useRenderGraph /* = false */, bool startFrozen /* = false */)
+        std::function<void(Caustic::IRenderer*, Caustic::IRenderCtx*, int)> callback,
+        std::function<void(Caustic::IRenderer*)> prePresentCallback,
+        bool useRenderGraph /* = false */, bool startFrozen /* = false */)
     {
         m_snapPosHome = { 10.0f, 10.0f, 10.0f };
         m_snapPosX = { 1000.0f, 0.0f, 0.0f };
         m_snapPosY = { 0.0f, 1000.0f, 0.0f };
         m_snapPosZ = { 0.0f, 0.0f, 1000.0f };
         m_callback = callback;
+        m_prePresentCallback = prePresentCallback;
         m_useRenderGraph = useRenderGraph;
         m_spMarshaller = Caustic::CCausticFactory::Instance()->CreateRendererMarshaller();
         if (useRenderGraph)
@@ -50,7 +56,10 @@ namespace Caustic
                     sceneCtx.m_CurrentPass = pass;
                     m_spSceneGraph->Render(pRenderer, pRenderCtx, &sceneCtx);
                 }
-        }, startFrozen);
+            },
+            [this](IRenderer* pRenderer) {
+                m_prePresentCallback(pRenderer);
+            }, startFrozen);
 
         Caustic::Vector3 pos(0.0f, 0.0f, 0.0f);
         Caustic::FRGBColor clr(1.0f, 1.0f, 1.0f);

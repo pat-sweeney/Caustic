@@ -139,6 +139,8 @@ namespace Caustic
         CComPtr<ID3D11DeviceContext> m_spContext;           // D3D Device context
         CComPtr<IDXGISwapChain> m_spSwapChain;              // D3D Swap chain
         D3D_FEATURE_LEVEL m_featureLevel;                   // D3D feature level
+        CComPtr<ID3D11Texture2D> m_spBackBuffer;
+        CComPtr<ID3D11Texture2D> m_spCPUBackBuffer;         // Version of back buffer with CPU access
         CRefObj<ICamera> m_spCamera;                        // Camera to use for rendering
         CRefObj<IRenderCtx> m_spRenderCtx;                  // D3D Render context
         CComPtr<ID3D11RenderTargetView> m_spRTView;         // Render target view
@@ -238,8 +240,6 @@ namespace Caustic
     public:
         explicit CRenderer();
         virtual ~CRenderer();
-        void RenderLoop(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback);
-        void RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback);
         virtual void InitializeD3D(HWND hwnd) override;
         
         //**********************************************************************
@@ -254,6 +254,16 @@ namespace Caustic
         virtual CComPtr<ID3D11Device> GetDevice() override { CHECKTHREAD;  return CGraphicsBase::GetDevice(); }
         virtual void Freeze() override;
         virtual void Unfreeze() override;
+        virtual void RenderLoop(std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)> renderCallback,
+            std::function<void(IRenderer* pRenderer)> prePresentCallback
+        ) override;
+        virtual void RenderFrame(
+            std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)> renderCallback,
+            std::function<void(IRenderer* pRenderer)> prePresentCallback
+        ) override;
+        virtual uint32 GetBackBufferWidth() override { return m_BBDesc.Width; }
+        virtual uint32 GetBackBufferHeight() override { return m_BBDesc.Height; }
+        virtual void CopyFrameBackBuffer(IImage* pImage) override;
         virtual void DrawScreenQuad(float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler *pSampler) override;
         virtual void LoadShaders(const wchar_t* pFolder) override;
         virtual CComPtr<ID3D11DeviceContext> GetContext() override { CHECKTHREAD; return CGraphicsBase::GetContext(); }

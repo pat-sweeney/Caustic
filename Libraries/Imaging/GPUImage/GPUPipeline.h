@@ -20,14 +20,106 @@ namespace Caustic
     //**********************************************************************
     struct IGPUPipelineNode : public IRefCount
     {
+        //**********************************************************************
+        // Method: SetName
+        // pName - Sets the debug name for a GPU node
+        //**********************************************************************
+        virtual void SetName(const wchar_t* pName) = 0;
+
+        //**********************************************************************
+        // Method: IsEnabled
+        // Returns true if node is enabled (i.e. will run) in the pipeline
+        //**********************************************************************
+        virtual bool IsEnabled() = 0;
+
+        //**********************************************************************
+        // Method: Enable
+        // Turns on a GPU node. If enabled when GPUPipeline::Process() is called
+        // this node will run (along with all its proceeding pipeline nodes).
+        // Otherwise, the node is not executed, and its Output texture is undefined.
+        //**********************************************************************
+        virtual void Enable() = 0;
+
+        //**********************************************************************
+        // Method: Disable
+        // Turns off the GPU node. This is the oppside of <IGPUPipelineNode::Enable>
+        //**********************************************************************
+        virtual void Disable() = 0;
+
+        //**********************************************************************
+        // Method: SetShader
+        // Assigns a pixel shader to the node. This shader will be run on an
+        // image when the node is processed.
+        //
+        // Parameters:
+        // pShader - pixel shader
+        //**********************************************************************
         virtual void SetShader(IShader *pShader) = 0;
+
+        //**********************************************************************
+        // Method: GetShader
+        // Returns the shader currently assigned to the node
+        //**********************************************************************
         virtual CRefObj<IShader> GetShader() = 0;
+
+        //**********************************************************************
+        // Method: GetInput
+        // Returns the node that attached to the specified node input parameter
+        // (i.e. this is the prior node in the pipeline that provides this node
+        // with the input specified by pName)
+        //
+        // Parameters:
+        // pName - name of input parameter
+        //**********************************************************************
         virtual CRefObj<IGPUPipelineNode> GetInput(const wchar_t *pName) = 0;
+
+        //**********************************************************************
+        // Method: SetInput
+        // Links a node from earlier in the pipeline to the specified parameter.
+        //
+        // Parameters:
+        // pName - name of input parameter
+        // pSamplerName - name of sampler
+        // pNode - previous node in pipeline that provides its output as input
+        // for parameter pName.
+        //**********************************************************************
         virtual void SetInput(const wchar_t* pName, const wchar_t* pSamplerName, IGPUPipelineNode*pNode) = 0;
+
+        //**********************************************************************
+        // Method: SetOutputSize
+        // Sets the size of the output image from this node
+        //
+        // Parameters:
+        // width - width of this image in pixels
+        // height - height of this image in pixels
+        //**********************************************************************
         virtual void SetOutputSize(uint32 width, uint32 height) = 0;
+
+        //**********************************************************************
+        // Method: GetOutputWidth
+        // Returns the width of the output image in pixels
+        //**********************************************************************
         virtual uint32 GetOutputWidth() = 0;
+
+        //**********************************************************************
+        // Method: GetOutputHeight
+        // Returns the height of the output image in pixels
+        //**********************************************************************
         virtual uint32 GetOutputHeight() = 0;
+
+        //**********************************************************************
+        // Method: GetOutputTexture
+        // Returns the texture generated as output by this node
+        //**********************************************************************
         virtual CRefObj<ITexture> GetOutputTexture(IGPUPipeline *pPipeline) = 0;
+
+        //**********************************************************************
+        // Method: Process
+        // Runs this node
+        //
+        // Parameters:
+        // pPipeline - pipeline to run this node on
+        //**********************************************************************
         virtual void Process(IGPUPipeline *pPipeline) = 0;
     };
 
@@ -102,30 +194,33 @@ namespace Caustic
         // with the specified image.
         //
         // Parameters:
+        // pName - name for this node (used for debugging)
         // pImage - image to feed through pipeline
         // format - format of output texture
         //**********************************************************************
-        virtual CRefObj<IGPUPipelineSourceNode> CreateSourceNode(IImage *pImage, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM) = 0;
+        virtual CRefObj<IGPUPipelineSourceNode> CreateSourceNode(const wchar_t *pName, IImage *pImage, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM) = 0;
 
         //**********************************************************************
         // Method: CreateSinkNode
         // Returns a sink node.
         //
         // Parameters:
+        // pName - name for this node (used for debugging)
         // pShader - shader to run on inputs
         // format - format of output texture
         //**********************************************************************
-        virtual CRefObj<IGPUPipelineSinkNode> CreateSinkNode(IShader *pShader, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM) = 0;
+        virtual CRefObj<IGPUPipelineSinkNode> CreateSinkNode(const wchar_t* pName, IShader *pShader, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM) = 0;
 
         //**********************************************************************
         // Method: CreateNode
         // Returns a GPU node that makes up part of the pipeline.
         //
         // Parameters:
+        // pName - name for this node (used for debugging)
         // pShader - shader to run on inputs
         // format - format of output texture
         //**********************************************************************
-        virtual CRefObj<IGPUPipelineNode> CreateNode(IShader *pShader, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM) = 0;
+        virtual CRefObj<IGPUPipelineNode> CreateNode(const wchar_t* pName, IShader *pShader, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM) = 0;
 
         //**********************************************************************
         // Method: CreatePredefinedNode

@@ -65,6 +65,15 @@
     <CustomBuild Include="FillHolesSP.xml">
       <Filter>Source Files\Shaders</Filter>
     </CustomBuild>
+    <CustomBuild Include="FillHolesVP.xml">
+      <Filter>Source Files\Shaders</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Depth2Norm.xml">
+      <Filter>Source Files\Shaders</Filter>
+    </CustomBuild>
+    <CustomBuild Include="FillHolesHP.xml">
+      <Filter>Source Files\Shaders</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <None Include="Gaussian.ps">
@@ -101,6 +110,15 @@
       <Filter>Source Files\Shaders</Filter>
     </None>
     <None Include="FillHolesSP.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Depth2Norm.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="FillHolesHP.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="FillHolesVP.ps">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>

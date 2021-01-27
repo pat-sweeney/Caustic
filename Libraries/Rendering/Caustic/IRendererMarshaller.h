@@ -42,8 +42,13 @@ namespace Caustic
         // hwnd - Window associated with the renderer
         // shaderFolder - path to directory containing shaders
         // renderCallback - callback function that is called each time a new frame is rendered
+        // prePresentCallback - callback function that is called right before Present()
+        // startFrozen - Should renderer be started in a frozen state?
         //**********************************************************************
-        virtual void Initialize(HWND hwnd, std::wstring &shaderFolder, std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback, bool startFrozen = false) = 0;
+        virtual void Initialize(HWND hwnd, std::wstring &shaderFolder, 
+            std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)> renderCallback,
+            std::function<void(IRenderer* pRenderer)> prePresentCallback,
+            bool startFrozen = false) = 0;
 
         //**********************************************************************
         // Method: Shutdown

@@ -91,7 +91,7 @@ namespace Caustic
         // IAzureKinect
         //**********************************************************************
         virtual bool NextFrame(IImage** ppColorImage, std::vector<Vector3>& pts, std::vector<Vector3>& normals, BBox3 &bbox) override;
-        virtual CRefObj<IImage> BuildRayMap(uint32 w, uint32 h) override;
+        virtual CRefObj<IImage> BuildRayMap(uint32 w, uint32 h, bool forDepth = true) override;
         virtual CameraIntrinsics GetAzureColorIntrinsics() override;
         virtual CameraIntrinsics GetAzureDepthIntrinsics() override;
         virtual bool BodyTrackingOn() override { return m_captureBodies; }

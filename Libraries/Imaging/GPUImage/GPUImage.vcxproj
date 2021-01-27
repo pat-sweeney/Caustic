@@ -187,6 +187,7 @@
     <None Include="DepthSel.ps" />
     <None Include="DepthSel2.ps" />
     <None Include="Bokeh.ps" />
+    <None Include="Depth2Norm.ps" />
     <None Include="Gaussian.ps" />
     <None Include="Quad.vs" />
     <None Include="RawCopy.ps" />
@@ -219,6 +220,14 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Imaging\GPUImage\Bokeh.xml -o $(CausticRoot)\$(Configuration)\Bokeh.shi</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\Bokeh.shi</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\Bokeh.shi</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="Depth2Norm.xml">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Imaging\GPUImage\Depth2Norm.xml -o $(CausticRoot)\$(Configuration)\Depth2Norm.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Imaging\GPUImage\Depth2Norm.xml -o $(CausticRoot)\$(Configuration)\Depth2Norm.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\Depth2Norm.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\Depth2Norm.shi</Outputs>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

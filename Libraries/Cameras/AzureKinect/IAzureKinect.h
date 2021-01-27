@@ -95,7 +95,7 @@ namespace Caustic
         using IDepthCameraDevice::NextFrame;
 
         virtual bool NextFrame(IImage** ppColorImage, std::vector<Vector3>& pts, std::vector<Vector3>& normals, BBox3 &bbox) = 0;
-        virtual CRefObj<IImage> BuildRayMap(uint32 w, uint32 h) = 0;
+        virtual CRefObj<IImage> BuildRayMap(uint32 w, uint32 h, bool forDepth = true) = 0;
         virtual CameraIntrinsics GetAzureColorIntrinsics() = 0;
         virtual CameraIntrinsics GetAzureDepthIntrinsics() = 0;
 

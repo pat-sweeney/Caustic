@@ -550,7 +550,7 @@ namespace Caustic
         return mat;
     }
 
-    CRefObj<IImage> CAzureKinectDevice::BuildRayMap(uint32 w, uint32 h)
+    CRefObj<IImage> CAzureKinectDevice::BuildRayMap(uint32 w, uint32 h, bool forDepth /*= true*/)
     {
         CRefObj<IImage> spImage = CreateImage(w, h, 128);
         CImageIter128 row(spImage, 0, 0);
@@ -566,8 +566,8 @@ namespace Caustic
                 pt.xy.y = float(iy);
                 k4a_float3_t result;
                 int valid;
-                k4a_result_t err = k4a_calibration_2d_to_3d(&m_calibration, &pt, 1000.0f, k4a_calibration_type_t::K4A_CALIBRATION_TYPE_DEPTH,
-                    k4a_calibration_type_t::K4A_CALIBRATION_TYPE_DEPTH, &result, &valid);
+                k4a_calibration_type_t calibType = (forDepth) ? k4a_calibration_type_t::K4A_CALIBRATION_TYPE_DEPTH : k4a_calibration_type_t::K4A_CALIBRATION_TYPE_COLOR;
+                k4a_result_t err = k4a_calibration_2d_to_3d(&m_calibration, &pt, 1000.0f, calibType, calibType, &result, &valid);
                 if (err == K4A_RESULT_SUCCEEDED && valid)
                 {
                     float len = sqrtf(result.xyz.x * result.xyz.x + result.xyz.y * result.xyz.y + result.xyz.z * result.xyz.z);

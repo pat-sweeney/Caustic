@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
-    <AzureKinectSDKDir Condition="'$(AzureKinectSDKDir)'==''">C:\Program Files\Azure Kinect SDK v1.4.0</AzureKinectSDKDir>
+    <AzureKinectSDKDir Condition="'$(AzureKinectSDKDir)'==''">C:\Program Files\Azure Kinect SDK v1.4.1</AzureKinectSDKDir>
     <AzureBodySDKDir Condition="'$(AzureBodySDKDir)'==''">c:\Program Files\Azure Kinect Body Tracking SDK</AzureBodySDKDir>
     <CausticRoot Condition="'$(CausticRoot)'==''">j:\github\Caustic</CausticRoot>
     <CausticFXCPath Condition="'$(CausticFXCPath)'==''">C:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x64\fxc.exe</CausticFXCPath>

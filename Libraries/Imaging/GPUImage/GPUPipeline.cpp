@@ -26,11 +26,11 @@ namespace Caustic
     // Method: CreateSourceNode
     // See <IGPUPipeline::CreateSourceNode>
     //**********************************************************************
-    CRefObj<IGPUPipelineSourceNode> CGPUPipeline::CreateSourceNode(IImage *pImage, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format)
+    CRefObj<IGPUPipelineSourceNode> CGPUPipeline::CreateSourceNode(const wchar_t* pName, IImage *pImage, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format)
     {
         std::unique_ptr<CGPUPipelineSourceNode> spSource(new CGPUPipelineSourceNode(outputWidth, outputHeight, format));
-        if (pImage)
-            spSource->SetSource(this, pImage);
+        spSource->SetSource(this, pImage);
+        spSource->SetName(pName);
         m_sourceNodes.push_back(CRefObj<IGPUPipelineSourceNode>(spSource.get()));
         return CRefObj<IGPUPipelineSourceNode>(spSource.release());
     }
@@ -39,9 +39,11 @@ namespace Caustic
     // Method: CreateSinkNode
     // See <IGPUPipeline::CreateSinkNode>
     //**********************************************************************
-    CRefObj<IGPUPipelineSinkNode> CGPUPipeline::CreateSinkNode(IShader *pShader, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format)
+    CRefObj<IGPUPipelineSinkNode> CGPUPipeline::CreateSinkNode(const wchar_t *pName, IShader *pShader, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format)
     {
         std::unique_ptr<CGPUPipelineSinkNode> spSource(new CGPUPipelineSinkNode(outputWidth, outputHeight, format));
+        spSource->SetName(pName);
+        spSource->SetShader(pShader);
         m_sinkNodes.push_back(CRefObj<IGPUPipelineSinkNode>(spSource.get()));
         return CRefObj<IGPUPipelineSinkNode>(spSource.release());
     }
@@ -84,9 +86,10 @@ namespace Caustic
     // Method: CreateNode
     // See <IGPUPipeline::CreateNode>
     //**********************************************************************
-    CRefObj<IGPUPipelineNode> CGPUPipeline::CreateNode(IShader *pShader, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format)
+    CRefObj<IGPUPipelineNode> CGPUPipeline::CreateNode(const wchar_t* pName, IShader *pShader, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format)
     {
         std::unique_ptr<CGPUPipelineNode> spSource(new CGPUPipelineNode(outputWidth, outputHeight, format));
+        spSource->SetName(pName);
         spSource->SetShader(pShader);
         m_nodes.push_back(CRefObj<IGPUPipelineNode>(spSource.get()));
         return CRefObj<IGPUPipelineNode>(spSource.release());
@@ -99,8 +102,9 @@ namespace Caustic
     void CGPUPipeline::Process()
     {
         for (CRefObj<IGPUPipelineSinkNode> &pCurNode : m_sinkNodes)
-        {
-            pCurNode->Process(this);
+        { 
+            if (pCurNode->IsEnabled())
+                pCurNode->Process(this);
         }
     }
     
@@ -271,6 +275,9 @@ namespace Caustic
         if (m_spOutputTexture == nullptr)
             m_spOutputTexture = CCausticFactory::Instance()->CreateTexture(spRenderer, m_width, m_height, m_outputFormat, m_cpuFlags, m_bindFlags);
         
+        if ( ! IsEnabled())
+            return;
+        
         // Get the input textures from the earlier nodes in the pipeline
         std::vector<CRefObj<ITexture>> textures;
         for (auto spSourceNode : m_sourceNodes)
@@ -439,6 +446,9 @@ namespace Caustic
         if (m_spOutputTexture == nullptr)
             m_spOutputTexture = CCausticFactory::Instance()->CreateTexture(spRenderer, m_width, m_height, m_outputFormat, m_cpuFlags, m_bindFlags);
 
+        if ( ! IsEnabled())
+            return;
+        
         // Get the input textures from the earlier nodes in the pipeline
         std::vector<CRefObj<ITexture>> textures;
         for (auto spSourceNode : m_sourceNodes)
@@ -512,8 +522,11 @@ namespace Caustic
     //**********************************************************************
     void CGPUPipelineSourceNode::SetSource(IGPUPipeline *pPipeline, IImage *pSource)
     {
-        CRefObj<IRenderer> spRenderer = pPipeline->GetRenderer();
-        m_spOutputTexture = Caustic::CreateTexture(spRenderer, pSource, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
+        if (pSource)
+        {
+            CRefObj<IRenderer> spRenderer = pPipeline->GetRenderer();
+            m_spOutputTexture = Caustic::CreateTexture(spRenderer, pSource, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
+        }
     }
 
     //**********************************************************************
@@ -532,18 +545,15 @@ namespace Caustic
     void CGPUPipelineSinkNode::Process(IGPUPipeline *pPipeline)
     {
         CRefObj<IRenderer> spRenderer = pPipeline->GetRenderer();
-        CComPtr<ID3D11Device> spDevice = spRenderer->GetDevice();
         CComPtr<ID3D11DeviceContext> spCtx = spRenderer->GetContext();
-        m_sourceNodes.begin()->second.first->Process(pPipeline);
-        CRefObj<ITexture> spTexture = m_sourceNodes.begin()->second.first->GetOutputTexture(pPipeline);
-        if (m_width == 0 || m_height == 0)
-        {
-            m_width = spTexture->GetWidth();
-            m_height = spTexture->GetHeight();
-        }
-        if (m_spOutputTexture == nullptr)
-            m_spOutputTexture = Caustic::CCausticFactory::Instance()->CreateTexture(spRenderer, m_width, m_height, DXGI_FORMAT_B8G8R8A8_UNORM, m_cpuFlags, m_bindFlags);
-        spCtx->CopyResource(m_spOutputTexture->GetD3DTexture(), spTexture->GetD3DTexture());
+        assert(m_outputFormat == DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM || m_outputFormat == DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
+        if (m_spOutputStagedTexture == nullptr)
+            m_spOutputStagedTexture = Caustic::CCausticFactory::Instance()->CreateTexture(spRenderer, m_width, m_height, m_outputFormat, D3D11_CPU_ACCESS_READ, (D3D11_BIND_FLAG)0);
+        
+        // First run the sink nodes shader
+        CGPUPipelineNodeBase::Process(pPipeline);
+
+        spCtx->CopyResource(m_spOutputStagedTexture->GetD3DTexture(), m_spOutputTexture->GetD3DTexture());
     }
 
     //**********************************************************************
@@ -558,7 +568,7 @@ namespace Caustic
         spCtx->Flush();
         CRefObj<IImage> spImage = CreateImage(m_width, m_height, 32);
         D3D11_MAPPED_SUBRESOURCE mapinfo;
-        CComPtr<ID3D11Texture2D> spTexture = m_spOutputTexture->GetD3DTexture();
+        CComPtr<ID3D11Texture2D> spTexture = m_spOutputStagedTexture->GetD3DTexture();
         spCtx->Map(spTexture, 0, D3D11_MAP::D3D11_MAP_READ, 0, &mapinfo);
         BYTE *pSrcRow = (BYTE*)mapinfo.pData;
         BYTE *pDstRow = spImage->GetData();
@@ -566,15 +576,7 @@ namespace Caustic
         {
             BYTE *pSrcCol = pSrcRow;
             BYTE *pDstCol = pDstRow;
-            for (uint32 x = 0; x < spImage->GetHeight(); x++)
-            {
-                pDstCol[0] = pSrcCol[0];
-                pDstCol[1] = pSrcCol[1];
-                pDstCol[2] = pSrcCol[2];
-                pDstCol[3] = pSrcCol[3];
-                pSrcCol += 4;
-                pDstCol += 4;
-            }
+            memcpy(pDstCol, pSrcCol, spImage->GetWidth() * 4);
             pSrcRow += mapinfo.RowPitch;
             pDstRow += spImage->GetStride();
         }

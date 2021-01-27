@@ -89,12 +89,16 @@ namespace Caustic
     // Method: Initialize
     // See <IRenderer::Initialize>
     //**********************************************************************
-    void CRendererMarshaller::Initialize(HWND hwnd, std::wstring &shaderFolder, std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback, bool startFrozen /* = false */)
+    void CRendererMarshaller::Initialize(HWND hwnd, std::wstring &shaderFolder,
+        std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)> renderCallback,
+        std::function<void(IRenderer* pRenderer)> prePresentCallback,
+        bool startFrozen /* = false */)
     {
         m_spRenderer = CCausticFactory::Instance()->CreateRenderer(hwnd, shaderFolder, startFrozen);
         InitializeCriticalSection(&m_renderQueue.m_cs);
         m_thread = CreateThread(nullptr, 0, RenderThreadProc, this, 0, nullptr);
         m_renderCallback = renderCallback;
+        m_prePresentCallback = prePresentCallback;
     }
 
     //**********************************************************************
@@ -289,7 +293,7 @@ namespace Caustic
                 m_renderQueue.m_queue.pop();
             }
             LeaveCriticalSection(&m_renderQueue.m_cs);
-            m_spRenderer->RenderFrame(m_renderCallback);
+            m_spRenderer->RenderFrame(m_renderCallback, m_prePresentCallback);
         }
     }
 
@@ -476,7 +480,10 @@ namespace Caustic
     // Method: RenderLoop
     // See <IRenderer::RenderLoop>. It is not valid for the client to call this method.
     //**********************************************************************
-    void CRendererMarshaller::RenderLoop(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback)
+    void CRendererMarshaller::RenderLoop(
+        std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)> renderCallback,
+        std::function<void(IRenderer* pRenderer)> prePresentCallback
+        )
     {
         throw new CausticException(E_FAIL, __FILE__, __LINE__); // Don't allow client to start render loop
     }
@@ -485,13 +492,71 @@ namespace Caustic
     // Method: RenderFrame
     // See <IRenderer::RenderFrame>
     //**********************************************************************
-    void CRendererMarshaller::RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback)
+    void CRendererMarshaller::RenderFrame(
+        std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)> renderCallback,
+        std::function<void(IRenderer* pRenderer)> prePresentCallback
+    )
     {
-        std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> callback = renderCallback;
+        std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)> callback = renderCallback;
+        std::function<void(IRenderer* pRenderer)> preCallback = prePresentCallback;
         m_renderQueue.AddLambda(
-            [this, callback]()
+            [this, callback, preCallback]()
             {
-                m_spRenderer->RenderFrame(callback);
+                m_spRenderer->RenderFrame(callback, preCallback);
+            }
+        );
+    }
+
+    //**********************************************************************
+    // Method: GetBackBufferWidth
+    // See <IRenderer::GetBackBufferWidth>
+    //**********************************************************************
+    uint32 CRendererMarshaller::GetBackBufferWidth()
+    {
+        HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+        uint32 width;
+        m_renderQueue.AddLambda(
+            [this, evt, &width]()
+            {
+                width = m_spRenderer->GetBackBufferWidth();
+                SetEvent(evt);
+            }
+        );
+        WaitForSingleObject(evt, INFINITE);
+        CloseHandle(evt);
+        return width;
+    }
+
+    //**********************************************************************
+    // Method: GetBackBufferHeight
+    // See <IRenderer::GetBackBufferHeight>
+    //**********************************************************************
+    uint32 CRendererMarshaller::GetBackBufferHeight()
+    {
+        HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+        uint32 height;
+        m_renderQueue.AddLambda(
+            [this, evt, &height]()
+            {
+                height = m_spRenderer->GetBackBufferHeight();
+                SetEvent(evt);
+            }
+        );
+        WaitForSingleObject(evt, INFINITE);
+        CloseHandle(evt);
+        return height;
+    }
+
+    //**********************************************************************
+    // Method: CopyFrameBackbuffer
+    // See <IRenderer::CopyFrameBackbuffer>
+    //**********************************************************************
+    void CRendererMarshaller::CopyFrameBackBuffer(IImage *pImage)
+    {
+        m_renderQueue.AddLambda(
+            [this, pImage]()
+            {
+                m_spRenderer->CopyFrameBackBuffer(pImage);
             }
         );
     }

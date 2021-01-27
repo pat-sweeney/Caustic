@@ -22,7 +22,8 @@ namespace CausticTestSuite
         auto spRenderGraphFactory = Caustic::CreateRenderGraphFactory();
         auto spCausticFactory = Caustic::CreateCausticFactory();
         std::wstring shaderFolder; // Intentionally left empty
-        auto spRenderWindow = CreateRenderWindow(GetDesktopWindow(), shaderFolder, [](IRenderer*, IRenderCtx*, int) {});
+        auto spRenderWindow = CreateRenderWindow(GetDesktopWindow(), shaderFolder,
+            [](IRenderer*, IRenderCtx*, int) {}, [](IRenderer*) {});
         return true;
     }
 

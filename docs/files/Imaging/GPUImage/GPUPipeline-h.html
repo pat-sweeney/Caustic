@@ -13,6 +13,82 @@
  <div class="CBody"><p>Defines the base class for each node in a GPU pipeline</p></div>
 </div>
 
+<a name="IGPUPipelineNode.Functions"></a><a name="Topic799"></a><div class="CTopic TGroup LC">
+ <div class="CTitle">Functions</div>
+</div>
+
+<a name="IGPUPipelineNode.IsEnabled"></a><a name="Topic1370"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">IsEnabled</div>
+ <div id="NDPrototype1370" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">bool</span> IsEnabled() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><p>Returns true if node is enabled (i.e. will run) in the pipeline</p></div>
+</div>
+
+<a name="IGPUPipelineNode.Enable"></a><a name="Topic807"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">Enable</div>
+ <div id="NDPrototype807" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> Enable() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><p>Turns on a GPU node. If enabled when GPUPipeline::Process() is called this node will run (along with all its proceeding pipeline nodes).&nbsp; Otherwise, the node is not executed, and its Output texture is undefined.</p></div>
+</div>
+
+<a name="IGPUPipelineNode.Disable"></a><a name="Topic1369"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">Disable</div>
+ <div id="NDPrototype1369" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> Disable() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><p>Turns off the GPU node. This is the oppside of <a href="../../../index.html#File:Imaging/GPUImage/GPUPipeline.h:IGPUPipelineNode.Enable" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,807);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipelineNode::Enable</a></p></div>
+</div>
+
+<a name="IGPUPipelineNode.SetShader"></a><a name="Topic1371"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">SetShader</div>
+ <div id="NDPrototype1371" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetShader(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/IShader.h:IShader" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,704);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IShader</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pShader</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Assigns a pixel shader to the node. This shader will be run on an image when the node is processed.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pShader<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/Caustic/IShader.h:IShader" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,704);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IShader</a>*</div></td><td class="CDLDefinition"><p>pixel shader</p></td></tr></table></div>
+</div>
+
+<a name="IGPUPipelineNode.GetShader"></a><a name="Topic1372"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetShader</div>
+ <div id="NDPrototype1372" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <a href="../../../index.html#File:Base/Core/IRefCount.h:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,61);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Rendering/Caustic/IShader.h:IShader" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,704);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IShader</a>&gt; GetShader() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><p>Returns the shader currently assigned to the node</p></div>
+</div>
+
+<a name="IGPUPipelineNode.GetInput"></a><a name="Topic1373"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetInput</div>
+ <div id="NDPrototype1373" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <a href="../../../index.html#File:Base/Core/IRefCount.h:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,61);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Imaging/GPUImage/GPUPipeline.h:IGPUPipelineNode" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1278);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipelineNode</a>&gt; GetInput(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><span class="SHKeyword">wchar_t</span>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pName</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Returns the node that attached to the specified node input parameter (i.e. this is the prior node in the pipeline that provides this node with the input specified by pName)</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pName<div class="CDLParameterType"><span class="SHKeyword">const</span> <span class="SHKeyword">wchar_t</span>*</div></td><td class="CDLDefinition"><p>name of input parameter</p></td></tr></table></div>
+</div>
+
+<a name="IGPUPipelineNode.SetInput"></a><a name="Topic1374"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">SetInput</div>
+ <div id="NDPrototype1374" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetInput(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><span class="SHKeyword">wchar_t</span>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pName,</td></tr><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><span class="SHKeyword">wchar_t</span>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pSamplerName,</td></tr><tr><td class="first"></td><td></td><td></td><td class="PName last">IGPUPipelineNode*pNode</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Links a node from earlier in the pipeline to the specified parameter.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pName<div class="CDLParameterType"><span class="SHKeyword">const</span> <span class="SHKeyword">wchar_t</span>*</div></td><td class="CDLDefinition"><p>name of input parameter</p></td></tr><tr><td class="CDLEntry">pSamplerName<div class="CDLParameterType"><span class="SHKeyword">const</span> <span class="SHKeyword">wchar_t</span>*</div></td><td class="CDLDefinition"><p>name of sampler</p></td></tr><tr><td class="CDLEntry">pNode</td><td class="CDLDefinition"><p>previous node in pipeline that provides its output as input for parameter pName.</p></td></tr></table></div>
+</div>
+
+<a name="IGPUPipelineNode.SetOutputSize"></a><a name="Topic1375"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">SetOutputSize</div>
+ <div id="NDPrototype1375" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetOutputSize(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">width,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">height</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Sets the size of the output image from this node</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">width<div class="CDLParameterType"><span class="SHKeyword">uint32</span></div></td><td class="CDLDefinition"><p>width of this image in pixels</p></td></tr><tr><td class="CDLEntry">height<div class="CDLParameterType"><span class="SHKeyword">uint32</span></div></td><td class="CDLDefinition"><p>height of this image in pixels</p></td></tr></table></div>
+</div>
+
+<a name="IGPUPipelineNode.GetOutputWidth"></a><a name="Topic1376"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetOutputWidth</div>
+ <div id="NDPrototype1376" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetOutputWidth() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><p>Returns the width of the output image in pixels</p></div>
+</div>
+
+<a name="IGPUPipelineNode.GetOutputHeight"></a><a name="Topic1377"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetOutputHeight</div>
+ <div id="NDPrototype1377" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetOutputHeight() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><p>Returns the height of the output image in pixels</p></div>
+</div>
+
+<a name="IGPUPipelineNode.GetOutputTexture"></a><a name="Topic1378"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetOutputTexture</div>
+ <div id="NDPrototype1378" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <a href="../../../index.html#File:Base/Core/IRefCount.h:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,61);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Rendering/Caustic/ITexture.h:ITexture" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,730);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ITexture</a>&gt; GetOutputTexture(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Imaging/GPUImage/GPUPipeline.h:IGPUPipeline" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1283);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipeline</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pPipeline</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Returns the texture generated as output by this node</p></div>
+</div>
+
+<a name="IGPUPipelineNode.Process"></a><a name="Topic1379"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">Process</div>
+ <div id="NDPrototype1379" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> Process(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Imaging/GPUImage/GPUPipeline.h:IGPUPipeline" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1283);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipeline</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pPipeline</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Runs this node</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pPipeline<div class="CDLParameterType"><a href="../../../index.html#File:Imaging/GPUImage/GPUPipeline.h:IGPUPipeline" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1283);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipeline</a>*</div></td><td class="CDLDefinition"><p>pipeline to run this node on</p></td></tr></table></div>
+</div>
+
 <a name="IGPUPipelineSourceNode"></a><a name="Topic1279"></a><div class="CTopic TInterface LC">
  <div class="CTitle">IGPUPipelineSourceNode</div>
  <div class="CBody"><p>Defines the a source node. This node is at the start of a pipeline.</p></div>

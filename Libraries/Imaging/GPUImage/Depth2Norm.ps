@@ -1,0 +1,47 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2015-2020
+// Licensed under the MIT license.
+// See file LICENSE for details.
+//**********************************************************************
+struct VSOutput
+{
+    float4 pos : SV_POSITION;
+    float2 uvs : TEXCOORD0;
+};
+
+Texture2D<uint> depthTex : register(t1); // Depth texture
+Texture2D<float4> rayTexture : register(t3);
+
+cbuffer VS_CONSTANT_BUFFER : register(b0)
+{
+    float4x4 colorExt;
+    int depthWidth;
+    int depthHeight;
+};
+
+float4 PS(VSOutput p) : SV_Target
+{
+    int3 pcL = int3(p.uvs.x * depthWidth - 1, (1-p.uvs.y) * depthHeight, 0);
+    int3 pcR = int3(p.uvs.x * depthWidth + 1, (1-p.uvs.y) * depthHeight, 0);
+    int3 pcT = int3(p.uvs.x * depthWidth, (1-p.uvs.y) * depthHeight - 1, 0);
+    int3 pcB = int3(p.uvs.x * depthWidth, (1-p.uvs.y) * depthHeight + 1, 0);
+
+    float depthL = depthTex.Load(pcL);
+    float depthR = depthTex.Load(pcR);
+    float depthT = depthTex.Load(pcT);
+    float depthB = depthTex.Load(pcB);
+
+    float4 ray = rayTexture.Load(pcL);
+    float4 posL = float4(ray.xyz * float(depthL), 1.0);
+    ray = rayTexture.Load(pcR);
+    float4 posR = float4(ray.xyz * float(depthR), 1.0);
+    ray = rayTexture.Load(pcT);
+    float4 posT = float4(ray.xyz * float(depthT), 1.0);
+    ray = rayTexture.Load(pcB);
+    float4 posB = float4(ray.xyz * float(depthB), 1.0);
+
+    float3 v0 = posL.xyz - posR.xyz;
+    float3 v1 = posT.xyz - posB.xyz;
+    float3 norm = normalize(cross(v0, v1));
+    return float4(norm.xyz, 1.0f);
+}

@@ -247,10 +247,28 @@ namespace Caustic
         }
         m_spQuadShader->SetPSParam(L"s", std::any(CSamplerRef(pSampler)));
 
+        CComPtr<ID3D11DepthStencilState> oldState;
+        UINT oldStencil;
+        pContext->OMGetDepthStencilState(&oldState, &oldStencil);
+
+        D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
+        ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
+        depthStencilDesc.DepthEnable = false;
+        CComPtr<ID3D11DepthStencilState> spState;
+        CT(m_spDevice->CreateDepthStencilState(&depthStencilDesc, &spState));
+        pContext->OMSetDepthStencilState(spState, 0);
+
+        m_spQuadShader->SetVSParamFloat(L"minu", minU);
+        m_spQuadShader->SetVSParamFloat(L"minv", minV);
+        m_spQuadShader->SetVSParamFloat(L"maxu", maxU);
+        m_spQuadShader->SetVSParamFloat(L"maxv", maxV);
+        
         m_spQuadShader->BeginRender(this, nullptr, nullptr, lights, nullptr);
         pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         pContext->DrawIndexed(6, 0, 0);
         m_spQuadShader->EndRender(this);
+
+        pContext->OMSetDepthStencilState(oldState, oldStencil);
 #ifdef _DEBUG
         spCtx2->EndEvent();
 #endif
@@ -633,7 +651,10 @@ namespace Caustic
     // Method: RenderFrame
     // See <IRenderer::RenderFrame>
     //**********************************************************************
-    void CRenderer::RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback)
+    void CRenderer::RenderFrame(
+        std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)> renderCallback,
+        std::function<void(IRenderer* pRenderer)> prePresentCallback
+        )
     {
         if (m_freeze > 0)
             WaitForSingleObject(m_freezeEvent, INFINITE);
@@ -656,6 +677,9 @@ namespace Caustic
         m_spContext->OMSetRenderTargets(1, &pView, m_spStencilView);
 
         RenderScene(renderCallback);
+
+        if (prePresentCallback)
+            (prePresentCallback)(this);
         m_spSwapChain->Present(1, 0);
     }
 
@@ -663,14 +687,77 @@ namespace Caustic
     // Method: RenderLoop
     // See <IRenderer::RenderLoop>
     //**********************************************************************
-    void CRenderer::RenderLoop(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback)
+    void CRenderer::RenderLoop(
+        std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback,
+        std::function<void(IRenderer* pRenderer)> prePresentCallback
+    )
     {
         m_waitForShutdown.Clear();
         while (!m_exitThread)
         {
-            RenderFrame(renderCallback);
+            RenderFrame(renderCallback, prePresentCallback);
         }
         m_waitForShutdown.Set();
+    }
+
+    //**********************************************************************
+    // Method: CopyFrameBackbuffer
+    // Copies the back buffer into an IImage (CPU based image)
+    //
+    // Parameters:
+    // pImage - Image to copy to
+    //**********************************************************************
+    void CRenderer::CopyFrameBackBuffer(IImage* pImage)
+    {
+        // Copy rendered image to an IImage for processing on the CPU
+        int bpp = 32;
+        switch (m_BBDesc.Format)
+        {
+        case DXGI_FORMAT::DXGI_FORMAT_R8_UNORM:
+            bpp = 8;
+            break;
+        case DXGI_FORMAT::DXGI_FORMAT_R16_UINT:
+            bpp = 16;
+            break;
+        case DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM:
+        case DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM:
+            bpp = 32;
+            break;
+        case DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT:
+            bpp = 128;
+            break;
+        }
+        if (m_spCPUBackBuffer == nullptr)
+        {
+            CD3D11_TEXTURE2D_DESC texdesc(m_BBDesc.Format, m_BBDesc.Width, m_BBDesc.Height);
+            texdesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+            texdesc.BindFlags = (D3D11_BIND_FLAG)0;
+            texdesc.Usage = D3D11_USAGE_STAGING;
+            texdesc.MipLevels = 1;
+            texdesc.SampleDesc.Count = 1;
+            texdesc.SampleDesc.Quality = 0;
+            CT(m_spDevice->CreateTexture2D(&texdesc, nullptr, &m_spCPUBackBuffer));
+        }
+        m_spContext->CopyResource(m_spCPUBackBuffer, m_spBackBuffer);
+        D3D11_MAPPED_SUBRESOURCE ms;
+        CT(m_spContext->Map(m_spCPUBackBuffer, 0, D3D11_MAP_READ, 0, &ms));
+        BYTE* pSrc = reinterpret_cast<BYTE*>(ms.pData);
+        BYTE* pDst = pImage->GetData();
+        int stride = pImage->GetStride();
+        if (ms.RowPitch == stride)
+        {
+            CopyMemory(pDst, pSrc, m_BBDesc.Height * stride);
+        }
+        else
+        {
+            for (int y = 0; y < (int)m_BBDesc.Height; y++)
+            {
+                memcpy(pDst, pSrc, m_BBDesc.Width * bpp / 8);
+                pSrc += ms.RowPitch;
+                pDst += stride;
+            }
+        }
+        m_spContext->Unmap(m_spCPUBackBuffer, 0);
     }
 
     //**********************************************************************
@@ -715,9 +802,7 @@ namespace Caustic
         std::unique_ptr<CRenderCtx> spCtx(new CRenderCtx());
         m_spRenderCtx = spCtx.release();
 
-        CComPtr<ID3D11Texture2D> m_spBackBuffer;
         CT(m_spSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&m_spBackBuffer)));
-        D3D11_TEXTURE2D_DESC m_BBDesc;
         m_spBackBuffer->GetDesc(&m_BBDesc);
         CT(m_spDevice->CreateRenderTargetView(m_spBackBuffer, nullptr, &m_spRTView));
 

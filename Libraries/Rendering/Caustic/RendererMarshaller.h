@@ -66,6 +66,7 @@ namespace Caustic
         bool m_exit;
         HANDLE m_thread;
         std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> m_renderCallback;
+        std::function<void(IRenderer* pRenderer)> m_prePresentCallback;
 
     public:
         CRendererMarshaller();
@@ -80,7 +81,11 @@ namespace Caustic
         //**********************************************************************
         // IRendererMarshaller methods
         //**********************************************************************
-        virtual void Initialize(HWND hwnd, std::wstring &shaderFolder, std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback, bool startFrozen = false) override;
+        virtual void Initialize(HWND hwnd,
+            std::wstring &shaderFolder, 
+            std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)> renderCallback,
+            std::function<void(IRenderer* pRenderer)> prePresentCallback,
+            bool startFrozen = false) override;
         virtual void Shutdown() override;
         virtual CRefObj<ITexture> LoadTexture(const wchar_t *pPath) override;
         virtual CRefObj<ITexture> LoadVideoTexture(const wchar_t *pPath) override;
@@ -104,8 +109,17 @@ namespace Caustic
         virtual CRefObj<IShaderMgr> GetShaderMgr() override { return m_spRenderer->GetShaderMgr(); }
         virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice, bool startFrozen = false) override;
         virtual void DrawMesh(IRenderSubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) override; // Draws a mesh
-        virtual void RenderLoop(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) override; // Renderer entry point
-        virtual void RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) override; // Have renderer draw and present next frame
+        virtual void RenderLoop(
+            std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)> renderCallback,
+            std::function<void(IRenderer* pRenderer)> prePresentCallback
+            ) override; // Renderer entry point
+        virtual void RenderFrame(
+            std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback,
+            std::function<void(IRenderer* pRenderer)> prePresentCallback
+        ) override; // Have renderer draw and present next frame
+        virtual uint32 GetBackBufferWidth() override;
+        virtual uint32 GetBackBufferHeight() override;
+        virtual void CopyFrameBackBuffer(IImage* pImage) override;
         virtual void SetCamera(ICamera *pCamera) override; // Sets camera
         virtual void AddPointLight(IPointLight *pLight) override;
         virtual CRefObj<IRenderCtx> GetRenderCtx() override;

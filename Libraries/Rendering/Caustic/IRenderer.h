@@ -229,8 +229,12 @@ namespace Caustic
         //
         // Parameters:
         // renderCallback - render callback
+        // prePresentCallback - callback called right before Present()
         //**********************************************************************
-        virtual void RenderLoop(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) = 0;
+        virtual void RenderLoop(
+            std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback,
+            std::function<void(IRenderer* pRenderer)> prePresentCallback
+            ) = 0;
 
         //**********************************************************************
         // Method: RenderFrame
@@ -238,9 +242,34 @@ namespace Caustic
         //
         // Parameters:
         // renderCallback - callback for rendering custom objects
+        // prePresentCallback - callback called right before Present()
         //**********************************************************************
-        virtual void RenderFrame(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback) = 0;
+        virtual void RenderFrame(
+            std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback,
+            std::function<void(IRenderer* pRenderer)> prePresentCallback
+            ) = 0;
 
+        //**********************************************************************
+        // Method: GetBackBufferWidth
+        // Returns the width in pixels of the back buffer
+        //**********************************************************************
+        virtual uint32 GetBackBufferWidth() = 0;
+
+        //**********************************************************************
+        // Method: GetBackBufferHeight
+        // Returns the height in pixels of the back buffer
+        //**********************************************************************
+        virtual uint32 GetBackBufferHeight() = 0;
+
+        //**********************************************************************
+        // Method: CopyFrameBackBuffer
+        // Copies the back buffer into an IImage (CPU based image)
+        //
+        // Parameters:
+        // pImage - Image to copy to
+        //**********************************************************************
+        virtual void CopyFrameBackBuffer(IImage* pImage) = 0;
+        
         //**********************************************************************
         // Method: AddPointLight
         // Adds a point light which the renderer uses

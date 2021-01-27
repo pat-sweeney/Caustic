@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("ena",["Function"],[["Enable",,[["IGPUPipelineNode",,,,0,"File:Imaging/GPUImage/GPUPipeline.h:IGPUPipelineNode.Enable","CClass:IGPUPipelineNode:Enable"]]]]);

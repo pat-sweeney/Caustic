@@ -28,7 +28,7 @@ void CApp::InitializeCaustic(HWND hwnd)
     spCausticFactory = Caustic::CreateCausticFactory();
     std::wstring shaderFolder(SHADERPATH);
     spRenderWindow = CreateRenderWindow(hwnd, shaderFolder, [](IRenderer*, IRenderCtx*, int) {
-        });
+        }, [](IRenderer*) {});
 }
 
 // Global Variables:

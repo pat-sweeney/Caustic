@@ -32,47 +32,48 @@ using namespace Caustic;
 class CApp
 {
 public:
-    CRefObj<IImage> spBackgroundImage;
-    CRefObj<ITexture> spBackgroundTexture;
-    CRefObj<ISceneLightCollectionElem> m_spLightCollectionElem;
-    CRefObj<IRenderWindow> spRenderWindow;
-    CRefObj<Caustic::ICausticFactory> spCausticFactory;
-    CRefObj<IRenderer> spRenderer;
-    CRefObj<IAzureKinect> spCamera;
-    CRefObj<IGPUPipeline> spGPUPipeline;
-    CRefObj<IGPUPipelineSourceNode> spSourceColorNode;
-    CRefObj<IGPUPipelineSourceNode> spSourceDepthNode;
-    CRefObj<IGPUPipelineNode> spNode;
-    CRefObj<IGPUPipelineNode> spNodeSmooth;
-    CRefObj<IGPUPipelineSinkNode> spCameraReadyNode;
-    CRefObj<IGPUPipelineSinkNode> spCameraReadyNodeSmooth;
-    CRefObj<ITexture> spOutputTexture;
-    CRefObj<IShader> spShader;
-    CRefObj<IShader> spBokehShader;
-    CRefObj<IShader> spDepthSelShader;
-    CRefObj<IShader> spHoleFillShaderV;
-    CRefObj<IShader> spHoleFillShaderH;
-    CRefObj<IImage> spLastColorImage;
-    CRefObj<IImage> spLastDepthImage;
-    CRefObj<IImage> spRayMap;
-    CRefObj<ITexture> spRayTex;
-    CRefObj<IImage> spFinalImage;
-    CComPtr<ID3D11Buffer> spLineVB;                   // Vertex buffer used to draw lines
-    CRefObj<IShader> spLineShader;
-    HANDLE hMapFile;
-    LPTSTR pMemBuf;
-    HBITMAP imgbitmap = nullptr;
-    int imgwidth, imgheight;
-    HWND hwnd;
-    Matrix4x4 cameraExt;
-    Matrix3x3 cameraInt;
+    CRefObj<IImage> spBackgroundImage;                  // Image to display as background texture
+    CRefObj<ITexture> spBackgroundTexture;              // Textured version of spBackgroundImage
+    CRefObj<ISceneLightCollectionElem> m_spLightCollectionElem; // List of 3D objects in scene effected by the light
+    CRefObj<IRenderWindow> spRenderWindow;              // Window that renderer draws to
+    CRefObj<Caustic::ICausticFactory> spCausticFactory; // Factory used to create Caustic objects
+    CRefObj<IRenderer> spRenderer;                      // Instance of our renderer
+    CRefObj<IAzureKinect> spCamera;                     // Azure Kinect camera
+    CRefObj<IGPUPipeline> spGPUPipeline;                // GPU Pipeline used to process images from Azure Kinect camera
+    CRefObj<IGPUPipelineSourceNode> spSourceColorNode;  // Source node in GPU pipeline that feeds color image from camera to pipeline
+    CRefObj<IGPUPipelineSourceNode> spSourceDepthNode;  // Source node in GPU pipeline that feeds depth image from camera to pipeline
+    CRefObj<IGPUPipelineNode> spNormNode;               // Contains normal map derived from depth map
+    CRefObj<IGPUPipelineNode> spNormDepth;              // Normalized depth node
+    CRefObj<IGPUPipelineNode> spDepthOfField;           // Node returning the color source blurred using depth of field
+    CRefObj<IGPUPipelineNode> spDepthOfFieldFilled;     // Node returning the color source blurred using depth of field (using hole filled depth)
+    CRefObj<IShader> spRawCopyShader;                   // Shader used to copy image to resized/format changed image
+    CRefObj<IShader> spBokehShader;                     // Shader used for computing depth of field
+    CRefObj<IShader> spHoleFillShaderV;                 // Shader used for hole filling (vertical pass)
+    CRefObj<IShader> spHoleFillShaderH;                 // Shader used for hole filling (horizontal pass)
+    CRefObj<IImage> spLastColorImage;                   // Last color image read from Azure Kinect
+    CRefObj<IImage> spLastDepthImage;                   // Last depth image read from Azure Kinect
+    CRefObj<IImage> spRayMap;                           // Depth pixel to ray map
+    CRefObj<ITexture> spRayTex;                         // Depth pixel to ray texture
+    CComPtr<ID3D11Buffer> spLineVB;                     // Vertex buffer used to draw lines
+    CRefObj<IShader> spLineShader;                      // Shader used for drawing lines
+    CRefObj<ILight> spPointLight;                       // Point light source used to illuminate 3D models
+    HANDLE hMapFile;                                    // Shared memory block for sending frames to virtual camera
+    LPTSTR pMemBuf;                                     // Pointer to shared memory block
+    HWND hwnd;                                          // HWND bound to renderer
+    Matrix4x4 cameraExt;                                // Color extrinsics for Azure Kinect
+    Matrix3x3 cameraInt;                                // Color intrinsics for Azure Kinect
+    CRefObj<IImage> pBackImage;                         // Back buffer (as an IImage)
     float depth[4];
+    bool displayNorms;
+    bool displayColorImage;
+    bool displayDepthImage;
     bool colored;
     bool useBackground;
     bool sendToCamera;
     bool sendOrigToCamera;
     bool renderModel;
     bool renderSkeleton;
+    bool detectHandRaised;
     bool focusTracking;
     bool renderCOC;
     bool showInFocus;
@@ -89,13 +90,20 @@ public:
     float modelScale;
     Caustic::BBox3 modelBbox;
     CRefObj<IShader> spModelShader;
+    HANDLE hCanRead[2];
+    HANDLE hCanWrite[2];
+    int currentFrame;
 
     CApp() :
         smooth(false),
+        displayNorms(false),
+        displayColorImage(false),
+        displayDepthImage(false),
         guiInited(false),
         colored(false),
         renderModel(false),
         renderSkeleton(false),
+        detectHandRaised(false),
         useBackground(true),
         sendToCamera(true),
         sendOrigToCamera(false),
@@ -110,8 +118,13 @@ public:
         focusWidth(0.0f),
         BokehRadius(10.0f),
         holeSize(16),
-        modelScale(1.0f)
+        modelScale(1.0f),
+        currentFrame(0)
     {
+        hCanRead[0] = nullptr;
+        hCanRead[1] = nullptr;
+        hCanWrite[0] = nullptr;
+        hCanWrite[1] = nullptr;
     }
 
     void InitializeCaustic(HWND hwnd);
@@ -145,9 +158,9 @@ void CApp::Setup3DScene(IRenderWindow *pRenderWindow)
 
     auto spSceneFactory = Caustic::CreateSceneFactory();
     auto spSceneGraph = spRenderWindow->GetSceneGraph();
-    auto spMesh = Caustic::MeshImport::LoadObj(L"j:\\Models\\newell_teaset\\teacup.obj");
-    auto spMeshElem = spSceneFactory->CreateMeshElem();
-    spMeshElem->SetMesh(spMesh);
+//    auto spMesh = Caustic::MeshImport::LoadObj(L"j:\\models\\bugatti\\bugatti.obj");
+//    auto spMeshElem = spSceneFactory->CreateMeshElem();
+//    spMeshElem->SetMesh(spMesh);
 
     auto spSphere = Caustic::CreateCube();
     spSphere->GetBBox(&app.modelBbox);
@@ -172,9 +185,8 @@ void CApp::Setup3DScene(IRenderWindow *pRenderWindow)
     app.m_spLightCollectionElem->AddLight(spLight);
 
     Vector3 lightDir(-1.0f, -1.0f, -1.0f);
-    spLight = spCausticFactory->CreateDirectionalLight(lightPos, lightDir, lightColor, 1.0f);
-    app.m_spLightCollectionElem->AddLight(spLight);
-    spMaterialElem->AddChild(spMeshElem);
+    spPointLight = spCausticFactory->CreateDirectionalLight(lightPos, lightDir, lightColor, 1.0f);
+    app.m_spLightCollectionElem->AddLight(spPointLight);
     spMaterialElem->AddChild(spSphereElem);
     app.m_spLightCollectionElem->AddChild(spMaterialElem);
     spSceneGraph->AddChild(app.m_spLightCollectionElem);
@@ -248,8 +260,6 @@ void CApp::DrawLine(Vector3 p1, Vector3 p2)
     spCtx2->EndEvent();
 }
 
-HANDLE hCanRead = nullptr;
-HANDLE hCanWrite = nullptr;
 void CApp::InitializeCaustic(HWND hwnd)
 {
     app.hwnd = hwnd;
@@ -268,12 +278,19 @@ void CApp::InitializeCaustic(HWND hwnd)
              uint32 colorH = app.spCamera->GetColorHeight();
              app.SetupAzureCameraParameters(app.spModelShader, depthW, depthH, colorW, colorH);
 
+             Matrix m(app.cameraExt);
+             std::any mat = std::any(m);
+             app.spBokehShader->SetPSParam(L"colorExt", mat);
+
              ImGui_ImplDX11_NewFrame();
              ImGui_ImplWin32_NewFrame();
              ImGui::NewFrame();
              ImGui::Checkbox("SendToCamera", &app.sendToCamera);
              if (ImGui::IsItemHovered())
                  ImGui::SetTooltip("Should we send image to camera driver?");
+             ImGui::Checkbox("Display Normals", &app.displayNorms);
+             ImGui::Checkbox("Display Color Image", &app.displayColorImage);
+             ImGui::Checkbox("Display Normalized Depth Image", &app.displayDepthImage);
              ImGui::Checkbox("SendOrigToCamera", &app.sendOrigToCamera);
              if (ImGui::IsItemHovered())
                  ImGui::SetTooltip("Sends original (unprocessed image) to camera driver");
@@ -292,6 +309,7 @@ void CApp::InitializeCaustic(HWND hwnd)
              if (ImGui::IsItemHovered())
                  ImGui::SetTooltip("Fill holes in depth map");
              ImGui::Checkbox("RenderSkeleton", &app.renderSkeleton);
+             ImGui::Checkbox("Detect Hand Raise", &app.detectHandRaised);
              ImGui::Checkbox("UseFocusTracking", &app.focusTracking);
              if (ImGui::IsItemHovered())
                  ImGui::SetTooltip("Use head tracking to set focus distance");
@@ -337,58 +355,40 @@ void CApp::InitializeCaustic(HWND hwnd)
                      app.spSourceColorNode->SetSource(app.spGPUPipeline, app.spLastColorImage);
                      app.spSourceDepthNode->SetSource(app.spGPUPipeline, app.spLastDepthImage);
 
-                     // Run the pipeline
-                     ((app.smooth) ? app.spCameraReadyNodeSmooth : app.spCameraReadyNode)->Process(app.spGPUPipeline);
-                     auto spTexture = ((app.smooth) ? app.spNodeSmooth : app.spNode)->GetOutputTexture(app.spGPUPipeline);
+                     // Run the pipeline. Normally we would run spGPUPipeline->Process() however, we don't have
+                     // any sink nodes in our graph (GPUPipeline::Process() runs the sink nodes). So, we need
+                     // to explicitly run each end point of the graph.
+                     if (app.smooth)
+                         app.spDepthOfFieldFilled->Process(app.spGPUPipeline);
+                     else
+                         app.spDepthOfField->Process(app.spGPUPipeline);
+                     if (app.displayNorms)
+                         app.spNormNode->Process(app.spGPUPipeline);
+
+                     auto DisplayTexture = [](const char *label, IGPUPipelineNode *spNode, bool &flag, bool flip) {
+                         ImGui::Begin(label, &flag);
+                         auto spTexture = spNode->GetOutputTexture(app.spGPUPipeline);
+                         ImVec2 winsize = ImGui::GetContentRegionAvail();
+                         if (winsize.y == 0)
+                         {
+                             winsize = ImVec2(256, 256);
+                             ImGui::SetWindowSize(winsize);
+                         }
+                         ImVec2 uv0(0.0f, (flip) ? 1.0f : 0.0f);
+                         ImVec2 uv1(1.0f, (flip) ? 0.0f : 1.0f);
+                         ImGui::Image((ImTextureID)spTexture->GetD3DTextureRV(), winsize, uv0, uv1);
+                         ImGui::End();
+                     };
+
+                     auto spTexture = ((app.smooth) ? app.spDepthOfFieldFilled : app.spDepthOfField)->GetOutputTexture(app.spGPUPipeline);
                      if (spTexture)
                          app.spRenderer->DrawScreenQuad(0.0f, 0.0f, 1.0f, 1.0f, spTexture, nullptr);
-
-#define WRITE_TO_CAMERA
-#ifdef WRITE_TO_CAMERA
-                     if (app.sendToCamera && app.pMemBuf)
-                     {
-                         CRefObj<IImage> imageToSend;
-                         if (app.sendOrigToCamera)
-                         {
-                             imageToSend = spColorImage;
-                         }
-                         else
-                         {
-                             auto finalTex = ((app.smooth) ? app.spCameraReadyNodeSmooth : app.spCameraReadyNode)->GetOutputTexture(app.spGPUPipeline);
-                             if (app.spFinalImage == nullptr)
-                             {
-                                 int bpp = 32;
-                                 switch (finalTex->GetFormat())
-                                 {
-                                 case DXGI_FORMAT::DXGI_FORMAT_R8_UNORM:
-                                     bpp = 8;
-                                     break;
-                                 case DXGI_FORMAT::DXGI_FORMAT_R16_UINT:
-                                     bpp = 16;
-                                     break;
-                                 case DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM:
-                                 case DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM:
-                                     bpp = 32;
-                                     break;
-                                 case DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT:
-                                     bpp = 128;
-                                     break;
-                                 }
-                                 app.spFinalImage = CreateImage(finalTex->GetWidth(), finalTex->GetHeight(), bpp);
-                             }
-                             finalTex->CopyToImage(app.spRenderer, app.spFinalImage);
-                             imageToSend = app.spFinalImage;
-                         }
-                         //DWORD res = WaitForSingleObject(hCanWrite, 10);
-                         //if (res == WAIT_OBJECT_0)
-                         //{
-                         //    ResetEvent(hCanWrite);
-                             CopyMemory((PVOID)app.pMemBuf, imageToSend->GetData(), 1920 * 1080 * 4);
-                         //  SetEvent(hCanRead);
-                         //}
-                     }
-#endif
-
+                     if (app.displayNorms)
+                         DisplayTexture("Normals", app.spNormNode, app.displayNorms, true);
+                     if (app.displayColorImage)
+                         DisplayTexture("ColorSource", app.spSourceColorNode, app.displayColorImage, false);
+                     if (app.displayDepthImage)
+                         DisplayTexture("Normalized Depth", app.spNormDepth, app.displayDepthImage, true);
                      app.spRenderer->ClearDepth();
                  }
                  if (app.renderModel)
@@ -419,6 +419,22 @@ void CApp::InitializeCaustic(HWND hwnd)
                              app.DrawLine(p1, p2);
                          }
                      }
+
+                     if (app.detectHandRaised)
+                     {
+                         auto mat1 = app.spCamera->GetJointMatrix(0, Caustic::AzureKinect::Joint::HandLeft);
+                         auto mat2 = app.spCamera->GetJointMatrix(0, Caustic::AzureKinect::Joint::ElbowLeft);
+                         auto mat3 = app.spCamera->GetJointMatrix(0, Caustic::AzureKinect::Joint::HandTipLeft);
+                         Vector3 handPos(mat1[3][0] * 1000.0f, mat1[3][1] * 1000.0f, mat1[3][2] * 1000.0f);
+                         Vector3 elbowPos(mat2[3][0] * 1000.0f, mat2[3][1] * 1000.0f, mat2[3][2] * 1000.0f);
+                         Vector3 handTipPos(mat3[3][0] * 1000.0f, mat3[3][1] * 1000.0f, mat3[3][2] * 1000.0f);
+                         Vector3 dir = (handPos - elbowPos).Normalize();
+                         Vector3 dir2 = (handPos - handTipPos).Normalize();
+                         if (fabs(dir.y) > 0.8f && fabs(dir2.y) > 0.8f)
+                             app.m_spLightCollectionElem->SetFlags(app.m_spLightCollectionElem->GetFlags() & ~ESceneElemFlags::Hidden);
+                         else
+                             app.m_spLightCollectionElem->SetFlags(app.m_spLightCollectionElem->GetFlags() | ESceneElemFlags::Hidden);
+                     }
                      auto mat = app.spCamera->GetJointMatrix(0, Caustic::AzureKinect::Joint::HandLeft);
                      Vector3 headPos(mat[3][0] * 1000.0f, mat[3][1] * 1000.0f, mat[3][2] * 1000.0f);
                      Vector3 center = (app.modelBbox.maxPt + app.modelBbox.minPt) / 2.0f;
@@ -433,18 +449,50 @@ void CApp::InitializeCaustic(HWND hwnd)
              }
              ImGui::Render();
              ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-         }, true);
+         },
+         [](IRenderer* pRenderer)
+         {
+             if (app.pBackImage == nullptr)
+             {
+                 uint32 w = pRenderer->GetBackBufferWidth();
+                 uint32 h = pRenderer->GetBackBufferHeight();
+                 app.pBackImage = Caustic::CreateImage(1920,1080, 32);
+             }
+             DWORD res = WaitForSingleObject(app.hCanWrite[app.currentFrame], 0);
+             if (res == WAIT_OBJECT_0)
+             {
+                 ResetEvent(app.hCanWrite[app.currentFrame]);
+                 pRenderer->CopyFrameBackBuffer(app.pBackImage);
+                 uint32 w = app.spRenderer->GetBackBufferWidth();
+                 uint32 h = app.spRenderer->GetBackBufferHeight();
+                 uint32 mw = min(w, app.pBackImage->GetWidth());
+                 uint32 mh = min(h, app.pBackImage->GetHeight());
+                 const int imageSize = 1920 * 1080 * 4;
+                 BYTE* pDstRow = (BYTE*)&app.pMemBuf[imageSize * app.currentFrame];
+                 BYTE* pSrcRow = app.pBackImage->GetData();
+                 ZeroMemory(pDstRow, 1920 * 1080 * 4);
+                 for (uint32 y = 0; y < mh; y++)
+                 {
+                     CopyMemory((PVOID)pDstRow, pSrcRow, mw * 4);
+                     pSrcRow += app.pBackImage->GetStride();
+                     pDstRow += 1920 * 4;
+                 }
+                 SetEvent(app.hCanRead[app.currentFrame]);
+                 app.currentFrame = (app.currentFrame == 0) ? 1 : 0;
+             }
+         },
+         true);
     app.spRenderer = app.spRenderWindow->GetRenderer();
-
-//    app.spRenderer->Freeze();
 
     app.spBackgroundTexture = Caustic::LoadVideoTexture(L"j:\\github\\caustic\\background.mp4", app.spRenderer);
 
-    hCanRead = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, TRUE, L"Global\\VirtualCameraMutexRead");
-    hCanWrite = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, TRUE, L"Global\\VirtualCameraMutexWrite");
-    SetEvent(hCanWrite);
+    app.hCanRead[0] = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, TRUE, L"Global\\VirtualCameraMutexRead0");
+    app.hCanRead[1] = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, TRUE, L"Global\\VirtualCameraMutexRead1");
+    app.hCanWrite[0] = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, TRUE, L"Global\\VirtualCameraMutexWrite0");
+    app.hCanWrite[1] = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, TRUE, L"Global\\VirtualCameraMutexWrite1");
+    SetEvent(app.hCanWrite[0]);
 
-    app.spCamera = Caustic::AzureKinect::CreateAzureKinect(0, AzureKinect::Color1080p, AzureKinect::Depth1024x1024, AzureKinect::FPS30, true);
+    app.spCamera = Caustic::AzureKinect::CreateAzureKinect(1, AzureKinect::Color1080p, AzureKinect::Depth1024x1024, AzureKinect::FPS30, true);
     app.cameraExt = app.spCamera->ColorExtrinsics();
     app.cameraInt = app.spCamera->ColorIntrinsics();
     uint32 depthW = app.spCamera->GetDepthWidth();
@@ -458,135 +506,112 @@ void CApp::InitializeCaustic(HWND hwnd)
     // Create shared memory that we will use for sending image to virtual camera driver
     app.hMapFile = OpenFileMapping(FILE_MAP_READ | FILE_MAP_WRITE, FALSE, L"Global\\VirtualCameraImage");
     if (app.hMapFile)
-        app.pMemBuf = (LPTSTR)MapViewOfFile(hMapFile, FILE_MAP_WRITE, 0, 0, 1920 * 1080 * 4);
+        app.pMemBuf = (LPTSTR)MapViewOfFile(hMapFile, FILE_MAP_WRITE, 0, 0, 1920 * 1080 * 4 * 2);
 
     app.spGPUPipeline = Caustic::CreateGPUPipeline(app.spRenderer);
 
     //**********************************************************************
     // Overall our pipeline looks like:
-    //    +-------------+      +-------------+
-    //    | Depth Image | ---> | Depth2Color | ---+
-    //    +-------------+      +-------------+    |    +----------+
-    //    +-------------+      +-------+          +--> |          |
-    //    | Color Image | -+-> | Bokeh |-------------> | DepthSel |
-    //    +-------------+  |   +-------+          +--> |          |
-    //                     |                      |    +----------+
-    //                     +----------------------+
+    //    +-------------+       +------------+
+    //    | Depth Image | -+--> | Depth2Norm |
+    //    +-------------+  |    +------------+
+    //                     |
+    //                     |    +-------------+    +-------------+    +-------------+    +-----------+        +-------+
+    //                     +--> | DepthResize |--> | FillHolesHP |--> | FillHolesVP |--> | NormDepth |------> | Bokeh |
+    //                     |    +-------------+    +-------------+    +-------------+    +-----------+   +--> | (DoF) |
+    //                     |                                                                             |    +-------+
+    //                     |    +-----------+         +-------+                                          |
+    //                     +--> | NormDepth |--+----> | Bokeh |                                          |
+    //                          +-----------+    +--> | (DoF) |                                          |
+    //                                           |    +-------+                                          |
+    //    +-------------+                        |                                                       |
+    //    | Color Image |------------------------+-------------------------------------------------------+
+    //    +-------------+
     // We have a color+depth image in. We then convert the depth to match
     // the color image dimensions. We then select between a blurred version
     // of the color image and pristine color image based on the depth.
     //**********************************************************************
 
+    app.spRawCopyShader = app.spRenderer->GetShaderMgr()->FindShader(L"RawCopy");
+
     //**********************************************************************
     // Create source nodes for color/depth images from camera
     //**********************************************************************
-    app.spSourceColorNode = app.spGPUPipeline->CreateSourceNode(nullptr, colorW, colorH, DXGI_FORMAT_B8G8R8A8_UNORM);
-    app.spSourceDepthNode = app.spGPUPipeline->CreateSourceNode(nullptr, depthW, depthH, DXGI_FORMAT_R16_UINT);
+    app.spSourceColorNode = app.spGPUPipeline->CreateSourceNode(L"SourceColorImage", nullptr, colorW, colorH, DXGI_FORMAT_B8G8R8A8_UNORM);
+    app.spSourceDepthNode = app.spGPUPipeline->CreateSourceNode(L"SourceDepthImage", nullptr, depthW, depthH, DXGI_FORMAT_R16_UINT);
 
     //**********************************************************************
     // Create texture that maps depth pixels into rays
     //**********************************************************************
-    app.spRayMap = app.spCamera->BuildRayMap(depthW, depthH);
+    app.spRayMap = app.spCamera->BuildRayMap(depthW, depthH, true);
     app.spRayTex = Caustic::CreateTexture(app.spRenderer, depthW, depthH, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT);
     app.spRayTex->CopyFromImage(app.spRenderer, app.spRayMap);
 
     //**********************************************************************
-    // Create node that generates depth texture matching color texture
+    // Create shader to convert depth map into normal map
+    //**********************************************************************
+    auto spNormTex = Caustic::CreateTexture(app.spRenderer, depthW, depthH, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT);
+    auto spNormShader = app.spRenderer->GetShaderMgr()->FindShader(L"Depth2Norm");
+    app.spNormNode = app.spGPUPipeline->CreateNode(L"Depth2Normals", spNormShader, depthW, depthH, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT);
+    app.spNormNode->SetInput(L"depthTex", nullptr, app.spSourceDepthNode);
+
+    // Pass arguments to Depth2Norm shader
+    std::any raymap = std::any(app.spRayTex);
+    spNormShader->SetVSParam(L"rayTexture", raymap);
+    spNormShader->SetPSParam(L"rayTexture", raymap);
+    auto depthExtrinsics = app.spCamera->ColorExtrinsics();
+    Matrix m(depthExtrinsics);
+    std::any depthExtrinsicsMat = std::any(m);
+    spNormShader->SetPSParam(L"colorExt", depthExtrinsicsMat);
+    spNormShader->SetPSParamInt(L"depthWidth", depthW);
+    spNormShader->SetPSParamInt(L"depthHeight", depthH);
+    spNormShader->SetPSParamInt(L"colorWidth", colorW);
+    spNormShader->SetPSParamInt(L"colorHeight", colorH);
+    spNormShader->SetPSParamFloat(L"minDepth", 10.0f);
+    spNormShader->SetPSParamFloat(L"maxDepth", 8000.0f);
+
+    //**********************************************************************
+    // Create node that generates depth texture matching the color texture's size
     //**********************************************************************
     auto extrinsics = app.spCamera->ColorExtrinsics();
     auto intrinsics = app.spCamera->GetAzureColorIntrinsics();
-    auto spDepthMeshNode = app.spGPUPipeline->CreatePredefinedNode(c_CustomNode_DepthMeshNode, (unsigned int)depthW, (unsigned int)depthH, (unsigned int)colorW, (unsigned int)colorH,
+    auto spDepthResize = app.spGPUPipeline->CreatePredefinedNode(c_CustomNode_DepthMeshNode, (unsigned int)depthW, (unsigned int)depthH, (unsigned int)colorW, (unsigned int)colorH,
         app.spRayTex, extrinsics, intrinsics, 10.0, 8000.0,
         DXGI_FORMAT_R16_UINT);
-    spDepthMeshNode->SetInput(L"depthTex", nullptr, app.spSourceDepthNode);
+    spDepthResize->SetInput(L"depthTex", nullptr, app.spSourceDepthNode);
 
     //**********************************************************************
     // Create downsampled depth using a median filter
     //**********************************************************************
-#ifdef USE_MEDIAN_HOLE_FILLING
-    auto spsh = app.spRenderer->GetShaderMgr()->FindShader(L"MedianDepth");
-    auto spMedian = app.spGPUPipeline->CreateNode(spsh, colorW, colorH, DXGI_FORMAT_R16_UINT);
-    spMedian->SetInput(L"depthTex", nullptr, spDepthMeshNode);
-    auto spMedian = app.spGPUPipeline->CreateNode(spsh, colorW / 2, colorH / 2, DXGI_FORMAT_R16_UINT);
-    spMedian->SetInput(L"depthTex", nullptr, spDepthMeshNode);
-    auto spMedian2 = app.spGPUPipeline->CreateNode(spsh, colorW / 4, colorH / 4, DXGI_FORMAT_R16_UINT);
-    spMedian2->SetInput(L"depthTex", nullptr, spMedian);
-    auto spMedian3 = app.spGPUPipeline->CreateNode(spsh, colorW / 8, colorH / 8, DXGI_FORMAT_R16_UINT);
-    spMedian3->SetInput(L"depthTex", nullptr, spMedian2);
-    auto spMedian4 = app.spGPUPipeline->CreateNode(spsh, colorW / 16, colorH / 16, DXGI_FORMAT_R16_UINT);
-    spMedian4->SetInput(L"depthTex", nullptr, spMedian3);
-    auto spMedian5 = app.spGPUPipeline->CreateNode(spsh, colorW / 32, colorH / 32, DXGI_FORMAT_R16_UINT);
-    spMedian5->SetInput(L"depthTex", nullptr, spMedian4);
-    auto spMedian6 = app.spGPUPipeline->CreateNode(spsh, colorW / 64, colorH / 64, DXGI_FORMAT_R16_UINT);
-    spMedian6->SetInput(L"depthTex", nullptr, spMedian5);
-    auto spMedian7 = app.spGPUPipeline->CreateNode(spsh, colorW / 128, colorH / 128, DXGI_FORMAT_R16_UINT);
-    spMedian7->SetInput(L"depthTex", nullptr, spMedian6);
-    auto spMedian8 = app.spGPUPipeline->CreateNode(spsh, colorW / 256, colorH / 256, DXGI_FORMAT_R16_UINT);
-    spMedian8->SetInput(L"depthTex", nullptr, spMedian7);
-
-    //**********************************************************************
-    // Fill holes in the depth map
-    //**********************************************************************
-    auto spfh = app.spRenderer->GetShaderMgr()->FindShader(L"FillHoles");
-    auto spFillHoles = app.spGPUPipeline->CreateNode(spfh, colorW, colorH, DXGI_FORMAT_R16_UINT);
-    spFillHoles->SetInput(L"depthTex0", nullptr, spDepthMeshNode);
-    spFillHoles->SetInput(L"depthTex1", nullptr, spMedian);
-    spFillHoles->SetInput(L"depthTex2", nullptr, spMedian2);
-    spFillHoles->SetInput(L"depthTex3", nullptr, spMedian3);
-    spFillHoles->SetInput(L"depthTex4", nullptr, spMedian4);
-    spFillHoles->SetInput(L"depthTex5", nullptr, spMedian5);
-    spFillHoles->SetInput(L"depthTex6", nullptr, spMedian6);
-    spFillHoles->SetInput(L"depthTex7", nullptr, spMedian7);
-    spFillHoles->SetInput(L"depthTex8", nullptr, spMedian8);
-#else
-#ifdef SINGLE_PASS_HOLEFILLING
-    auto spsh = app.spRenderer->GetShaderMgr()->FindShader(L"FillHolesSP");
-    auto spFillHoles = app.spGPUPipeline->CreateNode(spsh, colorW, colorH, DXGI_FORMAT_R16_UINT);
-    spFillHoles->SetInput(L"depthTex", nullptr, spDepthMeshNode);
-#else
     app.spHoleFillShaderH = app.spRenderer->GetShaderMgr()->FindShader(L"FillHolesHP");
     app.spHoleFillShaderV = app.spRenderer->GetShaderMgr()->FindShader(L"FillHolesVP");
-    auto spFillHolesH = app.spGPUPipeline->CreateNode(app.spHoleFillShaderH, colorW, colorH, DXGI_FORMAT_R16_UINT);
-    spFillHolesH->SetInput(L"depthTex", nullptr, spDepthMeshNode);
-    auto spFillHolesV = app.spGPUPipeline->CreateNode(app.spHoleFillShaderV, colorW, colorH, DXGI_FORMAT_R16_UINT);
+    auto spFillHolesH = app.spGPUPipeline->CreateNode(L"FillHoleHorizontal", app.spHoleFillShaderH, colorW, colorH, DXGI_FORMAT_R16_UINT);
+    spFillHolesH->SetInput(L"depthTex", nullptr, spDepthResize);
+    auto spFillHolesV = app.spGPUPipeline->CreateNode(L"FillHoleVertical", app.spHoleFillShaderV, colorW, colorH, DXGI_FORMAT_R16_UINT);
     spFillHolesV->SetInput(L"depthTex", nullptr, spFillHolesH);
-#endif
-#endif
 
     //**********************************************************************
     // Normalize the depth map to be in the range 0..1
     //**********************************************************************
     auto spnd = app.spRenderer->GetShaderMgr()->FindShader(L"NormDepth");
-    auto spNormSmooth = app.spGPUPipeline->CreateNode(spnd, colorW, colorH, DXGI_FORMAT_R32_FLOAT);
-    spNormSmooth->SetInput(L"depthTex", nullptr, spFillHolesV);
+    auto spNormFilledDepth = app.spGPUPipeline->CreateNode(L"NormalizeDepth", spnd, colorW, colorH, DXGI_FORMAT_R32_FLOAT);
+    spNormFilledDepth->SetInput(L"depthTex", nullptr, spFillHolesV);
 
-    auto spNorm = app.spGPUPipeline->CreateNode(spnd, colorW, colorH, DXGI_FORMAT_R32_FLOAT);
-    spNorm->SetInput(L"depthTex", nullptr, spDepthMeshNode);
+    app.spNormDepth = app.spGPUPipeline->CreateNode(L"NormalizeDepth", spnd, colorW, colorH, DXGI_FORMAT_R32_FLOAT);
+    app.spNormDepth->SetInput(L"depthTex", nullptr, spDepthResize);
     
     //**********************************************************************
     // Create depth of field node
     //**********************************************************************
     app.spBokehShader = app.spRenderer->GetShaderMgr()->FindShader(L"Bokeh");
-    auto bokeh = app.spGPUPipeline->CreateNode(app.spBokehShader, colorW, colorH, DXGI_FORMAT_B8G8R8A8_UNORM);
-    bokeh->SetInput(L"colorTex", L"colorSampler", app.spSourceColorNode);
-    bokeh->SetInput(L"depthTex", nullptr, spNorm);
-
-    auto bokehSmooth = app.spGPUPipeline->CreateNode(app.spBokehShader, colorW, colorH, DXGI_FORMAT_B8G8R8A8_UNORM);
-    bokehSmooth->SetInput(L"colorTex", L"colorSampler", app.spSourceColorNode);
-    bokehSmooth->SetInput(L"depthTex", nullptr, spNormSmooth);
-
-    app.spShader = app.spRenderer->GetShaderMgr()->FindShader(L"RawCopy");
-    app.spNode = app.spGPUPipeline->CreateNode(app.spShader, colorW, colorH, DXGI_FORMAT_B8G8R8A8_UNORM);
-    app.spNode->SetInput(L"sourceTexture1", L"sourceSampler1", bokeh);
-
-    app.spNodeSmooth = app.spGPUPipeline->CreateNode(app.spShader, colorW, colorH, DXGI_FORMAT_B8G8R8A8_UNORM);
-    app.spNodeSmooth->SetInput(L"sourceTexture1", L"sourceSampler1", bokehSmooth);
-
-    app.spCameraReadyNode = app.spGPUPipeline->CreateSinkNode(app.spShader, 1920, 1080, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
-    app.spCameraReadyNode->SetInput(L"sourceTexture1", L"sourceSampler1", app.spNode);
+    app.spDepthOfField = app.spGPUPipeline->CreateNode(L"ComputeDoF", app.spBokehShader, colorW, colorH, DXGI_FORMAT_B8G8R8A8_UNORM);
+    app.spDepthOfField->SetInput(L"colorTex", L"colorSampler", app.spSourceColorNode);
+    app.spDepthOfField->SetInput(L"depthTex", nullptr, app.spNormDepth);
     
-    app.spCameraReadyNodeSmooth = app.spGPUPipeline->CreateSinkNode(app.spShader, 1920, 1080, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
-    app.spCameraReadyNodeSmooth->SetInput(L"sourceTexture1", L"sourceSampler1", app.spNodeSmooth);
+    app.spDepthOfFieldFilled = app.spGPUPipeline->CreateNode(L"bokehFilled", app.spBokehShader, colorW, colorH, DXGI_FORMAT_B8G8R8A8_UNORM);
+    app.spDepthOfFieldFilled->SetInput(L"colorTex", L"colorSampler", app.spSourceColorNode);
+    app.spDepthOfFieldFilled->SetInput(L"depthTex", nullptr, spNormFilledDepth);
+
     app.spRenderer->Unfreeze();
 }
 
@@ -682,7 +707,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
     hInst = hInstance; // Store instance handle in our global variable
 
     HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+        CW_USEDEFAULT, 0, 1920, 1080, nullptr, nullptr, hInstance, nullptr);
 
     if (!hWnd)
     {

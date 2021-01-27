@@ -113,5 +113,8 @@ namespace Caustic
     // shaderFolder - Path to folder containing shaders
 	// ppRenderWindow - returns the created render window
 	//**********************************************************************
-	CAUSTICAPI CRefObj<IRenderWindow> CreateRenderWindow(HWND hwnd, std::wstring &shaderFolder, std::function<void(IRenderer*,IRenderCtx*,int)> callback, bool startFrozen = false);
+	CAUSTICAPI CRefObj<IRenderWindow> CreateRenderWindow(HWND hwnd, std::wstring &shaderFolder, 
+		std::function<void(IRenderer*, IRenderCtx*, int)> callback,
+		std::function<void(IRenderer*)> prePresentCallback,
+		bool startFrozen = false);
 } 

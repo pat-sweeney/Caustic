@@ -266,7 +266,9 @@
     <CustomBuild Include="TexturedWithShadow.xml">
       <Filter>Source Files\Shaders\Definitions</Filter>
     </CustomBuild>
-    <CustomBuild Include="ScreenQuad.xml" />
+    <CustomBuild Include="ScreenQuad.xml">
+      <Filter>Source Files\Shaders\Definitions</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <None Include="Brighten.cs">

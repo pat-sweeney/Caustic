@@ -14,10 +14,25 @@ struct VSOutput
     float2 uvs : TEXCOORD0;
 };
 
+cbuffer VS_CONSTANT_BUFFER : register(b0)
+{
+    float minu;
+    float minv;
+    float maxu;
+    float maxv;
+};
+
 VSOutput VS(VSInput p)
 {
     VSOutput v;
-    v.pos = float4(p.pos, 1.0f);
+
+    float nx = (p.pos.x + 1.0f) / 2.0f;
+    float ny = (p.pos.y + 1.0f) / 2.0f;
+    nx = nx * (maxu - minu) + minu;
+    ny = ny * (maxv - minv) + minv;
+    nx = nx * 2.0f - 1.0f;
+    ny = ny * 2.0f - 1.0f;
+    v.pos = float4(nx, ny, p.pos.z, 1.0f);
     v.uvs = p.uvs;
     return v;
 }

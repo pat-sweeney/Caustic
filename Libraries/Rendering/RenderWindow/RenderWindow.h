@@ -42,8 +42,12 @@ namespace Caustic
         Vector3 m_snapPosY;
         Vector3 m_snapPosZ;
         std::function<void(Caustic::IRenderer*, Caustic::IRenderCtx*, int)> m_callback;
+        std::function<void(Caustic::IRenderer*)> m_prePresentCallback;
     public:
-        CRenderWindow(HWND hwnd, std::wstring &shaderFolder, std::function<void(Caustic::IRenderer*, Caustic::IRenderCtx*, int)> callback, bool useRenderGraph = false, bool startFrozen = false);
+        CRenderWindow(HWND hwnd, std::wstring &shaderFolder,
+            std::function<void(Caustic::IRenderer*, Caustic::IRenderCtx*, int)> callback,
+            std::function<void(Caustic::IRenderer*)> prePresentCallback,
+            bool useRenderGraph = false, bool startFrozen = false);
         ~CRenderWindow();
         
         //**********************************************************************
