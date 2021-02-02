@@ -30,6 +30,8 @@ PSOutput2 PS(VSOutput p)
     PSOutput2 o;
     int3 pos = int3(p.uvs.x * depthWidth, (1.0f - p.uvs.y) * depthHeight, 0);
     o.depth = depthTex.Load(pos);
+    if (o.depth == 0.0f)
+        o.depth = 1.0f;
     o.clr = tex.Sample(s, p.uvs);
     return o;
 }

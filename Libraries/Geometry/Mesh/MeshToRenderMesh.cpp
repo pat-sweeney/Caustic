@@ -264,7 +264,6 @@ namespace Caustic
 		BuildVertexBuffer(pRenderer, spShaderInfo, vertexReferenced, &md);
 		BuildIndexBuffer(pRenderer, vertexReferenced, &md);
         spRenderSubMesh->SetMeshData(md);
-		spRenderSubMesh->SetShader(pShader);
 		return spRenderSubMesh;
 	}
 

@@ -73,6 +73,7 @@ public:
     bool sendToCamera;
     bool sendOrigToCamera;
     bool renderModel;
+    bool renderDesktopView;
     bool renderSkeleton;
     bool detectHandRaised;
     bool focusTracking;
@@ -91,6 +92,9 @@ public:
     float modelScale;
     Caustic::BBox3 modelBbox;
     CRefObj<IShader> spModelShader;
+    CRefObj<ISceneMeshElem> spCubeElem;
+    CRefObj<ISceneMaterialElem> spCubeMaterialElem;
+    CRefObj<ISceneMeshElem> spPlaneElem;
     HANDLE hCanRead[2];
     HANDLE hCanWrite[2];
     int currentFrame;
@@ -103,6 +107,7 @@ public:
         guiInited(false),
         colored(false),
         renderModel(false),
+        renderDesktopView(true),
         renderSkeleton(false),
         detectHandRaised(false),
         useBackground(true),
@@ -163,21 +168,56 @@ void CApp::Setup3DScene(IRenderWindow *pRenderWindow)
 //    auto spMeshElem = spSceneFactory->CreateMeshElem();
 //    spMeshElem->SetMesh(spMesh);
 
-    auto spSphere = Caustic::CreateCube();
-    spSphere->GetBBox(&app.modelBbox);
-    auto spSphereElem = spSceneFactory->CreateMeshElem();
-    spSphereElem->SetMesh(spSphere);
-
     app.spModelShader = spRenderWindow->GetRenderer()->GetShaderMgr()->FindShader(L"ModelMesh");
-    CRefObj<ISceneMaterialElem> spMaterialElem = spSceneFactory->CreateMaterialElem();
-    CRefObj<IMaterialAttrib> spMaterial = spCausticFactory->CreateMaterialAttrib();
+    
+    //**********************************************************************
+    // Create cube. This model will be displayed when the user raises their left hand
+    auto spCube = Caustic::CreateCube();
+    spCube->GetBBox(&app.modelBbox);
+    app.spCubeElem = spSceneFactory->CreateMeshElem();
+    app.spCubeElem->SetMesh(spCube);
+    app.spCubeElem->SetName(L"Cube");
+
+    // Create material for the cube
+    app.spCubeMaterialElem = spSceneFactory->CreateMaterialElem();
+    CRefObj<IMaterialAttrib> spCubeMaterial = spCausticFactory->CreateMaterialAttrib();
     FRGBColor ambient(0.2f, 0.2f, 0.2f);
     FRGBColor diffuse(0.4f, 0.4f, 0.4f);
-    spMaterial->SetColor(L"ambientColor", ambient);
-    spMaterial->SetColor(L"diffuseColor", diffuse);
-    spMaterialElem->SetMaterial(spMaterial);
-    spMaterialElem->SetShader(app.spModelShader);
+    spCubeMaterial->SetColor(L"ambientColor", ambient);
+    spCubeMaterial->SetColor(L"diffuseColor", diffuse);
+    app.spCubeMaterialElem->SetMaterial(spCubeMaterial);
+    app.spCubeMaterialElem->SetShader(app.spModelShader);
+    app.spCubeMaterialElem->AddChild(app.spCubeElem);
+    //**********************************************************************
 
+    //**********************************************************************
+    // Create plane for displaying desktop
+    auto spPlane = Caustic::CreateGrid(2, 2);
+    app.spPlaneElem = spSceneFactory->CreateMeshElem();
+    app.spPlaneElem->SetName(L"DesktopPlane");
+    app.spPlaneElem->SetMesh(spPlane);
+    
+    // Create plane material
+    auto spPlaneMaterialElem = spSceneFactory->CreateMaterialElem();
+    spPlaneMaterialElem->SetName(L"DesktopPlaneMaterial");
+    app.spDesktopTexture = Caustic::CreateDesktopTexture(app.spRenderer);
+    CRefObj<IMaterialAttrib> spPlaneMaterial = spCausticFactory->CreateMaterialAttrib();
+    spPlaneMaterial->SetColor(L"ambientColor", ambient);
+    spPlaneMaterial->SetColor(L"diffuseColor", diffuse);
+    spPlaneMaterialElem->SetMaterial(spPlaneMaterial);
+    spPlaneMaterialElem->SetShader(app.spModelShader);
+    spPlaneMaterialElem->AddChild(app.spPlaneElem);
+
+    // transform plane
+    auto rotmat = Matrix4x4::RotationMatrix(0.0f, Caustic::DegreesToRadians(180.0f), 0.0f);
+    auto scalemat = Matrix4x4::ScalingMatrix(300.0f, 300.0f, 300.0f);
+    auto transmat = Matrix4x4::TranslationMatrix(0.0f, 0.0f, 1200.0f);
+    auto transform = rotmat * scalemat * transmat;
+    spPlaneMaterialElem->SetTransform(transform);
+    //**********************************************************************
+
+    //**********************************************************************
+    // Create light node to hold all our objects
     app.m_spLightCollectionElem = spSceneFactory->CreateLightCollectionElem();
 
     Vector3 lightPos(1000.0f, 1000.0f, 0.0f);
@@ -185,29 +225,13 @@ void CApp::Setup3DScene(IRenderWindow *pRenderWindow)
     CRefObj<ILight> spLight(spCausticFactory->CreatePointLight(lightPos, lightColor, 1.0f));
     app.m_spLightCollectionElem->AddLight(spLight);
 
-    auto spPlane = Caustic::CreateGrid(2, 2);
-    auto spPlaneElem = spSceneFactory->CreateMeshElem();
-    spPlaneElem->SetMesh(spPlane);
-    auto spPlaneShader = spRenderWindow->GetRenderer()->GetShaderMgr()->FindShader(L"Textured");
-    auto spPlaneMaterialElem = spSceneFactory->CreateMaterialElem();
-    app.spDesktopTexture = Caustic::CreateDesktopTexture(app.spRenderer);
-    std::any spDesktopParam(spDesktopTexture);
-    spPlaneShader->SetPSParam(L"diffuseTexture", spDesktopParam);
-    spMaterialElem->SetMaterial(spMaterial);
-    spMaterialElem->SetShader(spPlaneShader);
-    spMaterialElem->AddChild(spPlaneElem);
-    auto rotmat = Matrix4x4::RotationMatrix(0.0f, Caustic::DegreesToRadians(180.0f), 0.0f);
-    auto scalemat = Matrix4x4::ScalingMatrix(300.0f, 300.0f, 300.0f);
-    auto transmat = Matrix4x4::TranslationMatrix(0.0f, 0.0f, 1200.0f);
-    auto transform = rotmat * scalemat * transmat;
-    spMaterialElem->SetTransform(transform);
-    spSceneGraph->AddChild(spMaterialElem);
-
     Vector3 lightDir(-1.0f, -1.0f, -1.0f);
     spPointLight = spCausticFactory->CreateDirectionalLight(lightPos, lightDir, lightColor, 1.0f);
     app.m_spLightCollectionElem->AddLight(spPointLight);
-    spMaterialElem->AddChild(spSphereElem);
-    app.m_spLightCollectionElem->AddChild(spMaterialElem);
+    
+    // Add objects to our light collection
+    app.m_spLightCollectionElem->AddChild(spPlaneMaterialElem);
+    app.m_spLightCollectionElem->AddChild(app.spCubeMaterialElem);
     spSceneGraph->AddChild(app.m_spLightCollectionElem);
 }
 
@@ -291,7 +315,10 @@ void CApp::InitializeCaustic(HWND hwnd)
              app.SetupAzureCameraParameters(app.spModelShader, depthW, depthH, colorW, colorH);
 
              app.spDesktopTexture->Update(pRenderer);
-             
+
+             std::any spDesktopParam(app.spDesktopTexture);
+             app.spModelShader->SetPSParam(L"diffuseTexture", spDesktopParam);
+
              Matrix m(app.cameraExt);
              std::any mat = std::any(m);
              app.spBokehShader->SetPSParam(L"colorExt", mat);
@@ -319,6 +346,7 @@ void CApp::InitializeCaustic(HWND hwnd)
              if (ImGui::IsItemHovered())
                  ImGui::SetTooltip("Forces depth discontinuity to effect blur sampling");
              ImGui::Checkbox("RenderModel", &app.renderModel);
+             ImGui::Checkbox("RenderDesktopView", &app.renderDesktopView);
              ImGui::Checkbox("FillHoles", &app.smooth);
              if (ImGui::IsItemHovered())
                  ImGui::SetTooltip("Fill holes in depth map");
@@ -432,12 +460,15 @@ void CApp::InitializeCaustic(HWND hwnd)
                          DisplayTexture("ColorSource", app.spSourceColorNode, app.displayColorImage, false);
                      if (app.displayDepthImage)
                          DisplayTexture("Normalized Depth", app.spNormDepth, app.displayDepthImage, true);
-//                     app.spRenderer->ClearDepth();
                  }
                  if (app.renderModel)
-                     app.m_spLightCollectionElem->SetFlags(app.m_spLightCollectionElem->GetFlags() & ~ESceneElemFlags::Hidden);
+                     app.spCubeElem->SetFlags(app.m_spLightCollectionElem->GetFlags() & ~ESceneElemFlags::Hidden);
                  else
-                     app.m_spLightCollectionElem->SetFlags(app.m_spLightCollectionElem->GetFlags() | ESceneElemFlags::Hidden);
+                     app.spCubeElem->SetFlags(app.m_spLightCollectionElem->GetFlags() | ESceneElemFlags::Hidden);
+                 if (app.renderDesktopView)
+                     app.spPlaneElem->SetFlags(app.m_spLightCollectionElem->GetFlags() & ~ESceneElemFlags::Hidden);
+                 else
+                     app.spPlaneElem->SetFlags(app.m_spLightCollectionElem->GetFlags() | ESceneElemFlags::Hidden);
                  if (app.spCamera->BodyTrackingOn() && app.spCamera->NumberBodiesDetected() >= 1)
                  {
                      if (app.focusTracking)
@@ -474,9 +505,9 @@ void CApp::InitializeCaustic(HWND hwnd)
                          Vector3 dir = (handPos - elbowPos).Normalize();
                          Vector3 dir2 = (handPos - handTipPos).Normalize();
                          if (fabs(dir.y) > 0.8f && fabs(dir2.y) > 0.8f)
-                             app.m_spLightCollectionElem->SetFlags(app.m_spLightCollectionElem->GetFlags() & ~ESceneElemFlags::Hidden);
+                             app.spCubeElem->SetFlags(app.m_spLightCollectionElem->GetFlags() & ~ESceneElemFlags::Hidden);
                          else
-                             app.m_spLightCollectionElem->SetFlags(app.m_spLightCollectionElem->GetFlags() | ESceneElemFlags::Hidden);
+                             app.spCubeElem->SetFlags(app.m_spLightCollectionElem->GetFlags() | ESceneElemFlags::Hidden);
                      }
                      auto mat = app.spCamera->GetJointMatrix(0, Caustic::AzureKinect::Joint::HandLeft);
                      Vector3 headPos(mat[3][0] * 1000.0f, mat[3][1] * 1000.0f, mat[3][2] * 1000.0f);
@@ -487,7 +518,7 @@ void CApp::InitializeCaustic(HWND hwnd)
                                  app.modelScale * -center.x + headPos.x, 
                                  app.modelScale * -center.y + headPos.y, 
                                  app.modelScale * -center.z + headPos.z, 1.0f);
-                     app.m_spLightCollectionElem->SetTransform(m);
+                     app.spCubeMaterialElem->SetTransform(m);
                  }
              }
              ImGui::Render();

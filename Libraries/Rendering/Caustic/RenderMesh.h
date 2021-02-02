@@ -39,7 +39,7 @@ namespace Caustic
         MeshData m_NormalVB;
         CRefObj<IRenderMaterial> m_spFrontMaterial;
 		CRefObj<IRenderMaterial> m_spBackMaterial;
-		CRefObj<IShader> m_spShader;
+		////CRefObj<IShader> m_spShader;
         uint32 m_flags;
 	public:
 		CRenderSubMesh() :
@@ -68,8 +68,8 @@ namespace Caustic
         virtual void GetBBox(BBox3 *pBBox) override { *pBBox = m_VB.m_bbox; };
 		virtual void Render(IRenderer* pRenderer, IRenderMaterial* pFrontMaterialOverride, IRenderMaterial* pBackMaterialOverride, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld) override;
 		virtual void Render(IRenderer* pRenderer, IShader* pShader, IRenderMaterial* pMaterial, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld) override;
-		virtual void SetShader(IShader *pShader) override { m_spShader = pShader; }
-		virtual CRefObj<IShader> GetShader() override { return m_spShader; }
+////		virtual void SetShader(IShader *pShader) override { m_spShader = pShader; }
+////		virtual CRefObj<IShader> GetShader() override { return m_spShader; }
 	};
 
 	//**********************************************************************

@@ -27,14 +27,14 @@ namespace Caustic
         if (pRenderer->GetRenderCtx()->GetCurrentPass() == c_PassShadow)
             spShader = pRenderer->GetShaderMgr()->FindShader(L"ShadowMap");
         else
-            spShader = m_spShader;
+            spShader = m_spFrontMaterial->GetShader();
         if (spShader)
         {
             spShader->BeginRender(pRenderer,
                 (pFrontMaterialOverride) ? pFrontMaterialOverride : m_spFrontMaterial,
                 (pBackMaterialOverride) ? pBackMaterialOverride : m_spBackMaterial,
                 lights, pWorld);
-            uint32 vertexSize = m_spShader->GetShaderInfo()->GetVertexSize();
+            uint32 vertexSize = spShader->GetShaderInfo()->GetVertexSize();
             uint32 numVertices = m_VB.m_numVertices;
             UINT offset = 0;
             pContext->IASetVertexBuffers(0, 1, &m_VB.m_spVB.p, &vertexSize, &offset);
@@ -194,7 +194,6 @@ namespace Caustic
         CRefObj<IRenderSubMesh> spSubMesh = spFactory->CreateRenderSubMesh();
         spSubMesh->SetBackMaterial(pBackMaterial);
         spSubMesh->SetFrontMaterial(pFrontMaterial);
-        spSubMesh->SetShader(pShader);
         CComPtr<ID3D11Device> spDevice = pRenderer->GetDevice();
         CRefObj<IShaderInfo> spShaderInfo = pShader->GetShaderInfo();
         MeshData meshData;

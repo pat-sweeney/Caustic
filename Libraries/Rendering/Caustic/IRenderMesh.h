@@ -147,22 +147,6 @@ namespace Caustic
         // pWorld - world matrix. Maybe nullptr
         //**********************************************************************
         virtual void Render(IRenderer* pRenderer, IShader* pShader, IRenderMaterial* pMaterial, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld) = 0;
-
-        //**********************************************************************
-        // Method: SetShader
-        // Sets the shader to use when rendering this mesh
-        //
-        // Parameters:
-        // pShader - shader
-        //**********************************************************************
-        virtual void SetShader(IShader *pShader) = 0;
-
-        //**********************************************************************
-        // Method: GetShader
-        // Returns:
-        // Returns the shader associated with this mesh
-        //**********************************************************************
-        virtual CRefObj<IShader> GetShader() = 0;
 	};
 
 	//**********************************************************************
