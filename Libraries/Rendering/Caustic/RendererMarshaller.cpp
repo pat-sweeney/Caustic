@@ -298,15 +298,29 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Method: DrawScreenQuadWithCustomShader
+    // See <IRenderer::DrawScreenQuadWithCustomShader>
+    //**********************************************************************
+    void CRendererMarshaller::DrawScreenQuadWithCustomShader(IShader *pShader, float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler* pSampler, bool disableDepth /* = false */)
+    {
+        m_renderQueue.AddLambda(
+            [this, pShader, minU, minV, maxU, maxV, pTexture, pSampler, disableDepth]()
+            {
+                m_spRenderer->DrawScreenQuadWithCustomShader(pShader, minU, minV, maxU, maxV, pTexture, pSampler, disableDepth);
+            }
+        );
+    }
+
+    //**********************************************************************
     // Method: DrawScreenQuad
     // See <IRenderer::DrawScreenQuad>
     //**********************************************************************
-    void CRendererMarshaller::DrawScreenQuad(float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler *pSampler)
+    void CRendererMarshaller::DrawScreenQuad(float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler *pSampler, bool disableDepth /* = false */)
     {
         m_renderQueue.AddLambda(
-            [this, minU, minV, maxU, maxV, pTexture, pSampler]()
+            [this, minU, minV, maxU, maxV, pTexture, pSampler, disableDepth]()
             {
-                m_spRenderer->DrawScreenQuad(minU, minV, maxU, maxV, pTexture, pSampler);
+                m_spRenderer->DrawScreenQuad(minU, minV, maxU, maxV, pTexture, pSampler, disableDepth);
             }
         );
     }
@@ -329,6 +343,36 @@ namespace Caustic
         return CComPtr<IDXGIOutputDuplication>(nullptr); // We don't allow the client access to the duplication service
     }
 
+#ifdef _DEBUG
+    //**********************************************************************
+    // Method: BeginMarker
+    // See <IRenderer::BeginMarker>
+    //**********************************************************************
+    void CRendererMarshaller::BeginMarker(const wchar_t* pLabel)
+    {
+        m_renderQueue.AddLambda(
+            [this, pLabel]()
+            {
+                m_spRenderer->BeginMarker(pLabel);
+            }
+        );
+    }
+
+    //**********************************************************************
+    // Method: EndMarker
+    // See <IRenderer::EndMarker>
+    //**********************************************************************
+    void CRendererMarshaller::EndMarker()
+    {
+        m_renderQueue.AddLambda(
+            [this]()
+            {
+                m_spRenderer->EndMarker();
+            }
+        );
+    }
+#endif
+    
     //**********************************************************************
     // Method: LoadShaders
     // See <IRenderer::LoadShaders>

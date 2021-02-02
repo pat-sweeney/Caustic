@@ -16,6 +16,7 @@
 #include <stack>
 #include <atlbase.h>
 #include <d3d11.h>
+#include <d3d11_4.h>
 
 //**********************************************************************
 // File: Renderer.h
@@ -253,6 +254,21 @@ namespace Caustic
         //**********************************************************************
         // IRenderer
         //**********************************************************************
+#ifdef _DEBUG
+        virtual void BeginMarker(const wchar_t* pLabel) override
+        {
+            CComPtr<ID3D11DeviceContext2> spCtx2;
+            CT(m_spContext->QueryInterface<ID3D11DeviceContext2>(&spCtx2));
+            spCtx2->BeginEventInt(pLabel, 0);
+        }
+        virtual void EndMarker() override
+        {
+            CHECKTHREAD;
+            CComPtr<ID3D11DeviceContext2> spCtx2;
+            CT(m_spContext->QueryInterface<ID3D11DeviceContext2>(&spCtx2));
+            spCtx2->EndEvent();
+        }
+#endif
         virtual CComPtr<ID3D11Device> GetDevice() override { CHECKTHREAD;  return CGraphicsBase::GetDevice(); }
         virtual CComPtr<IDXGIOutputDuplication> GetDuplication() override { CHECKTHREAD;  return m_spDuplication; }
         virtual void Freeze() override;
@@ -267,7 +283,8 @@ namespace Caustic
         virtual uint32 GetBackBufferWidth() override { return m_BBDesc.Width; }
         virtual uint32 GetBackBufferHeight() override { return m_BBDesc.Height; }
         virtual void CopyFrameBackBuffer(IImage* pImage) override;
-        virtual void DrawScreenQuad(float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler *pSampler) override;
+        virtual void DrawScreenQuad(float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler *pSampler, bool disableDepth = false) override;
+        virtual void DrawScreenQuadWithCustomShader(IShader *pShader, float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler* pSampler, bool disableDepth = false) override;
         virtual void LoadShaders(const wchar_t* pFolder) override;
         virtual CComPtr<ID3D11DeviceContext> GetContext() override { CHECKTHREAD; return CGraphicsBase::GetContext(); }
         virtual CRefObj<ICamera> GetCamera() override { CHECKTHREAD; return CGraphicsBase::GetCamera(); }

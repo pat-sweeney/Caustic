@@ -62,6 +62,8 @@ public:
     Matrix4x4 cameraExt;                                // Color extrinsics for Azure Kinect
     Matrix3x3 cameraInt;                                // Color intrinsics for Azure Kinect
     CRefObj<IImage> pBackImage;                         // Back buffer (as an IImage)
+    CRefObj<ITexture> spDesktopTexture;
+    CRefObj<IShader> spZPrePassShader;
     float depth[4];
     bool displayNorms;
     bool displayColorImage;
@@ -183,19 +185,30 @@ void CApp::Setup3DScene(IRenderWindow *pRenderWindow)
     CRefObj<ILight> spLight(spCausticFactory->CreatePointLight(lightPos, lightColor, 1.0f));
     app.m_spLightCollectionElem->AddLight(spLight);
 
+    auto spPlane = Caustic::CreateGrid(2, 2);
+    auto spPlaneElem = spSceneFactory->CreateMeshElem();
+    spPlaneElem->SetMesh(spPlane);
+    auto spPlaneShader = spRenderWindow->GetRenderer()->GetShaderMgr()->FindShader(L"Textured");
+    auto spPlaneMaterialElem = spSceneFactory->CreateMaterialElem();
+    app.spDesktopTexture = Caustic::CreateDesktopTexture(app.spRenderer);
+    std::any spDesktopParam(spDesktopTexture);
+    spPlaneShader->SetPSParam(L"diffuseTexture", spDesktopParam);
+    spMaterialElem->SetMaterial(spMaterial);
+    spMaterialElem->SetShader(spPlaneShader);
+    spMaterialElem->AddChild(spPlaneElem);
+    auto rotmat = Matrix4x4::RotationMatrix(0.0f, Caustic::DegreesToRadians(180.0f), 0.0f);
+    auto scalemat = Matrix4x4::ScalingMatrix(300.0f, 300.0f, 300.0f);
+    auto transmat = Matrix4x4::TranslationMatrix(0.0f, 0.0f, 1200.0f);
+    auto transform = rotmat * scalemat * transmat;
+    spMaterialElem->SetTransform(transform);
+    spSceneGraph->AddChild(spMaterialElem);
+
     Vector3 lightDir(-1.0f, -1.0f, -1.0f);
     spPointLight = spCausticFactory->CreateDirectionalLight(lightPos, lightDir, lightColor, 1.0f);
     app.m_spLightCollectionElem->AddLight(spPointLight);
     spMaterialElem->AddChild(spSphereElem);
     app.m_spLightCollectionElem->AddChild(spMaterialElem);
     spSceneGraph->AddChild(app.m_spLightCollectionElem);
-
-    auto spCamera = spCausticFactory->CreateCamera(true);
-    Vector3 eye(app.cameraExt[3][0], app.cameraExt[3][1], app.cameraExt[3][2]);
-    Vector4 lookDir = Vector4(0.0f, 0.0f, 1.0f, 0.0f) * app.cameraExt;
-    Vector3 look = eye + lookDir.xyz;
-    Vector3 upDir = (Vector4(0.0f, 1.0f, 0.0f, 0.0f) * app.cameraExt).xyz;
-    spCamera->SetPosition(eye, look, upDir);
 }
 
 void CApp::SetupAzureCameraParameters(IShader *pShader, uint32 depthW, uint32 depthH, uint32 colorW, uint32 colorH)
@@ -277,6 +290,8 @@ void CApp::InitializeCaustic(HWND hwnd)
              uint32 colorH = app.spCamera->GetColorHeight();
              app.SetupAzureCameraParameters(app.spModelShader, depthW, depthH, colorW, colorH);
 
+             app.spDesktopTexture->Update(pRenderer);
+             
              Matrix m(app.cameraExt);
              std::any mat = std::any(m);
              app.spBokehShader->SetPSParam(L"colorExt", mat);
@@ -379,16 +394,45 @@ void CApp::InitializeCaustic(HWND hwnd)
                          ImGui::End();
                      };
 
+                     //**********************************************************************
+                     // First run preprocess step to populate the depth buffer with depth from the camera
+                     CComPtr<ID3D11DepthStencilState> spOldDepthStencilState;
+                     UINT oldStencilRef;
+                     app.spRenderer->GetContext()->OMGetDepthStencilState(&spOldDepthStencilState, &oldStencilRef);
+
+                     CComPtr<ID3D11DepthStencilState> spDepthStencilState;
+                     D3D11_DEPTH_STENCIL_DESC depthDesc;
+                     depthDesc.DepthEnable = TRUE;
+                     depthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+                     depthDesc.DepthFunc = D3D11_COMPARISON_ALWAYS;
+                     depthDesc.StencilEnable = FALSE;
+                     depthDesc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
+                     depthDesc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
+                     const D3D11_DEPTH_STENCILOP_DESC defaultStencilOp =
+                     { D3D11_STENCIL_OP_KEEP, D3D11_STENCIL_OP_KEEP, D3D11_STENCIL_OP_KEEP, D3D11_COMPARISON_ALWAYS };
+                     depthDesc.FrontFace = defaultStencilOp;
+                     depthDesc.BackFace = defaultStencilOp;
+                     app.spRenderer->GetDevice()->CreateDepthStencilState(&depthDesc, &spDepthStencilState);
+
+                     app.spRenderer->GetContext()->OMSetDepthStencilState(spDepthStencilState, 0);
+
+                     app.spZPrePassShader->SetPSParamInt(L"depthWidth", app.spCamera->GetColorWidth());
+                     app.spZPrePassShader->SetPSParamInt(L"depthHeight", app.spCamera->GetColorHeight());
                      auto spTexture = ((app.smooth) ? app.spDepthOfFieldFilled : app.spDepthOfField)->GetOutputTexture(app.spGPUPipeline);
-                     if (spTexture)
-                         app.spRenderer->DrawScreenQuad(0.0f, 0.0f, 1.0f, 1.0f, spTexture, nullptr);
+                     std::any depthTex(app.spNormDepth->GetOutputTexture(app.spGPUPipeline));
+                     app.spZPrePassShader->SetPSParam(L"depthtex", depthTex);
+                     app.spRenderer->DrawScreenQuadWithCustomShader(app.spZPrePassShader, 0.0f, 0.0f, 1.0f, 1, spTexture, nullptr, false);
+
+                     app.spRenderer->GetContext()->OMSetDepthStencilState(spOldDepthStencilState, oldStencilRef);
+                     //**********************************************************************
+
                      if (app.displayNorms)
                          DisplayTexture("Normals", app.spNormNode, app.displayNorms, true);
                      if (app.displayColorImage)
                          DisplayTexture("ColorSource", app.spSourceColorNode, app.displayColorImage, false);
                      if (app.displayDepthImage)
                          DisplayTexture("Normalized Depth", app.spNormDepth, app.displayDepthImage, true);
-                     app.spRenderer->ClearDepth();
+//                     app.spRenderer->ClearDepth();
                  }
                  if (app.renderModel)
                      app.m_spLightCollectionElem->SetFlags(app.m_spLightCollectionElem->GetFlags() & ~ESceneElemFlags::Hidden);
@@ -545,6 +589,9 @@ void CApp::InitializeCaustic(HWND hwnd)
     app.spRayMap = app.spCamera->BuildRayMap(depthW, depthH, true);
     app.spRayTex = Caustic::CreateTexture(app.spRenderer, depthW, depthH, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT);
     app.spRayTex->CopyFromImage(app.spRenderer, app.spRayMap);
+
+    // Setup Z prepass shader
+    app.spZPrePassShader = app.spRenderer->GetShaderMgr()->FindShader(L"CameraZPrePass");
 
     //**********************************************************************
     // Create shader to convert depth map into normal map

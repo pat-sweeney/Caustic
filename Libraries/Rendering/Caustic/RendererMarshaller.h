@@ -103,8 +103,13 @@ namespace Caustic
         virtual void Unfreeze() override;
         virtual void AddRenderable(IRenderable* pRenderable) override;
         virtual CComPtr<ID3D11Device> GetDevice() override;
+#ifdef _DEBUG
+        virtual void BeginMarker(const wchar_t* pLabel) override;
+        virtual void EndMarker() override;
+#endif
         virtual CComPtr<IDXGIOutputDuplication> GetDuplication() override;
-        virtual void DrawScreenQuad(float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler* pSampler) override;
+        virtual void DrawScreenQuadWithCustomShader(IShader* pShader, float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler* pSampler, bool disableDepth = false) override;
+        virtual void DrawScreenQuad(float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler* pSampler, bool disableDepth = false) override;
         virtual void LoadShaders(const wchar_t* pFolder) override;
         virtual CComPtr<ID3D11DeviceContext> GetContext() override;
         virtual void ClearDepth() override;

@@ -54,43 +54,53 @@ namespace Caustic
     {
         DXGI_OUTDUPL_FRAME_INFO frameInfo;
         CComPtr<IDXGIResource> spResource;
-        HRESULT hr = pRenderer->GetDuplication()->AcquireNextFrame(0, &frameInfo, &spResource);
-        if (hr == S_OK)
+        auto spDuplication = pRenderer->GetDuplication();
+        if (spDuplication)
         {
-            CComPtr<ID3D11Texture2D> spTexture;
-            CT(spResource->QueryInterface(__uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&spTexture)));
-            
-            spTexture->GetDesc(&m_desc);
-            if (m_spDesktopCopy == nullptr)
+            HRESULT hr = spDuplication->AcquireNextFrame(0, &frameInfo, &spResource);
+            if (hr == S_OK)
             {
-                m_spDesktopCopy = Caustic::CreateTexture(pRenderer, m_desc.Width, m_desc.Height, m_desc.Format);
+                CComPtr<ID3D11Texture2D> spTexture;
+                CT(spResource->QueryInterface(__uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&spTexture)));
+
+                spTexture->GetDesc(&m_desc);
+                if (m_spDesktopCopy == nullptr)
+                {
+                    m_spDesktopCopy = Caustic::CreateTexture(pRenderer, m_desc.Width, m_desc.Height, m_desc.Format);
+                }
+                pRenderer->GetContext()->CopyResource(m_spDesktopCopy->GetD3DTexture(), spTexture);
+                CT(spDuplication->ReleaseFrame());
             }
-            pRenderer->GetContext()->CopyResource(m_spDesktopCopy->GetD3DTexture(), spTexture);
-            CT(pRenderer->GetDuplication()->ReleaseFrame());
         }
     }
 
     //**********************************************************************
     void CDesktopTexture::Render(IRenderer* pRenderer, int slot, bool isPixelShader)
     {
-        m_spDesktopCopy->Render(pRenderer, slot, isPixelShader);
+        if (m_spDesktopCopy)
+            m_spDesktopCopy->Render(pRenderer, slot, isPixelShader);
     }
     
     //**********************************************************************
     void CDesktopTexture::CopyFromImage(IRenderer* pRenderer, IImage* pImage, bool generateMipMap /* = false */)
     {
-        m_spDesktopCopy->CopyFromImage(pRenderer, pImage, generateMipMap);
+        if (m_spDesktopCopy)
+            m_spDesktopCopy->CopyFromImage(pRenderer, pImage, generateMipMap);
     }
 
     //**********************************************************************
     CRefObj<IImage> CDesktopTexture::CopyToImage(IRenderer* pRenderer)
     {
-        return m_spDesktopCopy->CopyToImage(pRenderer);
+        if (m_spDesktopCopy)
+            return m_spDesktopCopy->CopyToImage(pRenderer);
+        else
+            return CRefObj<IImage>(nullptr);
     }
 
     void CDesktopTexture::CopyToImage(IRenderer* pRenderer, IImage* pImage)
     {
-        m_spDesktopCopy->CopyToImage(pRenderer, pImage);
+        if (m_spDesktopCopy)
+            m_spDesktopCopy->CopyToImage(pRenderer, pImage);
     }
 
     //**********************************************************************

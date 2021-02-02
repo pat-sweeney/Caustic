@@ -104,6 +104,11 @@
  <div class="CBody"><p>Returns the scalar product between two vectors</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">v<div class="CDLParameterType"><span class="SHKeyword">const</span> <a href="../../../index.html#File:Base/Math/Vector.h:Vector3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,85);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector3</a>&amp;</div></td><td class="CDLDefinition"><p>vector to compute dot product against</p></td></tr></table><div class="CHeading">Returns</div><p>The scalar product</p></div>
 </div>
 
+<a name="VectorExt3"></a><a name="Topic147"></a><div class="CTopic TStruct LC">
+ <div class="CTitle">VectorExt3</div>
+ <div class="CBody"><p>Defines a variation of Vector3 that also supports swizzling. The reason this isn't part of Vector3 is that construction of all properties is far too heavy to place on the main class. This is only useful in non-critical path (in terms of speed) code. The usage generally looks like: Vector3 newv = ((Vector3Ext)v).zyx;</p><div class="CHeading">Header</div><p><a href='../../../index.html#File:Base/Math/Vector.h' target='_top'>Base/Math/Vector.h</a></p></div>
+</div>
+
 <a name="Vector4"></a><a name="Topic93"></a><div class="CTopic TStruct LC">
  <div class="CTitle">Vector4</div>
  <div class="CBody"><p>Defines a simple vector with 4 components</p><div class="CHeading">Members</div><table class="CDefinitionList"><tr><td class="CDLEntry">float x</td><td class="CDLDefinition"><p>x component</p></td></tr><tr><td class="CDLEntry">float y</td><td class="CDLDefinition"><p>y component</p></td></tr><tr><td class="CDLEntry">float z</td><td class="CDLDefinition"><p>z component</p></td></tr><tr><td class="CDLEntry">float w</td><td class="CDLDefinition"><p>w component</p></td></tr></table><div class="CHeading">Header</div><p><a href='../../../index.html#File:Base/Math/Vector.h' target='_top'>Base/Math/Vector.h</a></p></div>
@@ -113,10 +118,15 @@
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="Vector4.IsEq"></a><a name="Topic95"></a><div class="CTopic TFunction LC last">
+<a name="Vector4.IsEq"></a><a name="Topic95"></a><div class="CTopic TFunction LC">
  <div class="CTitle">IsEq</div>
  <div id="NDPrototype95" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">bool</span> IsEq(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><a href="../../../index.html#File:Base/Math/Vector.h:Vector4" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,93);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector4</a>&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">p</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div>
  <div class="CBody"><p>Returns whether two points are equivalent (within some tolerance)</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">p<div class="CDLParameterType"><span class="SHKeyword">const</span> <a href="../../../index.html#File:Base/Math/Vector.h:Vector4" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,93);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector4</a>&amp;</div></td><td class="CDLDefinition"><p>Point to test against</p></td></tr></table></div>
+</div>
+
+<a name="VectorExt4"></a><a name="Topic960"></a><div class="CTopic TStruct LC last">
+ <div class="CTitle">VectorExt4</div>
+ <div class="CBody"><p>Defines a variation of Vector4 that also supports swizzling. The reason this isn't part of Vector4 is that construction of all properties is far too heavy to place on the main class. This is only useful in non-critical path (in terms of speed) code. The usage generally looks like: Vector4 newv = ((Vector4Ext)v).zyx;</p><div class="CHeading">Header</div><p><a href='../../../index.html#File:Base/Math/Vector.h' target='_top'>Base/Math/Vector.h</a></p></div>
 </div>
 
 </body></html>

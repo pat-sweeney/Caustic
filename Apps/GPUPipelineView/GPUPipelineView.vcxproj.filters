@@ -68,12 +68,21 @@
     <None Include="ModelMesh.vs">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="CameraZPrePass.ps">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="CameraZPrePass.vs">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="AzureLine.xml">
       <Filter>Shaders</Filter>
     </CustomBuild>
     <CustomBuild Include="ModelMesh.xml">
+      <Filter>Shaders</Filter>
+    </CustomBuild>
+    <CustomBuild Include="CameraZPrePass.xml">
       <Filter>Shaders</Filter>
     </CustomBuild>
   </ItemGroup>

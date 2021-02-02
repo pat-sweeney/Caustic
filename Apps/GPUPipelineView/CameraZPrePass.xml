@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Shader>
+	<PixelShader Filename="$(CausticRoot)\Apps\GPUPipelineView\CameraZPrePass.ps" Output="$(CausticRoot)\$(Configuration)\CameraZPrePass_PS.cso"/>
+	<VertexShader Filename="$(CausticRoot)\Apps\GPUPipelineView\CameraZPrePass.vs" Output="$(CausticRoot)\$(Configuration)\CameraZPrePass_VS.cso"/>
+</Shader>

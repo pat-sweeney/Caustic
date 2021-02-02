@@ -1,0 +1,35 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2015-2020
+// All Rights Reserved
+// File: CameraZPrePass.ps
+//**********************************************************************
+Texture2D tex : register(t0);
+Texture2D<float> depthTex : register(t1);
+SamplerState s : register(s0);
+
+struct VSOutput
+{
+    float4 posPS : SV_POSITION; // Position of vertex in projected coordinates
+    float2 uvs : TEXCOORD0; // UV coordinates
+};
+
+cbuffer VS_CONSTANT_BUFFER : register(b0)
+{
+    int depthWidth;
+    int depthHeight;
+};
+
+struct PSOutput2
+{
+      float4 clr : SV_Target;
+      float depth : SV_Depth;
+};
+
+PSOutput2 PS(VSOutput p)
+{
+    PSOutput2 o;
+    int3 pos = int3(p.uvs.x * depthWidth, (1.0f - p.uvs.y) * depthHeight, 0);
+    o.depth = depthTex.Load(pos);
+    o.clr = tex.Sample(s, p.uvs);
+    return o;
+}

@@ -352,6 +352,11 @@ namespace Caustic
         //**********************************************************************
         // Method: RotationMatrix
         // Creates a rotation matrix
+        //
+        // Parameters:
+        // ax - rotation about X axis specified in radians
+        // ay - rotation about Y axis specified in radians
+        // az - rotation about Z axis specified in radians
         //**********************************************************************
         static Matrix4x4 RotationMatrix(float ax, float ay, float az);
 

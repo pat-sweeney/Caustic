@@ -149,32 +149,6 @@ namespace Caustic
 		//**********************************************************************
         Vector3(const float _x, const float _y, const float _z) { x = _x; y = _y; z = _z; }
 
-        // Define swizzle operators
-        Property<Vector3> xyz = Property<Vector3>(
-            [this]() -> Vector3 { return Vector3(x, y, z); },
-            [this](const Vector3& v) { x = v.x; y = v.y; z = v.z; });
-        Property<Vector3> zyx = Property<Vector3>(
-            [this]() -> Vector3 { return Vector3(z, y, x); },
-            [this](const Vector3& v) { z = v.x; y = v.y; x = v.z; });
-        Property<Vector3> xxx = Property<Vector3>(
-            [this]() -> Vector3 { return Vector3(x, x, x); },
-            [this](const Vector3& v) { x = v.x; });
-        Property<Vector3> yyy = Property<Vector3>(
-            [this]() -> Vector3 { return Vector3(y, y, y); },
-            [this](const Vector3& v) { y = v.x; });
-        Property<Vector3> zzz = Property<Vector3>(
-            [this]() -> Vector3 { return Vector3(z, z, z); },
-            [this](const Vector3& v) { z = v.x; });
-        Property<Vector2> xy = Property<Vector2>(
-            [this]() -> Vector2 { return Vector2(x, y); },
-            [this](const Vector2& v) { x = v.x; y = v.y; });
-        Property<Vector2> xz = Property<Vector2>(
-            [this]() -> Vector2 { return Vector2(x, z); },
-            [this](const Vector2& v) { x = v.x; z = v.y; });
-        Property<Vector2> yz = Property<Vector2>(
-            [this]() -> Vector2 { return Vector2(y, z); },
-            [this](const Vector2& v) { y = v.x; z = v.y; });
-
         //**********************************************************************
 		// Method: Sign
 		// Returns -1 or +1 depending on direction vector is pointing
@@ -284,6 +258,52 @@ namespace Caustic
 #pragma warning(pop)
 
     //**********************************************************************
+    // Structure: VectorExt3
+    // Defines a variation of Vector3 that also supports swizzling. The reason
+    // this isn't part of Vector3 is that construction of all properties is
+    // far too heavy to place on the main class. This is only useful in non-critical
+    // path (in terms of speed) code. The usage generally looks like:
+    //        Vector3 newv = ((Vector3Ext)v).zyx;
+    //
+    // Header:
+    // [Link:Base/Math/Vector.h]
+    //**********************************************************************
+    struct Vector3Ext : Vector3
+    {
+        Vector3Ext(Vector3& v)
+        {
+            x = v.x;
+            y = v.y;
+            z = v.z;
+        }
+
+        Property<Vector3> xyz = Property<Vector3>(
+            [this]() -> Vector3 { return Vector3(x, y, z); },
+            [this](const Vector3& v) { x = v.x; y = v.y; z = v.z; });
+        Property<Vector3> zyx = Property<Vector3>(
+            [this]() -> Vector3 { return Vector3(z, y, x); },
+            [this](const Vector3& v) { z = v.x; y = v.y; x = v.z; });
+        Property<Vector3> xxx = Property<Vector3>(
+            [this]() -> Vector3 { return Vector3(x, x, x); },
+            [this](const Vector3& v) { x = v.x; });
+        Property<Vector3> yyy = Property<Vector3>(
+            [this]() -> Vector3 { return Vector3(y, y, y); },
+            [this](const Vector3& v) { y = v.x; });
+        Property<Vector3> zzz = Property<Vector3>(
+            [this]() -> Vector3 { return Vector3(z, z, z); },
+            [this](const Vector3& v) { z = v.x; });
+        Property<Vector2> xy = Property<Vector2>(
+            [this]() -> Vector2 { return Vector2(x, y); },
+            [this](const Vector2& v) { x = v.x; y = v.y; });
+        Property<Vector2> xz = Property<Vector2>(
+            [this]() -> Vector2 { return Vector2(x, z); },
+            [this](const Vector2& v) { x = v.x; z = v.y; });
+        Property<Vector2> yz = Property<Vector2>(
+            [this]() -> Vector2 { return Vector2(y, z); },
+            [this](const Vector2& v) { y = v.x; z = v.y; });
+    };
+
+    //**********************************************************************
     // Structure: Vector4
     // Defines a simple vector with 4 components
     //
@@ -302,6 +322,67 @@ namespace Caustic
 
         Vector4() : x(0.0f), y(0.0f), z(0.0f), w(0.0f) {}
         Vector4(const float _x, const float _y, const float _z, const float _w) { x = _x; y = _y; z = _z; w = _w; }
+
+        //**********************************************************************
+        // Method: IsEq
+        // Returns whether two points are equivalent (within some tolerance)
+        //
+        // Parameters:
+        // p - Point to test against
+        //**********************************************************************
+        bool IsEq(const Vector4 &p)
+        {
+            if (IsZero(p.x - x) &&
+                IsZero(p.y - y) &&
+                IsZero(p.z - z) &&
+                IsZero(p.w - w))
+                return true;
+            return false;
+        }
+
+        Vector4 operator-(const Vector4 &rhs) { return Vector4(x - rhs.x, y - rhs.y, z - rhs.z, w - rhs.w); }
+        Vector4 operator+(const Vector4 &rhs) { return Vector4(x + rhs.x, y + rhs.y, z + rhs.z, w + rhs.w); }
+        Vector4 operator*(const float s) { return Vector4(x * s, y * s, z * s, w * s); }
+        bool operator==(const Vector4 &rhs) { return this->IsEq(rhs); }
+        bool operator!=(const Vector4 &rhs) { return !this->IsEq(rhs); }
+        float Length()
+        {
+            return (float)sqrtf(x * x + y * y + z * z + w * w);
+        }
+        void Normalize()
+        {
+            float len = Length();
+            x /= len;
+            y /= len;
+            z /= len;
+            w /= len;
+        }
+    };
+#pragma warning(push)
+#pragma warning(disable : 4505)
+    static Vector4 operator*(const float s, const Vector4 &v) { return Vector4(v.x * s, v.y * s, v.z * s, v.w * s); }
+#pragma warning(pop)
+
+    //**********************************************************************
+    // Structure: VectorExt4
+    // Defines a variation of Vector4 that also supports swizzling. The reason
+    // this isn't part of Vector4 is that construction of all properties is
+    // far too heavy to place on the main class. This is only useful in non-critical
+    // path (in terms of speed) code. The usage generally looks like:
+    //        Vector4 newv = ((Vector4Ext)v).zyx;
+    //
+    // Header:
+    // [Link:Base/Math/Vector.h]
+    //**********************************************************************
+    struct Vector4Ext : Vector4
+    {
+        Vector4Ext(Vector4& v)
+        {
+            x = v.x;
+            y = v.y;
+            z = v.z;
+            w = v.w;
+        }
 
         // Define swizzle operators
         Property<Vector4> xyzw = Property<Vector4>(
@@ -348,44 +429,5 @@ namespace Caustic
         Property<Vector2> yz = Property<Vector2>(
             [this]() -> Vector2 { return Vector2(y, z); },
             [this](const Vector2& v) { y = v.x; z = v.y; });
-
-        //**********************************************************************
-        // Method: IsEq
-        // Returns whether two points are equivalent (within some tolerance)
-        //
-        // Parameters:
-        // p - Point to test against
-        //**********************************************************************
-        bool IsEq(const Vector4 &p)
-        {
-            if (IsZero(p.x - x) &&
-                IsZero(p.y - y) &&
-                IsZero(p.z - z) &&
-                IsZero(p.w - w))
-                return true;
-            return false;
-        }
-
-        Vector4 operator-(const Vector4 &rhs) { return Vector4(x - rhs.x, y - rhs.y, z - rhs.z, w - rhs.w); }
-        Vector4 operator+(const Vector4 &rhs) { return Vector4(x + rhs.x, y + rhs.y, z + rhs.z, w + rhs.w); }
-        Vector4 operator*(const float s) { return Vector4(x * s, y * s, z * s, w * s); }
-        bool operator==(const Vector4 &rhs) { return this->IsEq(rhs); }
-        bool operator!=(const Vector4 &rhs) { return !this->IsEq(rhs); }
-        float Length()
-        {
-            return (float)sqrtf(x * x + y * y + z * z + w * w);
-        }
-        void Normalize()
-        {
-            float len = Length();
-            x /= len;
-            y /= len;
-            z /= len;
-            w /= len;
-        }
     };
-#pragma warning(push)
-#pragma warning(disable : 4505)
-    static Vector4 operator*(const float s, const Vector4 &v) { return Vector4(v.x * s, v.y * s, v.z * s, v.w * s); }
-#pragma warning(pop)
 }

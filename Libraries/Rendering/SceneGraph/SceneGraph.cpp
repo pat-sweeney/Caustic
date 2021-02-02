@@ -69,6 +69,9 @@ namespace Caustic
     void CSceneGraph::Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx)
     {
         Lock();
+#ifdef _DEBUG
+        pRenderer->BeginMarker(L"SceneGraph::Render");
+#endif
         if (m_prerenderCallback)
             if (!m_prerenderCallback(pRenderCtx->GetCurrentPass()))
             {
@@ -78,6 +81,9 @@ namespace Caustic
         m_spRoot->Render(pRenderer, pRenderCtx, pSceneCtx);
         if (m_postrenderCallback)
             m_postrenderCallback(pRenderCtx->GetCurrentPass());
+#ifdef _DEBUG
+        pRenderer->EndMarker();
+#endif
         Unlock();
     }
 

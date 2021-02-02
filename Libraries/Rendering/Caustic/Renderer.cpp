@@ -219,10 +219,10 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // Method: DrawScreenQuad
-    // See <IRenderer::DrawScreenQuad>
+    // Method: DrawScreenQuadWithCustomShader
+    // See <IRenderer::DrawScreenQuadWithCustomShader>
     //**********************************************************************
-    void CRenderer::DrawScreenQuad(float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler *pSampler)
+    void CRenderer::DrawScreenQuadWithCustomShader(IShader *pShader, float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler* pSampler, bool disableDepth /* = false */)
     {
         CHECKTHREAD;
 #ifdef _DEBUG
@@ -230,14 +230,28 @@ namespace Caustic
         CT(m_spContext->QueryInterface<ID3D11DeviceContext2>(&spCtx2));
 #endif
 #ifdef _DEBUG
-        spCtx2->BeginEventInt(L"ScreenQuad", 0);
+        spCtx2->BeginEventInt(L"DrawScreenQuadWithCustomShader", 0);
 #endif
+        ID3D11DeviceContext* pContext = GetContext();
+        CComPtr<ID3D11DepthStencilState> oldState;
+        UINT oldStencil;
+        if (disableDepth)
+        {
+            pContext->OMGetDepthStencilState(&oldState, &oldStencil);
+
+            D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
+            ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
+            depthStencilDesc.DepthEnable = false;
+            CComPtr<ID3D11DepthStencilState> spState;
+            CT(m_spDevice->CreateDepthStencilState(&depthStencilDesc, &spState));
+            pContext->OMSetDepthStencilState(spState, 0);
+        }
+
         UINT offset = 0;
         UINT vertexSize = sizeof(CQuadVertex);
-        ID3D11DeviceContext* pContext = GetContext();
         pContext->IASetVertexBuffers(0, 1, &m_spQuadVB.p, &vertexSize, &offset);
         pContext->IASetIndexBuffer(m_spQuadIB, DXGI_FORMAT::DXGI_FORMAT_R32_UINT, 0);
-        m_spQuadShader->SetPSParam(L"tex", std::any(CRefObj<ITexture>(pTexture)));
+        pShader->SetPSParam(L"tex", std::any(CRefObj<ITexture>(pTexture)));
         std::vector<CRefObj<ILight>> lights;
 
         CRefObj<ISampler> spSampler;
@@ -246,30 +260,43 @@ namespace Caustic
             spSampler = CCausticFactory::Instance()->CreateSampler(this, pTexture);
             pSampler = spSampler.p;
         }
-        m_spQuadShader->SetPSParam(L"s", std::any(CSamplerRef(pSampler)));
+        pShader->SetPSParam(L"s", std::any(CSamplerRef(pSampler)));
 
-        CComPtr<ID3D11DepthStencilState> oldState;
-        UINT oldStencil;
-        pContext->OMGetDepthStencilState(&oldState, &oldStencil);
 
-        D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
-        ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
-        depthStencilDesc.DepthEnable = false;
-        CComPtr<ID3D11DepthStencilState> spState;
-        CT(m_spDevice->CreateDepthStencilState(&depthStencilDesc, &spState));
-        pContext->OMSetDepthStencilState(spState, 0);
+        pShader->SetVSParamFloat(L"minu", minU);
+        pShader->SetVSParamFloat(L"minv", minV);
+        pShader->SetVSParamFloat(L"maxu", maxU);
+        pShader->SetVSParamFloat(L"maxv", maxV);
 
-        m_spQuadShader->SetVSParamFloat(L"minu", minU);
-        m_spQuadShader->SetVSParamFloat(L"minv", minV);
-        m_spQuadShader->SetVSParamFloat(L"maxu", maxU);
-        m_spQuadShader->SetVSParamFloat(L"maxv", maxV);
-        
-        m_spQuadShader->BeginRender(this, nullptr, nullptr, lights, nullptr);
+        pShader->BeginRender(this, nullptr, nullptr, lights, nullptr);
         pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         pContext->DrawIndexed(6, 0, 0);
-        m_spQuadShader->EndRender(this);
+        pShader->EndRender(this);
 
-        pContext->OMSetDepthStencilState(oldState, oldStencil);
+        if (disableDepth)
+            pContext->OMSetDepthStencilState(oldState, oldStencil);
+
+#ifdef _DEBUG
+        spCtx2->EndEvent();
+#endif
+    }
+
+    //**********************************************************************
+    // Method: DrawScreenQuad
+    // See <IRenderer::DrawScreenQuad>
+    //**********************************************************************
+    void CRenderer::DrawScreenQuad(float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler *pSampler, bool disableDepth /* = false */)
+    {
+        CHECKTHREAD;
+#ifdef _DEBUG
+        CComPtr<ID3D11DeviceContext2> spCtx2;
+        CT(m_spContext->QueryInterface<ID3D11DeviceContext2>(&spCtx2));
+#endif
+#ifdef _DEBUG
+        spCtx2->BeginEventInt(L"DrawScreenQuad", 0);
+#endif
+        DrawScreenQuadWithCustomShader(m_spQuadShader, minU, minV, maxU, maxV, pTexture, pSampler, disableDepth);
+
 #ifdef _DEBUG
         spCtx2->EndEvent();
 #endif
@@ -554,6 +581,10 @@ namespace Caustic
     void CRenderer::RenderScene(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback)
     {
 #ifdef _DEBUG
+        CComPtr<ID3D11DeviceContext2> spCtx2;
+        CT(m_spContext->QueryInterface<ID3D11DeviceContext2>(&spCtx2));
+        spCtx2->BeginEventInt(L"RenderScene", 0);
+
         m_spRenderCtx->SetDebugFlags(RenderCtxFlags::c_DisplayWorldAxis);
 #endif
         if (m_spRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayWorldAxis)
@@ -646,6 +677,9 @@ namespace Caustic
             }
 #endif // SUPPORT_OBJID
         }
+#ifdef _DEBUG
+        spCtx2->EndEvent();
+#endif
     }
 
     //**********************************************************************
@@ -887,7 +921,7 @@ namespace Caustic
         desc.BufferCount = 2;
         desc.OutputWindow = hwnd;
         desc.Windowed = TRUE;
-        desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;// DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
+        desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
         desc.Flags = 0;
 
         CT(D3D11CreateDeviceAndSwapChain(nullptr,
@@ -906,23 +940,25 @@ namespace Caustic
         CT(m_spDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)&spDXGIDevice));
         CComPtr<IDXGIAdapter> spDXGIAdapter;
         CT(spDXGIDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&spDXGIAdapter));
-        CComPtr<IDXGIFactory1> spDXGIFactory;
-        CT(spDXGIAdapter->GetParent(__uuidof(IDXGIFactory1), (void**)&spDXGIFactory));
 
         // Walk our list of adapters and find the correct display
-        int outputIndex = 0;
-        CComPtr<IDXGIOutput> spOutput;
-        while (spDXGIAdapter->EnumOutputs(outputIndex, &spOutput) != DXGI_ERROR_NOT_FOUND)
+        static bool enableDuplication = false;
+        if (enableDuplication)
         {
-            if (outputIndex == desktopIndex)
+            int outputIndex = 0;
+            CComPtr<IDXGIOutput> spOutput;
+            while (spDXGIAdapter->EnumOutputs(outputIndex, &spOutput) != DXGI_ERROR_NOT_FOUND)
             {
-                CComPtr<IDXGIOutput6> spOutput6;
-                CT(spOutput->QueryInterface(__uuidof(IDXGIOutput6), (void**)&spOutput6));
-                CT(spOutput6->DuplicateOutput(m_spDevice, &m_spDuplication));
-                break;
+                if (outputIndex == desktopIndex)
+                {
+                    CComPtr<IDXGIOutput1> spOutput1;
+                    CT(spOutput->QueryInterface(__uuidof(IDXGIOutput1), (void**)&spOutput1));
+                    CT(spOutput1->DuplicateOutput(m_spDevice, &m_spDuplication));
+                    break;
+                }
+                outputIndex++;
+                spOutput = nullptr;
             }
-            outputIndex++;
-            spOutput = nullptr;
         }
 
         InitializeD3D(hwnd);

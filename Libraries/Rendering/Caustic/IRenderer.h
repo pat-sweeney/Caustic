@@ -106,6 +106,23 @@ namespace Caustic
     //**********************************************************************
     struct IRenderer : public IRefCount
     {
+#ifdef _DEBUG
+        //**********************************************************************
+        // Method: BeginMarker
+        // Add marker to display in graphics debugger
+        //
+        // Parameters:
+        // pLabel - label
+        //**********************************************************************
+        virtual void BeginMarker(const wchar_t* pLabel) = 0;
+
+        //**********************************************************************
+        // Method: EndMarker
+        // Ends marker
+        //**********************************************************************
+        virtual void EndMarker() = 0;
+#endif
+
         //**********************************************************************
         // Method: GetDevice
         // Returns:
@@ -152,6 +169,30 @@ namespace Caustic
         // virtual void SetPostEffect(IGPUPipeline* pPipeline) = 0;
 
         //**********************************************************************
+        // Method: DrawScreenQuadWithCustomShader
+        // Renders a quad on the display at the specified uv coordinates.
+        // A full screen quad runs from 0.0,0.0 => 1.0,1.0
+        //
+        // Parameters:
+        // pShader - shader to use. The method expects the shader to contain
+        //        the following variables:
+        //           tex - texture to use
+        //           s - sampler
+        //           minu - min UV coordinate where quad is to be drawn
+        //           minv - min UV coordinate where quad is to be drawn
+        //           maxu - max UV coordinate where quad is to be drawn
+        //           maxv - max UV coordinate where quad is to be drawn
+        // minU - minimum U
+        // minV - minimum V
+        // maxU - maximum U
+        // maxV - maximum V
+        // pTexture - Texture to render on quad
+        // pSampler - Sampler to use. Maybe nullptr
+        // disableDepth - disable depth mapping?
+        //**********************************************************************
+        virtual void DrawScreenQuadWithCustomShader(IShader* pShader, float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler* pSampler, bool disableDepth = false) = 0;
+
+        //**********************************************************************
         // Method: DrawScreenQuad
         // Renders a quad on the display at the specified uv coordinates.
         // A full screen quad runs from 0.0,0.0 => 1.0,1.0
@@ -163,8 +204,9 @@ namespace Caustic
         // maxV - maximum V
         // pTexture - Texture to render on quad
         // pSampler - Sampler to use. Maybe nullptr
+        // disableDepth - disable depth mapping?
         //**********************************************************************
-        virtual void DrawScreenQuad(float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler *pSampler) = 0;
+        virtual void DrawScreenQuad(float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler *pSampler, bool disableDepth = false) = 0;
 
         //**********************************************************************
         // Method: GetContext

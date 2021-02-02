@@ -135,6 +135,8 @@ $(CausticRoot)\x64\Debug\RenderGraph.lib;
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <None Include="CameraZPrePass.ps" />
+    <None Include="CameraZPrePass.vs" />
     <None Include="ModelMesh.ps" />
     <None Include="ModelMesh.vs" />
   </ItemGroup>
@@ -144,6 +146,14 @@ $(CausticRoot)\x64\Debug\RenderGraph.lib;
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Apps\GPUPipelineView\ModelMesh.xml -o $(CausticRoot)\$(Configuration)\ModelMesh.shi</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\ModelMesh.shi</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\ModelMesh.shi</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="CameraZPrePass.xml">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Apps\GPUPipelineView\CameraZPrePass.xml -o $(CausticRoot)\$(Configuration)\CameraZPrePass.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Apps\GPUPipelineView\CameraZPrePass.xml -o $(CausticRoot)\$(Configuration)\CameraZPrePass.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\CameraZPrePass.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\CameraZPrePass.shi</Outputs>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
