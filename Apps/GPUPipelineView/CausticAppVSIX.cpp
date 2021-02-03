@@ -64,6 +64,10 @@ public:
     CRefObj<IImage> pBackImage;                         // Back buffer (as an IImage)
     CRefObj<ITexture> spDesktopTexture;
     CRefObj<IShader> spZPrePassShader;
+    CRefObj<ISceneMaterialElem> spPlaneMaterialElem;
+    Vector3 planeScale;
+    Vector3 planeXlate;
+    Vector3 planeRot;
     float depth[4];
     bool displayNorms;
     bool displayColorImage;
@@ -131,6 +135,9 @@ public:
         hCanRead[1] = nullptr;
         hCanWrite[0] = nullptr;
         hCanWrite[1] = nullptr;
+        planeScale = Vector3(300.0f, 300.0f, 300.0f);
+        planeXlate = Vector3(0.0f, 0.0f, 1200.0f);
+        planeRot = Vector3(0.0f, Caustic::DegreesToRadians(180.0f), 0.0f);
     }
 
     void InitializeCaustic(HWND hwnd);
@@ -198,22 +205,15 @@ void CApp::Setup3DScene(IRenderWindow *pRenderWindow)
     app.spPlaneElem->SetMesh(spPlane);
     
     // Create plane material
-    auto spPlaneMaterialElem = spSceneFactory->CreateMaterialElem();
-    spPlaneMaterialElem->SetName(L"DesktopPlaneMaterial");
+    app.spPlaneMaterialElem = spSceneFactory->CreateMaterialElem();
+    app.spPlaneMaterialElem->SetName(L"DesktopPlaneMaterial");
     app.spDesktopTexture = Caustic::CreateDesktopTexture(app.spRenderer);
     CRefObj<IMaterialAttrib> spPlaneMaterial = spCausticFactory->CreateMaterialAttrib();
     spPlaneMaterial->SetColor(L"ambientColor", ambient);
     spPlaneMaterial->SetColor(L"diffuseColor", diffuse);
-    spPlaneMaterialElem->SetMaterial(spPlaneMaterial);
-    spPlaneMaterialElem->SetShader(app.spModelShader);
-    spPlaneMaterialElem->AddChild(app.spPlaneElem);
-
-    // transform plane
-    auto rotmat = Matrix4x4::RotationMatrix(0.0f, Caustic::DegreesToRadians(180.0f), 0.0f);
-    auto scalemat = Matrix4x4::ScalingMatrix(300.0f, 300.0f, 300.0f);
-    auto transmat = Matrix4x4::TranslationMatrix(0.0f, 0.0f, 1200.0f);
-    auto transform = rotmat * scalemat * transmat;
-    spPlaneMaterialElem->SetTransform(transform);
+    app.spPlaneMaterialElem->SetMaterial(spPlaneMaterial);
+    app.spPlaneMaterialElem->SetShader(app.spModelShader);
+    app.spPlaneMaterialElem->AddChild(app.spPlaneElem);
     //**********************************************************************
 
     //**********************************************************************
@@ -230,7 +230,7 @@ void CApp::Setup3DScene(IRenderWindow *pRenderWindow)
     app.m_spLightCollectionElem->AddLight(spPointLight);
     
     // Add objects to our light collection
-    app.m_spLightCollectionElem->AddChild(spPlaneMaterialElem);
+    app.m_spLightCollectionElem->AddChild(app.spPlaneMaterialElem);
     app.m_spLightCollectionElem->AddChild(app.spCubeMaterialElem);
     spSceneGraph->AddChild(app.m_spLightCollectionElem);
 }
@@ -361,6 +361,22 @@ void CApp::InitializeCaustic(HWND hwnd)
              ImGui::SliderFloat("BokehRadius", &app.BokehRadius, 0.0f, 30.0f, "%f", 1.0f);
              ImGui::DragInt("HoleSize", &app.holeSize, 1.0f, 0, 128);
              ImGui::DragFloat("ModelScale", &app.modelScale, 0.1f, 0.5f, 1000.0f);
+             ImGui::DragFloat("RotatePlaneX", &app.planeRot.x, 0.0f, 180.0f, 1000.0f);
+             ImGui::DragFloat("RotatePlaneY", &app.planeRot.y, 0.0f, 180.0f, 1000.0f);
+             ImGui::DragFloat("RotatePlaneZ", &app.planeRot.z, 0.9f, 180.0f, 1000.0f);
+             ImGui::DragFloat("ScalePlaneX", &app.planeScale.x, 0.1f, 3000.0f, 1000.0f);
+             ImGui::DragFloat("ScalePlaneY", &app.planeScale.y, 0.1f, 3000.0f, 1000.0f);
+             ImGui::DragFloat("ScalePlaneZ", &app.planeScale.z, 0.1f, 3000.0f, 1000.0f);
+             ImGui::DragFloat("XlatePlaneX", &app.planeXlate.x, 0.1f, 3000.0f, 1000.0f);
+             ImGui::DragFloat("XlatePlaneY", &app.planeXlate.y, 0.1f, 3000.0f, 1000.0f);
+             ImGui::DragFloat("XlatePlaneZ", &app.planeXlate.z, 0.1f, 3000.0f, 1000.0f);
+
+             // transform plane
+             auto rotmat = Matrix4x4::RotationMatrix(Caustic::DegreesToRadians(app.planeRot.x), Caustic::DegreesToRadians(app.planeRot.y), Caustic::DegreesToRadians(app.planeRot.z));
+             auto scalemat = Matrix4x4::ScalingMatrix(app.planeScale.x, app.planeScale.y, app.planeScale.z);
+             auto transmat = Matrix4x4::TranslationMatrix(app.planeXlate.x, app.planeXlate.y, app.planeXlate.z);
+             auto transform = rotmat * scalemat * transmat;
+             app.spPlaneMaterialElem->SetTransform(transform);
 
              CRefObj<IImage> spColorImage;
              CRefObj<IImage> spDepthImage;
