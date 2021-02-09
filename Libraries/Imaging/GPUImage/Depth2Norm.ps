@@ -2,6 +2,7 @@
 // Copyright Patrick Sweeney 2015-2020
 // Licensed under the MIT license.
 // See file LICENSE for details.
+// File: Depth2Norm.ps
 //**********************************************************************
 struct VSOutput
 {
@@ -9,22 +10,24 @@ struct VSOutput
     float2 uvs : TEXCOORD0;
 };
 
-Texture2D<uint> depthTex : register(t1); // Depth texture
-Texture2D<float4> rayTexture : register(t3);
+Texture2D<uint> depthTex : register(t0);
+Texture2D<float2> color2Depth : register(t1);
+Texture2D<float4> rayTexture : register(t2);
+SamplerState depthsampler : register(s0);
 
 cbuffer VS_CONSTANT_BUFFER : register(b0)
 {
-    float4x4 colorExt;
     int depthWidth;
     int depthHeight;
 };
 
 float4 PS(VSOutput p) : SV_Target
 {
-    int3 pcL = int3(p.uvs.x * depthWidth - 1, (1-p.uvs.y) * depthHeight, 0);
-    int3 pcR = int3(p.uvs.x * depthWidth + 1, (1-p.uvs.y) * depthHeight, 0);
-    int3 pcT = int3(p.uvs.x * depthWidth, (1-p.uvs.y) * depthHeight - 1, 0);
-    int3 pcB = int3(p.uvs.x * depthWidth, (1-p.uvs.y) * depthHeight + 1, 0);
+    float2 uvs = color2Depth.Sample(depthsampler, p.uvs);
+    int3 pcL = int3(uvs.x * depthWidth - 1, uvs.y * depthHeight, 0);
+    int3 pcR = int3(uvs.x * depthWidth + 1, uvs.y * depthHeight, 0);
+    int3 pcT = int3(uvs.x * depthWidth, uvs.y * depthHeight - 1, 0);
+    int3 pcB = int3(uvs.x * depthWidth, uvs.y * depthHeight + 1, 0);
 
     float depthL = depthTex.Load(pcL);
     float depthR = depthTex.Load(pcR);

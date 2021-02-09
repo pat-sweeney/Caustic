@@ -50,15 +50,21 @@ namespace Caustic
 
     FRGBColor CMaterialAttrib::GetColor(const wchar_t* pName)
     {
-        std::map<std::wstring, FRGBColor>::iterator it = m_colors.find(std::wstring(pName));
+        std::map<std::wstring, FRGBAColor>::iterator it = m_colors.find(std::wstring(pName));
         if (it != m_colors.end())
-            return it->second;
+            return FRGBColor(it->second.r, it->second.g, it->second.b);
         return Vector3(0.0f, 0.0f, 0.0f);
     }
 
-    void CMaterialAttrib::SetColor(const wchar_t *pName, FRGBColor& v)
+    void CMaterialAttrib::SetColor(const wchar_t* pName, FRGBColor& v)
     {
-        std::map<std::wstring, FRGBColor>::iterator it = m_colors.find(pName);
+        FRGBAColor clr(v.r, v.g, v.b, 1.0f);
+        SetColor(pName, clr);
+    }
+    
+    void CMaterialAttrib::SetColor(const wchar_t* pName, FRGBAColor& v)
+    {
+        std::map<std::wstring, FRGBAColor>::iterator it = m_colors.find(pName);
         if (it != m_colors.end())
             it->second = v;
         else
@@ -127,7 +133,7 @@ namespace Caustic
         SetTexture(pName, spImage, access);
     }
 
-    void CMaterialAttrib::EnumerateColors(std::function<void(const wchar_t* pName, FRGBColor & v)> func)
+    void CMaterialAttrib::EnumerateColors(std::function<void(const wchar_t* pName, FRGBAColor & v)> func)
     {
         for (auto x : m_colors)
             func(x.first.c_str(), x.second);

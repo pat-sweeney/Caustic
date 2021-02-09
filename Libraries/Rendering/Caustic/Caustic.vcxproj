@@ -92,6 +92,15 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\ColorNormal.shi</Outputs>
       <SubType>Designer</SubType>
     </CustomBuild>
+    <CustomBuild Include="Obj.xml">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\Obj.xml -o $(CausticRoot)\$(Configuration)\Obj.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\Obj.xml -o $(CausticRoot)\$(Configuration)\Obj.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\Obj.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\Obj.shi</Outputs>
+      <SubType>Designer</SubType>
+    </CustomBuild>
     <CustomBuild Include="ScreenQuad.xml">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -322,6 +331,8 @@
     <None Include="Brighten.cs">
       <FileType>Text</FileType>
     </None>
+    <None Include="Obj.ps" />
+    <None Include="Obj.vs" />
     <None Include="PointCloud.ps" />
     <None Include="PointCloud.vs" />
     <None Include="DrawNormal.vs" />

@@ -74,6 +74,15 @@
     <CustomBuild Include="FillHolesHP.xml">
       <Filter>Source Files\Shaders</Filter>
     </CustomBuild>
+    <CustomBuild Include="RemapNormals.xml">
+      <Filter>Source Files\Shaders</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Color2Depth.xml">
+      <Filter>Source Files\Shaders</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ResizeDepth.xml">
+      <Filter>Source Files\Shaders</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <None Include="Gaussian.ps">
@@ -119,6 +128,24 @@
       <Filter>Source Files\Shaders</Filter>
     </None>
     <None Include="FillHolesVP.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="RemapNormals.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="RemapNormals.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Color2Depth.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Color2Depth.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="ResizeDepth.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="ResizeDepth.vs">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>

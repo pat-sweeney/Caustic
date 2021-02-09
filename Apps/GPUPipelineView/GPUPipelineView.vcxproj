@@ -139,6 +139,8 @@ $(CausticRoot)\x64\Debug\RenderGraph.lib;
     <None Include="CameraZPrePass.vs" />
     <None Include="ModelMesh.ps" />
     <None Include="ModelMesh.vs" />
+    <None Include="DefaultMesh.ps" />
+    <None Include="DefaultMesh.vs" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ModelMesh.xml">
@@ -146,6 +148,14 @@ $(CausticRoot)\x64\Debug\RenderGraph.lib;
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Apps\GPUPipelineView\ModelMesh.xml -o $(CausticRoot)\$(Configuration)\ModelMesh.shi</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\ModelMesh.shi</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\ModelMesh.shi</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="DefaultMesh.xml">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Apps\GPUPipelineView\DefaultMesh.xml -o $(CausticRoot)\$(Configuration)\DefaultMesh.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Apps\GPUPipelineView\DefaultMesh.xml -o $(CausticRoot)\$(Configuration)\DefaultMesh.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\DefaultMesh.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\DefaultMesh.shi</Outputs>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

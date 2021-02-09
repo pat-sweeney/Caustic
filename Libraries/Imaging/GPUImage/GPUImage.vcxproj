@@ -184,6 +184,12 @@
   <ItemGroup>
     <None Include="DepthMesh.ps" />
     <None Include="DepthMesh.vs" />
+    <None Include="ResizeDepth.ps" />
+    <None Include="ResizeDepth.vs" />
+    <None Include="Color2Depth.ps" />
+    <None Include="Color2Depth.vs" />
+    <None Include="RemapNormals.ps" />
+    <None Include="RemapNormals.vs" />
     <None Include="DepthSel.ps" />
     <None Include="DepthSel2.ps" />
     <None Include="Bokeh.ps" />
@@ -236,6 +242,30 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Imaging\GPUImage\DepthMesh.xml -o $(CausticRoot)\$(Configuration)\DepthMesh.shi</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\DepthMesh.shi</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\DepthMesh.shi</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="ResizeDepth.xml">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Imaging\GPUImage\ResizeDepth.xml -o $(CausticRoot)\$(Configuration)\ResizeDepth.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Imaging\GPUImage\ResizeDepth.xml -o $(CausticRoot)\$(Configuration)\ResizeDepth.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\ResizeDepth.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\ResizeDepth.shi</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="Color2Depth.xml">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Imaging\GPUImage\Color2Depth.xml -o $(CausticRoot)\$(Configuration)\Color2Depth.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Imaging\GPUImage\Color2Depth.xml -o $(CausticRoot)\$(Configuration)\Color2Depth.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\Color2Depth.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\Color2Depth.shi</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="RemapNormals.xml">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Imaging\GPUImage\RemapNormals.xml -o $(CausticRoot)\$(Configuration)\RemapNormals.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Imaging\GPUImage\RemapNormals.xml -o $(CausticRoot)\$(Configuration)\RemapNormals.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\RemapNormals.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\RemapNormals.shi</Outputs>
     </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -45,6 +45,7 @@ public:
     CRefObj<IGPUPipelineNode> spNormDepth;              // Normalized depth node
     CRefObj<IGPUPipelineNode> spDepthOfField;           // Node returning the color source blurred using depth of field
     CRefObj<IGPUPipelineNode> spDepthOfFieldFilled;     // Node returning the color source blurred using depth of field (using hole filled depth)
+    CRefObj<IGPUPipelineNode> spColor2Depth;
     CRefObj<IShader> spRawCopyShader;                   // Shader used to copy image to resized/format changed image
     CRefObj<IShader> spBokehShader;                     // Shader used for computing depth of field
     CRefObj<IShader> spHoleFillShaderV;                 // Shader used for hole filling (vertical pass)
@@ -68,6 +69,11 @@ public:
     Vector3 planeScale;
     Vector3 planeXlate;
     Vector3 planeRot;
+    CRefObj<ISceneMeshElem> spLightBulbElem;
+    CRefObj<ISceneMaterialElem> spLightBulbMaterialElem;
+    Vector3 lightPos;
+    Vector3 lightClr;
+    CRefObj<IShader> spLightShader;
     float depth[4];
     bool displayNorms;
     bool displayColorImage;
@@ -220,6 +226,24 @@ void CApp::Setup3DScene(IRenderWindow *pRenderWindow)
     // Create light node to hold all our objects
     app.m_spLightCollectionElem = spSceneFactory->CreateLightCollectionElem();
 
+    // Load our model for our lightbulb
+    CRefObj<IMesh> spLightBulbMesh = Caustic::MeshImport::LoadObj(L"j:\\models\\LightBulb\\Lightbulb_General_Poly_OBJ.obj");
+    app.spLightBulbElem = spSceneFactory->CreateMeshElem();
+    app.spLightBulbElem->SetMesh(spLightBulbMesh);
+    app.spLightBulbElem->SetName(L"LightBulb");
+    app.spLightBulbMaterialElem = spSceneFactory->CreateMaterialElem();
+    app.spLightBulbMaterialElem->SetName(L"LightBulbMaterialElem");
+    CRefObj<IMaterialAttrib> spLightBulbMaterial = spCausticFactory->CreateMaterialAttrib();
+    FRGBColor lightAmbient(1.0f, 1.0f, 1.0f);
+    FRGBColor lightDiffuse(1.0f, 1.0f, 1.0f);
+    spLightBulbMaterial->SetColor(L"ambientColor", lightAmbient);
+    spLightBulbMaterial->SetColor(L"diffuseColor", lightDiffuse);
+    app.spLightBulbMaterialElem->SetMaterial(spLightBulbMaterial);
+    app.spLightShader = spRenderWindow->GetRenderer()->GetShaderMgr()->FindShader(L"DefaultMesh");
+    app.spLightBulbMaterialElem->SetShader(app.spLightShader);
+    app.spLightBulbMaterialElem->AddChild(app.spLightBulbElem);
+    app.m_spLightCollectionElem->AddChild(app.spLightBulbMaterialElem);
+
     Vector3 lightPos(1000.0f, 1000.0f, 0.0f);
     FRGBColor lightColor(1.0f, 1.0f, 1.0f);
     CRefObj<ILight> spLight(spCausticFactory->CreatePointLight(lightPos, lightColor, 1.0f));
@@ -313,7 +337,7 @@ void CApp::InitializeCaustic(HWND hwnd)
              uint32 colorW = app.spCamera->GetColorWidth();
              uint32 colorH = app.spCamera->GetColorHeight();
              app.SetupAzureCameraParameters(app.spModelShader, depthW, depthH, colorW, colorH);
-
+             app.SetupAzureCameraParameters(app.spLightShader, depthW, depthH, colorW, colorH);
              app.spDesktopTexture->Update(pRenderer);
 
              std::any spDesktopParam(app.spDesktopTexture);
@@ -322,6 +346,11 @@ void CApp::InitializeCaustic(HWND hwnd)
              Matrix m(app.cameraExt);
              std::any mat = std::any(m);
              app.spBokehShader->SetPSParam(L"colorExt", mat);
+
+             std::any lightPos(Float3(app.lightPos.x, app.lightPos.y, app.lightPos.z));
+             app.spBokehShader->SetPSParam(L"lightPos", lightPos);
+             std::any lightClr(Float3(app.lightClr.x, app.lightClr.y, app.lightClr.z));
+             app.spBokehShader->SetPSParam(L"lightClr", lightClr);
 
              ImGui_ImplDX11_NewFrame();
              ImGui_ImplWin32_NewFrame();
@@ -370,6 +399,12 @@ void CApp::InitializeCaustic(HWND hwnd)
              ImGui::DragFloat("XlatePlaneX", &app.planeXlate.x, 0.1f, 3000.0f, 1000.0f);
              ImGui::DragFloat("XlatePlaneY", &app.planeXlate.y, 0.1f, 3000.0f, 1000.0f);
              ImGui::DragFloat("XlatePlaneZ", &app.planeXlate.z, 0.1f, 3000.0f, 1000.0f);
+             ImGui::DragFloat("LightX", &app.lightPos.x, 0.1f, 3000.0f, 1000.0f);
+             ImGui::DragFloat("LightY", &app.lightPos.y, 0.1f, 3000.0f, 1000.0f);
+             ImGui::DragFloat("LightZ", &app.lightPos.z, 0.1f, 3000.0f, 1000.0f);
+             ImGui::DragFloat("LightR", &app.lightClr.x, 0.1f, 3000.0f, 1000.0f);
+             ImGui::DragFloat("LightG", &app.lightClr.y, 0.1f, 3000.0f, 1000.0f);
+             ImGui::DragFloat("LightB", &app.lightClr.z, 0.1f, 3000.0f, 1000.0f);
 
              // transform plane
              auto rotmat = Matrix4x4::RotationMatrix(Caustic::DegreesToRadians(app.planeRot.x), Caustic::DegreesToRadians(app.planeRot.y), Caustic::DegreesToRadians(app.planeRot.z));
@@ -416,27 +451,13 @@ void CApp::InitializeCaustic(HWND hwnd)
                      // Run the pipeline. Normally we would run spGPUPipeline->Process() however, we don't have
                      // any sink nodes in our graph (GPUPipeline::Process() runs the sink nodes). So, we need
                      // to explicitly run each end point of the graph.
+                     app.spColor2Depth->Process(app.spGPUPipeline);
                      if (app.smooth)
                          app.spDepthOfFieldFilled->Process(app.spGPUPipeline);
                      else
                          app.spDepthOfField->Process(app.spGPUPipeline);
                      if (app.displayNorms)
                          app.spNormNode->Process(app.spGPUPipeline);
-
-                     auto DisplayTexture = [](const char *label, IGPUPipelineNode *spNode, bool &flag, bool flip) {
-                         ImGui::Begin(label, &flag);
-                         auto spTexture = spNode->GetOutputTexture(app.spGPUPipeline);
-                         ImVec2 winsize = ImGui::GetContentRegionAvail();
-                         if (winsize.y == 0)
-                         {
-                             winsize = ImVec2(256, 256);
-                             ImGui::SetWindowSize(winsize);
-                         }
-                         ImVec2 uv0(0.0f, (flip) ? 1.0f : 0.0f);
-                         ImVec2 uv1(1.0f, (flip) ? 0.0f : 1.0f);
-                         ImGui::Image((ImTextureID)spTexture->GetD3DTextureRV(), winsize, uv0, uv1);
-                         ImGui::End();
-                     };
 
                      //**********************************************************************
                      // First run preprocess step to populate the depth buffer with depth from the camera
@@ -469,13 +490,6 @@ void CApp::InitializeCaustic(HWND hwnd)
 
                      app.spRenderer->GetContext()->OMSetDepthStencilState(spOldDepthStencilState, oldStencilRef);
                      //**********************************************************************
-
-                     if (app.displayNorms)
-                         DisplayTexture("Normals", app.spNormNode, app.displayNorms, true);
-                     if (app.displayColorImage)
-                         DisplayTexture("ColorSource", app.spSourceColorNode, app.displayColorImage, false);
-                     if (app.displayDepthImage)
-                         DisplayTexture("Normalized Depth", app.spNormDepth, app.displayDepthImage, true);
                  }
                  if (app.renderModel)
                      app.spCubeElem->SetFlags(app.m_spLightCollectionElem->GetFlags() & ~ESceneElemFlags::Hidden);
@@ -535,13 +549,47 @@ void CApp::InitializeCaustic(HWND hwnd)
                                  app.modelScale * -center.y + headPos.y, 
                                  app.modelScale * -center.z + headPos.z, 1.0f);
                      app.spCubeMaterialElem->SetTransform(m);
+
+                     auto lightBulbRot = Caustic::Matrix4x4::RotationMatrix(0.0f, 0.0f, Caustic::DegreesToRadians(180.0f));
+                     auto lightBulbXlate = Caustic::Matrix4x4::TranslationMatrix(-app.lightPos.x, app.lightPos.y, app.lightPos.z);
+                     auto lightBulbMat = lightBulbRot* lightBulbXlate;
+                     app.spLightBulbMaterialElem->SetTransform(lightBulbMat);
                  }
              }
-             ImGui::Render();
-             ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
          },
          [](IRenderer* pRenderer)
          {
+             auto DisplayTexture = [](const char* label, IGPUPipelineNode* spNode, bool& flag, bool flip) {
+                 auto spTexture = spNode->GetOutputTexture(app.spGPUPipeline);
+                 if (spTexture)
+                 {
+                     ImGui::Begin(label, &flag);
+                     ImVec2 winsize = ImGui::GetContentRegionAvail();
+                     if (winsize.y == 0)
+                     {
+                         winsize = ImVec2(256, 256);
+                         ImGui::SetWindowSize(winsize);
+                     }
+                     ImVec2 uv0(0.0f, (flip) ? 1.0f : 0.0f);
+                     ImVec2 uv1(1.0f, (flip) ? 0.0f : 1.0f);
+                     ImGui::Image((ImTextureID)spTexture->GetD3DTextureRV(), winsize, uv0, uv1);
+                     ImGui::End();
+                 }
+             };
+
+             if (app.displayNorms)
+                 DisplayTexture("Normals", app.spNormNode, app.displayNorms, true);
+             if (app.displayColorImage)
+                 DisplayTexture("ColorSource", app.spSourceColorNode, app.displayColorImage, false);
+             if (app.displayDepthImage)
+                 DisplayTexture("Normalized Depth", app.spNormDepth, app.displayDepthImage, true);
+             static bool x = true;
+             DisplayTexture("Color2Depth", app.spColor2Depth, x, true);
+
+             ImGui::Render();
+             ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
              if (app.pBackImage == nullptr)
              {
                  uint32 w = pRenderer->GetBackBufferWidth();
@@ -602,20 +650,24 @@ void CApp::InitializeCaustic(HWND hwnd)
 
     //**********************************************************************
     // Overall our pipeline looks like:
-    //    +-------------+       +------------+
-    //    | Depth Image | -+--> | Depth2Norm |
-    //    +-------------+  |    +------------+
-    //                     |
-    //                     |    +-------------+    +-------------+    +-------------+    +-----------+        +-------+
-    //                     +--> | DepthResize |--> | FillHolesHP |--> | FillHolesVP |--> | NormDepth |------> | Bokeh |
-    //                     |    +-------------+    +-------------+    +-------------+    +-----------+   +--> | (DoF) |
-    //                     |                                                                             |    +-------+
-    //                     |    +-----------+         +-------+                                          |
-    //                     +--> | NormDepth |--+----> | Bokeh |                                          |
-    //                          +-----------+    +--> | (DoF) |                                          |
-    //                                           |    +-------+                                          |
-    //    +-------------+                        |                                                       |
-    //    | Color Image |------------------------+-------------------------------------------------------+
+    //    +-------------+      +-------------+
+    //    | Depth Image |-+--> | Color2Depth |
+    //    +-------------+ |    +-------------+
+    //                    |
+    //                    |    +-------------+
+    //                    +--> | DepthResize | --+
+    //                         +-------------+   |
+    //                    +<---------------------+
+    //                    |    +-------------+    +-------------+    +-----------------+        +-------+
+    //                    +--> | FillHolesHP |--> | FillHolesVP |--> | NormFilledDepth |------> | Bokeh |
+    //                    |    +-------------+    +-------------+    +-----------------+   +--> | (DoF) |
+    //                    |                                                                |    +-------+
+    //                    |    +-----------+         +-------+                             |
+    //                    +--> | NormDepth |-------> | Bokeh |                             |
+    //                         +-----------+    +--> | (DoF) |                             |
+    //                                          |    +-------+                             |
+    //    +-------------+                       |                                          |
+    //    | Color Image |-----------------------+------------------------------------------+
     //    +-------------+
     // We have a color+depth image in. We then convert the depth to match
     // the color image dimensions. We then select between a blurred version
@@ -637,41 +689,46 @@ void CApp::InitializeCaustic(HWND hwnd)
     app.spRayTex = Caustic::CreateTexture(app.spRenderer, depthW, depthH, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT);
     app.spRayTex->CopyFromImage(app.spRenderer, app.spRayMap);
 
-    // Setup Z prepass shader
-    app.spZPrePassShader = app.spRenderer->GetShaderMgr()->FindShader(L"CameraZPrePass");
+    //**********************************************************************
+    // Create node that maps color pixels into depth pixels
+    //**********************************************************************
+    auto extrinsics = app.spCamera->ColorExtrinsics();
+    auto intrinsics = app.spCamera->GetAzureColorIntrinsics();
+    app.spColor2Depth = app.spGPUPipeline->CreatePredefinedNode(c_CustomNode_Color2Depth, (unsigned int)depthW, (unsigned int)depthH, (unsigned int)colorW, (unsigned int)colorH,
+        app.spRayTex, extrinsics, intrinsics, 10.0, 8000.0,
+        DXGI_FORMAT_R32G32_FLOAT, L"Color2Depth");
+    app.spColor2Depth->SetInput(L"depthTex", nullptr, app.spSourceDepthNode);
 
     //**********************************************************************
     // Create shader to convert depth map into normal map
     //**********************************************************************
     auto spNormTex = Caustic::CreateTexture(app.spRenderer, depthW, depthH, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT);
     auto spNormShader = app.spRenderer->GetShaderMgr()->FindShader(L"Depth2Norm");
-    app.spNormNode = app.spGPUPipeline->CreateNode(L"Depth2Normals", spNormShader, depthW, depthH, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT);
-    app.spNormNode->SetInput(L"depthTex", nullptr, app.spSourceDepthNode);
-
-    // Pass arguments to Depth2Norm shader
     std::any raymap = std::any(app.spRayTex);
     spNormShader->SetVSParam(L"rayTexture", raymap);
     spNormShader->SetPSParam(L"rayTexture", raymap);
-    auto depthExtrinsics = app.spCamera->ColorExtrinsics();
-    Matrix m(depthExtrinsics);
-    std::any depthExtrinsicsMat = std::any(m);
-    spNormShader->SetPSParam(L"colorExt", depthExtrinsicsMat);
     spNormShader->SetPSParamInt(L"depthWidth", depthW);
     spNormShader->SetPSParamInt(L"depthHeight", depthH);
-    spNormShader->SetPSParamInt(L"colorWidth", colorW);
-    spNormShader->SetPSParamInt(L"colorHeight", colorH);
-    spNormShader->SetPSParamFloat(L"minDepth", 10.0f);
-    spNormShader->SetPSParamFloat(L"maxDepth", 8000.0f);
+    app.spNormNode = app.spGPUPipeline->CreateNode(L"Depth2Normals", spNormShader, colorW, colorH, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT);
+    app.spNormNode->SetInput(L"depthTex", nullptr, app.spSourceDepthNode);
+    app.spNormNode->SetInput(L"color2Depth", nullptr, app.spColor2Depth);
+
+    //**********************************************************************
+    // Setup Z prepass shader
+    //**********************************************************************
+    app.spZPrePassShader = app.spRenderer->GetShaderMgr()->FindShader(L"CameraZPrePass");
 
     //**********************************************************************
     // Create node that generates depth texture matching the color texture's size
     //**********************************************************************
-    auto extrinsics = app.spCamera->ColorExtrinsics();
-    auto intrinsics = app.spCamera->GetAzureColorIntrinsics();
-    auto spDepthResize = app.spGPUPipeline->CreatePredefinedNode(c_CustomNode_DepthMeshNode, (unsigned int)depthW, (unsigned int)depthH, (unsigned int)colorW, (unsigned int)colorH,
-        app.spRayTex, extrinsics, intrinsics, 10.0, 8000.0,
-        DXGI_FORMAT_R16_UINT);
-    spDepthResize->SetInput(L"depthTex", nullptr, app.spSourceDepthNode);
+    auto spResizeDepthShader = app.spRenderer->GetShaderMgr()->FindShader(L"ResizeDepth");
+    auto spResizeDepthNode = app.spGPUPipeline->CreateNode(L"ResizeDepth", spResizeDepthShader, colorW, colorH, DXGI_FORMAT_R16_UINT);
+    spResizeDepthShader->SetPSParamFloat(L"depthW", (float)depthW);
+    spResizeDepthShader->SetPSParamFloat(L"depthH", (float)depthH);
+    spResizeDepthShader->SetPSParamFloat(L"minDepth", 10.0f);
+    spResizeDepthShader->SetPSParamFloat(L"maxDepth", 8000.0f);
+    spResizeDepthNode->SetInput(L"depthTex", nullptr, app.spSourceDepthNode);
+    spResizeDepthNode->SetInput(L"color2Depth", nullptr, app.spColor2Depth);
 
     //**********************************************************************
     // Create downsampled depth using a median filter
@@ -679,7 +736,7 @@ void CApp::InitializeCaustic(HWND hwnd)
     app.spHoleFillShaderH = app.spRenderer->GetShaderMgr()->FindShader(L"FillHolesHP");
     app.spHoleFillShaderV = app.spRenderer->GetShaderMgr()->FindShader(L"FillHolesVP");
     auto spFillHolesH = app.spGPUPipeline->CreateNode(L"FillHoleHorizontal", app.spHoleFillShaderH, colorW, colorH, DXGI_FORMAT_R16_UINT);
-    spFillHolesH->SetInput(L"depthTex", nullptr, spDepthResize);
+    spFillHolesH->SetInput(L"depthTex", nullptr, spResizeDepthNode);
     auto spFillHolesV = app.spGPUPipeline->CreateNode(L"FillHoleVertical", app.spHoleFillShaderV, colorW, colorH, DXGI_FORMAT_R16_UINT);
     spFillHolesV->SetInput(L"depthTex", nullptr, spFillHolesH);
 
@@ -691,7 +748,7 @@ void CApp::InitializeCaustic(HWND hwnd)
     spNormFilledDepth->SetInput(L"depthTex", nullptr, spFillHolesV);
 
     app.spNormDepth = app.spGPUPipeline->CreateNode(L"NormalizeDepth", spnd, colorW, colorH, DXGI_FORMAT_R32_FLOAT);
-    app.spNormDepth->SetInput(L"depthTex", nullptr, spDepthResize);
+    app.spNormDepth->SetInput(L"depthTex", nullptr, spResizeDepthNode);
     
     //**********************************************************************
     // Create depth of field node
@@ -700,7 +757,14 @@ void CApp::InitializeCaustic(HWND hwnd)
     app.spDepthOfField = app.spGPUPipeline->CreateNode(L"ComputeDoF", app.spBokehShader, colorW, colorH, DXGI_FORMAT_B8G8R8A8_UNORM);
     app.spDepthOfField->SetInput(L"colorTex", L"colorSampler", app.spSourceColorNode);
     app.spDepthOfField->SetInput(L"depthTex", nullptr, app.spNormDepth);
-    
+    app.spDepthOfField->SetInput(L"meshNorms", nullptr, app.spNormNode);
+    app.spDepthOfField->SetInput(L"color2Depth", nullptr, app.spColor2Depth);
+    app.spBokehShader->SetPSParamFloat(L"depthW", (float)depthW);
+    app.spBokehShader->SetPSParamFloat(L"depthH", (float)depthH);
+    app.spBokehShader->SetPSParamFloat(L"colorW", (float)colorW);
+    app.spBokehShader->SetPSParamFloat(L"colorH", (float)colorH);
+    app.spBokehShader->SetPSParam(L"rayTexture", raymap);
+
     app.spDepthOfFieldFilled = app.spGPUPipeline->CreateNode(L"bokehFilled", app.spBokehShader, colorW, colorH, DXGI_FORMAT_B8G8R8A8_UNORM);
     app.spDepthOfFieldFilled->SetInput(L"colorTex", L"colorSampler", app.spSourceColorNode);
     app.spDepthOfFieldFilled->SetInput(L"depthTex", nullptr, spNormFilledDepth);

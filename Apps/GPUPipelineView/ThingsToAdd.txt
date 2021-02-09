@@ -1,0 +1,5 @@
+Things to do for demo:
+1) Implement 1euro Filter to filter depth map/normals
+2) Implement way to pull data from Excel spreadsheet into 3D
+3) fix obj materials
+4) Add shadows

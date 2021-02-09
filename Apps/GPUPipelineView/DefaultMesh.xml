@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Shader>
+  <PixelShader Filename="$(CausticRoot)\Apps\GPUPipelineView\DefaultMesh.ps" Output="$(CausticRoot)\$(Configuration)\DefaultMesh_PS.cso"/>
+  <VertexShader Filename="$(CausticRoot)\Apps\GPUPipelineView\DefaultMesh.vs" Output="$(CausticRoot)\$(Configuration)\DefaultMesh_VS.cso"/>
+</Shader>

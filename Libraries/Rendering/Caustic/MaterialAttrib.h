@@ -24,7 +24,7 @@ namespace Caustic
     //**********************************************************************
     struct CMaterialAttrib : public IMaterialAttrib, public CRefCount
     {
-        std::map<std::wstring, FRGBColor> m_colors;
+        std::map<std::wstring, FRGBAColor> m_colors;
         std::map<std::wstring, float> m_scalars;
         std::map<std::wstring, std::pair<CRefObj<IImage>, EShaderAccess>> m_textures;
         static CRefObj<IImage> s_spDefaultTexture;
@@ -53,7 +53,8 @@ namespace Caustic
         virtual bool GetIsShadowReceiver() override { return m_isShadowReceiver; }
         virtual void SetIsShadowReceiver(bool receivesShadow) override { m_isShadowReceiver = receivesShadow; }
         virtual FRGBColor GetColor(const wchar_t* pName) override;
-        virtual void SetColor(const wchar_t *pName, FRGBColor& v) override;
+        virtual void SetColor(const wchar_t* pName, FRGBColor& v) override;
+        virtual void SetColor(const wchar_t* pName, FRGBAColor& v) override;
         virtual float GetScalar(const wchar_t* pName) override;
         virtual void SetScalar(const wchar_t *pName, float s) override;
         virtual CRefObj<IImage> GetTexture(const wchar_t* pName) override;
@@ -61,7 +62,7 @@ namespace Caustic
         virtual void SetTextureViaFilename(const wchar_t* pName, std::wstring& filename, EShaderAccess access) override;
         virtual uint32 GetMaterialID() override { return m_materialID; }
         virtual void SetMaterialID(uint32 v) override { m_materialID = v; }
-        virtual void EnumerateColors(std::function<void(const wchar_t* pName, FRGBColor& v)> func) override;
+        virtual void EnumerateColors(std::function<void(const wchar_t* pName, FRGBAColor& v)> func) override;
         virtual void EnumerateScalars(std::function<void(const wchar_t* pName, float s)> func) override;
         virtual void EnumerateTextures(std::function<void(const wchar_t* pName, IImage * pTexture, EShaderAccess access)> func) override;
 

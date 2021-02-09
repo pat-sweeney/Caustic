@@ -1,0 +1,71 @@
+//**********************************************************************
+// File: DefaultMesh.vs
+//**********************************************************************
+#define MAX_LIGHTS 4
+
+struct VSInput
+{
+    float3 posOS : POSITION; // Vertex position in object coordinates
+    float3 normOS : NORMAL; // Vertex normal in object coordinates
+    float2 uvs : TEXCOORD0; // Texture coordinates
+};
+
+struct VSOutput
+{
+    float4 posPS : SV_POSITION; // Position of vertex in projected coordinates
+    float3 posWS : TEXCOORD0;
+    float3 normWS : TEXCOORD1; // Normal vector in world coordinates
+    float2 uvs : TEXCOORD2; // UV coordinates
+};
+
+Texture2D diffuseTexture : register(t0);
+SamplerState diffuseSampler : register(s0);
+Texture2D shadowMapTexture : register(t1);
+SamplerState shadowMapSampler : register(s1);
+
+cbuffer PS_CONSTANT_BUFFER
+{
+    float4 lightPos;
+    float4 lightColor[MAX_LIGHTS];
+    float4 ambientColor;
+    float4 diffuseColor;
+    float4 specularColor;
+    float4 specularExp;
+    float4 lightPosWS[MAX_LIGHTS];
+    float4 transparency;
+    matrix viewInv; // View => World
+    int numLights;
+    float4 shadowMapBounds;
+};
+
+float4 PS(VSOutput p) : SV_Target
+{
+    float3 viewPosWS = mul(float4(0.0f, 0.0f, 0.0f, 1.0f), viewInv).xyz;
+    float3 viewDirWS = normalize(viewPosWS - p.posWS);
+    float3 color = float3(0.0f, 0.0f, 0.0f);
+    float3 normWS = normalize(p.normWS);
+
+    // Check if point is in shadow
+    //float shadowDist = shadowMapTexture.Sample(shadowMapSampler, p.uvs);
+
+    for (int i = 0; i < numLights; i++)
+    {
+        float3 lightDirWS = normalize(lightPosWS[i].xyz - p.posWS);
+
+        // L.N
+        float dp = saturate(dot(normWS, lightDirWS));
+        
+        // Diffuse
+        float4 clr = diffuseTexture.Sample(diffuseSampler, p.uvs);
+        ////float4 clr = float4(diffuseColor.xyz, 1.0f);
+        color.xyz += clr.zyx * dp * lightColor[i].xyz;
+
+        // specular
+        float3 reflectWS = reflect(lightDirWS, normWS);
+        float specdp = saturate(dot(reflectWS, -viewDirWS));
+        float spec = pow(specdp, specularExp.x);
+        color.xyz += specularColor.xyz * spec * lightColor[i].xyz;
+    }
+    color.xyz += ambientColor.xyz;
+    return float4(color.xyz, transparency.x);
+}

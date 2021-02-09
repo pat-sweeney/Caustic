@@ -1,6 +1,7 @@
 //**********************************************************************
 // Copyright Patrick Sweeney 2015-2020
 // All Rights Reserved
+// File: Textured.ps
 //**********************************************************************
 #include "defs.h"
 
@@ -34,6 +35,8 @@ float4 PS(VSOutput p) : SV_Target
     // Check if point is in shadow
     //float shadowDist = shadowMapTexture.Sample(shadowMapSampler, p.uvs);
 
+        float4 clr = diffuseTexture.Sample(diffuseSampler, p.uvs);
+        return clr;
     for (int i = 0; i < numLights; i++)
     {
         float3 lightDirWS = normalize(lightPosWS[i].xyz - p.posWS);

@@ -1,0 +1,70 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2015-2020
+// All Rights Reserved
+// File: Obj.ps
+//
+// Defines a shader for .obj file format
+//**********************************************************************
+#include "defs.h"
+
+Texture2D ambientTexture : register(t0);
+Texture2D diffuseTexture : register(t1);
+Texture2D specularTexture : register(t2);
+Texture2D specularExpTexture : register(t3);
+Texture2D emissiveTexture : register(t4);
+Texture2D transparencyTexture : register(t5);
+Texture2D bumpTexture : register(t6);
+Texture2D reflectionTexture : register(t7);
+SamplerState texSampler : register(s0);
+
+cbuffer PS_CONSTANT_BUFFER
+{
+    float4 lightPos;
+    float4 lightColor[MAX_LIGHTS];
+    float4 ambientColor;
+    float4 diffuseColor;
+    float4 specularColor;
+    float4 specularExp;
+    float4 lightPosWS[MAX_LIGHTS];
+    float4 transparency;
+    float bumpFactor;
+    matrix viewInv; // View => World
+    int numLights;
+    float4 shadowMapBounds;
+};
+
+float4 PS(VSOutput p) : SV_Target
+{
+    float3 viewPosWS = mul(float4(0.0f, 0.0f, 0.0f, 1.0f), viewInv).xyz;
+    float3 viewDirWS = normalize(viewPosWS - p.posWS);
+    float3 color = float3(0.0f, 0.0f, 0.0f);
+    float3 normWS = normalize(p.normWS);
+
+    // Check if point is in shadow
+    //float shadowDist = shadowMapTexture.Sample(shadowMapSampler, p.uvs);
+
+    float4 ambientClr = ambientTexture.Sample(texSampler, p.uvs) + ambientColor;
+    float4 diffuseClr = diffuseTexture.Sample(texSampler, p.uvs) + diffuseColor;
+    float4 specularClr = specularTexture.Sample(texSampler, p.uvs) + specularColor;
+    float4 specularExpClr = specularExpTexture.Sample(texSampler, p.uvs) + specularExp;
+    float4 transparencyClr = transparencyTexture.Sample(texSampler, p.uvs) + transparency;
+    float4 bumpClr = bumpTexture.Sample(texSampler, p.uvs);
+    for (int i = 0; i < numLights; i++)
+    {
+        float3 lightDirWS = normalize(lightPosWS[i].xyz - p.posWS);
+
+        // L.N
+        float dp = saturate(dot(normWS, lightDirWS));
+        
+        // Diffuse
+        color.xyz += diffuseClr.xzy * dp * lightColor[i].xyz;
+
+        // specular
+        float3 reflectWS = reflect(lightDirWS, normWS);
+        float specdp = saturate(dot(reflectWS, -viewDirWS));
+        float3 spec = pow(specdp.xxx, specularExpClr.xyz);
+        color.xyz += specularColor.xyz * spec * lightColor[i].xyz;
+    }
+    color.xyz += ambientClr.xyz;
+    return float4(color.xyz, transparencyClr.x);
+}

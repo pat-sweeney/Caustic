@@ -68,9 +68,35 @@ namespace Caustic
             float minDepth = (float)va_arg(argptr, double);
             float maxDepth = (float)va_arg(argptr, double);
             DXGI_FORMAT outputFormat = va_arg(argptr, DXGI_FORMAT);
+            const wchar_t* pShaderName = va_arg(argptr, const wchar_t*);
             va_end(argptr);
 
-            auto spShader = m_spRenderer->GetShaderMgr()->FindShader(L"DepthMesh");
+            auto spShader = m_spRenderer->GetShaderMgr()->FindShader(pShaderName);
+            std::unique_ptr<CGPUPipelineDepthMeshNode> spSource(
+                new CGPUPipelineDepthMeshNode(m_spRenderer, spShader, depthWidth, depthHeight,
+                    colorWidth, colorHeight, spRayTex, extrinsics, intrinsics, minDepth, maxDepth,
+                    outputFormat));
+            m_nodes.push_back(CRefObj<IGPUPipelineNode>(spSource.get()));
+            return CRefObj<IGPUPipelineNode>(spSource.release());
+        }
+        if (wcscmp(pName, c_CustomNode_Color2Depth) == 0)
+        {
+            va_list argptr;
+            va_start(argptr, pName);
+            uint32 depthWidth = (uint32)va_arg(argptr, unsigned int);
+            uint32 depthHeight = (uint32)va_arg(argptr, unsigned int);
+            uint32 colorWidth = (uint32)va_arg(argptr, unsigned int);
+            uint32 colorHeight = (uint32)va_arg(argptr, unsigned int);
+            CRefObj<ITexture> spRayTex = va_arg(argptr, CRefObj<ITexture>);
+            Matrix4x4 extrinsics = va_arg(argptr, Matrix4x4);
+            CameraIntrinsics intrinsics = va_arg(argptr, CameraIntrinsics);
+            float minDepth = (float)va_arg(argptr, double);
+            float maxDepth = (float)va_arg(argptr, double);
+            DXGI_FORMAT outputFormat = va_arg(argptr, DXGI_FORMAT);
+            const wchar_t* pShaderName = va_arg(argptr, const wchar_t*);
+            va_end(argptr);
+
+            auto spShader = m_spRenderer->GetShaderMgr()->FindShader(pShaderName);
             std::unique_ptr<CGPUPipelineDepthMeshNode> spSource(
                 new CGPUPipelineDepthMeshNode(m_spRenderer, spShader, depthWidth, depthHeight,
                     colorWidth, colorHeight, spRayTex, extrinsics, intrinsics, minDepth, maxDepth,

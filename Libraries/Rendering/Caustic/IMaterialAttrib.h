@@ -100,6 +100,16 @@ namespace Caustic
 		virtual void SetColor(const wchar_t* pName, FRGBColor& v) = 0;
 
 		//**********************************************************************
+		// Method: SetColor
+		// Sets the color associated with the specified property name
+		//
+		// Parameters:
+		// pName - name of property (e.g. "Diffuse")
+		// v - color to assign
+		//**********************************************************************
+		virtual void SetColor(const wchar_t* pName, FRGBAColor& v) = 0;
+
+		//**********************************************************************
 		// Method: GetScalar
 		// Gets a float value associated with the specified property name
 		//
@@ -166,7 +176,7 @@ namespace Caustic
 		// pName - name of color property
 		// v - value of color property
 		//**********************************************************************
-		virtual void EnumerateColors(std::function<void(const wchar_t* pName, FRGBColor & v)> func) = 0;
+		virtual void EnumerateColors(std::function<void(const wchar_t* pName, FRGBAColor & v)> func) = 0;
 
 		//**********************************************************************
 		// Method: EnumerateScalars

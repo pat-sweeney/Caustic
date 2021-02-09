@@ -1,6 +1,7 @@
 //**********************************************************************
 // Copyright Patrick Sweeney 2015-2020
 // All Rights Reserved
+// File: TexturedWithShadow.vs
 //**********************************************************************
 #define MAX_LIGHTS 4
 

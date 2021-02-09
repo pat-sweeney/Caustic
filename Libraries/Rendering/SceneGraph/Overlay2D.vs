@@ -2,6 +2,7 @@
 // Copyright Patrick Sweeney 2015-2019
 // Licensed under the MIT license.
 // See file LICENSE for details.
+// File: Overlay2D.vs
 //**********************************************************************
 struct VSInput
 {

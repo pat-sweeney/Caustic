@@ -942,7 +942,7 @@ namespace Caustic
         CT(spDXGIDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&spDXGIAdapter));
 
         // Walk our list of adapters and find the correct display
-        static bool enableDuplication = true;
+        static bool enableDuplication = false;
         if (enableDuplication)
         {
             int outputIndex = 0;

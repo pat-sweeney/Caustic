@@ -1,6 +1,7 @@
 //**********************************************************************
 // Copyright Patrick Sweeney 2015-2020
 // All Rights Reserved
+// File: PointCloud.vs
 //**********************************************************************
 
 Texture2D<uint> depthTexture : register(t0);

@@ -2,6 +2,7 @@
 // Copyright Patrick Sweeney 2015-2020
 // Licensed under the MIT license.
 // See file LICENSE for details.
+// File: Bokeh.ps
 //**********************************************************************
 struct VSOutput
 {
@@ -9,11 +10,13 @@ struct VSOutput
     float2 uvs : TEXCOORD0;
 };
 
-Texture2D colorTex : register(t0); // Color texture
+Texture2D colorTex : register(t0);
 SamplerState colorSampler : register(s0);
-Texture2D<float> depthTex : register(t1); // Depth texture
+Texture2D<float> depthTex : register(t1);
 Texture2D backgroundTexture : register(t2);
 Texture2D<float4> rayTexture : register(t3);
+Texture2D<float4> meshNorms : register(t4);
+Texture2D<float2> color2Depth : register(t5);
 
 cbuffer VS_CONSTANT_BUFFER : register(b0)
 {
@@ -29,6 +32,15 @@ cbuffer VS_CONSTANT_BUFFER : register(b0)
 	float showDepth;
 	float showHoles;
 	float checkDepth;
+	float dummy;
+	float3 lightPos;
+	float dummy2;
+	float3 lightClr;
+	float dummy3;
+	float depthW;
+	float depthH;
+	float colorW;
+	float colorH;
 };
 
 float4 PS(VSOutput p) : SV_Target
@@ -58,8 +70,17 @@ float4 PS(VSOutput p) : SV_Target
 	// Compute circle of confusion
     float ux = p.uvs.x;
     float uy = p.uvs.y;
-    int3 pc = int3(ux * 1920, (1-uy) * 1080, 0);
+    int3 pc = int3(ux * colorW, (1-uy) * colorH, 0);
     float depth = depthTex.Load(pc);
+
+	// Our ray texture is in the coordinate space of the original
+	// depth map. Thus we need to convert our UVs from color space
+	// to depth space.
+	float2 depthuvs = color2Depth.Sample(colorSampler, float2(ux, 1.0f - uy));
+    int3 rp = int3(depthuvs.x * depthW, (1.0f - depthuvs.y) * depthH, 0);
+    float4 ray = rayTexture.Load(rp);
+    float4 posWS = float4(ray.xyz * float(depth), 1.0);
+
 	if (showHoles > 0 && depth == 0)
 		return float4(1,0,0,1);
 	if (showDepth > 0)
@@ -87,7 +108,13 @@ float4 PS(VSOutput p) : SV_Target
 	{
 		if (showInFocus)
 			return float4(1.0f,1.0f,0.0f,1.0f);
-		return float4(colorTex.Sample(colorSampler, p.uvs).xyz,1.0f);
+		float3 clr = colorTex.Sample(colorSampler, p.uvs).xyz;
+		float3 normWS = meshNorms.Sample(colorSampler, float2(p.uvs.x, 1.0f - p.uvs.y));
+		if (length(normWS) == 0.0f)
+		    normWS = float3(0.0f, 0.0f, 1.0f);
+        float3 lightDirWS = normalize(lightPos.xyz - posWS.xyz);
+        float dp = clamp(dot(normalize(normWS), lightDirWS), 0.0f, 1.0f);
+		return float4(clr * 0.5 + 0.5 * dp * lightClr, 1.0f);
 	}
 	if (depth < 0.001f && useBackground > 0)
 		return bgcolor;
@@ -101,21 +128,21 @@ float4 PS(VSOutput p) : SV_Target
 	int count = 0;
 	for (int k = 0; k < kernelSampleCount; k++)
 	{
-		float2 o = float2(kernel[k].x * coc / 1920.0f, kernel[k].y * coc / 1080.0f);
+		float2 o = float2(kernel[k].x * coc / colorW, kernel[k].y * coc / colorH);
 		float2 uvs = p.uvs + o;
-		int3 pc = int3(uvs.x * 1920, (1-uvs.y) * 1080, 0);
+		int3 pc = int3(uvs.x * colorW, (1-uvs.y) * colorH, 0);
 		float cdepth = depthTex.Load(pc);
 		float deltaDepth = cdepth - depth;
-		if (checkDepth < 1.0f || abs(deltaDepth) < 0.05)
-		{
-			color += colorTex.Sample(colorSampler, uvs).xyz;
-			count++;
-		}
-		else
-		{
-			color += colorTex.Sample(colorSampler, p.uvs).xyz;
-			count++;
-		}
+		if (checkDepth >= 1.0f && abs(deltaDepth) >= 0.05)
+			uvs = p.uvs;
+		float3 clr = colorTex.Sample(colorSampler, uvs).xyz;
+		float3 normWS = meshNorms.Sample(colorSampler, float2(uvs.x, 1.0f - uvs.y));
+		if (length(normWS) == 0.0f)
+		    normWS = float3(0.0f, 0.0f, 1.0f);
+		float3 lightDirWS = normalize(lightPos.xyz - posWS.xyz);
+        float dp = clamp(dot(normalize(normWS), lightDirWS), 0.0f, 1.0f);
+		color += float4(clr * 0.5 + 0.5 * dp * lightClr, 1.0f);
+		count++;
 	}
 	
 	if (count > 0)

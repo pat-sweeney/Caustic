@@ -64,11 +64,50 @@ namespace Caustic
 			b = _b;
 		}
 
-		FRGBColor(const Vector3 &clr)
+		FRGBColor(const Vector3& clr)
 		{
 			r = clr.x;
 			g = clr.y;
 			b = clr.z;
+		}
+	};
+
+	//**********************************************************************
+	// Class: FRGBAColor
+	// FRGBAColor defines an RGBA tuple defined in floating point.
+	// Each color component is in the range of 0.0 to 1.0
+	//
+	// Members:
+	// <uint8 at Caustic::uint8> r - Red component
+	// <uint8 at Caustic::uint8> g - Green component
+	// <uint8 at Caustic::uint8> b - Blue component
+	// <uint8 at Caustic::uint8> a - Alpha component
+	//
+	// Header:
+	// [Link:Imaging/Color/Color.h]
+	//**********************************************************************
+	struct FRGBAColor
+	{
+		float r, g, b, a;
+
+		FRGBAColor()
+		{
+		}
+
+		FRGBAColor(float _r, float _g, float _b, float _a)
+		{
+			r = _r;
+			g = _g;
+			b = _b;
+			a = _a;
+		}
+
+		FRGBAColor(const Vector4& clr)
+		{
+			r = clr.x;
+			g = clr.y;
+			b = clr.z;
+			a = clr.w;
 		}
 	};
 

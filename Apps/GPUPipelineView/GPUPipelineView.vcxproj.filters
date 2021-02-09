@@ -74,6 +74,12 @@
     <None Include="CameraZPrePass.vs">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="DefaultMesh.ps">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="DefaultMesh.vs">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="AzureLine.xml">
@@ -83,6 +89,9 @@
       <Filter>Shaders</Filter>
     </CustomBuild>
     <CustomBuild Include="CameraZPrePass.xml">
+      <Filter>Shaders</Filter>
+    </CustomBuild>
+    <CustomBuild Include="DefaultMesh.xml">
       <Filter>Shaders</Filter>
     </CustomBuild>
   </ItemGroup>

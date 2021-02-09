@@ -250,5 +250,20 @@ namespace Caustic
     //**********************************************************************
     static const wchar_t* c_CustomNode_DepthMeshNode = L"DepthMeshNode";
 
+    //**********************************************************************
+    // Constant: c_CustomNode_Color2Depth
+    // Defines name for a GPU node that creates a mesh from a depth map and
+    // renders that the texture coordinates into a map. The map then contains
+    // texture coordinates for mapping color texture coordinates to depth
+    // texture coordinates.
+    //
+    // Arguments:
+    // <uint32> depthWidth - width in pixels of depth map
+    // <uint32> depthHeight - height in pixels of depth map
+    // <uint32> colorWidth - width in pixels of color map
+    // <uint32> colorHeight - height in pixels of color map
+    //**********************************************************************
+    static const wchar_t* c_CustomNode_Color2Depth = L"Color2DepthNode";
+
     CAUSTICAPI CRefObj<IGPUPipeline> CreateGPUPipeline(IRenderer *pRenderer);
 }

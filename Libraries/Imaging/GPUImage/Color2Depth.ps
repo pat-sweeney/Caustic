@@ -1,0 +1,16 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2020
+// Licensed under the MIT license.
+// See file LICENSE for details.
+// File: Color2Depth.ps
+//**********************************************************************
+struct VSOutput
+{
+    float4 pos : SV_POSITION;
+    float2 uvs : TEXCOORD0;
+};
+
+float2 PS(VSOutput p) : SV_Target
+{
+    return float2(p.uvs);
+}

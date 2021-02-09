@@ -1,0 +1,75 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2020
+// Licensed under the MIT license.
+// See file LICENSE for details.
+// File: ResizeDepth.ps
+//**********************************************************************
+Texture2D<uint> depthTex : register(t0);
+Texture2D<float2> color2Depth : register(t1);
+SamplerState resizesampler : register(s0);
+
+struct VSOutput
+{
+    float4 pos : SV_POSITION;
+    float2 uvs : TEXCOORD0;
+};
+
+cbuffer VS_CONSTANT_BUFFER : register(b0)
+{
+    float depthW;
+    float depthH;
+    float maxDepth;
+    float minDepth;
+};
+
+uint PS(VSOutput p) : SV_Target
+{
+    float2 uvs = color2Depth.Sample(resizesampler, p.uvs);
+    uvs = float2(uvs.x * depthW, uvs.y * depthH);
+    float fx = frac(uvs.x);
+    float fy = frac(uvs.y);
+    int depth0;
+    if (fx < 1.0f - fy)
+    {
+        int x = floor(uvs.x);
+        int y = floor(uvs.y);
+        int3 pc0 = int3(x, y, 0);
+        depth0 = depthTex.Load(pc0);
+        if (depth0 == 0)
+            discard;
+        int3 pc1 = int3(x + 1, y, 0);
+        int depth1 = depthTex.Load(pc1);
+        if (depth1 == 0)
+            discard;
+        int3 pc2 = int3(x, y + 1, 0);
+        int depth2 = depthTex.Load(pc2);
+        if (depth2 == 0)
+            discard;
+        int d0 = abs(depth0 - depth1);
+        int d1 = abs(depth0 - depth2);
+        if (d0 > 100 || d1 > 100)
+            discard;
+    }
+    else
+    {
+        int x = ceil(uvs.x);
+        int y = ceil(uvs.y);
+        int3 pc0 = int3(x, y, 0);
+        depth0 = depthTex.Load(pc0);
+        if (depth0 == 0)
+            discard;
+        int3 pc1 = int3(x - 1, y, 0);
+        int depth1 = depthTex.Load(pc1);
+        if (depth1 == 0)
+            discard;
+        int3 pc2 = int3(x, y - 1, 0);
+        int depth2 = depthTex.Load(pc2);
+        if (depth2 == 0)
+            discard;
+        int d0 = abs(depth0 - depth1);
+        int d1 = abs(depth0 - depth2);
+        if (d0 > 100 || d1 > 100)
+            discard;
+    }
+    return depth0;
+}

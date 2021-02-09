@@ -85,7 +85,7 @@ namespace Caustic
 
         if (m_spMaterial)
         {
-            m_spMaterial->EnumerateColors([spShader](std::wstring name, FRGBColor& v) {
+            m_spMaterial->EnumerateColors([spShader](std::wstring name, FRGBAColor& v) {
                 Float4 sv(v.r, v.g, v.b, 1.0);
                 spShader->SetPSParam(name, std::any(sv));
                 });

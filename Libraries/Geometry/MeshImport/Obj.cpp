@@ -2,6 +2,10 @@
 // Copyright Patrick Sweeney 2015-2020
 // Licensed under the MIT license.
 // See file LICENSE for details.
+//
+// This file defines an implementation of .obj file format.
+// For complete details on the format see:
+// http://paulbourke.net/dataformats/mtl/
 //**********************************************************************
 #include "stdafx.h"
 #include "Base\Core\Core.h"
@@ -175,6 +179,25 @@ namespace Caustic
                 spMaterial->SetMaterialID(materialID);
                 materialID++;
                 m_matmap.insert(std::make_pair(matname, spMaterial));
+
+                // Setup initial values
+                auto spBlackImage = Caustic::CreateImage(1024, 1024, 32);
+                ZeroMemory(spBlackImage->GetData(), spBlackImage->GetHeight() * spBlackImage->GetStride());
+                spMaterial->SetTexture(L"ambientTexture", spBlackImage, EShaderAccess::PixelShader);
+                spMaterial->SetTexture(L"diffuseTexture", spBlackImage, EShaderAccess::PixelShader);
+                spMaterial->SetTexture(L"specularTexture", spBlackImage, EShaderAccess::PixelShader);
+                spMaterial->SetTexture(L"specularExpTexture", spBlackImage, EShaderAccess::PixelShader);
+                spMaterial->SetTexture(L"transparencyTexture", spBlackImage, EShaderAccess::PixelShader);
+                spMaterial->SetTexture(L"reflectionTexture", spBlackImage, EShaderAccess::PixelShader);
+                spMaterial->SetTexture(L"emissiveTexture", spBlackImage, EShaderAccess::PixelShader);
+                spMaterial->SetTexture(L"bumpTexture", spBlackImage, EShaderAccess::PixelShader);
+                FRGBAColor white(1.0f, 1.0f, 1.0f, 1.0f);
+                spMaterial->SetColor(L"ambientColor", white);
+                spMaterial->SetColor(L"diffuseColor", white);
+                spMaterial->SetColor(L"specularColor", white);
+                spMaterial->SetColor(L"specularExp", white);
+                spMaterial->SetColor(L"transparency", white);
+                spMaterial->SetScalar(L"bumpFactor", 1.0f);
             }
             else
             {
@@ -202,11 +225,114 @@ namespace Caustic
                 else if (_strnicmp(p, "map_Ks", 6) == 0)
                 {
                     p += 6;
-                     while (isspace(*p))
+                    while (isspace(*p))
                         p++;
                     std::string fn = m_Folder + std::string(p);
                     std::wstring wfn = str2wstr(fn);
                     spMaterial->SetTextureViaFilename(L"specularTexture", wfn, EShaderAccess::PixelShader);
+                }
+                else if (_strnicmp(p, "map_Ns", 6) == 0)
+                {
+                    p += 6;
+                    while (isspace(*p))
+                        p++;
+                    std::string fn = m_Folder + std::string(p);
+                    std::wstring wfn = str2wstr(fn);
+                    spMaterial->SetTextureViaFilename(L"specularExpTexture", wfn, EShaderAccess::PixelShader);
+                }
+                else if (_strnicmp(p, "map_d", 5) == 0)
+                {
+                    p += 5;
+                    while (isspace(*p))
+                        p++;
+                    std::string fn = m_Folder + std::string(p);
+                    std::wstring wfn = str2wstr(fn);
+                    spMaterial->SetTextureViaFilename(L"transparencyTexture", wfn, EShaderAccess::PixelShader);
+                }
+                else if (_strnicmp(p, "map_refl", 8) == 0 || _strnicmp(p, "refl", 4) == 0)
+                {
+                    p += ((p[0] == 'm') ? 8 : 4);
+                    while (isspace(*p))
+                        p++;
+                    if (_strnicmp(p, "-type", 5) == 0)
+                    {
+                        p += 5;
+                        while (isspace(*p))
+                            p++;
+                        if (_strnicmp(p, "sphere", 6) == 0)
+                        {
+                            spMaterial->SetScalar(L"reflType", 0.0f);
+                            p += 6;
+                        }
+                        if (_strnicmp(p, "cube_top", 8) == 0)
+                        {
+                            spMaterial->SetScalar(L"reflType", 1.0f);
+                            p += 8;
+                        }
+                        if (_strnicmp(p, "cube_bottom", 11) == 0)
+                        {
+                            spMaterial->SetScalar(L"reflType", 2.0f);
+                            p += 11;
+                        }
+                        if (_strnicmp(p, "cube_front", 10) == 0)
+                        {
+                            spMaterial->SetScalar(L"reflType", 3.0f);
+                            p += 10;
+                        }
+                        if (_strnicmp(p, "cube_back", 9) == 0)
+                        {
+                            spMaterial->SetScalar(L"reflType", 4.0f);
+                            p += 9;
+                        }
+                        if (_strnicmp(p, "cube_left", 9) == 0)
+                        {
+                            spMaterial->SetScalar(L"reflType", 5.0f);
+                            p += 9;
+                        }
+                        if (_strnicmp(p, "cube_right", 10) == 0)
+                        {
+                            spMaterial->SetScalar(L"reflType", 6.0f);
+                            p += 10;
+                        }
+                        while (!isspace(*p))
+                            p++;
+                        while (isspace(*p))
+                            p++;
+                    }
+                    std::string fn = m_Folder + std::string(p);
+                    std::wstring wfn = str2wstr(fn);
+                    spMaterial->SetTextureViaFilename(L"reflectionTexture", wfn, EShaderAccess::PixelShader);
+                }
+                else if (_strnicmp(p, "map_Ke", 6) == 0)
+                {
+                    p += 6;
+                    while (isspace(*p))
+                        p++;
+                    std::string fn = m_Folder + std::string(p);
+                    std::wstring wfn = str2wstr(fn);
+                    spMaterial->SetTextureViaFilename(L"emissiveTexture", wfn, EShaderAccess::PixelShader);
+                }
+                else if (_strnicmp(p, "map_bump", 8) == 0 || _strnicmp(p, "bump", 4) == 0)
+                {
+                    p += ((p[0] == 'm') ? 8 : 4);
+                    while (isspace(*p))
+                        p++;
+                    float bumpScalar = 1.0f;
+                    if (_strnicmp(p, "-bm", 3) == 0)
+                    {
+                        p += 3;
+                        while (isspace(*p))
+                            p++;
+                        bumpScalar = (float)atof(p);
+                        while (!isspace(*p))
+                            p++;
+                        while (isspace(*p))
+                            p++;
+                    }
+                    std::string fn = m_Folder + std::string(p);
+                    std::wstring wfn = str2wstr(fn);
+                    spMaterial->SetTextureViaFilename(L"bumpTexture", wfn, EShaderAccess::PixelShader);
+                    spMaterial->SetScalar(L"bumpFactor", bumpScalar);
                 }
                 else if (*p == 'N' && p[1] == 's')
                     spMaterial->SetScalar(L"specularExp", (float)atof(p + 3));
@@ -253,7 +379,7 @@ namespace Caustic
                 {
                     p += 2;
                     float transparency = (float)atof(p);
-                    spMaterial->SetScalar(L"alpha", transparency);
+                    spMaterial->SetScalar(L"transparency", transparency);
                 }
             }
         }

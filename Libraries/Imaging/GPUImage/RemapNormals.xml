@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Shader>
+  <PixelShader Filename="$(CausticRoot)\Libraries\Imaging\GPUImage\RemapNormals.ps" Output="$(CausticRoot)\$(Configuration)\RemapNormals_PS.cso"/>
+  <VertexShader Filename="$(CausticRoot)\Libraries\Imaging\GPUImage\RemapNormals.vs" Output="$(CausticRoot)\$(Configuration)\RemapNormals_VS.cso"/>
+</Shader>
