@@ -285,7 +285,7 @@ namespace Caustic
         //**********************************************************************
         virtual CRefObj<IShader> Clone(ID3D11Device *pDevice) override;
         virtual std::wstring &Name() override { return m_name; }
-        virtual void BeginRender(IRenderer* pRenderer, IRenderMaterial* pFrontMaterial, IRenderMaterial* pBackMaterial, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld) override;
+        virtual void BeginRender(IRenderer* pRenderer, IRenderMaterial* pMaterial, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld) override;
         virtual void SetPSParam(std::wstring paramName, std::any& value) override;
         virtual void SetPSParamFloat(std::wstring paramName, float value) override;
         virtual void SetPSParamInt(std::wstring paramName, int value) override;

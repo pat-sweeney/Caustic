@@ -45,6 +45,21 @@ namespace Caustic
 	struct IMaterialAttrib : public ISerialize
 	{
 		//**********************************************************************
+		// Method: SetName
+		// Sets the name of the material (mostly used for debugging)
+		//
+		// Parameters:
+		// pName - name of material
+		//**********************************************************************
+		virtual void SetName(const char* pName) = 0;
+
+		//**********************************************************************
+		// Method: GetName
+		// Returns name of material
+		//**********************************************************************
+		virtual std::string GetName() = 0;
+
+		//**********************************************************************
 		// Method: GetIsTransparent
 		// Indicates whether material is considered transparent
 		//

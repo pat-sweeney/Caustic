@@ -23,6 +23,7 @@ namespace Caustic
     //**********************************************************************
     class CSubMesh : public ISubMesh, public CRefCount
     {
+        std::string m_name;
         std::vector<CGeomVertex*> m_vertices;
         std::vector<CFaceVertex*> m_faceVertices;
         std::vector<CFace*> m_faces;
@@ -86,12 +87,14 @@ namespace Caustic
         //**********************************************************************
         // ISubMesh
         //**********************************************************************
-        uint32 GetNumberFaces() override { return (uint32)m_faces.size(); }
-        CFace *GetFace(uint32 index) override { return m_faces[index]; }
-        uint32 GetNumberVertices() override { return (uint32)m_vertices.size(); }
-        CGeomVertex *GetVertex(uint32 index) override { return m_vertices[index]; }
-        uint32 GetNumberEdges() override { return (uint32)m_edges.size(); }
-        CHalfEdge *GetEdge(uint32 index) override { return m_edges[index]; }
+        virtual void SetName(const char* pName) override { m_name = std::string(pName); }
+        virtual std::string GetName() override { return m_name; }
+        virtual uint32 GetNumberFaces() override { return (uint32)m_faces.size(); }
+        virtual CFace *GetFace(uint32 index) override { return m_faces[index]; }
+        virtual uint32 GetNumberVertices() override { return (uint32)m_vertices.size(); }
+        virtual CGeomVertex *GetVertex(uint32 index) override { return m_vertices[index]; }
+        virtual uint32 GetNumberEdges() override { return (uint32)m_edges.size(); }
+        virtual CHalfEdge *GetEdge(uint32 index) override { return m_edges[index]; }
         virtual EVertexFlags GetVertexFlags() override { return m_vertexFlags; }
         virtual void SetVertexFlags(EVertexFlags flags) override { m_vertexFlags = flags; }
         virtual EMeshFlags GetMeshFlags() override { return m_meshFlags; }

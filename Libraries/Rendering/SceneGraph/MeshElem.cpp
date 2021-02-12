@@ -81,20 +81,18 @@ namespace Caustic
     {
         if (pSceneCtx->m_CurrentPass == c_PassShadow && !pSceneCtx->m_inShadowLightGroup)
             return; // We are in the middle of a shadow pass, but we are not under any lights
-        if (pSceneCtx->m_CurrentPass == c_PassTransparent && !pSceneCtx->m_spCurrentMaterial->GetIsTransparent())
-            return; // In transparent pass but current material is not transparent
 
         if (m_prerenderCallback)
             if (!m_prerenderCallback(pRenderCtx->GetCurrentPass()))
                 return;
         if (GetFlags() & ESceneElemFlags::RenderableDirty)
         {
-            m_spRenderMesh = m_spMesh->ToRenderMesh(pRenderer, pSceneCtx->m_spCurrentShader);
+            m_spRenderMesh = m_spMesh->ToRenderMesh(pRenderer, m_spShader);
             SetFlags(GetFlags() & ~ESceneElemFlags::RenderableDirty);
         }
         if (GetFlags() & ESceneElemFlags::MaterialDirty)
         {
-            m_spMesh->ToRenderMaterials(pRenderer, pSceneCtx->m_spCurrentShader, m_spRenderMesh);
+            m_spMesh->ToRenderMaterials(pRenderer, m_spShader, m_spRenderMesh);
             SetFlags(GetFlags() & ~ESceneElemFlags::MaterialDirty);
         }
         DirectX::XMMATRIX xm(
@@ -111,7 +109,7 @@ namespace Caustic
             spCtx->BeginEventInt(GetName().c_str(), 0);
         }
 #endif
-        m_spRenderMesh->Render(pRenderer, (IRenderMaterial*)nullptr, nullptr, pSceneCtx->m_lights, &xm);
+        m_spRenderMesh->Render(pRenderer, pRenderCtx, (IRenderMaterial*)nullptr, nullptr, pSceneCtx->m_lights, &xm);
 #ifdef _DEBUG
         if (spCtx)
             spCtx->EndEvent();

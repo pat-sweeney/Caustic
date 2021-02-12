@@ -871,7 +871,7 @@ namespace Caustic
     // Parameters:
     // pRenderer - D3D11 device/context to use
     //**********************************************************************
-    void CShader::BeginRender(IRenderer* pRenderer, IRenderMaterial* pFrontMaterial, IRenderMaterial* pBackMaterial, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld)
+    void CShader::BeginRender(IRenderer* pRenderer, IRenderMaterial* pMaterial, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld)
     {
         CComPtr<ID3D11DeviceContext> spCtx = pRenderer->GetContext();
 #ifdef _DEBUG
@@ -895,8 +895,8 @@ namespace Caustic
         
         if (hasVS || hasPS)
         {
-            if (pFrontMaterial)
-                pFrontMaterial->Render(pRenderer, lights, nullptr, this);
+            if (pMaterial)
+                pMaterial->Render(pRenderer, lights, nullptr, this);
             PushLights(lights);
         }
 

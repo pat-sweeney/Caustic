@@ -176,6 +176,7 @@ namespace Caustic
             {
                 std::string matname = line.substr(7);
                 spMaterial = CreateMaterialAttrib();
+                spMaterial->SetName(matname.c_str());
                 spMaterial->SetMaterialID(materialID);
                 materialID++;
                 m_matmap.insert(std::make_pair(matname, spMaterial));
@@ -335,7 +336,11 @@ namespace Caustic
                     spMaterial->SetScalar(L"bumpFactor", bumpScalar);
                 }
                 else if (*p == 'N' && p[1] == 's')
-                    spMaterial->SetScalar(L"specularExp", (float)atof(p + 3));
+                {
+                    float v = (float)atof(p + 3);
+                    FRGBAColor c(v, v, v, v);
+                    spMaterial->SetColor(L"specularExp", c);
+                }
                 else if (*p == 'K' && p[1] == 'a')
                 {
                     FRGBColor v;
@@ -379,7 +384,8 @@ namespace Caustic
                 {
                     p += 2;
                     float transparency = (float)atof(p);
-                    spMaterial->SetScalar(L"transparency", transparency);
+                    FRGBAColor c(transparency, transparency, transparency, transparency);
+                    spMaterial->SetColor(L"transparency", c);
                 }
             }
         }
@@ -404,6 +410,7 @@ namespace Caustic
                 int materialID = (m_matmap.find(m_materialName) == m_matmap.end()) ? 0 : m_matmap[m_materialName]->GetMaterialID();
                 CRefObj<ISubMesh> spSubMesh = Caustic::CreateSubMesh(m_Vertices, m_FaceVertIndices, materialID);
                 m_spMesh->AddSubMesh(spSubMesh);
+                spSubMesh->SetName(m_groupName.c_str());
                 m_Vertices.clear();
                 m_FaceVertIndices.clear();
                 foundFace = false;
@@ -427,7 +434,15 @@ namespace Caustic
                 ParseMaterial((const char*)spBuffer.get());
                 std::vector<CRefObj<IMaterialAttrib>> materials;
                 for (auto m : m_matmap)
-                    materials.push_back(m.second);
+                {
+                    // m_matmap is indexed based on materialName=>IMaterialAttrib. We want
+                    // materials to be indexed based on MaterialID=>IMaterialAttrib. Thus we
+                    // need to get the materialID from m and use it as the index into materials.
+                    uint32 materialID = m.second->GetMaterialID();
+                    if (materialID >= materials.size())
+                        materials.resize(materialID + 1, nullptr);
+                    materials[materialID] = m.second;
+                }
                 m_spMesh->SetMaterials(materials);
             }
             else if (line[0] == 'v' && line[1] == 'n')

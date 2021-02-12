@@ -25,13 +25,24 @@ namespace Caustic
         if (m_prerenderCallback)
             if (!m_prerenderCallback(pRenderCtx->GetCurrentPass()))
                 return;
-        CRefObj<IMaterialAttrib> spOldMaterial = pSceneCtx->m_spCurrentMaterial;
-        CRefObj<IShader> spOldShader = pSceneCtx->m_spCurrentShader;
-        pSceneCtx->m_spCurrentMaterial = m_spMaterial;
-        pSceneCtx->m_spCurrentShader = m_spShader;
+        if (m_spMaterial->GetIsTransparent() && pSceneCtx->m_CurrentPass != c_PassTransparent)
+            return;
+        
+        // TODO:
+        // Need to clean this up. In some ways the MaterialElem in the scene graph
+        // is kind of useless since in general the mesh itself has the materials on it
+        // already. However, I think it will probably be useful to keep this node as
+        // an override material mechanism. I need to give this more thought. For now,
+        // I've commented this out until I figure out how I want to handle materials
+        // inside the scene graph.
+
+        //CRefObj<IMaterialAttrib> spOldMaterial = pSceneCtx->m_spCurrentMaterial;
+        //CRefObj<IShader> spOldShader = pSceneCtx->m_spCurrentShader;
+        //pSceneCtx->m_spCurrentMaterial = m_spMaterial;
+        //pSceneCtx->m_spCurrentShader = m_spShader;
         CSceneGroupElem::Render(pRenderer, pRenderCtx, pSceneCtx);
-        pSceneCtx->m_spCurrentMaterial = spOldMaterial;
-        pSceneCtx->m_spCurrentShader = spOldShader;
+        //pSceneCtx->m_spCurrentMaterial = spOldMaterial;
+        //pSceneCtx->m_spCurrentShader = spOldShader;
         if (m_postrenderCallback)
             m_postrenderCallback(pRenderCtx->GetCurrentPass());
     }

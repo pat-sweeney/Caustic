@@ -64,6 +64,8 @@ namespace Caustic
     
     void CMaterialAttrib::SetColor(const wchar_t* pName, FRGBAColor& v)
     {
+        if (v.a < 1.0f || (v.r < 1.0f && (_wcsicmp(pName, L"alpha") == 0 || _wcsicmp(pName, L"transparency") == 0)))
+            SetIsTransparent(true);
         std::map<std::wstring, FRGBAColor>::iterator it = m_colors.find(pName);
         if (it != m_colors.end())
             it->second = v;
@@ -81,7 +83,7 @@ namespace Caustic
     
     void CMaterialAttrib::SetScalar(const wchar_t *pName, float s)
     {
-        if (s < 1.0f && _wcsicmp(pName, L"alpha") == 0)
+        if (s < 1.0f && (_wcsicmp(pName, L"alpha") == 0 || _wcsicmp(pName, L"transparency") == 0))
             SetIsTransparent(true);
         std::map<std::wstring, float>::iterator it = m_scalars.find(pName);
         if (it != m_scalars.end())

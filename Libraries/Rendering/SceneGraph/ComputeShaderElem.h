@@ -61,7 +61,7 @@ namespace Caustic
                 if (!m_prerenderCallback(pRenderCtx->GetCurrentPass()))
                     return;
             std::vector<CRefObj<ILight>> lights;
-            m_spComputeShader->BeginRender(pRenderer, nullptr, nullptr, lights, nullptr);
+            m_spComputeShader->BeginRender(pRenderer, nullptr, lights, nullptr);
             m_spComputeShader->EndRender(pRenderer);
             if (m_postrenderCallback)
                 m_postrenderCallback(pRenderCtx->GetCurrentPass());

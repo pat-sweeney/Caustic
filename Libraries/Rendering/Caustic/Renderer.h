@@ -221,6 +221,7 @@ namespace Caustic
         CComPtr<ID3D11Buffer> m_spQuadVB;                   // Vertex buffer used to draw screen space quads
         CComPtr<ID3D11Buffer> m_spQuadIB;                   // Index buffer used to draw screen space quads
         CRefObj<IShader> m_spQuadShader;                    // Shader used to draw screen space quads
+        CComPtr<ID3D11RasterizerState> m_spRasterizerState;
 
 #ifdef DIAGNOSTICS
         void CheckThread()

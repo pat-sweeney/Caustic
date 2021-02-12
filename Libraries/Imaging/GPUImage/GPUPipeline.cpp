@@ -125,17 +125,17 @@ namespace Caustic
     // Method: Process
     // See <IGPUPipeline::Process>
     //**********************************************************************
-    void CGPUPipeline::Process()
+    void CGPUPipeline::Process(IRenderer* pRenderer, IRenderCtx* pRenderCtx)
     {
         for (CRefObj<IGPUPipelineSinkNode> &pCurNode : m_sinkNodes)
         { 
             if (pCurNode->IsEnabled())
-                pCurNode->Process(this);
+                pCurNode->Process(this, pRenderer, pRenderCtx);
         }
     }
     
     //**********************************************************************
-    // Method: Process
+    // Method: GetRenderer
     // See <IGPUPipeline::GetRenderer>
     //**********************************************************************
     CRefObj<IRenderer> CGPUPipeline::GetRenderer()
@@ -253,27 +253,20 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // Method: GetOutputTexture
-    // See <IGPUPipelineNode::GetOutputTexture>
+    // Method: RenderQuad
+    // See <IGPUPipelineNode::RenderQuad>
     //**********************************************************************
     void CGPUPipeline::RenderQuad(IShader *pShader)
     {
         UINT offset = 0;
         UINT vertexSize = sizeof(GPUVertex);
-        CComPtr<ID3D11RasterizerState> spRasterState;
-        D3D11_RASTERIZER_DESC rasDesc;
-        ZeroMemory(&rasDesc, sizeof(rasDesc));
-        rasDesc.CullMode = D3D11_CULL_NONE;
-        rasDesc.DepthClipEnable = TRUE;
-        rasDesc.FillMode = D3D11_FILL_SOLID;
+
         CComPtr<ID3D11Device> spDevice = m_spRenderer->GetDevice();
         CComPtr<ID3D11DeviceContext> spCtx = m_spRenderer->GetContext();
-        spDevice->CreateRasterizerState(&rasDesc, &spRasterState);
-        spCtx->RSSetState(spRasterState);
         spCtx->IASetVertexBuffers(0, 1, &m_spFullQuadVB.p, &vertexSize, &offset);
         spCtx->IASetIndexBuffer(m_spFullQuadIB, DXGI_FORMAT_R32_UINT, 0);
         std::vector<CRefObj<ILight>> lights;
-        pShader->BeginRender(m_spRenderer, nullptr, nullptr, lights, nullptr);
+        pShader->BeginRender(m_spRenderer, nullptr, lights, nullptr);
         spCtx->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         spCtx->DrawIndexed(6, 0, 0);
         pShader->EndRender(m_spRenderer);
@@ -283,11 +276,10 @@ namespace Caustic
     // Method: Process
     // See <IGPUPipelineNode::Process>
     //**********************************************************************
-    void CGPUPipelineNodeBase::Process(IGPUPipeline *pPipeline)
+    void CGPUPipelineNodeBase::Process(IGPUPipeline *pPipeline, IRenderer* pRenderer, IRenderCtx* pRenderCtx)
     {
-        CRefObj<IRenderer> spRenderer = pPipeline->GetRenderer();
-        CComPtr<ID3D11Device> spDevice = spRenderer->GetDevice();
-        CComPtr<ID3D11DeviceContext> spCtx = spRenderer->GetContext();
+        CComPtr<ID3D11Device> spDevice = pRenderer->GetDevice();
+        CComPtr<ID3D11DeviceContext> spCtx = pRenderer->GetContext();
 
 #ifdef _DEBUG
         CComPtr<ID3D11DeviceContext2> spCtx2;
@@ -297,9 +289,21 @@ namespace Caustic
         std::wstring s(buf);
         spCtx2->BeginEventInt((std::wstring(L"GPUPipeline:")+m_spShader->Name()+L"-"+s).c_str(), 0);
 #endif
+        CComPtr<ID3D11RasterizerState> spOldRasterState;
+        spCtx->RSGetState(&spOldRasterState);
+
+        CComPtr<ID3D11RasterizerState> spRasterState;
+        D3D11_RASTERIZER_DESC rasDesc;
+        ZeroMemory(&rasDesc, sizeof(rasDesc));
+        rasDesc.CullMode = D3D11_CULL_NONE;
+        rasDesc.DepthClipEnable = TRUE;
+        rasDesc.FillMode = D3D11_FILL_SOLID;
+        spDevice->CreateRasterizerState(&rasDesc, &spRasterState);
+        spCtx->RSSetState(spRasterState);
+
 
         if (m_spOutputTexture == nullptr)
-            m_spOutputTexture = CCausticFactory::Instance()->CreateTexture(spRenderer, m_width, m_height, m_outputFormat, m_cpuFlags, m_bindFlags);
+            m_spOutputTexture = CCausticFactory::Instance()->CreateTexture(pRenderer, m_width, m_height, m_outputFormat, m_cpuFlags, m_bindFlags);
         
         if ( ! IsEnabled())
             return;
@@ -308,7 +312,7 @@ namespace Caustic
         std::vector<CRefObj<ITexture>> textures;
         for (auto spSourceNode : m_sourceNodes)
         {
-            spSourceNode.second.first->Process(pPipeline);
+            spSourceNode.second.first->Process(pPipeline, pRenderer, pRenderCtx);
             CRefObj<ITexture> spTexture = spSourceNode.second.first->GetOutputTexture(pPipeline);
             textures.push_back(spTexture);
         }
@@ -327,9 +331,9 @@ namespace Caustic
                 m_spShader->SetPSParam(hName, std::any(float(spTexture->GetHeight())));
                 if (spSourceNode.second.second.length() > 0)
                 {
-                    CRefObj<ISampler> spSampler = Caustic::CCausticFactory::Instance()->CreateSampler(spRenderer, spTexture);
-                    spSampler->SetAddressU(spRenderer, D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_BORDER);
-                    spSampler->SetAddressV(spRenderer, D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_BORDER);
+                    CRefObj<ISampler> spSampler = Caustic::CCausticFactory::Instance()->CreateSampler(pRenderer, spTexture);
+                    spSampler->SetAddressU(pRenderer, D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_BORDER);
+                    spSampler->SetAddressV(pRenderer, D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_BORDER);
                     m_spShader->SetPSParam(spSourceNode.second.second, std::any(CSamplerRef(spSampler)));
                 }
             }
@@ -373,6 +377,7 @@ namespace Caustic
             spCtx->RSSetViewports(numViewports, &oldViewport);
             spCtx->OMSetRenderTargets(1, &spOldRTV.p, spOldDSV);
         }
+        spCtx->RSSetState(spOldRasterState);
 #ifdef _DEBUG
         spCtx2->EndEvent();
 #endif
@@ -454,11 +459,10 @@ namespace Caustic
     // Method: Process
     // See <CGPUPipelineDepthMeshNode::Process>
     //**********************************************************************
-    void CGPUPipelineDepthMeshNode::Process(IGPUPipeline* pPipeline)
+    void CGPUPipelineDepthMeshNode::Process(IGPUPipeline* pPipeline, IRenderer* pRenderer, IRenderCtx* pRenderCtx)
     {
-        CRefObj<IRenderer> spRenderer = pPipeline->GetRenderer();
-        CComPtr<ID3D11Device> spDevice = spRenderer->GetDevice();
-        CComPtr<ID3D11DeviceContext> spCtx = spRenderer->GetContext();
+        CComPtr<ID3D11Device> spDevice = pRenderer->GetDevice();
+        CComPtr<ID3D11DeviceContext> spCtx = pRenderer->GetContext();
 
 #ifdef _DEBUG
         CComPtr<ID3D11DeviceContext2> spCtx2;
@@ -470,7 +474,7 @@ namespace Caustic
 #endif
 
         if (m_spOutputTexture == nullptr)
-            m_spOutputTexture = CCausticFactory::Instance()->CreateTexture(spRenderer, m_width, m_height, m_outputFormat, m_cpuFlags, m_bindFlags);
+            m_spOutputTexture = CCausticFactory::Instance()->CreateTexture(pRenderer, m_width, m_height, m_outputFormat, m_cpuFlags, m_bindFlags);
 
         if ( ! IsEnabled())
             return;
@@ -494,9 +498,9 @@ namespace Caustic
                 m_spShader->SetPSParam(spSourceNode.first, std::any(spTexture));
                 if (spSourceNode.second.second.length() > 0)
                 {
-                    CRefObj<ISampler> spSampler = Caustic::CCausticFactory::Instance()->CreateSampler(spRenderer, spTexture);
-                    spSampler->SetAddressU(spRenderer, D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_BORDER);
-                    spSampler->SetAddressV(spRenderer, D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_BORDER);
+                    CRefObj<ISampler> spSampler = Caustic::CCausticFactory::Instance()->CreateSampler(pRenderer, spTexture);
+                    spSampler->SetAddressU(pRenderer, D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_BORDER);
+                    spSampler->SetAddressV(pRenderer, D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_BORDER);
                     m_spShader->SetVSParam(spSourceNode.second.second, std::any(CSamplerRef(spSampler)));
                     m_spShader->SetPSParam(spSourceNode.second.second, std::any(CSamplerRef(spSampler)));
                 }
@@ -532,7 +536,7 @@ namespace Caustic
 
             DirectX::XMMATRIX mat = DirectX::XMMatrixIdentity();
             std::vector<CRefObj<ILight>> lights;
-            m_spMesh->Render(spRenderer, m_spShader, nullptr, lights, nullptr);
+            m_spMesh->Render(pRenderer, pRenderCtx, m_spShader, nullptr, lights, nullptr);
 
             spCtx->RSSetViewports(numViewports, &oldViewport);
             spCtx->OMSetRenderTargets(1, &spOldRTV.p, spOldDSV);
@@ -568,16 +572,15 @@ namespace Caustic
     // Method: Process
     // See <IGPUPipelineNode::Process>
     //**********************************************************************
-    void CGPUPipelineSinkNode::Process(IGPUPipeline *pPipeline)
+    void CGPUPipelineSinkNode::Process(IGPUPipeline *pPipeline, IRenderer* pRenderer, IRenderCtx* pRenderCtx)
     {
-        CRefObj<IRenderer> spRenderer = pPipeline->GetRenderer();
-        CComPtr<ID3D11DeviceContext> spCtx = spRenderer->GetContext();
+        CComPtr<ID3D11DeviceContext> spCtx = pRenderer->GetContext();
         assert(m_outputFormat == DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM || m_outputFormat == DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
         if (m_spOutputStagedTexture == nullptr)
-            m_spOutputStagedTexture = Caustic::CCausticFactory::Instance()->CreateTexture(spRenderer, m_width, m_height, m_outputFormat, D3D11_CPU_ACCESS_READ, (D3D11_BIND_FLAG)0);
+            m_spOutputStagedTexture = Caustic::CCausticFactory::Instance()->CreateTexture(pRenderer, m_width, m_height, m_outputFormat, D3D11_CPU_ACCESS_READ, (D3D11_BIND_FLAG)0);
         
         // First run the sink nodes shader
-        CGPUPipelineNodeBase::Process(pPipeline);
+        CGPUPipelineNodeBase::Process(pPipeline, pRenderer, pRenderCtx);
 
         spCtx->CopyResource(m_spOutputStagedTexture->GetD3DTexture(), m_spOutputTexture->GetD3DTexture());
     }

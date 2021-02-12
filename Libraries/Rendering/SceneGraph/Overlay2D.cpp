@@ -90,7 +90,7 @@ namespace Caustic
         spCtx->IASetVertexBuffers(0, 1, &m_spQuadVB.p, &vertexSize, &offset);
         spCtx->IASetIndexBuffer(m_spQuadIB, DXGI_FORMAT_R32_UINT, 0);
         std::vector<CRefObj<ILight>> lights;
-        m_spShader->BeginRender(pRenderer, nullptr, nullptr, lights, nullptr);
+        m_spShader->BeginRender(pRenderer, nullptr, lights, nullptr);
         spCtx->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         spCtx->DrawIndexed(6, 0, 0);
         m_spShader->EndRender(pRenderer);

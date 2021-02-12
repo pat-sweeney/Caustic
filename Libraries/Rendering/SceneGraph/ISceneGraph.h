@@ -86,13 +86,13 @@ namespace Caustic
 		// Property: m_spCurrentMaterial
 		// Defines the current material
 		//**********************************************************************
-		CRefObj<IMaterialAttrib> m_spCurrentMaterial;
+	//	CRefObj<IMaterialAttrib> m_spCurrentMaterial;
 
 		//**********************************************************************
 		// Property: m_spCurrentShader
 		// Defines the current shader
 		//**********************************************************************
-		CRefObj<Caustic::IShader> m_spCurrentShader;
+//		CRefObj<Caustic::IShader> m_spCurrentShader;
 	};
 
 	//**********************************************************************
@@ -354,6 +354,12 @@ namespace Caustic
 		// Updates the mesh elements underlying mesh object
 		//**********************************************************************
 		virtual void SetMesh(IMesh* pMesh) = 0;
+
+		//**********************************************************************
+		// Method: SetShader
+		// Assigns shader used for rendering this mesh
+		//**********************************************************************
+		virtual void SetShader(IShader* pShader) = 0;
 	};
 
 	//**********************************************************************

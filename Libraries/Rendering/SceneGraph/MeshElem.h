@@ -21,6 +21,7 @@ namespace Caustic
     {
         CRefObj<IMesh> m_spMesh;
         CRefObj<IRenderMesh> m_spRenderMesh;
+        CRefObj<IShader> m_spShader;
     public:
 		//**********************************************************************
 		// Constructor: CSceneMeshElem
@@ -65,5 +66,6 @@ namespace Caustic
         // ISceneMeshElem
         //**********************************************************************
         virtual void SetMesh(IMesh *pMesh) override;
+        virtual void SetShader(IShader* pShader) override { m_spShader = pShader; }
     };
 };

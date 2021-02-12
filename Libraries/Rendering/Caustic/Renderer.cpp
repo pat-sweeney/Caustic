@@ -74,7 +74,6 @@ namespace Caustic
         // Make sure rasterizer is setup the way we expect it to be
         //   - BackFace Culling on
         //   - Front Faces are counter clockwise
-        CComPtr<ID3D11RasterizerState> spRasterizerState;
         D3D11_RASTERIZER_DESC desc;
         desc.FrontCounterClockwise = true;
         desc.CullMode = D3D11_CULL_BACK;
@@ -86,8 +85,7 @@ namespace Caustic
         desc.MultisampleEnable = true;
         desc.SlopeScaledDepthBias = 0.0f;
         desc.ScissorEnable = false;
-        CT(m_spDevice->CreateRasterizerState(&desc, &spRasterizerState));
-        m_spContext->RSSetState(spRasterizerState);
+        CT(m_spDevice->CreateRasterizerState(&desc, &m_spRasterizerState));
     }
 
     //**********************************************************************
@@ -268,7 +266,7 @@ namespace Caustic
         pShader->SetVSParamFloat(L"maxu", maxU);
         pShader->SetVSParamFloat(L"maxv", maxV);
 
-        pShader->BeginRender(this, nullptr, nullptr, lights, nullptr);
+        pShader->BeginRender(this, nullptr, lights, nullptr);
         pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         pContext->DrawIndexed(6, 0, 0);
         pShader->EndRender(this);
@@ -413,7 +411,7 @@ namespace Caustic
         Float4 color(clr.x, clr.y, clr.z, clr.w);
         m_spLineShader->SetPSParam(L"color", std::any(color));
         std::vector<CRefObj<ILight>> lights;
-        m_spLineShader->BeginRender(this, nullptr, nullptr, lights, nullptr);
+        m_spLineShader->BeginRender(this, nullptr, lights, nullptr);
         pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
         pContext->Draw(2, 0);
         m_spLineShader->EndRender(this);
@@ -587,6 +585,7 @@ namespace Caustic
 
         m_spRenderCtx->SetDebugFlags(RenderCtxFlags::c_DisplayWorldAxis);
 #endif
+        m_spContext->RSSetState(m_spRasterizerState);
         if (m_spRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayWorldAxis)
         {
             DrawLine(Vector3(0.0f, 0.0f, 0.0f), Vector3(100.0f, 0.0f, 0.0f), Vector4(1.0f, 0.0f, 0.0f, 1.0f));
@@ -646,6 +645,27 @@ namespace Caustic
 #ifdef _DEBUG
                 spCtx2->BeginEventInt(L"TransparentPass", 0);
 #endif
+                // Setup blend state
+                CComPtr<ID3D11BlendState> spBlendState;
+                D3D11_BLEND_DESC blendState;
+                ZeroMemory(&blendState, sizeof(D3D11_BLEND_DESC));
+                blendState.AlphaToCoverageEnable = false;
+                blendState.IndependentBlendEnable = false;
+                blendState.RenderTarget[0].BlendEnable = true;
+                blendState.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+                blendState.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+                blendState.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+                blendState.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
+                blendState.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+                blendState.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+                blendState.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+                m_spDevice->CreateBlendState(&blendState, &spBlendState);
+                CComPtr<ID3D11BlendState> spOldBlendState;
+                float oldBlendFactor[4];
+                UINT oldSampleMask;
+                m_spContext->OMGetBlendState(&spOldBlendState, oldBlendFactor, &oldSampleMask);
+                m_spContext->OMSetBlendState(spBlendState, 0, 0xffffffff);
+
                 std::vector<int> order;
                 order.resize(m_singleObjs.size());
                 std::sort(m_singleObjs.begin(), m_singleObjs.end(),
@@ -661,6 +681,7 @@ namespace Caustic
                     }
                 );
                 DrawSceneObjects(pass, renderCallback);
+                m_spContext->OMSetBlendState(spOldBlendState, oldBlendFactor, oldSampleMask);
 #ifdef _DEBUG
                 spCtx2->EndEvent();
 #endif

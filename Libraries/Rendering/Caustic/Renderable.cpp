@@ -91,26 +91,7 @@ namespace Caustic
         if (md.m_numIndices > 0)
             spContext->IASetIndexBuffer(md.m_spIB, DXGI_FORMAT_R32_UINT, 0);
 
-        spShader->BeginRender(pRenderer, m_spFrontMaterial, m_spBackMaterial, lights, &m_xform);
-
-        if (pRenderCtx->PassBlendable())
-        {
-            CComPtr<ID3D11BlendState> spBlendState;
-            D3D11_BLEND_DESC blendState;
-            ZeroMemory(&blendState, sizeof(D3D11_BLEND_DESC));
-            blendState.AlphaToCoverageEnable = false;
-            blendState.IndependentBlendEnable = false;
-            blendState.RenderTarget[0].BlendEnable = true;
-            blendState.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-            blendState.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-            blendState.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-            blendState.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
-            blendState.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-            blendState.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-            blendState.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-            spDevice->CreateBlendState(&blendState, &spBlendState);
-            spContext->OMSetBlendState(spBlendState, 0, 0xffffffff);
-        }
+        spShader->BeginRender(pRenderer, m_spFrontMaterial /*, m_spBackMaterial */, lights, &m_xform);
 
         spContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         if (md.m_numIndices > 0)
@@ -150,7 +131,7 @@ namespace Caustic
             v = (pRenderCtx->GetDebugFlags() & RenderCtxFlags::c_DisplayNormalsAsLines) ? 1.0f : 0.0f;
             spShader->SetVSParam(L"drawNormals", std::any(v));
 
-            spShader->BeginRender(pRenderer, m_spFrontMaterial, m_spBackMaterial, lights, nullptr);
+            spShader->BeginRender(pRenderer, m_spFrontMaterial /*, m_spBackMaterial */, lights, nullptr);
             spContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
             spContext->DrawInstanced(md.m_numVertices, 1, 0, 0);
             spShader->EndRender(pRenderer);

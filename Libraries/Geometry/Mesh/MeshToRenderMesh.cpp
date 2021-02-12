@@ -264,6 +264,7 @@ namespace Caustic
 		BuildVertexBuffer(pRenderer, spShaderInfo, vertexReferenced, &md);
 		BuildIndexBuffer(pRenderer, vertexReferenced, &md);
         spRenderSubMesh->SetMeshData(md);
+		spRenderSubMesh->SetName(GetName().c_str());
 		return spRenderSubMesh;
 	}
 
@@ -280,9 +281,7 @@ namespace Caustic
 			CRefObj<IRenderMaterial> spRenderMaterial = spFactory->CreateRenderMaterial(pRenderer, spMaterialAttrib, pShader);
 			spRenderSubMesh->SetFrontMaterial(spRenderMaterial);
 
-			// TODO: Add support for back face materials (for now just use same
-			// material as front faces)
-			spRenderSubMesh->SetBackMaterial(spRenderMaterial);
+			// For now assume now back material
 		}
 	}
 

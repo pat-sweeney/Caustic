@@ -69,7 +69,7 @@ namespace Caustic
         }
 
         std::vector<CRefObj<ILight>> lights;
-        m_spComputeShader->BeginRender(pRenderer, nullptr, nullptr, lights, nullptr);
+        m_spComputeShader->BeginRender(pRenderer, nullptr, lights, nullptr);
         m_spComputeShader->EndRender(pRenderer);
         return std::any(nullptr); // TODO: Return output buffer
     }

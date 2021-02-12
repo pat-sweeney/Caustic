@@ -119,8 +119,10 @@ namespace Caustic
         //
         // Parameters:
         // pPipeline - pipeline to run this node on
+        // pRenderer - current renderer
+        // pRenderCtx - current render context
         //**********************************************************************
-        virtual void Process(IGPUPipeline *pPipeline) = 0;
+        virtual void Process(IGPUPipeline *pPipeline, IRenderer* pRenderer, IRenderCtx* pRenderCtx) = 0;
     };
 
     //**********************************************************************
@@ -185,8 +187,12 @@ namespace Caustic
         //**********************************************************************
         // Method: Process
         // Executes the pipeline
+        //
+        // Parameters:
+        // pRenderer - renderer being used
+        // pRenderCtx - current render context
         //**********************************************************************
-        virtual void Process() = 0;
+        virtual void Process(IRenderer *pRenderer, IRenderCtx *pRenderCtx) = 0;
 
         //**********************************************************************
         // Method: CreateSourceNode

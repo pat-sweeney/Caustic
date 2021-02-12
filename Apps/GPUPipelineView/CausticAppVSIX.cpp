@@ -190,6 +190,7 @@ void CApp::Setup3DScene(IRenderWindow *pRenderWindow)
     app.spCubeElem = spSceneFactory->CreateMeshElem();
     app.spCubeElem->SetMesh(spCube);
     app.spCubeElem->SetName(L"Cube");
+    app.spCubeElem->SetShader(app.spModelShader);
 
     // Create material for the cube
     app.spCubeMaterialElem = spSceneFactory->CreateMaterialElem();
@@ -209,7 +210,8 @@ void CApp::Setup3DScene(IRenderWindow *pRenderWindow)
     app.spPlaneElem = spSceneFactory->CreateMeshElem();
     app.spPlaneElem->SetName(L"DesktopPlane");
     app.spPlaneElem->SetMesh(spPlane);
-    
+    app.spPlaneElem->SetShader(app.spModelShader);
+
     // Create plane material
     app.spPlaneMaterialElem = spSceneFactory->CreateMaterialElem();
     app.spPlaneMaterialElem->SetName(L"DesktopPlaneMaterial");
@@ -228,18 +230,13 @@ void CApp::Setup3DScene(IRenderWindow *pRenderWindow)
 
     // Load our model for our lightbulb
     CRefObj<IMesh> spLightBulbMesh = Caustic::MeshImport::LoadObj(L"j:\\models\\LightBulb\\Lightbulb_General_Poly_OBJ.obj");
+    app.spLightShader = spRenderWindow->GetRenderer()->GetShaderMgr()->FindShader(L"ModelMesh");
     app.spLightBulbElem = spSceneFactory->CreateMeshElem();
     app.spLightBulbElem->SetMesh(spLightBulbMesh);
+    app.spLightBulbElem->SetShader(app.spLightShader);
     app.spLightBulbElem->SetName(L"LightBulb");
     app.spLightBulbMaterialElem = spSceneFactory->CreateMaterialElem();
     app.spLightBulbMaterialElem->SetName(L"LightBulbMaterialElem");
-    CRefObj<IMaterialAttrib> spLightBulbMaterial = spCausticFactory->CreateMaterialAttrib();
-    FRGBColor lightAmbient(1.0f, 1.0f, 1.0f);
-    FRGBColor lightDiffuse(1.0f, 1.0f, 1.0f);
-    spLightBulbMaterial->SetColor(L"ambientColor", lightAmbient);
-    spLightBulbMaterial->SetColor(L"diffuseColor", lightDiffuse);
-    app.spLightBulbMaterialElem->SetMaterial(spLightBulbMaterial);
-    app.spLightShader = spRenderWindow->GetRenderer()->GetShaderMgr()->FindShader(L"DefaultMesh");
     app.spLightBulbMaterialElem->SetShader(app.spLightShader);
     app.spLightBulbMaterialElem->AddChild(app.spLightBulbElem);
     app.m_spLightCollectionElem->AddChild(app.spLightBulbMaterialElem);
@@ -312,7 +309,7 @@ void CApp::DrawLine(Vector3 p1, Vector3 p2)
     std::any clr(color);
     app.spLineShader->SetPSParam(L"color", clr);
     std::vector<CRefObj<ILight>> lights;
-    app.spLineShader->BeginRender(app.spRenderer, nullptr, nullptr, lights, nullptr);
+    app.spLineShader->BeginRender(app.spRenderer, nullptr, lights, nullptr);
     pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
     pContext->Draw(2, 0);
     app.spLineShader->EndRender(app.spRenderer);
@@ -451,13 +448,13 @@ void CApp::InitializeCaustic(HWND hwnd)
                      // Run the pipeline. Normally we would run spGPUPipeline->Process() however, we don't have
                      // any sink nodes in our graph (GPUPipeline::Process() runs the sink nodes). So, we need
                      // to explicitly run each end point of the graph.
-                     app.spColor2Depth->Process(app.spGPUPipeline);
+                     app.spColor2Depth->Process(app.spGPUPipeline, pRenderer, pRenderCtx);
                      if (app.smooth)
-                         app.spDepthOfFieldFilled->Process(app.spGPUPipeline);
+                         app.spDepthOfFieldFilled->Process(app.spGPUPipeline, pRenderer, pRenderCtx);
                      else
-                         app.spDepthOfField->Process(app.spGPUPipeline);
+                         app.spDepthOfField->Process(app.spGPUPipeline, pRenderer, pRenderCtx);
                      if (app.displayNorms)
-                         app.spNormNode->Process(app.spGPUPipeline);
+                         app.spNormNode->Process(app.spGPUPipeline, pRenderer, pRenderCtx);
 
                      //**********************************************************************
                      // First run preprocess step to populate the depth buffer with depth from the camera

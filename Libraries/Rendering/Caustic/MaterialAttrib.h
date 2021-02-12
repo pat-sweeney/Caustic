@@ -24,6 +24,7 @@ namespace Caustic
     //**********************************************************************
     struct CMaterialAttrib : public IMaterialAttrib, public CRefCount
     {
+        std::string m_name;
         std::map<std::wstring, FRGBAColor> m_colors;
         std::map<std::wstring, float> m_scalars;
         std::map<std::wstring, std::pair<CRefObj<IImage>, EShaderAccess>> m_textures;
@@ -48,6 +49,8 @@ namespace Caustic
         //**********************************************************************
         // IMaterialAttrib
         //**********************************************************************
+        virtual void SetName(const char* pName) override { m_name = std::string(pName); }
+        virtual std::string GetName() override { return m_name; }
         virtual bool GetIsTransparent() override { return m_isTransparent; }
         virtual void SetIsTransparent(bool isTransparent) override { m_isTransparent = isTransparent; }
         virtual bool GetIsShadowReceiver() override { return m_isShadowReceiver; }

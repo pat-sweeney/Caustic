@@ -66,7 +66,7 @@ namespace Caustic
         virtual uint32 GetOutputWidth() override { return m_width; }
         virtual uint32 GetOutputHeight() override { return m_height; }
         virtual CRefObj<ITexture> GetOutputTexture(IGPUPipeline* pPipeline) override;
-        virtual void Process(IGPUPipeline* pPipeline) override;
+        virtual void Process(IGPUPipeline* pPipeline, IRenderer* pRenderer, IRenderCtx* pRenderCtx) override;
     };
 
     //**********************************************************************
@@ -103,7 +103,7 @@ namespace Caustic
         virtual uint32 GetOutputWidth() override { return CGPUPipelineNodeBase::GetOutputWidth(); }
         virtual uint32 GetOutputHeight() override { return CGPUPipelineNodeBase::GetOutputHeight(); }
         virtual CRefObj<ITexture> GetOutputTexture(IGPUPipeline *pPipeline) override { return CGPUPipelineNodeBase::GetOutputTexture(pPipeline); }
-        virtual void Process(IGPUPipeline *pPipeline) override { CGPUPipelineNodeBase::Process(pPipeline); }
+        virtual void Process(IGPUPipeline *pPipeline, IRenderer* pRenderer, IRenderCtx* pRenderCtx) override { CGPUPipelineNodeBase::Process(pPipeline, pRenderer, pRenderCtx); }
     };
 
     //**********************************************************************
@@ -139,7 +139,7 @@ namespace Caustic
         virtual uint32 GetOutputWidth() override { return CGPUPipelineNodeBase::GetOutputWidth(); }
         virtual uint32 GetOutputHeight() override { return CGPUPipelineNodeBase::GetOutputHeight(); }
         virtual CRefObj<ITexture> GetOutputTexture(IGPUPipeline* pPipeline) override { return CGPUPipelineNodeBase::GetOutputTexture(pPipeline); }
-        virtual void Process(IGPUPipeline* pPipeline) override;
+        virtual void Process(IGPUPipeline* pPipeline, IRenderer* pRenderer, IRenderCtx* pRenderCtx) override;
     };
 
     //**********************************************************************
@@ -174,7 +174,7 @@ namespace Caustic
         virtual uint32 GetOutputWidth() override { return CGPUPipelineNodeBase::GetOutputWidth(); }
         virtual uint32 GetOutputHeight() override { return CGPUPipelineNodeBase::GetOutputHeight(); }
         virtual CRefObj<ITexture> GetOutputTexture(IGPUPipeline *pPipeline) override;
-        virtual void Process(IGPUPipeline *pPipeline) override { }
+        virtual void Process(IGPUPipeline *pPipeline, IRenderer* pRenderer, IRenderCtx* pRenderCtx) override { }
 
         //**********************************************************************
         // IGPUPipelineSourceNode
@@ -217,7 +217,7 @@ namespace Caustic
         { 
             return m_spOutputStagedTexture;
         }
-        virtual void Process(IGPUPipeline *pPipeline) override;
+        virtual void Process(IGPUPipeline *pPipeline, IRenderer* pRenderer, IRenderCtx* pRenderCtx) override;
         
         //**********************************************************************
         // IGPUPipelineSinkNode
@@ -253,7 +253,7 @@ namespace Caustic
         // IGPUPipeline
         //**********************************************************************
         virtual CRefObj<IRenderer> GetRenderer() override;
-        virtual void Process() override;
+        virtual void Process(IRenderer* pRenderer, IRenderCtx* pRenderCtx) override;
         virtual void RenderQuad(IShader* pShader) override;
         virtual CRefObj<IGPUPipelineSourceNode> CreateSourceNode(const wchar_t* pName, IImage *pImage, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM) override;
         virtual CRefObj<IGPUPipelineSinkNode> CreateSinkNode(const wchar_t* pName, IShader *pShader, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM) override;

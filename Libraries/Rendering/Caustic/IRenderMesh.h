@@ -32,6 +32,9 @@ namespace Caustic
     //**********************************************************************
 	struct IRenderSubMesh : public IRefCount
 	{
+        virtual void SetName(const char* pName) = 0;
+        virtual std::string GetName() = 0;
+
         //**********************************************************************
         // Method: GetMeshFlags
         // Returns:
@@ -128,12 +131,13 @@ namespace Caustic
         //
         // Parameters:
         // pRenderer - Renderer to use for rendering the mesh
+        // pRenderCtx - render context
         // pFrontMaterialOverride - material to use to override mesh's material. Maybe nullptr.
         // pBackMaterialOverride - material to use to override mesh's material. Maybe nullptr.
         // lights - List of lights to use
         // pWorld - world matrix. Maybe nullptr
         //**********************************************************************
-        virtual void Render(IRenderer* pRenderer, IRenderMaterial* pFrontMaterialOverride, IRenderMaterial* pBackMaterialOverride, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld) = 0;
+        virtual void Render(IRenderer* pRenderer, IRenderCtx *pRenderCtx, IRenderMaterial* pFrontMaterialOverride, IRenderMaterial* pBackMaterialOverride, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld) = 0;
 
         //**********************************************************************
         // Method: Render
@@ -141,12 +145,13 @@ namespace Caustic
         //
         // Parameters:
         // pRenderer - Renderer to use for rendering the mesh
+        // pRenderCtx - render context
         // pShader - Shader to use
         // pMaterial - Material to use
         // lights - List of lights to use
         // pWorld - world matrix. Maybe nullptr
         //**********************************************************************
-        virtual void Render(IRenderer* pRenderer, IShader* pShader, IRenderMaterial* pMaterial, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld) = 0;
+        virtual void Render(IRenderer* pRenderer, IRenderCtx *pRenderCtx, IShader* pShader, IRenderMaterial* pMaterial, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld) = 0;
 	};
 
 	//**********************************************************************
@@ -228,12 +233,13 @@ namespace Caustic
         //
         // Parameters:
         // pRenderer - renderer to use
+        // pRenderCtx - render context
         // pFrontMaterialOverride - material to use to override mesh's material. Maybe nullptr.
         // pBackMaterialOverride - material to use to override mesh's material. Maybe nullptr.
         // lights - list of lights to use
         // pWorld - world matrix
         //**********************************************************************
-        virtual void Render(IRenderer* pRenderer, IRenderMaterial* pFrontMaterialOverride, IRenderMaterial* pBackMaterialOverride, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld) = 0;
+        virtual void Render(IRenderer* pRenderer, IRenderCtx *pRenderCtx, IRenderMaterial* pFrontMaterialOverride, IRenderMaterial* pBackMaterialOverride, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld) = 0;
 
         //**********************************************************************
         // Method: Render
@@ -246,7 +252,7 @@ namespace Caustic
         // lights - list of lights to use
         // pWorld - world matrix
         //**********************************************************************
-        virtual void Render(IRenderer* pRenderer, IShader *pShader, IRenderMaterial*pMaterial, std::vector<CRefObj<ILight>> &lights, DirectX::XMMATRIX* pWorld) = 0;
+        virtual void Render(IRenderer* pRenderer, IRenderCtx* pRenderCtx, IShader *pShader, IRenderMaterial*pMaterial, std::vector<CRefObj<ILight>> &lights, DirectX::XMMATRIX* pWorld) = 0;
     };
 
     CAUSTICAPI CRefObj<IRenderSubMesh> BuildRenderSubMesh(IRenderer* pRenderer,

@@ -18,9 +18,16 @@ struct VSOutput
     float2 uvs : TEXCOORD2; // UV coordinates
 };
 
-Texture2D diffuseTexture : register(t0);
+Texture2D ambientTexture : register(t0);
+Texture2D diffuseTexture : register(t1);
+Texture2D specularTexture : register(t2);
+Texture2D specularExpTexture : register(t3);
+Texture2D emissiveTexture : register(t4);
+Texture2D transparencyTexture : register(t5);
+Texture2D bumpTexture : register(t6);
+Texture2D reflectionTexture : register(t7);
+Texture2D shadowMapTexture : register(t8);
 SamplerState diffuseSampler : register(s0);
-Texture2D shadowMapTexture : register(t1);
 SamplerState shadowMapSampler : register(s1);
 
 cbuffer PS_CONSTANT_BUFFER
@@ -33,9 +40,13 @@ cbuffer PS_CONSTANT_BUFFER
     float4 specularExp;
     float4 lightPosWS[MAX_LIGHTS];
     float4 transparency;
+    float bumpFactor;
+    float dummy1;
+    float dummy2;
+    float dummy3;
+    float4 shadowMapBounds;
     matrix viewInv; // View => World
     int numLights;
-    float4 shadowMapBounds;
 };
 
 float4 PS(VSOutput p) : SV_Target
@@ -48,6 +59,19 @@ float4 PS(VSOutput p) : SV_Target
     // Check if point is in shadow
     //float shadowDist = shadowMapTexture.Sample(shadowMapSampler, p.uvs);
 
+    float4 ambientTexClr = ambientTexture.Sample(diffuseSampler, p.uvs);
+    float4 diffuseTexClr = diffuseTexture.Sample(diffuseSampler, p.uvs);
+    float4 specularTexClr = specularTexture.Sample(diffuseSampler, p.uvs);
+    float4 specularExpTexClr = specularExpTexture.Sample(diffuseSampler, p.uvs);
+    float4 emissiveTexClr = emissiveTexture.Sample(diffuseSampler, p.uvs);
+    float4 transparencyTexClr = transparencyTexture.Sample(diffuseSampler, p.uvs);
+    float4 bumpClr = bumpTexture.Sample(diffuseSampler, p.uvs);
+    float4 reflectionTexClr = reflectionTexture.Sample(diffuseSampler, p.uvs);
+    float4 ambientClr =  ambientTexClr + ambientColor;
+    float4 diffuseClr = diffuseTexClr + diffuseColor;
+    float4 specularClr = specularTexClr + specularColor;
+    float4 specularExpClr = specularExpTexClr + specularExp;
+    float4 transparencyClr = transparencyTexClr + transparency;
     for (int i = 0; i < numLights; i++)
     {
         float3 lightDirWS = normalize(lightPosWS[i].xyz - p.posWS);
@@ -56,15 +80,14 @@ float4 PS(VSOutput p) : SV_Target
         float dp = saturate(dot(normWS, lightDirWS));
         
         // Diffuse
-        float4 clr = diffuseTexture.Sample(diffuseSampler, p.uvs);
-        color.xyz += clr.zyx * dp * lightColor[i].xyz;
+        color.xyz += diffuseClr.xzy * dp * lightColor[i].xyz;
 
         // specular
         float3 reflectWS = reflect(lightDirWS, normWS);
         float specdp = saturate(dot(reflectWS, -viewDirWS));
-        float spec = pow(specdp, specularExp.x);
+        float3 spec = pow(specdp.xxx, specularExpClr.xyz);
         color.xyz += specularColor.xyz * spec * lightColor[i].xyz;
     }
-    color.xyz += ambientColor.xyz;
-    return float4(color.xyz, transparency.x);
+    color.xyz += ambientClr.xyz;
+    return float4(color.xyz, transparencyClr.x);
 }

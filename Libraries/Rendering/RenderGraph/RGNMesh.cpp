@@ -77,9 +77,9 @@ namespace Caustic
             }
             m_lastEpochModified = pRenderCtx->GetEpoch();
         }
-        m_spRenderMesh->Render(pRenderer, spFrontMaterial, spBackMaterial, m_lights, nullptr);
+        m_spRenderMesh->Render(pRenderer, pRenderCtx, spFrontMaterial, spBackMaterial, m_lights, nullptr);
         if (spBackMaterial)
-            m_spRenderMesh->Render(pRenderer, spFrontMaterial, spBackMaterial, m_lights, nullptr);
+            m_spRenderMesh->Render(pRenderer, pRenderCtx, spFrontMaterial, spBackMaterial, m_lights, nullptr);
         return std::any();
     }
 }

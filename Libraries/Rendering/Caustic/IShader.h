@@ -110,7 +110,7 @@ namespace Caustic
         // lights - list of lights to use
         // pWorld - matrix to apply
         //**********************************************************************
-        virtual void BeginRender(IRenderer *pRenderer, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, std::vector<CRefObj<ILight>> &lights, DirectX::XMMATRIX *pWorld) = 0;
+        virtual void BeginRender(IRenderer *pRenderer, IRenderMaterial *pMaterial, std::vector<CRefObj<ILight>> &lights, DirectX::XMMATRIX *pWorld) = 0;
 
         //**********************************************************************
         // Method: SetPSParam

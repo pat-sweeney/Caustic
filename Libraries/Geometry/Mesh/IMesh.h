@@ -192,6 +192,8 @@ namespace Caustic
     //**********************************************************************
     struct ISubMesh : public ISerialize
     {
+        virtual void SetName(const char* pName) = 0;
+        virtual std::string GetName() = 0;
         virtual uint32 GetNumberFaces() = 0;
         virtual CFace *GetFace(uint32 index) = 0;
         virtual uint32 GetNumberVertices() = 0;

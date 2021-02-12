@@ -90,8 +90,7 @@ namespace Caustic
                 spShader->SetPSParam(name, std::any(sv));
                 });
             m_spMaterial->EnumerateScalars([spShader](std::wstring name, float v) {
-                Float4 sv(v, v, v, 1.0);
-                spShader->SetPSParam(name, std::any(sv));
+                spShader->SetPSParam(name, std::any(v));
                 });
             if (m_spMaterial->GetIsShadowReceiver())
             {
