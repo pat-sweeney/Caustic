@@ -79,6 +79,8 @@ namespace Caustic
 
     void CSceneMeshElem::Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx)
     {
+        if (!(m_passes & pRenderCtx->GetCurrentPass()))
+            return;
         if (pSceneCtx->m_CurrentPass == c_PassShadow && !pSceneCtx->m_inShadowLightGroup)
             return; // We are in the middle of a shadow pass, but we are not under any lights
 

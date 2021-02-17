@@ -68,6 +68,8 @@ namespace Caustic
 
     void CSceneGraph::Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx)
     {
+        if (!(m_passes & pRenderCtx->GetCurrentPass()))
+            return;
         Lock();
 #ifdef _DEBUG
         pRenderer->BeginMarker(L"SceneGraph::Render");

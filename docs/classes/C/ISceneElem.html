@@ -63,10 +63,22 @@
  <div class="CBody"><p>Renders the current element</p></div>
 </div>
 
-<a name="GetBBox"></a><a name="Topic1135"></a><div class="CTopic TFunction LC last">
+<a name="GetBBox"></a><a name="Topic1305"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetBBox</div>
- <div id="NDPrototype1135" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> GetBBox(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:BBox3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,191);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >BBox3</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pBBox</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div id="NDPrototype1305" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> GetBBox(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:BBox3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,191);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >BBox3</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pBBox</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
  <div class="CBody"><p>Returns the bounding box of this scene element</p></div>
+</div>
+
+<a name="SetInPass"></a><a name="Topic1307"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">SetInPass</div>
+ <div id="NDPrototype1307" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetInPass(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">pass</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Sets which render passes this element is rendered in</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pass<div class="CDLParameterType"><span class="SHKeyword">uint32</span></div></td><td class="CDLDefinition"><p>pass to render this element in</p></td></tr></table></div>
+</div>
+
+<a name="GetInPass"></a><a name="Topic1321"></a><div class="CTopic TFunction LC last">
+ <div class="CTitle">GetInPass</div>
+ <div id="NDPrototype1321" class="NDPrototype NoParameterForm"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetInPass() = <span class="SHNumber">0</span></div>
+ <div class="CBody"><p>Gets which render passes this element is rendered in</p><div class="CHeading">Returns</div><p>mask indicating which passes this element is rendered in</p></div>
 </div>
 
 </body></html>

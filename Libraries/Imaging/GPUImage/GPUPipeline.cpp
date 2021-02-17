@@ -272,14 +272,15 @@ namespace Caustic
         pShader->EndRender(m_spRenderer);
     }
 
-    //**********************************************************************
-    // Method: Process
-    // See <IGPUPipelineNode::Process>
-    //**********************************************************************
-    void CGPUPipelineNodeBase::Process(IGPUPipeline *pPipeline, IRenderer* pRenderer, IRenderCtx* pRenderCtx)
+    void CGPUPipelineNodeBase::ProcessInternal(IGPUPipeline* pPipeline, IRenderer* pRenderer, IRenderCtx* pRenderCtx,
+        std::function<void()> customRender)
     {
         CComPtr<ID3D11Device> spDevice = pRenderer->GetDevice();
         CComPtr<ID3D11DeviceContext> spCtx = pRenderer->GetContext();
+
+        if (m_epoch == pPipeline->GetCurrentEpoch())
+            return;
+        m_epoch = pPipeline->GetCurrentEpoch();
 
 #ifdef _DEBUG
         CComPtr<ID3D11DeviceContext2> spCtx2;
@@ -287,7 +288,7 @@ namespace Caustic
         wchar_t buf[1024];
         swprintf_s(buf, L"%d", rand());
         std::wstring s(buf);
-        spCtx2->BeginEventInt((std::wstring(L"GPUPipeline:")+m_spShader->Name()+L"-"+s).c_str(), 0);
+        spCtx2->BeginEventInt((std::wstring(L"GPUPipeline:") + m_spShader->Name() + L"-" + s).c_str(), 0);
 #endif
         CComPtr<ID3D11RasterizerState> spOldRasterState;
         spCtx->RSGetState(&spOldRasterState);
@@ -301,13 +302,12 @@ namespace Caustic
         spDevice->CreateRasterizerState(&rasDesc, &spRasterState);
         spCtx->RSSetState(spRasterState);
 
-
         if (m_spOutputTexture == nullptr)
             m_spOutputTexture = CCausticFactory::Instance()->CreateTexture(pRenderer, m_width, m_height, m_outputFormat, m_cpuFlags, m_bindFlags);
-        
-        if ( ! IsEnabled())
+
+        if (!IsEnabled())
             return;
-        
+
         // Get the input textures from the earlier nodes in the pipeline
         std::vector<CRefObj<ITexture>> textures;
         for (auto spSourceNode : m_sourceNodes)
@@ -324,17 +324,24 @@ namespace Caustic
             for (auto spSourceNode : m_sourceNodes)
             {
                 CRefObj<ITexture> spTexture = textures[i++];
-                m_spShader->SetPSParam(spSourceNode.first, std::any(spTexture));
-                std::wstring wName = std::wstring(L"_") + spSourceNode.first + std::wstring(L"Width");
-                m_spShader->SetPSParam(wName, std::any(float(spTexture->GetWidth())));
-                std::wstring hName = std::wstring(L"_") + spSourceNode.first + std::wstring(L"Height");
-                m_spShader->SetPSParam(hName, std::any(float(spTexture->GetHeight())));
-                if (spSourceNode.second.second.length() > 0)
+                if (spTexture)
                 {
-                    CRefObj<ISampler> spSampler = Caustic::CCausticFactory::Instance()->CreateSampler(pRenderer, spTexture);
-                    spSampler->SetAddressU(pRenderer, D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_BORDER);
-                    spSampler->SetAddressV(pRenderer, D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_BORDER);
-                    m_spShader->SetPSParam(spSourceNode.second.second, std::any(CSamplerRef(spSampler)));
+                    m_spShader->SetPSParam(spSourceNode.first, std::any(spTexture));
+                    m_spShader->SetVSParam(spSourceNode.first, std::any(spTexture));
+                    std::wstring wName = std::wstring(L"_") + spSourceNode.first + std::wstring(L"Width");
+                    m_spShader->SetPSParam(wName, std::any(float(spTexture->GetWidth())));
+                    m_spShader->SetVSParam(wName, std::any(float(spTexture->GetWidth())));
+                    std::wstring hName = std::wstring(L"_") + spSourceNode.first + std::wstring(L"Height");
+                    m_spShader->SetPSParam(hName, std::any(float(spTexture->GetHeight())));
+                    m_spShader->SetVSParam(hName, std::any(float(spTexture->GetHeight())));
+                    if (spSourceNode.second.second.length() > 0)
+                    {
+                        CRefObj<ISampler> spSampler = Caustic::CCausticFactory::Instance()->CreateSampler(pRenderer, spTexture);
+                        spSampler->SetAddressU(pRenderer, D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_BORDER);
+                        spSampler->SetAddressV(pRenderer, D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_BORDER);
+                        m_spShader->SetVSParam(spSourceNode.second.second, std::any(CSamplerRef(spSampler)));
+                        m_spShader->SetPSParam(spSourceNode.second.second, std::any(CSamplerRef(spSampler)));
+                    }
                 }
             }
 
@@ -368,11 +375,16 @@ namespace Caustic
 
             std::any w(viewport.Width);
             m_spShader->SetPSParam(L"_imageWidth", w);
+            m_spShader->SetVSParam(L"_imageWidth", w);
             std::any h(viewport.Height);
             m_spShader->SetPSParam(L"_imageHeight", h);
+            m_spShader->SetVSParam(L"_imageHeight", h);
 
             // Draw full screen quad using shader
-            pPipeline->RenderQuad(m_spShader);
+            if (customRender != nullptr)
+                customRender();
+            else
+                pPipeline->RenderQuad(m_spShader);
 
             spCtx->RSSetViewports(numViewports, &oldViewport);
             spCtx->OMSetRenderTargets(1, &spOldRTV.p, spOldDSV);
@@ -384,14 +396,24 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Method: Process
+    // See <IGPUPipelineNode::Process>
+    //**********************************************************************
+    void CGPUPipelineNodeBase::Process(IGPUPipeline *pPipeline, IRenderer* pRenderer, IRenderCtx* pRenderCtx)
+    {
+        ProcessInternal(pPipeline, pRenderer, pRenderCtx, nullptr);
+    }
+
+    //**********************************************************************
     CGPUPipelineDepthMeshNode::CGPUPipelineDepthMeshNode(
-        IRenderer *pRenderer, IShader *pShader,
+        IRenderer* pRenderer, IShader* pShader,
         uint32 depthInputWidth, uint32 depthInputHeight,
         uint32 outputColorWidth, uint32 outputColorHeight,
-        CRefObj<ITexture> spRayTex, Matrix4x4 &extrinsics, CameraIntrinsics& intrinsics,
+        CRefObj<ITexture> spRayTex, Matrix4x4& extrinsics, CameraIntrinsics& intrinsics,
         float minDepth, float maxDepth,
         DXGI_FORMAT format) :
-        CGPUPipelineNodeBase(outputColorWidth, outputColorHeight, format)
+        CGPUPipelineNodeBase(outputColorWidth, outputColorHeight, format),
+        m_epoch(0)
     {
         CRefObj<ICausticFactory> spFactory = Caustic::CreateCausticFactory();
         SetShader(pShader);
@@ -461,91 +483,14 @@ namespace Caustic
     //**********************************************************************
     void CGPUPipelineDepthMeshNode::Process(IGPUPipeline* pPipeline, IRenderer* pRenderer, IRenderCtx* pRenderCtx)
     {
-        CComPtr<ID3D11Device> spDevice = pRenderer->GetDevice();
-        CComPtr<ID3D11DeviceContext> spCtx = pRenderer->GetContext();
-
-#ifdef _DEBUG
-        CComPtr<ID3D11DeviceContext2> spCtx2;
-        CT(spCtx->QueryInterface<ID3D11DeviceContext2>(&spCtx2));
-        wchar_t buf[1024];
-        swprintf_s(buf, L"%d", rand());
-        std::wstring s(buf);
-        spCtx2->BeginEventInt((std::wstring(L"GPUPipeline:") + m_spShader->Name() + L"-" + s).c_str(), 0);
-#endif
-
-        if (m_spOutputTexture == nullptr)
-            m_spOutputTexture = CCausticFactory::Instance()->CreateTexture(pRenderer, m_width, m_height, m_outputFormat, m_cpuFlags, m_bindFlags);
-
-        if ( ! IsEnabled())
-            return;
-        
-        // Get the input textures from the earlier nodes in the pipeline
-        std::vector<CRefObj<ITexture>> textures;
-        for (auto spSourceNode : m_sourceNodes)
-        {
-            CRefObj<ITexture> spTexture = spSourceNode.second.first->GetOutputTexture(pPipeline);
-            textures.push_back(spTexture);
-        }
-
-        if (m_spShader)
-        {
-            // Set the input from earlier nodes as our source textures in our shader
-            int i = 0;
-            for (auto spSourceNode : m_sourceNodes)
-            {
-                CRefObj<ITexture> spTexture = textures[i++];
-                m_spShader->SetVSParam(spSourceNode.first, std::any(spTexture));
-                m_spShader->SetPSParam(spSourceNode.first, std::any(spTexture));
-                if (spSourceNode.second.second.length() > 0)
-                {
-                    CRefObj<ISampler> spSampler = Caustic::CCausticFactory::Instance()->CreateSampler(pRenderer, spTexture);
-                    spSampler->SetAddressU(pRenderer, D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_BORDER);
-                    spSampler->SetAddressV(pRenderer, D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_BORDER);
-                    m_spShader->SetVSParam(spSourceNode.second.second, std::any(CSamplerRef(spSampler)));
-                    m_spShader->SetPSParam(spSourceNode.second.second, std::any(CSamplerRef(spSampler)));
-                }
-            }
-
-            CComPtr<ID3D11RenderTargetView> spRTView;
-            CT(spDevice->CreateRenderTargetView(m_spOutputTexture->GetD3DTexture(), nullptr, &spRTView));
-
-            CComPtr<ID3D11RenderTargetView> spOldRTV;
-            CComPtr<ID3D11DepthStencilView> spOldDSV;
-            spCtx->OMGetRenderTargets(1, &spOldRTV, &spOldDSV);
-
-            // Setup render target
-            spCtx->OMSetRenderTargets(1, &spRTView.p, nullptr);
-
-            UINT numViewports = 1;
-            D3D11_VIEWPORT oldViewport;
-            spCtx->RSGetViewports(&numViewports, &oldViewport);
-
-            // Set viewport
-            D3D11_VIEWPORT viewport;
-            ZeroMemory(&viewport, sizeof(viewport));
-            viewport.TopLeftX = 0;
-            viewport.TopLeftY = 0;
-            viewport.Width = (float)m_spOutputTexture->GetWidth();
-            viewport.Height = (float)m_spOutputTexture->GetHeight();
-            viewport.MinDepth = 0.0f;
-            viewport.MaxDepth = 1.0f;
-            spCtx->RSSetViewports(1, &viewport);
-
-            FLOAT bgClr[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
-            spCtx->ClearRenderTargetView(spRTView, bgClr);
-
-            DirectX::XMMATRIX mat = DirectX::XMMatrixIdentity();
-            std::vector<CRefObj<ILight>> lights;
-            m_spMesh->Render(pRenderer, pRenderCtx, m_spShader, nullptr, lights, nullptr);
-
-            spCtx->RSSetViewports(numViewports, &oldViewport);
-            spCtx->OMSetRenderTargets(1, &spOldRTV.p, spOldDSV);
-        }
-#ifdef _DEBUG
-        spCtx2->EndEvent();
-#endif
+        ProcessInternal(pPipeline, pRenderer, pRenderCtx,
+            [&]() {
+                DirectX::XMMATRIX mat = DirectX::XMMatrixIdentity();
+                std::vector<CRefObj<ILight>> lights;
+                m_spMesh->Render(pRenderer, pRenderCtx, m_spShader, nullptr, lights, nullptr);
+            });
     }
-
+    
     //**********************************************************************
     // Method: SetSource
     // See <IGPUPipelineSourceNode::SetSource>

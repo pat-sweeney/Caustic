@@ -20,6 +20,8 @@ namespace Caustic
 
     void CSceneGroupElem::Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx)
     {
+        if (!(m_passes & pRenderCtx->GetCurrentPass()))
+            return;
         if (m_prerenderCallback)
             if (!m_prerenderCallback(pRenderCtx->GetCurrentPass()))
                 return;

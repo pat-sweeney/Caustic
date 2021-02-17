@@ -180,7 +180,25 @@ namespace Caustic
 		// Method: GetBBox
 		// Returns the bounding box of this scene element
 		//**********************************************************************
-		virtual void GetBBox(BBox3 *pBBox) = 0;
+		virtual void GetBBox(BBox3* pBBox) = 0;
+
+		//**********************************************************************
+		// Method: SetInPass
+		// Sets which render passes this element is rendered in
+		//
+		// Parameters:
+		// pass - pass to render this element in
+		//**********************************************************************
+		virtual void SetInPass(uint32 pass) = 0;
+
+		//**********************************************************************
+		// Method: GetInPass
+		// Gets which render passes this element is rendered in
+		//
+		// Returns:
+		// mask indicating which passes this element is rendered in
+		//**********************************************************************
+		virtual uint32 GetInPass() = 0;
 	};
 
 	//**********************************************************************

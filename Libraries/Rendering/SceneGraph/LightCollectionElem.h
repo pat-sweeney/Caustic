@@ -19,6 +19,11 @@ namespace Caustic
 	{
 		std::vector<CRefObj<ILight>> m_lights;
 	public:
+		CSceneLightCollectionElem()
+		{
+			m_passes = c_PassAllPasses;
+		}
+
 		//**********************************************************************
 		// IRefCount
 		//**********************************************************************
@@ -44,6 +49,8 @@ namespace Caustic
 		virtual void GetBBox(BBox3* pBBox) override;
 		virtual uint32 GetFlags() override { return m_Flags; }
 		virtual void SetFlags(uint32 flags) override { m_Flags = flags; }
+		virtual void SetInPass(uint32 pass) override { CSceneElem::SetInPass(pass); }
+		virtual uint32 GetInPass() override { return CSceneElem::GetInPass(); }
 
 		//**********************************************************************
 		// ISerialize

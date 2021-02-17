@@ -239,6 +239,21 @@ namespace Caustic
         // ... - list of parameters specific to the requested node
         //**********************************************************************
         virtual CRefObj<IGPUPipelineNode> CreatePredefinedNode(const wchar_t* pName, ...) = 0;
+
+        //**********************************************************************
+        // Method: IncrementCurrentEpoch
+        // Increments the current Epoch. The current epoch is a value indicating
+        // how many times the processing pipeline has been run. This is useful for
+        // determining whether a node in the pipeline has been run during the current
+        // frame.
+        //**********************************************************************
+        virtual void IncrementCurrentEpoch() = 0;
+
+        //**********************************************************************
+        // Method: GetCurrentEpoch
+        // Returns the current Epoch
+        //**********************************************************************
+        virtual uint32 GetCurrentEpoch() = 0;
     };
 
     //**********************************************************************

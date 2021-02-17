@@ -45,6 +45,8 @@ namespace Caustic
 
     void CSceneLightCollectionElem::Render(IRenderer* pRenderer, IRenderCtx* pRenderCtx, SceneCtx* pSceneCtx)
     {
+        if (!(m_passes & pRenderCtx->GetCurrentPass()))
+            return;
 #ifdef _DEBUG
         CComPtr<ID3D11DeviceContext2> spCtx2;
         CT(pRenderer->GetContext()->QueryInterface<ID3D11DeviceContext2>(&spCtx2));

@@ -235,6 +235,7 @@ void CApp::Setup3DScene(IRenderWindow *pRenderWindow)
     app.spLightBulbElem->SetMesh(spLightBulbMesh);
     app.spLightBulbElem->SetShader(app.spLightShader);
     app.spLightBulbElem->SetName(L"LightBulb");
+    app.spLightBulbElem->SetInPass(c_PassOpaque);
     app.spLightBulbMaterialElem = spSceneFactory->CreateMaterialElem();
     app.spLightBulbMaterialElem->SetName(L"LightBulbMaterialElem");
     app.spLightBulbMaterialElem->SetShader(app.spLightShader);
@@ -448,6 +449,7 @@ void CApp::InitializeCaustic(HWND hwnd)
                      // Run the pipeline. Normally we would run spGPUPipeline->Process() however, we don't have
                      // any sink nodes in our graph (GPUPipeline::Process() runs the sink nodes). So, we need
                      // to explicitly run each end point of the graph.
+                     app.spGPUPipeline->IncrementCurrentEpoch();
                      app.spColor2Depth->Process(app.spGPUPipeline, pRenderer, pRenderCtx);
                      if (app.smooth)
                          app.spDepthOfFieldFilled->Process(app.spGPUPipeline, pRenderer, pRenderCtx);
@@ -489,13 +491,13 @@ void CApp::InitializeCaustic(HWND hwnd)
                      //**********************************************************************
                  }
                  if (app.renderModel)
-                     app.spCubeElem->SetFlags(app.m_spLightCollectionElem->GetFlags() & ~ESceneElemFlags::Hidden);
+                     app.spCubeElem->SetFlags(app.spCubeElem->GetFlags() & ~ESceneElemFlags::Hidden);
                  else
-                     app.spCubeElem->SetFlags(app.m_spLightCollectionElem->GetFlags() | ESceneElemFlags::Hidden);
+                     app.spCubeElem->SetFlags(app.spCubeElem->GetFlags() | ESceneElemFlags::Hidden);
                  if (app.renderDesktopView)
-                     app.spPlaneElem->SetFlags(app.m_spLightCollectionElem->GetFlags() & ~ESceneElemFlags::Hidden);
+                     app.spPlaneElem->SetFlags(app.spPlaneElem->GetFlags() & ~ESceneElemFlags::Hidden);
                  else
-                     app.spPlaneElem->SetFlags(app.m_spLightCollectionElem->GetFlags() | ESceneElemFlags::Hidden);
+                     app.spPlaneElem->SetFlags(app.spPlaneElem->GetFlags() | ESceneElemFlags::Hidden);
                  if (app.spCamera->BodyTrackingOn() && app.spCamera->NumberBodiesDetected() >= 1)
                  {
                      if (app.focusTracking)
@@ -532,9 +534,9 @@ void CApp::InitializeCaustic(HWND hwnd)
                          Vector3 dir = (handPos - elbowPos).Normalize();
                          Vector3 dir2 = (handPos - handTipPos).Normalize();
                          if (fabs(dir.y) > 0.8f && fabs(dir2.y) > 0.8f)
-                             app.spCubeElem->SetFlags(app.m_spLightCollectionElem->GetFlags() & ~ESceneElemFlags::Hidden);
+                             app.spCubeElem->SetFlags(app.spCubeElem->GetFlags() & ~ESceneElemFlags::Hidden);
                          else
-                             app.spCubeElem->SetFlags(app.m_spLightCollectionElem->GetFlags() | ESceneElemFlags::Hidden);
+                             app.spCubeElem->SetFlags(app.spCubeElem->GetFlags() | ESceneElemFlags::Hidden);
                      }
                      auto mat = app.spCamera->GetJointMatrix(0, Caustic::AzureKinect::Joint::HandLeft);
                      Vector3 headPos(mat[3][0] * 1000.0f, mat[3][1] * 1000.0f, mat[3][2] * 1000.0f);

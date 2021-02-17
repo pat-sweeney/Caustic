@@ -59,7 +59,7 @@ namespace Caustic
     
     void CSceneOverlay2DElem::Render(IRenderer* pRenderer, IRenderCtx* pRenderCtx, SceneCtx* pSceneCtx)
     {
-        if (pRenderCtx->GetCurrentPass() == c_PassShadow)
+        if (!(m_passes & pRenderCtx->GetCurrentPass()))
             return;
         
         if (!m_initialized)

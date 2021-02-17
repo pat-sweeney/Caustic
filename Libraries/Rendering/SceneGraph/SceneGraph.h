@@ -24,13 +24,15 @@ namespace Caustic
         std::wstring m_Name; // User provided name for this element
         uint32 m_Flags;
         BBox3 m_BBox;
+        uint32 m_passes; // List of passes this element is rendered in
         std::function<bool(int pass)> m_prerenderCallback;
         std::function<void(int pass)> m_postrenderCallback;
 
         void DrawSelected(IRenderer *pRenderer, ISceneElem *pElem, SceneCtx *pSceneCtx);
     public:
         CSceneElem() :
-            m_Flags(0)
+            m_Flags(0),
+            m_passes(c_PassOpaque)
         {
         }
 
@@ -55,6 +57,8 @@ namespace Caustic
         void GetBBox(BBox3* pBBox) { *pBBox = m_BBox; }
         uint32 GetFlags() { return m_Flags; }
         void SetFlags(uint32 flags) { m_Flags = flags; }
+        void SetInPass(uint32 pass) { m_passes = pass; }
+        uint32 GetInPass() { return m_passes; }
     };
 }
 #include "GroupElem.h"
@@ -109,6 +113,8 @@ namespace Caustic
         }
         virtual uint32 GetFlags() { return m_Flags; }
         virtual void SetFlags(uint32 flags) { m_Flags = flags; }
+        virtual void SetInPass(uint32 pass) override { CSceneElem::SetInPass(pass); }
+        virtual uint32 GetInPass() override { return CSceneElem::GetInPass(); }
 
         //**********************************************************************
         // ISerialize
