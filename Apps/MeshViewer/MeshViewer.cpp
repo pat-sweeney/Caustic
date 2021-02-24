@@ -28,7 +28,20 @@ void InitializeCaustic(HWND hwnd)
     spSceneFactory = Caustic::CreateSceneFactory();
     spCausticFactory = Caustic::CreateCausticFactory();
     std::wstring shaderFolder(SHADERPATH);
-    spRenderWindow = CreateRenderWindow(hwnd, shaderFolder, [](IRenderer*, IRenderCtx*, int) {}, [](IRenderer*) {});
+    spRenderWindow = CreateRenderWindow(hwnd, shaderFolder, [](IRenderer*pRenderer, IRenderCtx*pRenderCtx, int pass) {
+        ////CRefObj<ISceneGraph> spSceneGraph = spRenderWindow->GetSceneGraph();
+        ////if (spSceneGraph && spRenderWindow->GetRenderer())
+        ////{
+        ////    PathTraceCtx ctx;
+        ////    ctx.spp = 4;
+        ////    ctx.maxDepth = 10;
+        ////    CRefObj<IImage> spImage = Caustic::CreateImage(1024, 1024, 24);
+        ////    spSceneGraph->PathTrace(pRenderer, &ctx, spImage);
+        ////    Caustic::StoreImage(L"c:\\temp\\florp.png", spImage);
+        ////}
+        }, 
+        [](IRenderer*) {
+        });
 }
 
 // Global Variables:
