@@ -152,6 +152,18 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Method: GetParams
+    // See <ICamera::GetParams>
+    //**********************************************************************
+    void CCamera::GetParams(float* fov, float* aspectRatio, float* nearZ, float* farZ)
+    {
+        *fov = m_FOV;
+        *aspectRatio = m_AspectRatio;
+        *nearZ = m_NearZ;
+        *farZ = m_FarZ;
+    }
+
+    //**********************************************************************
     // Method: SetPosition
     // See <ICamera::SetPosition>
     //**********************************************************************

@@ -30,6 +30,7 @@ namespace Caustic
                     }
                 });
         }
+
         return CRefObj<IRenderMaterial>(spRenderMaterial.release());
     }
 
@@ -58,15 +59,15 @@ namespace Caustic
 
     CRefObj<IShader> CRenderMaterial::GetShader()
     {
-        if (m_spShader == nullptr)
-        {
-            CT(E_NOTIMPL);
-//            CRefObj<IImage> spDiffuseTexture = m_spMaterial->GetTexture(L"diffuseTexture");
-//            if (spDiffuseTexture == nullptr)
-//                CShaderMgr::Instance()->FindShader(L"Default", &m_spShader);
-//            else
-//                CShaderMgr::Instance()->FindShader(L"Textured", &m_spShader);
-        }
+        ////if (m_spShader == nullptr)
+        ////{
+        ////    CT(E_NOTIMPL);
+        ////    ////CRefObj<IImage> spDiffuseTexture = m_spMaterial->GetTexture(L"diffuseTexture");
+        ////    ////if (spDiffuseTexture == nullptr)
+        ////    ////    CShaderMgr::Instance()->FindShader(L"Default", &m_spShader);
+        ////    ////else
+        ////    ////    CShaderMgr::Instance()->FindShader(L"Textured", &m_spShader);
+        ////}
         return m_spShader;
     }
 

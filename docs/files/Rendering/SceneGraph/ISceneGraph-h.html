@@ -51,14 +51,14 @@
  <div class="CBody"><p>Indicates whether we are currently rendering a group of lights+children that cast shadows. Otherwise, during the shadow pass we will skip rendering.</p></div>
 </div>
 
-<a name="SceneCtx.m_spCurrentMaterial"></a><a name="Topic707"></a><div class="CTopic TProperty LC">
+<a name="SceneCtx.m_spCurrentMaterial"></a><a name="Topic1419"></a><div class="CTopic TProperty LC">
  <div class="CTitle">m_spCurrentMaterial</div>
- <div class="CBody"><p>Defines the current material</p><p>CRefObj&lt;IMaterialAttrib&gt; m_spCurrentMaterial;</p></div>
+ <div class="CBody"><p>Defines the current material</p></div>
 </div>
 
-<a name="SceneCtx.m_spCurrentShader"></a><a name="Topic1404"></a><div class="CTopic TProperty LC">
+<a name="SceneCtx.m_spCurrentShader"></a><a name="Topic1420"></a><div class="CTopic TProperty LC">
  <div class="CTitle">m_spCurrentShader</div>
- <div class="CBody"><p>Defines the current shader</p><p>CRefObj&lt;Caustic::IShader&gt; m_spCurrentShader;</p></div>
+ <div class="CBody"><p>Defines the current shader</p></div>
 </div>
 
 <a name="SceneCtx.Types"></a><a name="Topic1119"></a><div class="CTopic TGroup LC">
@@ -77,6 +77,12 @@
 
 <a name="ISceneElem.Functions"></a><a name="Topic1126"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
+</div>
+
+<a name="ISceneElem.RayIntersect"></a><a name="Topic1421"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">RayIntersect</div>
+ <div id="NDPrototype1421" class="NDPrototype WideForm CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">bool</span> RayIntersect(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Base/Math/Ray.h:Ray3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,103);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Ray3</a>&nbsp;</td><td class="PNamePrefix">&amp;</td><td class="PName last">ray,</td></tr><tr><td class="PType first"><a href="../../../index.html#File:Base/Math/Ray.h:RayIntersect3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,102);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >RayIntersect3</a>&nbsp;</td><td class="PNamePrefix">*</td><td class="PName last">pIntersection,</td></tr><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/IMaterialAttrib.h:IMaterialAttrib" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,878);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMaterialAttrib</a>&nbsp;</td><td class="PNamePrefix">**</td><td class="PName last">pMaterial</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div>
+ <div class="CBody"><p>Traces a single path through the scene</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">ray<div class="CDLParameterType"><a href="../../../index.html#File:Base/Math/Ray.h:Ray3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,103);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Ray3</a>&amp;</div></td><td class="CDLDefinition"><p>ray to trace</p></td></tr><tr><td class="CDLEntry">pIntersection<div class="CDLParameterType"><a href="../../../index.html#File:Base/Math/Ray.h:RayIntersect3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,102);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >RayIntersect3</a>*</div></td><td class="CDLDefinition"><p>returns ray intersection info</p></td></tr><tr><td class="CDLEntry">pMaterial<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/Caustic/IMaterialAttrib.h:IMaterialAttrib" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,878);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMaterialAttrib</a>**</div></td><td class="CDLDefinition"><p>returns the material at the intersection point</p></td></tr></table><div class="CHeading">Returns</div><p>True if ray intersects the scene element. False otherwise.</p></div>
 </div>
 
 <a name="ISceneElem.GetType"></a><a name="Topic1127"></a><div class="CTopic TFunction LC">

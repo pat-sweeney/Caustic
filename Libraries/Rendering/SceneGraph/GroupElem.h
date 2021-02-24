@@ -43,6 +43,23 @@ namespace Caustic
 		//**********************************************************************
 		// ISceneElem
 		//**********************************************************************
+		virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** ppMaterial) override
+		{
+			bool found = false;
+			for (size_t i = 0; i < m_Children.size(); i++)
+			{
+				RayIntersect3 ri;
+				if (m_Children[i]->RayIntersect(ray, &ri, ppMaterial))
+				{
+					if (ri.hitTime < pIntersection->hitTime)
+					{
+						found = true;
+						*pIntersection = ri;
+					}
+				}
+			}
+			return found;
+		}
 		virtual ESceneElemType GetType() override { return ESceneElemType::Group; }
 		virtual std::wstring GetName() override { return CSceneElem::GetName(); }
 		virtual void SetName(const wchar_t* name) override { return CSceneElem::SetName(name); }

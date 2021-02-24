@@ -7,6 +7,8 @@
 #include "Base\Core\error.h"
 #include "Geometry\Mesh\Mesh.h"
 #include "Rendering\Caustic\MaterialAttrib.h"
+#include "Rendering\Caustic\PathTrace.h"
+#include "Base\Math\Ray.h"
 
 //**********************************************************************
 // File: Mesh.cpp
@@ -56,6 +58,24 @@ namespace Caustic
     //**********************************************************************
     CMesh::CMesh()
     {
+    }
+
+    //**********************************************************************
+    // Method: RayIntersect
+    // Computes the intersection of a ray with a mesh
+    //
+    // Parameters:
+    // pCtx - path tracing context
+    // ray - ray direction to trace
+    // pRadiance - Returns the radiance returned along 'ray'
+    //**********************************************************************
+    bool CMesh::RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** pMaterial)
+    {
+        bool hitMesh = false;
+        for (size_t i = 0; i < m_subMeshes.size(); i++)
+            if (m_subMeshes[i]->RayIntersect(ray, pIntersection, pMaterial, m_materials))
+                hitMesh = true;
+        return hitMesh;
     }
 
     //**********************************************************************

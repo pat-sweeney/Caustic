@@ -543,4 +543,71 @@ namespace Caustic
         }
         return false;
     }
+
+    //**********************************************************************
+    // Method: Intersect
+    // Calculates the intersection of a ray with an plane. If pIntersectInfo
+    // is not nullptr then the intersection data is returned via this pointer.
+    //
+    // Parameters:
+    // n - normal for plane
+    // d - plane offset
+    // pIntersectInfo - Returns the interesection info. Maybe nullptr.
+    //
+    // Returns:
+    // True if ray interesects plane, otherwise false
+    //**********************************************************************
+    bool Ray3::Intersect(Vector3 n, float d, RayIntersect3* pIntersectInfo)
+    {
+        float dp = n.Dot(dir);
+        if (IsZero(dp))
+            return false;
+        float t = d - n.Dot(pos) / dp;
+        if (t < 0.0f)
+            return false;
+        if (pIntersectInfo)
+        {
+            pIntersectInfo->hitNorm = n;
+            pIntersectInfo->hitPt = pos + dir * t;
+            pIntersectInfo->hitTime = t;
+        }
+        return true;
+    }
+
+    //**********************************************************************
+    // Method: Intersect
+    // Calculates the intersection of a ray with an triangle. If pIntersectInfo
+    // is not nullptr then the intersection data is returned via this pointer.
+    //
+    // Parameters:
+    // p0, p1, p2 - coordinates for triangle's vertices
+    // pIntersectInfo - Returns the interesection info. Maybe nullptr.
+    //
+    // Returns:
+    // True if ray interesects triangle, otherwise false
+    //**********************************************************************
+    bool Ray3::Intersect(Vector3 p0, Vector3 p1, Vector3 p2, RayIntersect3* pIntersectInfo)
+    {
+        // Compute normal for triangle
+        Vector3 d0 = (p1 - p0).Normalize();
+        Vector3 d1 = (p2 - p0).Normalize();
+        Vector3 n = d0.Cross(d1);
+        float dp = n.Dot(dir);
+        if (IsZero(dp))
+            return false;
+        float t = n.Dot(p0) - n.Dot(pos) / dp;
+        Vector3 ip = pos + dir * t;
+        // Perform inside/outside test
+        if ((p1 - p0).Cross(ip - p0).Dot(n) < 0.0f ||
+            (p2 - p1).Cross(ip - p1).Dot(n) < 0.0f ||
+            (p0 - p2).Cross(ip - p2).Dot(n) < 0.0f)
+            return false;
+        if (pIntersectInfo)
+        {
+            pIntersectInfo->hitNorm = n;
+            pIntersectInfo->hitPt = ip;
+            pIntersectInfo->hitTime = t;
+        }
+        return true;
+    }
 }

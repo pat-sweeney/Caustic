@@ -38,13 +38,13 @@ namespace Caustic
         // I've commented this out until I figure out how I want to handle materials
         // inside the scene graph.
 
-        //CRefObj<IMaterialAttrib> spOldMaterial = pSceneCtx->m_spCurrentMaterial;
-        //CRefObj<IShader> spOldShader = pSceneCtx->m_spCurrentShader;
-        //pSceneCtx->m_spCurrentMaterial = m_spMaterial;
-        //pSceneCtx->m_spCurrentShader = m_spShader;
+        CRefObj<IMaterialAttrib> spOldMaterial = pSceneCtx->m_spCurrentMaterial;
+        CRefObj<IShader> spOldShader = pSceneCtx->m_spCurrentShader;
+        pSceneCtx->m_spCurrentMaterial = m_spMaterial;
+        pSceneCtx->m_spCurrentShader = m_spShader;
         CSceneGroupElem::Render(pRenderer, pRenderCtx, pSceneCtx);
-        //pSceneCtx->m_spCurrentMaterial = spOldMaterial;
-        //pSceneCtx->m_spCurrentShader = spOldShader;
+        pSceneCtx->m_spCurrentMaterial = spOldMaterial;
+        pSceneCtx->m_spCurrentShader = spOldShader;
         if (m_postrenderCallback)
             m_postrenderCallback(pRenderCtx->GetCurrentPass());
     }

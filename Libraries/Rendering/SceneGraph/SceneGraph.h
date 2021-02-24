@@ -77,6 +77,8 @@ namespace Caustic
         CRefObj<IRenderer> m_spRenderer;
         std::vector<CRefObj<ISceneElem>> m_Selected;
         uint32 m_Flags;
+
+        void PathTraceInternal(PathTraceCtx* pCtx, int depth, Ray3& ray, FRGBColor* pRadiance);
     public:
         CSceneGraph(ISceneGroupElem *pGroup) :
             m_locked(false)
@@ -94,6 +96,7 @@ namespace Caustic
         //**********************************************************************
         // ISceneElem
         //**********************************************************************
+        virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** pMaterial) override { return false; }
         virtual ESceneElemType GetType() override { return ESceneElemType::SceneGraph; }
         virtual std::wstring GetName() override { return CSceneElem::GetName(); }
         virtual void SetName(const wchar_t* name) override { return CSceneElem::SetName(name); }
@@ -134,6 +137,7 @@ namespace Caustic
         //**********************************************************************
         // ISceneGraph
         //**********************************************************************
+        virtual void PathTrace(IRenderer *pRenderer, PathTraceCtx* pCtx, IImage* pDest) override;
         virtual void Merge(ISceneGraph *pGraph) override;
         virtual void Lock() override;
         virtual void Unlock() override;

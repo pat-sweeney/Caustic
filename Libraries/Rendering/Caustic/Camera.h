@@ -75,6 +75,7 @@ namespace Caustic
         // ICamera
         //**********************************************************************
         virtual void SetParams(float fov, float aspectRatio, float nearZ, float farZ) override;
+        virtual void GetParams(float* fov, float* aspectRatio, float* nearZ, float* farZ) override;
         virtual void SetPosition(Vector3 &eye, Vector3 &look, Vector3 &up) override;
         virtual void GetPosition(Vector3 *pEye, Vector3 *pLook, Vector3 *pUp, Vector3 *pU, Vector3 *pV, Vector3 *pN) override;
         virtual void SetOffset(Vector3 &offset) override;

@@ -77,6 +77,11 @@ namespace Caustic
         }
     }
 
+    bool CSceneMeshElem::RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** ppMaterial)
+    {
+        return m_spMesh->RayIntersect(ray, pIntersection, ppMaterial);
+    }
+    
     void CSceneMeshElem::Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx)
     {
         if (!(m_passes & pRenderCtx->GetCurrentPass()))
@@ -89,7 +94,7 @@ namespace Caustic
                 return;
         if (GetFlags() & ESceneElemFlags::RenderableDirty)
         {
-            m_spRenderMesh = m_spMesh->ToRenderMesh(pRenderer, m_spShader);
+            m_spRenderMesh = m_spMesh->ToRenderMesh(pRenderer, (m_spShader) ? m_spShader : pSceneCtx->m_spCurrentShader);
             SetFlags(GetFlags() & ~ESceneElemFlags::RenderableDirty);
         }
         if (GetFlags() & ESceneElemFlags::MaterialDirty)

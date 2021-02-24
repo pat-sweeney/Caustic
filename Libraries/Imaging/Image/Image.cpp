@@ -12,6 +12,7 @@
 #include <wincodec.h>
 #include "Geometry\Rast\Bresenham.h"
 #include "Geometry\Rast\BresenhamCircle.h"
+#include "Imaging\Image\ImageIter.h"
 
 namespace Caustic
 {
@@ -284,7 +285,35 @@ namespace Caustic
         CT(spBitmapFrame->SetSize(pImage->GetWidth(), pImage->GetHeight()));
         WICPixelFormatGUID formatGUID = GUID_WICPixelFormat32bppRGBA;
         CT(spBitmapFrame->SetPixelFormat(&formatGUID));
-        CT(spBitmapFrame->WritePixels(pImage->GetHeight(), pImage->GetWidth() * 4, pImage->GetHeight() * pImage->GetWidth() * 4, pImage->GetData()));
+        int bpp = pImage->GetBytesPerPixel();
+        if (bpp == 4)
+            CT(spBitmapFrame->WritePixels(pImage->GetHeight(), pImage->GetWidth() * 4, pImage->GetHeight() * pImage->GetWidth() * 4, pImage->GetData()));
+        else
+        {
+            CT((bpp == 3) ? S_OK : E_UNEXPECTED);
+            uint32 w = pImage->GetWidth();
+            uint32 h = pImage->GetHeight();
+            uint8* data = new uint8[w * h * 4];
+            uint8* pRow = data;
+            Caustic::CImageIter24 riter(pImage, 0, 0);
+            for (uint32 y = 0; y < h; y++)
+            {
+                Caustic::CImageIter24 citer = riter;
+                uint8* pCol = pRow;
+                for (uint32 x = 0; x < w; x++)
+                {
+                    pCol[0] = citer.GetRed();
+                    pCol[1] = citer.GetGreen();
+                    pCol[2] = citer.GetBlue();
+                    pCol[3] = 255;
+                    pCol += 4;
+                    citer.Step(CImageIter::EStepDirection::Right);
+                }
+                pRow += w * 4;
+                riter.Step(CImageIter::EStepDirection::Down);
+            }
+            CT(spBitmapFrame->WritePixels(h, w * 4, h * w * 4, data));
+        }
         CT(spBitmapFrame->Commit());
         CT(spEncoder->Commit());
     }

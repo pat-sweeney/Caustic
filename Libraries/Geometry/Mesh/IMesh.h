@@ -12,6 +12,7 @@
 #include "Base\Math\BBox.h"
 #include "Rendering\Caustic\RenderTypes.h"
 #include "Rendering\Caustic\IMaterialAttrib.h"
+#include "Rendering\Caustic\PathTrace.h"
 #include <memory>
 #include <atlbase.h>
 #include <vector>
@@ -192,6 +193,7 @@ namespace Caustic
     //**********************************************************************
     struct ISubMesh : public ISerialize
     {
+        virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** pMaterial, std::vector<CRefObj<IMaterialAttrib>> materials) = 0;
         virtual void SetName(const char* pName) = 0;
         virtual std::string GetName() = 0;
         virtual uint32 GetNumberFaces() = 0;
@@ -233,6 +235,7 @@ namespace Caustic
     //**********************************************************************
     struct IMesh : public ISerialize
     {
+        virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** pMaterial) = 0;
         virtual uint32 NumberSubMeshes() = 0;
         virtual CRefObj<ISubMesh> GetSubMesh(uint32 index) = 0;
         virtual void AddSubMesh(ISubMesh *pSubMesh) = 0;

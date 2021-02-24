@@ -42,7 +42,15 @@ namespace Caustic
         if (pRenderer->GetRenderCtx()->GetCurrentPass() == c_PassShadow)
             spShader = pRenderer->GetShaderMgr()->FindShader(L"ShadowMap");
         else
+        {
             spShader = m_spFrontMaterial->GetShader();
+            if (spShader == nullptr)
+            {
+                auto spMaterialAttrib = m_spFrontMaterial->GetMaterial();
+                CRefObj<IImage> spDiffuseTexture = (spMaterialAttrib) ? spMaterialAttrib->GetTexture(L"diffuseTexture") : nullptr;
+                spShader = pRenderer->GetShaderMgr()->FindShader((spDiffuseTexture == nullptr) ? L"Default" : L"Textured");
+            }
+        }
         if (spShader)
         {
             //**********************************************************************

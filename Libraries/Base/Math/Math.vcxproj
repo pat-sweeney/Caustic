@@ -84,6 +84,7 @@
     <ClInclude Include="Helper.h" />
     <ClInclude Include="IBBox.h" />
     <ClInclude Include="Matrix.h" />
+    <ClInclude Include="MCSampler.h" />
     <ClInclude Include="NewtonsMethod.h" />
     <ClInclude Include="OBBox.h" />
     <ClInclude Include="Point.h" />

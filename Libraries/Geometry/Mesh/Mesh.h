@@ -9,6 +9,7 @@
 #include "Base\Core\RefCount.h"
 #include "Base\Core\BlockAllocator.h"
 #include "Rendering\Caustic\Caustic.h"
+#include "Rendering\Caustic\PathTrace.h"
 #include <vector>
 #include <map>
 
@@ -87,6 +88,7 @@ namespace Caustic
         //**********************************************************************
         // ISubMesh
         //**********************************************************************
+        virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** pMaterial, std::vector<CRefObj<IMaterialAttrib>> materials);
         virtual void SetName(const char* pName) override { m_name = std::string(pName); }
         virtual std::string GetName() override { return m_name; }
         virtual uint32 GetNumberFaces() override { return (uint32)m_faces.size(); }
@@ -154,6 +156,7 @@ namespace Caustic
         //**********************************************************************
         // IMesh
         //**********************************************************************
+        virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** pMaterial);
         virtual uint32 NumberSubMeshes() override { return (uint32)m_subMeshes.size(); };
         virtual CRefObj<ISubMesh> GetSubMesh(uint32 index) override;
         virtual void AddSubMesh(ISubMesh *pSubMesh) override;

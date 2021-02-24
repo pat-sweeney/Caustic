@@ -198,7 +198,7 @@ namespace Caustic
         // True if ray interesects bbox. False otherwise.
         //**********************************************************************
         bool Intersect(float radius, Matrix4x4 *pInvTm, RayIntersect3 *pIntersectInfo);
-      
+
         //**********************************************************************
         // Method: Intersect
         // Calculates the intersection of a ray with an cylinder. If pIntersectInfo
@@ -211,8 +211,37 @@ namespace Caustic
         // pIntersectInfo - Returns the interesection info. Maybe nullptr.
         //
         // Returns:
-        // \return true if ray interesects bbox, otherwise false
+        // True if ray interesects bbox, otherwise false
         //**********************************************************************
-        bool Intersect(float radius, float height, Matrix4x4 *pInvTm, RayIntersect3 *pIntersectInfo);
+        bool Intersect(float radius, float height, Matrix4x4* pInvTm, RayIntersect3* pIntersectInfo);
+
+        //**********************************************************************
+        // Method: Intersect
+        // Calculates the intersection of a ray with an triangle. If pIntersectInfo
+        // is not nullptr then the intersection data is returned via this pointer.
+        //
+        // Parameters:
+        // p0, p1, p2 - coordinates for triangle's vertices
+        // pIntersectInfo - Returns the interesection info. Maybe nullptr.
+        //
+        // Returns:
+        // True if ray interesects triangle, otherwise false
+        //**********************************************************************
+        bool Intersect(Vector3 p0, Vector3 p1, Vector3 p2, RayIntersect3* pIntersectInfo);
+
+        //**********************************************************************
+        // Method: Intersect
+        // Calculates the intersection of a ray with an plane. If pIntersectInfo
+        // is not nullptr then the intersection data is returned via this pointer.
+        //
+        // Parameters:
+        // n - normal for plane
+        // d - plane offset
+        // pIntersectInfo - Returns the interesection info. Maybe nullptr.
+        //
+        // Returns:
+        // True if ray interesects plane, otherwise false
+        //**********************************************************************
+        bool Ray3::Intersect(Vector3 n, float d, RayIntersect3* pIntersectInfo);
     };
 }

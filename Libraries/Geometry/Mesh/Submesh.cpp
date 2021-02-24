@@ -6,6 +6,8 @@
 #include "Geometry\Mesh\Mesh.h"
 #include "Geometry\Mesh\MeshConstructor.h"
 #include "Base\Core\error.h"
+#include "Base\Math\Ray.h"
+#include "Rendering\Caustic\PathTrace.h"
 
 //**********************************************************************
 // File: SubMesh.cpp
@@ -19,6 +21,42 @@ namespace Caustic
     CBlockAllocator<CFaceVertex> CSubMesh::m_faceVertexAllocator(100000);
     CBlockAllocator<CHalfEdge> CSubMesh::m_edgeAllocator(100000);
     CBlockAllocator<CFace> CSubMesh::m_faceAllocator(100000);
+
+    //**********************************************************************
+    // Method: RayIntersect
+    // Computes intersection of ray with mesh
+    //
+    // Parameters:
+    // ray - ray direction to trace
+    // pIntersection - Returns the intersection point
+    // ppMaterial - Returns the material of the mesh at the intersection point
+    // materials - list of possible materials
+    //**********************************************************************
+    bool CSubMesh::RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** ppMaterial, std::vector<CRefObj<IMaterialAttrib>> materials)
+    {
+        bool hitMesh = false;
+        CRefObj<IMaterialAttrib> spMinMaterial;
+        for (size_t i = 0; i < m_faces.size(); i++)
+        {
+            _ASSERT(m_faces[i]->m_vertices.size() == 3);
+            RayIntersect3 rayInfo;
+            if (ray.Intersect(
+                m_faces[i]->m_vertices[0]->pos,
+                m_faces[i]->m_vertices[1]->pos,
+                m_faces[i]->m_vertices[2]->pos, &rayInfo))
+            {
+                if (rayInfo.hitTime < pIntersection->hitTime)
+                {
+                    spMinMaterial = materials[m_materialID];
+                    *pIntersection = rayInfo;
+                    hitMesh = true;
+                }
+            }
+        }
+        if (hitMesh)
+            *ppMaterial = spMinMaterial.Detach();
+        return hitMesh;
+    }
 
     //**********************************************************************
     // Method: Normalize

@@ -41,6 +41,18 @@ namespace Caustic
         virtual void SetParams(float fov, float aspectRatio, float nearZ, float farZ) = 0;
 
         //**********************************************************************
+        // Method: GetParams
+        // Gets the camera parameters
+        //
+        // Parameters:
+        // fov - field of view in radians
+        // aspectRatio - Camera's aspect ratio
+        // nearZ - distance to near plane
+        // farZ - distance to far plane
+        //**********************************************************************
+        virtual void GetParams(float *fov, float *aspectRatio, float *nearZ, float *farZ) = 0;
+
+        //**********************************************************************
         // Method: SetPosition
         // Sets the camera's position.
         //

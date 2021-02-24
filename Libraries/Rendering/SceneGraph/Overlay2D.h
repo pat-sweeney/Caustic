@@ -46,6 +46,7 @@ namespace Caustic
 		//**********************************************************************
 		// ISceneElem
 		//**********************************************************************
+		virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** pMaterial) override { return false; }
 		virtual ESceneElemType GetType() override { return ESceneElemType::Overlay2D; }
 		virtual std::wstring GetName() override { return CSceneElem::GetName(); }
 		virtual void SetName(const wchar_t* name) override { return CSceneElem::SetName(name); }

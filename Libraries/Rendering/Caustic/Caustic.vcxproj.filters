@@ -157,6 +157,9 @@
     <ClInclude Include="DesktopTexture.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="PathTrace.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

@@ -6,6 +6,7 @@
 #include "Base\Core\Core.h"
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\Shader.h"
+#include "Rendering\Caustic\PathTrace.h"
 #include "Base\Math\Matrix.h"
 
 namespace Caustic
@@ -86,13 +87,13 @@ namespace Caustic
 		// Property: m_spCurrentMaterial
 		// Defines the current material
 		//**********************************************************************
-	//	CRefObj<IMaterialAttrib> m_spCurrentMaterial;
+		CRefObj<IMaterialAttrib> m_spCurrentMaterial;
 
 		//**********************************************************************
 		// Property: m_spCurrentShader
 		// Defines the current shader
 		//**********************************************************************
-//		CRefObj<Caustic::IShader> m_spCurrentShader;
+		CRefObj<Caustic::IShader> m_spCurrentShader;
 	};
 
 	//**********************************************************************
@@ -121,6 +122,20 @@ namespace Caustic
 	//**********************************************************************
 	struct ISceneElem : public ISerialize
 	{
+		//**********************************************************************
+		// Method: RayIntersect
+		// Traces a single path through the scene
+		//
+		// Parameters:
+		// ray - ray to trace
+		// pIntersection - returns ray intersection info
+		// pMaterial - returns the material at the intersection point
+		//
+		// Returns:
+		// True if ray intersects the scene element. False otherwise.
+		//**********************************************************************
+		virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** pMaterial) = 0;
+
 		//**********************************************************************
 		// Method: GetType
 		// Returns the type of this scene element
@@ -399,6 +414,17 @@ namespace Caustic
 	//**********************************************************************
 	struct ISceneGraph : public ISceneGroupElem
 	{
+		//**********************************************************************
+		// Method: PathTrace
+		// Computes view of the scene using path tracing
+		//
+		// Parameters:
+		// pRenderer - renderer
+		// pCtx - path context
+		// pDest - Image to render results to
+		//**********************************************************************
+		virtual void PathTrace(IRenderer *pRenderer, PathTraceCtx *pCtx, IImage *pDest) = 0;
+
 		//**********************************************************************
 		// Method: Merge
 		// Merges a scene graph with another scene graph

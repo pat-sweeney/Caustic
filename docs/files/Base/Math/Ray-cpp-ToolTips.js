@@ -1,0 +1,1 @@
+NDContentPage.OnToolTipsLoaded({85:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines a simple vector with 3 components</div></div>",102:"<div class=\"NDToolTip TStruct LC\"><div class=\"TTSummary\">Defines results of a 3D ray intersection</div></div>"});
