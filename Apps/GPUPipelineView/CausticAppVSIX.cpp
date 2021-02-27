@@ -282,6 +282,8 @@ void CApp::SetupAzureCameraParameters(IShader *pShader, uint32 depthW, uint32 de
     pShader->SetVSParam(L"colorExt", mat);
     pShader->SetVSParamInt(L"colorWidth", colorW);
     pShader->SetVSParamInt(L"colorHeight", colorH);
+    pShader->SetPSParamInt(L"depthWidth", depthW);
+    pShader->SetPSParamInt(L"depthHeight", depthH);
     pShader->SetVSParamFloat(L"minDepth", 10.0f);
     pShader->SetPSParamFloat(L"minDepth", 10.0f);
     pShader->SetVSParamFloat(L"maxDepth", 8000.0f);
@@ -443,8 +445,16 @@ void CApp::InitializeCaustic(HWND hwnd)
                      app.spBokehShader->SetPSParamFloat(L"showDepth", (app.showDepth) ? 1.0f : 0.0f);
                      app.spBokehShader->SetPSParamFloat(L"showHoles", (app.showHoles) ? 1.0f : 0.0f);
                      app.spBokehShader->SetPSParamFloat(L"checkDepth", (app.checkDepth) ? 1.0f : 0.0f);
+#ifdef _DEBUG
+                     CComPtr<ID3D11DeviceContext2> spCtx2;
+                     CT(app.spRenderer->GetContext()->QueryInterface<ID3D11DeviceContext2>(&spCtx2));
+                     spCtx2->BeginEventInt(L"SetSource", 0);
+#endif
                      app.spSourceColorNode->SetSource(app.spGPUPipeline, app.spLastColorImage);
                      app.spSourceDepthNode->SetSource(app.spGPUPipeline, app.spLastDepthImage);
+#ifdef _DEBUG
+                     spCtx2->EndEvent();
+#endif
 
                      // Run the pipeline. Normally we would run spGPUPipeline->Process() however, we don't have
                      // any sink nodes in our graph (GPUPipeline::Process() runs the sink nodes). So, we need

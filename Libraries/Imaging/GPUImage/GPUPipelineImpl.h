@@ -151,12 +151,16 @@ namespace Caustic
     //**********************************************************************
     class CGPUPipelineSourceNode : public CGPUPipelineNodeBase, public IGPUPipelineSourceNode
     {
-        CComPtr<ID3D11Texture2D> m_spSourceImage;
+        static const int c_NumberBackBuffers = 10;
+        CRefObj<ITexture> m_spSourceImage[c_NumberBackBuffers];
+        int m_index;
     public:
         CGPUPipelineSourceNode(uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM) : CGPUPipelineNodeBase(outputWidth, outputHeight, format)
         {
             m_cpuFlags = D3D11_CPU_ACCESS_WRITE;
             m_bindFlags = D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE;
+            m_spSourceImage[0] = nullptr;
+            m_index = c_NumberBackBuffers - 1;
         }
 
         //**********************************************************************

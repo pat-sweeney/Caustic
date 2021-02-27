@@ -500,7 +500,23 @@ namespace Caustic
         if (pSource)
         {
             CRefObj<IRenderer> spRenderer = pPipeline->GetRenderer();
-            m_spOutputTexture = Caustic::CreateTexture(spRenderer, pSource, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
+            if (m_spSourceImage[0] == nullptr)
+            {
+                DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM;
+                switch (pSource->GetBPP())
+                {
+                case 1: format = DXGI_FORMAT::DXGI_FORMAT_R8_UNORM; break;
+                case 8: format = DXGI_FORMAT::DXGI_FORMAT_R8_UNORM; break;
+                case 16: format = DXGI_FORMAT::DXGI_FORMAT_R16_UINT; break;
+                case 24: format = (pSource->GetRGBOrder()) ? DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM : DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM; break;
+                case 32: format = (pSource->GetRGBOrder()) ? DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM : DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM; break;
+                case 128: format = DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT; break;
+                }
+                for (int i = 0; i < c_NumberBackBuffers; i++)
+                    m_spSourceImage[i] = CreateTexture(spRenderer, pSource->GetWidth(), pSource->GetHeight(), format, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
+            }
+            m_index = (m_index == c_NumberBackBuffers - 1) ? 0 : m_index + 1;
+            m_spSourceImage[m_index]->CopyFromImage(spRenderer, pSource);
         }
     }
 
@@ -510,7 +526,7 @@ namespace Caustic
     //**********************************************************************
     CRefObj<ITexture> CGPUPipelineSourceNode::GetOutputTexture(IGPUPipeline *pPipeline)
     {
-        return m_spOutputTexture;
+        return m_spSourceImage[m_index];
     }
 
     //**********************************************************************

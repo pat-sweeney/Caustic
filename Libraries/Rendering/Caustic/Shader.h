@@ -101,6 +101,7 @@ namespace Caustic
         std::any m_value;      // Value assigned to this parameter
         std::vector<std::any> m_values;
         bool m_dirty;            // Is parameter dirty and needs to be pushed to constant buffer
+        uint32 m_cbOffset;      // Byte offset of this variable in the constant buffer
     };
 
     struct Float { float x; Float(float _x) { x = _x; } };
@@ -238,9 +239,9 @@ namespace Caustic
         SBuffer m_vertexConstants;
         SBuffer m_pixelConstants;
         SBuffer m_computeConstants;
-        std::vector<ShaderParamInstance> m_psParams;
-        std::vector<ShaderParamInstance> m_vsParams;
-        std::vector<ShaderParamInstance> m_csParams;
+        std::map<std::wstring, ShaderParamInstance> m_psParams;
+        std::map<std::wstring, ShaderParamInstance> m_vsParams;
+        std::map<std::wstring, ShaderParamInstance> m_csParams;
         std::vector<SBuffer> m_csBuffers;
         CRefObj<IShaderInfo> m_spShaderInfo;
         int m_xThreads;
@@ -251,20 +252,21 @@ namespace Caustic
         void PushMatrix(const wchar_t *name, std::any mat);
         void PushLights(std::vector<CRefObj<ILight>>& lights);
         void PushMatrices(IRenderer* pRenderer, DirectX::XMMATRIX *pWorld);
-        uint32 ComputeParamSize(ShaderParamDef *pParams, uint32 numParams, std::vector<ShaderParamInstance> &params);
+        uint32 ComputeParamSize(ShaderParamDef *pParams, uint32 numParams, std::map<std::wstring, ShaderParamInstance> &params);
         uint32 ShaderTypeSize(ShaderParamDef& paramDef);
-        void PushConstants(IRenderer* pRenderer, SBuffer *pBuffer, std::vector<ShaderParamInstance> &params);
+        void PushConstants(IRenderer* pRenderer, SBuffer *pBuffer, std::map<std::wstring, ShaderParamInstance> &params);
         void ClearSamplers(IRenderer* pRenderer);
-        void PushSamplers(IRenderer* pRenderer, std::vector<ShaderParamInstance>& params, bool isPixelShader);
-        void PushBuffers(IRenderer* pRenderer, std::vector<ShaderParamInstance>& params);
+        void PushSamplers(IRenderer* pRenderer, std::map<std::wstring, ShaderParamInstance>& params, bool isPixelShader);
+        void PushBuffers(IRenderer* pRenderer, std::map<std::wstring, ShaderParamInstance>& params);
         void PopBuffers(IRenderer* pRenderer);
-        void SetParam(std::wstring paramName, std::any &value, std::vector<ShaderParamInstance> &params);
-        void SetParam(std::wstring paramName, int index, std::any &value, std::vector<ShaderParamInstance> &params);
+        void SetParam(const std::wstring& paramName, std::any& value, std::map<std::wstring, ShaderParamInstance>& params);
+        void SetParam(const wchar_t* paramName, std::any& value, std::map<std::wstring, ShaderParamInstance>& params);
+        void SetParam(const std::wstring& paramName, int index, std::any& value, std::map<std::wstring, ShaderParamInstance>& params);
+        void SetParam(const wchar_t* paramName, int index, std::any& value, std::map<std::wstring, ShaderParamInstance>& params);
     public:
         void Create(IRenderer *pRenderer, const wchar_t *pShaderName, IShaderInfo *pShaderInfo, ID3DBlob *pPSBlob, ID3DBlob* pVSBlob, ID3DBlob* pCSBlob);
         void CreateBuffer(ID3D11Device* pDevice, uint32 bufSize, uint32 bindFlags, uint32 cpuAccessFlags, D3D11_USAGE usage, uint32 miscFlags, uint32 stride, uint32 alignment, SBuffer* pBuffer, ID3D11Buffer **ppBuffer);
-        void CreateBuffers(ID3D11Device* pDevice, ShaderParamDef* pDefs, uint32 paramsSize, std::vector<ShaderParamInstance>& params);
-        void CreateConstantBuffer(ID3D11Device *pDevice, ShaderParamDef *pDefs, uint32 paramsSize, std::vector<ShaderParamInstance> &params, SBuffer *pConstantBuffer);
+        void CreateConstantBuffer(ID3D11Device *pDevice, ShaderParamDef *pDefs, uint32 paramsSize, std::map<std::wstring, ShaderParamInstance> &params, SBuffer *pConstantBuffer);
 
         CShader() :
             m_xThreads(32),
@@ -286,18 +288,30 @@ namespace Caustic
         virtual CRefObj<IShader> Clone(ID3D11Device *pDevice) override;
         virtual std::wstring &Name() override { return m_name; }
         virtual void BeginRender(IRenderer* pRenderer, IRenderMaterial* pMaterial, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld) override;
-        virtual void SetPSParam(std::wstring paramName, std::any& value) override;
-        virtual void SetPSParamFloat(std::wstring paramName, float value) override;
-        virtual void SetPSParamInt(std::wstring paramName, int value) override;
-        virtual void SetPSParam(std::wstring paramName, int index, std::any &value) override;
-        virtual void SetVSParam(std::wstring paramName, std::any& value) override;
-        virtual void SetVSParamFloat(std::wstring paramName, float value) override;
-        virtual void SetVSParamInt(std::wstring paramName, int value) override;
-        virtual void SetVSParam(std::wstring paramName, int index, std::any& value) override;
-        virtual void SetCSParam(std::wstring paramName, std::any& value) override;
-        virtual void SetCSParamFloat(std::wstring paramName, float value) override;
-        virtual void SetCSParamInt(std::wstring paramName, int value) override;
-        virtual void SetCSParam(std::wstring paramName, int index, std::any& value) override;
+        virtual void SetPSParam(const std::wstring& paramName, std::any& value) override;
+        virtual void SetPSParam(const wchar_t* paramName, std::any& value) override;
+        virtual void SetPSParamFloat(const std::wstring& paramName, float value) override;
+        virtual void SetPSParamFloat(const wchar_t* paramName, float value) override;
+        virtual void SetPSParamInt(const std::wstring& paramName, int value) override;
+        virtual void SetPSParamInt(const wchar_t* paramName, int value) override;
+        virtual void SetPSParam(const std::wstring& paramName, int index, std::any& value) override;
+        virtual void SetPSParam(const wchar_t* paramName, int index, std::any& value) override;
+        virtual void SetVSParam(const std::wstring& paramName, std::any& value) override;
+        virtual void SetVSParam(const wchar_t* paramName, std::any& value) override;
+        virtual void SetVSParamFloat(const std::wstring& paramName, float value) override;
+        virtual void SetVSParamFloat(const wchar_t* paramName, float value) override;
+        virtual void SetVSParamInt(const std::wstring& paramName, int value) override;
+        virtual void SetVSParamInt(const wchar_t* paramName, int value) override;
+        virtual void SetVSParam(const std::wstring& paramName, int index, std::any& value) override;
+        virtual void SetVSParam(const wchar_t* paramName, int index, std::any& value) override;
+        virtual void SetCSParam(const std::wstring& paramName, std::any& value) override;
+        virtual void SetCSParam(const wchar_t* paramName, std::any& value) override;
+        virtual void SetCSParamFloat(const std::wstring& paramName, float value) override;
+        virtual void SetCSParamFloat(const wchar_t* paramName, float value) override;
+        virtual void SetCSParamInt(const std::wstring& paramName, int value) override;
+        virtual void SetCSParamInt(const wchar_t* paramName, int value) override;
+        virtual void SetCSParam(const std::wstring& paramName, int index, std::any& value) override;
+        virtual void SetCSParam(const wchar_t* paramName, int index, std::any& value) override;
         virtual void EndRender(IRenderer* pRenderer) override;
         virtual CRefObj<IShaderInfo> GetShaderInfo() override;
         virtual void SetThreadCounts(int xThreads, int yThreads, int zThreads) override;

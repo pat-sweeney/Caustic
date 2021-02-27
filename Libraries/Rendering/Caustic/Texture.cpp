@@ -201,11 +201,11 @@ namespace Caustic
             BYTE* pSrc = pImage->GetData();
             int h = pImage->GetHeight();
             int w = pImage->GetWidth();
-            int bpp = pImage->GetBPP();
+            int bps = w * pImage->GetBPP() / 8;
             int stride = pImage->GetStride();
             for (int y = 0; y < (int)h; y++)
             {
-                memcpy(pDst, pSrc, w * bpp / 8);
+                memcpy(pDst, pSrc, bps);
                 pSrc += stride;
                 pDst += ms.RowPitch;
             }

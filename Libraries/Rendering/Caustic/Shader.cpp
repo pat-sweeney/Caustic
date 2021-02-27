@@ -100,59 +100,60 @@ namespace Caustic
     // numParams - Number of parameters in params
     // params - Parameter list we will copy definitions into
     //**********************************************************************
-    uint32 CShader::ComputeParamSize(ShaderParamDef* pDefs, uint32 numParams, std::vector<ShaderParamInstance>& params)
+    uint32 CShader::ComputeParamSize(ShaderParamDef* pDefs, uint32 numParams, std::map<std::wstring, ShaderParamInstance>& params)
     {
         if (pDefs == nullptr || numParams == 0)
             return 0;
         uint32 s = 0;
-        params.resize(numParams);
         for (size_t i = 0; i < numParams; i++)
         {
             if (pDefs[i].m_name.length() == 0)
                 continue;
-            ShaderParamDef& d = params[i];
+            const auto [it, success] = params.insert(std::make_pair(pDefs[i].m_name, ShaderParamInstance()));
+            ShaderParamDef& d = it->second;
             d = pDefs[i];
+            it->second.m_cbOffset = s;
             s += ShaderTypeSize(d);
-            params[i].m_dirty = true;
-            params[i].m_offset = (pDefs[i].m_type == EShaderParamType::ShaderType_Texture ||
+            it->second.m_dirty = true;
+            it->second.m_offset = (pDefs[i].m_type == EShaderParamType::ShaderType_Texture ||
                 pDefs[i].m_type == EShaderParamType::ShaderType_AppendStructuredBuffer ||
                 pDefs[i].m_type == EShaderParamType::ShaderType_RWStructuredBuffer ||
                 pDefs[i].m_type == EShaderParamType::ShaderType_RWByteAddressBuffer ||
-                pDefs[i].m_type == EShaderParamType::ShaderType_StructuredBuffer) ? pDefs[i].m_offset : s;
+                pDefs[i].m_type == EShaderParamType::ShaderType_StructuredBuffer) ? pDefs[i].m_offset : 0;
             if (pDefs[i].m_type == EShaderParamType::ShaderType_Float)
-                params[i].m_value = std::any(0.0f);
+                it->second.m_value = std::any(0.0f);
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Float_Array)
             {
-                for (size_t j = 0; j < params[i].m_members; j++)
-                    params[i].m_values.push_back(Float(0.0f));
+                for (size_t j = 0; j < it->second.m_members; j++)
+                    it->second.m_values.push_back(Float(0.0f));
             }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Float2)
-                params[i].m_value = std::any(Float2(0.0f, 0.0f));
+                it->second.m_value = std::any(Float2(0.0f, 0.0f));
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Float2_Array)
             {
-                for (size_t j = 0; j < params[i].m_members; j++)
-                    params[i].m_values.push_back(Float2(0.0f, 0.0f));
+                for (size_t j = 0; j < it->second.m_members; j++)
+                    it->second.m_values.push_back(Float2(0.0f, 0.0f));
             }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Float3)
-                params[i].m_value = std::any(Float3(0.0f, 0.0f, 0.0f));
+                it->second.m_value = std::any(Float3(0.0f, 0.0f, 0.0f));
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Float3_Array)
             {
-                for (size_t j = 0; j < params[i].m_members; j++)
-                    params[i].m_values.push_back(Float3(0.0f, 0.0f, 0.0f));
+                for (size_t j = 0; j < it->second.m_members; j++)
+                    it->second.m_values.push_back(Float3(0.0f, 0.0f, 0.0f));
             }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Float4)
-                params[i].m_value = std::any(Float4(0.0f, 0.0f, 0.0f, 0.0f));
+                it->second.m_value = std::any(Float4(0.0f, 0.0f, 0.0f, 0.0f));
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Float4_Array)
             {
-                for (size_t j = 0; j < params[i].m_members; j++)
-                    params[i].m_values.push_back(Float4(0.0f, 0.0f, 0.0f, 0.0f));
+                for (size_t j = 0; j < it->second.m_members; j++)
+                    it->second.m_values.push_back(Float4(0.0f, 0.0f, 0.0f, 0.0f));
             }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Int)
-                params[i].m_value = std::any(Int(0));
+                it->second.m_value = std::any(Int(0));
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Int_Array)
             {
-                for (size_t j = 0; j < params[i].m_members; j++)
-                    params[i].m_values.push_back(Int(0));
+                for (size_t j = 0; j < it->second.m_members; j++)
+                    it->second.m_values.push_back(Int(0));
             }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Matrix)
             {
@@ -163,7 +164,7 @@ namespace Caustic
                     0.0f, 0.0f, 0.0f, 1.0f
                 };
                 Matrix m(v);
-                params[i].m_value = std::any(m);
+                it->second.m_value = std::any(m);
             }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Matrix_Array)
             {
@@ -174,8 +175,8 @@ namespace Caustic
                     0.0f, 0.0f, 0.0f, 1.0f
                 };
                 Matrix m(v);
-                for (size_t j = 0; j < params[i].m_members; j++)
-                    params[i].m_values.push_back(m);
+                for (size_t j = 0; j < it->second.m_members; j++)
+                    it->second.m_values.push_back(m);
             }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Matrix3x3)
             {
@@ -185,7 +186,7 @@ namespace Caustic
                     0.0f, 0.0f, 1.0f
                 };
                 Matrix_3x3 m(v);
-                params[i].m_value = std::any(m);
+                it->second.m_value = std::any(m);
             }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_Matrix3x3_Array)
             {
@@ -195,8 +196,8 @@ namespace Caustic
                     0.0f, 0.0f, 1.0f
                 };
                 Matrix_3x3 m(v);
-                for (size_t j = 0; j < params[i].m_members; j++)
-                    params[i].m_values.push_back(m);
+                for (size_t j = 0; j < it->second.m_members; j++)
+                    it->second.m_values.push_back(m);
             }
             else if (pDefs[i].m_type == EShaderParamType::ShaderType_StructuredBuffer ||
                 pDefs[i].m_type == EShaderParamType::ShaderType_AppendStructuredBuffer ||
@@ -229,32 +230,32 @@ namespace Caustic
         m_maxTextureSlot = 0;
     }
 
-    void CShader::PushSamplers(IRenderer* pRenderer, std::vector<ShaderParamInstance>& params, bool isPixelShader)
+    void CShader::PushSamplers(IRenderer* pRenderer, std::map<std::wstring, ShaderParamInstance>& params, bool isPixelShader)
     {
         // First push samplers
-        for (size_t i = 0; i < params.size(); i++)
+        for (auto it : params)
         {
-            if (!params[i].m_dirty)
+            if (!it.second.m_dirty)
                 continue;
-            switch (params[i].m_type)
+            switch (it.second.m_type)
             {
             case EShaderParamType::ShaderType_Texture:
             {
-                if (params[i].m_value.has_value())
+                if (it.second.m_value.has_value())
                 {
-                    CRefObj<ITexture> v = std::any_cast<CRefObj<ITexture>>(params[i].m_value);
-                    v->Render(pRenderer, params[i].m_offset, isPixelShader);
-                    if (params[i].m_offset > (uint32)m_maxTextureSlot)
-                        m_maxTextureSlot = params[i].m_offset;
+                    CRefObj<ITexture> v = std::any_cast<CRefObj<ITexture>>(it.second.m_value);
+                    v->Render(pRenderer, it.second.m_offset, isPixelShader);
+                    if (it.second.m_offset > (uint32)m_maxTextureSlot)
+                        m_maxTextureSlot = it.second.m_offset;
                 }
             }
             break;
             case EShaderParamType::ShaderType_Sampler:
             {
-                if (params[i].m_value.has_value())
+                if (it.second.m_value.has_value())
                 {
-                    Caustic::CSamplerRef v = std::any_cast<CSamplerRef>(params[i].m_value);
-                    v.m_spSampler->Render(pRenderer, params[i].m_offset, isPixelShader);
+                    Caustic::CSamplerRef v = std::any_cast<CSamplerRef>(it.second.m_value);
+                    v.m_spSampler->Render(pRenderer, it.second.m_offset, isPixelShader);
                 }
             }
             break;
@@ -271,149 +272,125 @@ namespace Caustic
     // pBuffer - Constant buffer to push values into
     // params - List of parameters to push
     //**********************************************************************
-    void CShader::PushConstants(IRenderer* pRenderer, SBuffer* pBuffer, std::vector<ShaderParamInstance>& params)
+    void CShader::PushConstants(IRenderer* pRenderer, SBuffer* pBuffer, std::map<std::wstring, ShaderParamInstance>& params)
     {
         if (pBuffer == nullptr || pBuffer->m_bufferSize == 0)
             return;
 
         D3D11_MAPPED_SUBRESOURCE ms;
         CT(pRenderer->GetContext()->Map(pBuffer->m_spBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
-        BYTE* pb = reinterpret_cast<BYTE*>(ms.pData);
-        for (size_t i = 0; i < params.size(); i++)
+        for (auto it : params)
         {
-            switch (params[i].m_type)
+            BYTE* pb = reinterpret_cast<BYTE*>(ms.pData) + it.second.m_cbOffset;
+            switch (it.second.m_type)
             {
             case EShaderParamType::ShaderType_Sampler:
                 break;
             case EShaderParamType::ShaderType_Texture:
                 break;
             case EShaderParamType::ShaderType_Float:
-            {
-                float f = (params[i].m_value.has_value()) ? std::any_cast<float>(params[i].m_value) : 0.0f;
-                memcpy(pb, &f, sizeof(float));
-                pb += sizeof(float);
-            }
-            break;
+                {
+                    float f = (it.second.m_value.has_value()) ? std::any_cast<float>(it.second.m_value) : 0.0f;
+                    memcpy(pb, &f, sizeof(float));
+                }
+                break;
             case EShaderParamType::ShaderType_Float_Array:
             {
-                for (size_t j = 0; j < params[i].m_members; j++)
+                for (size_t j = 0; j < it.second.m_members; j++)
                 {
-                    Float v = (params[i].m_values[j].has_value()) ? std::any_cast<Float>(params[i].m_values[j]) : 0.0f;
+                    Float v = (it.second.m_values[j].has_value()) ? std::any_cast<Float>(it.second.m_values[j]) : 0.0f;
                     memcpy(pb, &v, sizeof(Float));
                     pb += sizeof(Float);
                 }
             }
             break;
             case EShaderParamType::ShaderType_Float2:
-            {
-                Float2 f = (params[i].m_value.has_value()) ? std::any_cast<Float2>(params[i].m_value) : Float2(0.0f, 0.0f);
-                memcpy(pb, &f, sizeof(Float2));
-                pb += sizeof(Float2);
-            }
-            break;
+                {
+                    Float2 f = (it.second.m_value.has_value()) ? std::any_cast<Float2>(it.second.m_value) : Float2(0.0f, 0.0f);
+                    memcpy(pb, &f, sizeof(Float2));
+                }
+                break;
             case EShaderParamType::ShaderType_Float2_Array:
-            {
-                for (size_t j = 0; j < params[i].m_members; j++)
                 {
-                    Float2 v = (params[i].m_values[j].has_value()) ? std::any_cast<Float2>(params[i].m_values[j]) : Float2(0.0f, 0.0f);
-                    memcpy(pb, &v, sizeof(Float2));
-                    pb += sizeof(Float2);
+                    for (size_t j = 0; j < it.second.m_members; j++)
+                    {
+                        Float2 v = (it.second.m_values[j].has_value()) ? std::any_cast<Float2>(it.second.m_values[j]) : Float2(0.0f, 0.0f);
+                        memcpy(pb, &v, sizeof(Float2));
+                        pb += sizeof(Float2);
+                    }
                 }
-            }
-            break;
+                break;
             case EShaderParamType::ShaderType_Float3:
-            {
-                Float3 f = (params[i].m_value.has_value()) ? std::any_cast<Float3>(params[i].m_value) : Float3(0.0f, 0.0f, 0.0f);
-                memcpy(pb, &f, sizeof(Float3));
-                pb += sizeof(Float3);
-            }
-            break;
+                {
+                    Float3 f = (it.second.m_value.has_value()) ? std::any_cast<Float3>(it.second.m_value) : Float3(0.0f, 0.0f, 0.0f);
+                    memcpy(pb, &f, sizeof(Float3));
+                }
+                break;
             case EShaderParamType::ShaderType_Float3_Array:
-            {
-                for (size_t j = 0; j < params[i].m_members; j++)
                 {
-                    Float3 v = (params[i].m_values[j].has_value()) ? std::any_cast<Float3>(params[i].m_values[j]) : Float3(0.0f, 0.0f, 0.0f);
-                    memcpy(pb, &v, sizeof(Float3));
-                    pb += sizeof(Float3);
+                    for (size_t j = 0; j < it.second.m_members; j++)
+                    {
+                        Float3 v = (it.second.m_values[j].has_value()) ? std::any_cast<Float3>(it.second.m_values[j]) : Float3(0.0f, 0.0f, 0.0f);
+                        memcpy(pb, &v, sizeof(Float3));
+                        pb += sizeof(Float3);
+                    }
                 }
-            }
-            break;
+                break;
             case EShaderParamType::ShaderType_Float4:
-            {
-                Float4 f = (params[i].m_value.has_value()) ? std::any_cast<Float4>(params[i].m_value) : Float4(0.0f, 0.0f, 0.0f, 0.0f);
-                memcpy(pb, &f, sizeof(Float4));
-                pb += sizeof(Float4);
-            }
-            break;
+                {
+                    Float4 f = (it.second.m_value.has_value()) ? std::any_cast<Float4>(it.second.m_value) : Float4(0.0f, 0.0f, 0.0f, 0.0f);
+                    memcpy(pb, &f, sizeof(Float4));
+                }
+                break;
             case EShaderParamType::ShaderType_Float4_Array:
-            {
-                for (size_t j = 0; j < params[i].m_members; j++)
                 {
-                    Float4 v = (params[i].m_values[j].has_value()) ? std::any_cast<Float4>(params[i].m_values[j]) : Float4(0.0f, 0.0f, 0.0f, 0.0f);
-                    memcpy(pb, &v, sizeof(Float4));
-                    pb += sizeof(Float4);
+                    for (size_t j = 0; j < it.second.m_members; j++)
+                    {
+                        Float4 v = (it.second.m_values[j].has_value()) ? std::any_cast<Float4>(it.second.m_values[j]) : Float4(0.0f, 0.0f, 0.0f, 0.0f);
+                        memcpy(pb, &v, sizeof(Float4));
+                        pb += sizeof(Float4);
+                    }
                 }
-            }
-            break;
+                break;
             case EShaderParamType::ShaderType_Int:
-            {
-                Int v = (params[i].m_value.has_value()) ? std::any_cast<Int>(params[i].m_value) : 0;
-                memcpy(pb, &v, sizeof(int));
-                pb += sizeof(int);
-            }
-            break;
+                {
+                    Int v = (it.second.m_value.has_value()) ? std::any_cast<Int>(it.second.m_value) : 0;
+                    memcpy(pb, &v, sizeof(int));
+                }
+                break;
             case EShaderParamType::ShaderType_Int_Array:
-            {
-                for (size_t j = 0; j < params[i].m_members; j++)
                 {
-                    Int v = (params[i].m_values[j].has_value()) ? std::any_cast<Int>(params[i].m_values[j]) : 0;
-                    memcpy(pb, &v.x, sizeof(int));
-                    pb += sizeof(int);
+                    for (size_t j = 0; j < it.second.m_members; j++)
+                    {
+                        Int v = (it.second.m_values[j].has_value()) ? std::any_cast<Int>(it.second.m_values[j]) : 0;
+                        memcpy(pb, &v.x, sizeof(int));
+                        pb += sizeof(int);
+                    }
                 }
-            }
-            break;
+                break;
             case EShaderParamType::ShaderType_Matrix:
-            {
-                Matrix m = (params[i].m_value.has_value()) ? std::any_cast<Matrix>(params[i].m_value) : Matrix();
-                memcpy(pb, m.x, 16 * sizeof(float));
-                pb += 16 * sizeof(float);
-            }
-            break;
-            case EShaderParamType::ShaderType_Matrix_Array:
-            {
-                for (size_t j = 0; j < params[i].m_members; j++)
                 {
-                    Matrix m = (params[i].m_values[j].has_value()) ? std::any_cast<Matrix>(params[i].m_values[j]) : Matrix();
+                    Matrix m = (it.second.m_value.has_value()) ? std::any_cast<Matrix>(it.second.m_value) : Matrix();
                     memcpy(pb, m.x, 16 * sizeof(float));
-                    pb += 16 * sizeof(float);
                 }
-            }
-            break;
+                break;
+            case EShaderParamType::ShaderType_Matrix_Array:
+                {
+                    for (size_t j = 0; j < it.second.m_members; j++)
+                    {
+                        Matrix m = (it.second.m_values[j].has_value()) ? std::any_cast<Matrix>(it.second.m_values[j]) : Matrix();
+                        memcpy(pb, m.x, 16 * sizeof(float));
+                        pb += 16 * sizeof(float);
+                    }
+                }
+                break;
             case EShaderParamType::ShaderType_Matrix3x3:
-            {
-                // D3D is so dumb. Apparently it will pack a float3x3 as if
-                // it is 3 float4s where the W component is a packing value.
-                // So stupid.
-                // So here I need to pack the values appropriately.
-                Matrix_3x3 m = (params[i].m_value.has_value()) ? std::any_cast<Matrix_3x3>(params[i].m_value) : Matrix_3x3();
-                for (int i = 0; i < 3; i++)
                 {
-                    memcpy(pb, &m.x[i * 3], 3 * sizeof(float));
-                    pb += 3 * sizeof(float);
-                    *(float*)pb = 0.0f;
-                    pb += sizeof(float);
-                }
-            }
-            break;
-            case EShaderParamType::ShaderType_Matrix3x3_Array:
-            {
-                for (size_t j = 0; j < params[i].m_members; j++)
-                {
-                    Matrix_3x3 m = (params[i].m_values[j].has_value()) ? std::any_cast<Matrix_3x3>(params[i].m_values[j]) : Matrix_3x3();
                     // D3D is so dumb. Apparently it will pack a float3x3 as if
                     // it is 3 float4s where the W component is a packing value.
                     // So stupid.
                     // So here I need to pack the values appropriately.
+                    Matrix_3x3 m = (it.second.m_value.has_value()) ? std::any_cast<Matrix_3x3>(it.second.m_value) : Matrix_3x3();
                     for (int i = 0; i < 3; i++)
                     {
                         memcpy(pb, &m.x[i * 3], 3 * sizeof(float));
@@ -422,8 +399,26 @@ namespace Caustic
                         pb += sizeof(float);
                     }
                 }
-            }
-            break;
+                break;
+            case EShaderParamType::ShaderType_Matrix3x3_Array:
+                {
+                    for (size_t j = 0; j < it.second.m_members; j++)
+                    {
+                        Matrix_3x3 m = (it.second.m_values[j].has_value()) ? std::any_cast<Matrix_3x3>(it.second.m_values[j]) : Matrix_3x3();
+                        // D3D is so dumb. Apparently it will pack a float3x3 as if
+                        // it is 3 float4s where the W component is a packing value.
+                        // So stupid.
+                        // So here I need to pack the values appropriately.
+                        for (int i = 0; i < 3; i++)
+                        {
+                            memcpy(pb, &m.x[i * 3], 3 * sizeof(float));
+                            pb += 3 * sizeof(float);
+                            *(float*)pb = 0.0f;
+                            pb += sizeof(float);
+                        }
+                    }
+                }
+                break;
             }
         }
         pRenderer->GetContext()->Unmap(pBuffer->m_spBuffer, 0);
@@ -467,22 +462,22 @@ namespace Caustic
     // params - List of parameters to push
     //**********************************************************************
     void CShader::PushBuffers(IRenderer* pRenderer,
-        std::vector<ShaderParamInstance>& params)
+        std::map<std::wstring, ShaderParamInstance>& params)
     {
         CComPtr<ID3D11DeviceContext> spCtx = pRenderer->GetContext();
-        for (size_t i = 0; i < params.size(); i++)
+        for (auto it : params)
         {
-            if (!params[i].m_value.has_value())
+            if (!it.second.m_value.has_value())
                 continue;
-            if (params[i].m_type != EShaderParamType::ShaderType_AppendStructuredBuffer &&
-                params[i].m_type != EShaderParamType::ShaderType_RWStructuredBuffer &&
-                params[i].m_type != EShaderParamType::ShaderType_StructuredBuffer &&
-                params[i].m_type != EShaderParamType::ShaderType_RWByteAddressBuffer)
+            if (it.second.m_type != EShaderParamType::ShaderType_AppendStructuredBuffer &&
+                it.second.m_type != EShaderParamType::ShaderType_RWStructuredBuffer &&
+                it.second.m_type != EShaderParamType::ShaderType_StructuredBuffer &&
+                it.second.m_type != EShaderParamType::ShaderType_RWByteAddressBuffer)
                 continue;
 
             uint32 miscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
             uint32 bind = 0;
-            switch (params[i].m_type)
+            switch (it.second.m_type)
             {
             case EShaderParamType::ShaderType_AppendStructuredBuffer:
                 CT(E_NOTIMPL);
@@ -502,37 +497,37 @@ namespace Caustic
             int bufferIndex = 0;
             for (; bufferIndex < (int)m_csBuffers.size(); bufferIndex++)
             {
-                if (m_csBuffers[bufferIndex].m_name == params[i].m_name)
+                if (m_csBuffers[bufferIndex].m_name == it.second.m_name)
                     break;
             }
             if (bufferIndex == (int)m_csBuffers.size())
             {
                 SBuffer buffer;
-                buffer.m_bufferSlot = params[i].m_offset;
-                buffer.m_name = params[i].m_name;
+                buffer.m_bufferSlot = it.second.m_offset;
+                buffer.m_name = it.second.m_name;
                 m_csBuffers.push_back(buffer);
                 bufferIndex = (int)m_csBuffers.size() - 1;
             }
 
-            ClientBuffer& srcVal = std::any_cast<ClientBuffer>(params[i].m_value);
-            if (params[i].m_dirty || bufferIndex == -1)
+            ClientBuffer& srcVal = std::any_cast<ClientBuffer>(it.second.m_value);
+            if (it.second.m_dirty || bufferIndex == -1)
             {
-                params[i].m_dirty = false;
+                it.second.m_dirty = false;
 
                 // Recreate the underlying buffer
                 uint32 access = 0;
                 D3D11_USAGE usage = D3D11_USAGE::D3D11_USAGE_DEFAULT;
                 uint32 stride, alignment;
-                if (params[i].m_type == EShaderParamType::ShaderType_StructuredBuffer ||
-                    params[i].m_type == EShaderParamType::ShaderType_RWStructuredBuffer)
+                if (it.second.m_type == EShaderParamType::ShaderType_StructuredBuffer ||
+                    it.second.m_type == EShaderParamType::ShaderType_RWStructuredBuffer)
                 {
                     // This is lame. Structured buffers must have each element be a multiple of 4
-                    stride = ((params[i].m_elemSize + 3) / 4) * 4;
+                    stride = ((it.second.m_elemSize + 3) / 4) * 4;
                     alignment = stride;
                 }
                 else
                 {
-                    stride = params[i].m_elemSize;
+                    stride = it.second.m_elemSize;
                     alignment = 16;
                 }
                 CComPtr<ID3D11Device> spDevice = pRenderer->GetDevice();
@@ -543,7 +538,7 @@ namespace Caustic
                 miscFlags = 0;
                 CreateBuffer(spDevice, srcVal.m_dataSize, bind, access, usage, miscFlags, stride, alignment, &m_csBuffers[bufferIndex], &m_csBuffers[bufferIndex].m_spStagingBuffer.p);
 
-                if (params[i].m_type == EShaderParamType::ShaderType_StructuredBuffer)
+                if (it.second.m_type == EShaderParamType::ShaderType_StructuredBuffer)
                 {
                     D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
                     ZeroMemory(&srvDesc, sizeof(srvDesc));
@@ -558,7 +553,7 @@ namespace Caustic
                     ZeroMemory(&uavDesc, sizeof(uavDesc));
                     uavDesc.Buffer.FirstElement = 0;
                     uavDesc.Buffer.NumElements = srcVal.m_dataSize / stride;
-                    if (params[i].m_type == EShaderParamType::ShaderType_RWStructuredBuffer)
+                    if (it.second.m_type == EShaderParamType::ShaderType_RWStructuredBuffer)
                     {
                         uavDesc.Format = DXGI_FORMAT_UNKNOWN;
                         uavDesc.Buffer.Flags = 0;
@@ -589,7 +584,7 @@ namespace Caustic
             }
 
             // Assign the buffer
-            if (params[i].m_type == EShaderParamType::ShaderType_StructuredBuffer)
+            if (it.second.m_type == EShaderParamType::ShaderType_StructuredBuffer)
                 spCtx->CSSetShaderResources(m_csBuffers[bufferIndex].m_bufferSlot, 1, &m_csBuffers[bufferIndex].m_spSRView.p);
             else
                 spCtx->CSSetUnorderedAccessViews(m_csBuffers[bufferIndex].m_bufferSlot, 1, &m_csBuffers[bufferIndex].m_spUAView.p, nullptr);
@@ -605,16 +600,19 @@ namespace Caustic
     // value - Value of parameter
     // params - List of parameters to update
     //**********************************************************************
-    void CShader::SetParam(std::wstring paramName, std::any& value, std::vector<ShaderParamInstance>& params)
+    void CShader::SetParam(const std::wstring& paramName, std::any& value, std::map<std::wstring, ShaderParamInstance>& params)
     {
-        for (size_t i = 0; i < params.size(); i++)
+        SetParam(paramName.c_str(), value, params);
+    }
+
+    //**********************************************************************
+    void CShader::SetParam(const wchar_t* paramName, std::any& value, std::map<std::wstring, ShaderParamInstance>& params)
+    {
+        auto it = params.find(paramName);
+        if (it != params.end())
         {
-            if (params[i].m_name == paramName)
-            {
-                params[i].m_value = value;
-                params[i].m_dirty = true;
-                break;
-            }
+            it->second.m_value = value;
+            it->second.m_dirty = true;
         }
     }
 
@@ -627,16 +625,19 @@ namespace Caustic
     // value - Value of parameter
     // params - List of parameters to update
     //**********************************************************************
-    void CShader::SetParam(std::wstring paramName, int index, std::any& value, std::vector<ShaderParamInstance>& params)
+    void CShader::SetParam(const std::wstring& paramName, int index, std::any& value, std::map<std::wstring, ShaderParamInstance>& params)
     {
-        for (size_t i = 0; i < params.size(); i++)
+        SetParam(paramName.c_str(), index, value, params);
+    }
+
+    //**********************************************************************
+    void CShader::SetParam(const wchar_t* paramName, int index, std::any& value, std::map<std::wstring, ShaderParamInstance>& params)
+    {
+        auto it = params.find(paramName);
+        if (it != params.end())
         {
-            if (params[i].m_name == paramName)
-            {
-                params[i].m_values[index] = value;
-                params[i].m_dirty = true;
-                break;
-            }
+            it->second.m_values[index] = value;
+            it->second.m_dirty = true;
         }
     }
 
@@ -648,7 +649,13 @@ namespace Caustic
     // paramName - Name of the parameter
     // value - Value of parameter
     //**********************************************************************
-    void CShader::SetPSParam(std::wstring paramName, std::any& value)
+    void CShader::SetPSParam(const std::wstring& paramName, std::any& value)
+    {
+        SetParam(paramName, value, m_psParams);
+    }
+
+    //**********************************************************************
+    void CShader::SetPSParam(const wchar_t* paramName, std::any& value)
     {
         SetParam(paramName, value, m_psParams);
     }
@@ -657,7 +664,14 @@ namespace Caustic
     // Method: SetPSParamFloat
     // See <IShader::SetPSParamFloat>
     //**********************************************************************
-    void CShader::SetPSParamFloat(std::wstring paramName, float value)
+    void CShader::SetPSParamFloat(const std::wstring& paramName, float value)
+    {
+        std::any v(value);
+        SetPSParam(paramName, v);
+    }
+
+    //**********************************************************************
+    void CShader::SetPSParamFloat(const wchar_t* paramName, float value)
     {
         std::any v(value);
         SetPSParam(paramName, v);
@@ -667,7 +681,14 @@ namespace Caustic
     // Method: SetPSParamInt
     // See <IShader::SetPSParamInt>
     //**********************************************************************
-    void CShader::SetPSParamInt(std::wstring paramName, int value)
+    void CShader::SetPSParamInt(const std::wstring& paramName, int value)
+    {
+        std::any v(Int((int)value));
+        SetPSParam(paramName, v);
+    }
+
+    //**********************************************************************
+    void CShader::SetPSParamInt(const wchar_t* paramName, int value)
     {
         std::any v(Int((int)value));
         SetPSParam(paramName, v);
@@ -682,7 +703,13 @@ namespace Caustic
     // index - Index into array
     // value - Value of parameter
     //**********************************************************************
-    void CShader::SetPSParam(std::wstring paramName, int index, std::any& value)
+    void CShader::SetPSParam(const std::wstring& paramName, int index, std::any& value)
+    {
+        SetParam(paramName, index, value, m_psParams);
+    }
+
+    //**********************************************************************
+    void CShader::SetPSParam(const wchar_t* paramName, int index, std::any& value)
     {
         SetParam(paramName, index, value, m_psParams);
     }
@@ -695,7 +722,13 @@ namespace Caustic
     // paramName - Name of parameter
     // value - Value of parameter
     //**********************************************************************
-    void CShader::SetVSParam(std::wstring paramName, std::any& value)
+    void CShader::SetVSParam(const std::wstring& paramName, std::any& value)
+    {
+        SetParam(paramName, value, m_vsParams);
+    }
+
+    //**********************************************************************
+    void CShader::SetVSParam(const wchar_t* paramName, std::any& value)
     {
         SetParam(paramName, value, m_vsParams);
     }
@@ -704,7 +737,14 @@ namespace Caustic
     // Method: SetVSParamFloat
     // See <IShader::SetVSParamFloat>
     //**********************************************************************
-    void CShader::SetVSParamFloat(std::wstring paramName, float value)
+    void CShader::SetVSParamFloat(const std::wstring& paramName, float value)
+    {
+        std::any v(value);
+        SetVSParam(paramName, v);
+    }
+
+    //**********************************************************************
+    void CShader::SetVSParamFloat(const wchar_t* paramName, float value)
     {
         std::any v(value);
         SetVSParam(paramName, v);
@@ -714,7 +754,14 @@ namespace Caustic
     // Method: SetVSParamInt
     // See <IShader::SetVSParamInt>
     //**********************************************************************
-    void CShader::SetVSParamInt(std::wstring paramName, int value)
+    void CShader::SetVSParamInt(const std::wstring& paramName, int value)
+    {
+        std::any v(Int((int)value));
+        SetVSParam(paramName, v);
+    }
+
+    //**********************************************************************
+    void CShader::SetVSParamInt(const wchar_t* paramName, int value)
     {
         std::any v(Int((int)value));
         SetVSParam(paramName, v);
@@ -729,9 +776,15 @@ namespace Caustic
     // index - Index into array
     // value - Value of parameter
     //**********************************************************************
-    void CShader::SetVSParam(std::wstring paramName, int index, std::any &value)
+    void CShader::SetVSParam(const std::wstring& paramName, int index, std::any& value)
     {
-        SetParam(paramName, index, value, m_psParams);
+        SetParam(paramName, index, value, m_vsParams);
+    }
+
+    //**********************************************************************
+    void CShader::SetVSParam(const wchar_t* paramName, int index, std::any& value)
+    {
+        SetParam(paramName, index, value, m_vsParams);
     }
 
     //**********************************************************************
@@ -742,7 +795,13 @@ namespace Caustic
     // paramName - Name of parameter
     // value - Value of parameter
     //**********************************************************************
-    void CShader::SetCSParam(std::wstring paramName, std::any& value)
+    void CShader::SetCSParam(const std::wstring& paramName, std::any& value)
+    {
+        SetParam(paramName, value, m_csParams);
+    }
+
+    //**********************************************************************
+    void CShader::SetCSParam(const wchar_t* paramName, std::any& value)
     {
         SetParam(paramName, value, m_csParams);
     }
@@ -751,7 +810,14 @@ namespace Caustic
     // Method: SetCSParamFloat
     // See <IShader::SetCSParamFloat>
     //**********************************************************************
-    void CShader::SetCSParamFloat(std::wstring paramName, float value)
+    void CShader::SetCSParamFloat(const std::wstring& paramName, float value)
+    {
+        std::any v(value);
+        SetCSParam(paramName, v);
+    }
+
+    //**********************************************************************
+    void CShader::SetCSParamFloat(const wchar_t* paramName, float value)
     {
         std::any v(value);
         SetCSParam(paramName, v);
@@ -761,11 +827,19 @@ namespace Caustic
     // Method: SetCSParamInt
     // See <IShader::SetCSParamInt>
     //**********************************************************************
-    void CShader::SetCSParamInt(std::wstring paramName, int value)
+    void CShader::SetCSParamInt(const std::wstring& paramName, int value)
     {
         std::any v(Int((int)value));
         SetCSParam(paramName, v);
     }
+    
+    //**********************************************************************
+    void CShader::SetCSParamInt(const wchar_t* paramName, int value)
+    {
+        std::any v(Int((int)value));
+        SetCSParam(paramName, v);
+    }
+
     //**********************************************************************
     // Method: SetCSParam
     // Sets a compute shader array element parameter
@@ -775,9 +849,15 @@ namespace Caustic
     // index - Index into array
     // value - Value of parameter
     //**********************************************************************
-    void CShader::SetCSParam(std::wstring paramName, int index, std::any& value)
+    void CShader::SetCSParam(const std::wstring& paramName, int index, std::any& value)
     {
-        SetParam(paramName, index, value, m_psParams);
+        SetParam(paramName, index, value, m_csParams);
+    }
+
+    //**********************************************************************
+    void CShader::SetCSParam(const wchar_t* paramName, int index, std::any& value)
+    {
+        SetParam(paramName, index, value, m_csParams);
     }
 
     static Matrix D3DMatrixToMatrix(DirectX::XMMATRIX &mat)
@@ -1000,43 +1080,10 @@ namespace Caustic
     // params - Generated parameter list
     // ppBuffer - Returns the created constant buffer
     //**********************************************************************
-    void CShader::CreateConstantBuffer(ID3D11Device *pDevice, ShaderParamDef *pDefs, uint32 paramsSize, std::vector<ShaderParamInstance> &params, SBuffer *pConstantBuffer)
+    void CShader::CreateConstantBuffer(ID3D11Device *pDevice, ShaderParamDef *pDefs, uint32 paramsSize, std::map<std::wstring, ShaderParamInstance> &params, SBuffer *pConstantBuffer)
     {
         uint32 s = ComputeParamSize(pDefs, paramsSize, params);
         CreateBuffer(pDevice, s, D3D11_BIND_CONSTANT_BUFFER, D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE, D3D11_USAGE_DYNAMIC, 0, 0, 16, pConstantBuffer, &pConstantBuffer->m_spBuffer);
-    }
-
-    //**********************************************************************
-    // Method: CreateConstantBuffer
-    // CreateConstantBuffer creates the constant buffer (pixel or vertex shader)
-    //
-    // Parameters:
-    // pDevice - D3D device
-    // pDefs - List of parameter definitions (parsed from HLSL)
-    // paramsSize - Length of pDefs
-    // params - Generated parameter list
-    // ppBuffer - Returns the created constant buffer
-    //**********************************************************************
-    void CShader::CreateBuffers(ID3D11Device* pDevice, ShaderParamDef* pDefs, uint32 numParams, std::vector<ShaderParamInstance>& params)
-    {
-        if (pDefs == nullptr || numParams == 0)
-            return;
-        uint32 s = 0;
-        params.resize(numParams);
-        for (size_t i = 0; i < numParams; i++)
-        {
-            if (pDefs[i].m_name.length() == 0)
-                continue;
-            ShaderParamDef& d = params[i];
-            d = pDefs[i];
-            params[i].m_dirty = true;
-            params[i].m_offset = (pDefs[i].m_type == EShaderParamType::ShaderType_Texture) ? pDefs[i].m_offset : s;
-            if (pDefs[i].m_type == EShaderParamType::ShaderType_StructuredBuffer)
-            {
-                ClientBuffer& buffer = std::any_cast<ClientBuffer>(params[i].m_value);
-                s += buffer.m_dataSize;
-            }
-        }
     }
 
     //**********************************************************************
