@@ -76,6 +76,7 @@ namespace Caustic
         spShader->m_spVertexShader = this->m_spVertexShader;
         spShader->m_spComputeShader = this->m_spComputeShader;
         spShader->m_spShaderInfo = this->m_spShaderInfo;
+        spShader->m_matricesAvail = this->m_matricesAvail;
         spShader->m_xThreads = this->m_xThreads;
         spShader->m_yThreads = this->m_yThreads;
         spShader->m_zThreads = this->m_zThreads;
@@ -233,10 +234,8 @@ namespace Caustic
     void CShader::PushSamplers(IRenderer* pRenderer, std::map<std::wstring, ShaderParamInstance>& params, bool isPixelShader)
     {
         // First push samplers
-        for (auto it : params)
+        for (auto &it : params)
         {
-            if (!it.second.m_dirty)
-                continue;
             switch (it.second.m_type)
             {
             case EShaderParamType::ShaderType_Texture:
@@ -279,7 +278,9 @@ namespace Caustic
 
         D3D11_MAPPED_SUBRESOURCE ms;
         CT(pRenderer->GetContext()->Map(pBuffer->m_spBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
-        for (auto it : params)
+        // Since we can't update only part of the constant buffer (since our mapping prevents that)
+        // we will update all the properties regardless of the dirty state.
+        for (auto &it : params)
         {
             BYTE* pb = reinterpret_cast<BYTE*>(ms.pData) + it.second.m_cbOffset;
             switch (it.second.m_type)
@@ -465,7 +466,7 @@ namespace Caustic
         std::map<std::wstring, ShaderParamInstance>& params)
     {
         CComPtr<ID3D11DeviceContext> spCtx = pRenderer->GetContext();
-        for (auto it : params)
+        for (auto &it : params)
         {
             if (!it.second.m_value.has_value())
                 continue;
@@ -510,7 +511,7 @@ namespace Caustic
             }
 
             ClientBuffer& srcVal = std::any_cast<ClientBuffer>(it.second.m_value);
-            if (it.second.m_dirty || bufferIndex == -1)
+            if (it.second.m_dirty)
             {
                 it.second.m_dirty = false;
 
@@ -882,10 +883,12 @@ namespace Caustic
         return m;
     }
 
-    void CShader::PushMatrix(const wchar_t *pParamName, std::any mat)
+    void CShader::PushMatrix(const wchar_t* pParamName, std::any mat, uint32 vsmask, uint32 psmask)
     {
-        SetVSParam(pParamName, mat);
-        SetPSParam(pParamName, mat);
+        if ((m_matricesAvail & vsmask) == vsmask)
+            SetVSParam(pParamName, mat);
+        if ((m_matricesAvail & psmask) == psmask)
+            SetPSParam(pParamName, mat);
     }
 
     void CShader::PushLights(std::vector<CRefObj<ILight>> &lights)
@@ -903,6 +906,33 @@ namespace Caustic
         SetPSParam(L"numLights", std::any((Int)numLights));
     }
 
+    void CShader::DetermineMatricesUsed()
+    {
+        m_matricesAvail |= m_spShaderInfo->PSUsesVariable(L"world") ? PSMatrixAvail_world : 0;
+        m_matricesAvail |= m_spShaderInfo->PSUsesVariable(L"worldInv") ? PSMatrixAvail_worldInv : 0;
+        m_matricesAvail |= m_spShaderInfo->PSUsesVariable(L"worldInvTranspose") ? PSMatrixAvail_worldInvTranspose : 0;
+        m_matricesAvail |= m_spShaderInfo->PSUsesVariable(L"view") ? PSMatrixAvail_view : 0;
+        m_matricesAvail |= m_spShaderInfo->PSUsesVariable(L"viewInv") ? PSMatrixAvail_viewInv : 0;
+        m_matricesAvail |= m_spShaderInfo->PSUsesVariable(L"proj") ? PSMatrixAvail_proj : 0;
+        m_matricesAvail |= m_spShaderInfo->PSUsesVariable(L"projInv") ? PSMatrixAvail_projInv : 0;
+        m_matricesAvail |= m_spShaderInfo->PSUsesVariable(L"worldView") ? PSMatrixAvail_worldView : 0;
+        m_matricesAvail |= m_spShaderInfo->PSUsesVariable(L"worldViewInv") ? PSMatrixAvail_worldViewInv : 0;
+        m_matricesAvail |= m_spShaderInfo->PSUsesVariable(L"worldViewProj") ? PSMatrixAvail_worldViewProj : 0;
+        m_matricesAvail |= m_spShaderInfo->PSUsesVariable(L"worldViewProjInv") ? PSMatrixAvail_worldViewProjInv : 0;
+
+        m_matricesAvail |= m_spShaderInfo->VSUsesVariable(L"world") ? VSMatrixAvail_world : 0;
+        m_matricesAvail |= m_spShaderInfo->VSUsesVariable(L"worldInv") ? VSMatrixAvail_worldInv : 0;
+        m_matricesAvail |= m_spShaderInfo->VSUsesVariable(L"worldInvTranspose") ? VSMatrixAvail_worldInvTranspose : 0;
+        m_matricesAvail |= m_spShaderInfo->VSUsesVariable(L"view") ? VSMatrixAvail_view : 0;
+        m_matricesAvail |= m_spShaderInfo->VSUsesVariable(L"viewInv") ? VSMatrixAvail_viewInv : 0;
+        m_matricesAvail |= m_spShaderInfo->VSUsesVariable(L"proj") ? VSMatrixAvail_proj : 0;
+        m_matricesAvail |= m_spShaderInfo->VSUsesVariable(L"projInv") ? VSMatrixAvail_projInv : 0;
+        m_matricesAvail |= m_spShaderInfo->VSUsesVariable(L"worldView") ? VSMatrixAvail_worldView : 0;
+        m_matricesAvail |= m_spShaderInfo->VSUsesVariable(L"worldViewInv") ? VSMatrixAvail_worldViewInv : 0;
+        m_matricesAvail |= m_spShaderInfo->VSUsesVariable(L"worldViewProj") ? VSMatrixAvail_worldViewProj : 0;
+        m_matricesAvail |= m_spShaderInfo->VSUsesVariable(L"worldViewProjInv") ? VSMatrixAvail_worldViewProjInv : 0;
+    }
+
     void CShader::PushMatrices(IRenderer *pRenderer, DirectX::XMMATRIX *pWorld)
     {
         DirectX::XMMATRIX view = pRenderer->GetCamera()->GetView();
@@ -911,19 +941,19 @@ namespace Caustic
         DirectX::XMMATRIX identity = DirectX::XMMatrixIdentity();
         if (pWorld == nullptr)
             pWorld = &identity;
-        PushMatrix(L"world", std::any(D3DMatrixToMatrix(*pWorld)));
-        PushMatrix(L"worldInv", std::any(D3DMatrixToMatrix(DirectX::XMMatrixInverse(nullptr, *pWorld))));
-        PushMatrix(L"worldInvTranspose", std::any(D3DMatrixToMatrix(DirectX::XMMatrixTranspose(DirectX::XMMatrixInverse(nullptr, *pWorld)))));
-        PushMatrix(L"view", std::any(D3DMatrixToMatrix(view)));
-        PushMatrix(L"viewInv", std::any(D3DMatrixToMatrix(DirectX::XMMatrixInverse(nullptr, view))));
-        PushMatrix(L"proj", std::any(D3DMatrixToMatrix(proj)));
-        PushMatrix(L"projInv", std::any(D3DMatrixToMatrix(DirectX::XMMatrixInverse(nullptr, proj))));
+        PushMatrix(L"world", std::any(D3DMatrixToMatrix(*pWorld)), PSMatrixAvail_world, VSMatrixAvail_world);
+        PushMatrix(L"worldInv", std::any(D3DMatrixToMatrix(DirectX::XMMatrixInverse(nullptr, *pWorld))), PSMatrixAvail_worldInv, VSMatrixAvail_worldInv);
+        PushMatrix(L"worldInvTranspose", std::any(D3DMatrixToMatrix(DirectX::XMMatrixTranspose(DirectX::XMMatrixInverse(nullptr, *pWorld)))), PSMatrixAvail_worldInvTranspose, PSMatrixAvail_worldInvTranspose);
+        PushMatrix(L"view", std::any(D3DMatrixToMatrix(view)), PSMatrixAvail_view, VSMatrixAvail_view);
+        PushMatrix(L"viewInv", std::any(D3DMatrixToMatrix(DirectX::XMMatrixInverse(nullptr, view))), PSMatrixAvail_viewInv, VSMatrixAvail_viewInv);
+        PushMatrix(L"proj", std::any(D3DMatrixToMatrix(proj)), PSMatrixAvail_proj, VSMatrixAvail_proj);
+        PushMatrix(L"projInv", std::any(D3DMatrixToMatrix(DirectX::XMMatrixInverse(nullptr, proj))), PSMatrixAvail_projInv, VSMatrixAvail_projInv);
         DirectX::XMMATRIX wv = DirectX::XMMatrixMultiply(*pWorld, view);
-        PushMatrix(L"worldView", std::any(D3DMatrixToMatrix(wv)));
-        PushMatrix(L"worldViewInv", std::any(D3DMatrixToMatrix(DirectX::XMMatrixInverse(nullptr, wv))));
+        PushMatrix(L"worldView", std::any(D3DMatrixToMatrix(wv)), PSMatrixAvail_worldView, VSMatrixAvail_worldView);
+        PushMatrix(L"worldViewInv", std::any(D3DMatrixToMatrix(DirectX::XMMatrixInverse(nullptr, wv))), PSMatrixAvail_worldViewInv, VSMatrixAvail_worldViewInv);
         DirectX::XMMATRIX wvp = DirectX::XMMatrixMultiply(wv, proj);
-        PushMatrix(L"worldViewProj", std::any(D3DMatrixToMatrix(wvp)));
-        PushMatrix(L"worldViewProjInv", std::any(D3DMatrixToMatrix(DirectX::XMMatrixInverse(nullptr, wvp))));
+        PushMatrix(L"worldViewProj", std::any(D3DMatrixToMatrix(wvp)), PSMatrixAvail_worldViewProj, VSMatrixAvail_worldViewProj);
+        PushMatrix(L"worldViewProjInv", std::any(D3DMatrixToMatrix(DirectX::XMMatrixInverse(nullptr, wvp))), PSMatrixAvail_worldViewProjInv, VSMatrixAvail_worldViewProjInv);
     }
 
     //**********************************************************************
@@ -1105,6 +1135,7 @@ namespace Caustic
 
         ID3D11Device* pDevice = pRenderer->GetDevice();
         m_spShaderInfo = pShaderInfo;
+        DetermineMatricesUsed();
         if (pShaderInfo->HasShader(EShaderType::TypeVertexShader))
         {
             const byte* pVSByteCodes = (const byte*)pVSBlob->GetBufferPointer();

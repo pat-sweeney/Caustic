@@ -61,6 +61,8 @@ namespace Caustic
 		//**********************************************************************
 		// IShaderInfo
 		//**********************************************************************
+		virtual bool PSUsesVariable(const wchar_t* pName) override;
+		virtual bool VSUsesVariable(const wchar_t* pName) override;
 		virtual bool HasShader(EShaderType type) override
 		{
 			return (type & m_shaderTypeFlags);

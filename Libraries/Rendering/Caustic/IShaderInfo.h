@@ -52,6 +52,24 @@ namespace Caustic
 	struct IShaderInfo : public IRefCount
 	{
         //**********************************************************************
+        // Method: PSUsesVariable
+        // Returns whether the Pixel shader uses the specified variable
+        //
+        // Parameters:
+        // pName - name of variable
+        //**********************************************************************
+        virtual bool PSUsesVariable(const wchar_t *pName) = 0;
+
+        //**********************************************************************
+        // Method: VSUsesVariable
+        // Returns whether the Vertex shader uses the specified variable
+        //
+        // Parameters:
+        // pName - name of variable
+        //**********************************************************************
+        virtual bool VSUsesVariable(const wchar_t *pName) = 0;
+
+        //**********************************************************************
         // Method: HasShader
         // Returns:
         // Returns whether the Caustic shader contains the specified D3D shader type

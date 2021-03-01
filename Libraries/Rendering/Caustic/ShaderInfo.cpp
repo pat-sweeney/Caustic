@@ -17,6 +17,22 @@ namespace Caustic
         return m_topologyType;
     }
 
+	bool CShaderInfo::PSUsesVariable(const wchar_t* pName)
+	{
+		for (size_t i = 0; i < m_pixelShaderParamDefs.size(); i++)
+			if (_wcsicmp(m_pixelShaderParamDefs[i].m_name.c_str(), pName) == 0)
+				return true;
+		return false;
+	}
+
+	bool CShaderInfo::VSUsesVariable(const wchar_t* pName)
+	{
+		for (size_t i = 0; i < m_vertexShaderParamDefs.size(); i++)
+			if (_wcsicmp(m_vertexShaderParamDefs[i].m_name.c_str(), pName) == 0)
+				return true;
+		return false;
+	}
+
 	//**********************************************************************
 	std::vector<ShaderParamDef> &CShaderInfo::PixelShaderParameterDefs()
 	{

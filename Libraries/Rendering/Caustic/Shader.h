@@ -229,6 +229,33 @@ namespace Caustic
     //**********************************************************************
     class CShader : public IShader, public CRefCount
     {
+        enum MatrixTypesAvail
+        {
+            PSMatrixAvail_world = 1,
+            PSMatrixAvail_worldInv = 1 << 1,
+            PSMatrixAvail_worldInvTranspose = 1 << 2,
+            PSMatrixAvail_view = 1 << 3,
+            PSMatrixAvail_viewInv = 1 << 4,
+            PSMatrixAvail_proj = 1 << 5,
+            PSMatrixAvail_projInv = 1 << 6,
+            PSMatrixAvail_worldView = 1 << 7,
+            PSMatrixAvail_worldViewInv = 1 << 8,
+            PSMatrixAvail_worldViewProj = 1 << 9,
+            PSMatrixAvail_worldViewProjInv = 1 << 10,
+
+            VSMatrixAvail_world = 1 << 11,
+            VSMatrixAvail_worldInv = 1 << 12,
+            VSMatrixAvail_worldInvTranspose = 1 << 13,
+            VSMatrixAvail_view = 1 << 14,
+            VSMatrixAvail_viewInv = 1 << 15,
+            VSMatrixAvail_proj = 1 << 16,
+            VSMatrixAvail_projInv = 1 << 17,
+            VSMatrixAvail_worldView = 1 << 18,
+            VSMatrixAvail_worldViewInv = 1 << 19,
+            VSMatrixAvail_worldViewProj = 1 << 20,
+            VSMatrixAvail_worldViewProjInv = 1 << 21,
+        };
+        uint32 m_matricesAvail; // Combination of MatrixTypesAvail flags indicating which matrices are referenced by the shader
         std::wstring m_name;
         std::vector<D3D11_INPUT_ELEMENT_DESC> m_layout;
         CComPtr<ID3D11SamplerState> m_spSamplerState;
@@ -249,7 +276,8 @@ namespace Caustic
         int m_zThreads;
         int m_maxTextureSlot;
     protected:
-        void PushMatrix(const wchar_t *name, std::any mat);
+        void DetermineMatricesUsed();
+        void PushMatrix(const wchar_t* pParamName, std::any mat, uint32 vsmask, uint32 psmask);
         void PushLights(std::vector<CRefObj<ILight>>& lights);
         void PushMatrices(IRenderer* pRenderer, DirectX::XMMATRIX *pWorld);
         uint32 ComputeParamSize(ShaderParamDef *pParams, uint32 numParams, std::map<std::wstring, ShaderParamInstance> &params);
@@ -272,7 +300,8 @@ namespace Caustic
             m_xThreads(32),
             m_yThreads(32),
             m_zThreads(1),
-            m_maxTextureSlot(0)
+            m_maxTextureSlot(0),
+            m_matricesAvail(0)
         {
         }
 
