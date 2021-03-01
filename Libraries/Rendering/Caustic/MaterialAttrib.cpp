@@ -137,19 +137,19 @@ namespace Caustic
 
     void CMaterialAttrib::EnumerateColors(std::function<void(const wchar_t* pName, FRGBAColor & v)> func)
     {
-        for (auto x : m_colors)
+        for (auto &x : m_colors)
             func(x.first.c_str(), x.second);
     }
 
     void CMaterialAttrib::EnumerateScalars(std::function<void(const wchar_t* pName, float s)> func)
     {
-        for (auto x : m_scalars)
+        for (auto &x : m_scalars)
             func(x.first.c_str(), x.second);
     }
 
     void CMaterialAttrib::EnumerateTextures(std::function<void(const wchar_t*pName, IImage *pImage, EShaderAccess access)> func)
     {
-        for (auto x : m_textures)
+        for (auto &x : m_textures)
             func(x.first.c_str(), x.second.first, x.second.second);
     }
 

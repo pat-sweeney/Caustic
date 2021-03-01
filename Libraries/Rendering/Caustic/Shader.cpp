@@ -603,18 +603,19 @@ namespace Caustic
     //**********************************************************************
     void CShader::SetParam(const std::wstring& paramName, std::any& value, std::map<std::wstring, ShaderParamInstance>& params)
     {
-        SetParam(paramName.c_str(), value, params);
-    }
-
-    //**********************************************************************
-    void CShader::SetParam(const wchar_t* paramName, std::any& value, std::map<std::wstring, ShaderParamInstance>& params)
-    {
         auto it = params.find(paramName);
         if (it != params.end())
         {
             it->second.m_value = value;
             it->second.m_dirty = true;
         }
+    }
+
+    //**********************************************************************
+    void CShader::SetParam(const wchar_t* paramName, std::any& value, std::map<std::wstring, ShaderParamInstance>& params)
+    {
+        std::wstring wstr(paramName);
+        SetParam(wstr, value, params);
     }
 
     //**********************************************************************
@@ -628,18 +629,19 @@ namespace Caustic
     //**********************************************************************
     void CShader::SetParam(const std::wstring& paramName, int index, std::any& value, std::map<std::wstring, ShaderParamInstance>& params)
     {
-        SetParam(paramName.c_str(), index, value, params);
-    }
-
-    //**********************************************************************
-    void CShader::SetParam(const wchar_t* paramName, int index, std::any& value, std::map<std::wstring, ShaderParamInstance>& params)
-    {
         auto it = params.find(paramName);
         if (it != params.end())
         {
             it->second.m_values[index] = value;
             it->second.m_dirty = true;
         }
+    }
+
+    //**********************************************************************
+    void CShader::SetParam(const wchar_t* paramName, int index, std::any& value, std::map<std::wstring, ShaderParamInstance>& params)
+    {
+        std::wstring wstr(paramName);
+        SetParam(wstr, index, value, params);
     }
 
     //**********************************************************************
@@ -941,19 +943,30 @@ namespace Caustic
         DirectX::XMMATRIX identity = DirectX::XMMatrixIdentity();
         if (pWorld == nullptr)
             pWorld = &identity;
-        PushMatrix(L"world", std::any(D3DMatrixToMatrix(*pWorld)), PSMatrixAvail_world, VSMatrixAvail_world);
-        PushMatrix(L"worldInv", std::any(D3DMatrixToMatrix(DirectX::XMMatrixInverse(nullptr, *pWorld))), PSMatrixAvail_worldInv, VSMatrixAvail_worldInv);
-        PushMatrix(L"worldInvTranspose", std::any(D3DMatrixToMatrix(DirectX::XMMatrixTranspose(DirectX::XMMatrixInverse(nullptr, *pWorld)))), PSMatrixAvail_worldInvTranspose, PSMatrixAvail_worldInvTranspose);
-        PushMatrix(L"view", std::any(D3DMatrixToMatrix(view)), PSMatrixAvail_view, VSMatrixAvail_view);
-        PushMatrix(L"viewInv", std::any(D3DMatrixToMatrix(DirectX::XMMatrixInverse(nullptr, view))), PSMatrixAvail_viewInv, VSMatrixAvail_viewInv);
-        PushMatrix(L"proj", std::any(D3DMatrixToMatrix(proj)), PSMatrixAvail_proj, VSMatrixAvail_proj);
-        PushMatrix(L"projInv", std::any(D3DMatrixToMatrix(DirectX::XMMatrixInverse(nullptr, proj))), PSMatrixAvail_projInv, VSMatrixAvail_projInv);
+        if ((m_matricesAvail & PSMatrixAvail_world) == PSMatrixAvail_world || (m_matricesAvail & VSMatrixAvail_world) == VSMatrixAvail_world)
+            PushMatrix(L"world", std::any(D3DMatrixToMatrix(*pWorld)), PSMatrixAvail_world, VSMatrixAvail_world);
+        if ((m_matricesAvail & PSMatrixAvail_world) == PSMatrixAvail_worldInv || (m_matricesAvail & VSMatrixAvail_world) == VSMatrixAvail_worldInv)
+            PushMatrix(L"worldInv", std::any(D3DMatrixToMatrix(DirectX::XMMatrixInverse(nullptr, *pWorld))), PSMatrixAvail_worldInv, VSMatrixAvail_worldInv);
+        if ((m_matricesAvail & PSMatrixAvail_world) == PSMatrixAvail_worldInvTranspose || (m_matricesAvail & VSMatrixAvail_world) == VSMatrixAvail_worldInvTranspose)
+            PushMatrix(L"worldInvTranspose", std::any(D3DMatrixToMatrix(DirectX::XMMatrixTranspose(DirectX::XMMatrixInverse(nullptr, *pWorld)))), PSMatrixAvail_worldInvTranspose, PSMatrixAvail_worldInvTranspose);
+        if ((m_matricesAvail & PSMatrixAvail_world) == PSMatrixAvail_view || (m_matricesAvail & VSMatrixAvail_world) == VSMatrixAvail_view)
+            PushMatrix(L"view", std::any(D3DMatrixToMatrix(view)), PSMatrixAvail_view, VSMatrixAvail_view);
+        if ((m_matricesAvail & PSMatrixAvail_world) == PSMatrixAvail_viewInv || (m_matricesAvail & VSMatrixAvail_world) == VSMatrixAvail_viewInv)
+            PushMatrix(L"viewInv", std::any(D3DMatrixToMatrix(DirectX::XMMatrixInverse(nullptr, view))), PSMatrixAvail_viewInv, VSMatrixAvail_viewInv);
+        if ((m_matricesAvail & PSMatrixAvail_world) == PSMatrixAvail_proj || (m_matricesAvail & VSMatrixAvail_world) == VSMatrixAvail_proj)
+            PushMatrix(L"proj", std::any(D3DMatrixToMatrix(proj)), PSMatrixAvail_proj, VSMatrixAvail_proj);
+        if ((m_matricesAvail & PSMatrixAvail_world) == PSMatrixAvail_projInv || (m_matricesAvail & VSMatrixAvail_world) == VSMatrixAvail_projInv)
+            PushMatrix(L"projInv", std::any(D3DMatrixToMatrix(DirectX::XMMatrixInverse(nullptr, proj))), PSMatrixAvail_projInv, VSMatrixAvail_projInv);
         DirectX::XMMATRIX wv = DirectX::XMMatrixMultiply(*pWorld, view);
-        PushMatrix(L"worldView", std::any(D3DMatrixToMatrix(wv)), PSMatrixAvail_worldView, VSMatrixAvail_worldView);
-        PushMatrix(L"worldViewInv", std::any(D3DMatrixToMatrix(DirectX::XMMatrixInverse(nullptr, wv))), PSMatrixAvail_worldViewInv, VSMatrixAvail_worldViewInv);
+        if ((m_matricesAvail & PSMatrixAvail_world) == PSMatrixAvail_worldView || (m_matricesAvail & VSMatrixAvail_world) == VSMatrixAvail_worldView)
+            PushMatrix(L"worldView", std::any(D3DMatrixToMatrix(wv)), PSMatrixAvail_worldView, VSMatrixAvail_worldView);
+        if ((m_matricesAvail & PSMatrixAvail_world) == PSMatrixAvail_worldViewInv || (m_matricesAvail & VSMatrixAvail_world) == VSMatrixAvail_worldViewInv)
+            PushMatrix(L"worldViewInv", std::any(D3DMatrixToMatrix(DirectX::XMMatrixInverse(nullptr, wv))), PSMatrixAvail_worldViewInv, VSMatrixAvail_worldViewInv);
         DirectX::XMMATRIX wvp = DirectX::XMMatrixMultiply(wv, proj);
-        PushMatrix(L"worldViewProj", std::any(D3DMatrixToMatrix(wvp)), PSMatrixAvail_worldViewProj, VSMatrixAvail_worldViewProj);
-        PushMatrix(L"worldViewProjInv", std::any(D3DMatrixToMatrix(DirectX::XMMatrixInverse(nullptr, wvp))), PSMatrixAvail_worldViewProjInv, VSMatrixAvail_worldViewProjInv);
+        if ((m_matricesAvail & PSMatrixAvail_world) == PSMatrixAvail_worldViewProj || (m_matricesAvail & VSMatrixAvail_world) == VSMatrixAvail_worldViewProj)
+            PushMatrix(L"worldViewProj", std::any(D3DMatrixToMatrix(wvp)), PSMatrixAvail_worldViewProj, VSMatrixAvail_worldViewProj);
+        if ((m_matricesAvail & PSMatrixAvail_world) == PSMatrixAvail_worldViewProjInv || (m_matricesAvail & VSMatrixAvail_world) == VSMatrixAvail_worldViewProjInv)
+            PushMatrix(L"worldViewProjInv", std::any(D3DMatrixToMatrix(DirectX::XMMatrixInverse(nullptr, wvp))), PSMatrixAvail_worldViewProjInv, VSMatrixAvail_worldViewProjInv);
     }
 
     //**********************************************************************
@@ -985,9 +998,9 @@ namespace Caustic
     {
         CComPtr<ID3D11DeviceContext> spCtx = pRenderer->GetContext();
 #ifdef _DEBUG
-        CComPtr<ID3DUserDefinedAnnotation> spAnnotations;
-        CT(spCtx->QueryInterface(__uuidof(ID3DUserDefinedAnnotation), (void**)&spAnnotations));
-        spAnnotations->BeginEvent(L"BeginRender");
+        CComPtr<ID3D11DeviceContext2> spCtx2;
+        CT(spCtx->QueryInterface<ID3D11DeviceContext2>(&spCtx2));
+        spCtx2->BeginEventInt(L"BeginRender", 0);
 #endif
         
         bool hasVS = m_spShaderInfo->HasShader(EShaderType::TypeVertexShader);
@@ -1039,7 +1052,7 @@ namespace Caustic
             spCtx->CSSetShaderResources(0, 1, srvNull);
         }
 #ifdef _DEBUG
-        spAnnotations->EndEvent();
+        spCtx2->EndEvent();
 #endif
     }
 

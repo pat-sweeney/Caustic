@@ -61,6 +61,7 @@ float2 Project3D(float3 p)
     float yp2 = yp * yp;
     float xyp = xp * yp;
     float rs = xp2 + yp2;
+#pragma warning(disable:4008)
     if (rs > metricRadius * metricRadius)
         return float2(0.0f / 0.0f, 0.0f / 0.0f);
     float rss = rs * rs;
@@ -104,7 +105,7 @@ VSOutput VS(VSInput p)
     // Transform our vertex normal from object space to world space
     v.normWS = normalize(mul(float4(p.normOS,1.0f), worldInvTranspose).xyz);
     v.posWS = mul(float4(p.posOS, 1.0f), world).xyz;
-    float3 posDS = mul(float4(v.posWS.xyz, 1.0f),colorExt);
+    float4 posDS = mul(float4(v.posWS.xyz, 1.0f),colorExt);
     //float4 posDS = mul(float4(p.posOS, 1.0f), worldViewProj);
     v.uvs = p.uvs;
     v.posPS.xy = Project3D(posDS.xyz);

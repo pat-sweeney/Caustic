@@ -98,7 +98,7 @@ namespace Caustic
                 // Push our shadow maps
                 pRenderer->SelectShadowmap(c_HiResShadowMap, 0, lights, spShader);
             }
-            for (auto t : m_textures)
+            for (auto &t : m_textures)
             {
                 if (t.second.m_spTexture)
                 {
@@ -115,25 +115,17 @@ namespace Caustic
             }
         }
 
-        spShader->SetPSParam(L"numLights", std::any());
         int numLights = (int)lights.size();
         if (numLights > 4)
             numLights = 4; // TODO: Replace with constant shared with shaders
         spShader->SetPSParam(L"numLights", std::any(Int(numLights)));
         for (int i = 0; i < numLights; i++)
         {
-            Float4 v(0.0f, 0.0f, 0.0f, 0.0f);
             Vector3 pos = lights[i]->GetPosition();
-            v.x = pos.x;
-            v.y = pos.y;
-            v.z = pos.z;
-            v.w = 0.0f;
+            Float4 v(pos.x, pos.y, pos.z, 0.0f);
             spShader->SetPSParam(L"lightPosWS", i, std::any(v));
             FRGBColor lightColor = lights[i]->GetColor();
-            v.x = lightColor.r;
-            v.y = lightColor.g;
-            v.z = lightColor.b;
-            v.w = 0.0f;
+            v = Float4(lightColor.r, lightColor.g, lightColor.b, 0.0f);
             spShader->SetPSParam(L"lightColor", i, std::any(v));
         }
     }
