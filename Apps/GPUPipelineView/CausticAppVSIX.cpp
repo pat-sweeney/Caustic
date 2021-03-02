@@ -78,6 +78,7 @@ public:
     bool displayNorms;
     bool displayColorImage;
     bool displayDepthImage;
+    bool displayColor2DepthImage;
     bool colored;
     bool useBackground;
     bool sendToCamera;
@@ -114,6 +115,7 @@ public:
         displayNorms(false),
         displayColorImage(false),
         displayDepthImage(false),
+        displayColor2DepthImage(false),
         guiInited(false),
         colored(false),
         renderModel(false),
@@ -361,6 +363,7 @@ void CApp::InitializeCaustic(HWND hwnd)
              ImGui::Checkbox("Display Normals", &app.displayNorms);
              ImGui::Checkbox("Display Color Image", &app.displayColorImage);
              ImGui::Checkbox("Display Normalized Depth Image", &app.displayDepthImage);
+             ImGui::Checkbox("Display Color2Depth Image", &app.displayColor2DepthImage);
              ImGui::Checkbox("SendOrigToCamera", &app.sendOrigToCamera);
              if (ImGui::IsItemHovered())
                  ImGui::SetTooltip("Sends original (unprocessed image) to camera driver");
@@ -593,8 +596,8 @@ void CApp::InitializeCaustic(HWND hwnd)
                  DisplayTexture("ColorSource", app.spSourceColorNode, app.displayColorImage, false);
              if (app.displayDepthImage)
                  DisplayTexture("Normalized Depth", app.spNormDepth, app.displayDepthImage, true);
-             static bool x = true;
-             DisplayTexture("Color2Depth", app.spColor2Depth, x, true);
+             if (app.displayColor2DepthImage)
+                 DisplayTexture("Color2Depth", app.spColor2Depth, app.displayColor2DepthImage, true);
 
              ImGui::Render();
              ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());

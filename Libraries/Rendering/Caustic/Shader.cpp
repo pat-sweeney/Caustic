@@ -885,7 +885,7 @@ namespace Caustic
         return m;
     }
 
-    void CShader::PushMatrix(const wchar_t* pParamName, std::any mat, uint32 vsmask, uint32 psmask)
+    void CShader::PushMatrix(const wchar_t* pParamName, std::any mat, uint32 psmask, uint32 vsmask)
     {
         if ((m_matricesAvail & vsmask) == vsmask)
             SetVSParam(pParamName, mat);
@@ -945,27 +945,27 @@ namespace Caustic
             pWorld = &identity;
         if ((m_matricesAvail & PSMatrixAvail_world) == PSMatrixAvail_world || (m_matricesAvail & VSMatrixAvail_world) == VSMatrixAvail_world)
             PushMatrix(L"world", std::any(D3DMatrixToMatrix(*pWorld)), PSMatrixAvail_world, VSMatrixAvail_world);
-        if ((m_matricesAvail & PSMatrixAvail_world) == PSMatrixAvail_worldInv || (m_matricesAvail & VSMatrixAvail_world) == VSMatrixAvail_worldInv)
+        if ((m_matricesAvail & PSMatrixAvail_worldInv) == PSMatrixAvail_worldInv || (m_matricesAvail & VSMatrixAvail_worldInv) == VSMatrixAvail_worldInv)
             PushMatrix(L"worldInv", std::any(D3DMatrixToMatrix(DirectX::XMMatrixInverse(nullptr, *pWorld))), PSMatrixAvail_worldInv, VSMatrixAvail_worldInv);
-        if ((m_matricesAvail & PSMatrixAvail_world) == PSMatrixAvail_worldInvTranspose || (m_matricesAvail & VSMatrixAvail_world) == VSMatrixAvail_worldInvTranspose)
+        if ((m_matricesAvail & PSMatrixAvail_worldInvTranspose) == PSMatrixAvail_worldInvTranspose || (m_matricesAvail & VSMatrixAvail_worldInvTranspose) == VSMatrixAvail_worldInvTranspose)
             PushMatrix(L"worldInvTranspose", std::any(D3DMatrixToMatrix(DirectX::XMMatrixTranspose(DirectX::XMMatrixInverse(nullptr, *pWorld)))), PSMatrixAvail_worldInvTranspose, PSMatrixAvail_worldInvTranspose);
-        if ((m_matricesAvail & PSMatrixAvail_world) == PSMatrixAvail_view || (m_matricesAvail & VSMatrixAvail_world) == VSMatrixAvail_view)
+        if ((m_matricesAvail & PSMatrixAvail_view) == PSMatrixAvail_view || (m_matricesAvail & VSMatrixAvail_view) == VSMatrixAvail_view)
             PushMatrix(L"view", std::any(D3DMatrixToMatrix(view)), PSMatrixAvail_view, VSMatrixAvail_view);
-        if ((m_matricesAvail & PSMatrixAvail_world) == PSMatrixAvail_viewInv || (m_matricesAvail & VSMatrixAvail_world) == VSMatrixAvail_viewInv)
+        if ((m_matricesAvail & PSMatrixAvail_viewInv) == PSMatrixAvail_viewInv || (m_matricesAvail & VSMatrixAvail_viewInv) == VSMatrixAvail_viewInv)
             PushMatrix(L"viewInv", std::any(D3DMatrixToMatrix(DirectX::XMMatrixInverse(nullptr, view))), PSMatrixAvail_viewInv, VSMatrixAvail_viewInv);
-        if ((m_matricesAvail & PSMatrixAvail_world) == PSMatrixAvail_proj || (m_matricesAvail & VSMatrixAvail_world) == VSMatrixAvail_proj)
+        if ((m_matricesAvail & PSMatrixAvail_proj) == PSMatrixAvail_proj || (m_matricesAvail & VSMatrixAvail_proj) == VSMatrixAvail_proj)
             PushMatrix(L"proj", std::any(D3DMatrixToMatrix(proj)), PSMatrixAvail_proj, VSMatrixAvail_proj);
-        if ((m_matricesAvail & PSMatrixAvail_world) == PSMatrixAvail_projInv || (m_matricesAvail & VSMatrixAvail_world) == VSMatrixAvail_projInv)
+        if ((m_matricesAvail & PSMatrixAvail_projInv) == PSMatrixAvail_projInv || (m_matricesAvail & VSMatrixAvail_projInv) == VSMatrixAvail_projInv)
             PushMatrix(L"projInv", std::any(D3DMatrixToMatrix(DirectX::XMMatrixInverse(nullptr, proj))), PSMatrixAvail_projInv, VSMatrixAvail_projInv);
         DirectX::XMMATRIX wv = DirectX::XMMatrixMultiply(*pWorld, view);
-        if ((m_matricesAvail & PSMatrixAvail_world) == PSMatrixAvail_worldView || (m_matricesAvail & VSMatrixAvail_world) == VSMatrixAvail_worldView)
+        if ((m_matricesAvail & PSMatrixAvail_worldView) == PSMatrixAvail_worldView || (m_matricesAvail & VSMatrixAvail_worldView) == VSMatrixAvail_worldView)
             PushMatrix(L"worldView", std::any(D3DMatrixToMatrix(wv)), PSMatrixAvail_worldView, VSMatrixAvail_worldView);
-        if ((m_matricesAvail & PSMatrixAvail_world) == PSMatrixAvail_worldViewInv || (m_matricesAvail & VSMatrixAvail_world) == VSMatrixAvail_worldViewInv)
+        if ((m_matricesAvail & PSMatrixAvail_worldViewInv) == PSMatrixAvail_worldViewInv || (m_matricesAvail & VSMatrixAvail_worldViewInv) == VSMatrixAvail_worldViewInv)
             PushMatrix(L"worldViewInv", std::any(D3DMatrixToMatrix(DirectX::XMMatrixInverse(nullptr, wv))), PSMatrixAvail_worldViewInv, VSMatrixAvail_worldViewInv);
         DirectX::XMMATRIX wvp = DirectX::XMMatrixMultiply(wv, proj);
-        if ((m_matricesAvail & PSMatrixAvail_world) == PSMatrixAvail_worldViewProj || (m_matricesAvail & VSMatrixAvail_world) == VSMatrixAvail_worldViewProj)
+        if ((m_matricesAvail & PSMatrixAvail_worldViewProj) == PSMatrixAvail_worldViewProj || (m_matricesAvail & VSMatrixAvail_worldViewProj) == VSMatrixAvail_worldViewProj)
             PushMatrix(L"worldViewProj", std::any(D3DMatrixToMatrix(wvp)), PSMatrixAvail_worldViewProj, VSMatrixAvail_worldViewProj);
-        if ((m_matricesAvail & PSMatrixAvail_world) == PSMatrixAvail_worldViewProjInv || (m_matricesAvail & VSMatrixAvail_world) == VSMatrixAvail_worldViewProjInv)
+        if ((m_matricesAvail & PSMatrixAvail_worldViewProjInv) == PSMatrixAvail_worldViewProjInv || (m_matricesAvail & VSMatrixAvail_worldViewProjInv) == VSMatrixAvail_worldViewProjInv)
             PushMatrix(L"worldViewProjInv", std::any(D3DMatrixToMatrix(DirectX::XMMatrixInverse(nullptr, wvp))), PSMatrixAvail_worldViewProjInv, VSMatrixAvail_worldViewProjInv);
     }
 
