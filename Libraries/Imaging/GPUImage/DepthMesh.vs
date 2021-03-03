@@ -60,6 +60,7 @@ float2 Project3D(float3 p)
     float yp2 = yp * yp;
     float xyp = xp * yp;
     float rs = xp2 + yp2;
+#pragma warning(disable: 4008)
     if (rs > metricRadius * metricRadius)
         return float2(0.0f / 0.0f, 0.0f / 0.0f);
     float rss = rs * rs;

@@ -51,6 +51,7 @@ cbuffer VS_CONSTANT_BUFFER : register(b0)
 
 float2 Project3D(float3 p)
 {
+#pragma warning(disable: 4000)
     if (abs(p.z) < 0.001)
         return float2(0.0f, 0.0f);
     p.x /= p.z;
