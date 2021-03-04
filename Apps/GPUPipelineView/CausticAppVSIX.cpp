@@ -18,6 +18,7 @@
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
+#include "imgui_internal.h"
 #include <string>
 #include <windows.h>
 #include <winuser.h>
@@ -329,85 +330,75 @@ void CApp::InitializeCaustic(HWND hwnd)
     std::wstring shaderFolder(SHADERPATH);
     spRenderWindow = CreateRenderWindow(hwnd, shaderFolder,
         [](IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)
-         {
-             if (pass != Caustic::c_PassOpaque)
-                 return;
-             app.cameraExt = app.spCamera->ColorExtrinsics();
-             app.cameraInt = app.spCamera->ColorIntrinsics();
-             uint32 depthW = app.spCamera->GetDepthWidth();
-             uint32 depthH = app.spCamera->GetDepthHeight();
-             uint32 colorW = app.spCamera->GetColorWidth();
-             uint32 colorH = app.spCamera->GetColorHeight();
-             app.SetupAzureCameraParameters(app.spModelShader, depthW, depthH, colorW, colorH);
-             app.SetupAzureCameraParameters(app.spLightShader, depthW, depthH, colorW, colorH);
-             app.spDesktopTexture->Update(pRenderer);
+        {
+            if (pass != Caustic::c_PassOpaque)
+                return;
+            app.cameraExt = app.spCamera->ColorExtrinsics();
+            app.cameraInt = app.spCamera->ColorIntrinsics();
+            uint32 depthW = app.spCamera->GetDepthWidth();
+            uint32 depthH = app.spCamera->GetDepthHeight();
+            uint32 colorW = app.spCamera->GetColorWidth();
+            uint32 colorH = app.spCamera->GetColorHeight();
+            app.SetupAzureCameraParameters(app.spModelShader, depthW, depthH, colorW, colorH);
+            app.SetupAzureCameraParameters(app.spLightShader, depthW, depthH, colorW, colorH);
+            app.spDesktopTexture->Update(pRenderer);
 
-             std::any spDesktopParam(app.spDesktopTexture);
-             app.spModelShader->SetPSParam(L"diffuseTexture", spDesktopParam);
+            std::any spDesktopParam(app.spDesktopTexture);
+            app.spModelShader->SetPSParam(L"diffuseTexture", spDesktopParam);
 
-             Matrix m(app.cameraExt);
-             std::any mat = std::any(m);
-             app.spBokehShader->SetPSParam(L"colorExt", mat);
+            Matrix m(app.cameraExt);
+            std::any mat = std::any(m);
+            app.spBokehShader->SetPSParam(L"colorExt", mat);
 
-             std::any lightPos(Float3(app.lightPos.x, app.lightPos.y, app.lightPos.z));
-             app.spBokehShader->SetPSParam(L"lightPos", lightPos);
-             std::any lightClr(Float3(app.lightClr.x, app.lightClr.y, app.lightClr.z));
-             app.spBokehShader->SetPSParam(L"lightClr", lightClr);
+            std::any lightPos(Float3(app.lightPos.x, app.lightPos.y, app.lightPos.z));
+            app.spBokehShader->SetPSParam(L"lightPos", lightPos);
+            std::any lightClr(Float3(app.lightClr.x, app.lightClr.y, app.lightClr.z));
+            app.spBokehShader->SetPSParam(L"lightClr", lightClr);
 
-             ImGui_ImplDX11_NewFrame();
-             ImGui_ImplWin32_NewFrame();
-             ImGui::NewFrame();
-             ImGui::Checkbox("SendToCamera", &app.sendToCamera);
-             if (ImGui::IsItemHovered())
-                 ImGui::SetTooltip("Should we send image to camera driver?");
-             ImGui::Checkbox("Display Normals", &app.displayNorms);
-             ImGui::Checkbox("Display Color Image", &app.displayColorImage);
-             ImGui::Checkbox("Display Normalized Depth Image", &app.displayDepthImage);
-             ImGui::Checkbox("Display Color2Depth Image", &app.displayColor2DepthImage);
-             ImGui::Checkbox("SendOrigToCamera", &app.sendOrigToCamera);
-             if (ImGui::IsItemHovered())
-                 ImGui::SetTooltip("Sends original (unprocessed image) to camera driver");
-             ImGui::Checkbox("UseDynamicBackground", &app.useBackground);
-             ImGui::Checkbox("RenderCircleConfusion", &app.renderCOC);
-             ImGui::Checkbox("ColorInFocus", &app.showInFocus);
-             if (ImGui::IsItemHovered())
-                 ImGui::SetTooltip("Display pixels that are full in focus in yellow");
-             ImGui::Checkbox("ShowHoles", &app.showHoles);
-             ImGui::Checkbox("ShowDepth", &app.showDepth);
-             ImGui::Checkbox("CheckDepth", &app.checkDepth);
-             if (ImGui::IsItemHovered())
-                 ImGui::SetTooltip("Forces depth discontinuity to effect blur sampling");
-             ImGui::Checkbox("RenderModel", &app.renderModel);
-             ImGui::Checkbox("RenderDesktopView", &app.renderDesktopView);
-             ImGui::Checkbox("FillHoles", &app.smooth);
-             if (ImGui::IsItemHovered())
-                 ImGui::SetTooltip("Fill holes in depth map");
-             ImGui::Checkbox("RenderSkeleton", &app.renderSkeleton);
-             ImGui::Checkbox("Detect Hand Raise", &app.detectHandRaised);
-             ImGui::Checkbox("UseFocusTracking", &app.focusTracking);
-             if (ImGui::IsItemHovered())
-                 ImGui::SetTooltip("Use head tracking to set focus distance");
-             ImGui::SliderFloat("FocusDistance", &app.focusDistance, 0.0f, 1.0f, "%f", 1.0f);
-             ImGui::SliderFloat("FocusWidth", &app.focusWidth, 0.0f, 3.0f, "%f", 1.0f);
-             ImGui::SliderFloat("FocusMaxWidth", &app.focusMaxWidth, 0.0f, 3.0f, "%f", 1.0f);
-             ImGui::SliderFloat("BokehRadius", &app.BokehRadius, 0.0f, 30.0f, "%f", 1.0f);
-             ImGui::DragInt("HoleSize", &app.holeSize, 1.0f, 0, 128);
-             ImGui::DragFloat("ModelScale", &app.modelScale, 0.1f, 0.5f, 1000.0f);
-             ImGui::DragFloat("RotatePlaneX", &app.planeRot.x, 0.0f, 180.0f, 1000.0f);
-             ImGui::DragFloat("RotatePlaneY", &app.planeRot.y, 0.0f, 180.0f, 1000.0f);
-             ImGui::DragFloat("RotatePlaneZ", &app.planeRot.z, 0.9f, 180.0f, 1000.0f);
-             ImGui::DragFloat("ScalePlaneX", &app.planeScale.x, 0.1f, 3000.0f, 1000.0f);
-             ImGui::DragFloat("ScalePlaneY", &app.planeScale.y, 0.1f, 3000.0f, 1000.0f);
-             ImGui::DragFloat("ScalePlaneZ", &app.planeScale.z, 0.1f, 3000.0f, 1000.0f);
-             ImGui::DragFloat("XlatePlaneX", &app.planeXlate.x, 0.1f, 3000.0f, 1000.0f);
-             ImGui::DragFloat("XlatePlaneY", &app.planeXlate.y, 0.1f, 3000.0f, 1000.0f);
-             ImGui::DragFloat("XlatePlaneZ", &app.planeXlate.z, 0.1f, 3000.0f, 1000.0f);
-             ImGui::DragFloat("LightX", &app.lightPos.x, 0.1f, 3000.0f, 1000.0f);
-             ImGui::DragFloat("LightY", &app.lightPos.y, 0.1f, 3000.0f, 1000.0f);
-             ImGui::DragFloat("LightZ", &app.lightPos.z, 0.1f, 3000.0f, 1000.0f);
-             ImGui::DragFloat("LightR", &app.lightClr.x, 0.1f, 3000.0f, 1000.0f);
-             ImGui::DragFloat("LightG", &app.lightClr.y, 0.1f, 3000.0f, 1000.0f);
-             ImGui::DragFloat("LightB", &app.lightClr.z, 0.1f, 3000.0f, 1000.0f);
+            ImGui_ImplDX11_NewFrame();
+            ImGui_ImplWin32_NewFrame();
+            ImGui::NewFrame();
+            ImGui::Checkbox("SendToCamera", &app.sendToCamera);
+            if (ImGui::IsItemHovered())
+                ImGui::SetTooltip("Should we send image to camera driver?");
+            ImGui::Checkbox("Display Normals", &app.displayNorms);
+            ImGui::Checkbox("Display Color Image", &app.displayColorImage);
+            ImGui::Checkbox("Display Normalized Depth Image", &app.displayDepthImage);
+            ImGui::Checkbox("Display Color2Depth Image", &app.displayColor2DepthImage);
+            ImGui::Checkbox("SendOrigToCamera", &app.sendOrigToCamera);
+            if (ImGui::IsItemHovered())
+                ImGui::SetTooltip("Sends original (unprocessed image) to camera driver");
+            ImGui::Checkbox("UseDynamicBackground", &app.useBackground);
+            ImGui::Checkbox("RenderCircleConfusion", &app.renderCOC);
+            ImGui::Checkbox("ColorInFocus", &app.showInFocus);
+            if (ImGui::IsItemHovered())
+                ImGui::SetTooltip("Display pixels that are full in focus in yellow");
+            ImGui::Checkbox("ShowHoles", &app.showHoles);
+            ImGui::Checkbox("ShowDepth", &app.showDepth);
+            ImGui::Checkbox("CheckDepth", &app.checkDepth);
+            if (ImGui::IsItemHovered())
+                ImGui::SetTooltip("Forces depth discontinuity to effect blur sampling");
+            ImGui::Checkbox("RenderModel", &app.renderModel);
+            ImGui::Checkbox("RenderDesktopView", &app.renderDesktopView);
+            ImGui::Checkbox("FillHoles", &app.smooth);
+            if (ImGui::IsItemHovered())
+                ImGui::SetTooltip("Fill holes in depth map");
+            ImGui::Checkbox("RenderSkeleton", &app.renderSkeleton);
+            ImGui::Checkbox("Detect Hand Raise", &app.detectHandRaised);
+            ImGui::Checkbox("UseFocusTracking", &app.focusTracking);
+            if (ImGui::IsItemHovered())
+                ImGui::SetTooltip("Use head tracking to set focus distance");
+            ImGui::SliderFloat("FocusDistance", &app.focusDistance, 0.0f, 1.0f, "%f", 1.0f);
+            ImGui::SliderFloat("FocusWidth", &app.focusWidth, 0.0f, 3.0f, "%f", 1.0f);
+            ImGui::SliderFloat("FocusMaxWidth", &app.focusMaxWidth, 0.0f, 3.0f, "%f", 1.0f);
+            ImGui::SliderFloat("BokehRadius", &app.BokehRadius, 0.0f, 30.0f, "%f", 1.0f);
+            ImGui::DragInt("HoleSize", &app.holeSize, 1.0f, 0, 128);
+            ImGui::DragFloat("ModelScale", &app.modelScale, 0.1f, 0.5f, 1000.0f);
+            ImGui::DragFloat3("RotatePlane", (float*)&app.planeRot.x, 0.1f, 0.0f, 3000.0f);
+            ImGui::DragFloat3("ScalePlane", (float*)&app.planeScale.x, 0.1f, 0.0f, 3000.0f);
+            ImGui::DragFloat3("XlatePlane", (float*)&app.planeXlate.x, 0.1f, 0.0f, 3000.0f);
+            ImGui::DragFloat3("LightPos", (float*)&app.lightPos.x, 0.1f, 0.0f, 3000.0f);
+            ImGui::ColorEdit3("LightColor", (float*)&app.lightClr.x);
 
              // transform plane
              auto rotmat = Matrix4x4::RotationMatrix(Caustic::DegreesToRadians(app.planeRot.x), Caustic::DegreesToRadians(app.planeRot.y), Caustic::DegreesToRadians(app.planeRot.z));
@@ -599,6 +590,18 @@ void CApp::InitializeCaustic(HWND hwnd)
              if (app.displayColor2DepthImage)
                  DisplayTexture("Color2Depth", app.spColor2Depth, app.displayColor2DepthImage, true);
 
+             // Unfortunately, ImGui is dependent on the WndProc method
+             // being called after NewFrame(). Currently, Render() will
+             // call EndFrame() because NewFrame incremented the FrameCount
+             // which won't match the current frame. This will cause the keyboard
+             // buffer (ImGuiIO::InputQueueCharacters) will be erased (i.e. we first
+             // collected the characters, then called Render() which calls EndFrame()
+             // which then erases all the collected characters). To avoid this
+             // we artifially reset the FrameCountEnded so that Render() doesn't
+             // call EndFrame(). We must then explicitly call EndFrame().
+             ImGuiContext* pG = ImGui::GetCurrentContext();
+             pG->FrameCountEnded = pG->FrameCount;
+             
              ImGui::Render();
              ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
@@ -630,6 +633,7 @@ void CApp::InitializeCaustic(HWND hwnd)
                  SetEvent(app.hCanRead[app.currentFrame]);
                  app.currentFrame = (app.currentFrame == 0) ? 1 : 0;
              }
+             ImGui::EndFrame();
          },
          true);
     app.spRenderer = app.spRenderWindow->GetRenderer();
@@ -919,13 +923,10 @@ void Shutdown()
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    static bool captureKeyboard = false;
-    static bool captureMouse = false;
     if (app.guiInited)
     {
-        ImGui::CaptureKeyboardFromApp(&captureKeyboard);
-        ImGui::CaptureMouseFromApp(&captureMouse);
-        ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam);
+        if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+            return true;
     }
     switch (message)
     {
@@ -955,24 +956,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         PostQuitMessage(0);
         break;
 //    case WM_LBUTTONDOWN:
-//        if (!captureMouse)
 //            app.spRenderWindow->MouseDown((int)LOWORD(lParam), (int)HIWORD(lParam), c_LeftButton, (uint32)wParam);
 //        break;
 //    case WM_LBUTTONUP:
-//        if (!captureMouse)
 //            app.spRenderWindow->MouseUp((int)LOWORD(lParam), (int)HIWORD(lParam), c_LeftButton, (uint32)wParam);
 //        break;
 //    case WM_MOUSEMOVE:
-//        if (!captureMouse)
 //            app.spRenderWindow->MouseMove((int)LOWORD(lParam), (int)HIWORD(lParam), (uint32)wParam);
 //        break;
 //    case WM_MOUSEWHEEL:
-//        if (!captureMouse)
 //            app.spRenderWindow->MouseWheel((int)wParam);
 //        break;
     case WM_KEYDOWN:
-        if (!captureKeyboard)
-            app.spRenderWindow->MapKey((uint32)wParam, (uint32)lParam);
+        app.spRenderWindow->MapKey((uint32)wParam, (uint32)lParam);
         break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
