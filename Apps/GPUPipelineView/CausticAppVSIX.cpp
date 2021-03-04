@@ -30,6 +30,8 @@
 
 using namespace Caustic;
 
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 class CApp
 {
 public:
@@ -93,7 +95,6 @@ public:
     bool showInFocus;
     bool showDepth;
     bool showHoles;
-    bool guiInited;
     float focusDistance;
     float focusMaxWidth;
     float focusWidth;
@@ -117,7 +118,6 @@ public:
         displayColorImage(false),
         displayDepthImage(false),
         displayColor2DepthImage(false),
-        guiInited(false),
         colored(false),
         renderModel(false),
         renderDesktopView(true),
@@ -323,6 +323,17 @@ void CApp::DrawLine(Vector3 p1, Vector3 p2)
     spCtx2->EndEvent();
 }
 
+struct ImGuiEvent
+{
+    HWND hWnd;
+    UINT msg;
+    WPARAM wParam;
+    LPARAM lParam;
+};
+bool initializedCS = false;
+CRITICAL_SECTION s_cs;
+std::vector<ImGuiEvent> events;
+
 void CApp::InitializeCaustic(HWND hwnd)
 {
     app.hwnd = hwnd;
@@ -354,6 +365,12 @@ void CApp::InitializeCaustic(HWND hwnd)
             app.spBokehShader->SetPSParam(L"lightPos", lightPos);
             std::any lightClr(Float3(app.lightClr.x, app.lightClr.y, app.lightClr.z));
             app.spBokehShader->SetPSParam(L"lightClr", lightClr);
+
+            EnterCriticalSection(&s_cs);
+            for (size_t i = 0; i < events.size(); i++)
+                ImGui_ImplWin32_WndProcHandler(events[i].hWnd, events[i].msg, events[i].wParam, events[i].lParam);
+            events.resize(0);
+            LeaveCriticalSection(&s_cs);
 
             ImGui_ImplDX11_NewFrame();
             ImGui_ImplWin32_NewFrame();
@@ -590,18 +607,6 @@ void CApp::InitializeCaustic(HWND hwnd)
              if (app.displayColor2DepthImage)
                  DisplayTexture("Color2Depth", app.spColor2Depth, app.displayColor2DepthImage, true);
 
-             // Unfortunately, ImGui is dependent on the WndProc method
-             // being called after NewFrame(). Currently, Render() will
-             // call EndFrame() because NewFrame incremented the FrameCount
-             // which won't match the current frame. This will cause the keyboard
-             // buffer (ImGuiIO::InputQueueCharacters) will be erased (i.e. we first
-             // collected the characters, then called Render() which calls EndFrame()
-             // which then erases all the collected characters). To avoid this
-             // we artifially reset the FrameCountEnded so that Render() doesn't
-             // call EndFrame(). We must then explicitly call EndFrame().
-             ImGuiContext* pG = ImGui::GetCurrentContext();
-             pG->FrameCountEnded = pG->FrameCount;
-             
              ImGui::Render();
              ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
@@ -633,7 +638,6 @@ void CApp::InitializeCaustic(HWND hwnd)
                  SetEvent(app.hCanRead[app.currentFrame]);
                  app.currentFrame = (app.currentFrame == 0) ? 1 : 0;
              }
-             ImGui::EndFrame();
          },
          true);
     app.spRenderer = app.spRenderWindow->GetRenderer();
@@ -892,7 +896,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
     auto ctx = ImGui::CreateContext();
     ImGui_ImplWin32_Init(hWnd);
     ImGui_ImplDX11_Init(app.spRenderer->GetDevice(), app.spRenderer->GetContext());
-    app.guiInited = true;
 
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
@@ -908,6 +911,7 @@ void Shutdown()
         UnmapViewOfFile(app.pMemBuf);
     if (app.hMapFile)
         CloseHandle(app.hMapFile);
+    DeleteCriticalSection(&s_cs);
 }
 
 //
@@ -920,14 +924,21 @@ void Shutdown()
 //  WM_DESTROY  - post a quit message and return
 //
 //
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    if (app.guiInited)
+    if (!initializedCS)
     {
-        if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
-            return true;
+        initializedCS = true;
+        InitializeCriticalSection(&s_cs);
     }
+    ImGuiEvent evt;
+    evt.hWnd = hWnd;
+    evt.lParam = lParam;
+    evt.wParam = wParam;
+    evt.msg = message;
+    EnterCriticalSection(&s_cs);
+    events.push_back(evt);
+    LeaveCriticalSection(&s_cs);
     switch (message)
     {
     case WM_COMMAND:
@@ -968,7 +979,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 //            app.spRenderWindow->MouseWheel((int)wParam);
 //        break;
     case WM_KEYDOWN:
-        app.spRenderWindow->MapKey((uint32)wParam, (uint32)lParam);
+        //app.spRenderWindow->MapKey((uint32)wParam, (uint32)lParam);
         break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
