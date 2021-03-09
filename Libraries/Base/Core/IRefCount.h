@@ -96,8 +96,6 @@ namespace Caustic
         bool operator!=(T *v) { return !(p == v); }
         CRefObj &operator=(const CRefObj &v)
         {
-            if (p == v.p)
-                return *this;
             *this = v.p;
             return *this;
         }

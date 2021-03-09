@@ -83,9 +83,23 @@ namespace Caustic
         spShader->SetPSParam(L"specularColor", std::any(vSpecular));
         spShader->SetPSParam(L"specularExp", std::any(vSpecularExp));
         spShader->SetPSParam(L"transparency", std::any(Float4(transparency, transparency, transparency, transparency)));
-
+        
         if (m_spMaterial)
         {
+            CComPtr<ID3D11Device> spDevice = pRenderer->GetDevice();
+            CComPtr<ID3D11DeviceContext> spContext = pRenderer->GetContext();
+            CComPtr<ID3D11RasterizerState> spRasterizerState;
+            CComPtr<ID3D11RasterizerState> spOldRasterizerState;
+            spContext->RSGetState(&spOldRasterizerState);
+            D3D11_RASTERIZER_DESC desc;
+            spOldRasterizerState->GetDesc(&desc);
+            if (desc.CullMode != m_spMaterial->GetCullMode())
+            {
+                desc.CullMode = m_spMaterial->GetCullMode();
+                CT(spDevice->CreateRasterizerState(&desc, &spRasterizerState));
+                spContext->RSSetState(spRasterizerState);
+            }
+
             m_spMaterial->EnumerateColors([spShader](std::wstring name, FRGBAColor& v) {
                 Float4 sv(v.r, v.g, v.b, 1.0);
                 spShader->SetPSParam(name, std::any(sv));

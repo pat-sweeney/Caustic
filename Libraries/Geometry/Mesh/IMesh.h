@@ -246,7 +246,7 @@ namespace Caustic
         virtual CRefObj<IMaterialAttrib> GetMaterial(uint32 materialID) = 0;
         virtual void ComputeNormals() = 0;
 		virtual CRefObj<IRenderMesh> ToRenderMesh(IRenderer *pRenderer, IShader *pShader) = 0;
-        virtual void ToRenderMaterials(IRenderer* pRenderer, IShader* pShader, IRenderMesh* pRenderMesh) = 0;
+        virtual void ToRenderMaterials(IRenderer* pRenderer, IShader* pShader, IRenderMesh* pRenderMesh, IMaterialAttrib* pDefaultMaterial) = 0;
     };
     
 

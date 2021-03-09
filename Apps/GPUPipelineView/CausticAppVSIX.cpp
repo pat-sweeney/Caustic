@@ -105,6 +105,7 @@ public:
     float modelScale;
     Caustic::BBox3 modelBbox;
     CRefObj<IShader> spModelShader;
+    CRefObj<IShader> spDesktopShader;
     CRefObj<ISceneMeshElem> spCubeElem;
     CRefObj<ISceneMaterialElem> spCubeMaterialElem;
     CRefObj<ISceneMeshElem> spPlaneElem;
@@ -180,11 +181,12 @@ void CApp::Setup3DScene(IRenderWindow *pRenderWindow)
 
     auto spSceneFactory = Caustic::CreateSceneFactory();
     auto spSceneGraph = spRenderWindow->GetSceneGraph();
-//    auto spMesh = Caustic::MeshImport::LoadObj(L"j:\\models\\bugatti\\bugatti.obj");
+//    auto spMesh = Caustic::MeshImport::LoadObj(L"g:\\models\\bugatti\\bugatti.obj");
 //    auto spMeshElem = spSceneFactory->CreateMeshElem();
 //    spMeshElem->SetMesh(spMesh);
 
     app.spModelShader = spRenderWindow->GetRenderer()->GetShaderMgr()->FindShader(L"ModelMesh");
+    app.spDesktopShader = spRenderWindow->GetRenderer()->GetShaderMgr()->FindShader(L"Desktop");
     
     //**********************************************************************
     // Create cube. This model will be displayed when the user raises their left hand
@@ -213,7 +215,7 @@ void CApp::Setup3DScene(IRenderWindow *pRenderWindow)
     app.spPlaneElem = spSceneFactory->CreateMeshElem();
     app.spPlaneElem->SetName(L"DesktopPlane");
     app.spPlaneElem->SetMesh(spPlane);
-    app.spPlaneElem->SetShader(app.spModelShader);
+    app.spPlaneElem->SetShader(app.spDesktopShader);
 
     // Create plane material
     app.spPlaneMaterialElem = spSceneFactory->CreateMaterialElem();
@@ -222,8 +224,9 @@ void CApp::Setup3DScene(IRenderWindow *pRenderWindow)
     CRefObj<IMaterialAttrib> spPlaneMaterial = spCausticFactory->CreateMaterialAttrib();
     spPlaneMaterial->SetColor(L"ambientColor", ambient);
     spPlaneMaterial->SetColor(L"diffuseColor", diffuse);
+    spPlaneMaterial->SetCullMode(D3D11_CULL_NONE);
     app.spPlaneMaterialElem->SetMaterial(spPlaneMaterial);
-    app.spPlaneMaterialElem->SetShader(app.spModelShader);
+    app.spPlaneMaterialElem->SetShader(app.spDesktopShader);
     app.spPlaneMaterialElem->AddChild(app.spPlaneElem);
     //**********************************************************************
 
@@ -232,9 +235,9 @@ void CApp::Setup3DScene(IRenderWindow *pRenderWindow)
     app.m_spLightCollectionElem = spSceneFactory->CreateLightCollectionElem();
 
     // Load our model for our lightbulb
-    CRefObj<IMesh> spLightBulbMesh = Caustic::MeshImport::LoadObj(L"j:\\models\\LightBulb\\Lightbulb_General_Poly_OBJ.obj");
+    CRefObj<IMesh> spLightBulbMesh = Caustic::MeshImport::LoadObj(L"g:\\models\\LightBulb\\Lightbulb_General_Poly_OBJ.obj");
     app.spLightShader = spRenderWindow->GetRenderer()->GetShaderMgr()->FindShader(L"ModelMesh");
-    app.spLightBulbElem = spSceneFactory->CreateMeshElem();
+    app.spLightBulbElem = spSceneFactory->CreateMeshElem(); 
     app.spLightBulbElem->SetMesh(spLightBulbMesh);
     app.spLightBulbElem->SetShader(app.spLightShader);
     app.spLightBulbElem->SetName(L"LightBulb");
@@ -351,11 +354,12 @@ void CApp::InitializeCaustic(HWND hwnd)
             uint32 colorW = app.spCamera->GetColorWidth();
             uint32 colorH = app.spCamera->GetColorHeight();
             app.SetupAzureCameraParameters(app.spModelShader, depthW, depthH, colorW, colorH);
+            app.SetupAzureCameraParameters(app.spDesktopShader, depthW, depthH, colorW, colorH);
             app.SetupAzureCameraParameters(app.spLightShader, depthW, depthH, colorW, colorH);
             app.spDesktopTexture->Update(pRenderer);
 
             std::any spDesktopParam(app.spDesktopTexture);
-            app.spModelShader->SetPSParam(L"diffuseTexture", spDesktopParam);
+            app.spDesktopShader->SetPSParam(L"diffuseTexture", spDesktopParam);
 
             Matrix m(app.cameraExt);
             std::any mat = std::any(m);
@@ -375,6 +379,7 @@ void CApp::InitializeCaustic(HWND hwnd)
             ImGui_ImplDX11_NewFrame();
             ImGui_ImplWin32_NewFrame();
             ImGui::NewFrame();
+            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
             ImGui::Checkbox("SendToCamera", &app.sendToCamera);
             if (ImGui::IsItemHovered())
                 ImGui::SetTooltip("Should we send image to camera driver?");
@@ -411,9 +416,9 @@ void CApp::InitializeCaustic(HWND hwnd)
             ImGui::SliderFloat("BokehRadius", &app.BokehRadius, 0.0f, 30.0f, "%f", 1.0f);
             ImGui::DragInt("HoleSize", &app.holeSize, 1.0f, 0, 128);
             ImGui::DragFloat("ModelScale", &app.modelScale, 0.1f, 0.5f, 1000.0f);
-            ImGui::DragFloat3("RotatePlane", (float*)&app.planeRot.x, 0.1f, 0.0f, 3000.0f);
-            ImGui::DragFloat3("ScalePlane", (float*)&app.planeScale.x, 0.1f, 0.0f, 3000.0f);
-            ImGui::DragFloat3("XlatePlane", (float*)&app.planeXlate.x, 0.1f, 0.0f, 3000.0f);
+            ImGui::DragFloat3("RotatePlane", (float*)&app.planeRot.x, 0.1f, -360.0f, 360.0f);
+            ImGui::DragFloat3("ScalePlane", (float*)&app.planeScale.x, 0.1f, 0.01f, 3000.0f);
+            ImGui::DragFloat3("XlatePlane", (float*)&app.planeXlate.x, 0.1f, -3000.0f, 3000.0f);
             ImGui::DragFloat3("LightPos", (float*)&app.lightPos.x, 0.1f, 0.0f, 3000.0f);
             ImGui::ColorEdit3("LightColor", (float*)&app.lightClr.x);
 
@@ -642,7 +647,7 @@ void CApp::InitializeCaustic(HWND hwnd)
          true);
     app.spRenderer = app.spRenderWindow->GetRenderer();
 
-    app.spBackgroundTexture = Caustic::LoadVideoTexture(L"j:\\github\\caustic\\background.mp4", app.spRenderer);
+    app.spBackgroundTexture = Caustic::LoadVideoTexture(L"g:\\github\\caustic\\background.mp4", app.spRenderer);
 
     app.hCanRead[0] = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, TRUE, L"Global\\VirtualCameraMutexRead0");
     app.hCanRead[1] = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, TRUE, L"Global\\VirtualCameraMutexRead1");
@@ -650,7 +655,7 @@ void CApp::InitializeCaustic(HWND hwnd)
     app.hCanWrite[1] = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, TRUE, L"Global\\VirtualCameraMutexWrite1");
     SetEvent(app.hCanWrite[0]);
 
-    app.spCamera = Caustic::AzureKinect::CreateAzureKinect(1, AzureKinect::Color1080p, AzureKinect::Depth1024x1024, AzureKinect::FPS30, true);
+    app.spCamera = Caustic::AzureKinect::CreateAzureKinect(0, AzureKinect::Color1080p, AzureKinect::Depth1024x1024, AzureKinect::FPS30, false);
     app.cameraExt = app.spCamera->ColorExtrinsics();
     app.cameraInt = app.spCamera->ColorIntrinsics();
     uint32 depthW = app.spCamera->GetDepthWidth();

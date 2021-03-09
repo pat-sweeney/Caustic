@@ -14,6 +14,7 @@
 #include <vector>
 #include <string>
 #include <functional>
+#include <d3d11.h>
 
 //**********************************************************************
 // File: IRenderMaterial.h
@@ -58,6 +59,21 @@ namespace Caustic
 		// Returns name of material
 		//**********************************************************************
 		virtual std::string GetName() = 0;
+
+		//**********************************************************************
+		// Method: SetCullMode
+		// Sets the culling mode
+		//
+		// Parameters:
+		// cullMode - culling mode
+		//**********************************************************************
+		virtual void SetCullMode(D3D11_CULL_MODE cullMode) = 0;
+
+		//**********************************************************************
+		// Method: GetCullMode
+		// Returns current culling mode
+		//**********************************************************************
+		virtual D3D11_CULL_MODE GetCullMode() = 0;
 
 		//**********************************************************************
 		// Method: GetIsTransparent

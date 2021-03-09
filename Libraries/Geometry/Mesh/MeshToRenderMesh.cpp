@@ -268,7 +268,7 @@ namespace Caustic
 		return spRenderSubMesh;
 	}
 
-	void CMesh::ToRenderMaterials(IRenderer* pRenderer, IShader* pShader, IRenderMesh* pRenderMesh)
+	void CMesh::ToRenderMaterials(IRenderer* pRenderer, IShader* pShader, IRenderMesh* pRenderMesh, IMaterialAttrib *pDefaultMaterial)
 	{
 		CRefObj<ICausticFactory> spFactory = CreateCausticFactory();
 		for (int i = 0; i < m_subMeshes.size(); i++)
@@ -278,7 +278,7 @@ namespace Caustic
 			
 			// Assign appropriate materials
 			CRefObj<IMaterialAttrib> spMaterialAttrib = this->GetMaterial(pSubMesh->GetMaterialID());
-			CRefObj<IRenderMaterial> spRenderMaterial = spFactory->CreateRenderMaterial(pRenderer, spMaterialAttrib, pShader);
+			CRefObj<IRenderMaterial> spRenderMaterial = spFactory->CreateRenderMaterial(pRenderer, (spMaterialAttrib) ? spMaterialAttrib : pDefaultMaterial, pShader);
 			spRenderSubMesh->SetFrontMaterial(spRenderMaterial);
 
 			// For now assume now back material

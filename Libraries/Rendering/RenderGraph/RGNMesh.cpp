@@ -68,7 +68,7 @@ namespace Caustic
         {
             // We need to update. Otherwise, nothing has changed
             m_spRenderMesh = m_spMesh->ToRenderMesh(pRenderer, spShader);
-            m_spMesh->ToRenderMaterials(pRenderer, spShader, m_spRenderMesh);
+            m_spMesh->ToRenderMaterials(pRenderer, spShader, m_spRenderMesh, nullptr);
             std::any lightsVal = m_spLightsPin->GetValue(pRenderer, pRenderCtx);
             if (lightsVal.has_value())
             {

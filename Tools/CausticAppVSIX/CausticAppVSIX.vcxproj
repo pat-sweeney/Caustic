@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="UserMacros">
-    <CausticRoot Condition="'$(CausticRoot)'==''">j:\github\Caustic</CausticRoot>
+    <CausticRoot Condition="'$(CausticRoot)'==''">g:\github\Caustic</CausticRoot>
     <CausticLibs>
 $(CausticRoot)\x64\Debug\Core.lib;
 $(CausticRoot)\x64\Debug\Math.lib;

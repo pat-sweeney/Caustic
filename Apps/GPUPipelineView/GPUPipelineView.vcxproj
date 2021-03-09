@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="UserMacros">
-    <CausticRoot Condition="'$(CausticRoot)'==''">j:\github\Caustic</CausticRoot>
+    <CausticRoot Condition="'$(CausticRoot)'==''">g:\github\Caustic</CausticRoot>
     <CausticLibs>
 $(CausticRoot)\x64\Debug\Core.lib;
 $(CausticRoot)\x64\Debug\Math.lib;
@@ -137,6 +137,8 @@ $(CausticRoot)\x64\Debug\RenderGraph.lib;
   <ItemGroup>
     <None Include="CameraZPrePass.ps" />
     <None Include="CameraZPrePass.vs" />
+    <None Include="Desktop.ps" />
+    <None Include="Desktop.vs" />
     <None Include="ModelMesh.ps" />
     <None Include="ModelMesh.vs" />
     <None Include="DefaultMesh.ps" />
@@ -225,6 +227,14 @@ $(CausticRoot)\x64\Debug\RenderGraph.lib;
     <ProjectReference Include="..\..\Libraries\Rendering\SceneGraph\SceneGraph.vcxproj">
       <Project>{49433c2e-bf12-4b0f-8dd2-204c3339d5c5}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="Desktop.xml">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Apps\GPUPipelineView\Desktop.xml -o $(CausticRoot)\$(Configuration)\Desktop.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Apps\GPUPipelineView\Desktop.xml -o $(CausticRoot)\$(Configuration)\Desktop.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\Desktop.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\Desktop.shi</Outputs>
+    </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -65,12 +65,17 @@ namespace Caustic
 
                 spTexture->GetDesc(&m_desc);
                 if (m_spDesktopCopy == nullptr)
-                {
                     m_spDesktopCopy = Caustic::CreateTexture(pRenderer, m_desc.Width, m_desc.Height, m_desc.Format);
-                }
                 pRenderer->GetContext()->CopyResource(m_spDesktopCopy->GetD3DTexture(), spTexture);
                 CT(spDuplication->ReleaseFrame());
             }
+        }
+        else
+        {
+            auto spTex = Caustic::CheckerboardTexture(pRenderer, 1024, 1024, 32);
+            if (m_spDesktopCopy == nullptr)
+                m_spDesktopCopy = Caustic::CreateTexture(pRenderer, spTex->GetWidth(), spTex->GetHeight(), spTex->GetFormat());
+            pRenderer->GetContext()->CopyResource(m_spDesktopCopy->GetD3DTexture(), spTex->GetD3DTexture());
         }
     }
 

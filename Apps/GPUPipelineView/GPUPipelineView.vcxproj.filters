@@ -80,6 +80,12 @@
     <None Include="DefaultMesh.vs">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="Desktop.ps">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Desktop.vs">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="AzureLine.xml">
@@ -92,6 +98,9 @@
       <Filter>Shaders</Filter>
     </CustomBuild>
     <CustomBuild Include="DefaultMesh.xml">
+      <Filter>Shaders</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Desktop.xml">
       <Filter>Shaders</Filter>
     </CustomBuild>
   </ItemGroup>

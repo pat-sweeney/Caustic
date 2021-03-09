@@ -68,24 +68,31 @@ namespace Caustic
     CRefObj<IShader> CShader::Clone(ID3D11Device* pDevice)
     {
         std::unique_ptr<CShader> spShader(new CShader());
-        spShader->m_name = this->m_name;
-        spShader->m_layout = this->m_layout;
-        spShader->m_spSamplerState = this->m_spSamplerState;
-        spShader->m_spLayout = this->m_spLayout;
-        spShader->m_spPixelShader = this->m_spPixelShader;
-        spShader->m_spVertexShader = this->m_spVertexShader;
-        spShader->m_spComputeShader = this->m_spComputeShader;
-        spShader->m_spShaderInfo = this->m_spShaderInfo;
-        spShader->m_matricesAvail = this->m_matricesAvail;
-        spShader->m_xThreads = this->m_xThreads;
-        spShader->m_yThreads = this->m_yThreads;
-        spShader->m_zThreads = this->m_zThreads;
-        CreateConstantBuffer(pDevice, m_spShaderInfo->VertexShaderParameterDefs().data(),
-            (uint32)m_spShaderInfo->VertexShaderParameterDefs().size(), m_vsParams, &m_vertexConstants);
-        CreateConstantBuffer(pDevice, m_spShaderInfo->PixelShaderParameterDefs().data(),
-            (uint32)m_spShaderInfo->PixelShaderParameterDefs().size(), m_psParams, &m_pixelConstants);
-        CreateConstantBuffer(pDevice, m_spShaderInfo->ComputeShaderParameterDefs().data(),
-            (uint32)m_spShaderInfo->ComputeShaderParameterDefs().size(), m_csParams, &m_computeConstants);
+        spShader->m_csParams = m_csParams;
+        spShader->m_psParams = m_psParams;
+        spShader->m_vsParams = m_vsParams;
+        spShader->m_layout = m_layout;
+        spShader->m_matricesAvail = m_matricesAvail;
+        spShader->m_maxTextureSlot = m_maxTextureSlot;
+        spShader->m_name = m_name;
+        spShader->m_spLayout = m_spLayout;
+        spShader->m_spPixelShader = m_spPixelShader;
+        spShader->m_spVertexShader = m_spVertexShader;
+        spShader->m_spComputeShader = m_spComputeShader;
+        spShader->m_spSamplerState = m_spSamplerState;
+        spShader->m_spShaderInfo = m_spShaderInfo;
+        spShader->m_xThreads = m_xThreads;
+        spShader->m_yThreads = m_yThreads;
+        spShader->m_zThreads = m_zThreads;
+        if (m_spShaderInfo->VertexShaderParameterDefs().size() > 0)
+            CreateConstantBuffer(pDevice, m_spShaderInfo->VertexShaderParameterDefs().data(),
+                (uint32)m_spShaderInfo->VertexShaderParameterDefs().size(), spShader->m_vsParams, &spShader->m_vertexConstants);
+        if (m_spShaderInfo->PixelShaderParameterDefs().size() > 0)
+            CreateConstantBuffer(pDevice, m_spShaderInfo->PixelShaderParameterDefs().data(),
+                (uint32)m_spShaderInfo->PixelShaderParameterDefs().size(), spShader->m_psParams, &spShader->m_pixelConstants);
+        if (m_spShaderInfo->ComputeShaderParameterDefs().size() > 0)
+            CreateConstantBuffer(pDevice, m_spShaderInfo->ComputeShaderParameterDefs().data(),
+                (uint32)m_spShaderInfo->ComputeShaderParameterDefs().size(), spShader->m_csParams, &spShader->m_computeConstants);
         return CRefObj<IShader>(spShader.release());
     }
 

@@ -187,11 +187,14 @@ namespace Caustic
     //
     // Parameters:
     // pRenderer - Renderer
+    // w - width of texture in pixels
+    // h - height of texture in pixels
+    // blocksize - size of each square in checkerboard pattern
     //
     // Header:
     // [Link:Rendering/Caustic/ITexture.h]
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> CheckerboardTexture(IRenderer* pRenderer);
+    CAUSTICAPI CRefObj<ITexture> CheckerboardTexture(IRenderer* pRenderer, int w = 32, int h = 32, int blocksize = 4);
 
     //**********************************************************************
     // Function: LoadTexture

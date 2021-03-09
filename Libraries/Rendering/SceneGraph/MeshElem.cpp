@@ -99,7 +99,7 @@ namespace Caustic
         }
         if (GetFlags() & ESceneElemFlags::MaterialDirty)
         {
-            m_spMesh->ToRenderMaterials(pRenderer, m_spShader, m_spRenderMesh);
+            m_spMesh->ToRenderMaterials(pRenderer, m_spShader, m_spRenderMesh, pSceneCtx->m_spCurrentMaterial);
             SetFlags(GetFlags() & ~ESceneElemFlags::MaterialDirty);
         }
         DirectX::XMMATRIX xm(

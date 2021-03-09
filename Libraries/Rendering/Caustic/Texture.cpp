@@ -90,22 +90,24 @@ namespace Caustic
     // Parameters:
     // pRenderer - Renderer
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> CheckerboardTexture(IRenderer* pRenderer)
+    CAUSTICAPI CRefObj<ITexture> CheckerboardTexture(IRenderer* pRenderer, int w /* = 32 */, int h /* = 32 */, int blocksize /* = 4 */)
     {
         static CRefObj<ITexture> s_spCheckerBoard;
         if (s_spCheckerBoard == nullptr)
         {
-            s_spCheckerBoard = CreateTexture(pRenderer, 32, 32, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
+            s_spCheckerBoard = CreateTexture(pRenderer, w, h, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
             CComPtr<ID3D11Texture2D> spTexture = s_spCheckerBoard->GetD3DTexture();
             D3D11_MAPPED_SUBRESOURCE ms;
             CT(pRenderer->GetContext()->Map(spTexture, 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
             BYTE* pr = reinterpret_cast<BYTE*>(ms.pData);
-            for (int i = 0; i < 32; i++)
+            for (int i = 0; i < h; i++)
             {
                 BYTE* pc = pr;
-                for (int j = 0; j < 32; j++)
+                for (int j = 0; j < w; j++)
                 {
-                    if ((i & 1) == (j & 1))
+                    int bx = j / blocksize;
+                    int by = i / blocksize;
+                    if ((bx & 1) == (by & 1))
                     {
                         pc[0] = 0x00;
                         pc[1] = 0x00;

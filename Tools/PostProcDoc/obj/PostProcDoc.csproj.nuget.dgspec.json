@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "J:\\GitHub\\Caustic\\Tools\\PostProcDoc\\PostProcDoc.csproj": {}
+    "G:\\GitHub\\Caustic\\Tools\\PostProcDoc\\PostProcDoc.csproj": {}
   },
   "projects": {
-    "J:\\GitHub\\Caustic\\Tools\\PostProcDoc\\PostProcDoc.csproj": {
+    "G:\\GitHub\\Caustic\\Tools\\PostProcDoc\\PostProcDoc.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "J:\\GitHub\\Caustic\\Tools\\PostProcDoc\\PostProcDoc.csproj",
+        "projectUniqueName": "G:\\GitHub\\Caustic\\Tools\\PostProcDoc\\PostProcDoc.csproj",
         "projectName": "PostProcDoc",
-        "projectPath": "J:\\GitHub\\Caustic\\Tools\\PostProcDoc\\PostProcDoc.csproj",
-        "packagesPath": "C:\\Users\\patri\\.nuget\\packages\\",
-        "outputPath": "J:\\GitHub\\Caustic\\Tools\\PostProcDoc\\obj\\",
+        "projectPath": "G:\\GitHub\\Caustic\\Tools\\PostProcDoc\\PostProcDoc.csproj",
+        "packagesPath": "C:\\Users\\patricsw\\.nuget\\packages\\",
+        "outputPath": "G:\\GitHub\\Caustic\\Tools\\PostProcDoc\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\patri\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\patricsw\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -58,7 +58,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.200\\RuntimeIdentifierGraph.json"
         }
       }
     }
