@@ -55,6 +55,9 @@
     <ClInclude Include="MCSampler.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="FuncFilter.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

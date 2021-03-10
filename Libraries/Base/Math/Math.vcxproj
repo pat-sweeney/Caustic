@@ -81,6 +81,7 @@
     <ClInclude Include="Basis.h" />
     <ClInclude Include="BBox.h" />
     <ClInclude Include="Covariance.h" />
+    <ClInclude Include="FuncFilter.h" />
     <ClInclude Include="Helper.h" />
     <ClInclude Include="IBBox.h" />
     <ClInclude Include="Matrix.h" />
