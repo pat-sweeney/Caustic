@@ -42,7 +42,12 @@ namespace Caustic
         CRefObj<IShader> spOldShader = pSceneCtx->m_spCurrentShader;
         pSceneCtx->m_spCurrentMaterial = m_spMaterial;
         pSceneCtx->m_spCurrentShader = m_spShader;
+        bool oldState = false;
+        if (!(GetFlags() & DepthTested))
+            oldState = pRenderer->EnableDepthTest(false);
         CSceneGroupElem::Render(pRenderer, pRenderCtx, pSceneCtx);
+        if (!(GetFlags() & DepthTested))
+            pRenderer->EnableDepthTest(oldState);
         pSceneCtx->m_spCurrentMaterial = spOldMaterial;
         pSceneCtx->m_spCurrentShader = spOldShader;
         if (m_postrenderCallback)

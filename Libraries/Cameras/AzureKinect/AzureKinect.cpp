@@ -35,6 +35,42 @@ namespace Caustic
             pCamera->Startup(deviceId, colorMode, depthMode, fpsMode, captureBodies);
             return CRefObj<IAzureKinect>(pCamera.release());
         }
+
+        const wchar_t* JointNames[] =
+        {
+            L"Pelvis",
+            L"SpineNavel",
+            L"SpineChest",
+            L"Neck",
+            L"ClavicleLeft",
+            L"ShoulderLeft",
+            L"ElbowLeft",
+            L"WristLeft",
+            L"HandLeft",
+            L"HandTipLeft",
+            L"ThumbLeft",
+            L"ClavicleRight",
+            L"ShoulderRight",
+            L"ElbowRight",
+            L"WristRight",
+            L"HandRight",
+            L"HandTipRight",
+            L"ThumbRight",
+            L"HipLeft",
+            L"KneeLeft",
+            L"AnkleLeft",
+            L"FootLeft",
+            L"HipRight",
+            L"KneeRight",
+            L"AnkleRight",
+            L"FootRight",
+            L"Head",
+            L"Nose",
+            L"EyeLeft",
+            L"EarLeft",
+            L"EyeRight",
+            L"EarRight",
+        };
     }
 
     CAzureKinectDevice::CAzureKinectDevice() :
@@ -496,37 +532,38 @@ namespace Caustic
 
     static AzureKinect::Joint Parents[] =
     {
-        AzureKinect::Joint::Pelvis, /* Pelvis => Pelvis */
-        AzureKinect::Joint::Pelvis, /* SpineNavel => Pelvis */
-        AzureKinect::Joint::SpineNavel, /* SpineChest => SpineNavel */
-        AzureKinect::Joint::SpineChest, /* Neck => SpineChest */
-        AzureKinect::Joint::SpineChest, /* ClavicleLeft => SpineChest */
-        AzureKinect::Joint::ClavicleLeft, /* ShoulderLeft => ClavicleLeft */
-        AzureKinect::Joint::ShoulderLeft, /* ElbowLeft => ShoulderLeft */
-        AzureKinect::Joint::ElbowLeft, /* WristLeft => ElbowLeft */
-        AzureKinect::Joint::WristLeft, /* HandLeft => WristLeft */
-        AzureKinect::Joint::HandLeft, /* HandTipLeft => HandLeft */
-        AzureKinect::Joint::WristLeft, /* ThumbLeft => WristLeft */
-        AzureKinect::Joint::ClavicleRight, /* ShoulderRight => ClavicleRight */
-        AzureKinect::Joint::ShoulderRight, /* ElbowRight => ShoulderRight */
-        AzureKinect::Joint::ElbowRight, /* WristRight => ElbowRight */
-        AzureKinect::Joint::WristRight, /* HandRight => WristRight */
-        AzureKinect::Joint::HandRight, /* HandTipRight => HandRight */
-        AzureKinect::Joint::WristRight, /* ThumbRight => WristRight */
-        AzureKinect::Joint::Pelvis, /* HipLeft => Pelvis */
-        AzureKinect::Joint::HipLeft, /* KneeLeft => HipLeft */
-        AzureKinect::Joint::KneeLeft, /* AnkleLeft => KneeLeft */
-        AzureKinect::Joint::AnkleLeft, /* FootLeft => AnkleLeft */
-        AzureKinect::Joint::Pelvis, /* HipRight => Pelvis */
-        AzureKinect::Joint::HipRight, /* KneeRight => HipRight */
-        AzureKinect::Joint::KneeRight, /* AnkleRight => KneeRight */
-        AzureKinect::Joint::AnkleRight, /* FootRight => AnkleRight */
-        AzureKinect::Joint::Neck, /* Head => Neck */
-        AzureKinect::Joint::Nose, /* Nose => Nose */
-        AzureKinect::Joint::EyeLeft, /* EyeLeft => EyeLeft */
-        AzureKinect::Joint::EarLeft, /* EarLeft => EarLeft */
-        AzureKinect::Joint::EyeRight, /* EyeRight => EyeRight */
-        AzureKinect::Joint::EarRight, /* EarRight => EarRight */
+        /* Pelvis        => Pelvis */        AzureKinect::Joint::Pelvis,
+        /* SpineNavel    => Pelvis */        AzureKinect::Joint::Pelvis,
+        /* SpineChest    => SpineNavel */    AzureKinect::Joint::SpineNavel,
+        /* Neck          => SpineChest */    AzureKinect::Joint::SpineChest,
+        /* ClavicleLeft  => SpineChest */    AzureKinect::Joint::SpineChest,
+        /* ShoulderLeft  => ClavicleLeft */  AzureKinect::Joint::ClavicleLeft,
+        /* ElbowLeft     => ShoulderLeft */  AzureKinect::Joint::ShoulderLeft,
+        /* WristLeft     => ElbowLeft */     AzureKinect::Joint::ElbowLeft,
+        /* HandLeft      => WristLeft */     AzureKinect::Joint::WristLeft,
+        /* HandTipLeft   => HandLeft */      AzureKinect::Joint::HandLeft,
+        /* ThumbLeft     => WristLeft */     AzureKinect::Joint::WristLeft,
+        /* ClavicleRight => SpineChest */    AzureKinect::Joint::SpineChest,
+        /* ShoulderRight => ClavicleRight */ AzureKinect::Joint::ClavicleRight,
+        /* ElbowRight    => ShoulderRight */ AzureKinect::Joint::ShoulderRight,
+        /* WristRight    => ElbowRight */    AzureKinect::Joint::ElbowRight,
+        /* HandRight     => WristRight */    AzureKinect::Joint::WristRight,
+        /* HandTipRight  => HandRight */     AzureKinect::Joint::HandRight,
+        /* ThumbRight    => WristRight */    AzureKinect::Joint::WristRight,
+        /* HipLeft       => Pelvis */        AzureKinect::Joint::Pelvis,
+        /* KneeLeft      => HipLeft */       AzureKinect::Joint::HipLeft,
+        /* AnkleLeft     => KneeLeft */      AzureKinect::Joint::KneeLeft,
+        /* FootLeft      => AnkleLeft */     AzureKinect::Joint::AnkleLeft,
+        /* HipRight      => Pelvis */        AzureKinect::Joint::Pelvis,
+        /* KneeRight     => HipRight */      AzureKinect::Joint::HipRight,
+        /* AnkleRight    => KneeRight */     AzureKinect::Joint::KneeRight,
+        /* FootRight     => AnkleRight */    AzureKinect::Joint::AnkleRight,
+        /* Head          => Neck */          AzureKinect::Joint::Neck,
+        /* Nose          => Nose */          AzureKinect::Joint::Nose,
+        /* EyeLeft       => EyeLeft */       AzureKinect::Joint::EyeLeft,
+        /* EarLeft       => EarLeft */       AzureKinect::Joint::EarLeft,
+        /* EyeRight      => EyeRight */      AzureKinect::Joint::EyeRight,
+        /* EarRight      => EarRight */      AzureKinect::Joint::EarRight,
     };
 
     AzureKinect::Joint CAzureKinectDevice::GetParentJoint(AzureKinect::Joint joint)

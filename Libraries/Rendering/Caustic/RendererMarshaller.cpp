@@ -45,6 +45,26 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Method: EnableDepthTest
+    // See <IRenderer::EnableDepthTest>
+    //**********************************************************************
+    bool CRendererMarshaller::EnableDepthTest(bool enable)
+    {
+        HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+        bool enableDepth;
+        m_renderQueue.AddLambda(
+            [this, evt, enable, &enableDepth]()
+            {
+                enableDepth = m_spRenderer->EnableDepthTest(enable);
+                SetEvent(evt);
+            }
+        );
+        WaitForSingleObject(evt, INFINITE);
+        CloseHandle(evt);
+        return enableDepth;
+    }
+
+    //**********************************************************************
     // Method: Freeze
     // See <IRenderer::Freeze>
     //**********************************************************************

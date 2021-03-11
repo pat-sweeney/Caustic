@@ -101,6 +101,7 @@ namespace Caustic
 	//
 	// Hidden - Indicates that the scene element is hidden (not rendered)
 	// Selected - Indicates that the scene element is currently selected
+	// DepthTested - Is element depth tested during rendering
 	// BBoxDirty - (private) Indicates scene element's bounding box is dirty (changed but not updated)
 	// RenderableDirty - (private) Indicates scene element was modified but render version not updated
 	//**********************************************************************
@@ -108,12 +109,13 @@ namespace Caustic
 	{
 		Hidden = 0x01,
 		Selected = 0x02,
+		DepthTested = 0x4,
 
 		// List of private flags.
 		// TODO: Move this to private header
-		BBoxDirty = 0x04,
-		RenderableDirty = 0x08,
-		MaterialDirty = 0x10
+		BBoxDirty = 0x040,
+		RenderableDirty = 0x080,
+		MaterialDirty = 0x100
 	};
 
 	//**********************************************************************

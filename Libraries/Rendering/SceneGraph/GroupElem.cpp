@@ -10,6 +10,7 @@
 #include "GroupElem.h"
 #include <string>
 #include <functional>
+#include <d3d11_4.h>
 
 namespace Caustic
 {
@@ -20,6 +21,14 @@ namespace Caustic
 
     void CSceneGroupElem::Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx)
     {
+#ifdef _DEBUG
+        CComPtr<ID3D11DeviceContext4> spCtx;
+        if (!GetName().empty())
+        {
+            pRenderer->GetContext()->QueryInterface<ID3D11DeviceContext4>(&spCtx);
+            spCtx->BeginEventInt(GetName().c_str(), 0);
+        }
+#endif
         if (!(m_passes & pRenderCtx->GetCurrentPass()))
             return;
         if (m_prerenderCallback)
@@ -37,6 +46,10 @@ namespace Caustic
         pSceneCtx->m_Transform = old;
         if (m_postrenderCallback)
             m_postrenderCallback(pRenderCtx->GetCurrentPass());
+#ifdef _DEBUG
+        if (!GetName().empty())
+            spCtx->EndEvent();
+#endif
     }
 
     void CSceneGroupElem::GetBBox(BBox3 *pBBox)

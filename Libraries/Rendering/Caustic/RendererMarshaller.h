@@ -99,6 +99,7 @@ namespace Caustic
         //**********************************************************************
         // IRenderer methods
         //**********************************************************************
+        virtual bool EnableDepthTest(bool enable) override;
         virtual void Freeze() override;
         virtual void Unfreeze() override;
         virtual void AddRenderable(IRenderable* pRenderable) override;

@@ -109,6 +109,9 @@ public:
     CRefObj<ISceneMeshElem> spCubeElem;
     CRefObj<ISceneMaterialElem> spCubeMaterialElem;
     CRefObj<ISceneMeshElem> spPlaneElem;
+    CRefObj<IMesh> spJointSphere[Caustic::AzureKinect::Joint::Count];
+    CRefObj<ISceneMeshElem> spJointElem[Caustic::AzureKinect::Joint::Count];
+    CRefObj<ISceneMaterialElem> spJointMaterialElem[Caustic::AzureKinect::Joint::Count];
     HANDLE hCanRead[2];
     HANDLE hCanWrite[2];
     int currentFrame;
@@ -257,6 +260,38 @@ void CApp::Setup3DScene(IRenderWindow *pRenderWindow)
     spPointLight = spCausticFactory->CreateDirectionalLight(lightPos, lightDir, lightColor, 1.0f);
     app.m_spLightCollectionElem->AddLight(spPointLight);
     
+    // Create set of spheres used for rendering skeleton
+    auto spJointMaterialElem = spSceneFactory->CreateMaterialElem();
+    CRefObj<IMaterialAttrib> spJointMaterial = spCausticFactory->CreateMaterialAttrib();
+    ambient = FRGBColor(0.2f, 0.2f, 0.2f);
+    diffuse = FRGBColor(0.4f, 0.4f, 0.4f);
+    spJointMaterial->SetColor(L"ambientColor", ambient);
+    spJointMaterial->SetColor(L"diffuseColor", diffuse);
+    spJointMaterialElem->SetMaterial(spJointMaterial);
+    spJointMaterialElem->SetShader(app.spModelShader);
+    spJointMaterialElem->SetName(L"JointRoot");
+    spJointMaterialElem->SetFlags(spJointMaterialElem->GetFlags() | ESceneElemFlags::DepthTested);
+    for (int i = 0; i < Caustic::AzureKinect::Joint::Count; i++)
+    {
+        app.spJointMaterialElem[i] = spSceneFactory->CreateMaterialElem();
+        CRefObj<IMaterialAttrib> spMaterial = spCausticFactory->CreateMaterialAttrib();
+        FRGBColor ambient(0.2f, 0.2f, 0.2f);
+        FRGBColor diffuse(0.4f, 0.4f, 0.4f);
+        spMaterial->SetColor(L"ambientColor", ambient);
+        spMaterial->SetColor(L"diffuseColor", diffuse);
+        app.spJointMaterialElem[i]->SetMaterial(spMaterial);
+        app.spJointMaterialElem[i]->SetShader(app.spModelShader);
+
+        app.spJointElem[i] = spSceneFactory->CreateMeshElem();
+        app.spJointSphere[i] = Caustic::CreateSphere(10);
+        app.spJointElem[i]->SetMesh(app.spJointSphere[i]);
+        app.spJointElem[i]->SetName((std::wstring(L"Joint") + std::wstring(AzureKinect::JointNames[i])).c_str());
+        app.spJointElem[i]->SetShader(app.spModelShader);
+        app.spJointMaterialElem[i]->AddChild(spJointElem[i]);
+        spJointMaterialElem->AddChild(app.spJointMaterialElem[i]);
+    }
+    app.m_spLightCollectionElem->AddChild(spJointMaterialElem);
+
     // Add objects to our light collection
     app.m_spLightCollectionElem->AddChild(app.spPlaneMaterialElem);
     app.m_spLightCollectionElem->AddChild(app.spCubeMaterialElem);
@@ -539,13 +574,18 @@ void CApp::InitializeCaustic(HWND hwnd)
                      {
                          for (int i = 0; i < (int)Caustic::AzureKinect::Joint::Count; i++)
                          {
-                             auto parent = app.spCamera->GetParentJoint((Caustic::AzureKinect::Joint)i);
-                             auto mat0 = app.spCamera->GetJointMatrix(0, parent);
                              auto mat1 = app.spCamera->GetJointMatrix(0, (Caustic::AzureKinect::Joint)i);
-                             Vector3 p1(mat0.v[3][0] * 1000.0f, mat0.v[3][1] * 1000.0f, mat0.v[3][2] * 1000.0f);
-                             Vector3 p2(mat1.v[3][0] * 1000.0f, mat1.v[3][1] * 1000.0f, mat1.v[3][2] * 1000.0f);
-                             Vector4 clr(1.0f, 0.0f, 0.0f, 1.0f);
-                             app.DrawLine(p1, p2);
+                             auto scale = Matrix4x4::ScalingMatrix(1.0f / 100.0f, 1.0f / 100.0f, 1.0f / 100.0f) * mat1 * Matrix4x4::ScalingMatrix(1000.0f, 1000.0f, 1000.0f);
+                             app.spJointMaterialElem[i]->SetTransform(scale);
+                             auto parent = app.spCamera->GetParentJoint((Caustic::AzureKinect::Joint)i);
+                             if (parent != i)
+                             {
+                                 auto mat0 = app.spCamera->GetJointMatrix(0, parent);
+                                 Vector3 p1(mat0.v[3][0] * 1000.0f, mat0.v[3][1] * 1000.0f, mat0.v[3][2] * 1000.0f);
+                                 Vector3 p2(mat1.v[3][0] * 1000.0f, mat1.v[3][1] * 1000.0f, mat1.v[3][2] * 1000.0f);
+                                 Vector4 clr(1.0f, 0.0f, 0.0f, 1.0f);
+                                 app.DrawLine(p1, p2);
+                             }
                          }
                      }
 
@@ -655,7 +695,7 @@ void CApp::InitializeCaustic(HWND hwnd)
     app.hCanWrite[1] = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, TRUE, L"Global\\VirtualCameraMutexWrite1");
     SetEvent(app.hCanWrite[0]);
 
-    app.spCamera = Caustic::AzureKinect::CreateAzureKinect(0, AzureKinect::Color1080p, AzureKinect::Depth1024x1024, AzureKinect::FPS30, false);
+    app.spCamera = Caustic::AzureKinect::CreateAzureKinect(0, AzureKinect::Color1080p, AzureKinect::Depth1024x1024, AzureKinect::FPS30, true);
     app.cameraExt = app.spCamera->ColorExtrinsics();
     app.cameraInt = app.spCamera->ColorIntrinsics();
     uint32 depthW = app.spCamera->GetDepthWidth();

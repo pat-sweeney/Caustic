@@ -53,6 +53,8 @@ namespace Caustic
             Count
         };
 
+        extern const wchar_t* JointNames[];
+        
         enum DepthMode
         {
             DepthOff,

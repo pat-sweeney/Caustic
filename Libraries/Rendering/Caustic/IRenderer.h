@@ -124,6 +124,18 @@ namespace Caustic
 #endif
 
         //**********************************************************************
+        // Method: EnableDepthTest
+        // Turns on or off depth testing
+        // 
+        // Parameters:
+        // enable - indicates whether to turn on or off depth testing
+        // 
+        // Returns:
+        // Previous state
+        //**********************************************************************
+        virtual bool EnableDepthTest(bool enable) = 0;
+        
+        //**********************************************************************
         // Method: GetDevice
         // Returns:
         // The underlying D3D11 device

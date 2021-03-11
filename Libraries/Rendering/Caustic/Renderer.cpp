@@ -156,6 +156,28 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Method: EnableDepthTest
+    // See <IRenderer::EnableDepthTest>
+    //**********************************************************************
+    bool CRenderer::EnableDepthTest(bool enable)
+    {
+        CHECKTHREAD;
+        bool oldEnable = m_depthTestEnabled;
+        
+        CComPtr<ID3D11DepthStencilState> oldState;
+        UINT oldStencil;
+        m_spContext->OMGetDepthStencilState(&oldState, &oldStencil);
+        D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
+        ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
+        depthStencilDesc.DepthEnable = enable;
+        CComPtr<ID3D11DepthStencilState> spState;
+        CT(m_spDevice->CreateDepthStencilState(&depthStencilDesc, &spState));
+        m_spContext->OMSetDepthStencilState(spState, 0);
+        m_depthTestEnabled = enable;
+        return oldEnable;
+    }
+    
+    //**********************************************************************
     // Method: Freeze
     // See <IRenderer::Freeze>
     //**********************************************************************

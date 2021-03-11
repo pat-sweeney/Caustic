@@ -222,6 +222,7 @@ namespace Caustic
         CComPtr<ID3D11Buffer> m_spQuadIB;                   // Index buffer used to draw screen space quads
         CRefObj<IShader> m_spQuadShader;                    // Shader used to draw screen space quads
         CComPtr<ID3D11RasterizerState> m_spRasterizerState;
+        bool m_depthTestEnabled;
 
 #ifdef DIAGNOSTICS
         void CheckThread()
@@ -270,6 +271,7 @@ namespace Caustic
             spCtx2->EndEvent();
         }
 #endif
+        virtual bool EnableDepthTest(bool enable) override;
         virtual CComPtr<ID3D11Device> GetDevice() override { CHECKTHREAD;  return CGraphicsBase::GetDevice(); }
         virtual CComPtr<IDXGIOutputDuplication> GetDuplication() override { CHECKTHREAD;  return m_spDuplication; }
         virtual void Freeze() override;
