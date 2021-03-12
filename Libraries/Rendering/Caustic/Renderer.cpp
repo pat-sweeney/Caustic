@@ -33,7 +33,8 @@ namespace Caustic
     //**********************************************************************
     CRenderer::CRenderer() :
         m_waitForShutdown(true, true),
-        m_exitThread(false)
+        m_exitThread(false),
+        m_depthTestEnabled(true)
     {
         m_freezeEvent = CreateEvent(nullptr, true, false, nullptr);
         m_freeze = 0;
@@ -168,11 +169,11 @@ namespace Caustic
         UINT oldStencil;
         m_spContext->OMGetDepthStencilState(&oldState, &oldStencil);
         D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
-        ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
+        oldState->GetDesc(&depthStencilDesc);
         depthStencilDesc.DepthEnable = enable;
         CComPtr<ID3D11DepthStencilState> spState;
         CT(m_spDevice->CreateDepthStencilState(&depthStencilDesc, &spState));
-        m_spContext->OMSetDepthStencilState(spState, 0);
+        m_spContext->OMSetDepthStencilState(spState, oldStencil);
         m_depthTestEnabled = enable;
         return oldEnable;
     }

@@ -270,7 +270,7 @@ void CApp::Setup3DScene(IRenderWindow *pRenderWindow)
     spJointMaterialElem->SetMaterial(spJointMaterial);
     spJointMaterialElem->SetShader(app.spModelShader);
     spJointMaterialElem->SetName(L"JointRoot");
-    spJointMaterialElem->SetFlags(spJointMaterialElem->GetFlags() | ESceneElemFlags::DepthTested);
+    spJointMaterialElem->SetFlags(spJointMaterialElem->GetFlags() & ~ESceneElemFlags::DepthTested);
     for (int i = 0; i < Caustic::AzureKinect::Joint::Count; i++)
     {
         app.spJointMaterialElem[i] = spSceneFactory->CreateMaterialElem();
