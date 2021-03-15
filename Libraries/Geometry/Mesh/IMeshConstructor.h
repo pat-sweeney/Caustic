@@ -23,6 +23,7 @@ namespace Caustic
         virtual void FaceOpen() = 0;
         virtual void FaceClose() = 0;
         virtual void VertexAdd(Vector3 &pos, Vector3 &normal, Vector2 &uv) = 0;
+        virtual CRefObj<IMesh> MeshFromDensityFunction(int numBlocks, std::function<float(Vector3&)>& fn) = 0;
     };
 
     CAUSTICAPI CRefObj<IMeshConstructor> CreateMeshConstructor();
