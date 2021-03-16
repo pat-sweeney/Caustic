@@ -421,14 +421,14 @@ namespace Caustic
                     edgePos[10] = e2 + (e6 - e2) * t10;
                     edgePos[11] = e3 + (e7 - e3) * t11;
                     uint8 code = 0;
-                    code = (code << 1) | ((d7 > 0.0f) ? 1 : 0);
-                    code = (code << 1) | ((d6 > 0.0f) ? 1 : 0);
-                    code = (code << 1) | ((d5 > 0.0f) ? 1 : 0);
-                    code = (code << 1) | ((d4 > 0.0f) ? 1 : 0);
-                    code = (code << 1) | ((d3 > 0.0f) ? 1 : 0);
-                    code = (code << 1) | ((d2 > 0.0f) ? 1 : 0);
-                    code = (code << 1) | ((d1 > 0.0f) ? 1 : 0);
-                    code = (code << 1) | ((d0 > 0.0f) ? 1 : 0);
+                    code = (code << 1) | ((d7 >= 0.0f) ? 1 : 0);
+                    code = (code << 1) | ((d6 >= 0.0f) ? 1 : 0);
+                    code = (code << 1) | ((d5 >= 0.0f) ? 1 : 0);
+                    code = (code << 1) | ((d4 >= 0.0f) ? 1 : 0);
+                    code = (code << 1) | ((d3 >= 0.0f) ? 1 : 0);
+                    code = (code << 1) | ((d2 >= 0.0f) ? 1 : 0);
+                    code = (code << 1) | ((d1 >= 0.0f) ? 1 : 0);
+                    code = (code << 1) | ((d0 >= 0.0f) ? 1 : 0);
                     int numPolys = edgeTable[code][0];
                     for (int l = 0; l < numPolys; l++)
                     {

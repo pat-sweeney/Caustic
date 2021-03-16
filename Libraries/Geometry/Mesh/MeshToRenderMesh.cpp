@@ -54,6 +54,9 @@ namespace Caustic
 		uint32 numVerts = GetNumberVertices();
 		uint32 vertexSize = pShaderInfo->GetVertexSize();
 
+		if (numVerts == 0)
+			return;
+
 		BBox3 bbox;
 
 		// Create buffer with our vertex data
@@ -182,8 +185,10 @@ namespace Caustic
 			}
 		}
 		
-        UINT ibSize = (UINT)(numIndices * sizeof(uint32));
-        D3D11_BUFFER_DESC desc = { 0 };
+		if (numIndices == 0)
+			return;
+		UINT ibSize = (UINT)(numIndices * sizeof(uint32));
+		D3D11_BUFFER_DESC desc = { 0 };
         desc.ByteWidth = ibSize;
         desc.Usage = D3D11_USAGE_DEFAULT;
         desc.CPUAccessFlags = 0;
