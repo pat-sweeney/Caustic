@@ -76,6 +76,21 @@ namespace Caustic
 		virtual D3D11_CULL_MODE GetCullMode() = 0;
 
 		//**********************************************************************
+		// Method: SetFillMode
+		// Sets fill mode for rendering
+		//
+		// Parameters:
+		// renderMode - mode to use
+		//**********************************************************************
+		virtual void SetFillMode(D3D11_FILL_MODE renderMode) = 0;
+
+		//**********************************************************************
+		// Method: GetFillMode
+		// Returns current fill mode
+		//**********************************************************************
+		virtual D3D11_FILL_MODE GetFillMode() = 0;
+
+		//**********************************************************************
 		// Method: GetIsTransparent
 		// Indicates whether material is considered transparent
 		//

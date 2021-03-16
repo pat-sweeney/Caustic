@@ -33,7 +33,11 @@ namespace Caustic
 		LightCollection,
 		Material,
 		ComputeShaderElem,
-		Overlay2D
+		Overlay2D,
+		LineElem,
+		CubeElem,
+		CylinderElem,
+		SphereElem
 	};
 
 	//**********************************************************************
@@ -243,6 +247,46 @@ namespace Caustic
 		// it isn't called the default shader is used.
 		//**********************************************************************
 		virtual void SetShader(IShader* pShader) = 0;
+	};
+
+	//**********************************************************************
+	// Interface: ISceneLineElem
+	// Defines a line element in our scene graph.
+	//**********************************************************************
+	struct ISceneLineElem : public ISceneElem
+	{
+		virtual void SetPosition(Vector3& p0, Vector3& p1) = 0;
+		virtual void GetPosition(Vector3 *p0, Vector3 *p1) = 0;
+	};
+
+	//**********************************************************************
+	// Interface: ISceneSphereElem
+	// Defines a sphere element in our scene graph.
+	//**********************************************************************
+	struct ISceneSphereElem : public ISceneElem
+	{
+		virtual void SetPosition(Vector3& center, float& radius) = 0;
+		virtual void GetPosition(Vector3* pCenter, float* pRadius) = 0;
+	};
+
+	//**********************************************************************
+	// Interface: ISceneCubeElem
+	// Defines a cube element in our scene graph.
+	//**********************************************************************
+	struct ISceneCubeElem : public ISceneElem
+	{
+		virtual void SetPosition(Vector3& center, float width, float height, float depth) = 0;
+		virtual void GetPosition(Vector3* pCenter, float* pWidth, float* pHeight, float* pDepth) = 0;
+	};
+
+	//**********************************************************************
+	// Interface: ISceneCylinderElem
+	// Defines a cylinder element in our scene graph.
+	//**********************************************************************
+	struct ISceneCylinderElem : public ISceneElem
+	{
+		virtual void SetPosition(Vector3& center, float height, float topRadius, float bottomRadius) = 0;
+		virtual void GetPosition(Vector3* pCenter, float* pHeight, float* pTopRadius, float *pBottomRadius) = 0;
 	};
 
 	//**********************************************************************

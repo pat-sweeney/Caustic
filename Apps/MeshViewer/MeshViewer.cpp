@@ -11,6 +11,8 @@
 #include "Rendering\Caustic\ICausticFactory.h"
 #include "Rendering\SceneGraph\ISceneFactory.h"
 #include "Geometry\MeshImport\MeshImport.h"
+#include "Geometry\Mesh\Mesh.h"
+#include "Geometry\Mesh\IMeshConstructor.h"
 #include <Windows.h>
 #include <commdlg.h>
 #include <string>
@@ -172,6 +174,74 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             {
             case IDM_ABOUT:
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
+                break;
+            case ID_PDF_SPHERE:
+            {
+                CRefObj<IMeshConstructor> spMeshConstructor = Caustic::CreateMeshConstructor();
+                auto spherePDF = [](Vector3& v)->float
+                {
+                    static Vector3 center(0.5f, 0.5f, 0.5f);
+                    return (v - center).Length() - 0.5f;
+                };
+                CRefObj<ISceneMeshElem> spMeshElem = spSceneFactory->CreateMeshElem();
+                CRefObj<IMesh> spMesh = spMeshConstructor->MeshFromDensityFunction(128, spherePDF);
+                spMeshElem->SetMesh(spMesh);
+                CRefObj<ISceneGraph> spSceneGraph = spRenderWindow->GetSceneGraph();
+                CRefObj<IShader> spShader = spRenderWindow->GetRenderer()->GetShaderMgr()->FindShader(L"Default");
+                CRefObj<ISceneMaterialElem> spMaterialElem = spSceneFactory->CreateMaterialElem();
+                CRefObj<IMaterialAttrib> spMaterial = spCausticFactory->CreateMaterialAttrib();
+                FRGBColor ambient(0.2f, 0.2f, 0.2f);
+                FRGBColor diffuse(0.4f, 0.4f, 0.4f);
+                spMaterial->SetColor(L"ambientColor", ambient);
+                spMaterial->SetColor(L"diffuseColor", diffuse);
+                spMaterial->SetFillMode(D3D11_FILL_MODE::D3D11_FILL_WIREFRAME);
+                spMaterial->SetCullMode(D3D11_CULL_NONE);
+                spMaterialElem->SetMaterial(spMaterial);
+                spMaterialElem->SetShader(spShader);
+                spMaterialElem->AddChild(spMeshElem);
+
+                auto spLightCollectionElem = spSceneFactory->CreateLightCollectionElem();
+
+                Vector3 lightPos(1000.0f, 1000.0f, 0.0f);
+                FRGBColor lightColor(1.0f, 1.0f, 1.0f);
+                CRefObj<ILight> spLight(spCausticFactory->CreatePointLight(lightPos, lightColor, 1.0f));
+                spLightCollectionElem->AddLight(spLight);
+                spLightCollectionElem->AddChild(spMaterialElem);
+
+                for (int i = 0; i < 16; i++)
+                {
+                    for (int j = 0; j < 16; j++)
+                    {
+                        float offsets[12][6] = {
+                            { 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f },
+                            { 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f },
+                            { 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f },
+                            { 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f },
+
+                            { 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f },
+                            { 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f },
+                            { 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f },
+                            { 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f },
+
+                            { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f },
+                            { 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f },
+                            { 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f },
+                            { 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f },
+                        };
+                        for (int k = 0; k < 12; k++)
+                        {
+                            float px = i * 2.0f;
+                            float py = j * 2.0f;
+                            Vector3 p0(px + offsets[k][0], py + offsets[k][1], offsets[k][2]);
+                            Vector3 p1(px + offsets[k][3], py + offsets[k][4], offsets[k][5]);
+                            auto spLine = spSceneFactory->CreateLineElem(p0, p1);
+                            spLightCollectionElem->AddChild(spLine);
+                        }
+                    }
+                }
+
+                spSceneGraph->AddChild(spLightCollectionElem);
+            }
                 break;
             case IDM_LOADMESH:
                 {

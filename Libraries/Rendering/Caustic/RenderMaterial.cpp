@@ -93,9 +93,10 @@ namespace Caustic
             spContext->RSGetState(&spOldRasterizerState);
             D3D11_RASTERIZER_DESC desc;
             spOldRasterizerState->GetDesc(&desc);
-            if (desc.CullMode != m_spMaterial->GetCullMode())
+            if (desc.CullMode != m_spMaterial->GetCullMode() || desc.FillMode != m_spMaterial->GetFillMode())
             {
                 desc.CullMode = m_spMaterial->GetCullMode();
+                desc.FillMode = m_spMaterial->GetFillMode();
                 CT(spDevice->CreateRasterizerState(&desc, &spRasterizerState));
                 spContext->RSSetState(spRasterizerState);
             }
@@ -127,6 +128,8 @@ namespace Caustic
                 if (t.second.m_spSampler && (t.second.m_access == EShaderAccess::Both || t.second.m_access == EShaderAccess::VertexShader))
                     spShader->SetVSParam(t.second.m_samplerName, std::any(CSamplerRef(t.second.m_spSampler)));
             }
+            if (desc.CullMode != m_spMaterial->GetCullMode() || desc.FillMode != m_spMaterial->GetFillMode())
+                spContext->RSSetState(spOldRasterizerState);
         }
 
         int numLights = (int)lights.size();

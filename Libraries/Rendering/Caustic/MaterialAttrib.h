@@ -33,12 +33,14 @@ namespace Caustic
         bool m_isTransparent;
         bool m_isShadowReceiver;
         D3D11_CULL_MODE m_cullMode;
+        D3D11_FILL_MODE m_fillMode;
 
         CMaterialAttrib() :
             m_materialID(0),
             m_isTransparent(false),
             m_isShadowReceiver(true),
-            m_cullMode(D3D11_CULL_BACK)
+            m_cullMode(D3D11_CULL_BACK),
+            m_fillMode(D3D11_FILL_MODE::D3D11_FILL_SOLID)
         {
         }
 
@@ -55,6 +57,8 @@ namespace Caustic
         virtual std::string GetName() override { return m_name; }
         virtual void SetCullMode(D3D11_CULL_MODE cullMode) override { m_cullMode = cullMode; }
         virtual D3D11_CULL_MODE GetCullMode() override { return m_cullMode; }
+        virtual void SetFillMode(D3D11_FILL_MODE fillmode) override { m_fillMode = fillmode; }
+        virtual D3D11_FILL_MODE GetFillMode() override { return m_fillMode; }
         virtual bool GetIsTransparent() override { return m_isTransparent; }
         virtual void SetIsTransparent(bool isTransparent) override { m_isTransparent = isTransparent; }
         virtual bool GetIsShadowReceiver() override { return m_isShadowReceiver; }

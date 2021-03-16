@@ -68,4 +68,35 @@ namespace Caustic
 	{
 		return Caustic::CreateCustomRenderElem(clientCallback);
 	}
+
+	CAUSTICAPI CRefObj<ISceneLineElem> CreateLineElem(Vector3& p0, Vector3& p1);
+	CRefObj<ISceneLineElem> CSceneFactory::CreateLineElem(Vector3& p0, Vector3& p1)
+	{
+		return Caustic::CreateLineElem(p0, p1);
+	}
+
+	CAUSTICAPI CRefObj<ISceneSphereElem> CreateSphereElem(Vector3& center, float radius);
+	CRefObj<ISceneSphereElem> CSceneFactory::CreateSphereElem(Vector3& center, float radius)
+	{
+		return Caustic::CreateSphereElem(center, radius);
+	}
+
+	CAUSTICAPI CRefObj<ISceneCubeElem> CreateCubeElem(Vector3& center, float width, float height, float depth);
+	CRefObj<ISceneCubeElem> CSceneFactory::CreateCubeElem(Vector3& center, float width, float height, float depth)
+	{
+		return Caustic::CreateCubeElem(center, width, height, depth);
+	}
+
+	CAUSTICAPI CRefObj<ISceneCylinderElem> CreateCylinderElem(Vector3& center, float height, float topRadius, float bottomRadius);
+	CRefObj<ISceneCylinderElem> CSceneFactory::CreateCylinderElem(Vector3& center, float height, float topRadius, float bottomRadius)
+	{
+		return Caustic::CreateCylinderElem(center, height, topRadius, bottomRadius);
+	}
+
+//	CAUSTICAPI CRefObj<ISceneElem> CreateInstanceElem(ISceneElem* pTemplate);
+	CRefObj<ISceneElem> CSceneFactory::CreateInstanceElem(ISceneElem* pTemplate)
+	{
+		return CRefObj<ISceneElem>(nullptr);
+//		return Caustic::CreateInstanceElem(pTemplate);
+	}
 };

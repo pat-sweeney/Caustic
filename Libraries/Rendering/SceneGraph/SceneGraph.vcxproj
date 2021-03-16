@@ -81,29 +81,37 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ComputeShaderElem.h" />
+    <ClInclude Include="CubeElem.h" />
     <ClInclude Include="CustomRenderElem.h" />
+    <ClInclude Include="CylinderElem.h" />
     <ClInclude Include="GroupElem.h" />
     <ClInclude Include="ISceneFactory.h" />
     <ClInclude Include="LightCollectionElem.h" />
+    <ClInclude Include="LineElem.h" />
     <ClInclude Include="MaterialElem.h" />
     <ClInclude Include="MeshElem.h" />
     <ClInclude Include="Overlay2D.h" />
     <ClInclude Include="SceneFactory.h" />
     <ClInclude Include="SceneGraph.h" />
     <ClInclude Include="SceneGraphImpl.h" />
+    <ClInclude Include="SphereElem.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ComputeShaderElem.cpp" />
+    <ClCompile Include="CubeElem.cpp" />
     <ClCompile Include="CustomRenderElem.cpp" />
+    <ClCompile Include="CylinderElem.cpp" />
     <ClCompile Include="GroupElem.cpp" />
     <ClCompile Include="LightCollectionElem.cpp" />
+    <ClCompile Include="LineElem.cpp" />
     <ClCompile Include="MaterialElem.cpp" />
     <ClCompile Include="MeshElem.cpp" />
     <ClCompile Include="Overlay2D.cpp" />
     <ClCompile Include="SceneFactory.cpp" />
     <ClCompile Include="SceneGraph.cpp" />
+    <ClCompile Include="SphereElem.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>

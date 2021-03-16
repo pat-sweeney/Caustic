@@ -50,6 +50,36 @@ namespace Caustic
 		virtual CRefObj<ISceneMeshElem> CreateMeshElem() = 0;
 
 		//**********************************************************************
+		// Method: CreateLineElem
+		// Creates a line element
+		//**********************************************************************
+		virtual CRefObj<ISceneLineElem> CreateLineElem(Vector3& p0, Vector3& p1) = 0;
+
+		//**********************************************************************
+		// Method: CreateSphereElem
+		// Creates a sphere element
+		//**********************************************************************
+		virtual CRefObj<ISceneSphereElem> CreateSphereElem(Vector3& center, float radius) = 0;
+
+		//**********************************************************************
+		// Method: CreateCubeElem
+		// Creates a cube element
+		//**********************************************************************
+		virtual CRefObj<ISceneCubeElem> CreateCubeElem(Vector3& center, float width, float height, float depth) = 0;
+
+		//**********************************************************************
+		// Method: CreateCylinderElem
+		// Creates a mesh element
+		//**********************************************************************
+		virtual CRefObj<ISceneCylinderElem> CreateCylinderElem(Vector3 &center, float height, float topRadius, float bottomRadius) = 0;
+
+		//**********************************************************************
+		// Method: CreateMeshElem
+		// Creates a mesh element
+		//**********************************************************************
+		virtual CRefObj<ISceneElem> CreateInstanceElem(ISceneElem* pTemplate) = 0;
+
+		//**********************************************************************
 		// Method: CreateCustomRenderElem
 		// Create a element that will use a callback for rendering
 		//**********************************************************************

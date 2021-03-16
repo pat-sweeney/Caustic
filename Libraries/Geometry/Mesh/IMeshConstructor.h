@@ -23,7 +23,17 @@ namespace Caustic
         virtual void FaceOpen() = 0;
         virtual void FaceClose() = 0;
         virtual void VertexAdd(Vector3 &pos, Vector3 &normal, Vector2 &uv) = 0;
-        virtual CRefObj<IMesh> MeshFromDensityFunction(int numBlocks, std::function<float(Vector3&)>& fn) = 0;
+
+        //**********************************************************************
+        // Method: MeshFromDensityFunction
+        // Creates a mesh from a density function using the marching cubes algorithm.
+        // It is assumed that the density function occupies a unit cube.
+        //
+        // Parameters:
+        // numBlocks - number of blocks to subdivide space in each direction
+        // fn - density function
+        //**********************************************************************
+        virtual CRefObj<IMesh> MeshFromDensityFunction(int numBlocks, std::function<float(Vector3&)> fn) = 0;
     };
 
     CAUSTICAPI CRefObj<IMeshConstructor> CreateMeshConstructor();

@@ -22,6 +22,10 @@ namespace Caustic
         CFace *m_pCurFace;              // Current face being constructed
         CHalfEdge *m_pPrevEdge;         // Previous edge
         CGeomVertex *m_pPrevVertex;     // Previous vertex
+
+#ifdef CHECK_MARCHING_CUBES
+        CRefObj<IMesh> BuildMarchingCubeCases();
+#endif
     public:
         CMeshConstructor();
         
@@ -43,6 +47,6 @@ namespace Caustic
         virtual void FaceOpen() override;
         virtual void FaceClose() override;
         virtual void VertexAdd(Caustic::Vector3 &pos, Caustic::Vector3 &normal, Caustic::Vector2 &uv) override;
-        virtual CRefObj<IMesh> MeshFromDensityFunction(int numBlocks, std::function<float(Vector3&)>& fn) override;
+        virtual CRefObj<IMesh> MeshFromDensityFunction(int numBlocks, std::function<float(Vector3&)> fn) override;
     };
 }

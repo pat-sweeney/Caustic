@@ -52,6 +52,18 @@
     <ClInclude Include="Overlay2D.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="LineElem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CubeElem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereElem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CylinderElem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -82,6 +94,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Overlay2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LineElem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CubeElem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CylinderElem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SphereElem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
