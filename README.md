@@ -12,8 +12,9 @@ You will also need to set \<CausticFXCPath> to point to where the FXC shader com
                  e.g. c:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x64\fxc.exe  
   
 Lastly, you will need to set \<AzureKinectSDKDir> to point to your Azure Kinect SDK folder (e.g. "C:\Program Files\Azure Kinect SDK v1.4.0")  
-  
-You will need to install:  
+
+You will need to install:
+Git for Windows: https://gitforwindows.org
 NaturalDocs: https://www.naturaldocs.org/download/  
 Azure Kinect SDK: https://docs.microsoft.com/en-us/azure/kinect-dk/sensor-sdk-download  
 Azure Kinect Body Tracking: https://docs.microsoft.com/en-us/azure/kinect-dk/body-sdk-download  
