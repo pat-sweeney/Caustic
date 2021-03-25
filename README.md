@@ -17,6 +17,7 @@ You will need to install:
 NaturalDocs: https://www.naturaldocs.org/download/  
 Azure Kinect SDK: https://docs.microsoft.com/en-us/azure/kinect-dk/sensor-sdk-download  
 Azure Kinect Body Tracking: https://docs.microsoft.com/en-us/azure/kinect-dk/body-sdk-download
+.Net SDK 4.7.2: https://dotnet.microsoft.com/download/dotnet-framework/thank-you/net472-developer-pack-offline-installer
 
 ## Documentation
 Documentation for the library can be found at https://pat-sweeney.github.io/Caustic/
