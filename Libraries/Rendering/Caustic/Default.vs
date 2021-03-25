@@ -17,7 +17,7 @@ cbuffer VS_CONSTANT_BUFFER : register(b0)
 VSOutput VS(VSInput p)
 {
     VSOutput v;
-    e
+
     // Transform our vertex normal from object space to world space
     v.normWS = normalize(mul(float4(p.normOS,1.0f), worldInvTranspose).xyz);
     v.posWS = mul(float4(p.posOS, 1.0f), world).xyz;
