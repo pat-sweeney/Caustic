@@ -11,7 +11,13 @@ In order to build the solution you need to edit Caustic.props and modify \<Caust
 You will also need to set \<CausticFXCPath> to point to where the FXC shader compiler lives:  
                  e.g. c:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x64\fxc.exe  
   
-Lastly, you will need to set \<AzureKinectSDKDir> to point to your Azure Kinect SDK folder (e.g. "C:\Program Files\Azure Kinect SDK v1.4.0")  
+You will need to set \<AzureKinectSDKDir> to point to your Azure Kinect SDK folder (e.g. "C:\Program Files\Azure Kinect SDK v1.4.0")  
+
+Clone ImGui into $(CausticRoot)\External:
+```
+cd %CausticRoot%\External
+git clone https://github.com/ocornut/imgui.git
+```
 
 You will need to install:
 Git for Windows: https://gitforwindows.org
