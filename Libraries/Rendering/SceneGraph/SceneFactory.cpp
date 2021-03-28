@@ -63,6 +63,12 @@ namespace Caustic
 		return Caustic::CreateMeshElem();
 	}
 
+	CAUSTICAPI CRefObj<ISceneMarchingCubesElem> CreateMarchingCubesElem(IRenderer* pRenderer, uint32 subdivisions, std::function<float(Vector3&)> sdf);
+	CRefObj<ISceneMarchingCubesElem> CSceneFactory::CreateMarchingCubesElem(IRenderer* pRenderer, uint32 subdivisions, std::function<float(Vector3&)> sdf)
+	{
+		return Caustic::CreateMarchingCubesElem(pRenderer, subdivisions, sdf);
+	}
+
 	CAUSTICAPI CRefObj<ISceneCustomRenderElem> CreateCustomRenderElem(std::function<void(IRenderer *pRenderer, IRenderCtx *pCtx, SceneCtx * pSceneCtx)> clientCallback);
 	CRefObj<ISceneCustomRenderElem> CSceneFactory::CreateCustomRenderElem(std::function<void(IRenderer * pRenderer, IRenderCtx * pCtx, SceneCtx * pSceneCtx)> clientCallback)
 	{

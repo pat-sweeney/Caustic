@@ -64,6 +64,9 @@
     <ClInclude Include="CylinderElem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="MarchingCubesElem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -108,6 +111,9 @@
     <ClCompile Include="SphereElem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MarchingCubesElem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Overlay2D.ps">
@@ -116,8 +122,34 @@
     <None Include="Overlay2D.vs">
       <Filter>Source Files\Shaders</Filter>
     </None>
+    <None Include="MarchingCubes.cs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="MCCountVerts.cs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="MCEmitVerts.cs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="MCAllocVerts.cs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="Overlay2D.xml" />
+    <CustomBuild Include="MarchingCubes.xml">
+      <Filter>Source Files\Shaders\Definitions</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Overlay2D.xml">
+      <Filter>Source Files\Shaders\Definitions</Filter>
+    </CustomBuild>
+    <CustomBuild Include="MCCountVerts.xml">
+      <Filter>Source Files\Shaders\Definitions</Filter>
+    </CustomBuild>
+    <CustomBuild Include="MCEmitVerts.xml">
+      <Filter>Source Files\Shaders\Definitions</Filter>
+    </CustomBuild>
+    <CustomBuild Include="MCAllocVerts.xml">
+      <Filter>Source Files\Shaders\Definitions</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>

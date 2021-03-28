@@ -178,6 +178,57 @@ namespace Caustic
         }
     };
 
+    enum EBufferType
+    {
+        Input,
+        Output,
+        InputOutput
+    };
+
+////    struct IGPUBuffer
+////    {
+////        virtual CComPtr<ID3D11Buffer> GetBuffer() = 0;
+////        virtual CComPtr<ID3D11Buffer> GetStagingBuffer() = 0;
+////        virtual void CopyFromCPU(IRenderer* pRenderer, uint8* pData, uint32 bufSize) = 0;
+////        virtual void CopyToCPU(IRenderer* pRenderer, uint8* pData, uint32* pBufSize) = 0;
+////    };
+////
+////    CRefObj<IGPUBuffer> CreateGPUBuffer(IRenderer* pRenderer, uint8* pData, uint32* pBufSize);
+////
+////    class CGPUBuffer : public IGPUBuffer
+////    {
+////        SBuffer m_buffer;
+////    public:
+////        virtual CComPtr<ID3D11Buffer> GetBuffer() { return m_buffer.m_spBuffer; }
+////        virtual CComPtr<ID3D11Buffer> GetStagingBuffer() { return m_buffer.m_spStagingBuffer; }
+////        virtual void CopyFromCPU(IRenderer* pRenderer, uint8* pData, uint32 bufSize)
+////        {
+////            // Copy the data from the CPU memory to the buffer
+////            CComPtr<ID3D11DeviceContext> spCtx = pRenderer->GetContext();
+////            D3D11_MAPPED_SUBRESOURCE ms;
+////            CT(spCtx->Map(m_buffer.m_spStagingBuffer, 0, D3D11_MAP_WRITE, 0, &ms));
+////            BYTE* pb = reinterpret_cast<BYTE*>(ms.pData);
+////            memcpy(pb, pData, bufSize);
+////            spCtx->Unmap(m_buffer.m_spStagingBuffer, 0);
+////            spCtx->CopyResource(m_buffer.m_spBuffer, m_buffer.m_spStagingBuffer);
+////        }
+////        virtual void CopyToCPU(IRenderer *pRenderer, uint8* pData, uint32* pBufSize)
+////        {
+////            if (pBufSize)
+////                *pBufSize = m_buffer.m_bufferSize;
+////            if (pData)
+////            {
+////                CComPtr<ID3D11DeviceContext> spCtx = pRenderer->GetContext();
+////                spCtx->CopyResource(m_buffer.m_spStagingBuffer, m_buffer.m_spBuffer);
+////                D3D11_MAPPED_SUBRESOURCE ms;
+////                CT(spCtx->Map(m_buffer.m_spStagingBuffer, 0, D3D11_MAP_READ, 0, &ms));
+////                BYTE* pb = reinterpret_cast<BYTE*>(ms.pData);
+////                memcpy(pb, pData, m_buffer.m_bufferSize);
+////                spCtx->Unmap(m_buffer.m_spStagingBuffer, 0);
+////            }
+////        }
+////    };
+////
     //**********************************************************************
     // Class: SBuffer
     // Defines a buffer (which may be either a constant buffer or
@@ -201,18 +252,18 @@ namespace Caustic
         CComPtr<ID3D11ShaderResourceView> m_spSRView;
         uint32 m_bufferSize;
         uint32 m_heapSize;
-        bool m_isInput;
+        EBufferType m_bufferType;
         int m_bufferSlot;
         std::wstring m_name;
 
-        uint8* m_wpOutputBuffer; // Weak reference to the output buffer
+        uint8* m_wpBuffer; // Weak reference to the input/output buffer
 
         SBuffer() :
-            m_wpOutputBuffer(nullptr),
             m_bufferSize(0),
             m_heapSize(0),
-            m_isInput(true),
-            m_bufferSlot(0)
+            m_bufferType(Input),
+            m_bufferSlot(0),
+            m_wpBuffer(nullptr)
         {
         }
     };

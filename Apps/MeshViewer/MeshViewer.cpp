@@ -181,13 +181,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 auto spherePDF = [](Vector3& v)->float
                 {
                     static Vector3 center(0.5f, 0.5f, 0.5f);
-                    return (v - center).Length() - 0.5f;
+                    Vector3 q = v - center;
+                    return max(fabs(q.x), max(fabs(q.y), fabs(q.z))) - 0.5f;
+                    //return (v - center).Length() - 0.5f;
                 };
                 CRefObj<ISceneMeshElem> spMeshElem = spSceneFactory->CreateMeshElem();
                 CRefObj<IMesh> spMesh = spMeshConstructor->MeshFromDensityFunction(128, spherePDF);
                 spMeshElem->SetMesh(spMesh);
                 CRefObj<ISceneGraph> spSceneGraph = spRenderWindow->GetSceneGraph();
-                CRefObj<IShader> spShader = spRenderWindow->GetRenderer()->GetShaderMgr()->FindShader(L"Default");
+                CRefObj<IRenderer> spRenderer = spRenderWindow->GetRenderer();
+                CRefObj<IShader> spShader = spRenderer->GetShaderMgr()->FindShader(L"Default");
                 CRefObj<ISceneMaterialElem> spMaterialElem = spSceneFactory->CreateMaterialElem();
                 CRefObj<IMaterialAttrib> spMaterial = spCausticFactory->CreateMaterialAttrib();
                 FRGBColor ambient(0.2f, 0.2f, 0.2f);
@@ -200,7 +203,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 spMaterialElem->SetShader(spShader);
                 spMaterialElem->AddChild(spMeshElem);
 
+                auto spMC = spSceneFactory->CreateMarchingCubesElem(spRenderer, 32, spherePDF);
+
                 auto spLightCollectionElem = spSceneFactory->CreateLightCollectionElem();
+                spLightCollectionElem->AddChild(spMC);
 
                 Vector3 lightPos(1000.0f, 1000.0f, 0.0f);
                 FRGBColor lightColor(1.0f, 1.0f, 1.0f);

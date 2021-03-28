@@ -37,7 +37,8 @@ namespace Caustic
     // clients will pass to IShader::SetCSParam for any of these shader types.
     //
     // Parameters:
-    // m_pData - pointer to the buffer. If output buffer then client owns this. Otherwise do (i.e. we free it).
+    // m_pData - pointer to the buffer. It is up to the client to ensure that
+    //           this buffer persists through the call to dispatch.
     // m_dataSize - size of buffer in bytes
     // m_stride - size of each buffer element in bytes
     //
@@ -46,15 +47,13 @@ namespace Caustic
     //**********************************************************************
     struct ClientBuffer
     {
-        std::shared_ptr<uint8> m_spInputData; // Copy of client data. Owned by this object.
-        uint8* m_wpOutputData; // Weak reference to client output buffer. Owned by client.
+        std::shared_ptr<uint8> m_spBuffer; // Copy of client data. Owned by this object.
         uint32 m_dataSize;
         uint32 m_stride; // Size of each element
 
         ClientBuffer() :
             m_dataSize(0),
-            m_stride(0),
-            m_wpOutputData(nullptr)
+            m_stride(0)
         {
         }
         ClientBuffer(const ClientBuffer& s)

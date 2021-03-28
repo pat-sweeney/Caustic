@@ -446,13 +446,13 @@ namespace Caustic
         for (int bufferIndex = 0; bufferIndex < (int)m_csBuffers.size(); bufferIndex++)
         {
             SBuffer& s = m_csBuffers[bufferIndex];
-            if (!s.m_isInput)
+            if (s.m_bufferType == EBufferType::Output || s.m_bufferType == EBufferType::InputOutput)
             {
                 D3D11_MAPPED_SUBRESOURCE ms;
                 spCtx->CopyResource(s.m_spStagingBuffer, s.m_spBuffer);
                 CT(spCtx->Map(s.m_spStagingBuffer, 0, D3D11_MAP_READ, 0, &ms));
                 BYTE* pb = reinterpret_cast<BYTE*>(ms.pData);
-                memcpy(s.m_wpOutputBuffer, pb, s.m_bufferSize);
+                memcpy(s.m_wpBuffer, pb, s.m_bufferSize);
                 spCtx->Unmap(s.m_spStagingBuffer, 0);
             }
         }
@@ -488,8 +488,6 @@ namespace Caustic
             switch (it.second.m_type)
             {
             case EShaderParamType::ShaderType_AppendStructuredBuffer:
-                CT(E_NOTIMPL);
-                break;
             case EShaderParamType::ShaderType_StructuredBuffer:
             case EShaderParamType::ShaderType_RWStructuredBuffer:
                 miscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
@@ -527,6 +525,7 @@ namespace Caustic
                 D3D11_USAGE usage = D3D11_USAGE::D3D11_USAGE_DEFAULT;
                 uint32 stride, alignment;
                 if (it.second.m_type == EShaderParamType::ShaderType_StructuredBuffer ||
+                    it.second.m_type == EShaderParamType::ShaderType_AppendStructuredBuffer ||
                     it.second.m_type == EShaderParamType::ShaderType_RWStructuredBuffer)
                 {
                     // This is lame. Structured buffers must have each element be a multiple of 4
@@ -554,6 +553,7 @@ namespace Caustic
                     srvDesc.Buffer.ElementWidth = srcVal.m_dataSize / stride;
                     srvDesc.Format = DXGI_FORMAT::DXGI_FORMAT_UNKNOWN;
                     CT(spDevice->CreateShaderResourceView(m_csBuffers[bufferIndex].m_spBuffer, &srvDesc, &m_csBuffers[bufferIndex].m_spSRView.p));
+                    m_csBuffers[bufferIndex].m_bufferType = Input;
                 }
                 else
                 {
@@ -565,30 +565,35 @@ namespace Caustic
                     {
                         uavDesc.Format = DXGI_FORMAT_UNKNOWN;
                         uavDesc.Buffer.Flags = 0;
+                        m_csBuffers[bufferIndex].m_bufferType = InputOutput;
                     }
-                    else
+                    else if (it.second.m_type == EShaderParamType::ShaderType_AppendStructuredBuffer)
+                    {
+                        uavDesc.Format = DXGI_FORMAT_UNKNOWN;
+                        uavDesc.Buffer.Flags = D3D11_BUFFER_UAV_FLAG_APPEND;
+                        m_csBuffers[bufferIndex].m_bufferType = Output;
+                    }
+                    else // it.second.m_type == EShaderParamType::ShaderType_RWByteAddressBuffer
                     {
                         uavDesc.Format = DXGI_FORMAT_R32_TYPELESS;
                         uavDesc.Buffer.Flags = D3D11_BUFFER_UAV_FLAG_RAW;
+                        m_csBuffers[bufferIndex].m_bufferType = InputOutput;
                     }
                     uavDesc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
                     CT(spDevice->CreateUnorderedAccessView(m_csBuffers[bufferIndex].m_spBuffer, &uavDesc, &m_csBuffers[bufferIndex].m_spUAView.p));
                 }
 
-                m_csBuffers[bufferIndex].m_isInput = (srcVal.m_spInputData != nullptr);
-
-                if (srcVal.m_spInputData)
+                if (srcVal.m_spBuffer)
                 {
                     // Copy the data from the CPU memory to the buffer
                     D3D11_MAPPED_SUBRESOURCE ms;
                     CT(spCtx->Map(m_csBuffers[bufferIndex].m_spStagingBuffer, 0, D3D11_MAP_WRITE, 0, &ms));
                     BYTE* pb = reinterpret_cast<BYTE*>(ms.pData);
-                    memcpy(pb, srcVal.m_spInputData.get(), srcVal.m_dataSize);
+                    memcpy(pb, srcVal.m_spBuffer.get(), srcVal.m_dataSize);
                     spCtx->Unmap(m_csBuffers[bufferIndex].m_spStagingBuffer, 0);
                     spCtx->CopyResource(m_csBuffers[bufferIndex].m_spBuffer, m_csBuffers[bufferIndex].m_spStagingBuffer);
                 }
-                if (srcVal.m_wpOutputData)
-                    m_csBuffers[bufferIndex].m_wpOutputBuffer = srcVal.m_wpOutputData;
+                m_csBuffers[bufferIndex].m_wpBuffer = srcVal.m_spBuffer.get();
             }
 
             // Assign the buffer

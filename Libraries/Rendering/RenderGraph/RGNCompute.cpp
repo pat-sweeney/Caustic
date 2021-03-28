@@ -100,37 +100,37 @@ namespace Caustic
 
     void CRenderGraphNode_Compute::SetInputBuffer(const wchar_t* pBufferName, uint8* pData, uint32 bufSize, uint32 stride)
     {
-        ClientBuffer s;
-        s.m_dataSize = bufSize;
-        s.m_stride = stride;
-        uint8* pBuffer = new uint8[bufSize];
-        memcpy(pBuffer, pData, bufSize);
-        s.m_spInputData.reset(pBuffer);
-        std::any v(s);
-        m_spComputeShader->SetCSParam(pBufferName, v);
+   //     ClientBuffer s;
+   //     s.m_dataSize = bufSize;
+   //     s.m_stride = stride;
+   //     uint8* pBuffer = new uint8[bufSize];
+   //     memcpy(pBuffer, pData, bufSize);
+   //     s.m_spInputData.reset(pBuffer);
+   //     std::any v(s);
+   //     m_spComputeShader->SetCSParam(pBufferName, v);
     }
 
     void CRenderGraphNode_Compute::SetOutputBuffer(const wchar_t* pBufferName, uint8* pData, uint32 bufSize, uint32 stride)
     {
-        ClientBuffer s;
-        s.m_dataSize = bufSize;
-        s.m_stride = stride;
-        s.m_wpOutputData = pData;
-        std::any v(s);
-        m_spComputeShader->SetCSParam(pBufferName, v);
+   //   ClientBuffer s;
+   //   s.m_dataSize = bufSize;
+   //   s.m_stride = stride;
+   //   s.m_wpOutputData = pData;
+   //   std::any v(s);
+   //   m_spComputeShader->SetCSParam(pBufferName, v);
     }
 
     void CRenderGraphNode_Compute::SetInputOutputBuffer(const wchar_t* pBufferName, uint8* pInputData, uint8* pOutputData, uint32 bufSize, uint32 stride)
     {
-        std::vector<CRefObj<IRenderGraphPin>> m_inputs; // List of arbitrary inputs that Compute shader might take
-        ClientBuffer s;
-        s.m_dataSize = bufSize;
-        s.m_stride = stride;
-        uint8* pBuffer = new uint8[bufSize];
-        memcpy(pBuffer, pInputData, bufSize);
-        s.m_spInputData.reset(pBuffer);
-        s.m_wpOutputData = pOutputData;
-        std::any v(s);
-        m_spComputeShader->SetCSParam(pBufferName, v);
+   //   std::vector<CRefObj<IRenderGraphPin>> m_inputs; // List of arbitrary inputs that Compute shader might take
+   //   ClientBuffer s;
+   //   s.m_dataSize = bufSize;
+   //   s.m_stride = stride;
+   //   uint8* pBuffer = new uint8[bufSize];
+   //   memcpy(pBuffer, pInputData, bufSize);
+   //   s.m_spInputData.reset(pBuffer);
+   //   s.m_wpOutputData = pOutputData;
+   //   std::any v(s);
+   //   m_spComputeShader->SetCSParam(pBufferName, v);
     }
 }

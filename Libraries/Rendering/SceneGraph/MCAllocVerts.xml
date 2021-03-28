@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Shader>
+  <ComputeShader Filename="$(CausticRoot)\Libraries\Rendering\SceneGraph\MCAllocVerts.cs" Output="$(CausticRoot)\$(Configuration)\MCAllocVerts_CS.cso"/>
+</Shader>

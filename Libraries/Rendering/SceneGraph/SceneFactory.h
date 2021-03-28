@@ -46,7 +46,7 @@ namespace Caustic
 		virtual CRefObj<ISceneLightCollectionElem> CreateLightCollectionElem() override;
 		virtual CRefObj<ISceneGroupElem> CreateGroupElem() override;
 		virtual CRefObj<ISceneLineElem> CreateLineElem(Vector3 &p0, Vector3 &p1) override;
-
+		virtual CRefObj<ISceneMarchingCubesElem> CreateMarchingCubesElem(IRenderer* pRenderer, uint32 subdivisions, std::function<float(Vector3&)> sdf) override;
 		virtual CRefObj<ISceneSphereElem> CreateSphereElem(Vector3 &center, float radius) override;
 		virtual CRefObj<ISceneCubeElem> CreateCubeElem(Vector3& center, float width, float height, float depth) override;
 		virtual CRefObj<ISceneCylinderElem> CreateCylinderElem(Vector3& center, float height, float topRadius, float bottomRadius) override;

@@ -44,6 +44,18 @@ namespace Caustic
 		virtual CRefObj<ISceneGroupElem> CreateGroupElem() = 0;
 
 		//**********************************************************************
+		// Method: CreateMarchingCubesElem
+		// Creates an element that uses the marching cubes algorithm to convert
+		// a signed distance field into a mesh.
+		// 
+		// Parameters:
+		// pRenderer - renderer to use
+		// subdivisions - number of cells along each voxel grid axis
+		// sdf - function that returns the signed distance field for the voxel grid
+		//**********************************************************************
+		virtual CRefObj<ISceneMarchingCubesElem> CreateMarchingCubesElem(IRenderer* pRenderer, uint32 subdivisions, std::function<float(Vector3&)> sdf) = 0;
+
+		//**********************************************************************
 		// Method: CreateMeshElem
 		// Creates a mesh element
 		//**********************************************************************
