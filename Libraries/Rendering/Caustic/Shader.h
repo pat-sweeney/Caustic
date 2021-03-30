@@ -178,57 +178,6 @@ namespace Caustic
         }
     };
 
-    enum EBufferType
-    {
-        Input,
-        Output,
-        InputOutput
-    };
-
-////    struct IGPUBuffer
-////    {
-////        virtual CComPtr<ID3D11Buffer> GetBuffer() = 0;
-////        virtual CComPtr<ID3D11Buffer> GetStagingBuffer() = 0;
-////        virtual void CopyFromCPU(IRenderer* pRenderer, uint8* pData, uint32 bufSize) = 0;
-////        virtual void CopyToCPU(IRenderer* pRenderer, uint8* pData, uint32* pBufSize) = 0;
-////    };
-////
-////    CRefObj<IGPUBuffer> CreateGPUBuffer(IRenderer* pRenderer, uint8* pData, uint32* pBufSize);
-////
-////    class CGPUBuffer : public IGPUBuffer
-////    {
-////        SBuffer m_buffer;
-////    public:
-////        virtual CComPtr<ID3D11Buffer> GetBuffer() { return m_buffer.m_spBuffer; }
-////        virtual CComPtr<ID3D11Buffer> GetStagingBuffer() { return m_buffer.m_spStagingBuffer; }
-////        virtual void CopyFromCPU(IRenderer* pRenderer, uint8* pData, uint32 bufSize)
-////        {
-////            // Copy the data from the CPU memory to the buffer
-////            CComPtr<ID3D11DeviceContext> spCtx = pRenderer->GetContext();
-////            D3D11_MAPPED_SUBRESOURCE ms;
-////            CT(spCtx->Map(m_buffer.m_spStagingBuffer, 0, D3D11_MAP_WRITE, 0, &ms));
-////            BYTE* pb = reinterpret_cast<BYTE*>(ms.pData);
-////            memcpy(pb, pData, bufSize);
-////            spCtx->Unmap(m_buffer.m_spStagingBuffer, 0);
-////            spCtx->CopyResource(m_buffer.m_spBuffer, m_buffer.m_spStagingBuffer);
-////        }
-////        virtual void CopyToCPU(IRenderer *pRenderer, uint8* pData, uint32* pBufSize)
-////        {
-////            if (pBufSize)
-////                *pBufSize = m_buffer.m_bufferSize;
-////            if (pData)
-////            {
-////                CComPtr<ID3D11DeviceContext> spCtx = pRenderer->GetContext();
-////                spCtx->CopyResource(m_buffer.m_spStagingBuffer, m_buffer.m_spBuffer);
-////                D3D11_MAPPED_SUBRESOURCE ms;
-////                CT(spCtx->Map(m_buffer.m_spStagingBuffer, 0, D3D11_MAP_READ, 0, &ms));
-////                BYTE* pb = reinterpret_cast<BYTE*>(ms.pData);
-////                memcpy(pb, pData, m_buffer.m_bufferSize);
-////                spCtx->Unmap(m_buffer.m_spStagingBuffer, 0);
-////            }
-////        }
-////    };
-////
     //**********************************************************************
     // Class: SBuffer
     // Defines a buffer (which may be either a constant buffer or
@@ -252,20 +201,66 @@ namespace Caustic
         CComPtr<ID3D11ShaderResourceView> m_spSRView;
         uint32 m_bufferSize;
         uint32 m_heapSize;
-        EBufferType m_bufferType;
         int m_bufferSlot;
         std::wstring m_name;
-
-        uint8* m_wpBuffer; // Weak reference to the input/output buffer
 
         SBuffer() :
             m_bufferSize(0),
             m_heapSize(0),
-            m_bufferType(Input),
-            m_bufferSlot(0),
-            m_wpBuffer(nullptr)
+            m_bufferSlot(0)
         {
         }
+    };
+
+    //**********************************************************************
+    // Class: CGPUBuffer
+    // Defines a buffer that is created by the client for passing/receiving
+    // data from a compute shader.
+    //
+    // Header:
+    // [Link:Rendering/Caustic/Shader.h]
+    //**********************************************************************
+    class CGPUBuffer : public IGPUBuffer, public CRefCount
+    {
+        CComPtr<ID3D11Buffer> m_spBuffer;
+        CComPtr<ID3D11Buffer> m_spStagingBuffer;
+        CComPtr<ID3D11UnorderedAccessView> m_spUAView;
+        CComPtr<ID3D11ShaderResourceView> m_spSRView;
+        uint32 m_bufferSize;
+        uint32 m_heapSize;
+        int m_bufferSlot;
+        std::wstring m_name;
+        EBufferType m_bufferType;
+        
+        void CreateBuffer(ID3D11Device* pDevice, uint32 bufSize,
+            uint32 bindFlags, uint32 cpuAccessFlags, D3D11_USAGE usage,
+            uint32 miscFlags, uint32 stride, uint32 alignment, ID3D11Buffer** ppBuffer);
+    public:
+        CGPUBuffer() :
+            m_bufferSize(0),
+            m_heapSize(0),
+            m_bufferSlot(0),
+            m_bufferType(EBufferType::StructuredBuffer)
+        {
+        }
+        void Create(IRenderer* pRenderer, EBufferType bufferType, uint32 bufferSize, uint32 elemSize);
+
+        //**********************************************************************
+        // IRefCount
+        //**********************************************************************
+        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32 Release() override { return CRefCount::Release(); }
+
+        //**********************************************************************
+        // IGPUBuffer
+        //**********************************************************************
+        virtual EBufferType GetBufferType() override { return m_bufferType; }
+        virtual CComPtr<ID3D11Buffer> GetBuffer() override { return m_spBuffer; }
+        virtual CComPtr<ID3D11Buffer> GetStagingBuffer() override { return m_spStagingBuffer; }
+        virtual CComPtr<ID3D11UnorderedAccessView> GetUAView() override { return m_spUAView; }
+        virtual CComPtr<ID3D11ShaderResourceView> GetSRView() override { return m_spSRView; }
+        virtual void CopyFromCPU(IRenderer* pRenderer, uint8* pData, uint32 bufSize) override;
+        virtual void CopyToCPU(IRenderer* pRenderer, uint8* pData, uint32* pBufSize) override;
     };
 
     //**********************************************************************
@@ -320,7 +315,6 @@ namespace Caustic
         std::map<std::wstring, ShaderParamInstance> m_psParams;
         std::map<std::wstring, ShaderParamInstance> m_vsParams;
         std::map<std::wstring, ShaderParamInstance> m_csParams;
-        std::vector<SBuffer> m_csBuffers;
         CRefObj<IShaderInfo> m_spShaderInfo;
         int m_xThreads;
         int m_yThreads;
@@ -337,7 +331,7 @@ namespace Caustic
         void ClearSamplers(IRenderer* pRenderer);
         void PushSamplers(IRenderer* pRenderer, std::map<std::wstring, ShaderParamInstance>& params, bool isPixelShader);
         void PushBuffers(IRenderer* pRenderer, std::map<std::wstring, ShaderParamInstance>& params);
-        void PopBuffers(IRenderer* pRenderer);
+        void PopBuffers(IRenderer* pRenderer, std::map<std::wstring, ShaderParamInstance>& params);
         void SetParam(const std::wstring& paramName, std::any& value, std::map<std::wstring, ShaderParamInstance>& params);
         void SetParam(const wchar_t* paramName, std::any& value, std::map<std::wstring, ShaderParamInstance>& params);
         void SetParam(const std::wstring& paramName, int index, std::any& value, std::map<std::wstring, ShaderParamInstance>& params);

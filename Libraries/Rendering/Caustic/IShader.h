@@ -30,43 +30,59 @@ namespace Caustic
     struct ILight;
     struct IRenderer;
 
+    enum EBufferType
+    {
+        AppendStructuredBuffer,
+        RWStructuredBuffer,
+        StructuredBuffer,
+        RWByteAddressBuffer,
+    };
+
     //**********************************************************************
-    // Structure: ClientBuffer
-    // Data from/to the client that is mapped to/from a shader's StructuredBuffer,
-    // RWStructuredBuffer, or AppendStructuredBuffer). This structure is what
-    // clients will pass to IShader::SetCSParam for any of these shader types.
-    //
-    // Parameters:
-    // m_pData - pointer to the buffer. It is up to the client to ensure that
-    //           this buffer persists through the call to dispatch.
-    // m_dataSize - size of buffer in bytes
-    // m_stride - size of each buffer element in bytes
+    // Interface: IGPUBuffer
+    // Defines the public interface to a buffer used by the GPU. When clients
+    // need to pass data to a compute shader (i.e. as either a StructuredBuffer,
+    // RWStructuredBuffer, AppendStructuredBuffer, or RWByteAddressBuffer) they
+    // will pass one of these objects via IShader::SetCSParam().
     //
     // Header:
     // [Link:Rendering/Caustic/IShader.h]
     //**********************************************************************
-    struct ClientBuffer
+    struct IGPUBuffer : public IRefCount
     {
-        std::shared_ptr<uint8> m_spBuffer; // Copy of client data. Owned by this object.
-        uint32 m_dataSize;
-        uint32 m_stride; // Size of each element
+        virtual CComPtr<ID3D11Buffer> GetBuffer() = 0;
+        virtual CComPtr<ID3D11Buffer> GetStagingBuffer() = 0;
+        virtual CComPtr<ID3D11UnorderedAccessView> GetUAView() = 0;
+        virtual CComPtr<ID3D11ShaderResourceView> GetSRView() = 0;
+        virtual EBufferType GetBufferType() = 0;
 
-        ClientBuffer() :
-            m_dataSize(0),
-            m_stride(0)
-        {
-        }
-        ClientBuffer(const ClientBuffer& s)
-        {
-            *this = s;
-        }
+        //**********************************************************************
+        // Method: CopyFromCPU
+        // CopyFromCPU() is used to move data from the CPU (i.e. client data)
+        // to the underlying GPU buffer.
+        //
+        // Parameters:
+        // pRenderer - renderer
+        // pData - pointer to buffer owned by client that contains the data
+        // bufSize - size of data in bytes
+        //**********************************************************************
+        virtual void CopyFromCPU(IRenderer* pRenderer, uint8* pData, uint32 bufSize) = 0;
 
-        ~ClientBuffer()
-        {
-            m_dataSize = 0;
-        }
+        //**********************************************************************
+        // Method: CopyToCPU
+        // CopyToCPU() is used to move data from the CPU (i.e. client data)
+        // to the underlying GPU buffer.
+        //
+        // Parameters:
+        // pRenderer - renderer
+        // pData - pointer to buffer owned by client that contains the data
+        // bufSize - size of data in bytes
+        //**********************************************************************
+        virtual void CopyToCPU(IRenderer* pRenderer, uint8* pData, uint32* pBufSize) = 0;
     };
-    
+    CAUSTICAPI CRefObj<IGPUBuffer> CreateGPUBuffer(IRenderer* pRenderer, EBufferType type, uint32 bufferSize, uint32 elemSize);
+
+        
     //**********************************************************************
     // Interface: IShader
     // Defines the public interface for using <CShader>

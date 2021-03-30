@@ -88,7 +88,7 @@ namespace Caustic
         // Returns:
         // Returns list of pixel parameter definitions that the shader uses
         //**********************************************************************
-        virtual std::vector<ShaderParamDef> &PixelShaderParameterDefs() = 0;
+        virtual std::vector<ShaderParamDef>& PixelShaderParameterDefs() = 0;
 
         //**********************************************************************
         // Method: VertexShaderParameterDefs
@@ -103,6 +103,45 @@ namespace Caustic
         // Returns list of compute parameter definitions that the shader uses
         //**********************************************************************
         virtual std::vector<ShaderParamDef>& ComputeShaderParameterDefs() = 0;
+
+        //**********************************************************************
+        // Method: GetPixelShaderParameterDef
+        // Returns information about a specific variable found in the shader
+        // 
+        // Parameters:
+        // paramName - name of parameter
+        // pDef - parameter definition info
+        // 
+        // Returns:
+        // True if parameter is found. Otherwise false.
+        //**********************************************************************
+        virtual bool GetPixelShaderParameterDef(const wchar_t* pParamName, ShaderParamDef* pDef) = 0;
+        
+        //**********************************************************************
+        // Method: GetVertexShaderParameterDef
+        // Returns information about a specific variable found in the shader
+        // 
+        // Parameters:
+        // paramName - name of parameter
+        // pDef - parameter definition info
+        // 
+        // Returns:
+        // True if parameter is found. Otherwise false.
+        //**********************************************************************
+        virtual bool GetVertexShaderParameterDef(const wchar_t* pParamName, ShaderParamDef* pDef) = 0;
+        
+        //**********************************************************************
+        // Method: GetComputeShaderParameterDef
+        // Returns information about a specific variable found in the shader
+        // 
+        // Parameters:
+        // paramName - name of parameter
+        // pDef - parameter definition info
+        // 
+        // Returns:
+        // True if parameter is found. Otherwise false.
+        //**********************************************************************
+        virtual bool GetComputeShaderParameterDef(const wchar_t* pParamName, ShaderParamDef* pDef) = 0;
 
         //**********************************************************************
         // Method: VertexLayout

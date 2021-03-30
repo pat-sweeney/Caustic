@@ -71,6 +71,9 @@ namespace Caustic
         virtual std::vector<ShaderParamDef> &PixelShaderParameterDefs() override;
 		virtual std::vector<ShaderParamDef>& VertexShaderParameterDefs() override;
 		virtual std::vector<ShaderParamDef>& ComputeShaderParameterDefs() override;
+		virtual bool GetPixelShaderParameterDef(const wchar_t* pParamName, ShaderParamDef* pDef) override;
+		virtual bool GetVertexShaderParameterDef(const wchar_t* pParamName, ShaderParamDef* pDef) override;
+		virtual bool GetComputeShaderParameterDef(const wchar_t* pParamName, ShaderParamDef* pDef) override;
 		virtual std::vector<D3D11_INPUT_ELEMENT_DESC> &VertexLayout() override;
 		virtual uint32 GetVertexSize() override;
 		virtual void GetThreadGroupSize(uint32* pXThreads, uint32* pYThreads, uint32* pZThreads) override

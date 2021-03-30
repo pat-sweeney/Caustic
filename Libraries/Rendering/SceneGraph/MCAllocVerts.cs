@@ -16,9 +16,10 @@ cbuffer ConstantBuffer
 
 struct Counts
 {
-    uint numVertices; // Total number of vertices emitted
-    uint numIndices; // Total number of indices emitted
+    uint numVertices; // Total number of vertices
+    uint numIndices; // Total number of indices
     uint numAllocatedVerts; // Total number of vertices allocated thus far
+    uint numEmittedIndices; // Total number of emitted indices
 };
 
 RWStructuredBuffer<uint> cellMasks : register(u3);

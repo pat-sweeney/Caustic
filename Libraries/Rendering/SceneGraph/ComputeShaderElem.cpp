@@ -44,35 +44,23 @@ namespace Caustic
         m_spComputeShader->SetThreadCounts(xThreads, yThreads, zThreads);
     }
 
-    void CSceneComputeShaderElem::SetInputBuffer(const wchar_t * pBufferName, uint8* pData, uint32 bufSize, uint32 stride)
+    void CSceneComputeShaderElem::SetBuffer(IRenderer *pRenderer, const wchar_t * pBufferName, uint8* pData, uint32 bufSize, uint32 elemSize)
     {
-////        ClientBuffer s;
-////        s.m_dataSize = bufSize;
-////        s.m_stride = stride;
-////        uint8* pBuffer = new uint8[bufSize];
-////        memcpy(pBuffer, pData, bufSize);
-////        s.m_spInputData.reset(pBuffer);
-////        m_spComputeShader->SetCSParam(pBufferName, std::any(s));
-    }
-
-    void CSceneComputeShaderElem::SetOutputBuffer(const wchar_t* pBufferName, uint8* pData, uint32 bufSize, uint32 stride)
-    {
-////        ClientBuffer s;
-////        s.m_dataSize = bufSize;
-////        s.m_stride = stride;
-////        s.m_wpOutputData = pData;
-////        m_spComputeShader->SetCSParam(pBufferName, std::any(s));
-    }
-
-    void CSceneComputeShaderElem::SetInputOutputBuffer(const wchar_t* pBufferName, uint8* pInputData, uint8* pOutputData, uint32 bufSize, uint32 stride)
-    {
-////        ClientBuffer s;
-////        s.m_dataSize = bufSize;
-////        s.m_stride = stride;
-////        uint8* pBuffer = new uint8[bufSize];
-////        memcpy(pBuffer, pInputData, bufSize);
-////        s.m_spInputData.reset(pBuffer);
-////        s.m_wpOutputData = pOutputData;
-////        m_spComputeShader->SetCSParam(pBufferName, std::any(s));
+        EBufferType bufferType;
+        ShaderParamDef def;
+        if (m_spComputeShader->GetShaderInfo()->GetComputeShaderParameterDef(pBufferName, &def))
+        {
+            switch (def.m_type)
+            {
+            case EShaderParamType::ShaderType_AppendStructuredBuffer: bufferType = AppendStructuredBuffer; break;
+            case EShaderParamType::ShaderType_RWStructuredBuffer: bufferType = RWStructuredBuffer; break;
+            case EShaderParamType::ShaderType_RWByteAddressBuffer: bufferType = RWByteAddressBuffer; break;
+            case EShaderParamType::ShaderType_StructuredBuffer: bufferType = StructuredBuffer; break;
+            }
+            auto spGPUBuffer = Caustic::CreateGPUBuffer(pRenderer, bufferType, bufSize, elemSize);
+            spGPUBuffer->CopyFromCPU(pRenderer, pData, bufSize);
+            std::any v(spGPUBuffer);
+            m_spComputeShader->SetCSParam(pBufferName, v);
+        }
     }
 }

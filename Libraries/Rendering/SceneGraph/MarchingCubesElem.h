@@ -26,6 +26,7 @@ namespace Caustic
         std::function<float(Vector3&)> m_sdf;
         uint32 m_subdivisions;
         float* m_sdfData;
+        bool m_initialized;
 
     public:
         //**********************************************************************

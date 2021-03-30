@@ -34,7 +34,7 @@ namespace Caustic
 	}
 
 	//**********************************************************************
-	std::vector<ShaderParamDef> &CShaderInfo::PixelShaderParameterDefs()
+	std::vector<ShaderParamDef>& CShaderInfo::PixelShaderParameterDefs()
 	{
 		return m_pixelShaderParamDefs;
 	}
@@ -49,6 +49,42 @@ namespace Caustic
 		return m_computeShaderParamDefs;
 	}
 
+	bool CShaderInfo::GetPixelShaderParameterDef(const wchar_t* pParamName, ShaderParamDef* pDef)
+	{
+		std::wstring wstr(pParamName);
+		for (size_t i = 0; i < m_pixelShaderParamDefs.size(); i++)
+			if (m_pixelShaderParamDefs[i].m_name == wstr)
+			{
+				*pDef = m_pixelShaderParamDefs[i];
+				return true;
+			}
+		return false;
+	}
+
+	bool CShaderInfo::GetVertexShaderParameterDef(const wchar_t* pParamName, ShaderParamDef* pDef)
+	{
+		std::wstring wstr(pParamName);
+		for (size_t i = 0; i < m_vertexShaderParamDefs.size(); i++)
+			if (m_vertexShaderParamDefs[i].m_name == wstr)
+			{
+				*pDef = m_vertexShaderParamDefs[i];
+				return true;
+			}
+		return false;
+	}
+
+	bool CShaderInfo::GetComputeShaderParameterDef(const wchar_t* pParamName, ShaderParamDef* pDef)
+	{
+		std::wstring wstr(pParamName);
+		for (size_t i = 0; i < m_computeShaderParamDefs.size(); i++)
+			if (m_computeShaderParamDefs[i].m_name == wstr)
+			{
+				*pDef = m_computeShaderParamDefs[i];
+				return true;
+			}
+		return false;
+	}
+	
 	std::vector<D3D11_INPUT_ELEMENT_DESC> &CShaderInfo::VertexLayout()
 	{
 		return m_vertexLayout;

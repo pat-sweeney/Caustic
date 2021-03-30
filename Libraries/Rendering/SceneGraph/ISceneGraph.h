@@ -366,9 +366,7 @@ namespace Caustic
 		virtual void SetInputThreads(uint32 width, uint32 height, uint32 depth = 1) = 0;
 		virtual void SetShaderParam(const wchar_t* pParamName, uint32 value) = 0;
 		virtual void SetShaderParam(const wchar_t* pParamName, float value) = 0;
-		virtual void SetInputBuffer(const wchar_t* pBufferName, uint8* pData, uint32 bufSize, uint32 stride) = 0;
-		virtual void SetOutputBuffer(const wchar_t* pBufferName, uint8* pData, uint32 bufSize, uint32 stride) = 0;
-		virtual void SetInputOutputBuffer(const wchar_t* pBufferName, uint8* pInputData, uint8* pOutputData, uint32 bufSize, uint32 stride) = 0;
+		virtual void SetBuffer(IRenderer* pRenderer, const wchar_t* pBufferName, uint8* pData, uint32 bufSize, uint32 elemSize) = 0;
 		virtual void SetNumberThreads(int xThreads, int yThreads, int zThreads) = 0;
 	};
 

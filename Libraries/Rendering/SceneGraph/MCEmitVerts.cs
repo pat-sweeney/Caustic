@@ -23,9 +23,10 @@ struct Vertex
 
 struct Counts
 {
-    uint numVertices; // Total number of vertices emitted
-    uint numIndices; // Total number of indices emitted
+    uint numVertices; // Total number of vertices
+    uint numIndices; // Total number of indices
     uint numAllocatedVerts; // Total number of vertices allocated thus far
+    uint numEmittedIndices; // Total number of emitted indices
 };
 
 StructuredBuffer<float> densityField : register(t1); // Assumed to be normalized (0..1 x 0..1 x 0..1) and of size (numCells x numCells x numCells)
@@ -131,7 +132,7 @@ void CS(uint3 DTid : SV_DispatchThreadID)
     // Next reserve space for the indices in the index buffer
     int numPolys = edgeTable[code * 16];
     int startIndex;
-    InterlockedAdd(counts[0].numIndices, numPolys * 3, startIndex);
+    InterlockedAdd(counts[0].numEmittedIndices, numPolys * 3, startIndex);
     for (int l = 0; l < numPolys; l++)
     {
         indexBuffer[startIndex++] = VertexToIndex(addr, edgeTable[code * 16 + 3 * l + 0]);
