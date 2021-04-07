@@ -231,6 +231,8 @@ namespace Caustic
         int m_bufferSlot;
         std::wstring m_name;
         EBufferType m_bufferType;
+        uint32 m_numElems; // Number of elemens in buffer
+        uint32 m_elemSize; // Element size (unaligned on CPU)
         
         void CreateBuffer(ID3D11Device* pDevice, uint32 bufSize,
             uint32 bindFlags, uint32 cpuAccessFlags, D3D11_USAGE usage,
@@ -243,7 +245,13 @@ namespace Caustic
             m_bufferType(EBufferType::StructuredBuffer)
         {
         }
-        void Create(IRenderer* pRenderer, EBufferType bufferType, uint32 bufferSize, uint32 elemSize);
+
+        ~CGPUBuffer()
+        {
+            m_numElems = 0;
+        }
+
+        void Create(IRenderer* pRenderer, EBufferType bufferType, uint32 numElems, uint32 elemSize, uint32 bindFlags);
 
         //**********************************************************************
         // IRefCount
@@ -259,8 +267,8 @@ namespace Caustic
         virtual CComPtr<ID3D11Buffer> GetStagingBuffer() override { return m_spStagingBuffer; }
         virtual CComPtr<ID3D11UnorderedAccessView> GetUAView() override { return m_spUAView; }
         virtual CComPtr<ID3D11ShaderResourceView> GetSRView() override { return m_spSRView; }
-        virtual void CopyFromCPU(IRenderer* pRenderer, uint8* pData, uint32 bufSize) override;
-        virtual void CopyToCPU(IRenderer* pRenderer, uint8* pData, uint32* pBufSize) override;
+        virtual void CopyFromCPU(IRenderer* pRenderer, uint8* pData) override;
+        virtual void CopyToCPU(IRenderer* pRenderer, uint8* pData) override;
     };
 
     //**********************************************************************

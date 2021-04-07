@@ -341,8 +341,9 @@ namespace Caustic
 #ifdef CHECK_MARCHING_CUBES
         return BuildMarchingCubeCases();
 #else
-        float *data = new float[(numBlocks + 1) * (numBlocks + 1) * (numBlocks + 1)];
         float delta = 1.0f / float(numBlocks);
+        numBlocks++;
+        float *data = new float[numBlocks * numBlocks * numBlocks];
         float z = 0.0f;
         int i = 0;
         while (z <= 1.0f)
@@ -371,13 +372,13 @@ namespace Caustic
         SubMeshOpen();
 
         z = 0.0f;
-        for (int bz = 0; bz < numBlocks; bz++)
+        for (int bz = 0; bz < numBlocks - 1; bz++)
         {
             float y = 0.0f;
-            for (int by = 0; by < numBlocks; by++)
+            for (int by = 0; by < numBlocks - 1; by++)
             {
                 float x = 0.0f;
-                for (int bx = 0; bx < numBlocks; bx++)
+                for (int bx = 0; bx < numBlocks - 1; bx++)
                 {
                     float d0 = data[bz * numBlocks * numBlocks + by * numBlocks + bx];
                     float d1 = data[bz * numBlocks * numBlocks + (by + 1) * numBlocks + bx];

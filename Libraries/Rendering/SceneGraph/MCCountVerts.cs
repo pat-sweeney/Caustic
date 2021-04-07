@@ -46,26 +46,25 @@ RWStructuredBuffer<Counts> counts : register(u4);
 //    +---------3-------+
 static uint mask[12] =
 {
-    //                             +-------- Vertex 0 referenced
-    //                             | +------ Vertex 3 referenced
-    //                             | | +---- Vertex 8 referenced
-    //                             | | | +-- vertexBuffer offset
-    //                             | | | |
-    //                             V V V V
-    0x44000000UL, // Vertex 0 :  . 1 . . <24b index>
-    0x22000000UL, // Vertex 1 :  . . 1 . <24b index>
-    0x44000000UL, // Vertex 2 :  . 1 . . <24b index>
-    0x22000000UL, // Vertex 3 :  . . 1 . <24b index>
-    0x44000000UL, // Vertex 4 :  . 1 . . <24b index>
-    0x22000000UL, // Vertex 5 :  . . 1 . <24b index>
-    0x44000000UL, // Vertex 6 :  . 1 . . <24b index>
-    0x22000000UL, // Vertex 7 :  . . 1 . <24b index>
-    0x11000000UL, // Vertex 8 :  . . . 1 <24b index>
-    0x11000000UL, // Vertex 9 :  . . . 1 <24b index>
-    0x11000000UL, // Vertex 10:  . . . 1 <24b index>
-    0x11000000UL, // Vertex 11:  . . . 1 <24b index>
+    //                           +-------- Vertex 0 referenced
+    //                           | +------ Vertex 3 referenced
+    //                           | | +---- Vertex 8 referenced
+    //                           | | | +-- vertexBuffer offset
+    //                           | | | |
+    //                           V V V V
+    0x40000000, // Vertex 0 :  . 1 . . <24b index>
+    0x20000000, // Vertex 1 :  . . 1 . <24b index>
+    0x40000000, // Vertex 2 :  . 1 . . <24b index>
+    0x20000000, // Vertex 3 :  . . 1 . <24b index>
+    0x40000000, // Vertex 4 :  . 1 . . <24b index>
+    0x20000000, // Vertex 5 :  . . 1 . <24b index>
+    0x40000000, // Vertex 6 :  . 1 . . <24b index>
+    0x20000000, // Vertex 7 :  . . 1 . <24b index>
+    0x10000000, // Vertex 8 :  . . . 1 <24b index>
+    0x10000000, // Vertex 9 :  . . . 1 <24b index>
+    0x10000000, // Vertex 10:  . . . 1 <24b index>
+    0x10000000, // Vertex 11:  . . . 1 <24b index>
 };
-static const uint flagVoxelReferencedMask = 0x70000000;
 
 // VertexIDToVoxelAddr() converts a vertexId (0-12) for
 // the specified voxel (addr) into the voxel address that
@@ -81,12 +80,12 @@ uint VertexIDToVoxelAddr(uint addr, int vertexId)
         case 1: stepy = 1; break;
         case 2: stepx = 1; break;
         case 3: break;
-        case 4: stepz = 1; break;
+        case 4:            stepz = 1; break;
         case 5: stepy = 1; stepz = 1; break;
         case 6: stepx = 1; stepz = 1; break;
-        case 7: stepz = 1; break;
+        case 7:            stepz = 1; break;
         case 8: break;
-        case 9: stepy = 1; break;
+        case 9:             stepy = 1; break;
         case 10: stepx = 1; stepy = 1; break;
         case 11: stepx = 1; break;
     }
@@ -96,9 +95,11 @@ uint VertexIDToVoxelAddr(uint addr, int vertexId)
     return addr + stepx + stepy * numCells + stepz * numCells * numCells;
 }
 
-[numthreads(8, 8, 8)]
+[numthreads(1, 1, 1)]
 void CS(uint3 DTid : SV_DispatchThreadID)
 {
+    if (DTid.x >= numCells - 1 || DTid.y >= numCells - 1 || DTid.z >= numCells - 1)
+        return;
     uint numCells2 = uint(numCells * numCells);
     uint addr = DTid.x + DTid.y * numCells + DTid.z * numCells2;
     float density = densityField[addr];
@@ -140,22 +141,22 @@ void CS(uint3 DTid : SV_DispatchThreadID)
         // Finally increment our vertex count if the original value didn't have the use bit set (i.e. it didn't but now does, so we need to generate that vertex)
         uint e0Addr = VertexIDToVoxelAddr(addr, e0);
         uint origFlag0 = 0;
-        InterlockedOr(cellMasks[e0Addr], mask[e0] & flagVoxelReferencedMask, origFlag0);
-        uint f0 = (origFlag0 & (mask[e0] & flagVoxelReferencedMask));
+        InterlockedOr(cellMasks[e0Addr], mask[e0], origFlag0);
+        uint f0 = (origFlag0 & mask[e0]);
         totalVertices += (f0 == 0) ? 1 : 0;
 
         // Repeat for vertex e1
         uint e1Addr = VertexIDToVoxelAddr(addr, e1);
         uint origFlag1 = 0;
-        InterlockedOr(cellMasks[e1Addr], mask[e1] & flagVoxelReferencedMask, origFlag1);
-        uint f1 = (origFlag1 & (mask[e1] & flagVoxelReferencedMask));
+        InterlockedOr(cellMasks[e1Addr], mask[e1], origFlag1);
+        uint f1 = (origFlag1 & mask[e1]);
         totalVertices += (f1 == 0) ? 1 : 0;
 
         // Repeat for vertex e2
         uint e2Addr = VertexIDToVoxelAddr(addr, e2);
         uint origFlag2 = 0;
-        InterlockedOr(cellMasks[e2Addr], mask[e2] & flagVoxelReferencedMask, origFlag2);
-        uint f2 = (origFlag2 & (mask[e2] & flagVoxelReferencedMask));
+        InterlockedOr(cellMasks[e2Addr], mask[e2], origFlag2);
+        uint f2 = (origFlag2 & mask[e2]);
         totalVertices += (f2 == 0) ? 1 : 0;
     }
 

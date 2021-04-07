@@ -57,8 +57,8 @@ namespace Caustic
             case EShaderParamType::ShaderType_RWByteAddressBuffer: bufferType = RWByteAddressBuffer; break;
             case EShaderParamType::ShaderType_StructuredBuffer: bufferType = StructuredBuffer; break;
             }
-            auto spGPUBuffer = Caustic::CreateGPUBuffer(pRenderer, bufferType, bufSize, elemSize);
-            spGPUBuffer->CopyFromCPU(pRenderer, pData, bufSize);
+            auto spGPUBuffer = Caustic::CreateGPUBuffer(pRenderer, bufferType, bufSize / elemSize, elemSize, 0); // TODO: Change signature on this method so we don't compute number of elements
+            spGPUBuffer->CopyFromCPU(pRenderer, pData);
             std::any v(spGPUBuffer);
             m_spComputeShader->SetCSParam(pBufferName, v);
         }

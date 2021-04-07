@@ -122,9 +122,6 @@
     <None Include="Overlay2D.vs">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="MarchingCubes.cs">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
     <None Include="MCCountVerts.cs">
       <Filter>Source Files\Shaders</Filter>
     </None>
@@ -136,9 +133,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="MarchingCubes.xml">
-      <Filter>Source Files\Shaders\Definitions</Filter>
-    </CustomBuild>
     <CustomBuild Include="Overlay2D.xml">
       <Filter>Source Files\Shaders\Definitions</Filter>
     </CustomBuild>

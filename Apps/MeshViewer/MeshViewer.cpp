@@ -181,12 +181,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 auto spherePDF = [](Vector3& v)->float
                 {
                     static Vector3 center(0.5f, 0.5f, 0.5f);
-                    Vector3 q = v - center;
-                    return max(fabs(q.x), max(fabs(q.y), fabs(q.z))) - 0.5f;
-                    //return (v - center).Length() - 0.5f;
+//                    Vector3 q = v - center;
+//                    return max(fabs(q.x), max(fabs(q.y), fabs(q.z))) - 0.5f;
+                    return (v - center).Length() - 0.5f;
                 };
                 CRefObj<ISceneMeshElem> spMeshElem = spSceneFactory->CreateMeshElem();
-                CRefObj<IMesh> spMesh = spMeshConstructor->MeshFromDensityFunction(128, spherePDF);
+                CRefObj<IMesh> spMesh = spMeshConstructor->MeshFromDensityFunction(8, spherePDF);
                 spMeshElem->SetMesh(spMesh);
                 CRefObj<ISceneGraph> spSceneGraph = spRenderWindow->GetSceneGraph();
                 CRefObj<IRenderer> spRenderer = spRenderWindow->GetRenderer();
@@ -201,9 +201,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 spMaterial->SetCullMode(D3D11_CULL_NONE);
                 spMaterialElem->SetMaterial(spMaterial);
                 spMaterialElem->SetShader(spShader);
+                Matrix4x4 xm = Matrix4x4::TranslationMatrix(2.0f, 1.0f, 0.0f);
+                spMaterialElem->SetTransform(xm);
                 spMaterialElem->AddChild(spMeshElem);
 
-                auto spMC = spSceneFactory->CreateMarchingCubesElem(spRenderer, 32, spherePDF);
+                auto spMC = spSceneFactory->CreateMarchingCubesElem(spRenderer, 8, spherePDF);
 
                 auto spLightCollectionElem = spSceneFactory->CreateLightCollectionElem();
                 spLightCollectionElem->AddChild(spMC);
@@ -213,38 +215,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 CRefObj<ILight> spLight(spCausticFactory->CreatePointLight(lightPos, lightColor, 1.0f));
                 spLightCollectionElem->AddLight(spLight);
                 spLightCollectionElem->AddChild(spMaterialElem);
-
-                for (int i = 0; i < 16; i++)
-                {
-                    for (int j = 0; j < 16; j++)
-                    {
-                        float offsets[12][6] = {
-                            { 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f },
-                            { 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f },
-                            { 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f },
-                            { 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f },
-
-                            { 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f },
-                            { 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f },
-                            { 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f },
-                            { 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f },
-
-                            { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f },
-                            { 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f },
-                            { 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f },
-                            { 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f },
-                        };
-                        for (int k = 0; k < 12; k++)
-                        {
-                            float px = i * 2.0f;
-                            float py = j * 2.0f;
-                            Vector3 p0(px + offsets[k][0], py + offsets[k][1], offsets[k][2]);
-                            Vector3 p1(px + offsets[k][3], py + offsets[k][4], offsets[k][5]);
-                            auto spLine = spSceneFactory->CreateLineElem(p0, p1);
-                            spLightCollectionElem->AddChild(spLine);
-                        }
-                    }
-                }
 
                 spSceneGraph->AddChild(spLightCollectionElem);
             }

@@ -64,9 +64,8 @@ namespace Caustic
         // Parameters:
         // pRenderer - renderer
         // pData - pointer to buffer owned by client that contains the data
-        // bufSize - size of data in bytes
         //**********************************************************************
-        virtual void CopyFromCPU(IRenderer* pRenderer, uint8* pData, uint32 bufSize) = 0;
+        virtual void CopyFromCPU(IRenderer* pRenderer, uint8* pData) = 0;
 
         //**********************************************************************
         // Method: CopyToCPU
@@ -76,11 +75,22 @@ namespace Caustic
         // Parameters:
         // pRenderer - renderer
         // pData - pointer to buffer owned by client that contains the data
-        // bufSize - size of data in bytes
         //**********************************************************************
-        virtual void CopyToCPU(IRenderer* pRenderer, uint8* pData, uint32* pBufSize) = 0;
+        virtual void CopyToCPU(IRenderer* pRenderer, uint8* pData) = 0;
     };
-    CAUSTICAPI CRefObj<IGPUBuffer> CreateGPUBuffer(IRenderer* pRenderer, EBufferType type, uint32 bufferSize, uint32 elemSize);
+
+    //**********************************************************************
+    // Function: CreateGPUBuffer
+    // Creates a buffer on the GPU
+    //
+    // Parameters:
+    // pRenderer - renderer
+    // type - which type of buffer we are creating (Structured, RWStructured, etc)
+    // numElems - number of elements in buffer
+    // elemSize - size in bytes of each element (on CPU without unalignment)
+    // bindFlags - additional bind flags
+    //**********************************************************************
+    CAUSTICAPI CRefObj<IGPUBuffer> CreateGPUBuffer(IRenderer* pRenderer, EBufferType type, uint32 numElems, uint32 elemSize, uint32 bindFlags);
 
         
     //**********************************************************************

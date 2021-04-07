@@ -8,6 +8,7 @@
 #include "MarchingCubesElem.h"
 #include <d3d11.h>
 #include <atlbase.h>
+#include <d3d11_4.h>
 
 namespace Caustic
 {
@@ -279,13 +280,32 @@ namespace Caustic
     {
         m_initialized = false;
         m_sdf = sdf;
-        m_subdivisions = subdivisions;
         CRefObj<IShaderMgr> spShaderMgr = pRenderer->GetShaderMgr();
         m_spMCCountVertsShader = spShaderMgr->FindShader(L"MCCountVerts");
         m_spMCAllocVertsShader = spShaderMgr->FindShader(L"MCAllocVerts");
         m_spMCEmitVertsShader = spShaderMgr->FindShader(L"MCEmitVerts");
-        m_sdfData = new float[(subdivisions + 1) * (subdivisions + 1) * (subdivisions + 1)];
         float delta = 1.0f / float(subdivisions);
+
+        // NOTE: Since each voxel represents one corner of the MC algorithm (i.e. the value of the voxel is considered
+        // to be the lower left front corner) we need to expand out voxel grid by 1 voxel in each direction. For instance,
+        // if the user specified they want '1' subdisivion (i.e. 1 voxel) that voxel would only contain the value of vertex
+        // 0 in the following diagram. The values for the other vertices are stored in neighboring voxels (i.e. vertex 1's
+        // value is stored in the +Y voxel, 2 in the +X,+Y voxel, 3 in the +X voxel, etc)
+        //        5-----------------6
+        //       /|                /|
+        //      / |               / |
+        //     /  |              /  |
+        //    1-----------------2   |
+        //    |   |             |   |
+        //    |   8-------------|---7
+        //    |  /              |  /
+        //    | /               | /
+        //    |/                |/
+        //    0-----------------3
+        subdivisions++;
+
+        m_subdivisions = subdivisions;
+        m_sdfData = new float[subdivisions * subdivisions * subdivisions];
         float z = 0.0f;
         int i = 0;
         while (z <= 1.0f)
@@ -321,38 +341,33 @@ namespace Caustic
                 return;
         std::vector<CRefObj<ILight>> lights;
         
+        uint32 totalCells = m_subdivisions * m_subdivisions * m_subdivisions;
         if (!m_initialized)
         {
             m_initialized = true;
-            EBufferType bufferType = EBufferType::StructuredBuffer;
-            uint32 bufSize = sizeof(float) * (m_subdivisions + 1) * (m_subdivisions + 1) * (m_subdivisions + 1);
-            auto spGPUBuffer = CreateGPUBuffer(pRenderer, bufferType, bufSize, sizeof(float));
-            spGPUBuffer->CopyFromCPU(pRenderer, (uint8*)m_sdfData, bufSize);
+            auto spGPUBuffer = CreateGPUBuffer(pRenderer, EBufferType::StructuredBuffer, totalCells, sizeof(float), 0);
+            spGPUBuffer->CopyFromCPU(pRenderer, (uint8*)m_sdfData);
             std::any v(spGPUBuffer);
             m_spMCCountVertsShader->SetCSParam(L"densityField", v);
             m_spMCAllocVertsShader->SetCSParam(L"densityField", v);
             m_spMCEmitVertsShader->SetCSParam(L"densityField", v);
 
-            bufferType = EBufferType::StructuredBuffer;
-            bufSize = sizeof(int32) * 256 * 16;
-            spGPUBuffer = CreateGPUBuffer(pRenderer, bufferType, bufSize, sizeof(int32));
-            spGPUBuffer->CopyFromCPU(pRenderer, (uint8*)s_edgeTable, bufSize);
+            spGPUBuffer = CreateGPUBuffer(pRenderer, EBufferType::StructuredBuffer, 256 * 16, sizeof(int32), 0);
+            spGPUBuffer->CopyFromCPU(pRenderer, (uint8*)s_edgeTable);
             std::any ed(spGPUBuffer);
             m_spMCCountVertsShader->SetCSParam(L"edgeTable", ed);
             m_spMCAllocVertsShader->SetCSParam(L"edgeTable", ed);
             m_spMCEmitVertsShader->SetCSParam(L"edgeTable", ed);
 
-            m_spMCCountVertsShader->SetCSParam(L"numCells", std::any(Int(32)));
-            m_spMCAllocVertsShader->SetCSParam(L"numCells", std::any(Int(32)));
-            m_spMCEmitVertsShader->SetCSParam(L"numCells", std::any(Int(32)));
+            m_spMCCountVertsShader->SetCSParam(L"numCells", std::any(Int(m_subdivisions)));
+            m_spMCAllocVertsShader->SetCSParam(L"numCells", std::any(Int(m_subdivisions)));
+            m_spMCEmitVertsShader->SetCSParam(L"numCells", std::any(Int(m_subdivisions)));
         }
 
-        EBufferType bufferType = EBufferType::RWStructuredBuffer;
-        uint32 bufSize = sizeof(uint32) * (m_subdivisions + 1) * (m_subdivisions + 1) * (m_subdivisions + 1);
-        auto spGPUCellBuffer = CreateGPUBuffer(pRenderer, bufferType, bufSize, sizeof(uint32));
-        uint8* pCellBuffer = new uint8[bufSize];
-        ZeroMemory(pCellBuffer, bufSize);
-        spGPUCellBuffer->CopyFromCPU(pRenderer, (uint8*)pCellBuffer, bufSize);
+        auto spGPUCellBuffer = CreateGPUBuffer(pRenderer, EBufferType::RWStructuredBuffer, totalCells, sizeof(uint32), 0);
+        uint8* pCellBuffer = (uint8*)new uint32[totalCells];
+        ZeroMemory(pCellBuffer, totalCells * sizeof(uint32));
+        spGPUCellBuffer->CopyFromCPU(pRenderer, (uint8*)pCellBuffer);
         std::any v(spGPUCellBuffer);
         m_spMCCountVertsShader->SetCSParam(L"cellMasks", v);
         m_spMCAllocVertsShader->SetCSParam(L"cellMasks", v);
@@ -365,30 +380,29 @@ namespace Caustic
             uint32 numEmittedIndices;
         };
         Counts *counts = new Counts();
-        counts->numVertices = 0;
-        counts->numIndices = 0;
-        counts->numAllocatedVerts = 0;
-        counts->numEmittedIndices = 0;
-        bufferType = EBufferType::RWStructuredBuffer;
-        bufSize = sizeof(Counts);
-        auto spGPUCountBuffer = CreateGPUBuffer(pRenderer, bufferType, bufSize, sizeof(Counts));
-        spGPUCountBuffer->CopyFromCPU(pRenderer, (uint8*)counts, bufSize);
+        ZeroMemory(counts, sizeof(Counts));
+        auto spGPUCountBuffer = CreateGPUBuffer(pRenderer, EBufferType::RWStructuredBuffer, 1, sizeof(Counts), 0);
+        spGPUCountBuffer->CopyFromCPU(pRenderer, (uint8*)counts);
         std::any anyCounts(spGPUCountBuffer);
         m_spMCCountVertsShader->SetCSParam(L"counts", anyCounts);
         m_spMCAllocVertsShader->SetCSParam(L"counts", anyCounts);
+        m_spMCEmitVertsShader->SetCSParam(L"counts", anyCounts);
 
-        m_spMCCountVertsShader->SetThreadCounts(((m_subdivisions + 1) + 7) / 8, ((m_subdivisions + 1) + 7) / 8, ((m_subdivisions + 1) + 7) / 8);
-        m_spMCAllocVertsShader->SetThreadCounts(((m_subdivisions + 1) + 7) / 8, ((m_subdivisions + 1) + 7) / 8, ((m_subdivisions + 1) + 7) / 8);
-        m_spMCEmitVertsShader->SetThreadCounts(((m_subdivisions + 1) + 7) / 8, ((m_subdivisions + 1) + 7) / 8, ((m_subdivisions + 1) + 7) / 8);
+        uint32 xThreads, yThreads, zThreads;
+        m_spMCCountVertsShader->GetShaderInfo()->GetThreadGroupSize(&xThreads, &yThreads, &zThreads);
+        uint32 xRoundedSubdivisions = (m_subdivisions - 1 + xThreads - 1) / xThreads;
+        uint32 yRoundedSubdivisions = (m_subdivisions - 1 + yThreads - 1) / yThreads;
+        uint32 zRoundedSubdivisions = (m_subdivisions - 1 + zThreads - 1) / zThreads;
+        m_spMCCountVertsShader->SetThreadCounts(xRoundedSubdivisions, yRoundedSubdivisions, zRoundedSubdivisions);
+        m_spMCAllocVertsShader->SetThreadCounts(xRoundedSubdivisions, yRoundedSubdivisions, zRoundedSubdivisions);
+        m_spMCEmitVertsShader->SetThreadCounts(xRoundedSubdivisions, yRoundedSubdivisions, zRoundedSubdivisions);
 
         m_spMCCountVertsShader->BeginRender(pRenderer, nullptr, lights, nullptr);
         m_spMCCountVertsShader->EndRender(pRenderer);
-        spGPUCountBuffer->CopyToCPU(pRenderer, (uint8*)counts, nullptr);
-
+    
         m_spMCAllocVertsShader->BeginRender(pRenderer, nullptr, lights, nullptr);
         m_spMCAllocVertsShader->EndRender(pRenderer);
-        spGPUCountBuffer->CopyToCPU(pRenderer, (uint8*)counts, nullptr);
-
+        spGPUCountBuffer->CopyToCPU(pRenderer, (uint8*)counts);
 
         struct Vertex
         {
@@ -397,40 +411,38 @@ namespace Caustic
             float u, v;
         };
 
-        Vertex* pVertices = new Vertex[counts->numAllocatedVerts];
-        uint32 vertBufSize;
-        uint32* pIndices = new uint32[counts->numIndices];
-        uint32 indexBufSize;
         CRefObj<IGPUBuffer> spGPUIndexBuffer;
+        CRefObj<IGPUBuffer> spGPUVertexBuffer;
         if (counts->numVertices > 0 && counts->numIndices > 0)
         {
-            bufferType = EBufferType::RWStructuredBuffer;
-            bufSize = sizeof(Vertex) * counts->numVertices;
-            auto spGPUVertexBuffer = CreateGPUBuffer(pRenderer, bufferType, bufSize, sizeof(Vertex));
+            spGPUVertexBuffer = CreateGPUBuffer(pRenderer, EBufferType::RWByteAddressBuffer, counts->numVertices, sizeof(Vertex), D3D11_BIND_VERTEX_BUFFER);
             std::any anyVB(spGPUVertexBuffer);
             m_spMCEmitVertsShader->SetCSParam(L"vertexBuffer", anyVB);
 
-            bufferType = EBufferType::RWStructuredBuffer;
-            bufSize = sizeof(UINT) * counts->numIndices;
-            spGPUIndexBuffer = CreateGPUBuffer(pRenderer, bufferType, bufSize, sizeof(UINT));
+            spGPUIndexBuffer = CreateGPUBuffer(pRenderer, EBufferType::RWByteAddressBuffer, counts->numIndices, sizeof(UINT), D3D11_BIND_INDEX_BUFFER);
             std::any anyIB(spGPUIndexBuffer);
             m_spMCEmitVertsShader->SetCSParam(L"indexBuffer", anyIB);
 
-            m_spMCEmitVertsShader->SetCSParam(L"counts", anyCounts);
-
-            std::any v(spGPUCellBuffer);
-            m_spMCEmitVertsShader->SetCSParam(L"cellMasks", v);
-
             m_spMCEmitVertsShader->BeginRender(pRenderer, nullptr, lights, nullptr);
             m_spMCEmitVertsShader->EndRender(pRenderer);
-
-            spGPUVertexBuffer->CopyToCPU(pRenderer, (uint8*)pVertices, &vertBufSize);
-
-            spGPUIndexBuffer->CopyToCPU(pRenderer, (uint8*)pIndices, &indexBufSize);
+            spGPUCountBuffer->CopyToCPU(pRenderer, (uint8*)counts);
         }
 
         if (m_postrenderCallback)
             m_postrenderCallback(pRenderCtx->GetCurrentPass());
+
+        CRefObj<ICausticFactory> spFactory = Caustic::CreateCausticFactory();
+        CRefObj<IRenderSubMesh> spRenderSubMesh = spFactory->CreateRenderSubMesh();
+        MeshData md;
+        md.m_spIB = spGPUIndexBuffer->GetBuffer();
+        md.m_spVB = spGPUVertexBuffer->GetBuffer();
+        md.m_numIndices = counts->numEmittedIndices;
+        md.m_numVertices = counts->numVertices;
+        md.m_vertexSize = sizeof(Vertex);
+        spRenderSubMesh->SetMeshData(md);
+        spRenderSubMesh->SetName("");
+        auto spShader = pRenderer->GetShaderMgr()->FindShader(L"Default");
+        spRenderSubMesh->Render(pRenderer, pRenderCtx, spShader, nullptr, lights, nullptr);
     }
 
     void CSceneMarchingCubesElem::SetShaderParam(const wchar_t* pParamName, uint32 value)
