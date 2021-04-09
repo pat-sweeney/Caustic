@@ -20,7 +20,8 @@
 
 namespace Caustic
 {
-    CRenderGraphNode_Compute::CRenderGraphNode_Compute(IShader *pShader)
+    CRenderGraphNode_Compute::CRenderGraphNode_Compute(IShader *pShader) :
+        m_xThreads(0), m_yThreads(0), m_zThreads(0)
     {
         m_spComputeShader = pShader;
         CRefObj<IShaderInfo> spShaderInfo = m_spComputeShader->GetShaderInfo();
@@ -68,9 +69,7 @@ namespace Caustic
             }
         }
 
-        std::vector<CRefObj<ILight>> lights;
-        m_spComputeShader->BeginRender(pRenderer, nullptr, lights, nullptr);
-        m_spComputeShader->EndRender(pRenderer);
+        m_spComputeShader->Dispatch(pRenderer, m_xThreads, m_yThreads, m_zThreads);
         return std::any(nullptr); // TODO: Return output buffer
     }
 
@@ -82,7 +81,9 @@ namespace Caustic
         uint32 xGroups = (width + xThreads - 1) / xThreads;
         uint32 yGroups = (height + yThreads - 1) / yThreads;
         uint32 zGroups = (depth + zThreads - 1) / zThreads;
-        m_spComputeShader->SetThreadCounts(xGroups, yGroups, zGroups);
+        m_xThreads = xGroups;
+        m_yThreads = yGroups;
+        m_zThreads = zGroups;
     }
 
     void CRenderGraphNode_Compute::SetShaderParam(const wchar_t* pParamName, uint32 value)
@@ -107,6 +108,7 @@ namespace Caustic
             switch (def.m_type)
             {
             case EShaderParamType::ShaderType_AppendStructuredBuffer: bufferType = AppendStructuredBuffer; break;
+            default:
             case EShaderParamType::ShaderType_RWStructuredBuffer: bufferType = RWStructuredBuffer; break;
             case EShaderParamType::ShaderType_RWByteAddressBuffer: bufferType = RWByteAddressBuffer; break;
             case EShaderParamType::ShaderType_StructuredBuffer: bufferType = StructuredBuffer; break;

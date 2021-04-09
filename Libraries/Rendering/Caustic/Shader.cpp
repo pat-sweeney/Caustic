@@ -890,20 +890,22 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // Method: SetThreadCounts
-    // Specifies the number of thread groups to run when dispatching the shader's
-    // compute shader.
+    // Method: Dispatch
+    // Runs the compute shader associated with a Caustic shader.
     //
     // Parameters:
     // xThreads - number of threads in X
     // yThreads - number of threads in Y
     // zThreads - number of threads in Z
     //**********************************************************************
-    void CShader::SetThreadCounts(int xThreads, int yThreads, int zThreads)
+    void CShader::Dispatch(IRenderer* pRenderer, int xThreads, int yThreads, int zThreads)
     {
         m_xThreads = xThreads;
         m_yThreads = yThreads;
         m_zThreads = zThreads;
+        std::vector<CRefObj<ILight>> lights;
+        BeginRender(pRenderer, nullptr, lights, nullptr);
+        EndRender(pRenderer);
     }
     
     //**********************************************************************

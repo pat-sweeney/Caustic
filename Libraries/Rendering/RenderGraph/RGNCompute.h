@@ -20,6 +20,7 @@ namespace Caustic
     protected:
         CRefObj<IShader> m_spComputeShader;
         CRefObj<IRenderGraphPin> m_spComputeBufferPin;
+        uint32 m_xThreads, m_yThreads, m_zThreads;
     public:
         CRenderGraphNode_Compute(IShader *pShader);
 
@@ -52,7 +53,9 @@ namespace Caustic
         virtual CRefObj<IShader> GetShader() override { return m_spComputeShader; }
         virtual void SetNumberThreads(int xThreads, int yThreads, int zThreads) override
         {
-            m_spComputeShader->SetThreadCounts(xThreads, yThreads, zThreads);
+            m_xThreads = xThreads;
+            m_yThreads = yThreads;
+            m_zThreads = zThreads;
         }
         virtual void SetInputThreads(uint32 width, uint32 height, uint32 depth /* = 1 */) override;
         virtual void SetShaderParam(const wchar_t* pParamName, uint32 value) override;

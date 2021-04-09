@@ -24,7 +24,9 @@ namespace Caustic
         uint32 xGroups = (width + xThreads - 1) / xThreads;
         uint32 yGroups = (height + yThreads - 1) / yThreads;
         uint32 zGroups = (depth + zThreads - 1) / zThreads;
-        m_spComputeShader->SetThreadCounts(xGroups, yGroups, zGroups);
+        m_xThreads = xGroups;
+        m_yThreads = yGroups;
+        m_zThreads = zGroups;
     }
 
     void CSceneComputeShaderElem::SetShaderParam(const wchar_t* pParamName, uint32 value)
@@ -41,7 +43,9 @@ namespace Caustic
 
     void CSceneComputeShaderElem::SetNumberThreads(int xThreads, int yThreads, int zThreads)
     {
-        m_spComputeShader->SetThreadCounts(xThreads, yThreads, zThreads);
+        m_xThreads = xThreads;
+        m_yThreads = yThreads;
+        m_zThreads = zThreads;
     }
 
     void CSceneComputeShaderElem::SetBuffer(IRenderer *pRenderer, const wchar_t * pBufferName, uint8* pData, uint32 bufSize, uint32 elemSize)

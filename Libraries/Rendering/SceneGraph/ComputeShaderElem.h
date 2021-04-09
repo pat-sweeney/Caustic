@@ -21,6 +21,7 @@ namespace Caustic
         public CRefCount
     {
         CRefObj<IShader> m_spComputeShader;
+        uint32 m_xThreads, m_yThreads, m_zThreads;
 
     public:
         //**********************************************************************
@@ -30,7 +31,8 @@ namespace Caustic
         // Parameters:
         // pComputeShader - underlying compute shader
         //**********************************************************************
-        CSceneComputeShaderElem(IShader* pComputeShader)
+        CSceneComputeShaderElem(IShader* pComputeShader) :
+            m_xThreads(1), m_yThreads(1), m_zThreads(1)
         {
             m_spComputeShader = pComputeShader;
         }
@@ -63,9 +65,7 @@ namespace Caustic
             if (m_prerenderCallback)
                 if (!m_prerenderCallback(pRenderCtx->GetCurrentPass()))
                     return;
-            std::vector<CRefObj<ILight>> lights;
-            m_spComputeShader->BeginRender(pRenderer, nullptr, lights, nullptr);
-            m_spComputeShader->EndRender(pRenderer);
+            m_spComputeShader->Dispatch(pRenderer, m_xThreads, m_yThreads, m_zThreads);
             if (m_postrenderCallback)
                 m_postrenderCallback(pRenderCtx->GetCurrentPass());
         }

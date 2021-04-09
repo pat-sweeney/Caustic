@@ -28,8 +28,6 @@ RWStructuredBuffer<Counts> counts : register(u4);
 [numthreads(1, 1, 1)]
 void CS(uint3 DTid : SV_DispatchThreadID)
 {
-    if (DTid.x >= numCells - 1 || DTid.y >= numCells - 1 || DTid.z >= numCells - 1)
-        return;
     uint numCells2 = uint(numCells * numCells);
     uint addr = DTid.x + DTid.y * numCells + DTid.z * numCells2;
 

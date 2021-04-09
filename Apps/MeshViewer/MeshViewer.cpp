@@ -186,7 +186,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     return (v - center).Length() - 0.5f;
                 };
                 CRefObj<ISceneMeshElem> spMeshElem = spSceneFactory->CreateMeshElem();
-                CRefObj<IMesh> spMesh = spMeshConstructor->MeshFromDensityFunction(8, spherePDF);
+                CRefObj<IMesh> spMesh = spMeshConstructor->MeshFromDensityFunction(3, spherePDF);
                 spMeshElem->SetMesh(spMesh);
                 CRefObj<ISceneGraph> spSceneGraph = spRenderWindow->GetSceneGraph();
                 CRefObj<IRenderer> spRenderer = spRenderWindow->GetRenderer();
@@ -205,10 +205,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 spMaterialElem->SetTransform(xm);
                 spMaterialElem->AddChild(spMeshElem);
 
-                auto spMC = spSceneFactory->CreateMarchingCubesElem(spRenderer, 8, spherePDF);
+                auto spMC = spSceneFactory->CreateMarchingCubesElem(spRenderer, 3, spherePDF);
 
                 auto spLightCollectionElem = spSceneFactory->CreateLightCollectionElem();
-                spLightCollectionElem->AddChild(spMC);
+                spMaterialElem->AddChild(spMC);
 
                 Vector3 lightPos(1000.0f, 1000.0f, 0.0f);
                 FRGBColor lightColor(1.0f, 1.0f, 1.0f);

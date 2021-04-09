@@ -33,7 +33,7 @@ struct Counts
 StructuredBuffer<float> densityField : register(t1); // Assumed to be normalized (0..1 x 0..1 x 0..1) and of size (numCells x numCells x numCells)
 StructuredBuffer<uint> edgeTable : register(t2); // Assume to be of size [256][16] with format: [code]{ numPolys, i0, i1, i2, i0, i1, i2, i0, i1, i2, i0, i1, i2, i0, i1, i2 }
 RWStructuredBuffer<uint> cellMasks : register(u3);
-RWStructuredBuffer<Counts> counts : register(u4);
+globallycoherent RWStructuredBuffer<Counts> counts : register(u4);
 globallycoherent RWByteAddressBuffer indexBuffer : register(u5);
 globallycoherent RWByteAddressBuffer vertexBuffer : register(u6);
 
@@ -176,8 +176,6 @@ uint VertexIDToVoxelAddr(uint addr, int vertexId)
 [numthreads(1, 1, 1)]
 void CS(uint3 DTid : SV_DispatchThreadID)
 {
-    if (DTid.x >= numCells - 1 || DTid.y >= numCells - 1 || DTid.z >= numCells - 1)
-        return;
     // Determine the address of this voxel
     uint numCells2 = numCells * numCells;
     uint addr = DTid.x + DTid.y * numCells + DTid.z * numCells2;
@@ -194,6 +192,19 @@ void CS(uint3 DTid : SV_DispatchThreadID)
     float d5 = densityField[addr + numCells2 + numCells];
     float d6 = densityField[addr + numCells2 + numCells + 1];
     float d7 = densityField[addr + numCells2 + 1];
+
+    // Compute configuration code
+    uint code = 0;
+    code = (code << 1) | ((d7 >= 0.0f) ? 1 : 0);
+    code = (code << 1) | ((d6 >= 0.0f) ? 1 : 0);
+    code = (code << 1) | ((d5 >= 0.0f) ? 1 : 0);
+    code = (code << 1) | ((d4 >= 0.0f) ? 1 : 0);
+    code = (code << 1) | ((d3 >= 0.0f) ? 1 : 0);
+    code = (code << 1) | ((d2 >= 0.0f) ? 1 : 0);
+    code = (code << 1) | ((d1 >= 0.0f) ? 1 : 0);
+    code = (code << 1) | ((d0 >= 0.0f) ? 1 : 0);
+    if (code == 0 || code == 255)
+        return;
 
     // Determine the zero crossing for each vertex
     float t0 = -d0 / (d1 - d0);
@@ -213,17 +224,6 @@ void CS(uint3 DTid : SV_DispatchThreadID)
     float3 edgePos0 = e0 + (e1 - e0) * t0;
     float3 edgePos3 = e3 + (e0 - e3) * t3;
     float3 edgePos8 = e0 + (e4 - e0) * t8;
-
-    // Compute configuration code
-    uint code = 0;
-    code = (code << 1) | ((d7 >= 0.0f) ? 1 : 0);
-    code = (code << 1) | ((d6 >= 0.0f) ? 1 : 0);
-    code = (code << 1) | ((d5 >= 0.0f) ? 1 : 0);
-    code = (code << 1) | ((d4 >= 0.0f) ? 1 : 0);
-    code = (code << 1) | ((d3 >= 0.0f) ? 1 : 0);
-    code = (code << 1) | ((d2 >= 0.0f) ? 1 : 0);
-    code = (code << 1) | ((d1 >= 0.0f) ? 1 : 0);
-    code = (code << 1) | ((d0 >= 0.0f) ? 1 : 0);
 
     int vbAddr = cellVal & 0xFFFFFF;
     int offset = 0;
@@ -245,18 +245,18 @@ void CS(uint3 DTid : SV_DispatchThreadID)
 
     // Next reserve space for the indices in the index buffer
     int numPolys = edgeTable[code * 16];
-    int startIndex;
+    uint startIndex;
     InterlockedAdd(counts[0].numEmittedIndices, numPolys * 3, startIndex);
     startIndex *= 4;
     for (int l = 0; l < numPolys; l++)
     {
-        uint i0 = edgeTable[code * 16 + 3 * l + 0];
+        uint i0 = edgeTable[code * 16 + 3 * l + 1];
         indexBuffer.Store(startIndex, VertexToIndex(VertexIDToVoxelAddr(addr, i0), i0));
         startIndex += 4;
-        uint i1 = edgeTable[code * 16 + 3 * l + 1];
+        uint i1 = edgeTable[code * 16 + 3 * l + 2];
         indexBuffer.Store(startIndex, VertexToIndex(VertexIDToVoxelAddr(addr, i1), i1));
         startIndex += 4;
-        uint i2 = edgeTable[code * 16 + 3 * l + 2];
+        uint i2 = edgeTable[code * 16 + 3 * l + 3];
         indexBuffer.Store(startIndex, VertexToIndex(VertexIDToVoxelAddr(addr, i2), i2));
         startIndex += 4;
     }

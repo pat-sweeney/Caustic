@@ -289,16 +289,15 @@ namespace Caustic
         virtual CRefObj<IShaderInfo> GetShaderInfo() = 0;
 
         //**********************************************************************
-        // Method: SetThreadCounts
-        // This is a bit of a hack. We need some way to specify how many threads
-        // to execute for the compute shader. This needs to be rethought (maybe
-        // make specific class for shader with underlying compute shader??)
+        // Method: Dispatch
+        // This runs the compute shader, if any.
         //
         // Parameters:
+        // pRenderer - graphics device
         // xThreads - Number of threads in X axis
         // yThreads - Number of threads in Y axis
         // zThreads - Number of threads in Z axis
         //**********************************************************************
-        virtual void SetThreadCounts(int xThreads, int yThreads, int zThreads) = 0;
+        virtual void Dispatch(IRenderer* pRenderer, int xThreads, int yThreads, int zThreads) = 0;
     };
 }

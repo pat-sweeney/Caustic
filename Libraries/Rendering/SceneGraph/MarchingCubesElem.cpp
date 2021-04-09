@@ -393,15 +393,10 @@ namespace Caustic
         uint32 xRoundedSubdivisions = (m_subdivisions - 1 + xThreads - 1) / xThreads;
         uint32 yRoundedSubdivisions = (m_subdivisions - 1 + yThreads - 1) / yThreads;
         uint32 zRoundedSubdivisions = (m_subdivisions - 1 + zThreads - 1) / zThreads;
-        m_spMCCountVertsShader->SetThreadCounts(xRoundedSubdivisions, yRoundedSubdivisions, zRoundedSubdivisions);
-        m_spMCAllocVertsShader->SetThreadCounts(xRoundedSubdivisions, yRoundedSubdivisions, zRoundedSubdivisions);
-        m_spMCEmitVertsShader->SetThreadCounts(xRoundedSubdivisions, yRoundedSubdivisions, zRoundedSubdivisions);
 
-        m_spMCCountVertsShader->BeginRender(pRenderer, nullptr, lights, nullptr);
-        m_spMCCountVertsShader->EndRender(pRenderer);
-    
-        m_spMCAllocVertsShader->BeginRender(pRenderer, nullptr, lights, nullptr);
-        m_spMCAllocVertsShader->EndRender(pRenderer);
+        m_spMCCountVertsShader->Dispatch(pRenderer, xRoundedSubdivisions, yRoundedSubdivisions, zRoundedSubdivisions);
+        m_spMCAllocVertsShader->Dispatch(pRenderer, xRoundedSubdivisions, yRoundedSubdivisions, zRoundedSubdivisions);
+
         spGPUCountBuffer->CopyToCPU(pRenderer, (uint8*)counts);
 
         struct Vertex
@@ -423,8 +418,8 @@ namespace Caustic
             std::any anyIB(spGPUIndexBuffer);
             m_spMCEmitVertsShader->SetCSParam(L"indexBuffer", anyIB);
 
-            m_spMCEmitVertsShader->BeginRender(pRenderer, nullptr, lights, nullptr);
-            m_spMCEmitVertsShader->EndRender(pRenderer);
+            m_spMCEmitVertsShader->Dispatch(pRenderer, xRoundedSubdivisions, yRoundedSubdivisions, zRoundedSubdivisions);
+
             spGPUCountBuffer->CopyToCPU(pRenderer, (uint8*)counts);
         }
 

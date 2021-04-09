@@ -396,7 +396,7 @@ namespace Caustic
         virtual void SetCSParam(const wchar_t* paramName, int index, std::any& value) override;
         virtual void EndRender(IRenderer* pRenderer) override;
         virtual CRefObj<IShaderInfo> GetShaderInfo() override;
-        virtual void SetThreadCounts(int xThreads, int yThreads, int zThreads) override;
+        virtual void Dispatch(IRenderer* pRenderer, int xThreads, int yThreads, int zThreads) override;
     };
 
     //**********************************************************************
