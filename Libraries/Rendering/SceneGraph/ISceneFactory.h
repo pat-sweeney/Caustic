@@ -52,8 +52,9 @@ namespace Caustic
 		// pRenderer - renderer to use
 		// subdivisions - number of cells along each voxel grid axis
 		// sdf - function that returns the signed distance field for the voxel grid
+		// drawIndexed - should generated mesh use index buffer?
 		//**********************************************************************
-		virtual CRefObj<ISceneMarchingCubesElem> CreateMarchingCubesElem(IRenderer* pRenderer, uint32 subdivisions, std::function<float(Vector3&)> sdf) = 0;
+		virtual CRefObj<ISceneMarchingCubesElem> CreateMarchingCubesElem(IRenderer* pRenderer, uint32 subdivisions, std::function<float(Vector3&)> sdf, bool drawIndexed) = 0;
 
 		//**********************************************************************
 		// Method: CreateMeshElem

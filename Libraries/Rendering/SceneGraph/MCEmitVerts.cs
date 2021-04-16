@@ -11,7 +11,10 @@
 
 cbuffer commonstuff : register(b0)
 {
-    int numCells; // Number of voxels in each direction
+    int subdivisions; // Original subdivisions requested by client
+    int numCellsX; // Number of voxels in X direction
+    int numCellsY; // Number of voxels in Y direction
+    int numCellsZ; // Number of voxels in Z direction
 };
 
 struct Vertex
@@ -170,28 +173,27 @@ uint VertexIDToVoxelAddr(uint addr, int vertexId)
     // determine the address of the voxel that owns the vertex on edge e0.
     // Then set the flags on the owner voxel (see mask[] for description)
     // Finally increment our vertex count if the original value didn't have the use bit set (i.e. it didn't but now does, so we need to generate that vertex)
-    return addr + stepx + stepy * numCells + stepz * numCells * numCells;
+    return addr + stepx + stepy * numCellsX + stepz * numCellsX * numCellsY;
 }
 
-[numthreads(1, 1, 1)]
+[numthreads(8, 8, 8)]
 void CS(uint3 DTid : SV_DispatchThreadID)
 {
     // Determine the address of this voxel
-    uint numCells2 = numCells * numCells;
-    uint addr = DTid.x + DTid.y * numCells + DTid.z * numCells2;
+    uint numCellsXY = numCellsX * numCellsY;
+    uint addr = DTid.x + DTid.y * numCellsX + DTid.z * numCellsXY;
     uint cellVal = cellMasks[addr];
 
     // Compute the denisty at the voxels corners
     float density = densityField[addr];
-    float delta = 1.0f / float(numCells);
     float d0 = densityField[addr];
-    float d1 = densityField[addr + numCells];
-    float d2 = densityField[addr + numCells + 1];
+    float d1 = densityField[addr + numCellsX];
+    float d2 = densityField[addr + numCellsX + 1];
     float d3 = densityField[addr + 1];
-    float d4 = densityField[addr + numCells2];
-    float d5 = densityField[addr + numCells2 + numCells];
-    float d6 = densityField[addr + numCells2 + numCells + 1];
-    float d7 = densityField[addr + numCells2 + 1];
+    float d4 = densityField[addr + numCellsXY];
+    float d5 = densityField[addr + numCellsXY + numCellsX];
+    float d6 = densityField[addr + numCellsXY + numCellsX + 1];
+    float d7 = densityField[addr + numCellsXY + 1];
 
     // Compute configuration code
     uint code = 0;
@@ -212,9 +214,10 @@ void CS(uint3 DTid : SV_DispatchThreadID)
     float t8 = -d0 / (d4 - d0);
 
     // Find normalized position of the voxels
-    float x = float(DTid.x) / float(numCells);
-    float y = float(DTid.y) / float(numCells);
-    float z = float(DTid.z) / float(numCells);
+    float delta = 1.0f / float(subdivisions);
+    float x = float(DTid.x) / float(subdivisions);
+    float y = float(DTid.y) / float(subdivisions);
+    float z = float(DTid.z) / float(subdivisions);
     float3 e0 = float3(x, y, z);
     float3 e1 = float3(x, y + delta, z);
     float3 e3 = float3(x + delta, y, z);

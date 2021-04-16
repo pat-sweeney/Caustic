@@ -11,7 +11,10 @@
 
 cbuffer ConstantBuffer : register(b0)
 {
-    int numCells; // Number of voxels in each direction
+    int subdivisions; // Original subdivisions requested by client
+    int numCellsX; // Number of voxels in X direction
+    int numCellsY; // Number of voxels in Y direction
+    int numCellsZ; // Number of voxels in Z direction
 };
 
 struct Counts
@@ -24,8 +27,8 @@ struct Counts
 
 StructuredBuffer<float> densityField : register(t1); // Assumed to be normalized (0..1 x 0..1 x 0..1) and of size (numCells x numCells x numCells)
 StructuredBuffer<int> edgeTable : register(t2); // Assume to be of size [256][16] with format: [code]{ numPolys, i0, i1, i2, i0, i1, i2, i0, i1, i2, i0, i1, i2, i0, i1, i2 }
-RWStructuredBuffer<uint> cellMasks : register(u3);
-RWStructuredBuffer<Counts> counts : register(u4);
+globallycoherent RWStructuredBuffer<uint> cellMasks : register(u3);
+globallycoherent RWStructuredBuffer<Counts> counts : register(u4);
 
 // Each voxel defines up to 12 potential vertices. Each voxel is only reponsible for creating vertices 0, 3, and 8.
 // We rely on the neighboring voxels to create the rest of the vertices. Each voxel will keep 3 flags indicating
@@ -92,26 +95,25 @@ uint VertexIDToVoxelAddr(uint addr, int vertexId)
     // determine the address of the voxel that owns the vertex on edge e0.
     // Then set the flags on the owner voxel (see mask[] for description)
     // Finally increment our vertex count if the original value didn't have the use bit set (i.e. it didn't but now does, so we need to generate that vertex)
-    return addr + stepx + stepy * numCells + stepz * numCells * numCells;
+    return addr + stepx + stepy * numCellsX + stepz * numCellsX * numCellsY;
 }
 
-[numthreads(1, 1, 1)]
+[numthreads(8, 8, 8)]
 void CS(uint3 DTid : SV_DispatchThreadID)
 {
-    uint numCells2 = uint(numCells * numCells);
-    uint addr = DTid.x + DTid.y * numCells + DTid.z * numCells2;
+    uint numCellsXY = uint(numCellsX * numCellsY);
+    uint addr = DTid.x + DTid.y * numCellsX + DTid.z * numCellsXY;
     float density = densityField[addr];
-    float delta = 1.0f / float(numCells);
 
     // Determine the signed distance value at each of the 8 corners of our voxel
     float d0 = densityField[addr];
-    float d1 = densityField[addr + numCells];
-    float d2 = densityField[addr + numCells + 1];
+    float d1 = densityField[addr + numCellsX];
+    float d2 = densityField[addr + numCellsX + 1];
     float d3 = densityField[addr + 1];
-    float d4 = densityField[addr + numCells2];
-    float d5 = densityField[addr + numCells2 + numCells];
-    float d6 = densityField[addr + numCells2 + numCells + 1];
-    float d7 = densityField[addr + numCells2 + 1];
+    float d4 = densityField[addr + numCellsXY];
+    float d5 = densityField[addr + numCellsXY + numCellsX];
+    float d6 = densityField[addr + numCellsXY + numCellsX + 1];
+    float d7 = densityField[addr + numCellsXY + 1];
 
     // From the density values determine the code defining the cube configuration
     uint code = 0;

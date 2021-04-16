@@ -181,12 +181,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 auto spherePDF = [](Vector3& v)->float
                 {
                     static Vector3 center(0.5f, 0.5f, 0.5f);
-//                    Vector3 q = v - center;
-//                    return max(fabs(q.x), max(fabs(q.y), fabs(q.z))) - 0.5f;
+                    Vector3 q = v - center;
+                    return max(fabs(q.x), max(fabs(q.y), fabs(q.z))) - 0.5f;
                     return (v - center).Length() - 0.5f;
                 };
                 CRefObj<ISceneMeshElem> spMeshElem = spSceneFactory->CreateMeshElem();
-                CRefObj<IMesh> spMesh = spMeshConstructor->MeshFromDensityFunction(3, spherePDF);
+                CRefObj<IMesh> spMesh = spMeshConstructor->MeshFromDensityFunction(16, spherePDF);
                 spMeshElem->SetMesh(spMesh);
                 CRefObj<ISceneGraph> spSceneGraph = spRenderWindow->GetSceneGraph();
                 CRefObj<IRenderer> spRenderer = spRenderWindow->GetRenderer();
@@ -201,11 +201,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 spMaterial->SetCullMode(D3D11_CULL_NONE);
                 spMaterialElem->SetMaterial(spMaterial);
                 spMaterialElem->SetShader(spShader);
-                Matrix4x4 xm = Matrix4x4::TranslationMatrix(2.0f, 1.0f, 0.0f);
+                Matrix4x4 xm = Matrix4x4::TranslationMatrix(1.0f, 0.0f, 0.0f);
                 spMaterialElem->SetTransform(xm);
                 spMaterialElem->AddChild(spMeshElem);
 
-                auto spMC = spSceneFactory->CreateMarchingCubesElem(spRenderer, 3, spherePDF);
+                auto spMC = spSceneFactory->CreateMarchingCubesElem(spRenderer, 16, spherePDF, false);
 
                 auto spLightCollectionElem = spSceneFactory->CreateLightCollectionElem();
                 spMaterialElem->AddChild(spMC);

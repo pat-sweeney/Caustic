@@ -11,7 +11,10 @@
 
 cbuffer ConstantBuffer : register(b0)
 {
-    int numCells; // Number of voxels in each direction
+    int subdivisions; // Original subdivisions requested by client
+    int numCellsX; // Number of voxels in X direction
+    int numCellsY; // Number of voxels in Y direction
+    int numCellsZ; // Number of voxels in Z direction
 };
 
 struct Counts
@@ -22,14 +25,14 @@ struct Counts
     uint numEmittedIndices; // Total number of emitted indices
 };
 
-RWStructuredBuffer<uint> cellMasks : register(u3);
-RWStructuredBuffer<Counts> counts : register(u4);
+globallycoherent RWStructuredBuffer<uint> cellMasks : register(u3);
+globallycoherent RWStructuredBuffer<Counts> counts : register(u4);
 
-[numthreads(1, 1, 1)]
+[numthreads(8, 8, 8)]
 void CS(uint3 DTid : SV_DispatchThreadID)
 {
-    uint numCells2 = uint(numCells * numCells);
-    uint addr = DTid.x + DTid.y * numCells + DTid.z * numCells2;
+    uint numCellsXY = uint(numCellsX * numCellsY);
+    uint addr = DTid.x + DTid.y * numCellsX + DTid.z * numCellsXY;
 
     int vertsToAlloc = 0;
     uint mask = cellMasks[addr];

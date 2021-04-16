@@ -23,10 +23,18 @@ namespace Caustic
         CRefObj<IShader> m_spMCCountVertsShader;
         CRefObj<IShader> m_spMCAllocVertsShader;
         CRefObj<IShader> m_spMCEmitVertsShader;
+        CRefObj<IShader> m_spMCShader;
         std::function<float(Vector3&)> m_sdf;
-        uint32 m_subdivisions;
+        uint32 m_subdivisions;          // Original voxel grid size request by client
+        uint32 m_xRoundedSubdivisions;  // Voxel grid size rounded up to nearest multiple of thread group size
+        uint32 m_yRoundedSubdivisions;  // Voxel grid size rounded up to nearest multiple of thread group size
+        uint32 m_zRoundedSubdivisions;  // Voxel grid size rounded up to nearest multiple of thread group size
+        uint32 m_numGroupsX;            // Number of groups in X direction for Dispatch
+        uint32 m_numGroupsY;            // Number of groups in Y direction for Dispatch
+        uint32 m_numGroupsZ;            // Number of groups in Z direction for Dispatch
         float* m_sdfData;
         bool m_initialized;
+        bool m_drawIndexed;
 
     public:
         //**********************************************************************
@@ -36,7 +44,7 @@ namespace Caustic
         // Parameters:
         // pComputeShader - underlying compute shader
         //**********************************************************************
-        CSceneMarchingCubesElem(IRenderer* pRenderer, uint32 subdivisions, std::function<float(Vector3&)> sdf);
+        CSceneMarchingCubesElem(IRenderer* pRenderer, uint32 subdivisions, std::function<float(Vector3&)> sdf, bool drawIndexed = false);
 
         //**********************************************************************
         // IUnknown

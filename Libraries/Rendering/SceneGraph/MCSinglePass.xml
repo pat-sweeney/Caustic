@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Shader>
+  <ComputeShader Filename="$(CausticRoot)\Libraries\Rendering\SceneGraph\MCSinglePass.cs" Output="$(CausticRoot)\$(Configuration)\MCSinglePass_CS.cso"/>
+</Shader>

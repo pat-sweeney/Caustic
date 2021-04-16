@@ -119,8 +119,13 @@ namespace Caustic
         uint32 numVertices = m_VB.m_numVertices;
         UINT offset = 0;
         pContext->IASetVertexBuffers(0, 1, &m_VB.m_spVB.p, &vertexSize, &offset);
-        pContext->IASetIndexBuffer(m_VB.m_spIB, DXGI_FORMAT::DXGI_FORMAT_R32_UINT, 0);
-        pContext->DrawIndexed(m_VB.m_numIndices, 0, 0);
+        if (m_VB.m_numIndices == 0)
+            pContext->Draw(m_VB.m_numVertices, 0);
+        else
+        {
+            pContext->IASetIndexBuffer(m_VB.m_spIB, DXGI_FORMAT::DXGI_FORMAT_R32_UINT, 0);
+            pContext->DrawIndexed(m_VB.m_numIndices, 0, 0);
+        }
         pShader->EndRender(pRenderer);
     }
 

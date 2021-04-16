@@ -343,30 +343,28 @@ namespace Caustic
 #else
         float delta = 1.0f / float(numBlocks);
         numBlocks++;
-        float *data = new float[numBlocks * numBlocks * numBlocks];
+        int numBlocks2 = numBlocks * numBlocks;
+        int numBlocks3 = numBlocks * numBlocks2;
+        float *data = new float[numBlocks3];
+        ZeroMemory(data, sizeof(float) * numBlocks3);
         float z = 0.0f;
-        int i = 0;
-        while (z <= 1.0f)
+        int index = 0;
+        for (int i = 0; i < numBlocks; i++)
         {
-            int j = 0;
             float y = 0.0f;
-            while (y <= 1.0f)
+            for (int j = 0; j < numBlocks; j++)
             {
-                int k = 0; 
                 float x = 0.0f;
-                while (x <= 1.0f)
+                for (int k = 0; k < numBlocks; k++)
                 {
                     Vector3 v(x, y, z);
                     float val = fn(v);
-                    data[i * numBlocks * numBlocks + j * numBlocks + k] = val;
+                    data[index++] = val;
                     x += delta;
-                    k++;
                 }
                 y += delta;
-                j++;
             }
             z += delta;
-            i++;
         }
         MeshOpen();
         SubMeshOpen();
@@ -380,14 +378,14 @@ namespace Caustic
                 float x = 0.0f;
                 for (int bx = 0; bx < numBlocks - 1; bx++)
                 {
-                    float d0 = data[bz * numBlocks * numBlocks + by * numBlocks + bx];
-                    float d1 = data[bz * numBlocks * numBlocks + (by + 1) * numBlocks + bx];
-                    float d2 = data[bz * numBlocks * numBlocks + (by + 1) * numBlocks + (bx + 1)];
-                    float d3 = data[bz * numBlocks * numBlocks + by * numBlocks + (bx + 1)];
-                    float d4 = data[(bz + 1) * numBlocks * numBlocks + by * numBlocks + bx];
-                    float d5 = data[(bz + 1) * numBlocks * numBlocks + (by + 1) * numBlocks + bx];
-                    float d6 = data[(bz + 1) * numBlocks * numBlocks + (by + 1) * numBlocks + (bx + 1)];
-                    float d7 = data[(bz + 1) * numBlocks * numBlocks + by * numBlocks + (bx + 1)];
+                    float d0 = data[bz * numBlocks2 + by * numBlocks + bx];
+                    float d1 = data[bz * numBlocks2 + (by + 1) * numBlocks + bx];
+                    float d2 = data[bz * numBlocks2 + (by + 1) * numBlocks + (bx + 1)];
+                    float d3 = data[bz * numBlocks2 + by * numBlocks + (bx + 1)];
+                    float d4 = data[(bz + 1) * numBlocks2 + by * numBlocks + bx];
+                    float d5 = data[(bz + 1) * numBlocks2 + (by + 1) * numBlocks + bx];
+                    float d6 = data[(bz + 1) * numBlocks2 + (by + 1) * numBlocks + (bx + 1)];
+                    float d7 = data[(bz + 1) * numBlocks2 + by * numBlocks + (bx + 1)];
                     Vector3 edgePos[12];
                     float t0 = -d0 / (d1 - d0);
                     float t1 = -d1 / (d2 - d1);

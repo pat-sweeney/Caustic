@@ -131,6 +131,9 @@
     <None Include="MCAllocVerts.cs">
       <Filter>Source Files\Shaders</Filter>
     </None>
+    <None Include="MCSinglePass.cs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Overlay2D.xml">
@@ -143,6 +146,9 @@
       <Filter>Source Files\Shaders\Definitions</Filter>
     </CustomBuild>
     <CustomBuild Include="MCAllocVerts.xml">
+      <Filter>Source Files\Shaders\Definitions</Filter>
+    </CustomBuild>
+    <CustomBuild Include="MCSinglePass.xml">
       <Filter>Source Files\Shaders\Definitions</Filter>
     </CustomBuild>
   </ItemGroup>
