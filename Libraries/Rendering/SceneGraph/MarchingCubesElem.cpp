@@ -328,7 +328,8 @@ namespace Caustic
 
         float delta = 1.0f / float(subdivisions);
         m_sdfData = new float[m_xRoundedSubdivisions * m_yRoundedSubdivisions * m_zRoundedSubdivisions];
-        ZeroMemory(m_sdfData, sizeof(float) * m_xRoundedSubdivisions * m_yRoundedSubdivisions * m_zRoundedSubdivisions);
+        for (uint32 i = 0; i < m_xRoundedSubdivisions * m_yRoundedSubdivisions * m_zRoundedSubdivisions; i++)
+            m_sdfData[i] = FLT_MAX;
         float z = 0.0f;
         for (uint32 i = 0; i < m_subdivisions; i++)
         {

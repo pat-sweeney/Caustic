@@ -92,7 +92,7 @@ uint VertexToIndex(uint va, int vi)
     int relOffset0 = 0;
     int relOffset1 = 0;
     int relOffset2 = 0;
-    switch (cellMasks[va] & 0x7000000)
+    switch (cellMasks[va] & 0x70000000)
     {
         case 0x00000000: break;
         case 0x10000000: relOffset2 = 0; break;
@@ -157,18 +157,18 @@ uint VertexIDToVoxelAddr(uint addr, int vertexId)
     uint stepx = 0, stepy = 0, stepz = 0;
     switch (vertexId)
     {
-        case 0: break;
+        case 0:            break;
         case 1: stepy = 1; break;
         case 2: stepx = 1; break;
-        case 3: break;
-        case 4: stepz = 1; break;
+        case 3:            break;
+        case 4:            stepz = 1; break;
         case 5: stepy = 1; stepz = 1; break;
         case 6: stepx = 1; stepz = 1; break;
-        case 7: stepz = 1; break;
-        case 8: break;
-        case 9: stepy = 1; break;
+        case 7:            stepz = 1; break;
+        case 8:                        break;
+        case 9:             stepy = 1; break;
         case 10: stepx = 1; stepy = 1; break;
-        case 11: stepx = 1; break;
+        case 11: stepx = 1;            break;
     }
     // determine the address of the voxel that owns the vertex on edge e0.
     // Then set the flags on the owner voxel (see mask[] for description)
@@ -179,13 +179,14 @@ uint VertexIDToVoxelAddr(uint addr, int vertexId)
 [numthreads(8, 8, 8)]
 void CS(uint3 DTid : SV_DispatchThreadID)
 {
+    if (DTid.x >= subdivisions || DTid.y >= subdivisions || DTid.z >= subdivisions)
+        return;
     // Determine the address of this voxel
     uint numCellsXY = numCellsX * numCellsY;
     uint addr = DTid.x + DTid.y * numCellsX + DTid.z * numCellsXY;
     uint cellVal = cellMasks[addr];
 
     // Compute the denisty at the voxels corners
-    float density = densityField[addr];
     float d0 = densityField[addr];
     float d1 = densityField[addr + numCellsX];
     float d2 = densityField[addr + numCellsX + 1];
@@ -210,14 +211,26 @@ void CS(uint3 DTid : SV_DispatchThreadID)
 
     // Determine the zero crossing for each vertex
     float t0 = -d0 / (d1 - d0);
-    float t3 = -d3 / (d0 - d3);
+    float t3 = -d0 / (d3 - d0);
     float t8 = -d0 / (d4 - d0);
 
     // Find normalized position of the voxels
-    float delta = 1.0f / float(subdivisions);
-    float x = float(DTid.x) / float(subdivisions);
-    float y = float(DTid.y) / float(subdivisions);
-    float z = float(DTid.z) / float(subdivisions);
+    float delta = 1.0f / float(subdivisions - 1);
+    float x = float(DTid.x) * delta;
+    float y = float(DTid.y) * delta;
+    float z = float(DTid.z) * delta;
+
+    //               e5----------------e6
+    //              /|                /|
+    //             / |               / |
+    //            /  |              /  |
+    //           e1----------------e2  |
+    //           |   |             |   |
+    //           |   e4------------|---e7
+    //     edge0 o  /              |  /
+    //           | o edge8         | /
+    //           |/      edge3     |/
+    //           e0------o---------e3
     float3 e0 = float3(x, y, z);
     float3 e1 = float3(x, y + delta, z);
     float3 e3 = float3(x + delta, y, z);
@@ -225,7 +238,7 @@ void CS(uint3 DTid : SV_DispatchThreadID)
 
     // Compute final vertices
     float3 edgePos0 = e0 + (e1 - e0) * t0;
-    float3 edgePos3 = e3 + (e0 - e3) * t3;
+    float3 edgePos3 = e0 + (e3 - e0) * t3;
     float3 edgePos8 = e0 + (e4 - e0) * t8;
 
     int vbAddr = cellVal & 0xFFFFFF;

@@ -52,21 +52,21 @@ static uint mask[12] =
     //                           +-------- Vertex 0 referenced
     //                           | +------ Vertex 3 referenced
     //                           | | +---- Vertex 8 referenced
-    //                           | | | +-- vertexBuffer offset
-    //                           | | | |
-    //                           V V V V
-    0x40000000, // Vertex 0 :  . 1 . . <24b index>
-    0x20000000, // Vertex 1 :  . . 1 . <24b index>
-    0x40000000, // Vertex 2 :  . 1 . . <24b index>
-    0x20000000, // Vertex 3 :  . . 1 . <24b index>
-    0x40000000, // Vertex 4 :  . 1 . . <24b index>
-    0x20000000, // Vertex 5 :  . . 1 . <24b index>
-    0x40000000, // Vertex 6 :  . 1 . . <24b index>
-    0x20000000, // Vertex 7 :  . . 1 . <24b index>
-    0x10000000, // Vertex 8 :  . . . 1 <24b index>
-    0x10000000, // Vertex 9 :  . . . 1 <24b index>
-    0x10000000, // Vertex 10:  . . . 1 <24b index>
-    0x10000000, // Vertex 11:  . . . 1 <24b index>
+    //                           | | |         +-- vertexBuffer offset
+    //                           | | |         |
+    //                           V V V         V
+    0x40000000, // Vertex 0 :  . 1 . . . . . . <24b index>
+    0x20000000, // Vertex 1 :  . . 1 . . . . . <24b index>
+    0x40000000, // Vertex 2 :  . 1 . . . . . . <24b index>
+    0x20000000, // Vertex 3 :  . . 1 . . . . . <24b index>
+    0x40000000, // Vertex 4 :  . 1 . . . . . . <24b index>
+    0x20000000, // Vertex 5 :  . . 1 . . . . . <24b index>
+    0x40000000, // Vertex 6 :  . 1 . . . . . . <24b index>
+    0x20000000, // Vertex 7 :  . . 1 . . . . . <24b index>
+    0x10000000, // Vertex 8 :  . . . 1 . . . . <24b index>
+    0x10000000, // Vertex 9 :  . . . 1 . . . . <24b index>
+    0x10000000, // Vertex 10:  . . . 1 . . . . <24b index>
+    0x10000000, // Vertex 11:  . . . 1 . . . . <24b index>
 };
 
 // VertexIDToVoxelAddr() converts a vertexId (0-12) for
@@ -101,9 +101,10 @@ uint VertexIDToVoxelAddr(uint addr, int vertexId)
 [numthreads(8, 8, 8)]
 void CS(uint3 DTid : SV_DispatchThreadID)
 {
+    if (DTid.x >= subdivisions || DTid.y >= subdivisions || DTid.z >= subdivisions)
+        return;
     uint numCellsXY = uint(numCellsX * numCellsY);
     uint addr = DTid.x + DTid.y * numCellsX + DTid.z * numCellsXY;
-    float density = densityField[addr];
 
     // Determine the signed distance value at each of the 8 corners of our voxel
     float d0 = densityField[addr];
