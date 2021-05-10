@@ -59,7 +59,7 @@ namespace Caustic
             {
                 std::string valName = std::any_cast<std::string>(pObj->GetValue());
                 std::string propName = pObj->GetName();
-                ImGui::Text(((propName.empty() ? pTreeName : propName) + "=" + valName).c_str());
+                ImGui::Text(((propName.empty() ? pTreeName : propName) + " = \"" + valName + "\"").c_str());
             }
             break;
         }
