@@ -52,7 +52,7 @@ namespace Caustic
 		void WriteValue(CRefObj<IJSonObj> obj, char** ppBuffer, uint32* pTotalSize);
 		void ConditionalWrite(char** ppBuffer, uint32* pTotalSize, const char* format, ...);
 		void ParseObject(ILex* pLex, std::map<std::string, CRefObj<IJSonObj>>& data);
-		CRefObj<IJSonObj> ParseValue(ILex* pLex);
+		CRefObj<IJSonObj> ParseValue(ILex* pLex, const char* pName);
 		void ParseArray(ILex* pLex, std::vector<CRefObj<IJSonObj>>&data);
 	public:
 		CJSonParser()

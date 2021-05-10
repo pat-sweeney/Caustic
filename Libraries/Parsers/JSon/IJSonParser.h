@@ -80,4 +80,5 @@ namespace Caustic
 	};
 	
 	CAUSTICAPI CRefObj<IJSonParser> CreateJSonParser();
+	extern void JSONTree(IJSonObj* pObj, const char* pTreeName);
 }

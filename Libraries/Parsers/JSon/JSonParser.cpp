@@ -73,11 +73,11 @@ namespace Caustic
 			token = pLex->ReadToken();
 			if (token.m_id != c_LexToken_Colon)
 				CT(E_UNEXPECTED);
-			data[valueName] = ParseValue(pLex);
+			data[valueName] = ParseValue(pLex, valueName.c_str());
 			token = pLex->ReadToken();
 			if (token.m_id == c_LexToken_RightBrace)
 				break;
-			CT((token.m_id != c_LexToken_Colon) ? E_UNEXPECTED : S_OK);
+			CT((token.m_id != c_LexToken_Character || token.m_cval != ',') ? E_UNEXPECTED : S_OK);
 		}
 	}
 
@@ -91,55 +91,59 @@ namespace Caustic
 				token = pLex->ReadToken();
 				break;
 			}
-
+			data.push_back(ParseValue(pLex, ""));
 			token = pLex->ReadToken();
-			if (token.m_id != c_LexToken_String)
-				CT(E_UNEXPECTED);
-			std::string valueName = token.m_sval;
-			token = pLex->ReadToken();
-			if (token.m_id != c_LexToken_Colon)
-				CT(E_UNEXPECTED);
-			data.push_back(ParseValue(pLex));
-			token = pLex->ReadToken();
-			 if (token.m_id == c_LexToken_RightBrace)
+			 if (token.m_id == c_LexToken_RightBracket)
 				break;
-			CT((token.m_id != c_LexToken_Colon) ? E_UNEXPECTED : S_OK);
+			 CT((token.m_id != c_LexToken_Character || token.m_cval != ',') ? E_UNEXPECTED : S_OK);
 		}
 	}
 
-	CRefObj<IJSonObj> CJSonParser::ParseValue(ILex *pLex)
+	CRefObj<IJSonObj> CJSonParser::ParseValue(ILex *pLex, const char *pName)
 	{
 		CJSonObj* pObj = new CJSonObj();
 		LexToken token = pLex->ReadToken();
+		pObj->m_propertyName = std::string(pName);
 		switch (token.m_id)
 		{
+		case c_LexToken_String:
+			pObj->m_type = CJSonType::String;
+			pObj->m_value = std::any(token.m_sval);
+			break;
 		case c_LexToken_LeftBrace: // Parse object
 			{
+				pObj->m_type = CJSonType::Object;
 				std::map<std::string, CRefObj<IJSonObj>> data;
 				ParseObject(pLex, data);
 				pObj->m_value = std::any(data);
 			}
 			break;
-		case c_LexToken_RightBracket: // Parse array
+		case c_LexToken_LeftBracket: // Parse array
 			{
+				pObj->m_type = CJSonType::Array;
 				std::vector<CRefObj<IJSonObj>> data;
 				ParseArray(pLex, data);
 				pObj->m_value = std::any(data);
 			}
 			break;
 		case c_LexToken_Float:
+			pObj->m_type = CJSonType::Number;
 			pObj->m_value = std::any(token.m_fval);
 			break;
 		case c_LexToken_Integer:
+			pObj->m_type = CJSonType::Number;
 			pObj->m_value = std::any(float(token.m_ival));
 			break;
 		case c_LexToken_True:
+			pObj->m_type = CJSonType::Bool;
 			pObj->m_value = std::any(true);
 			break;
 		case c_LexToken_False:
+			pObj->m_type = CJSonType::Bool;
 			pObj->m_value = std::any(false);
 			break;
 		case c_LexToken_Null:
+			pObj->m_type = CJSonType::Null;
 			pObj->m_value = std::any(nullptr);
 			break;
 		}
@@ -156,7 +160,7 @@ namespace Caustic
 			{ nullptr, 0 },
 		};
 		spLex->SetParseTable(entries);
-		return ParseValue(spLex);
+		return ParseValue(spLex, "");
 	}
 
 	void CJSonParser::ConditionalWrite(char **ppBuffer, uint32 *pTotalSize, const char *format, ...)

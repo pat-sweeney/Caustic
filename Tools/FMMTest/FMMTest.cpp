@@ -35,6 +35,7 @@
 #include "Rendering\SceneGraph\ISceneFactory.h"
 #include "Rendering\SceneGraph\ISceneGraph.h"
 #include "Geometry\MeshImport\MeshImport.h"
+#include "Parsers\JSon\IJSonParser.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -66,6 +67,7 @@ public:
     CRefObj<Caustic::ICausticFactory> spCausticFactory; // Factory used to create Caustic objects
     CRefObj<IRenderer> spRenderer;                      // Instance of our renderer
     HWND hwnd;
+    CRefObj<IJSonObj> spJSON;
 
     CApp()
     {
@@ -87,36 +89,11 @@ std::vector<ImGuiEvent> events;
 float heatmap[512][512];
 void CApp::InitializeCaustic(HWND hwnd)
 {
-    // Make up data from FMM tutorial. First make up some gravitational potential data.
-    Vector2 pos[1000];
-    float mass[1000];
-    for (int i = 0; i < 1000; i++)
-    {
-        pos[i].x = (float)rand() / (float)RAND_MAX;
-        pos[i].y = (float)rand() / (float)RAND_MAX;
-        mass[i] = 0.25f * (float)rand() / (float)RAND_MAX;
-    }
-    float maxsum = 0.0f;
-    for (int y = 0; y < 512; y++)
-    {
-        for (int x = 0; x < 512; x++)
-        {
-            Vector2 pt(x / 512.0f, y / 512.0f);
-            float sum = 0.0f;
-            for (int j = 0; j < 1000; j++)
-            {
-                float dist = (pt - pos[j]).Length();
-                sum += mass[j] / dist;
-            }
-            heatmap[y][x] = sum;
-            if (sum > maxsum)
-                maxsum = sum;
-        }
-    }
-    for (int y = 0; y < 512; y++)
-        for (int x = 0; x < 512; x++)
-            heatmap[y][x] = 255.0f * (heatmap[y][x] / maxsum);
+    auto spParser = CreateJSonParser();
+    std::wstring fn(L"g:\\test.json");
+    app.spJSON = spParser->LoadDOM(fn);
 
+    // Make up data from FMM tutorial. First make up some gravitational potential data.
     app.hwnd = hwnd;
     spCausticFactory = Caustic::CreateCausticFactory();
     std::wstring shaderFolder(SHADERPATH);
@@ -135,22 +112,12 @@ void CApp::InitializeCaustic(HWND hwnd)
             ImGui_ImplWin32_NewFrame();
             ImGui::NewFrame();
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+            Caustic::JSONTree(app.spJSON, "g:\\test.json");
             bool op = true;
 #define USE_IMPLOT_DEMO
 #ifdef USE_IMPLOT_DEMO
             ImPlot::ShowDemoWindow(&op);
 #else
-            static float scale_min = 0.0f;
-            static float scale_max = 255.0f;
-            ImPlot::PushColormap(ImPlotColormap_Viridis);
-            static ImPlotAxisFlags axes_flags = ImPlotAxisFlags_Lock | ImPlotAxisFlags_NoGridLines | ImPlotAxisFlags_NoTickMarks;
-            ImPlot::SetNextPlotTicksX(0.0f, 1.0f, 512);
-            ImPlot::SetNextPlotTicksY(0.0f, 1.0f, 512);
-            if (ImPlot::BeginPlot("##Heatmap1", NULL, NULL, ImVec2(1024, 1024), ImPlotFlags_NoLegend | ImPlotFlags_NoMousePos, axes_flags, axes_flags)) {
-                ImPlot::PlotHeatmap("heat", heatmap[0], 512, 512, scale_min, scale_max);
-                ImPlot::EndPlot();
-            }
-            ImPlot::PopColormap();
 #endif // USE_IMPLOT_DEMO
         },
         [](IRenderer* pRenderer)
