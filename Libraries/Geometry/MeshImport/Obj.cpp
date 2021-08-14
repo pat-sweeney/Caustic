@@ -32,6 +32,7 @@ namespace Caustic
         std::string m_groupName;
         int m_smoothingGroup;
         std::string m_materialName;
+        bool m_normalsSpecified;
         std::map<std::string, CRefObj<IMaterialAttrib>> m_matmap;
         CRefObj<IMesh> m_spMesh;
 
@@ -45,7 +46,8 @@ namespace Caustic
         void ParseAscii(const wchar_t *pFilename, const char *pData);
     };
 
-    CObjParser::CObjParser()
+    CObjParser::CObjParser() :
+        m_normalsSpecified(false)
     {
     }
 
@@ -446,7 +448,10 @@ namespace Caustic
                 m_spMesh->SetMaterials(materials);
             }
             else if (line[0] == 'v' && line[1] == 'n')
+            {
                 ParseVector3(line.c_str() + 2/* skip 'vn' */, m_Norms);
+                m_normalsSpecified = true;
+            }
             else if (line[0] == 'v' && line[1] == 't')
                 ParseVector3(line.c_str() + 2/* skip 'vt' */, m_UVs);
             else if (line[0] == 'v')
@@ -491,7 +496,6 @@ namespace Caustic
         //**********************************************************************
         CRefObj<IMesh> LoadObj(const wchar_t *pFilename)
         {
-
             HANDLE h = CreateFile(pFilename, FILE_GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr);
             if (h == INVALID_HANDLE_VALUE)
                 CT(HRESULT_FROM_WIN32(GetLastError()));
@@ -505,6 +509,8 @@ namespace Caustic
             CObjParser parser;
             parser.m_spMesh = Caustic::CreateEmptyMesh();
             parser.ParseAscii(pFilename, (const char*)spBuffer.get());
+            if (!parser.m_normalsSpecified)
+                parser.m_spMesh->ComputeNormals();
             return parser.m_spMesh;
         }
     };

@@ -292,7 +292,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
                         CRefObj<ISceneOverlay2DElem> spOverlay;
                         spOverlay = spSceneFactory->CreateOverlay2DElem();
-                        auto spTexture = spCausticFactory->LoadTexture(L"c:\\users\\patri\\Pictures\\Capture.PNG", spRenderWindow->GetRenderer());
+                        auto spTexture = spCausticFactory->LoadTexture(L"c:\\users\\patricsw\\Pictures\\Capture.PNG", spRenderWindow->GetRenderer());
                         BBox2 bb;
                         bb.minPt = Vector2(0.0f, 0.0f);
                         bb.maxPt = Vector2(0.1f, 0.1f);
