@@ -238,13 +238,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                         wchar_t *ext = StrRChrW(fn, nullptr, L'.');
                         CRefObj<ISceneMeshElem> spMeshElem = spSceneFactory->CreateMeshElem();
                         CRefObj<IMesh> spMesh = nullptr;
+                        const wchar_t *pShaderName = L"Textured";
                         if (StrCmpW(ext, L".obj") == 0)
+                        {
                             spMesh = Caustic::MeshImport::LoadObj(fn);
+                            pShaderName = L"ObjShader";
+                        }
                         else if (StrCmpW(ext, L".ply") == 0)
+                        {
                             spMesh = Caustic::MeshImport::LoadPLY(fn);
+                            pShaderName = L"Textured";
+                        }
                         spMeshElem->SetMesh(spMesh);
                         CRefObj<ISceneGraph> spSceneGraph = spRenderWindow->GetSceneGraph();
-                        CRefObj<IShader> spShader = spRenderWindow->GetRenderer()->GetShaderMgr()->FindShader(L"Textured");
+                        CRefObj<IShader> spShader = spRenderWindow->GetRenderer()->GetShaderMgr()->FindShader(pShaderName);
                         CRefObj<ISceneMaterialElem> spMaterialElem = spSceneFactory->CreateMaterialElem();
                         CRefObj<IMaterialAttrib> spMaterial = spCausticFactory->CreateMaterialAttrib();
                         FRGBColor ambient(0.2f, 0.2f, 0.2f);

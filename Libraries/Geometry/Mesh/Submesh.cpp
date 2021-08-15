@@ -339,11 +339,15 @@ namespace Caustic
         pLeftHalf->index = (int)m_edges.size()+1;
         m_edges.push_back(pRightHalf);
         m_edges.push_back(pLeftHalf);
+        
+        // Use cantor pairing to come up with hash value
+        // For complete description of cantor pairing see:
+        // https://en.wikipedia.org/wiki/Pairing_function#Cantor_pairing_function
         uint64 addr1 = (uint64)pHead;
         uint64 addr2 = (uint64)pTail;
         uint64 value = ((addr1 + addr2) * (addr1 + addr2 + 1)) / 2 + addr2;
+
         m_vertToEdge[value] = pLeftHalf;
-        m_vertToEdge[value] = pRightHalf;
         return m_edges[m_edges.size() - 1];
     }
 
@@ -362,10 +366,15 @@ namespace Caustic
     CHalfEdge *CSubMesh::FindEdge(CGeomVertex *pHead, CGeomVertex *pTail)
     {
         // Use cantor pairing to come up with hash value
+        // For complete description of cantor pairing see:
+        // https://en.wikipedia.org/wiki/Pairing_function#Cantor_pairing_function
         uint64 addr1 = (uint64)pHead;
         uint64 addr2 = (uint64)pTail;
         uint64 value = ((addr1 + addr2) * (addr1 + addr2 + 1)) / 2 + addr2;
-        return m_vertToEdge[value];
+        CHalfEdge *pEdge = m_vertToEdge[value];
+        if (pEdge == nullptr || pEdge->GetHeadVertex() == pHead)
+            return pEdge;
+        return pEdge->GetOppositeEdge();
     }
 
     //**********************************************************************

@@ -201,6 +201,7 @@ namespace Caustic
                 spMaterial->SetColor(L"specularExp", white);
                 spMaterial->SetColor(L"transparency", white);
                 spMaterial->SetScalar(L"bumpFactor", 1.0f);
+                spMaterial->SetIsTransparent(true);
             }
             else
             {

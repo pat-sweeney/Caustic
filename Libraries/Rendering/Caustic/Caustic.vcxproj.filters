@@ -281,6 +281,9 @@
     <CustomBuild Include="Obj.xml">
       <Filter>Source Files\Shaders\Definitions</Filter>
     </CustomBuild>
+    <CustomBuild Include="ObjShader.xml">
+      <Filter>Source Files\Shaders\Definitions</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <None Include="Brighten.cs">
@@ -344,6 +347,9 @@
       <Filter>Source Files\Shaders</Filter>
     </None>
     <None Include="Obj.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="ObjShader.ps">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>

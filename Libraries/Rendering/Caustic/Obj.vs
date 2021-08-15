@@ -1,6 +1,7 @@
 //**********************************************************************
 // Copyright Patrick Sweeney 2015-2020
-// All Rights Reserved
+// Licensed under the MIT license.
+// See file LICENSE for details.
 // File: Obj.vs
 //**********************************************************************
 #define MAX_LIGHTS 4

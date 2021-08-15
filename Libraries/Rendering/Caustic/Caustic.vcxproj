@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -229,6 +229,17 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\Libraries\Rendering\Caustic\Textured.ps</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\Libraries\Rendering\Caustic\Textured.ps</AdditionalInputs>
     </CustomBuild>
+    <CustomBuild Include="ObjShader.xml">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\ObjShader.xml -o $(CausticRoot)\$(Configuration)\ObjShader.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\ObjShader.xml -o $(CausticRoot)\$(Configuration)\ObjShader.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\ObjShader.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\ObjShader.shi</Outputs>
+      <SubType>Designer</SubType>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\Libraries\Rendering\Caustic\ObjShader.ps</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\Libraries\Rendering\Caustic\ObjShader.ps</AdditionalInputs>
+    </CustomBuild>
     <CustomBuild Include="TexturedWithShadow.xml">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -345,6 +356,7 @@
     <None Include="ShadowMap.ps" />
     <None Include="ShadowMap.vs" />
     <None Include="Textured.ps" />
+    <None Include="ObjShader.ps" />
     <None Include="TexturedWithShadow.ps" />
     <None Include="TexturedWithShadow.vs" />
   </ItemGroup>
