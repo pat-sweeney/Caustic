@@ -26,6 +26,7 @@ cbuffer PS_CONSTANT_BUFFER
     matrix viewInv; // View => World
     int numLights;
     float4 shadowMapBounds;
+    float transparencyAvail;
 };
 
 float4 PS(VSOutput p) : SV_Target
@@ -39,7 +40,7 @@ float4 PS(VSOutput p) : SV_Target
     //float shadowDist = shadowMapTexture.Sample(shadowMapSampler, p.uvs);
 
     float4 clr = diffuseTexture.Sample(diffuseSampler, p.uvs);
-    float t = transparencyTexture.Sample(transparencySampler, p.uvs);
+    float t = (transparencyAvail > 0.0f) ? transparencyTexture.Sample(transparencySampler, p.uvs) : 1.0f;
     for (int i = 0; i < numLights; i++)
     {
         float3 lightDirWS = normalize(lightPosWS[i].xyz - p.posWS);

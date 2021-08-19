@@ -136,13 +136,7 @@ namespace Caustic
             n = Vector3(0.0f, 0.0f, 0.0f);
         else
             n = m_Norms[nIndex[0] - 1];
-        bool flipWindingOrder = false;
-        if (v0.Cross(v1).Dot(n) < 0)
-        {
-            flipWindingOrder = true;
-        }
-        flipWindingOrder = false;
-
+        bool flipWindingOrder = (v0.Cross(v1).Dot(n) < 0) ? true : false;
         if (count == 3)
         {
             for (int i = 0; i < 3; i++)
@@ -194,6 +188,14 @@ namespace Caustic
                 spMaterial->SetTexture(L"reflectionTexture", spBlackImage, EShaderAccess::PixelShader);
                 spMaterial->SetTexture(L"emissiveTexture", spBlackImage, EShaderAccess::PixelShader);
                 spMaterial->SetTexture(L"bumpTexture", spBlackImage, EShaderAccess::PixelShader);
+                spMaterial->SetScalar(L"ambientAvail", 0.0f);
+                spMaterial->SetScalar(L"diffuseAvail", 0.0f);
+                spMaterial->SetScalar(L"specularAvail", 0.0f);
+                spMaterial->SetScalar(L"specularExpAvail", 0.0f);
+                spMaterial->SetScalar(L"transparencyAvail", 0.0f);
+                spMaterial->SetScalar(L"reflectionAvail", 0.0f);
+                spMaterial->SetScalar(L"emissiveAvail", 0.0f);
+                spMaterial->SetScalar(L"bumpAvail", 0.0f);
                 FRGBAColor white(1.0f, 1.0f, 1.0f, 1.0f);
                 spMaterial->SetColor(L"ambientColor", white);
                 spMaterial->SetColor(L"diffuseColor", white);
@@ -216,6 +218,7 @@ namespace Caustic
                     std::string fn = m_Folder + std::string(p);
                     std::wstring wfn = str2wstr(fn);
                     spMaterial->SetTextureViaFilename(L"ambientTexture", wfn, EShaderAccess::PixelShader);
+                    spMaterial->SetScalar(L"ambientAvail", 1.0f);
                 }
                 else if (_strnicmp(p, "map_Kd", 6) == 0)
                 {
@@ -225,6 +228,7 @@ namespace Caustic
                     std::string fn = m_Folder + std::string(p);
                     std::wstring wfn = str2wstr(fn);
                     spMaterial->SetTextureViaFilename(L"diffuseTexture", wfn, EShaderAccess::PixelShader);
+                    spMaterial->SetScalar(L"diffuseAvail", 1.0f);
                 }
                 else if (_strnicmp(p, "map_Ks", 6) == 0)
                 {
@@ -234,6 +238,7 @@ namespace Caustic
                     std::string fn = m_Folder + std::string(p);
                     std::wstring wfn = str2wstr(fn);
                     spMaterial->SetTextureViaFilename(L"specularTexture", wfn, EShaderAccess::PixelShader);
+                    spMaterial->SetScalar(L"specularAvail", 1.0f);
                 }
                 else if (_strnicmp(p, "map_Ns", 6) == 0)
                 {
@@ -243,6 +248,7 @@ namespace Caustic
                     std::string fn = m_Folder + std::string(p);
                     std::wstring wfn = str2wstr(fn);
                     spMaterial->SetTextureViaFilename(L"specularExpTexture", wfn, EShaderAccess::PixelShader);
+                    spMaterial->SetScalar(L"specularExpAvail", 1.0f);
                 }
                 else if (_strnicmp(p, "map_d", 5) == 0)
                 {
@@ -252,6 +258,7 @@ namespace Caustic
                     std::string fn = m_Folder + std::string(p);
                     std::wstring wfn = str2wstr(fn);
                     spMaterial->SetTextureViaFilename(L"transparencyTexture", wfn, EShaderAccess::PixelShader);
+                    spMaterial->SetScalar(L"transparencyAvail", 1.0f);
                 }
                 else if (_strnicmp(p, "map_refl", 8) == 0 || _strnicmp(p, "refl", 4) == 0)
                 {
@@ -306,6 +313,7 @@ namespace Caustic
                     std::string fn = m_Folder + std::string(p);
                     std::wstring wfn = str2wstr(fn);
                     spMaterial->SetTextureViaFilename(L"reflectionTexture", wfn, EShaderAccess::PixelShader);
+                    spMaterial->SetScalar(L"reflectionAvail", 1.0f);
                 }
                 else if (_strnicmp(p, "map_Ke", 6) == 0)
                 {
@@ -315,6 +323,7 @@ namespace Caustic
                     std::string fn = m_Folder + std::string(p);
                     std::wstring wfn = str2wstr(fn);
                     spMaterial->SetTextureViaFilename(L"emissiveTexture", wfn, EShaderAccess::PixelShader);
+                    spMaterial->SetScalar(L"emissiveAvail", 1.0f);
                 }
                 else if (_strnicmp(p, "map_bump", 8) == 0 || _strnicmp(p, "bump", 4) == 0)
                 {
@@ -336,6 +345,7 @@ namespace Caustic
                     std::string fn = m_Folder + std::string(p);
                     std::wstring wfn = str2wstr(fn);
                     spMaterial->SetTextureViaFilename(L"bumpTexture", wfn, EShaderAccess::PixelShader);
+                    spMaterial->SetScalar(L"bumpAvail", 1.0f);
                     spMaterial->SetScalar(L"bumpFactor", bumpScalar);
                 }
                 else if (*p == 'N' && p[1] == 's')
