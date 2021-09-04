@@ -193,21 +193,130 @@ namespace Caustic
     //**********************************************************************
     struct ISubMesh : public ISerialize
     {
+        //**********************************************************************
+        // Method: RayIntersect
+        // Computes the intersection between a ray and a mesh.
+        //
+        // Parameters:
+        // ray - Ray to intersect against
+        // pIntersection - Returns the point of intersection if ray intersects mesh
+        // pMaterial - Material of face that ray intersects
+        // materials - list of possible materials
+        // 
+        // Returns:
+        // Returns true if ray intersects mesh. False otherwise.
+        //**********************************************************************
         virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** pMaterial, std::vector<CRefObj<IMaterialAttrib>> materials) = 0;
+
+        //**********************************************************************
+        // Method: SetName
+        // Sets the name of the submesh
+        //
+        // Parameters:
+        // pName - name to assign
+        //**********************************************************************
         virtual void SetName(const char* pName) = 0;
+
+        //**********************************************************************
+        // Method: GetName
+        // Returns the name of the submesh
+        //**********************************************************************
         virtual std::string GetName() = 0;
+
+        //**********************************************************************
+        // Method: GetNumberFaces
+        // Returns the number of faces in the submesh
+        //**********************************************************************
         virtual uint32 GetNumberFaces() = 0;
+
+        //**********************************************************************
+        // Method: GetFace
+        // Returns a pointer to the requested face
+        // 
+        // Parameters:
+        // index - index of face
+        //**********************************************************************
         virtual CFace *GetFace(uint32 index) = 0;
+
+        //**********************************************************************
+        // Method: GetNumberVertices
+        // Returns number of vertices in submesh
+        //**********************************************************************
         virtual uint32 GetNumberVertices() = 0;
+
+        //**********************************************************************
+        // Method: GetVertex
+        // Returns a requested vertex
+        // 
+        // Parameters:
+        // index - index of requested vertex
+        //**********************************************************************
         virtual CGeomVertex *GetVertex(uint32 index) = 0;
+
+        //**********************************************************************
+        // Method: GetNumberEdges
+        // Returns number of edges in submesh
+        //**********************************************************************
         virtual uint32 GetNumberEdges() = 0;
+
+        //**********************************************************************
+        // Method: GetEdge
+        // Returns the requested edge
+        // 
+        // Parameters:
+        // index - index of requested edge
+        //**********************************************************************
         virtual CHalfEdge *GetEdge(uint32 index) = 0;
+
+        //**********************************************************************
+        // Method: GetVertexFlags
+        // Returns vertex flags (which describe what fields a vertex contains)
+        //**********************************************************************
         virtual EVertexFlags GetVertexFlags() = 0;
+
+        //**********************************************************************
+        // Method: SetVertexFlags
+        // Sets which fields a vertex contains
+        // 
+        // Parameters:
+        // flags - flags indicating which fields a vertex contains
+        //**********************************************************************
         virtual void SetVertexFlags(EVertexFlags flags) = 0;
+
+        //**********************************************************************
+        // Method: GetMeshFlags
+        // Returns mesh flags (set of flags describing attributes of the submesh)
+        //**********************************************************************
         virtual EMeshFlags GetMeshFlags() = 0;
+
+        //**********************************************************************
+        // Method: SetMeshFlags
+        // Sets the mesh flags on the submesh
+        // 
+        // Parameters:
+        // flags - list of flags describing attributes of the submesh
+        //**********************************************************************
         virtual void SetMeshFlags(EMeshFlags flags) = 0;
+
+        //**********************************************************************
+        // Method: GetMaterialID
+        // Returns the material ID associated with the submesh
+        //**********************************************************************
         virtual uint32 GetMaterialID() = 0;
+
+        //**********************************************************************
+        // Method: SetMaterialID
+        // Sets the material ID for the submesh
+        // 
+        // Parameters:
+        // materialID - ID of material
+        //**********************************************************************
         virtual void SetMaterialID(uint32 materialID) = 0;
+
+        //**********************************************************************
+        // Method: GetBBOX
+        // Returns the bounding box of the submesh
+        //**********************************************************************
         virtual const BBox3 &GetBBox() = 0;
 
         //**********************************************************************
@@ -218,11 +327,68 @@ namespace Caustic
         // bbox - Bounding box of the mesh
         //**********************************************************************
         virtual void Normalize(const BBox3 &bbox) = 0;
+
+        //**********************************************************************
+        // Method: ComputeNormals
+        // This method will compute all the vertex normals
+        // on the mesh by summing and normalizing the face vertices
+        // around each vertex (via Newell's method). NOTE: This makes
+        // an implicit assumption that each face is planar. This is not
+        // always the case and can thus result in incorrect normals (for
+        // instance, the faces from CreateSphere() will not be planar).
+        // To prevent incorrect normals, it is first recommended that
+        // the mesh be triangulated first via CSubMesh::Triangulate().
+        //**********************************************************************
         virtual void ComputeNormals() = 0;
+
+        //**********************************************************************
+        // Method: VertexToIndex
+        // Given a vertex this returns the index of that vertex
+        // 
+        // Parameters:
+        // pVertex - vertex to convert into index
+        //**********************************************************************
         virtual uint32 VertexToIndex(CGeomVertex *pVertex) = 0;
+
+        //**********************************************************************
+        // Method: FaceToIndex
+        // Given a face this returns the index of that face
+        // 
+        // Parameters:
+        // pFace - face to convert into index
+        //**********************************************************************
         virtual uint32 FaceToIndex(CFace *pFace) = 0;
+
+        //**********************************************************************
+        // Method: EdgeToIndex
+        // Given a edge this returns the index of that edge
+        // 
+        // Parameters:
+        // pEdge - edge to convert into index
+        //**********************************************************************
         virtual uint32 EdgeToIndex(CHalfEdge *pEdge) = 0;
+
+        //**********************************************************************
+        // Method: Triangulate
+        // Converts a mesh from arbitrary polygons into
+        // a triangulated mesh.
+        //
+        // Parameters:
+        // method - method to use for triangulation
+        //**********************************************************************
         virtual void Triangulate(ETriangulateMethod method) = 0;
+
+        //**********************************************************************
+        // Method: ToRenderSubMesh
+        // Converts a CSubMesh object into a renderable form
+        //
+        // Parameters:
+        // pRenderer - Renderer
+        // pShader - shader
+        //
+        // Returns:
+        // Returns the new submesh
+        //**********************************************************************
         virtual CRefObj<IRenderSubMesh> ToRenderSubMesh(IRenderer *pRenderer, IShader *pShader) = 0;
     };
 
@@ -264,6 +430,11 @@ namespace Caustic
     CAUSTICAPI CRefObj<ISubMesh> CreateSubMesh(std::vector<Vector3> &vertPos,
         std::vector<int> &faces,
         uint32 materialID);
+
+    //**********************************************************************
+    // Method: CreateEmptySubMesh
+    // Creates a empty submesh.
+    //**********************************************************************
     CAUSTICAPI CRefObj<ISubMesh> CreateEmptySubMesh();
     CAUSTICAPI CRefObj<IMesh> CreateCube();
     CAUSTICAPI CRefObj<IMesh> CreateSphere(uint32 subdivisions);

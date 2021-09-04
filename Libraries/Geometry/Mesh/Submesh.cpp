@@ -13,7 +13,6 @@
 // File: SubMesh.cpp
 // Contains the methods used to implement the CSubMesh object.
 //**********************************************************************
-
 namespace Caustic
 {
     bool CSubMesh::s_allocatorInitialized = false;
@@ -24,13 +23,7 @@ namespace Caustic
 
     //**********************************************************************
     // Method: RayIntersect
-    // Computes intersection of ray with mesh
-    //
-    // Parameters:
-    // ray - ray direction to trace
-    // pIntersection - Returns the intersection point
-    // ppMaterial - Returns the material of the mesh at the intersection point
-    // materials - list of possible materials
+    // See <ISubMesh::RayIntersect>
     //**********************************************************************
     bool CSubMesh::RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** ppMaterial, std::vector<CRefObj<IMaterialAttrib>> materials)
     {
@@ -127,11 +120,7 @@ namespace Caustic
 
     //**********************************************************************
     // Method: Triangulate
-    // Converts a mesh from arbitrary polygons into
-    // a triangulated mesh.
-    //
-    // Parameters:
-    // method - method to use for triangulation
+    // See <ISubMesh::Triangulate>
     //**********************************************************************
     void CSubMesh::Triangulate(ETriangulateMethod method)
     {
@@ -148,14 +137,7 @@ namespace Caustic
 
     //**********************************************************************
     // Method: ComputeNormals
-    // This method will compute all the vertex normals
-    // on the mesh by summing and normalizing the face vertices
-    // around each vertex (via Newell's method). NOTE: This makes
-    // an implicit assumption that each face is planar. This is not
-    // always the case and can thus result in incorrect normals (for
-    // instance, the faces from CreateSphere() will not be planar).
-    // To prevent incorrect normals, it is first recommended that
-    // the mesh be triangulated first via CSubMesh::Triangulate().
+    // See <ISubMesh::ComputeNormals>
     //**********************************************************************
     void CSubMesh::ComputeNormals()
     {
@@ -173,16 +155,28 @@ namespace Caustic
             m_vertices[i]->norm.Normalize();
     }
 
+    //**********************************************************************
+    // Method: VertexToIndex
+    // See <ISubMesh::VertexToIndex>
+    //**********************************************************************
     uint32 CSubMesh::VertexToIndex(CGeomVertex *pVertex)
     {
         return pVertex->index;
     }
 
+    //**********************************************************************
+    // Method: EdgeToIndex
+    // See <ISubMesh::EdgeToIndex>
+    //**********************************************************************
     uint32 CSubMesh::EdgeToIndex(CHalfEdge *pEdge)
     {
         return pEdge->index;
     };
     
+    //**********************************************************************
+    // Method: FaceToIndex
+    // See <ISubMesh::FaceToIndex>
+    //**********************************************************************
     uint32 CSubMesh::FaceToIndex(CFace *pFace)
     {
         return pFace->index;
@@ -256,7 +250,7 @@ namespace Caustic
 
     //**********************************************************************
     // Method: AllocateFace
-    // Allocates a new face and places in our face list.
+    // See <CSubMesh::AllocateFace>
     //**********************************************************************
     CFace *CSubMesh::AllocateFace()
     {
@@ -269,16 +263,7 @@ namespace Caustic
 
     //**********************************************************************
     // Method: AllocateGeomVertex
-    // Allocates a new vertex given a position,
-    // normal, and UVs and places it in our vertex list.
-    //
-    // Parameters:
-    // pos - position of vertex
-    // normal - normal vector at the vertex
-    // uv - texture coordinates at the vertex
-    //
-    // Returns:
-    // Newly created vertex object
+    // See <CSubMesh::AllocateGeomVertex>
     //**********************************************************************
     CGeomVertex *CSubMesh::AllocateGeomVertex(Vector3 &pos, Vector3 &normal, Vector2 &uv)
     {
@@ -307,17 +292,7 @@ namespace Caustic
 
     //**********************************************************************
     // Method: AllocateEdge
-    // Allocates a new edge going from
-    // pTail->pHead. NOTE: This function does not insert
-    // the edge into our edge list. That occurs during the call
-    // to LinkEdges().
-    //
-    // Parameters:
-    // pHead - starting vertex for the edge
-    // pTail - ending vertex for the edge
-    //
-    // Returns:
-    // Returns new edge
+    // See <CSubMesh::AllocateEdge>
     //**********************************************************************
     CHalfEdge *CSubMesh::AllocateEdge(CGeomVertex *pHead, CGeomVertex *pTail)
     {
@@ -353,15 +328,7 @@ namespace Caustic
 
     //**********************************************************************
     // Method: FindEdge
-    // Returns the edge from pTail->pHead. If the edge does
-    // not exist then nullptr is returned.
-    //
-    // Parameters:
-    // pHead - starting vertex for edge
-    // pTail -ending vertex for edge
-    //
-    // Returns:
-    // Found edge
+    // See <CSubMesh::FindEdge>
     //**********************************************************************
     CHalfEdge *CSubMesh::FindEdge(CGeomVertex *pHead, CGeomVertex *pTail)
     {
@@ -379,16 +346,7 @@ namespace Caustic
 
     //**********************************************************************
     // Method: FindVertex
-    // Returns a pointer to a vertex in our mesh
-    // that matches the specified values
-    //
-    // Parameters:
-    // pos - position of vertex
-    // pNorm - normal at vertex. maybe nullptr
-    // pUV - texture coordinates at vertex. maybe nullptr
-    //
-    // Returns:
-    // Found vertex. nullptr if there is no matching vertex
+    // See <CSubMesh::FindVertex>
     //**********************************************************************
     CGeomVertex *CSubMesh::FindVertex(Vector3 &pos, Vector3 *pNorm, Vector2 *pUV)
     {
@@ -409,18 +367,7 @@ namespace Caustic
 
     //**********************************************************************
     // Method: FindNextEdgeAroundVertex
-    // Returns the next edge around the vertex
-    // in the given direction (clockwise or counter-clockwise) that is either
-    // entering or leaving the vertex.
-    //
-    // Parameters:
-    // pVertex - Vertex around which to search
-    // pEdge - starting edge for search
-    // entering - true if edge is pointing towards 'pVert'. false otherwise
-    // clockwise - indicates whether to search clockwise around vertex. counter-clockwise otherwise.
-    //
-    // Returns:
-    // Next edge around vertex.
+    // See <CSubMesh::FindNextEdgeAroundVertex>
     //**********************************************************************
     CHalfEdge *CSubMesh::FindNextEdgeAroundVertex(CGeomVertex *pVert, CHalfEdge *pEdge, bool entering, bool clockwise)
     {
@@ -465,36 +412,7 @@ namespace Caustic
 
     //**********************************************************************
     // Method: LinkEdges
-    // Links two edges (full edges) together
-    // We start with the picture at the top. The solid lines represent
-    // HalfEdge's, while the dotted lines represent their m_pPrev/m_pNext
-    // links. We are trying to add newEdge and link it to oldEdge (an existing
-    // edge)
-    // === Text
-    //            ^|
-    //        ...>|| <.......
-    //        v   |V        .
-    //  ---------> O pHead  .
-    //  <---------          .
-    //  oldEdge ^............
-    //
-    //            ^|
-    //        ...>|| <.......
-    //        v   |V        .
-    //  ---------> O pHead  .
-    //  <--------- ^|       .
-    //  oldEdge    ||<.......
-    //     newEdge ||
-    //        ....>||<.......
-    //        v    |V       .
-    //  ---------> O pTail  .
-    //  <---------          .
-    //         ^.............
-    // ===
-    //
-    // Parameters:
-    // pPrev - previous edge
-    // pCur - current edge
+    // See <CSubMesh::LinkEdges>
     //**********************************************************************
     void CSubMesh::LinkEdges(CHalfEdge *pPrev, CHalfEdge *pCur)
     {
@@ -506,6 +424,10 @@ namespace Caustic
         pCur->m_pPrev = pPrev;
     }
 
+    //**********************************************************************
+    // Method: CheckConsistency
+    // See <CSubMesh::CheckConsistency>
+    //**********************************************************************
     void CSubMesh::CheckConsistency()
     {
         for (size_t i = 0; i < m_faces.size(); i++)
@@ -533,6 +455,10 @@ namespace Caustic
         }
     }
 
+    //**********************************************************************
+    // Method: Load
+    // See <ISubMesh::Load>
+    //**********************************************************************
     void CSubMesh::Load(IStream *pStream)
     {
         ULONG bytesRead;
@@ -608,6 +534,10 @@ namespace Caustic
         m_meshFlags = (EMeshFlags)flags;
     }
 
+    //**********************************************************************
+    // Method: Load
+    // See <ISubMesh::Store>
+    //**********************************************************************
     void CSubMesh::Store(IStream *pStream)
     {
         ULONG bytesWritten;

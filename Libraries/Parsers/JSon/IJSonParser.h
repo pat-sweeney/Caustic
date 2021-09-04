@@ -21,13 +21,41 @@ namespace Caustic
 		Null    // GetValue() returns nullptr
 	};
 
+	//**********************************************************************
+	// Interface: IJSonObj 
+	// Defines an interface to our basic JSON object returned by the parser.
+	//
+	// Header:
+	// [Link:Parsers/JSon/IJsonParser.h]
+	//**********************************************************************
 	struct IJSonObj : public IRefCount
 	{
+		//**********************************************************************
+		// Method: GetName
+		// Returns the name of the object
+		//**********************************************************************
 		virtual std::string GetName() = 0;
+
+		//**********************************************************************
+		// Method: GetType
+		// Returns type of the JSON object
+		//**********************************************************************
 		virtual CJSonType GetType() = 0;
+
+		//**********************************************************************
+		// Method: GetValue
+		// Returns the value of the JSON object
+		//**********************************************************************
 		virtual std::any GetValue() = 0;
 	};
 
+	//**********************************************************************
+	// Interface: IJSonParser 
+	// Defines an interface for parsing JSON files.
+	//
+	// Header:
+	// [Link:Parsers/JSon/IJsonParser.h]
+	//**********************************************************************
 	struct IJSonParser : public IRefCount
 	{
 		//**********************************************************************

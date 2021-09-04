@@ -37,15 +37,6 @@ namespace Caustic
 	}
 
     //**********************************************************************
-	// Method: BuildVertexBuffer
-	// Creates a vertex buffer using the specified submesh.
-	//
-	// Parameters:
-	// pRenderer - Graphics device
-	// pShaderInfo - Information about the shader
-	// vertexReferenced - List of vertices that are referenced
-	// MeshData - place to store created vertex buffer
-	//**********************************************************************
 	void CSubMesh::BuildVertexBuffer(IRenderer* pRenderer,
 		IShaderInfo* pShaderInfo, std::vector<int>& vertexReferenced, MeshData* pMeshData)
 	{
@@ -125,14 +116,6 @@ namespace Caustic
 	}
 
 	//**********************************************************************
-	// Method: BuildIndexBuffer
-    // Creates a index buffer using the specified submesh.
-    //
-    // Parameters:
-    // pRenderer - Graphics device
-    // vertexReferenced - List of vertices that are referenced
-    // MeshData - place to store created index buffer
-    //**********************************************************************
     void CSubMesh::BuildIndexBuffer(IRenderer *pRenderer, std::vector<int> &vertexReferenced, MeshData *pMeshData)
 	{
         CComPtr<ID3D11Device> spDevice = pRenderer->GetDevice();
@@ -247,16 +230,6 @@ namespace Caustic
 		}
 	}
 
-	//**********************************************************************
-    // Method: ToRenderSubMesh
-	// Converts a CSubMesh object into a renderable form
-    //
-    // Parameters:
-	// pRenderer - Renderer
-	// pShader - shader
-	//
-	// Returns:
-	// Returns the new submesh
 	//**********************************************************************
 	CRefObj<IRenderSubMesh> CSubMesh::ToRenderSubMesh(IRenderer *pRenderer, IShader *pShader)
 	{

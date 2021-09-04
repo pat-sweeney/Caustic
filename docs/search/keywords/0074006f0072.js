@@ -1,1 +1,1 @@
-﻿NDSearch.OnPrefixDataLoaded("tor",["Function"],[["ToRenderMesh",,[[,,,,0,"File:Geometry/Mesh/MeshToRenderMesh.cpp:ToRenderMesh"]]],["ToRenderSubMesh",,[[,,,,0,"File:Geometry/Mesh/MeshToRenderMesh.cpp:ToRenderSubMesh"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("tor",["Function"],[["ToRenderMesh",,[[,,,,0,"File:Geometry/Mesh/MeshToRenderMesh.cpp:ToRenderMesh"]]],["ToRenderSubMesh",,[["ISubMesh",,,,0,"File:Geometry/Mesh/IMesh.h:ISubMesh.ToRenderSubMesh","CClass:ISubMesh:ToRenderSubMesh"]]]]);
