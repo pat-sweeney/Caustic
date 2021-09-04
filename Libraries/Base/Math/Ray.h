@@ -242,6 +242,6 @@ namespace Caustic
         // Returns:
         // True if ray interesects plane, otherwise false
         //**********************************************************************
-        bool Ray3::Intersect(Vector3 n, float d, RayIntersect3* pIntersectInfo);
+        bool Intersect(Vector3 n, float d, RayIntersect3* pIntersectInfo);
     };
 }
