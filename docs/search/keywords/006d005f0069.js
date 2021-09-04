@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("m_i",["Property"],[["m_inShadowLightGroup",,[["SceneCtx",,,,0,"File:Rendering/SceneGraph/ISceneGraph.h:SceneCtx.m_inShadowLightGroup","CClass:SceneCtx:m_inShadowLightGroup"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("m_i",["Property"],[["m_inShadowLightGroup",,[["SceneCtx",,,,0,"File:Rendering/SceneGraph/ISceneGraph.h:SceneCtx.m_inShadowLightGroup","CClass:SceneCtx:m_inShadowLightGroup"]]]]);

@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("CClass:IGPUBuffer","IGPUBuffer");NDSummary.OnSummaryLoaded("CClass:IGPUBuffer",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Interfaces","Interface"]],[[924,0,2,"IGPUBuffer"],[925,0,1,"Functions","Functions"],[926,0,0,"CopyFromCPU","CopyFromCPU"],[927,0,0,"CopyToCPU","CopyToCPU"],[928,0,0,"CreateGPUBuffer","CreateGPUBuffer"]]);

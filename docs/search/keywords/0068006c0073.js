@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("hls",["Class"],[["HLSColor",,[[,,,,0,"File:Imaging/Color/Color.h:HLSColor","CClass:HLSColor"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("hls",["Class"],[["HLSColor",,[[,,,,0,"File:Imaging/Color/Color.h:HLSColor","CClass:HLSColor"]]]]);

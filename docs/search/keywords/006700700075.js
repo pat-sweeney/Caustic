@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("gpu",["Struct"],[["GPUVertex",,[[,,,,0,"File:Imaging/GPUImage/GPUPipeline.cpp:GPUVertex","CClass:GPUVertex"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("gpu",["Struct"],[["GPUVertex",,[[,,,,0,"File:Imaging/GPUImage/GPUPipeline.cpp:GPUVertex","CClass:GPUVertex"]]]]);

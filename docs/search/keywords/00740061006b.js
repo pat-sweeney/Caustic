@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("tak",["Function"],[["TakeDataOwnership",,[["IImage",,,,0,"File:Imaging/Image/Image.h:IImage.TakeDataOwnership","CClass:IImage:TakeDataOwnership"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("tak",["Function"],[["TakeDataOwnership",,[["IImage",,,,0,"File:Imaging/Image/Image.h:IImage.TakeDataOwnership","CClass:IImage:TakeDataOwnership"]]]]);

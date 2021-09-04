@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("abs",["Function"],[["Abs",,[["Caustic",,,,0,"File:Base/Core/Core.h:Caustic.Abs","CClass:Caustic:Abs"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("abs",["Function"],[["Abs",,[["Caustic",,,,0,"File:Base/Core/Core.h:Caustic.Abs","CClass:Caustic:Abs"]]]]);

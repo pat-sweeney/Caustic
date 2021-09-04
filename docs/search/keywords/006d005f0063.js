@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("m_c",["Property"],[["m_CurrentPass",,[["SceneCtx",,,,0,"File:Rendering/SceneGraph/ISceneGraph.h:SceneCtx.m_CurrentPass","CClass:SceneCtx:m_CurrentPass"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("m_c",["Property"],[["m_CurrentPass",,[["SceneCtx",,,,0,"File:Rendering/SceneGraph/ISceneGraph.h:SceneCtx.m_CurrentPass","CClass:SceneCtx:m_CurrentPass"]]]]);

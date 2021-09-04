@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("ima",["Interface"],[["ImageFilterParams",,[[,,,,0,"File:Imaging/Image/ImageFilter.h:ImageFilterParams","CClass:ImageFilterParams"]]],["IMaterialAttrib",,[[,,,,0,"File:Rendering/Caustic/IMaterialAttrib.h:IMaterialAttrib","CClass:IMaterialAttrib"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("ima",["Interface"],[["ImageFilterParams",,[[,,,,0,"File:Imaging/Image/ImageFilter.h:ImageFilterParams","CClass:ImageFilterParams"]]],["IMaterialAttrib",,[[,,,,0,"File:Rendering/Caustic/IMaterialAttrib.h:IMaterialAttrib","CClass:IMaterialAttrib"]]]]);

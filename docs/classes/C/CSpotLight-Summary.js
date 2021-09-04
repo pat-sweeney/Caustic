@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:CSpotLight","CSpotLight");NDSummary.OnSummaryLoaded("CClass:CSpotLight",[["C/C++","C"]],[["Classes","Class"]],[[527,0,0,"CSpotLight"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CSpotLight","CSpotLight");NDSummary.OnSummaryLoaded("CClass:CSpotLight",[["C/C++","C"]],[["Classes","Class"]],[[715,0,0,"CSpotLight"]]);

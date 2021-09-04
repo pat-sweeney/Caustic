@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("CClass:LowPassFilter","LowPassFilter");NDSummary.OnSummaryLoaded("CClass:LowPassFilter",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[245,0,0,"LowPassFilter"],[246,0,2,"Functions","Functions"],[247,0,1,"Sample","Sample"]]);

@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("dou",["Class"],[["DoubleExponentialFilter",,[[,,,,0,"File:Base/Math/FuncFilter.h:DoubleExponentialFilter","CClass:DoubleExponentialFilter"]]]]);

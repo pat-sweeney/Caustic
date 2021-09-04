@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("eve",["Enumeration"],[["EVertexFlags",,[["CFace",,,,0,"File:Geometry/Mesh/IMesh.h:CFace.EVertexFlags","CClass:CFace:EVertexFlags"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("eve",["Enumeration"],[["EVertexFlags",,[["CFace",,,,0,"File:Geometry/Mesh/IMesh.h:CFace.EVertexFlags","CClass:CFace:EVertexFlags"]]]]);

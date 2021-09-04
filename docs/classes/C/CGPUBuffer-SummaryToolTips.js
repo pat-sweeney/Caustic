@@ -1,0 +1,1 @@
+﻿NDSummary.OnToolTipsLoaded("CClass:CGPUBuffer",{679:"<div class=\"NDToolTip TClass LC\"><div class=\"NDClassPrototype\" id=\"NDClassPrototype679\"><div class=\"CPEntry TClass Current\"><div class=\"CPName\">CGPUBuffer</div></div></div><div class=\"TTSummary\">Defines a buffer that is created by the client for passing/receiving data from a compute shader.</div></div>"});

@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:SBuffer","SBuffer");NDSummary.OnSummaryLoaded("CClass:SBuffer",[["C/C++","C"]],[["Classes","Class"]],[[542,0,0,"SBuffer"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:SBuffer","SBuffer");NDSummary.OnSummaryLoaded("CClass:SBuffer",[["C/C++","C"]],[["Classes","Class"]],[[678,0,0,"SBuffer"]]);

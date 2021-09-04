@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:CVideoFormat","CVideoFormat");NDSummary.OnSummaryLoaded("CClass:CVideoFormat",[["C/C++","C"]],[["Classes","Class"]],[[1380,0,0,"CVideoFormat"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CVideoFormat","CVideoFormat");NDSummary.OnSummaryLoaded("CClass:CVideoFormat",[["C/C++","C"]],[["Classes","Class"]],[[1227,0,0,"CVideoFormat"]]);

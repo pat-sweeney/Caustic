@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:CameraIntrinsics","CameraIntrinsics");NDSummary.OnSummaryLoaded("CClass:CameraIntrinsics",[["C/C++","C"]],[["Structs","Struct"]],[[1230,0,0,"CameraIntrinsics"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CameraIntrinsics","CameraIntrinsics");NDSummary.OnSummaryLoaded("CClass:CameraIntrinsics",[["C/C++","C"]],[["Structs","Struct"]],[[255,0,0,"CameraIntrinsics"]]);

@@ -1,0 +1,1 @@
+﻿NDContentPage.OnToolTipsLoaded({1422:"<div class=\"NDToolTip TClass LC\"><div class=\"NDClassPrototype\" id=\"NDClassPrototype1422\"><div class=\"CPEntry TClass Current\"><div class=\"CPName\">CSceneLineElem</div></div></div><div class=\"TTSummary\">Defines a line element in our scene graph</div></div>"});

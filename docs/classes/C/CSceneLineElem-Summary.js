@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("CClass:CSceneLineElem","CSceneLineElem");NDSummary.OnSummaryLoaded("CClass:CSceneLineElem",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[1422,0,0,"CSceneLineElem"],[1423,0,2,"Functions","Functions"],[1424,0,1,"CSceneLineElem","CSceneLineElem"]]);

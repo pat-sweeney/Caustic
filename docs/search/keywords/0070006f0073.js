@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("pos",["Variable"],[["pos",,[["Vector",,,,0,"File:Rendering/Caustic/Depth2Points.cs:Vector.pos","CSharpClass:Vector:pos"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("pos",["Variable"],[["pos",,[["Vector",,,,0,"File:Rendering/Caustic/Depth2Points.cs:Vector.pos","CSharpClass:Vector:pos"]]]]);

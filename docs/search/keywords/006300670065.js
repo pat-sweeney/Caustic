@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("cge",["Struct"],[["CGeomFace",,[[,,,,0,"File:Rendering/Caustic/RenderTypes.h:CGeomFace","CClass:CGeomFace"]]],["CGeomVertex",,[[,,,,0,"File:Rendering/Caustic/RenderTypes.h:CGeomVertex","CClass:CGeomVertex"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("cge",["Struct"],[["CGeomFace",,[[,,,,0,"File:Rendering/Caustic/RenderTypes.h:CGeomFace","CClass:CGeomFace"]]],["CGeomVertex",,[[,,,,0,"File:Rendering/Caustic/RenderTypes.h:CGeomVertex","CClass:CGeomVertex"]]]]);

@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:IMeshConstructor","IMeshConstructor");NDSummary.OnSummaryLoaded("CClass:IMeshConstructor",[["C/C++","C"]],[["Interfaces","Interface"]],[[270,0,0,"IMeshConstructor"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:IMeshConstructor","IMeshConstructor");NDSummary.OnSummaryLoaded("CClass:IMeshConstructor",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Interfaces","Interface"]],[[327,0,2,"IMeshConstructor"],[328,0,1,"Functions","Functions"],[329,0,0,"MeshFromDensityFunction","MeshFromDensityFunction"]]);

@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("cmo",["Class"],[["CMosaicFilter",,[[,,,,0,"File:Imaging/Image/MosaicFilter.cpp:CMosaicFilter","CClass:CMosaicFilter"]]],["CMotionBlurFilter",,[[,,,,0,"File:Imaging/Image/MotionBlurFilter.cpp:CMotionBlurFilter","CClass:CMotionBlurFilter"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("cmo",["Class"],[["CMosaicFilter",,[[,,,,0,"File:Imaging/Image/MosaicFilter.cpp:CMosaicFilter","CClass:CMosaicFilter"]]],["CMotionBlurFilter",,[[,,,,0,"File:Imaging/Image/MotionBlurFilter.cpp:CMotionBlurFilter","CClass:CMotionBlurFilter"]]]]);

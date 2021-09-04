@@ -1,1 +1,1 @@
-NDSummary.OnToolTipsLoaded("File:Geometry/GeomDS/Path2.cpp",{218:"<div class=\"NDToolTip TFunction LC\"><div id=\"NDPrototype218\" class=\"NDPrototype NoParameterForm\">CRefObj&lt;IPath2&gt; CreatePath2()</div><div class=\"TTSummary\">Creates a new path</div></div>"});
+﻿NDSummary.OnToolTipsLoaded("File:Geometry/GeomDS/Path2.cpp",{271:"<div class=\"NDToolTip TFunction LC\"><div id=\"NDPrototype271\" class=\"NDPrototype\"><div class=\"PSection PPlainSection\">CRefObj&lt;IPath2&gt; CreatePath2()</div></div><div class=\"TTSummary\">Creates a new path</div></div>"});

@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("CClass:CSceneCubeElem","CSceneCubeElem");NDSummary.OnSummaryLoaded("CClass:CSceneCubeElem",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[1546,0,0,"CSceneCubeElem"],[1547,0,2,"Functions","Functions"],[1548,0,1,"CSceneSphereElem","CSceneSphereElem"]]);

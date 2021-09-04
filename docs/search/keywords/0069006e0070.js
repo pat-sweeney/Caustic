@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("inp",["Function"],[["InPass",,[["IRenderable",,,,0,"File:Rendering/Caustic/IRenderable.h:IRenderable.InPass","CClass:IRenderable:InPass"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("inp",["Function"],[["InPass",,[["IRenderable",,,,0,"File:Rendering/Caustic/IRenderable.h:IRenderable.InPass","CClass:IRenderable:InPass"]]]]);

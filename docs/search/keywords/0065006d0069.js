@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("emi",["Function"],[["EmitVertex",,[[,,,,0,"File:Rendering/SceneGraph/MCEmitVerts.cs:EmitVertex"]]]]);

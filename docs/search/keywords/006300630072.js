@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("ccr",["Class"],[["CCritSec",,[[,,,,0,"File:Base/Core/CritSec.h:CCritSec","CClass:CCritSec"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("ccr",["Class"],[["CCritSec",,[[,,,,0,"File:Base/Core/CritSec.h:CCritSec","CClass:CCritSec"]]]]);

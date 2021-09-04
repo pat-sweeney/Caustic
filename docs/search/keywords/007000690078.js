@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("pix",["Function"],[["PixelShaderParameterDefs",,[["IShaderInfo",,,,0,"File:Rendering/Caustic/IShaderInfo.h:IShaderInfo.PixelShaderParameterDefs","CClass:IShaderInfo:PixelShaderParameterDefs"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("pix",["Function"],[["PixelShaderParameterDefs",,[["IShaderInfo",,,,0,"File:Rendering/Caustic/IShaderInfo.h:IShaderInfo.PixelShaderParameterDefs","CClass:IShaderInfo:PixelShaderParameterDefs"]]]]);

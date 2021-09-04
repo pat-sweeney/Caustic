@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:HLSColor","HLSColor");NDSummary.OnSummaryLoaded("CClass:HLSColor",[["C/C++","C"]],[["Classes","Class"]],[[350,0,0,"HLSColor"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:HLSColor","HLSColor");NDSummary.OnSummaryLoaded("CClass:HLSColor",[["C/C++","C"]],[["Classes","Class"]],[[428,0,0,"HLSColor"]]);

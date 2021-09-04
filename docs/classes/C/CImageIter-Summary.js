@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:CImageIter","CImageIter");NDSummary.OnSummaryLoaded("CClass:CImageIter",[["C/C++","C"]],[["Classes","Class"]],[[408,0,0,"CImageIter"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CImageIter","CImageIter");NDSummary.OnSummaryLoaded("CClass:CImageIter",[["C/C++","C"]],[["Classes","Class"]],[[509,0,0,"CImageIter"]]);

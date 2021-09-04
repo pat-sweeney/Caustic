@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/Sampler.h","Sampler.h");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/Sampler.h",[["C/C++","C"]],[["Classes","Class"],["Structs","Struct"]],[[548,0,1,"CSamplerRef","CSamplerRef"],[549,0,0,"CSampler","CSampler"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/Sampler.h","Sampler.h");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/Sampler.h",[["C/C++","C"]],[["Classes","Class"],["Structs","Struct"]],[[716,0,1,"CSamplerRef","CSamplerRef"],[717,0,0,"CSampler","CSampler"]]);

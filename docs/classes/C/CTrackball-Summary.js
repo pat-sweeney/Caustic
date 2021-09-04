@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:CTrackball","CTrackball");NDSummary.OnSummaryLoaded("CClass:CTrackball",[["C/C++","C"]],[["Classes","Class"]],[[518,0,0,"CTrackball"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CTrackball","CTrackball");NDSummary.OnSummaryLoaded("CClass:CTrackball",[["C/C++","C"]],[["Classes","Class"]],[[675,0,0,"CTrackball"]]);

@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("rgb",["Class"],[["RGBColor",,[[,,,,0,"File:Imaging/Color/Color.h:RGBColor","CClass:RGBColor"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("rgb",["Class"],[["RGBColor",,[[,,,,0,"File:Imaging/Color/Color.h:RGBColor","CClass:RGBColor"]]]]);

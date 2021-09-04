@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("cbo",["Class"],[["CBoxFilter",,[[,,,,0,"File:Imaging/Image/BoxFilter.cpp:CBoxFilter","CClass:CBoxFilter"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("cbo",["Class"],[["CBoxFilter",,[[,,,,0,"File:Imaging/Image/BoxFilter.cpp:CBoxFilter","CClass:CBoxFilter"]]]]);

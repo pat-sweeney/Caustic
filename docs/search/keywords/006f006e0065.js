@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("one",["Class"],[["OneEulerFilter",,[[,,,,0,"File:Base/Math/FuncFilter.h:OneEulerFilter","CClass:OneEulerFilter"]]]]);

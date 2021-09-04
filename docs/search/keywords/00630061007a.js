@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("caz",["Class"],[["CAzureKinectDevice",,[[,,,,0,"File:Cameras/AzureKinect/AzureKinect.h:CAzureKinectDevice","CClass:CAzureKinectDevice"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("caz",["Class"],[["CAzureKinectDevice",,[[,,,,0,"File:Cameras/AzureKinect/AzureKinect.h:CAzureKinectDevice","CClass:CAzureKinectDevice"]]]]);

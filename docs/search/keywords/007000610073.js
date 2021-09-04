@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("pas",["Function"],[["PassBlendable",,[["IRenderCtx",,,,0,"File:Rendering/Caustic/IRenderCtx.h:IRenderCtx.PassBlendable","CClass:IRenderCtx:PassBlendable"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("pas",["Function"],[["PassBlendable",,[["IRenderCtx",,,,0,"File:Rendering/Caustic/IRenderCtx.h:IRenderCtx.PassBlendable","CClass:IRenderCtx:PassBlendable"]]]]);

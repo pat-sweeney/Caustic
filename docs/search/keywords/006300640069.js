@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("cdi",["Class"],[["CDirectionalLight",,[[,,,,0,"File:Rendering/Caustic/DirectionalLight.h:CDirectionalLight","CClass:CDirectionalLight"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("cdi",["Class"],[["CDirectionalLight",,[[,,,,0,"File:Rendering/Caustic/DirectionalLight.h:CDirectionalLight","CClass:CDirectionalLight"]]]]);

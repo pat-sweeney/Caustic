@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("isi",["Function"],[["IsInput",,[["IRenderGraphPin",,,,0,"File:Rendering/RenderGraph/IRenderGraphPin.h:IRenderGraphPin.IsInput","CClass:IRenderGraphPin:IsInput"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("isi",["Function"],[["IsInput",,[["IRenderGraphPin",,,,0,"File:Rendering/RenderGraph/IRenderGraphPin.h:IRenderGraphPin.IsInput","CClass:IRenderGraphPin:IsInput"]]]]);

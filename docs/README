@@ -4,8 +4,12 @@ There are 3 configuration files:
       Languages.txt
       Project.txt
 These were created by running the command line (from our $CausticRoot folder)
-	"C:\Program Files (x86)\Natural Docs\NaturalDocs.exe" docs
+    "$(CausticRoot)\External\NaturalDocs\CLI\bin\Release\NaturalDocs.exe" docs
 We then hand edited the generated Project.txt file.
+
+To install NaturalDocs you need to enlist in the git repository:
+    https://github.com/NaturalDocs/NaturalDocs
+This should be cloned under $(CausticRoot)\External
 
 For more details see the NaturalDocs documentation at:
 	https://www.naturaldocs.org/whats_new_in_2.0/configuring_and_running/

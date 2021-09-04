@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:CGeomFace","CGeomFace");NDSummary.OnSummaryLoaded("CClass:CGeomFace",[["C/C++","C"]],[["Structs","Struct"]],[[1241,0,0,"CGeomFace"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CGeomFace","CGeomFace");NDSummary.OnSummaryLoaded("CClass:CGeomFace",[["C/C++","C"]],[["Structs","Struct"]],[[689,0,0,"CGeomFace"]]);

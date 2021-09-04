@@ -1,1 +1,1 @@
-NDFramePage.OnPageTitleLoaded("CClass:CTexture","CTexture");NDSummary.OnSummaryLoaded("CClass:CTexture",[["C/C++","C"]],[["Classes","Class"]],[[517,0,0,"CTexture"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CTexture","CTexture");NDSummary.OnSummaryLoaded("CClass:CTexture",[["C/C++","C"]],[["Classes","Class"]],[[657,0,0,"CTexture"]]);

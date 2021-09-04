@@ -1,0 +1,1 @@
+﻿NDSummary.OnToolTipsLoaded("CClass:ISceneMarchingCubesElem",{1519:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Implements marching cubes on a signed distance function</div></div>"});

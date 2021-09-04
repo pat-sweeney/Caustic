@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("mov",["Class"],[["MovingAverage",,[[,,,,0,"File:Base/Math/FuncFilter.h:MovingAverage","CClass:MovingAverage"]]]]);
