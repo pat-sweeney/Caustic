@@ -29,8 +29,12 @@ git clone https://github.com/ocornut/imgui.git
 ```
 
 You will need to install:
+=========================
 Git for Windows: https://gitforwindows.org
-NaturalDocs: https://www.naturaldocs.org/download/  
+    
+NaturalDocs: https://github.com/NaturalDocs/NaturalDocs
+You should clone this repository under $(CausticRoot)\External
+
 Azure Kinect SDK: https://docs.microsoft.com/en-us/azure/kinect-dk/sensor-sdk-download  
 Azure Kinect Body Tracking: https://docs.microsoft.com/en-us/azure/kinect-dk/body-sdk-download  
 .Net SDK 4.7: https://dotnet.microsoft.com/download/dotnet-framework/thank-you/net47-developer-pack-offline-installer
