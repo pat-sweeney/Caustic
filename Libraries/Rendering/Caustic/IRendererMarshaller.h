@@ -27,7 +27,7 @@ namespace Caustic
     // Interface: IRendererMarshaller
     // Creates a renderer that runs on its own thread and method calls
     // are marshalled from the client to render thread.
-    // renderer is on a separate thread where the client is calling from)
+    // The renderer is on a separate thread where the client is calling from.
     //
     // Header:
     // [Link:Rendering/Caustic/IRendererMarshaller.h]

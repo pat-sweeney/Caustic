@@ -1,0 +1,318 @@
+{
+  "version": 3,
+  "targets": {
+    "net5.0-windows7.0": {
+      "Caustic/1.0.0": {
+        "type": "project",
+        "dependencies": {
+          "ParseShader": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Caustic.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Caustic.dll": {}
+        }
+      },
+      "Color/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/Color.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Color.dll": {}
+        }
+      },
+      "Core/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/Core.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Core.dll": {}
+        }
+      },
+      "GeomDS/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/GeomDS.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/GeomDS.dll": {}
+        }
+      },
+      "Image/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/Image.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Image.dll": {}
+        }
+      },
+      "ImGui/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/ImGui.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/ImGui.dll": {}
+        }
+      },
+      "ImPlot/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/ImPlot.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/ImPlot.dll": {}
+        }
+      },
+      "Math/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/Math.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Math.dll": {}
+        }
+      },
+      "Mesh/1.0.0": {
+        "type": "project",
+        "dependencies": {
+          "GeomDS": "1.0.0",
+          "Image": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Mesh.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Mesh.dll": {}
+        }
+      },
+      "ParseShader/1.0.0": {
+        "type": "project",
+        "dependencies": {
+          "Core": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/ParseShader.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/ParseShader.dll": {}
+        }
+      },
+      "Rast/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/Rast.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Rast.dll": {}
+        }
+      },
+      "Renderer/1.0.0": {
+        "type": "project",
+        "dependencies": {
+          "Caustic": "1.0.0",
+          "Color": "1.0.0",
+          "Core": "1.0.0",
+          "GeomDS": "1.0.0",
+          "ImGui": "1.0.0",
+          "ImPlot": "1.0.0",
+          "Image": "1.0.0",
+          "Math": "1.0.0",
+          "Mesh": "1.0.0",
+          "Rast": "1.0.0",
+          "RenderGraph": "1.0.0",
+          "RenderWindow": "1.0.0",
+          "SceneGraph": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Renderer.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Renderer.dll": {}
+        }
+      },
+      "RenderGraph/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/RenderGraph.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/RenderGraph.dll": {}
+        }
+      },
+      "RenderWindow/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/RenderWindow.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/RenderWindow.dll": {}
+        }
+      },
+      "SceneGraph/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/SceneGraph.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/SceneGraph.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Caustic/1.0.0": {
+      "type": "project",
+      "path": "../../Libraries/Rendering/Caustic/Caustic.vcxproj",
+      "msbuildProject": "../../Libraries/Rendering/Caustic/Caustic.vcxproj"
+    },
+    "Color/1.0.0": {
+      "type": "project",
+      "path": "../../Libraries/Imaging/Color/Color.vcxproj",
+      "msbuildProject": "../../Libraries/Imaging/Color/Color.vcxproj"
+    },
+    "Core/1.0.0": {
+      "type": "project",
+      "path": "../../Libraries/Base/Core/Core.vcxproj",
+      "msbuildProject": "../../Libraries/Base/Core/Core.vcxproj"
+    },
+    "GeomDS/1.0.0": {
+      "type": "project",
+      "path": "../../Libraries/Geometry/GeomDS/GeomDS.vcxproj",
+      "msbuildProject": "../../Libraries/Geometry/GeomDS/GeomDS.vcxproj"
+    },
+    "Image/1.0.0": {
+      "type": "project",
+      "path": "../../Libraries/Imaging/Image/Image.vcxproj",
+      "msbuildProject": "../../Libraries/Imaging/Image/Image.vcxproj"
+    },
+    "ImGui/1.0.0": {
+      "type": "project",
+      "path": "../../Libraries/Rendering/ImGui/ImGui.vcxproj",
+      "msbuildProject": "../../Libraries/Rendering/ImGui/ImGui.vcxproj"
+    },
+    "ImPlot/1.0.0": {
+      "type": "project",
+      "path": "../../Libraries/Rendering/ImPlot/ImPlot.vcxproj",
+      "msbuildProject": "../../Libraries/Rendering/ImPlot/ImPlot.vcxproj"
+    },
+    "Math/1.0.0": {
+      "type": "project",
+      "path": "../../Libraries/Base/Math/Math.vcxproj",
+      "msbuildProject": "../../Libraries/Base/Math/Math.vcxproj"
+    },
+    "Mesh/1.0.0": {
+      "type": "project",
+      "path": "../../Libraries/Geometry/Mesh/Mesh.vcxproj",
+      "msbuildProject": "../../Libraries/Geometry/Mesh/Mesh.vcxproj"
+    },
+    "ParseShader/1.0.0": {
+      "type": "project",
+      "path": "../../Tools/ParseShader/ParseShader.vcxproj",
+      "msbuildProject": "../../Tools/ParseShader/ParseShader.vcxproj"
+    },
+    "Rast/1.0.0": {
+      "type": "project",
+      "path": "../../Libraries/Geometry/Rast/Rast.vcxproj",
+      "msbuildProject": "../../Libraries/Geometry/Rast/Rast.vcxproj"
+    },
+    "Renderer/1.0.0": {
+      "type": "project",
+      "path": "../../Libraries/Interop/Renderer/Renderer.vcxproj",
+      "msbuildProject": "../../Libraries/Interop/Renderer/Renderer.vcxproj"
+    },
+    "RenderGraph/1.0.0": {
+      "type": "project",
+      "path": "../../Libraries/Rendering/RenderGraph/RenderGraph.vcxproj",
+      "msbuildProject": "../../Libraries/Rendering/RenderGraph/RenderGraph.vcxproj"
+    },
+    "RenderWindow/1.0.0": {
+      "type": "project",
+      "path": "../../Libraries/Rendering/RenderWindow/RenderWindow.vcxproj",
+      "msbuildProject": "../../Libraries/Rendering/RenderWindow/RenderWindow.vcxproj"
+    },
+    "SceneGraph/1.0.0": {
+      "type": "project",
+      "path": "../../Libraries/Rendering/SceneGraph/SceneGraph.vcxproj",
+      "msbuildProject": "../../Libraries/Rendering/SceneGraph/SceneGraph.vcxproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net5.0-windows7.0": [
+      "Renderer >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\patricsw\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "G:\\GitHub\\Caustic\\Apps\\WorldBuilder\\WorldBuilder.csproj",
+      "projectName": "WorldBuilder",
+      "projectPath": "G:\\GitHub\\Caustic\\Apps\\WorldBuilder\\WorldBuilder.csproj",
+      "packagesPath": "C:\\Users\\patricsw\\.nuget\\packages\\",
+      "outputPath": "G:\\GitHub\\Caustic\\Apps\\WorldBuilder\\obj\\",
+      "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
+      "configFilePaths": [
+        "C:\\Users\\patricsw\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net5.0-windows7.0"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net5.0-windows7.0": {
+          "targetAlias": "net5.0-windows",
+          "projectReferences": {
+            "G:\\GitHub\\Caustic\\Libraries\\Interop\\Renderer\\Renderer.vcxproj": {
+              "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Interop\\Renderer\\Renderer.vcxproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "net5.0-windows7.0": {
+        "targetAlias": "net5.0-windows",
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          },
+          "Microsoft.WindowsDesktop.App.WPF": {
+            "privateAssets": "none"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.400\\RuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

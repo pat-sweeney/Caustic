@@ -50,7 +50,7 @@ void EmitVertex(uint vbAddr, float3 pos, float3 norm, float2 uv)
 [numthreads(8, 8, 8)]
 void CS(uint3 DTid : SV_DispatchThreadID)
 {
-    if (DTid.x >= subdivisions || DTid.y >= subdivisions || DTid.z >= subdivisions)
+    if (DTid.x >= (uint)subdivisions || DTid.y >= (uint)subdivisions || DTid.z >= (uint)subdivisions)
         return;
     uint numCellsXY = uint(numCellsX * numCellsY);
     uint addr = DTid.x + DTid.y * numCellsX + DTid.z * numCellsXY;

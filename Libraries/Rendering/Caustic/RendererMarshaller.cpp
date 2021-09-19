@@ -621,6 +621,26 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Method: GetBackBuffer
+    // See <IRenderer::GetBackBuffer>
+    //**********************************************************************
+    CComPtr<ID3D11Texture2D> CRendererMarshaller::GetBackBuffer()
+    {
+        HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+        CComPtr<ID3D11Texture2D> spTexture;
+        m_renderQueue.AddLambda(
+            [this, evt, &spTexture]()
+            {
+                spTexture = m_spRenderer->GetBackBuffer();
+                SetEvent(evt);
+            }
+        );
+        WaitForSingleObject(evt, INFINITE);
+        CloseHandle(evt);
+        return spTexture;
+    }
+
+    //**********************************************************************
     // Method: CopyFrameBackbuffer
     // See <IRenderer::CopyFrameBackbuffer>
     //**********************************************************************
@@ -646,6 +666,38 @@ namespace Caustic
             {
                 m_spRenderer->SetCamera(pCamera);
                 pCamera->Release();
+            }
+        );
+    }
+
+    //**********************************************************************
+    // Method: SetFinalRenderTarget
+    // See <IRenderer::SetFinalRenderTarget>
+    //**********************************************************************
+    void CRendererMarshaller::SetFinalRenderTarget(ID3D11Texture2D* pTexture)
+    {
+        pTexture->AddRef();
+        m_renderQueue.AddLambda(
+            [this, pTexture]()
+            {
+                m_spRenderer->SetFinalRenderTarget(pTexture);
+                pTexture->Release();
+            }
+        );
+    }
+
+    //**********************************************************************
+    // Method: SetFinalRenderTarget
+    // See <IRenderer::SetFinalRenderTargetUsingSharedTexture>
+    //**********************************************************************
+    void CRendererMarshaller::SetFinalRenderTargetUsingSharedTexture(IUnknown* pTexture)
+    {
+        pTexture->AddRef();
+        m_renderQueue.AddLambda(
+            [this, pTexture]()
+            {
+                m_spRenderer->SetFinalRenderTargetUsingSharedTexture(pTexture);
+                pTexture->Release();
             }
         );
     }

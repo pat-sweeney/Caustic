@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "WorldBuilder": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

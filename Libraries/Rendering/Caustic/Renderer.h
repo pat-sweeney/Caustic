@@ -146,6 +146,7 @@ namespace Caustic
         CRefObj<ICamera> m_spCamera;                        // Camera to use for rendering
         CRefObj<IRenderCtx> m_spRenderCtx;                  // D3D Render context
         CComPtr<ID3D11RenderTargetView> m_spRTView;         // Render target view
+        CComPtr<ID3D11RenderTargetView> m_spFinalRTView;    // Render target view if final RT override is set
         CComPtr<ID3D11DepthStencilView> m_spStencilView;    // Stencil view
         CComPtr<ID3D11Texture2D> m_spDepthStencilBuffer;    // Our depth map
         D3D11_TEXTURE2D_DESC m_BBDesc;                      // Description of our back buffer
@@ -155,6 +156,7 @@ namespace Caustic
         CComPtr<ID3D11DepthStencilView> m_spShadowMapStencilView[c_MaxShadowMaps];
         int m_shadowMapWidth[c_MaxShadowMaps];
         int m_shadowMapHeight[c_MaxShadowMaps];
+        RECT m_viewRect;
         D3D11_VIEWPORT m_viewport;
 
         friend CAUSTICAPI CRefObj<IRenderer> CreateGraphics(HWND hwnd);
@@ -285,6 +287,7 @@ namespace Caustic
         ) override;
         virtual uint32 GetBackBufferWidth() override { return m_BBDesc.Width; }
         virtual uint32 GetBackBufferHeight() override { return m_BBDesc.Height; }
+        virtual CComPtr<ID3D11Texture2D> GetBackBuffer() { return m_spBackBuffer; }
         virtual void CopyFrameBackBuffer(IImage* pImage) override;
         virtual void DrawScreenQuad(float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler *pSampler, bool disableDepth = false) override;
         virtual void DrawScreenQuadWithCustomShader(IShader *pShader, float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler* pSampler, bool disableDepth = false) override;
@@ -304,5 +307,7 @@ namespace Caustic
         virtual void PopShadowmapRT() override;
         virtual void SelectShadowmap(int whichShadowMap, int lightMapIndex, std::vector<CRefObj<ILight>>& lights, IShader* pShader) override;
         virtual CRefObj<ITexture> GetShadowmapTexture(int whichShadowMap) override;
+        virtual void SetFinalRenderTarget(ID3D11Texture2D* pTexture) override;
+        virtual void SetFinalRenderTargetUsingSharedTexture(IUnknown* pTexture) override;
     };
 }

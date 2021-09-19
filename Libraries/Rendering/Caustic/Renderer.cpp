@@ -738,7 +738,7 @@ namespace Caustic
         if (m_freeze > 0)
             WaitForSingleObject(m_freezeEvent, INFINITE);
 
-        ID3D11RenderTargetView *pView = m_spRTView;
+        ID3D11RenderTargetView *pView = (m_spFinalRTView) ? m_spFinalRTView : m_spRTView;
         m_spContext->OMSetRenderTargets(1, &pView, nullptr);
 
         FLOAT bgClr[4] = { 0.4f, 0.4f, 0.4f, 1.0f };
@@ -780,11 +780,62 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Method: SetFinalRenderTarget
+    // See <IRenderer>
+    //**********************************************************************
+    void CRenderer::SetFinalRenderTarget(ID3D11Texture2D* pTexture)
+    {
+        Freeze();
+        if (m_spFinalRTView)
+        {
+            m_spContext->OMSetRenderTargets(0, nullptr, nullptr);
+            m_spFinalRTView = nullptr;
+        }
+        CT(m_spDevice->CreateRenderTargetView(pTexture, nullptr, &m_spFinalRTView));
+        
+        D3D11_TEXTURE2D_DESC desc;
+        pTexture->GetDesc(&desc);
+        uint32 width = m_viewRect.right - m_viewRect.left + 1;
+        uint32 height = m_viewRect.bottom - m_viewRect.top + 1;
+        if (desc.Width != width || desc.Height != height)
+        {
+            ZeroMemory(&m_viewport, sizeof(m_viewport));
+            m_viewport.TopLeftX = 0;
+            m_viewport.TopLeftY = 0;
+            m_viewport.Width = (float)(desc.Width);
+            m_viewport.Height = (float)(desc.Height);
+            m_viewport.MinDepth = 0.0f;
+            m_viewport.MaxDepth = 1.0f;
+            m_spContext->RSSetViewports(1, &m_viewport);
+        }
+        Unfreeze();
+    }
+
+
+    //**********************************************************************
+    // Method: SetFinalRenderTargetUsingSharedTexture
+    // See <IRenderer>
+    //**********************************************************************
+    void CRenderer::SetFinalRenderTargetUsingSharedTexture(IUnknown* pTexture)
+    {
+        IDXGIResource* pDXGIResource;
+        CT(pTexture->QueryInterface(__uuidof(IDXGIResource), (void**)&pDXGIResource));
+        HANDLE sharedHandle;
+        CT(pDXGIResource->GetSharedHandle(&sharedHandle));
+        pDXGIResource->Release();
+
+        CComPtr<ID3D11Device> spDevice = GetDevice();
+        CComPtr<IUnknown> tempResource11;
+        CT(spDevice->OpenSharedResource(sharedHandle, __uuidof(ID3D11Resource), (void**)(&tempResource11)));
+
+        CComPtr<ID3D11Texture2D> spOutputResource;
+        CT(tempResource11->QueryInterface(__uuidof(ID3D11Texture2D), (void**)(&spOutputResource)));
+        SetFinalRenderTarget(spOutputResource);
+    }
+
+    //**********************************************************************
     // Method: CopyFrameBackbuffer
-    // Copies the back buffer into an IImage (CPU based image)
-    //
-    // Parameters:
-    // pImage - Image to copy to
+    // See <IRenderer>
     //**********************************************************************
     void CRenderer::CopyFrameBackBuffer(IImage* pImage)
     {
@@ -933,16 +984,20 @@ namespace Caustic
         CD3D11_DEPTH_STENCIL_VIEW_DESC stencilDesc(D3D11_DSV_DIMENSION_TEXTURE2D, DXGI_FORMAT_D24_UNORM_S8_UINT);
         CT(m_spDevice->CreateDepthStencilView(m_spDepthStencilBuffer, &stencilDesc, &m_spStencilView));
 
-        RECT rect;
-        ::GetClientRect(hwnd, &rect);
+        ::GetClientRect(hwnd, &m_viewRect);
         ZeroMemory(&m_viewport, sizeof(m_viewport));
         m_viewport.TopLeftX = 0;
         m_viewport.TopLeftY = 0;
-        m_viewport.Width = (float)(rect.right - rect.left);
-        m_viewport.Height = (float)(rect.bottom - rect.top);
+        m_viewport.Width = (float)(m_viewRect.right - m_viewRect.left);
+        m_viewport.Height = (float)(m_viewRect.bottom - m_viewRect.top);
         m_viewport.MinDepth = 0.0f;
         m_viewport.MaxDepth = 1.0f;
         m_spContext->RSSetViewports(1, &m_viewport);
+    }
+
+    /*static*/ LRESULT CALLBACK OffscreenWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+    {
+        return DefWindowProc(hwnd, uMsg, wParam, lParam);
     }
 
     //**********************************************************************
@@ -951,6 +1006,19 @@ namespace Caustic
     //**********************************************************************
     void CGraphicsBase::Setup(HWND hwnd, bool createDebugDevice, int desktopIndex)
     {
+        if (hwnd == nullptr)
+        {
+            WNDCLASS wc = {};
+            wc.lpfnWndProc = OffscreenWndProc;
+            wc.cbWndExtra = 0;
+            wc.hInstance = nullptr;
+            wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+            wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+            wc.style = CS_SAVEBITS | CS_DROPSHADOW;
+            wc.lpszClassName = L"OffscreenWindowClass";
+            RegisterClass(&wc);
+            hwnd = CreateWindow(L"OffscreenWindowClass", L"OffscreenWindow", 0, 0, 0, 100, 100, nullptr, nullptr, nullptr, nullptr);
+        }
         DXGI_SWAP_CHAIN_DESC desc = { 0 };
         desc.BufferDesc.Width = 0;
         desc.BufferDesc.Height = 0;

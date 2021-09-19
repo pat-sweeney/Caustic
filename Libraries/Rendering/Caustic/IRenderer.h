@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2020
+// Copyright Patrick Sweeney 2015-2021
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -325,6 +325,12 @@ namespace Caustic
         virtual uint32 GetBackBufferHeight() = 0;
 
         //**********************************************************************
+        // Method: GetBackBuffer
+        // Returns the texture that contains the back buffer
+        //**********************************************************************
+        virtual CComPtr<ID3D11Texture2D> GetBackBuffer() = 0;
+
+        //**********************************************************************
         // Method: CopyFrameBackBuffer
         // Copies the back buffer into an IImage (CPU based image)
         //
@@ -401,6 +407,28 @@ namespace Caustic
         // whichShadowmap - constant indicating which shadow map to use (c_HiResShadow, ...)
         //**********************************************************************
         virtual CRefObj<ITexture> GetShadowmapTexture(int whichShadowMap) = 0;
+
+        //**********************************************************************
+        // Method: SetFinalRenderTarget
+        // Sets the final render target. This allows for the final output to
+        // be something other than the default window.
+        //
+        // Parameters:
+        // pTexture - Texture to use as final render target
+        //**********************************************************************
+        virtual void SetFinalRenderTarget(ID3D11Texture2D* pTexture) = 0;
+
+        //**********************************************************************
+        // Method: SetFinalRenderTargetUsingSharedTexture
+        // Sets the final render target. This method is only intended to be used
+        // by the WPF interop layer. It will assign the final render target using
+        // the shared textured that D3D11Image returns.
+        //
+        // Parameters:
+        // pTexture - Shared texture from D3D11Image (WPF Interop layer) to use
+        // as final render target
+        //**********************************************************************
+        virtual void SetFinalRenderTargetUsingSharedTexture(IUnknown* pTexture) = 0;
     };
 
     //**********************************************************************

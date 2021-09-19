@@ -94,7 +94,7 @@ namespace Caustic
         virtual void SaveScene(const wchar_t *pFilename, ISceneGraph *pSceneGraph) override;
         virtual void LoadScene(const wchar_t *pFilename, ISceneGraph *pSceneGraph) override;
         virtual void RunOnRenderer(std::function<void(IRenderer*, void* clientData)> callback, void* clientData) override;
-        virtual CRefObj<IRenderer> GetRenderer() { return m_spRenderer; }
+        virtual CRefObj<IRenderer> GetRenderer() { return this; }
 
         //**********************************************************************
         // IRenderer methods
@@ -128,6 +128,7 @@ namespace Caustic
         ) override; // Have renderer draw and present next frame
         virtual uint32 GetBackBufferWidth() override;
         virtual uint32 GetBackBufferHeight() override;
+        virtual CComPtr<ID3D11Texture2D> GetBackBuffer() override;
         virtual void CopyFrameBackBuffer(IImage* pImage) override;
         virtual void SetCamera(ICamera *pCamera) override; // Sets camera
         virtual void AddPointLight(IPointLight *pLight) override;
@@ -137,5 +138,7 @@ namespace Caustic
         virtual void PopShadowmapRT() override;
         virtual void SelectShadowmap(int whichShadowmap, int lightMapIndex, std::vector<CRefObj<ILight>>& lights, IShader* pShader) override;
         virtual CRefObj<ITexture> GetShadowmapTexture(int whichShadowmap) override;
+        virtual void SetFinalRenderTarget(ID3D11Texture2D* pTexture) override;
+        virtual void SetFinalRenderTargetUsingSharedTexture(IUnknown* pTexture) override;
     };
 }
