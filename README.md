@@ -22,14 +22,20 @@ You will need to set \<AzureKinectSDKDir> to point to your Azure Kinect SDK fold
 setx AzureKinectSDKDir "C:\Program Files\Azure Kinect SDK v1.4.0" /M
 ```
 
-Clone ImGui into $(CausticRoot)\External:
+You will need to install:
+=========================
+ImGui into $(CausticRoot)\External:
 ```
 cd %CausticRoot%\External
 git clone https://github.com/ocornut/imgui.git
 ```
 
-You will need to install:
-=========================
+WPFDXInterop into $(CausticRoot)\External. This library is used for integrating WPF and Caustic:
+```
+cd %CausticRoot%\External
+git clone https://github.com/microsoft/WPFDXInterop.git
+```
+
 Git for Windows: https://gitforwindows.org
     
 NaturalDocs: https://github.com/NaturalDocs/NaturalDocs

@@ -7,10 +7,6 @@ These were created by running the command line (from our $CausticRoot folder)
     "$(CausticRoot)\External\NaturalDocs\CLI\bin\Release\NaturalDocs.exe" docs
 We then hand edited the generated Project.txt file.
 
-In order to build Interop\Renderer you must have WPFDXInterop installed:
-https://github.com/Microsoft/WPFDXInterop
-This should be cloned under $(CausticRoot)\External
-
 To install NaturalDocs you need to enlist in the git repository:
     https://github.com/NaturalDocs/NaturalDocs
 This should be cloned under $(CausticRoot)\External
