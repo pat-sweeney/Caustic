@@ -264,9 +264,13 @@ namespace Caustic
             CComPtr<IWICBitmapSource> spNewFrame;
             WICConvertBitmapSource(GUID_WICPixelFormat32bppBGRA, spFrame, &spNewFrame);
             CT(spNewFrame->CopyPixels(nullptr, stride, numbytes, spImage->GetData()));
+            spImage->SetRGBOrder(false);
         }
         else
+        {
             spFrame->CopyPixels(nullptr, stride, numbytes, spImage->GetData());
+            spImage->SetRGBOrder(true);
+        }
         return spImage;
     }
 
