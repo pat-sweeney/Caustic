@@ -173,7 +173,7 @@ namespace Caustic
             m_beta(beta),
             m_dcutoff(dcutoff)
         {
-            float tau = 1.0f / (2.0f * M_PI * m_dcutoff);
+            float tau = 1.0f / (2.0f * float(M_PI) * m_dcutoff);
             m_dxAlpha = 1.0f / (1.0f + tau * m_rate);
         }
         
@@ -201,8 +201,8 @@ namespace Caustic
             }
             m_lastDX = m_dxAlpha * dx + (1.0f - m_dxAlpha) * m_lastDX;
 
-            float cutoff = m_mincutoff + m_beta * fabs(m_lastDX);
-            float tau = 1.0f / (2.0f * M_PI * cutoff);
+            float cutoff = float(m_mincutoff + m_beta * fabs(m_lastDX));
+            float tau = 1.0f / (2.0f * float(M_PI) * cutoff);
             float te = 1.0f / m_rate;
             float alpha = 1.0f / (1.0f + tau / te);
             m_lastV = alpha * v + (1.0f - alpha) * m_lastV;

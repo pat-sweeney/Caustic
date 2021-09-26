@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("~ct",["Function"],[["~CTimer",,[["CTimer",,,,0,"File:Base/Core/Timer.h:CTimer.~CTimer","CClass:CTimer:~CTimer"]]]]);

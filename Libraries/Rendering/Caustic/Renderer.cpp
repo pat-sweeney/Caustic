@@ -204,6 +204,15 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Method: RunOnRenderer
+    // See <IRenderer>
+    //**********************************************************************
+    void CRenderer::RunOnRenderer(std::function<void(IRenderer*)> callback, bool wait /* = false */)
+    {
+        callback(this);
+    }
+
+    //**********************************************************************
     // Method: LoadShaderBlob
     // Loads the shader into a blob from the specified file.
     //

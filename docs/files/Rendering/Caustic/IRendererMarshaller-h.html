@@ -13,9 +13,9 @@
  <div class="CBody"><p>This file defines the published interface for talking to marshalled version of the renderer. The marshalled version allows for IRenderer methods to be called from threads other than the render thread.</p></div>
 </div>
 
-<a name="IRendererMarshaller"></a><a name="Topic986"></a><div class="CTopic TInterface LC">
+<a name="IRendererMarshaller"></a><a name="Topic314"></a><div class="CTopic TInterface LC">
  <div class="CTitle">IRendererMarshaller</div>
- <div class="CBody"><p>Creates a renderer that runs on its own thread and method calls are marshalled from the client to render thread.&nbsp; renderer is on a separate thread where the client is calling from)</p><div class="CHeading">Header</div><p><a href='../../../index.html#File:Rendering/Caustic/IRendererMarshaller.h' target='_top'>Rendering/Caustic/IRendererMarshaller.h</a></p></div>
+ <div class="CBody"><p>Creates a renderer that runs on its own thread and method calls are marshalled from the client to render thread.&nbsp; The renderer is on a separate thread where the client is calling from.</p><div class="CHeading">Header</div><p><a href='../../../index.html#File:Rendering/Caustic/IRendererMarshaller.h' target='_top'>Rendering/Caustic/IRendererMarshaller.h</a></p></div>
 </div>
 
 <a name="IRendererMarshaller.Functions"></a><a name="Topic987"></a><div class="CTopic TGroup LC">
@@ -71,7 +71,7 @@
 
 <a name="IRendererMarshaller.CreateRendererMarshaller"></a><a name="Topic996"></a><div class="CTopic TFunction LC last">
  <div class="CTitle">CreateRendererMarshaller</div>
- <div id="NDPrototype996" class="NDPrototype"><div class="PSection PPlainSection">CAUSTICAPI <a href="../../../index.html#File:Base/Core/IRefCount.h:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,24);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Rendering/Caustic/IRendererMarshaller.h:IRendererMarshaller" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,986);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRendererMarshaller</a>&gt; CreateRendererMarshaller()</div></div>
+ <div id="NDPrototype996" class="NDPrototype"><div class="PSection PPlainSection">CAUSTICAPI <a href="../../../index.html#File:Base/Core/IRefCount.h:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,24);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Rendering/Caustic/IRendererMarshaller.h:IRendererMarshaller" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,314);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRendererMarshaller</a>&gt; CreateRendererMarshaller()</div></div>
  <div class="CBody"><p>Global function for creating the RendererMarshaller. This method should generally not be called. Use the ICausticFactory to create new Caustic objects.</p><div class="CHeading">Returns</div><p>Returns the newly created RendererMarshaller.</p><div class="CHeading">Header</div><p><a href='../../../index.html#File:Rendering/Caustic/IRendererMarshaller.h' target='_top'>Rendering/Caustic/IRendererMarshaller.h</a></p></div>
 </div>
 

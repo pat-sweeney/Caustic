@@ -19,14 +19,14 @@
 
 <a name="CreateRendererMarshaller"></a><a name="Topic813"></a><div class="CTopic TFunction LC">
  <div class="CTitle">CreateRendererMarshaller</div>
- <div id="NDPrototype813" class="NDPrototype"><div class="PSection PPlainSection">CAUSTICAPI <a href="../../../index.html#File:Base/Core/IRefCount.h:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,24);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Rendering/Caustic/IRendererMarshaller.h:IRendererMarshaller" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,986);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRendererMarshaller</a>&gt; CreateRendererMarshaller()</div></div>
+ <div id="NDPrototype813" class="NDPrototype"><div class="PSection PPlainSection">CAUSTICAPI <a href="../../../index.html#File:Base/Core/IRefCount.h:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,24);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Rendering/Caustic/IRendererMarshaller.h:IRendererMarshaller" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,314);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRendererMarshaller</a>&gt; CreateRendererMarshaller()</div></div>
  <div class="CBody"><p>Global function for creating the RendererMarshaller. This method should generally not be called. Use the ICausticFactory to create new Caustic objects.</p><div class="CHeading">Returns</div><p>Returns the newly created RendererMarshaller.</p></div>
 </div>
 
 <a name="CRendererMarshaller"></a><a name="Topic814"></a><div class="CTopic TFunction LC">
  <div class="CTitle">CRendererMarshaller</div>
  <div id="NDPrototype814" class="NDPrototype"><div class="PSection PPlainSection">CRendererMarshaller::CRendererMarshaller() : m_exit(<span class="SHKeyword">false</span>), m_thread(nullptr)</div></div>
- <div class="CBody"><p>Defines the implementation of <a href="../../../index.html#File:Rendering/Caustic/IRendererMarshaller.h:IRendererMarshaller" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,986);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRendererMarshaller</a></p></div>
+ <div class="CBody"><p>Defines the implementation of <a href="../../../index.html#File:Rendering/Caustic/IRendererMarshaller.h:IRendererMarshaller" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,314);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRendererMarshaller</a></p></div>
 </div>
 
 <a name="EnableDepthTest"></a><a name="Topic815"></a><div class="CTopic TFunction LC">
@@ -239,6 +239,12 @@
  <div class="CBody"><p>See <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer.GetBackBufferHeight" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1038);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer::GetBackBufferHeight</a></p></div>
 </div>
 
+<a name="GetBackBuffer"></a><a name="Topic1600"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetBackBuffer</div>
+ <div id="NDPrototype1600" class="NDPrototype"><div class="PSection PPlainSection">CComPtr&lt;ID3D11Texture2D&gt; CRendererMarshaller::GetBackBuffer()</div></div>
+ <div class="CBody"><p>See <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer.GetBackBuffer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1039);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer::GetBackBuffer</a></p></div>
+</div>
+
 <a name="CopyFrameBackbuffer"></a><a name="Topic850"></a><div class="CTopic TFunction LC">
  <div class="CTitle">CopyFrameBackbuffer</div>
  <div id="NDPrototype850" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CRendererMarshaller::CopyFrameBackBuffer(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Imaging/Image/Image.h:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,564);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pImage</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
@@ -251,10 +257,22 @@
  <div class="CBody"><p>See <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer.SetCamera" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1031);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer::SetCamera</a></p></div>
 </div>
 
-<a name="SetFinalRenderTarget"></a><a name="Topic316"></a><div class="CTopic TFunction LC last">
+<a name="SetFinalRenderTarget"></a><a name="Topic316"></a><div class="CTopic TFunction LC">
  <div class="CTitle">SetFinalRenderTarget</div>
  <div id="NDPrototype316" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CRendererMarshaller::SetFinalRenderTarget(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first">ID3D11Texture2D*&nbsp;</td><td class="PName last">pTexture</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
- <div class="CBody"><p>See <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer.SetFinalRenderTarget" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,314);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer::SetFinalRenderTarget</a></p></div>
+ <div class="CBody"><p>See <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer.SetFinalRenderTarget" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1602);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer::SetFinalRenderTarget</a></p></div>
+</div>
+
+<a name="SetFinalRenderTarget(2)"></a><a name="Topic1601"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">SetFinalRenderTarget</div>
+ <div id="NDPrototype1601" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CRendererMarshaller::SetFinalRenderTargetUsingSharedTexture(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first">IUnknown*&nbsp;</td><td class="PName last">pTexture</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
+ <div class="CBody"><p>See <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer.SetFinalRenderTargetUsingSharedTexture" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1603);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer::SetFinalRenderTargetUsingSharedTexture</a></p></div>
+</div>
+
+<a name="AllocateTexture"></a><a name="Topic1604"></a><div class="CTopic TFunction LC last">
+ <div class="CTitle">AllocateTexture</div>
+ <div id="NDPrototype1604" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><a href="../../../index.html#File:Base/Core/IRefCount.h:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,24);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Rendering/Caustic/ITexture.h:ITexture" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,872);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ITexture</a>&gt; CRendererMarshaller::AllocateTexture(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">width,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">height,</td></tr><tr><td class="PType first">DXGI_FORMAT&nbsp;</td><td class="PName last">format,</td></tr><tr><td class="PType first">D3D11_CPU_ACCESS_FLAG&nbsp;</td><td class="PName last">cpuFlags,</td></tr><tr><td class="PType first">D3D11_BIND_FLAG&nbsp;</td><td class="PName last">bindFlags</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
+ <div class="CBody"><p>See <a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer.AllocateTexture" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1345);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer::AllocateTexture</a></p></div>
 </div>
 
 </body></html>

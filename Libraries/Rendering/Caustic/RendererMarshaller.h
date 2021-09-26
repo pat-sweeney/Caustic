@@ -93,12 +93,13 @@ namespace Caustic
         virtual CRefObj<ITexture> LoadVideoTexture(const wchar_t *pPath) override;
         virtual void SaveScene(const wchar_t *pFilename, ISceneGraph *pSceneGraph) override;
         virtual void LoadScene(const wchar_t *pFilename, ISceneGraph *pSceneGraph) override;
-        virtual void RunOnRenderer(std::function<void(IRenderer*, void* clientData)> callback, void* clientData) override;
         virtual CRefObj<IRenderer> GetRenderer() { return this; }
 
         //**********************************************************************
         // IRenderer methods
         //**********************************************************************
+        virtual bool IsRenderThread() override { return false; }
+        virtual void RunOnRenderer(std::function<void(IRenderer*)> callback, bool wait /* = false */) override;
         virtual bool EnableDepthTest(bool enable) override;
         virtual void Freeze() override;
         virtual void Unfreeze() override;

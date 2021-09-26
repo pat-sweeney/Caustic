@@ -44,7 +44,7 @@ namespace Caustic
 
 		//**********************************************************************
 		// Method: GetRenderer
-		// Returns the underlying renderer
+		// Returns the renderer. This is the marshaling version of the renderer.
 		//**********************************************************************
 		virtual CRefObj<IRenderer> GetRenderer() = 0;
 

@@ -106,6 +106,22 @@ namespace Caustic
     //**********************************************************************
     struct IRenderer : public IRefCount
     {
+        //**********************************************************************
+        // Method: RunOnRenderer
+        // Runs the specified function on the render thread.
+        //**********************************************************************
+        virtual bool IsRenderThread() = 0;
+
+        //**********************************************************************
+        // Method: RunOnRenderer
+        // Runs the specified function on the render thread.
+        // 
+        // Parameters:
+        // callback - function to call
+        // wait - should we wait for completion before returning?
+        //**********************************************************************
+        virtual void RunOnRenderer(std::function<void(IRenderer*)> callback, bool wait = false) = 0;
+
 #ifdef _DEBUG
         //**********************************************************************
         // Method: BeginMarker

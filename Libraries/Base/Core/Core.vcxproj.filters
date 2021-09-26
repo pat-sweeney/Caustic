@@ -40,6 +40,9 @@
     <ClInclude Include="Property.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="convertStr.cpp">

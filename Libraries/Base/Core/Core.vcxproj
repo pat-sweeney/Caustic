@@ -21,6 +21,7 @@
     <ClInclude Include="ISerialize.h" />
     <ClInclude Include="Property.h" />
     <ClInclude Include="RefCount.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="UnitTests.h" />
   </ItemGroup>
   <ItemGroup>

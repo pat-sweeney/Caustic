@@ -64,7 +64,7 @@ namespace Caustic
         // Parameters:
         // callback - function to run
         //**********************************************************************
-        virtual void RunOnRenderer(std::function<void(IRenderer*,void*clientData)> callback, void* clientData) = 0;
+        virtual void RunOnRenderer(std::function<void(IRenderer*)> callback, bool wait = false) = 0;
 
         //**********************************************************************
         // Method: LoadTexture

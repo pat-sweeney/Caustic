@@ -196,14 +196,23 @@ namespace Caustic
         return spTexture;
     }
 
-    void CRendererMarshaller::RunOnRenderer(std::function<void(IRenderer*, void* clientData)> callback, void* clientData)
+    void CRendererMarshaller::RunOnRenderer(std::function<void(IRenderer*)> callback, bool wait /* = false */)
     {
+        HANDLE evt;
+        if (wait)
+            evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
         m_renderQueue.AddLambda(
-            [this, callback, clientData]()
+            [this, evt, callback]()
             {
-                callback(m_spRenderer, clientData);
+                callback(m_spRenderer);
+                SetEvent(evt);
             }
         );
+        if (wait)
+        {
+            WaitForSingleObject(evt, INFINITE);
+            CloseHandle(evt);
+        }
     }
 
     //**********************************************************************

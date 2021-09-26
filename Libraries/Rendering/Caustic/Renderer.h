@@ -258,6 +258,8 @@ namespace Caustic
         //**********************************************************************
         // IRenderer
         //**********************************************************************
+        virtual bool IsRenderThread() override { return true; }
+        virtual void RunOnRenderer(std::function<void(IRenderer*)> callback, bool wait /* = false */) override;
 #ifdef _DEBUG
         virtual void BeginMarker(const wchar_t* pLabel) override
         {

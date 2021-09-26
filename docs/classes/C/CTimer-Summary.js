@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("CClass:CTimer","CTimer");NDSummary.OnSummaryLoaded("CClass:CTimer",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[319,0,0,"CTimer"],[320,0,2,"Functions","Functions"],[757,0,1,"CTimer","CTimer"],[1597,0,1,"~CTimer","~CTimer"],[1598,0,1,"Start","Start"],[1599,0,1,"Stop","Stop"]]);
