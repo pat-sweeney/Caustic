@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2020
+// Copyright Patrick Sweeney 2015-2021
 // Ported from Nestegg Software (Copyright 1995-1997)
 // Licensed under the MIT license.
 // See file LICENSE for details.

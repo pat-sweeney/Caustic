@@ -11,7 +11,7 @@
 Title: Caustic
 Subtitle: A Modern Renderer
 
-Copyright: Copyright © Patrick Sweeney 2015-2020
+Copyright: Copyright © Patrick Sweeney 2015-2021
 
 
 # This is where you specify general information about your project.

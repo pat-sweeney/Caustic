@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 1996-2020
+// Copyright Patrick Sweeney 1996-2021
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************

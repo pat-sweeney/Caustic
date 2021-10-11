@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2020
+// Copyright Patrick Sweeney 2021
 // All Rights Reserved
 // File: AzureLine.vs
 //**********************************************************************
