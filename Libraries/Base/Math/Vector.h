@@ -50,7 +50,7 @@ namespace Caustic
 	    // Returns:
 	    // True if points are equivalent. False otherwise.
 	    //**********************************************************************
-	    bool IsEq(const Vector2 &p)
+	    bool IsEq(const Vector2 &p) const
 	    {
 	        if (IsZero(p.x - x) && IsZero(p.y - y))
 		        return true;
@@ -64,7 +64,7 @@ namespace Caustic
 	    // Returns:
 	    // Length of vector
 	    //**********************************************************************
-	    float Length() { return (float)sqrtf(x * x + y * y); }
+	    float Length() const { return (float)sqrtf(x * x + y * y); }
 
 	    //**********************************************************************
 	    // Method: Normalize
@@ -91,7 +91,7 @@ namespace Caustic
 	    // Returns:
 	    // Cross product vector
 	    //**********************************************************************
-	    float Cross(const Vector2 &v)
+	    float Cross(const Vector2 &v) const
 	    {
 	        return x * v.y - y * v.x;
 	    }
@@ -103,17 +103,17 @@ namespace Caustic
 	    // Returns:
 	    // Dot product
 	    //**********************************************************************
-	    float Dot(const Vector2 &v)
+	    float Dot(const Vector2 &v) const
 	    {
 	        return x * v.x + y * v.y;
 	    }
 
-	    Vector2 operator-() { return Vector2(-x, -y); }
-	    Vector2 operator-(Vector2 &rhs) { return Vector2(x - rhs.x, y - rhs.y); }
-	    Vector2 operator+(Vector2 &rhs) { return Vector2(x + rhs.x, y + rhs.y); }
-	    Vector2 operator*(float f) { return Vector2(x * f, y * f); }
-	    bool operator==(Vector2 &rhs) { return this->IsEq(rhs); }
-	    bool operator!=(Vector2 &rhs) { return !this->IsEq(rhs); }
+	    Vector2 operator-() const { return Vector2(-x, -y); }
+	    Vector2 operator-(const Vector2 &rhs) const { return Vector2(x - rhs.x, y - rhs.y); }
+	    Vector2 operator+(const Vector2 &rhs) const { return Vector2(x + rhs.x, y + rhs.y); }
+	    Vector2 operator*(float f) const { return Vector2(x * f, y * f); }
+	    bool operator==(const Vector2 &rhs) const { return this->IsEq(rhs); }
+	    bool operator!=(const Vector2 &rhs) const { return !this->IsEq(rhs); }
     };
 
     //**********************************************************************
@@ -153,7 +153,7 @@ namespace Caustic
 		// Method: Sign
 		// Returns -1 or +1 depending on direction vector is pointing
 		//**********************************************************************
-        int Sign()
+        int Sign() const
         {
             int s0 = (x < 0) ? -1 : +1;
             int s1 = (y < 0) ? -1 : +1;
@@ -171,7 +171,7 @@ namespace Caustic
 		// Returns:
 		// True if points are considered equivalent. False otherwise.
 		//**********************************************************************
-        bool IsEq(const Vector3 &p)
+        bool IsEq(const Vector3 &p) const
         {
             if (IsZero(p.x - x) &&
                 IsZero(p.y - y) &&
@@ -190,7 +190,7 @@ namespace Caustic
 		// Returns:
 		// The cross product
 		//**********************************************************************
-        Vector3 Cross(Vector3 &v)
+        Vector3 Cross(const Vector3 &v) const
         {
             Vector3 nv;
             
@@ -210,14 +210,14 @@ namespace Caustic
 		// Returns:
 		// The scalar product
 		//**********************************************************************
-        float Dot(const Vector3 &v)
+        float Dot(const Vector3 &v) const
         {
             return x * v.x + y * v.y + z * v.z;
         }
       
-        bool operator==(const Vector3 &rhs) { return this->IsEq(rhs); }
-        bool operator!=(const Vector3 &rhs) { return !this->IsEq(rhs); }
-        Vector3 operator-(const Vector3 &rhs) { return Vector3(x - rhs.x, y - rhs.y, z - rhs.z); }
+        bool operator==(const Vector3 &rhs) const { return this->IsEq(rhs); }
+        bool operator!=(const Vector3 &rhs) const { return !this->IsEq(rhs); }
+        Vector3 operator-(const Vector3 &rhs) const { return Vector3(x - rhs.x, y - rhs.y, z - rhs.z); }
         Vector3 operator-=(const Vector3 &rhs)
         {
             x -= rhs.x;
@@ -225,7 +225,7 @@ namespace Caustic
             z -= rhs.z;
             return *this;
         }
-        Vector3 operator+(const Vector3 &rhs) { return Vector3(x + rhs.x, y + rhs.y, z + rhs.z); }
+        Vector3 operator+(const Vector3 &rhs) const { return Vector3(x + rhs.x, y + rhs.y, z + rhs.z); }
         Vector3 operator+=(const Vector3 &rhs)
         {
             x += rhs.x;
@@ -233,9 +233,9 @@ namespace Caustic
             z += rhs.z;
             return *this;
         }
-        Vector3 operator*(const float s) { return Vector3(x * s, y * s, z * s); }
-        Vector3 operator/(const float s) { return Vector3(x / s, y / s, z / s); }
-        float Length()
+        Vector3 operator*(const float s) const { return Vector3(x * s, y * s, z * s); }
+        Vector3 operator/(const float s) const { return Vector3(x / s, y / s, z / s); }
+        float Length() const
         {
             return (float)sqrtf(x * x + y * y + z * z);
         }

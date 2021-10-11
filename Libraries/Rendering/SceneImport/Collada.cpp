@@ -46,10 +46,11 @@ namespace Caustic
     {
     }
 
-    void CColladaImporter::ParseAttribute(IXMLDOMNamedNodeMap *pAttributes, wchar_t *id, std::wstring &value)
+    void CColladaImporter::ParseAttribute(IXMLDOMNamedNodeMap *pAttributes, const wchar_t *id, std::wstring &value)
     {
         CComPtr<IXMLDOMNode> spNode;
-        CT(pAttributes->getNamedItem(id, &spNode));
+        CComBSTR idBSTR(id);
+        CT(pAttributes->getNamedItem(idBSTR, &spNode));
         if (spNode != nullptr)
         {
             CComVariant val;
@@ -60,10 +61,11 @@ namespace Caustic
             value = std::wstring(L"");
     }
 
-    void CColladaImporter::ParseAttribute(IXMLDOMNamedNodeMap *pAttributes, wchar_t *id, float &value)
+    void CColladaImporter::ParseAttribute(IXMLDOMNamedNodeMap *pAttributes, const wchar_t *id, float &value)
     {
         CComPtr<IXMLDOMNode> spNode;
-        CT(pAttributes->getNamedItem(id, &spNode));
+        CComBSTR idBSTR(id);
+        CT(pAttributes->getNamedItem(idBSTR, &spNode));
         if (spNode != nullptr)
         {
             CComVariant val;
@@ -74,10 +76,11 @@ namespace Caustic
             value = 0.0f;
     }
 
-    void CColladaImporter::ParseAttribute(IXMLDOMNamedNodeMap *pAttributes, wchar_t *id, int &value)
+    void CColladaImporter::ParseAttribute(IXMLDOMNamedNodeMap *pAttributes, const wchar_t *id, int &value)
     {
         CComPtr<IXMLDOMNode> spNode;
-        CT(pAttributes->getNamedItem(id, &spNode));
+        CComBSTR idBSTR(id);
+        CT(pAttributes->getNamedItem(idBSTR, &spNode));
         CComVariant val;
         if (spNode)
         {
@@ -210,7 +213,8 @@ namespace Caustic
                         }
                     }
                 }
-                pMeshConstructor->VertexAdd(vert.pos, vert.norm, Vector2(0.0f, 0.0f));
+                Vector2 v(0.0f, 0.0f);
+                pMeshConstructor->VertexAdd(vert.pos, vert.norm, v);
             }
             pMeshConstructor->FaceClose();
 #ifdef RESPECT_WINDING_ORDER

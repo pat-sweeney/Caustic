@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("sch",["Class"],[["SchemeInterpreter",,[[,,,,0,"File:Interpreter/Scheme/Scheme.h:SchemeInterpreter","CClass:SchemeInterpreter"]]]]);

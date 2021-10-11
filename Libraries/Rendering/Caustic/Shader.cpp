@@ -117,7 +117,9 @@ namespace Caustic
         {
             if (pDefs[i].m_name.length() == 0)
                 continue;
-            const auto [it, success] = params.insert(std::make_pair(pDefs[i].m_name, ShaderParamInstance()));
+            std::pair<std::map<std::wstring, ShaderParamInstance>::iterator, bool> result = params.insert(std::make_pair(pDefs[i].m_name, ShaderParamInstance()));
+            std::map<std::wstring, ShaderParamInstance>::iterator it = result.first;
+            bool success = result.second;
             ShaderParamDef& d = it->second;
             d = pDefs[i];
             it->second.m_cbOffset = s;
@@ -521,7 +523,7 @@ namespace Caustic
     // value - Value of parameter
     // params - List of parameters to update
     //**********************************************************************
-    void CShader::SetParam(const std::wstring& paramName, std::any& value, std::map<std::wstring, ShaderParamInstance>& params)
+    void CShader::SetParam(const std::wstring& paramName, const std::any& value, std::map<std::wstring, ShaderParamInstance>& params)
     {
         auto it = params.find(paramName);
         if (it != params.end())
@@ -532,7 +534,7 @@ namespace Caustic
     }
 
     //**********************************************************************
-    void CShader::SetParam(const wchar_t* paramName, std::any& value, std::map<std::wstring, ShaderParamInstance>& params)
+    void CShader::SetParam(const wchar_t* paramName, const std::any& value, std::map<std::wstring, ShaderParamInstance>& params)
     {
         std::wstring wstr(paramName);
         SetParam(wstr, value, params);
@@ -547,7 +549,7 @@ namespace Caustic
     // value - Value of parameter
     // params - List of parameters to update
     //**********************************************************************
-    void CShader::SetParam(const std::wstring& paramName, int index, std::any& value, std::map<std::wstring, ShaderParamInstance>& params)
+    void CShader::SetParam(const std::wstring& paramName, int index, const std::any& value, std::map<std::wstring, ShaderParamInstance>& params)
     {
         auto it = params.find(paramName);
         if (it != params.end())
@@ -558,7 +560,7 @@ namespace Caustic
     }
 
     //**********************************************************************
-    void CShader::SetParam(const wchar_t* paramName, int index, std::any& value, std::map<std::wstring, ShaderParamInstance>& params)
+    void CShader::SetParam(const wchar_t* paramName, int index, const std::any& value, std::map<std::wstring, ShaderParamInstance>& params)
     {
         std::wstring wstr(paramName);
         SetParam(wstr, index, value, params);
@@ -572,13 +574,13 @@ namespace Caustic
     // paramName - Name of the parameter
     // value - Value of parameter
     //**********************************************************************
-    void CShader::SetPSParam(const std::wstring& paramName, std::any& value)
+    void CShader::SetPSParam(const std::wstring& paramName, const std::any& value)
     {
         SetParam(paramName, value, m_psParams);
     }
 
     //**********************************************************************
-    void CShader::SetPSParam(const wchar_t* paramName, std::any& value)
+    void CShader::SetPSParam(const wchar_t* paramName, const std::any& value)
     {
         SetParam(paramName, value, m_psParams);
     }
@@ -626,13 +628,13 @@ namespace Caustic
     // index - Index into array
     // value - Value of parameter
     //**********************************************************************
-    void CShader::SetPSParam(const std::wstring& paramName, int index, std::any& value)
+    void CShader::SetPSParam(const std::wstring& paramName, int index, const std::any& value)
     {
         SetParam(paramName, index, value, m_psParams);
     }
 
     //**********************************************************************
-    void CShader::SetPSParam(const wchar_t* paramName, int index, std::any& value)
+    void CShader::SetPSParam(const wchar_t* paramName, int index, const std::any& value)
     {
         SetParam(paramName, index, value, m_psParams);
     }
@@ -645,13 +647,13 @@ namespace Caustic
     // paramName - Name of parameter
     // value - Value of parameter
     //**********************************************************************
-    void CShader::SetVSParam(const std::wstring& paramName, std::any& value)
+    void CShader::SetVSParam(const std::wstring& paramName, const std::any& value)
     {
         SetParam(paramName, value, m_vsParams);
     }
 
     //**********************************************************************
-    void CShader::SetVSParam(const wchar_t* paramName, std::any& value)
+    void CShader::SetVSParam(const wchar_t* paramName, const std::any& value)
     {
         SetParam(paramName, value, m_vsParams);
     }
@@ -699,13 +701,13 @@ namespace Caustic
     // index - Index into array
     // value - Value of parameter
     //**********************************************************************
-    void CShader::SetVSParam(const std::wstring& paramName, int index, std::any& value)
+    void CShader::SetVSParam(const std::wstring& paramName, int index, const std::any& value)
     {
         SetParam(paramName, index, value, m_vsParams);
     }
 
     //**********************************************************************
-    void CShader::SetVSParam(const wchar_t* paramName, int index, std::any& value)
+    void CShader::SetVSParam(const wchar_t* paramName, int index, const std::any& value)
     {
         SetParam(paramName, index, value, m_vsParams);
     }
@@ -718,13 +720,13 @@ namespace Caustic
     // paramName - Name of parameter
     // value - Value of parameter
     //**********************************************************************
-    void CShader::SetCSParam(const std::wstring& paramName, std::any& value)
+    void CShader::SetCSParam(const std::wstring& paramName, const std::any& value)
     {
         SetParam(paramName, value, m_csParams);
     }
 
     //**********************************************************************
-    void CShader::SetCSParam(const wchar_t* paramName, std::any& value)
+    void CShader::SetCSParam(const wchar_t* paramName, const std::any& value)
     {
         SetParam(paramName, value, m_csParams);
     }
@@ -772,18 +774,18 @@ namespace Caustic
     // index - Index into array
     // value - Value of parameter
     //**********************************************************************
-    void CShader::SetCSParam(const std::wstring& paramName, int index, std::any& value)
+    void CShader::SetCSParam(const std::wstring& paramName, int index, const std::any& value)
     {
         SetParam(paramName, index, value, m_csParams);
     }
 
     //**********************************************************************
-    void CShader::SetCSParam(const wchar_t* paramName, int index, std::any& value)
+    void CShader::SetCSParam(const wchar_t* paramName, int index, const std::any& value)
     {
         SetParam(paramName, index, value, m_csParams);
     }
 
-    static Matrix D3DMatrixToMatrix(DirectX::XMMATRIX &mat)
+    static Matrix D3DMatrixToMatrix(const DirectX::XMMATRIX &mat)
     {
         Matrix m;
         m.x[0] = DirectX::XMVectorGetX(mat.r[0]);

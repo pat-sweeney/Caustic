@@ -1,1 +1,0 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Interpreter/Scheme/Scheme.h","Scheme.h");NDSummary.OnSummaryLoaded("File:Interpreter/Scheme/Scheme.h",[["C/C++","C"]],[["Classes","Class"]],[[656,0,0,"SchemeInterpreter","SchemeInterpreter"]]);

@@ -39,7 +39,11 @@ git clone https://github.com/microsoft/WPFDXInterop.git
 Git for Windows: https://gitforwindows.org
     
 NaturalDocs: https://github.com/NaturalDocs/NaturalDocs
-You should clone this repository under $(CausticRoot)\External
+You will need to manually load and build both the CLI and Engine projects. Build both the Debug and Release versions.
+```
+cd %CausticRoot%\External
+git clone https://github.com/NaturalDocs/NaturalDocs.git
+```
 
 Azure Kinect SDK: https://docs.microsoft.com/en-us/azure/kinect-dk/sensor-sdk-download  
 Azure Kinect Body Tracking: https://docs.microsoft.com/en-us/azure/kinect-dk/body-sdk-download  

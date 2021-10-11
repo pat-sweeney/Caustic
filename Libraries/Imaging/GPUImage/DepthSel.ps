@@ -94,9 +94,7 @@ float4 PS(VSOutput p) : SV_Target
     int3 rp = int3(ux * 1024, uy * 1024, 0);
     float4 ray = rayTexture.Load(rp);
     float4 pos = float4(ray.xyz * float(depth), 1.0);
-    float3 posDS = pos.xyz;
-
-    posDS = mul(float4(posDS, 1.0f),colorExt);
+    float3 posDS = mul(float4(pos.xyz, 1.0f),colorExt);
     float2 posCP = Project3D(posDS.xyz);
     posCP.x /= 1920.0f;
     posCP.y /= 1080.0f;

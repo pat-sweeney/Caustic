@@ -65,7 +65,7 @@ namespace Caustic
             // to go with option 1 since it simplifies the shaders and it isn't
             // very often where we have actual back face materials.
             //**********************************************************************
-            auto spRenderMaterial = (pFrontMaterialOverride) ? pFrontMaterialOverride : m_spFrontMaterial;
+            auto spRenderMaterial = (pFrontMaterialOverride) ? pFrontMaterialOverride : m_spFrontMaterial.p;
             uint32 currentPass = pRenderCtx->GetCurrentPass();
             auto spMaterialAttrib = spRenderMaterial->GetMaterial();
             if (spMaterialAttrib == nullptr)
@@ -76,7 +76,7 @@ namespace Caustic
                 RenderSubMesh(pRenderer, spShader, spRenderMaterial, lights, pWorld);
             if (pBackMaterialOverride || m_spBackMaterial)
             {
-                auto spRenderMaterial = (pBackMaterialOverride) ? pBackMaterialOverride : m_spBackMaterial;
+                auto spRenderMaterial = (pBackMaterialOverride) ? pBackMaterialOverride : m_spBackMaterial.p;
                 uint32 currentPass = pRenderCtx->GetCurrentPass();
                 auto spMaterialAttrib = spRenderMaterial->GetMaterial();
                 if (((currentPass == c_PassTransparent) && spMaterialAttrib->GetIsTransparent()) ||

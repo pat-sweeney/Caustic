@@ -396,7 +396,7 @@ namespace Caustic
         // lightPos - position of the light to render from
         // lightDir - direction of the light to render from
         //**********************************************************************
-        virtual void PushShadowmapRT(int whichShadowmap, int lightMapIndex, Vector3& lightPos, Vector3& lightDir) = 0;
+        virtual void PushShadowmapRT(int whichShadowmap, int lightMapIndex, const Vector3& lightPos, const Vector3& lightDir) = 0;
 
         //**********************************************************************
         // Method: PopShadowmapRT

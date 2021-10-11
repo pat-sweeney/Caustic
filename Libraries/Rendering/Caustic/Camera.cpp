@@ -167,7 +167,7 @@ namespace Caustic
     // Method: SetPosition
     // See <ICamera::SetPosition>
     //**********************************************************************
-    void CCamera::SetPosition(Vector3 &eye, Vector3 &look, Vector3 &up)
+    void CCamera::SetPosition(const Vector3 &eye, const Vector3 &look, const Vector3 &up)
     {
         if ((look - eye).Length() < 0.001)
             return;

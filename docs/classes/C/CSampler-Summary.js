@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CSampler","CSampler");NDSummary.OnSummaryLoaded("CClass:CSampler",[["C/C++","C"]],[["Classes","Class"]],[[717,0,0,"CSampler"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CSampler","CSampler");NDSummary.OnSummaryLoaded("CClass:CSampler",[["C/C++","C"]],[["Classes","Class"]],[[730,0,0,"CSampler"]]);

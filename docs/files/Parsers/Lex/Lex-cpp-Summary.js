@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Parsers/Lex/Lex.cpp","Lex.cpp");NDSummary.OnSummaryLoaded("File:Parsers/Lex/Lex.cpp",[["C/C++","C"]],[["Classes","Class"]],[[647,0,0,"Caustic","Caustic"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:Parsers/Lex/Lex.cpp","Lex.cpp");NDSummary.OnSummaryLoaded("File:Parsers/Lex/Lex.cpp",[["C/C++","C"]],[["Classes","Class"]],[[694,0,0,"Caustic","Caustic"]]);

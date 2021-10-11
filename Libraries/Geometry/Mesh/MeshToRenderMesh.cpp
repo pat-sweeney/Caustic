@@ -256,7 +256,7 @@ namespace Caustic
 			
 			// Assign appropriate materials
 			CRefObj<IMaterialAttrib> spMaterialAttrib = this->GetMaterial(pSubMesh->GetMaterialID());
-			CRefObj<IRenderMaterial> spRenderMaterial = spFactory->CreateRenderMaterial(pRenderer, (spMaterialAttrib) ? spMaterialAttrib : pDefaultMaterial, pShader);
+			CRefObj<IRenderMaterial> spRenderMaterial = spFactory->CreateRenderMaterial(pRenderer, (spMaterialAttrib) ? spMaterialAttrib.p : pDefaultMaterial, pShader);
 			spRenderSubMesh->SetFrontMaterial(spRenderMaterial);
 
 			// For now assume now back material

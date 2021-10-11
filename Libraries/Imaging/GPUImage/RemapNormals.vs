@@ -105,7 +105,7 @@ VSOutput VS(VSInput p)
     int3 rp = int3(p.uvs.x * depthWidth, p.uvs.y * depthHeight, 0);
     float4 ray = rayTexture.Load(rp);
     float4 pos = float4(ray.xyz * float(depth), 1.0);
-    float3 posDS = mul(float4(pos.xyz, 1.0f),colorExt);
+    float3 posDS = mul(float4(pos.xyz, 1.0f),colorExt).xyz;
     VSOutput vs;
     vs.uvs = p.pixcoords;
     vs.pos.xy = Project3D(posDS.xyz);

@@ -8,42 +8,42 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="Topic1506"></a><div class="CTopic TInterface LC first">
+<a name="Topic1568"></a><div class="CTopic TInterface LC first">
  <div class="CTitle">ISceneGroupElem</div>
  <div class="CBody"><p>Defines a group element in our scene graph. Groups contain other scene elements.</p></div>
 </div>
 
-<a name="Functions"></a><a name="Topic1507"></a><div class="CTopic TGroup LC">
+<a name="Functions"></a><a name="Topic1569"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="NumberChildren"></a><a name="Topic1508"></a><div class="CTopic TFunction LC">
+<a name="NumberChildren"></a><a name="Topic1570"></a><div class="CTopic TFunction LC">
  <div class="CTitle">NumberChildren</div>
- <div id="NDPrototype1508" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> NumberChildren() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype1570" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> NumberChildren() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Returns the number of child elements part of this group</p></div>
 </div>
 
-<a name="GetChild"></a><a name="Topic1509"></a><div class="CTopic TFunction LC">
+<a name="GetChild"></a><a name="Topic1571"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetChild</div>
- <div id="NDPrototype1509" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <a href="../../index.html#CClass:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,24);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../index.html#CClass:ISceneElem" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1483);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ISceneElem</a>&gt; GetChild(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">index</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div id="NDPrototype1571" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <a href="../../index.html#CClass:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,38);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../index.html#CClass:ISceneElem" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1545);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ISceneElem</a>&gt; GetChild(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">index</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
  <div class="CBody"><p>Gets the Nth child element</p></div>
 </div>
 
-<a name="AddChild"></a><a name="Topic1510"></a><div class="CTopic TFunction LC">
+<a name="AddChild"></a><a name="Topic1572"></a><div class="CTopic TFunction LC">
  <div class="CTitle">AddChild</div>
- <div id="NDPrototype1510" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> AddChild(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:ISceneElem" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1483);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ISceneElem</a>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pElem</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div id="NDPrototype1572" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> AddChild(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:ISceneElem" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1545);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ISceneElem</a>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pElem</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
  <div class="CBody"><p>Adds a new scene element to the group</p></div>
 </div>
 
-<a name="InsertChild"></a><a name="Topic1511"></a><div class="CTopic TFunction LC">
+<a name="InsertChild"></a><a name="Topic1573"></a><div class="CTopic TFunction LC">
  <div class="CTitle">InsertChild</div>
- <div id="NDPrototype1511" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> InsertChild(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:ISceneElem" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1483);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ISceneElem</a>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pElem,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td></td><td class="PName last">index</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div id="NDPrototype1573" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> InsertChild(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:ISceneElem" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1545);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ISceneElem</a>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pElem,</td></tr><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td></td><td class="PName last">index</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
  <div class="CBody"><p>Adds a new scene element to the group. The order of elements defines the render order.</p></div>
 </div>
 
-<a name="SetTransform"></a><a name="Topic1512"></a><div class="CTopic TFunction LC last">
+<a name="SetTransform"></a><a name="Topic1574"></a><div class="CTopic TFunction LC last">
  <div class="CTitle">SetTransform</div>
- <div id="NDPrototype1512" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetTransform(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:Matrix4x4" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,178);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Matrix4x4</a>&nbsp;</td><td class="PSymbols">&amp;</td><td class="PName last">transform</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div id="NDPrototype1574" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetTransform(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:Matrix4x4" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,178);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Matrix4x4</a>&nbsp;</td><td class="PSymbols">&amp;</td><td class="PName last">transform</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
  <div class="CBody"><p>Sets the transform associated with this group.</p></div>
 </div>
 

@@ -157,7 +157,10 @@ namespace Caustic
     void CGPUPipeline::Initialize(IRenderer *pRenderer)
     {
         if (pRenderer == nullptr)
-			pRenderer = Caustic::CCausticFactory::Instance()->CreateRenderer(nullptr, std::wstring(L""));
+        {
+            std::wstring shaderFolder(L"");
+            pRenderer = Caustic::CCausticFactory::Instance()->CreateRenderer(nullptr, shaderFolder);
+        }
         m_spRenderer = pRenderer;
 
         // Make sure the shaders required are loaded

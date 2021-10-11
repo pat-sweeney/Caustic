@@ -145,8 +145,8 @@ namespace Caustic
         // paramName - name of parameter
         // value - value to set
         //**********************************************************************
-        virtual void SetPSParam(const std::wstring& paramName, std::any& value) = 0;
-        virtual void SetPSParam(const wchar_t* paramName, std::any& value) = 0;
+        virtual void SetPSParam(const std::wstring& paramName, const std::any& value) = 0;
+        virtual void SetPSParam(const wchar_t* paramName, const std::any& value) = 0;
 
         //**********************************************************************
         // Method: SetPSParamFloat
@@ -178,8 +178,8 @@ namespace Caustic
         // paramName - name of parameter
         // value - value to set
         //**********************************************************************
-        virtual void SetVSParam(const std::wstring& paramName, std::any& value) = 0;
-        virtual void SetVSParam(const wchar_t* paramName, std::any& value) = 0;
+        virtual void SetVSParam(const std::wstring& paramName, const std::any& value) = 0;
+        virtual void SetVSParam(const wchar_t* paramName, const std::any& value) = 0;
 
         //**********************************************************************
         // Method: SetVSParamFloat
@@ -211,8 +211,8 @@ namespace Caustic
         // paramName - name of parameter
         // value - value to set
         //**********************************************************************
-        virtual void SetCSParam(const std::wstring& paramName, std::any& value) = 0;
-        virtual void SetCSParam(const wchar_t* paramName, std::any& value) = 0;
+        virtual void SetCSParam(const std::wstring& paramName, const std::any& value) = 0;
+        virtual void SetCSParam(const wchar_t* paramName, const std::any& value) = 0;
 
         //**********************************************************************
         // Method: SetCSParamFloat
@@ -245,8 +245,8 @@ namespace Caustic
         // index - array index to set
         // value - value to set
         //**********************************************************************
-        virtual void SetPSParam(const std::wstring& paramName, int index, std::any& value) = 0;
-        virtual void SetPSParam(const wchar_t* paramName, int index, std::any& value) = 0;
+        virtual void SetPSParam(const std::wstring& paramName, int index, const std::any& value) = 0;
+        virtual void SetPSParam(const wchar_t* paramName, int index, const std::any& value) = 0;
 
         //**********************************************************************
         // Method: SetVSParam
@@ -257,8 +257,8 @@ namespace Caustic
         // index - array index to set
         // value - value to set
         //**********************************************************************
-        virtual void SetVSParam(const std::wstring& paramName, int index, std::any& value) = 0;
-        virtual void SetVSParam(const wchar_t* paramName, int index, std::any& value) = 0;
+        virtual void SetVSParam(const std::wstring& paramName, int index, const std::any& value) = 0;
+        virtual void SetVSParam(const wchar_t* paramName, int index, const std::any& value) = 0;
 
         //**********************************************************************
         // Method: SetCSParam
@@ -269,8 +269,8 @@ namespace Caustic
         // index - array index to set
         // value - value to set
         //**********************************************************************
-        virtual void SetCSParam(const std::wstring& paramName, int index, std::any& value) = 0;
-        virtual void SetCSParam(const wchar_t* paramName, int index, std::any& value) = 0;
+        virtual void SetCSParam(const std::wstring& paramName, int index, const std::any& value) = 0;
+        virtual void SetCSParam(const wchar_t* paramName, int index, const std::any& value) = 0;
 
         //**********************************************************************
         // Method: EndRender

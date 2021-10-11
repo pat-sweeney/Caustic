@@ -316,8 +316,8 @@ void CompileShader(IXMLDOMNode *pNode, EShaderType shaderType, std::string &shad
             ::MessageBox(nullptr, "Path to fxc not found. Define path to fxc.exe in $(CausticFXCPath)", "Undefined path", MB_OK);
             exit(1);
         }
-        char* entryPoint = "";
-        char* profile = "";
+        const char* entryPoint = "";
+        const char* profile = "";
         switch (shaderType)
         {
         case EShaderType::PixelShader:

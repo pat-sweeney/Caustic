@@ -109,7 +109,7 @@ float4 PS(VSOutput p) : SV_Target
 		if (showInFocus)
 			return float4(1.0f,1.0f,0.0f,1.0f);
 		float3 clr = colorTex.Sample(colorSampler, p.uvs).xyz;
-		float3 normWS = meshNorms.Sample(colorSampler, float2(p.uvs.x, 1.0f - p.uvs.y));
+		float3 normWS = meshNorms.Sample(colorSampler, float2(p.uvs.x, 1.0f - p.uvs.y)).xyz;
 		if (length(normWS) == 0.0f)
 		    normWS = float3(0.0f, 0.0f, 1.0f);
         float3 lightDirWS = normalize(lightPos.xyz - posWS.xyz);
@@ -136,12 +136,12 @@ float4 PS(VSOutput p) : SV_Target
 		if (checkDepth >= 1.0f && abs(deltaDepth) >= 0.05)
 			uvs = p.uvs;
 		float3 clr = colorTex.Sample(colorSampler, uvs).xyz;
-		float3 normWS = meshNorms.Sample(colorSampler, float2(uvs.x, 1.0f - uvs.y));
+		float3 normWS = meshNorms.Sample(colorSampler, float2(uvs.x, 1.0f - uvs.y)).xyz;
 		if (length(normWS) == 0.0f)
 		    normWS = float3(0.0f, 0.0f, 1.0f);
 		float3 lightDirWS = normalize(lightPos.xyz - posWS.xyz);
         float dp = clamp(dot(normalize(normWS), lightDirWS), 0.0f, 1.0f);
-		color += float4(clr * 0.5 + 0.5 * dp * lightClr, 1.0f);
+		color += float3(clr * 0.5 + 0.5 * dp * lightClr);
 		count++;
 	}
 	

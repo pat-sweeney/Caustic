@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CGPUBuffer","CGPUBuffer");NDSummary.OnSummaryLoaded("CClass:CGPUBuffer",[["C/C++","C"]],[["Classes","Class"]],[[679,0,0,"CGPUBuffer"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CGPUBuffer","CGPUBuffer");NDSummary.OnSummaryLoaded("CClass:CGPUBuffer",[["C/C++","C"]],[["Classes","Class"]],[[734,0,0,"CGPUBuffer"]]);

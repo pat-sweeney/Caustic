@@ -250,7 +250,7 @@ namespace Caustic
     public:
         struct ParseElements
         {
-            wchar_t *nodeName;
+            const wchar_t *nodeName;
             std::function<void(IXMLDOMNode*)> func;
         };
 
@@ -278,9 +278,9 @@ namespace Caustic
         void ParseVisualScene(IXMLDOMNode *pNode, std::map<std::wstring, Collada::SVisualScene*> *pVisualScenes);
         void ParseMesh(IXMLDOMNode *pNode, Collada::SGeometry *pGeom);
         void ParseSource(IXMLDOMNode *pNode, std::map<std::wstring, Collada::SSource*> *pSources);
-        void ParseAttribute(IXMLDOMNamedNodeMap *pAttributes, wchar_t *id, std::wstring &value);
-        void ParseAttribute(IXMLDOMNamedNodeMap *pAttributes, wchar_t *id, float &value);
-        void ParseAttribute(IXMLDOMNamedNodeMap *pAttributes, wchar_t *id, int &value);
+        void ParseAttribute(IXMLDOMNamedNodeMap *pAttributes, const wchar_t *id, std::wstring &value);
+        void ParseAttribute(IXMLDOMNamedNodeMap *pAttributes, const wchar_t *id, float &value);
+        void ParseAttribute(IXMLDOMNamedNodeMap *pAttributes, const wchar_t *id, int &value);
 
     public:
         void Import(const char *fn, Caustic::ISceneGraph **ppSceneGraph);

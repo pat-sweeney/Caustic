@@ -70,7 +70,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>$(CausticDefaultExtLibs);kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(AzureKinectSDKDir)\sdk\windows-desktop\amd64\release\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CausticDefaultExtLibDirs)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -85,8 +85,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>windowscodecs.lib;msxml6.lib;d3dcompiler.lib;d3d11.lib;mf.lib;mfplat.lib;mfuuid.lib;mfreadwrite.lib;k4a.lib;msxml6.lib;d3dcompiler.lib;d3d11.lib;mf.lib;mfplat.lib;mfuuid.lib;mfreadwrite.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(AzureKinectSDKDir)\sdk\windows-desktop\amd64\release\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(CausticDefaultExtLibs);windowscodecs.lib;msxml6.lib;d3dcompiler.lib;d3d11.lib;mf.lib;mfplat.lib;mfuuid.lib;mfreadwrite.lib;k4a.lib;msxml6.lib;d3dcompiler.lib;d3d11.lib;mf.lib;mfplat.lib;mfuuid.lib;mfreadwrite.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(CausticDefaultExtLibDirs)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -118,9 +118,6 @@
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Parsers\Lex\Lex.vcxproj">
       <Project>{e96c27e0-989e-4fd1-af44-06c378e1794e}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Libraries\Interpreter\Scheme\Scheme.vcxproj">
-      <Project>{ccee5d4d-8fa4-4e20-a1dc-a7b450d68353}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Rendering\Caustic\Caustic.vcxproj">
       <Project>{60a04400-10f9-4c6d-b34c-d5c7ebafa262}</Project>

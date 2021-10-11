@@ -239,8 +239,8 @@ namespace Caustic
 #else
 #define CHECKTHREAD
 #endif
-        void LoadShaderBlob(std::wstring &filename, ID3DBlob **ppBlob);
-        CRefObj<IShaderInfo> LoadShaderInfo(std::wstring &filename);
+        void LoadShaderBlob(const std::wstring &filename, ID3DBlob **ppBlob);
+        CRefObj<IShaderInfo> LoadShaderInfo(const std::wstring &filename);
         void RenderScene(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback);
         void DrawSceneObjects(int pass, std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback);
         void SetShadowmapViewport(int whichShadowMap, int lightMapIndex);
@@ -305,7 +305,7 @@ namespace Caustic
         virtual CRefObj<IRenderCtx> GetRenderCtx() override;
         virtual void ClearDepth() override;
         virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) override;
-        virtual void PushShadowmapRT(int whichShadowmap, int lightMapIndex, Vector3& lightPos, Vector3& lightDir) override;
+        virtual void PushShadowmapRT(int whichShadowmap, int lightMapIndex, const Vector3& lightPos, const Vector3& lightDir) override;
         virtual void PopShadowmapRT() override;
         virtual void SelectShadowmap(int whichShadowMap, int lightMapIndex, std::vector<CRefObj<ILight>>& lights, IShader* pShader) override;
         virtual CRefObj<ITexture> GetShadowmapTexture(int whichShadowMap) override;

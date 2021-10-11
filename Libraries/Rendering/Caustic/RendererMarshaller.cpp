@@ -135,7 +135,7 @@ namespace Caustic
     // Method: PushShadowmapRT
     // See <IRenderer::PushShadowmapRT>
     //**********************************************************************
-    void CRendererMarshaller::PushShadowmapRT(int whichShadowmap, int lightMapIndex, Vector3& lightPos, Vector3 &lightDir)
+    void CRendererMarshaller::PushShadowmapRT(int whichShadowmap, int lightMapIndex, const Vector3& lightPos, const Vector3 &lightDir)
     {
         Vector3 lp = lightPos;
         Vector3 ld = lightDir;

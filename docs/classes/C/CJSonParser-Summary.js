@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CJSonParser","CJSonParser");NDSummary.OnSummaryLoaded("CClass:CJSonParser",[["C/C++","C"]],[["Classes","Class"]],[[640,0,0,"CJSonParser"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CJSonParser","CJSonParser");NDSummary.OnSummaryLoaded("CClass:CJSonParser",[["C/C++","C"]],[["Classes","Class"]],[[680,0,0,"CJSonParser"]]);

@@ -494,7 +494,7 @@ namespace Caustic
 #endif // CHECK_CONSISTENCY
             m_spMesh->AddSubMesh(m_spSubMesh);
         }
-        CRefObj<ISubMesh> spSubMesh = m_spSubMesh;
+        CRefObj<ISubMesh> spSubMesh(m_spSubMesh.p);
         m_spSubMesh = nullptr;
         return spSubMesh;
     }

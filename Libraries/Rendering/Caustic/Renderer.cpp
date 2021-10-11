@@ -220,7 +220,7 @@ namespace Caustic
     // filename - Name of file to load from
     // ppBlob - Returns the created shader blob
     //**********************************************************************
-    void CRenderer::LoadShaderBlob(std::wstring &filename, ID3DBlob **ppBlob)
+    void CRenderer::LoadShaderBlob(const std::wstring &filename, ID3DBlob **ppBlob)
     {
         HANDLE f = ::CreateFile(filename.c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr);
         if (f != INVALID_HANDLE_VALUE)
@@ -243,7 +243,7 @@ namespace Caustic
     // Returns:
     // Returns the new shader info object
     //**********************************************************************
-    CRefObj<IShaderInfo> CRenderer::LoadShaderInfo(std::wstring &filename)
+    CRefObj<IShaderInfo> CRenderer::LoadShaderInfo(const std::wstring &filename)
     {
         return CCausticFactory::Instance()->CreateShaderInfo(filename.c_str());
     }
@@ -569,7 +569,7 @@ namespace Caustic
     }
 
     //**********************************************************************
-    void CRenderer::PushShadowmapRT(int whichShadowMap, int lightMapIndex, Vector3& lightPos, Vector3 &lightDir)
+    void CRenderer::PushShadowmapRT(int whichShadowMap, int lightMapIndex, const Vector3& lightPos, const Vector3 &lightDir)
     {
         ShadowMapRenderState rs;
         m_spContext->OMGetRenderTargets(1, &rs.m_spOldRT, &rs.m_spOldStencil);

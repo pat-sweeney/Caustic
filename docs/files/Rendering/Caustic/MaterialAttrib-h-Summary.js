@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/MaterialAttrib.h","MaterialAttrib.h");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/MaterialAttrib.h",[["C/C++","C"]],[["Structs","Struct"]],[[796,0,0,"CMaterialAttrib","CMaterialAttrib"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/MaterialAttrib.h","MaterialAttrib.h");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/MaterialAttrib.h",[["C/C++","C"]],[["Structs","Struct"]],[[904,0,0,"CMaterialAttrib","CMaterialAttrib"]]);

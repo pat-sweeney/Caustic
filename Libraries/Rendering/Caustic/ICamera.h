@@ -61,7 +61,7 @@ namespace Caustic
         // look - camera's look point. Used to define the camera's view direction
         // up - camera's up point. The eye point and up point define the up vector.
         //**********************************************************************
-        virtual void SetPosition(Vector3 &eye, Vector3 &look, Vector3 &up) = 0;
+        virtual void SetPosition(const Vector3 &eye, const Vector3 &look, const Vector3 &up) = 0;
 
         //**********************************************************************
         // Method: GetPosition
