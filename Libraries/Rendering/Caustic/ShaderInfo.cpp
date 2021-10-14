@@ -5,7 +5,8 @@
 //**********************************************************************
 #pragma once
 #include "stdafx.h"
-#include "Base\Core\Core.h"
+#include <windows.h>
+import Base.Core.Core;
 #include "Base/Core/convertStr.h"
 #include "ShaderInfo.h"
 #include <MsXml6.h>

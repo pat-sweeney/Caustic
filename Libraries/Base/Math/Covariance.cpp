@@ -5,9 +5,10 @@
 //**********************************************************************
 #pragma once
 #include "stdafx.h"
-#include "Base\Core\Core.h"
-#include "Base\Core\error.h"
+import Base.Core.Core;
+import Base.Core.Error;
 #include <vector>
+#include <winerror.h>
 
 namespace Caustic
 {

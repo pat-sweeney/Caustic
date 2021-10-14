@@ -10,7 +10,7 @@
 
 namespace Caustic
 {
-    CAUSTICAPI CRefObj<ISceneSphereElem> CreateSphereElem(Vector3& center, float radius)
+    CRefObj<ISceneSphereElem> CreateSphereElem(Vector3& center, float radius)
     {
         return CRefObj<ISceneSphereElem>(new CSceneSphereElem(center, radius));
     }

@@ -4,7 +4,7 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Base\Core\Core.h"
+import Base.Core.Core;
 #include "IMesh.h"
 
 namespace Caustic
@@ -36,5 +36,5 @@ namespace Caustic
         virtual CRefObj<IMesh> MeshFromDensityFunction(int numBlocks, std::function<float(Vector3&)> fn) = 0;
     };
 
-    CAUSTICAPI CRefObj<IMeshConstructor> CreateMeshConstructor();
+    CRefObj<IMeshConstructor> CreateMeshConstructor();
 }

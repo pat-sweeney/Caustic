@@ -4,7 +4,7 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "stdafx.h"
-#include "Base\Core\error.h"
+import Base.Core.Error;
 #include "Cameras\AzureKinect\IAzureKinect.h"
 #include "UnitTest.h"
 #include <stdlib.h>
@@ -41,7 +41,7 @@ namespace CausticTestSuite
                 continue;
             if (!(*tests[i].testFunc)())
             {
-                printf("MathTestSuite: Test %d failed\n", i);
+                printf("MathTestSuite: Test %d \n", i);
                 result = false;
             }
             else

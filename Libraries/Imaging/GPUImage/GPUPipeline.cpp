@@ -4,7 +4,8 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "stdafx.h"
-#include "Base\Core\error.h"
+import Base.Core.Core;
+import Base.Core.Error;
 #include "Rendering\Caustic\Shader.h"
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\Sampler.h"

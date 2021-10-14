@@ -10,7 +10,7 @@
 
 namespace Caustic
 {
-    CAUSTICAPI CRefObj<ISceneCylinderElem> CreateCylinderElem(Vector3& center, float height, float topRadius, float bottomRadius)
+    CRefObj<ISceneCylinderElem> CreateCylinderElem(Vector3& center, float height, float topRadius, float bottomRadius)
     {
         return CRefObj<ISceneCylinderElem>(new CSceneCylinderElem(center, height, topRadius, bottomRadius));
     }

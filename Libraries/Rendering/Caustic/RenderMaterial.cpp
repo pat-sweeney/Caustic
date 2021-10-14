@@ -13,7 +13,7 @@
 
 namespace Caustic
 {
-    CAUSTICAPI CRefObj<IRenderMaterial> CreateRenderMaterial(IRenderer* pRenderer, IMaterialAttrib* pMaterialAttrib, IShader* pShader)
+    CRefObj<IRenderMaterial> CreateRenderMaterial(IRenderer* pRenderer, IMaterialAttrib* pMaterialAttrib, IShader* pShader)
     {
         std::unique_ptr<CRenderMaterial> spRenderMaterial(new CRenderMaterial());
         CRenderMaterial* wpRenderMaterial = spRenderMaterial.get();

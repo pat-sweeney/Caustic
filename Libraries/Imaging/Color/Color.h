@@ -4,7 +4,7 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Base\Core\Core.h"
+import Base.Core.Core;
 
 #pragma warning(push)
 #pragma warning(disable:26495) // Turn off warnings about uninitialized variables

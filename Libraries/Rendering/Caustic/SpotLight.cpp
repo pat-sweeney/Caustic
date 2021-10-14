@@ -4,8 +4,8 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "stdafx.h"
-#include "Base\Core\Core.h"
-#include "Base\Core\error.h"
+import Base.Core.Core;
+import Base.Core.Error;
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\SpotLight.h"
 #include "Rendering\Caustic\ISpotLight.h"
@@ -33,7 +33,7 @@ namespace Caustic
     // Returns:
     // Returns the created point light
     //**********************************************************************
-    CAUSTICAPI CRefObj<ISpotLight> CreateSpotLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity, float innerAngle, float outerAngle, bool casts)
+    CRefObj<ISpotLight> CreateSpotLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity, float innerAngle, float outerAngle, bool casts)
     {
         return CRefObj<ISpotLight>(new CSpotLight(pos, dir, color, intensity, innerAngle, outerAngle, casts));
     }

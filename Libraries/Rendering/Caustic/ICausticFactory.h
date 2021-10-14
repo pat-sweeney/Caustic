@@ -5,7 +5,7 @@
 //**********************************************************************
 #pragma once
 
-#include "Base\Core\Core.h"
+import Base.Core.Core;
 #include "Base\Math\Vector.h"
 #include "Geometry\Mesh\Mesh.h"
 #include "Imaging\Image\Image.h"
@@ -344,5 +344,5 @@ namespace Caustic
 	// Header:
 	// [Link:Rendering/Caustic/ICausticFactory.h]
 	//**********************************************************************
-    CAUSTICAPI CRefObj<ICausticFactory> CreateCausticFactory();
+    CRefObj<ICausticFactory> CreateCausticFactory();
 }

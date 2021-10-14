@@ -17,7 +17,7 @@ namespace Caustic
         float uvs[2];
     };
 
-    CAUSTICAPI CRefObj<ISceneOverlay2DElem> CreateOverlay2DElem(IShader *pShader = nullptr)
+    CRefObj<ISceneOverlay2DElem> CreateOverlay2DElem(IShader *pShader = nullptr)
     {
         return CRefObj<ISceneOverlay2DElem>(new CSceneOverlay2DElem(pShader));
     }

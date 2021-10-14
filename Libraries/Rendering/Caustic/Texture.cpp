@@ -4,7 +4,8 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "stdafx.h"
-#include "Base\Core\Error.h"
+import Base.Core.Core;
+import Base.Core.Error;
 #include "Imaging\Image\Image.h"
 #include "Imaging\Image\ImageIter.h"
 #include "Texture.h"
@@ -12,6 +13,7 @@
 #include <wincodec.h>
 #include <objbase.h>
 #include <map>
+#undef LoadImage
 
 namespace Caustic
 {
@@ -30,7 +32,7 @@ namespace Caustic
     // Returns:
     // Returns the created texture
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags)
+    CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags)
     {
         CRefObj<ITexture> spTexture;
         pRenderer->RunOnRenderer(
@@ -54,7 +56,7 @@ namespace Caustic
     // Returns:
     // Returns the created texture
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, uint32 width, uint32 height, DXGI_FORMAT format)
+    CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, uint32 width, uint32 height, DXGI_FORMAT format)
     {
         return CreateTexture(pRenderer, width, height, format, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
     }
@@ -72,7 +74,7 @@ namespace Caustic
     // Returns:
     // Returns the created texture
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, IImage* pImage, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags)
+    CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, IImage* pImage, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags)
     {
         DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM;
         switch (pImage->GetBPP())
@@ -96,7 +98,7 @@ namespace Caustic
     // Parameters:
     // pRenderer - Renderer
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> CheckerboardTexture(IRenderer* pRenderer, int w /* = 32 */, int h /* = 32 */, int blocksize /* = 4 */)
+    CRefObj<ITexture> CheckerboardTexture(IRenderer* pRenderer, int w /* = 32 */, int h /* = 32 */, int blocksize /* = 4 */)
     {
         static CRefObj<ITexture> s_spCheckerBoard;
         if (s_spCheckerBoard == nullptr)
@@ -150,7 +152,7 @@ namespace Caustic
     // Returns:
     // Returns the new texture
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> LoadTexture(const wchar_t* pFilename, IRenderer* pRenderer)
+    CRefObj<ITexture> LoadTexture(const wchar_t* pFilename, IRenderer* pRenderer)
     {
         static std::map<std::wstring, CRefObj<ITexture>> cache;
         std::map<std::wstring, CRefObj<ITexture>>::iterator it;

@@ -1,1 +1,0 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CCritSec","CCritSec");NDSummary.OnSummaryLoaded("CClass:CCritSec",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[16,0,0,"CCritSec"],[17,0,2,"Functions","Functions"],[18,0,1,"CCritSec","CCritSec"],[19,0,1,"~CCritSec","~CCritSec"],[20,0,1,"Enter","Enter"],[21,0,1,"Leave","Leave"]]);

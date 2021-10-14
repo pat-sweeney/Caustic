@@ -5,8 +5,9 @@
 //**********************************************************************
 #pragma once
 #define NOMINMAX 
-#include "Base\Core\Core.h"
-#include "Base\Core\RefCount.h"
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.RefCount;
 #include "Caustic.h"
 #include <memory>
 #include <d3d11.h>

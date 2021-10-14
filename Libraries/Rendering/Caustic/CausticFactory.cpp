@@ -6,9 +6,9 @@
 #pragma once
 #include "stdafx.h"
 #include "Rendering\Caustic\Caustic.h"
-#include "Base\Core\Core.h"
-#include "Base\Core\error.h"
-#include "Base\Core\RefCount.h"
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.RefCount;
 #include "Imaging\Image\Image.h"
 #include "RenderMesh.h"
 #include "ShaderInfo.h"
@@ -37,7 +37,7 @@ namespace Caustic
     // Returns:
     // ppFactory - Returns the newly created Caustic factory.
     //**********************************************************************
-    CAUSTICAPI CRefObj<ICausticFactory> CreateCausticFactory()
+    CRefObj<ICausticFactory> CreateCausticFactory()
 	{
 		return CRefObj<ICausticFactory>(new CCausticFactory());
 	}

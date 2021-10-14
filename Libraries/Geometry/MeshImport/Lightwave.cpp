@@ -4,8 +4,8 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "stdafx.h"
-#include "Base\Core\Core.h"
-#include "Base\Core\error.h"
+import Base.Core.Core;
+import Base.Core.Error;
 #include "MeshImport.h"
 #include <memory>
 #include <vector>

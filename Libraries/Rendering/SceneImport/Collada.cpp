@@ -4,8 +4,8 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "stdafx.h"
-#include "Base\Core\Core.h"
-#include "Base\Core\error.h"
+import Base.Core.Core;
+import Base.Core.Error;
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\SceneGraph\SceneGraph.h"
 #include "Rendering\SceneGraph\SceneFactory.h"

@@ -9,7 +9,7 @@
 // Namespace: Caustic
 namespace Caustic
 {
-	CAUSTICAPI CRefObj<ILex> CreateLex(const char* buffer, bool returnWhitespace /* = false */)
+	CRefObj<ILex> CreateLex(const char* buffer, bool returnWhitespace /* = false */)
 	{
 		return CRefObj<ILex>(new CLex(buffer, returnWhitespace));
 	}

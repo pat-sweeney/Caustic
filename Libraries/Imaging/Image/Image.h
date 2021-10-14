@@ -4,8 +4,8 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Base\Core\Core.h"
-#include "Base\Core\IRefCount.h"
+import Base.Core.Core;
+import Base.Core.IRefCount;
 #include "Base\Math\Vector.h"
 #include "Geometry\GeomDS\IPath2.h"
 
@@ -229,7 +229,7 @@ namespace Caustic
 		virtual void DrawPath(IPath2* pPath) = 0;
 	};
 
-	CAUSTICAPI CRefObj<IImage> CreateImage(uint32 width, uint32 height, uint32 bpp);
+	CRefObj<IImage> CreateImage(uint32 width, uint32 height, uint32 bpp);
 
 	//**********************************************************************
 	// Interface: IIntegralImage
@@ -266,7 +266,7 @@ namespace Caustic
 		//**********************************************************************
 		virtual CRefObj<IImage> BoxBlur(int width, int height) = 0;
 	};
-	CAUSTICAPI CRefObj<IIntegralImage> CreateIntegralImage(IImage *pImage);
+	CRefObj<IIntegralImage> CreateIntegralImage(IImage *pImage);
 
 #undef LoadImage
 }

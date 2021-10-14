@@ -1,1 +1,0 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CEvent","CEvent");NDSummary.OnSummaryLoaded("CClass:CEvent",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[9,0,0,"CEvent"],[10,0,2,"Functions","Functions"],[11,0,1,"CEvent","CEvent"],[12,0,1,"~CEvent","~CEvent"],[13,0,1,"Set","Set"],[14,0,1,"Clear","Clear"],[15,0,1,"Wait","Wait"]]);

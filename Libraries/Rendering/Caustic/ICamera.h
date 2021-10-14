@@ -5,8 +5,8 @@
 //**********************************************************************
 #pragma once
 
-#include "Base\Core\Core.h"
-#include "Base\Core\ISerialize.h"
+import Base.Core.Core;
+import Base.Core.ISerialize;
 #include "Base\Math\Vector.h"
 #include <d3d11.h>
 #include <DirectXMath.h>
@@ -148,5 +148,5 @@ namespace Caustic
     // Header:
     // [Link:Rendering/Caustic/ICamera.h]
     //**********************************************************************
-    CAUSTICAPI CRefObj<ICamera> CreateCamera(bool leftHanded);
+    CRefObj<ICamera> CreateCamera(bool leftHanded);
 }

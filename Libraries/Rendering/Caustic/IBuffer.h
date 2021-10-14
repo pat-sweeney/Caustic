@@ -5,7 +5,7 @@
 //**********************************************************************
 #pragma once
 
-#include "Base\Core\IRefCount.h"
+import Base.Core.IRefCount;
 #include "Base\Math\BBox.h"
 
 //**********************************************************************

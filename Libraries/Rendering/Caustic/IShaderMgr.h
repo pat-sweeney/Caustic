@@ -5,8 +5,8 @@
 //**********************************************************************
 #pragma once
 
-#include "Base\Core\Core.h"
-#include "Base\Core\IRefCount.h"
+import Base.Core.Core;
+import Base.Core.IRefCount;
 #include "Rendering\Caustic\IShader.h"
 
 //**********************************************************************

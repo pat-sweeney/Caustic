@@ -4,7 +4,7 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "stdafx.h"
-#include "Base\Core\Core.h"
+import Base.Core.Core;
 #include "Rendering\RenderWindow\RenderWindow.h"
 #include "Rendering\RenderGraph\RenderGraph.h"
 #include "Rendering\SceneGraph\SceneGraph.h"
@@ -13,7 +13,7 @@
 
 namespace Caustic
 {
-    CAUSTICAPI CRefObj<IRenderWindow> CreateRenderWindow(HWND hwnd, std::wstring &shaderFolder,
+    CRefObj<IRenderWindow> CreateRenderWindow(HWND hwnd, std::wstring &shaderFolder,
         std::function<void(IRenderer*,IRenderCtx*,int)> callback,
         std::function<void(IRenderer*)> prePresentCallback,
         bool startFrozen /* = false */, int desktopIndex /* = 0 */)

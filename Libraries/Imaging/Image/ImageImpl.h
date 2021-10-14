@@ -6,8 +6,8 @@
 #pragma once
 #include <memory>
 #include <Windows.h>
-#include "Base\Core\Core.h"
-#include "Base\Core\RefCount.h"
+import Base.Core.Core;
+import Base.Core.RefCount;
 #include "Image.h"
 #include "ImageIter.h"
 #include "Geometry\GeomDS\IPath2.h"

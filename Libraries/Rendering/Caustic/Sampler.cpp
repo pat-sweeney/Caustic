@@ -57,7 +57,7 @@ namespace Caustic
         CT(pRenderer->GetDevice()->CreateSamplerState(&desc, &m_spSamplerState));
     }
 
-    CAUSTICAPI CRefObj<ISampler> CreateSampler(IRenderer *pRenderer, ITexture *pTexture)
+    CRefObj<ISampler> CreateSampler(IRenderer *pRenderer, ITexture *pTexture)
     {
         return CRefObj<ISampler>(new CSampler(pRenderer, pTexture));
     }

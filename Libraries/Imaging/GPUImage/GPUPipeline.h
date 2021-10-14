@@ -4,7 +4,7 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Base\Core\Core.h"
+import Base.Core.Core;
 #include "Imaging\Image\Image.h"
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\Shader.h"
@@ -286,5 +286,5 @@ namespace Caustic
     //**********************************************************************
     static const wchar_t* c_CustomNode_Color2Depth = L"Color2DepthNode";
 
-    CAUSTICAPI CRefObj<IGPUPipeline> CreateGPUPipeline(IRenderer *pRenderer);
+    CRefObj<IGPUPipeline> CreateGPUPipeline(IRenderer *pRenderer);
 }

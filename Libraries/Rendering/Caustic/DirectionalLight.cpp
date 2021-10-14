@@ -4,8 +4,8 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "stdafx.h"
-#include "Base\Core\Core.h"
-#include "Base\Core\error.h"
+import Base.Core.Core;
+import Base.Core.Error;
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\DirectionalLight.h"
 #include "Rendering\Caustic\IDirectionalLight.h"
@@ -30,7 +30,7 @@ namespace Caustic
     // Returns:
     // Returns the created directional light
     //**********************************************************************
-    CAUSTICAPI CRefObj<IDirectionalLight> CreateDirectionalLight(Vector3 &pos, Vector3& dir, FRGBColor& color, float intensity, bool casts)
+    CRefObj<IDirectionalLight> CreateDirectionalLight(Vector3 &pos, Vector3& dir, FRGBColor& color, float intensity, bool casts)
     {
         return CRefObj<IDirectionalLight>(new CDirectionalLight(pos, dir, color, intensity, casts));
     }

@@ -5,10 +5,12 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "stdafx.h"
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.RefCount;
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\Light.h"
 #include "Rendering\Caustic\IDirectionalLight.h"
-#include "Base\Core\RefCount.h"
 
 //**********************************************************************
 // File: SpotLight.h

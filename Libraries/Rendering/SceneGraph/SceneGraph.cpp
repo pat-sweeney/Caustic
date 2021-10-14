@@ -11,7 +11,7 @@
 
 namespace Caustic
 {
-    CAUSTICAPI CRefObj<ISceneGraph> CreateSceneGraph()
+    CRefObj<ISceneGraph> CreateSceneGraph()
     {
 		CRefObj<ISceneGroupElem> spGroup = CSceneFactory::Instance()->CreateGroupElem();
 		return CRefObj<ISceneGraph>(new CSceneGraph(spGroup));

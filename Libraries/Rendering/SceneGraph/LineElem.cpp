@@ -10,7 +10,7 @@
 
 namespace Caustic
 {
-    CAUSTICAPI CRefObj<ISceneLineElem> CreateLineElem(Vector3& p0, Vector3& p1)
+    CRefObj<ISceneLineElem> CreateLineElem(Vector3& p0, Vector3& p1)
     {
         return CRefObj<ISceneLineElem>(new CSceneLineElem(p0, p1));
     }

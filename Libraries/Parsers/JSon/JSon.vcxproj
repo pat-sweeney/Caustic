@@ -105,6 +105,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Base\Core\Core.vcxproj">
+      <Project>{aacfe62f-5400-4a81-87ad-b37573a1f5c9}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Rendering\ImGui\ImGui.vcxproj">
       <Project>{fd63d447-4b42-4f14-be8d-392fa277ee0e}</Project>
     </ProjectReference>

@@ -5,10 +5,10 @@
 //**********************************************************************
 #pragma once
 
-#include "Base\Core\Core.h"
-#include "Base\Core\IRefCount.h"
+import Base.Core.Core;
+import Base.Core.IRefCount;
+import Base.Core.ISerialize;
 #include "Base\Math\Vector.h"
-#include "Base\Core\ISerialize.h"
 #include "Imaging\Image\Image.h"
 #include "Imaging\Color\Color.h"
 #include <vector>
@@ -284,7 +284,7 @@ namespace Caustic
 	// Header:
 	// [Link:Rendering/Caustic/IMaterialAttrib.h]
 	//**********************************************************************
-	CAUSTICAPI CRefObj<IMaterialAttrib> CreateStandardMaterialAttrib(FRGBColor ambientColor, FRGBColor diffuseColor,
+	CRefObj<IMaterialAttrib> CreateStandardMaterialAttrib(FRGBColor ambientColor, FRGBColor diffuseColor,
 		FRGBColor specularColor, float specularExp, float alpha);
 
 	//**********************************************************************
@@ -297,5 +297,5 @@ namespace Caustic
 	// Header:
 	// [Link:Rendering/Caustic/IMaterialAttrib.h]
 	//**********************************************************************
-	CAUSTICAPI CRefObj<IMaterialAttrib> CreateMaterialAttrib();
+	CRefObj<IMaterialAttrib> CreateMaterialAttrib();
 }

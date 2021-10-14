@@ -4,8 +4,8 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "stdafx.h"
-#include "Base\Core\Core.h"
-#include "Base\Core\error.h"
+import Base.Core.Core;
+import Base.Core.Error;
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\PointLight.h"
 
@@ -28,7 +28,7 @@ namespace Caustic
     // Returns:
     // Returns the created point light
     //**********************************************************************
-    CAUSTICAPI CRefObj<IPointLight> CreatePointLight(Vector3 &pos, FRGBColor &color, float intensity, bool casts)
+    CRefObj<IPointLight> CreatePointLight(Vector3 &pos, FRGBColor &color, float intensity, bool casts)
     {
         return CRefObj<IPointLight>(new CPointLight(pos, color, intensity, casts));
     }

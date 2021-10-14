@@ -6,8 +6,9 @@
 //**********************************************************************
 #include "Geometry\Mesh\IMesh.h"
 #include "Geometry\GeomDS\kdtree.h"
-#include "Base\Core\RefCount.h"
-#include "Base\Core\BlockAllocator.h"
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.BlockAllocator;
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\PathTrace.h"
 #include <vector>

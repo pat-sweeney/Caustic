@@ -15,8 +15,8 @@
 #include <d3d11shader.h>
 #include <d3dcompiler.h>
 #include <atlbase.h>
-#include "Base/Core/Core.h"
-#include "Base/Core/error.h"
+import Base.Core.Core;
+import Base.Core.Error;
 #include "Base/Core/convertStr.h"
 #include <MsXml6.h>
 #include <stdlib.h>

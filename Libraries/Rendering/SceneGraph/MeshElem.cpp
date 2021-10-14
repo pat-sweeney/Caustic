@@ -12,7 +12,7 @@
 
 namespace Caustic
 {
-    CAUSTICAPI CRefObj<ISceneMeshElem> CreateMeshElem()
+    CRefObj<ISceneMeshElem> CreateMeshElem()
     {
         return CRefObj<ISceneMeshElem>(new CSceneMeshElem());
     }

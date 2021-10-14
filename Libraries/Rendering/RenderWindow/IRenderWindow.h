@@ -4,8 +4,8 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Base\Core\Core.h"
-#include "Base\Core\IRefCount.h"
+import Base.Core.Core;
+import Base.Core.IRefCount;
 #include "Rendering\RenderGraph\IRenderGraph.h"
 #include <Windows.h>
 #include <functional>
@@ -113,7 +113,7 @@ namespace Caustic
     // shaderFolder - Path to folder containing shaders
 	// ppRenderWindow - returns the created render window
 	//**********************************************************************
-	CAUSTICAPI CRefObj<IRenderWindow> CreateRenderWindow(HWND hwnd, std::wstring &shaderFolder, 
+	CRefObj<IRenderWindow> CreateRenderWindow(HWND hwnd, std::wstring &shaderFolder, 
 		std::function<void(IRenderer*, IRenderCtx*, int)> callback,
 		std::function<void(IRenderer*)> prePresentCallback,
 		bool startFrozen = false, int desktopIndex = 0);

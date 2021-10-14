@@ -4,9 +4,9 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Base\Core\Core.h"
-#include "Base\Core\error.h"
-#include "Base\Core\RefCount.h"
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.RefCount;
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\IShaderInfo.h"
 #include "Shader.h"

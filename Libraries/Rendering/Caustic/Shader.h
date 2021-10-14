@@ -6,10 +6,10 @@
 #pragma once
 #include <d3d11.h>
 #include <atlbase.h>
-#include "Base\Core\Core.h"
-#include "Base\Core\error.h"
-#include "Base\Core\RefCount.h"
-#include "Base\Core\IRefCount.h"
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
 #include "Base\Math\BBox.h"
 #include "Rendering\Caustic\Caustic.h"
 #include <string>

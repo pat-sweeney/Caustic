@@ -5,8 +5,8 @@
 //**********************************************************************
 #pragma once
 
-#include "Base\Core\Core.h"
-#include "Base\Core\RefCount.h"
+import Base.Core.Core;
+import Base.Core.RefCount;
 #include "Rendering\RenderWindow\IRenderWindow.h"
 #include "Rendering\SceneGraph\ISceneGraph.h"
 #include "Rendering\SceneGraph\ISceneFactory.h"

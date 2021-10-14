@@ -6,9 +6,10 @@
 #pragma once
 #include "Rendering\Caustic\Caustic.h"
 #include "IRenderable.h"
-#include "Base\Core\RefCount.h"
-#include "Base\Core\CritSec.h"
-#include "Base\Core\Event.h"
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.Event;
+import Base.Core.CritSec;
 #include "Shader.h"
 #include <memory>
 #include <any>

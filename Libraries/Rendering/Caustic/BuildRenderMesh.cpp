@@ -4,8 +4,8 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "stdafx.h"
-#include "Base\Core\Core.h"
-#include "Base\Core\error.h"
+import Base.Core.Core;
+import Base.Core.Error;
 #include "Rendering\Caustic\CausticFactory.h"
 #include "Rendering\Caustic\RenderTypes.h"
 #include "Rendering\Caustic\IRenderer.h"
@@ -222,7 +222,7 @@ namespace Caustic
 	// Returns:
 	// Returns the new render submesh
 	//**********************************************************************
-	CAUSTICAPI CRefObj<IRenderSubMesh> BuildRenderSubMesh(IRenderer* pRenderer, 
+	CRefObj<IRenderSubMesh> BuildRenderSubMesh(IRenderer* pRenderer, 
 		std::vector<CGeomFace> &faces, std::vector<CGeomVertex> &verts,
 		IShader* pShader)
 	{
@@ -253,7 +253,7 @@ namespace Caustic
 	// Returns:
 	// Returns the new render submesh
 	//**********************************************************************
-	CAUSTICAPI CRefObj<IRenderSubMesh> CreateDepthGridMesh(IRenderer* pRenderer, uint32 width, uint32 height, IShader* pShader)
+	CRefObj<IRenderSubMesh> CreateDepthGridMesh(IRenderer* pRenderer, uint32 width, uint32 height, IShader* pShader)
 	{
 		std::vector<CGeomVertex> verts;
 		std::vector<CGeomFace> faces;

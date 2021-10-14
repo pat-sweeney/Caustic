@@ -4,8 +4,8 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Base\Core\Core.h"
-#include "Base\Core\IRefCount.h"
+import Base.Core.Core;
+import Base.Core.IRefCount;
 #include "ILightCollection.h"
 #include <vector>
 

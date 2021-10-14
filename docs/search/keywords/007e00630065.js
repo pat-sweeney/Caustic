@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("~ce",["Function"],[["~CEvent",,[["CEvent",,,,0,"File:Base/Core/Event.h:CEvent.~CEvent","CClass:CEvent:~CEvent"]]]]);

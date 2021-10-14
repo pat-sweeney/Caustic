@@ -4,15 +4,16 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "stdafx.h"
-#include "Base\Core\Core.h"
-#include "Base\Core\error.h"
-#include "Base\Core\RefCount.h"
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.RefCount;
 #include "Geometry/Rast/Bresenham.h"
 #include "Image.h"
 #include "ImageFilter.h"
 #include "ImageIter.h"
 #include <memory>
 #include <any>
+#include <winerror.h>
 
 // Namespace: Caustic
 namespace Caustic

@@ -4,8 +4,8 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Base\Core\Core.h"
-#include "Base\Core\IRefCount.h"
+import Base.Core.Core;
+import Base.Core.IRefCount;
 #include "Image.h"
 
 // Namespace: Caustic
@@ -33,5 +33,5 @@ namespace Caustic
 		virtual CRefObj<IImage> Acquire(uint32 width, uint32 height, uint32 bpp) = 0;
 	};
 
-	CAUSTICAPI CRefObj<IImagePool> CreateImagePool(uint32 maxImages, uint32 width, uint32 height, uint32 bpp);
+	CRefObj<IImagePool> CreateImagePool(uint32 maxImages, uint32 width, uint32 height, uint32 bpp);
 }

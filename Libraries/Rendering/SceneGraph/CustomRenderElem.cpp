@@ -11,7 +11,7 @@
 
 namespace Caustic
 {
-    CAUSTICAPI CRefObj<ISceneCustomRenderElem> CreateCustomRenderElem(std::function<void(IRenderer * pRenderer, IRenderCtx * pRenderCtx, SceneCtx * pSceneCtx)> clientCallback)
+    CRefObj<ISceneCustomRenderElem> CreateCustomRenderElem(std::function<void(IRenderer * pRenderer, IRenderCtx * pRenderCtx, SceneCtx * pSceneCtx)> clientCallback)
     {
         return CRefObj<ISceneCustomRenderElem>(new CSceneCustomRenderElem(clientCallback));
     }

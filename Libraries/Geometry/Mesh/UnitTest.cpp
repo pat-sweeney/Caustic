@@ -4,9 +4,10 @@
 // See file LICENSE for details.
 //**********************************************************************
 #define _USE_MATH_DEFINES
+import Base.Core.Core;
+import Base.Core.Error;
 #include <cmath>
 #include "Base\Math\Vector.h"
-#include "Base\Core\error.h"
 #include "Geometry\Mesh\IMesh.h"
 #include "Geometry\Mesh\IMeshConstructor.h"
 #include "UnitTest.h"

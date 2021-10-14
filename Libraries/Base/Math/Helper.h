@@ -5,7 +5,7 @@
 //**********************************************************************
 #pragma once
 #include "stdafx.h"
-#include "Base\Core\Core.h"
+import Base.Core.Core;
 #include "Base\Math\BBox.h"
 
 // Namespace: Caustic

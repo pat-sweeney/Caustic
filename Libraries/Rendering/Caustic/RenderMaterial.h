@@ -4,8 +4,9 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Base\Core\Core.h"
-#include "Base\Core\RefCount.h"
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.RefCount;
 #include "Rendering\Caustic\Caustic.h"
 #include <map>
 
@@ -44,7 +45,7 @@ namespace Caustic
         std::map<std::wstring, CRenderTexture> m_textures;
     public:
         friend class CRenderer;
-        friend CAUSTICAPI CRefObj<IRenderMaterial> CreateRenderMaterial(IRenderer* pRenderer, IMaterialAttrib *pMaterialAttrib, IShader *pShader);
+        friend CRefObj<IRenderMaterial> CreateRenderMaterial(IRenderer* pRenderer, IMaterialAttrib *pMaterialAttrib, IShader *pShader);
 
         //**********************************************************************
         // IRefCount

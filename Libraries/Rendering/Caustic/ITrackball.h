@@ -5,7 +5,7 @@
 //**********************************************************************
 #pragma once
 
-#include "Base\Core\Core.h"
+import Base.Core.Core;
 
 //**********************************************************************
 // File: ITrackball.h
@@ -86,5 +86,5 @@ namespace Caustic
     // Header:
     // [Link:Rendering/Caustic/ITrackball.h]
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITrackball> CreateTrackball();
+    CRefObj<ITrackball> CreateTrackball();
 }

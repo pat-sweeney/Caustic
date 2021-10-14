@@ -22,7 +22,7 @@ namespace Caustic
     // Returns:
     // Returns the newly created trackball.
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITrackball> CreateTrackball()
+    CRefObj<ITrackball> CreateTrackball()
     {
         return CRefObj<ITrackball>(new CTrackball());
     }

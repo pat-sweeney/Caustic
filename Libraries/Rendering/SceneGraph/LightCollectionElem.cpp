@@ -14,7 +14,7 @@
 
 namespace Caustic
 {
-    CAUSTICAPI CRefObj<ISceneLightCollectionElem> CreateLightCollectionElem()
+    CRefObj<ISceneLightCollectionElem> CreateLightCollectionElem()
     {
         return CRefObj<ISceneLightCollectionElem>(new CSceneLightCollectionElem());
     }

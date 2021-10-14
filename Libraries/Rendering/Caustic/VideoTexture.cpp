@@ -4,7 +4,8 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "stdafx.h"
-#include "Base\Core\Error.h"
+import Base.Core.Core;
+import Base.Core.Error;
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\CausticFactory.h"
 #include "VideoTexture.h"
@@ -276,7 +277,7 @@ namespace Caustic
     // Returns:
     // Returns the new texture
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> LoadVideoTexture(const wchar_t* pFilename, IRenderer* pRenderer)
+    CRefObj<ITexture> LoadVideoTexture(const wchar_t* pFilename, IRenderer* pRenderer)
     {
         std::unique_ptr<CVideoTexture> spTexture(new CVideoTexture(pRenderer));
         spTexture->LoadFromFile(pFilename, pRenderer);
@@ -293,7 +294,7 @@ namespace Caustic
     // Returns:
     // Returns the new texture
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> VideoTextureFromWebcam(IRenderer* pRenderer)
+    CRefObj<ITexture> VideoTextureFromWebcam(IRenderer* pRenderer)
     {
         std::unique_ptr<CVideoTexture> spTexture(new CVideoTexture(pRenderer));
         spTexture->CreateFromWebcam(pRenderer);

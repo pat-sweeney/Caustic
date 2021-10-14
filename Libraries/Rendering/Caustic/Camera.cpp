@@ -4,8 +4,8 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "stdafx.h"
-#include "Base\Core\Core.h"
-#include "Base\Core\Error.h"
+import Base.Core.Core;
+import Base.Core.Error;
 #include "Camera.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -30,7 +30,7 @@ namespace Caustic
     // Returns:
     // Returns the newly created camera.
     //**********************************************************************
-    CAUSTICAPI CRefObj<ICamera> CreateCamera(bool leftHanded)
+    CRefObj<ICamera> CreateCamera(bool leftHanded)
     {
         return CRefObj<ICamera>(new CCamera(leftHanded));
     }

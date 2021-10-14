@@ -14,7 +14,7 @@
 
 namespace Caustic
 {
-    CAUSTICAPI CRefObj<ISceneGroupElem> CreateGroupElem()
+    CRefObj<ISceneGroupElem> CreateGroupElem()
     {
         return CRefObj<ISceneGroupElem>(new CSceneGroupElem());
     }

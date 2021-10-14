@@ -5,8 +5,8 @@
 //**********************************************************************
 #pragma once
 
-#include "Base\Core\Core.h"
-#include "Base\Core\IRefCount.h"
+import Base.Core.Core;
+import Base.Core.IRefCount;
 #include "Imaging\Image\Image.h"
 #include "Rendering/Caustic/IRenderer.h"
 
@@ -143,7 +143,7 @@ namespace Caustic
     // Header:
     // [Link:Rendering/Caustic/ITexture.h]
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags);
+    CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags);
     
     //**********************************************************************
     // Function: CreateTexture
@@ -161,7 +161,7 @@ namespace Caustic
     // Header:
     // [Link:Rendering/Caustic/ITexture.h]
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, uint32 width, uint32 height, DXGI_FORMAT format);
+    CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, uint32 width, uint32 height, DXGI_FORMAT format);
     
     //**********************************************************************
     // Function: CreateTexture
@@ -179,7 +179,7 @@ namespace Caustic
     // Header:
     // [Link:Rendering/Caustic/ITexture.h]
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, IImage* pImage, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags);
+    CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, IImage* pImage, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags);
     
     //**********************************************************************
     // Function: CheckerboardTexture
@@ -194,7 +194,7 @@ namespace Caustic
     // Header:
     // [Link:Rendering/Caustic/ITexture.h]
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> CheckerboardTexture(IRenderer* pRenderer, int w = 32, int h = 32, int blocksize = 4);
+    CRefObj<ITexture> CheckerboardTexture(IRenderer* pRenderer, int w = 32, int h = 32, int blocksize = 4);
 
     //**********************************************************************
     // Function: LoadTexture
@@ -210,7 +210,7 @@ namespace Caustic
     // Header:
     // [Link:Rendering/Caustic/ITexture.h]
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> LoadTexture(const wchar_t* pFilename, IRenderer* pRenderer);
+    CRefObj<ITexture> LoadTexture(const wchar_t* pFilename, IRenderer* pRenderer);
 
     //**********************************************************************
     // Function: LoadVideoTexture
@@ -226,7 +226,7 @@ namespace Caustic
     // Header:
     // [Link:Rendering/Caustic/ITexture.h]
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> LoadVideoTexture(const wchar_t* pFilename, IRenderer* pRenderer);
+    CRefObj<ITexture> LoadVideoTexture(const wchar_t* pFilename, IRenderer* pRenderer);
 
     //**********************************************************************
     // Function: VideoTextureFromWebcam
@@ -241,7 +241,7 @@ namespace Caustic
     // Header:
     // [Link:Rendering/Caustic/ITexture.h]
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> VideoTextureFromWebcam(IRenderer* pRenderer);
+    CRefObj<ITexture> VideoTextureFromWebcam(IRenderer* pRenderer);
 
     //**********************************************************************
     // Function: CreateDesktopTexture
@@ -256,5 +256,5 @@ namespace Caustic
     // Header:
     // [Link:Rendering/Caustic/ITexture.h]
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> CreateDesktopTexture(IRenderer* pRenderer);
+    CRefObj<ITexture> CreateDesktopTexture(IRenderer* pRenderer);
 }

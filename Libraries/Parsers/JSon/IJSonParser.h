@@ -3,7 +3,8 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "Base\Core\IRefCount.h"
+import Base.Core.Core;
+import Base.Core.IRefCount;
 #include <string>
 #include <memory>
 #include <any>
@@ -107,6 +108,6 @@ namespace Caustic
 		virtual uint32 WriteDOM(CRefObj<IJSonObj>& dom, char* pBuffer, uint32 bufLen) = 0;
 	};
 	
-	CAUSTICAPI CRefObj<IJSonParser> CreateJSonParser();
+	CRefObj<IJSonParser> CreateJSonParser();
 	extern void JSONTree(IJSonObj* pObj, const char* pTreeName);
 }

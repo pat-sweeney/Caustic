@@ -4,10 +4,10 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Base\Core\Core.h"
-#include "Base\Core\IRefCount.h"
-#include "Base\Core\RefCount.h"
-#include "Base\Core\ISerialize.h"
+import Base.Core.Core;
+import Base.Core.IRefCount;
+import Base.Core.ISerialize;
+import Base.Core.RefCount;
 #include "Base\Math\Vector.h"
 #include "Base\Math\BBox.h"
 #include "Rendering\Caustic\RenderTypes.h"
@@ -416,18 +416,18 @@ namespace Caustic
     };
     
 
-    CAUSTICAPI CRefObj<IMesh> CreateSurfaceRevolution(std::vector<Vector3> &pts, uint32 npts, uint32 subdivisions, float maxAngle);
-    CAUSTICAPI CRefObj<IMesh> CreateEmptyMesh();
-    CAUSTICAPI CRefObj<ISubMesh> CreateSubMesh(std::vector<CGeomVertex> &verts,
+    CRefObj<IMesh> CreateSurfaceRevolution(std::vector<Vector3> &pts, uint32 npts, uint32 subdivisions, float maxAngle);
+    CRefObj<IMesh> CreateEmptyMesh();
+    CRefObj<ISubMesh> CreateSubMesh(std::vector<CGeomVertex> &verts,
         std::vector<int> &faces,
         uint32 materialID);
-    CAUSTICAPI CRefObj<ISubMesh> CreateSubMesh(std::vector<Vector3> &vertPos,
+    CRefObj<ISubMesh> CreateSubMesh(std::vector<Vector3> &vertPos,
         std::vector<Vector3> &vertNorms,
         std::vector<Vector2> &vertUVs,
         std::vector<int> &faces,
         EVertexFlags flags,
         uint32 materialID);
-    CAUSTICAPI CRefObj<ISubMesh> CreateSubMesh(std::vector<Vector3> &vertPos,
+    CRefObj<ISubMesh> CreateSubMesh(std::vector<Vector3> &vertPos,
         std::vector<int> &faces,
         uint32 materialID);
 
@@ -435,10 +435,10 @@ namespace Caustic
     // Method: CreateEmptySubMesh
     // Creates a empty submesh.
     //**********************************************************************
-    CAUSTICAPI CRefObj<ISubMesh> CreateEmptySubMesh();
-    CAUSTICAPI CRefObj<IMesh> CreateCube();
-    CAUSTICAPI CRefObj<IMesh> CreateSphere(uint32 subdivisions);
-    CAUSTICAPI CRefObj<IMesh> CreateTetrahedron();
-    CAUSTICAPI CRefObj<IMesh> CreateGrid(uint32 subdivisions);
-    CAUSTICAPI CRefObj<IMesh> CreateGrid(uint32 width, uint32 height);
+    CRefObj<ISubMesh> CreateEmptySubMesh();
+    CRefObj<IMesh> CreateCube();
+    CRefObj<IMesh> CreateSphere(uint32 subdivisions);
+    CRefObj<IMesh> CreateTetrahedron();
+    CRefObj<IMesh> CreateGrid(uint32 subdivisions);
+    CRefObj<IMesh> CreateGrid(uint32 width, uint32 height);
 }

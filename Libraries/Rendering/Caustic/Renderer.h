@@ -6,9 +6,10 @@
 #pragma once
 #include "Rendering\Caustic\Caustic.h"
 #include "Geometry\Mesh\Mesh.h"
-#include "Base\Core\RefCount.h"
-#include "Base\Core\CritSec.h"
-#include "Base\Core\Event.h"
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.Event;
+import Base.Core.CritSec;
 #include "Shader.h"
 #include <memory>
 #include <any>
@@ -159,7 +160,7 @@ namespace Caustic
         RECT m_viewRect;
         D3D11_VIEWPORT m_viewport;
 
-        friend CAUSTICAPI CRefObj<IRenderer> CreateGraphics(HWND hwnd);
+        friend CRefObj<IRenderer> CreateGraphics(HWND hwnd);
 
         virtual void InitializeD3D(HWND hwnd);
         void Setup(HWND hwnd, bool createDebugDevice, int desktopIndex);

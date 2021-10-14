@@ -4,7 +4,7 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Base\Core\Core.h"
+import Base.Core.Core;
 #include "Base\Math\Vector.h"
 #include "Base\Math\Quaternion.h"
 #include <string.h>

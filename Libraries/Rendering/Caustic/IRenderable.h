@@ -5,8 +5,8 @@
 //**********************************************************************
 #pragma once
 
-#include "Base\Core\Core.h"
-#include "Base\Core\IRefCount.h"
+import Base.Core.Core;
+import Base.Core.IRefCount;
 #include "Base\Math\Vector.h"
 #include <d3d11.h>
 #include <DirectXMath.h>
@@ -147,5 +147,5 @@ namespace Caustic
     // Header:
     // [Link:Rendering/Caustic/IRenderable.h]
     //**********************************************************************
-    CAUSTICAPI CRefObj<IRenderable> CreateRenderable(IRenderSubMesh* pSubMesh, IRenderMaterial* pFrontMaterial, IRenderMaterial* pBackMaterial, DirectX::XMMATRIX& mat);
+    CRefObj<IRenderable> CreateRenderable(IRenderSubMesh* pSubMesh, IRenderMaterial* pFrontMaterial, IRenderMaterial* pBackMaterial, DirectX::XMMATRIX& mat);
 }

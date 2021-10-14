@@ -3,6 +3,8 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+import Base.Core.Core;
+import Base.Core.IRefCount;
 #include "Geometry\Mesh\IMesh.h"
 #include "Geometry\Mesh\IMeshConstructor.h"
 #include "Mesh.h"
@@ -26,7 +28,7 @@ namespace Caustic
     // Returns:
     // Return newly generated mesh
     //**********************************************************************
-    CAUSTICAPI CRefObj<IMesh> CreateSurfaceRevolution(std::vector<Vector3> &pts, uint32 npts, uint32 subdivisions, float maxAngle)
+    CRefObj<IMesh> CreateSurfaceRevolution(std::vector<Vector3> &pts, uint32 npts, uint32 subdivisions, float maxAngle)
     {
         CRefObj<IMeshConstructor> spMeshConstructor = Caustic::CreateMeshConstructor();
         spMeshConstructor->MeshOpen();
@@ -198,7 +200,7 @@ namespace Caustic
     // Returns:
     // Returns the created mesh
     //**********************************************************************
-    CAUSTICAPI CRefObj<IMesh> CreateSphere(uint32 subdivisions)
+    CRefObj<IMesh> CreateSphere(uint32 subdivisions)
     {
         std::vector<Vector3> pts(subdivisions + 2);
         pts[0] = Vector3(0.0F, -1.0F, 0.0F);
@@ -221,7 +223,7 @@ namespace Caustic
     // Returns:
     // Returns the created mesh
     //**********************************************************************
-    CAUSTICAPI CRefObj<IMesh> CreateTetrahedron()
+    CRefObj<IMesh> CreateTetrahedron()
     {
         Vector3 vertPos[4] =
         {
@@ -268,7 +270,7 @@ namespace Caustic
     // Returns:
     // Returns the created mesh
     //**********************************************************************
-    CAUSTICAPI CRefObj<IMesh> CreateGrid(uint32 width, uint32 height)
+    CRefObj<IMesh> CreateGrid(uint32 width, uint32 height)
     {
         CRefObj<IMeshConstructor> spMeshConstructor = Caustic::CreateMeshConstructor();
 
@@ -321,7 +323,7 @@ namespace Caustic
     // Returns:
     // Returns the created mesh
     //**********************************************************************
-    CAUSTICAPI CRefObj<IMesh> CreateGrid(uint32 subdivisions)
+    CRefObj<IMesh> CreateGrid(uint32 subdivisions)
     {
         return CreateGrid(subdivisions, subdivisions);
     }
@@ -333,7 +335,7 @@ namespace Caustic
     // Returns:
     // Returns the newly created mesh object
     //**********************************************************************
-    CAUSTICAPI CRefObj<IMesh> CreateCube()
+    CRefObj<IMesh> CreateCube()
     {
         std::vector<Vector3> vpos =
         {

@@ -5,7 +5,8 @@
 //**********************************************************************
 #pragma once
 #include "GPUPipeline.h"
-#include "Base\Core\RefCount.h"
+import Base.Core.Core;
+import Base.Core.RefCount;
 #include "Rendering\Caustic\Caustic.h"
 #include "Cameras\CameraBase\ICamera.h"
 #include <vector>

@@ -1120,7 +1120,7 @@ namespace Caustic
     // Returns:
     // Returns the created buffer
     //**********************************************************************
-    CAUSTICAPI CRefObj<IGPUBuffer> CreateGPUBuffer(IRenderer* pRenderer, EBufferType type, uint32 numElems, uint32 elemSize, uint32 bindFlags)
+    CRefObj<IGPUBuffer> CreateGPUBuffer(IRenderer* pRenderer, EBufferType type, uint32 numElems, uint32 elemSize, uint32 bindFlags)
     {
         std::unique_ptr<CGPUBuffer> spBuffer(new CGPUBuffer());
         spBuffer->Create(pRenderer, type, numElems, elemSize, bindFlags);
@@ -1299,7 +1299,7 @@ namespace Caustic
     // Returns:
     // Returns the created shader
     //**********************************************************************
-    CAUSTICAPI CRefObj<IShader> CreateShader(IRenderer *pRenderer, const wchar_t *pShaderName, IShaderInfo *pShaderInfo,
+    CRefObj<IShader> CreateShader(IRenderer *pRenderer, const wchar_t *pShaderName, IShaderInfo *pShaderInfo,
         ID3DBlob *pPSBlob, ID3DBlob *pVSBlob, ID3DBlob *pCSBlob)
     {
         std::unique_ptr<CShader> spShader(new CShader());

@@ -5,7 +5,7 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Base\Core\Core.h"
+import Base.Core.Core;
 #include <assert.h>
 
 namespace Caustic {

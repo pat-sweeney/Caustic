@@ -5,7 +5,7 @@
 //**********************************************************************
 #pragma once
 
-#include "Base\Core\Core.h"
+import Base.Core.Core;
 #include "Geometry\Mesh\IMesh.h"
 #include "Rendering\Caustic\IRenderable.h"
 #include <functional>
@@ -463,5 +463,5 @@ namespace Caustic
     // Header:
     // [Link:Rendering/Caustic/IRenderer.h]
     //**********************************************************************
-    CAUSTICAPI CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring& shaderFolder, bool startFrozen = false, int desktopIndex = 0);
+    CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring& shaderFolder, bool startFrozen = false, int desktopIndex = 0);
 }

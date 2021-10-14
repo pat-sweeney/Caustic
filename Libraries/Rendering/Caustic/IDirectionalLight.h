@@ -5,8 +5,8 @@
 //**********************************************************************
 #pragma once
 
-#include "Base\Core\Core.h"
-#include "Base\Core\IRefCount.h"
+import Base.Core.Core;
+import Base.Core.IRefCount;
 #include "Base\Math\Vector.h"
 #include "Imaging\Color\Color.h"
 #include "Rendering\Caustic\ILight.h"
@@ -59,5 +59,5 @@ namespace Caustic
     // Header:
     // [Link:Rendering/Caustic/IPointLight.h]
     //**********************************************************************
-    CAUSTICAPI CRefObj<IDirectionalLight> CreateDirectionalLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity = 1000.0f, bool casts = true);
+    CRefObj<IDirectionalLight> CreateDirectionalLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity = 1000.0f, bool casts = true);
 }

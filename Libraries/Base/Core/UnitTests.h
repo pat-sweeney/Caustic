@@ -4,7 +4,7 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Core.h"
+import Base.Core.Core;
 
 namespace CausticTestSuite
 {

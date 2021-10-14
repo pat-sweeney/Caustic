@@ -7,40 +7,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Core.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CritSec.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="error.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Event.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RefCount.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="UnitTests.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="IRefCount.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ISerialize.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BlockAllocator.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="convertStr.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Property.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Timer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -48,7 +18,37 @@
     <ClCompile Include="convertStr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Core.cpp">
+    <ClCompile Include="Core.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IRefCount.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ISerialize.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BlockAllocator.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Error.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RefCount.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Event.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CritSec.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Property.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core.cppm">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

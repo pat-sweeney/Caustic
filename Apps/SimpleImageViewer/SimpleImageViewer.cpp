@@ -6,8 +6,8 @@
 #include "SimpleImageViewer.h"
 #include <Windows.h>
 #include <commdlg.h>
-#include "Base\Core\Core.h"
-#include "Base\Core\IRefCount.h"
+import Base.Core.Core;
+import Base.Core.IRefCount;
 #include "Imaging\Image\Image.h"
 #include "Imaging\Image\ImageFilter.h"
 #include "Cameras\AzureKinect\IAzureKinect.h"

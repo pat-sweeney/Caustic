@@ -4,8 +4,8 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Base\Core\Core.h"
-#include "Base\Core\IRefCount.h"
+import Base.Core.Core;
+import Base.Core.IRefCount;
 #include "Base\Math\Vector.h"
 #include "Imaging\Image\Image.h"
 #include <map>
@@ -69,19 +69,19 @@ namespace Caustic
 		virtual bool ApplyInPlace(IImage* pImage, ImageFilterParams* pParams) = 0;
 	};
     
-	CAUSTICAPI CRefObj<IImageFilter> CreateGaussianBlur(float sigma);
-	CAUSTICAPI CRefObj<IImageFilter> CreateGaussianBlur();
-	CAUSTICAPI CRefObj<IImageFilter> CreateColorize();
-    CAUSTICAPI CRefObj<IImageFilter> CreateColorize(int maxDepth);
-    CAUSTICAPI CRefObj<IImageFilter> CreateMedian();
-    CAUSTICAPI CRefObj<IImageFilter> CreateCustomFilter(int kernelWidth, int kernelHeight, float* kernelWeights);
-    CAUSTICAPI CRefObj<IImageFilter> CreateHarrisCornerFilter();
-    CAUSTICAPI CRefObj<IImageFilter> CreateSobelFilter(bool horizontal, int kernelSize = 3);
-	CAUSTICAPI CRefObj<IImageFilter> CreateSharpenFilter();
-	CAUSTICAPI CRefObj<IImageFilter> CreateUnsharpMaskFilter();
-	CAUSTICAPI CRefObj<IImageFilter> CreateEqualizeFilter();
-	CAUSTICAPI CRefObj<IImageFilter> CreateMosaicFilter();
-	CAUSTICAPI CRefObj<IImageFilter> CreateMotionBlurFilter();
-	CAUSTICAPI CRefObj<IImageFilter> CreateBoxFilter(int kernelSize);
-	CAUSTICAPI CRefObj<IImageFilter> CreateQuantizeFilter();
+	CRefObj<IImageFilter> CreateGaussianBlur(float sigma);
+	CRefObj<IImageFilter> CreateGaussianBlur();
+	CRefObj<IImageFilter> CreateColorize();
+    CRefObj<IImageFilter> CreateColorize(int maxDepth);
+    CRefObj<IImageFilter> CreateMedian();
+    CRefObj<IImageFilter> CreateCustomFilter(int kernelWidth, int kernelHeight, float* kernelWeights);
+    CRefObj<IImageFilter> CreateHarrisCornerFilter();
+    CRefObj<IImageFilter> CreateSobelFilter(bool horizontal, int kernelSize = 3);
+	CRefObj<IImageFilter> CreateSharpenFilter();
+	CRefObj<IImageFilter> CreateUnsharpMaskFilter();
+	CRefObj<IImageFilter> CreateEqualizeFilter();
+	CRefObj<IImageFilter> CreateMosaicFilter();
+	CRefObj<IImageFilter> CreateMotionBlurFilter();
+	CRefObj<IImageFilter> CreateBoxFilter(int kernelSize);
+	CRefObj<IImageFilter> CreateQuantizeFilter();
 }

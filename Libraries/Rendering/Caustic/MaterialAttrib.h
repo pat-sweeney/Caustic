@@ -5,7 +5,8 @@
 //**********************************************************************
 #pragma once
 #include "IMaterialAttrib.h"
-#include "Base\Core\RefCount.h"
+import Base.Core.Core;
+import Base.Core.RefCount;
 #include "Imaging\Image\Image.h"
 #include "Imaging\Image\ImageIter.h"
 #include <vector>

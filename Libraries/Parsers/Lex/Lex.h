@@ -5,10 +5,10 @@
 //**********************************************************************
 #pragma once
 
-#include "Base\Core\Core.h"
-#include "Base/Core/RefCount.h"
-#include "Base/Core/IRefCount.h"
-#include "Base/Core/error.h"
+import Base.Core.Core;
+import Base.Core.IRefCount;
+import Base.Core.Error;
+import Base.Core.RefCount;
 #include "Parsers/Lex/ILex.h"
 #include <string>
 

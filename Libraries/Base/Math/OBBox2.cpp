@@ -4,7 +4,7 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "stdafx.h"
-#include "Base\Core\Core.h"
+import Base.Core.Core;
 #include "Base\Math\OBBox.h"
 
 namespace Caustic

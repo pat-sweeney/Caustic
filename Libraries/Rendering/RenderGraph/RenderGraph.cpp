@@ -4,8 +4,8 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Base\Core\Core.h"
-#include "Base\Core\RefCount.h"
+import Base.Core.Core;
+import Base.Core.RefCount;
 #include "Rendering\Caustic\Caustic.h"
 #include "Base\Math\Matrix.h"
 #include "IRenderGraphNode.h"

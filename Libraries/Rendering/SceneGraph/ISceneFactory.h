@@ -4,7 +4,7 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Base\Core\Core.h"
+import Base.Core.Core;
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\Shader.h"
 #include "Base\Math\Matrix.h"
@@ -119,5 +119,5 @@ namespace Caustic
 	// Creates a scene factory. This factory is used to create elements in
 	// the scene graph.
 	//**********************************************************************
-	CAUSTICAPI CRefObj<ISceneFactory> CreateSceneFactory();
+	CRefObj<ISceneFactory> CreateSceneFactory();
 };

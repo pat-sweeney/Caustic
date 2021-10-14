@@ -5,9 +5,9 @@
 //**********************************************************************
 #pragma once
 
-#include "Base\Core\Core.h"
+import Base.Core.Core;
+import Base.Core.IRefCount;
 #include "Base\Math\Vector.h"
-#include "Base/Core/IRefCount.h"
 #include <vector>
 #include <d3d11.h>
 

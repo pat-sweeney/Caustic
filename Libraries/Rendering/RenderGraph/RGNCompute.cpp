@@ -4,8 +4,12 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Base\Core\Core.h"
-#include "Base\Core\RefCount.h"
+#include <vector>
+#include <string>
+#include <any>
+#include <windows.h>
+import Base.Core.Core;
+import Base.Core.RefCount;
 #include "Base\Math\Vector.h"
 #include "Base\Core\convertStr.h"
 #include "IRGNCompute.h"
@@ -14,9 +18,6 @@
 #include "Rendering\Caustic\IBuffer.h"
 #include "Rendering\Caustic\Shader.h"
 #include "Rendering\Caustic\ShaderInfo.h"
-#include <vector>
-#include <string>
-#include <any>
 
 namespace Caustic
 {

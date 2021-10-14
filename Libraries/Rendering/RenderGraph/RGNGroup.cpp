@@ -4,9 +4,9 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Base\Core\Core.h"
-#include "Base\Core\IRefCount.h"
-#include "Base\Core\error.h"
+import Base.Core.Core;
+import Base.Core.IRefCount;
+import Base.Core.Error;
 #include "IRenderGraphNode.h"
 #include "RenderGraphNode.h"
 #include "RGNGroup.h"

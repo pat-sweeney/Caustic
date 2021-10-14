@@ -222,7 +222,7 @@ namespace Caustic
     }
 
     //**********************************************************************
-    CAUSTICAPI CRefObj<IKDTree> CreateKDTree()
+    CRefObj<IKDTree> CreateKDTree()
     {
         return CRefObj<IKDTree>(new Caustic::CKDTree(50));
     }

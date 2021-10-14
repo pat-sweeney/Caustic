@@ -4,8 +4,9 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Base\Core\Core.h"
-#include "Base\Core\RefCount.h"
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.RefCount;
 #include "Base\Math\Vector.h"
 #include "IRGNCompute.h"
 #include "RenderGraphNode.h"

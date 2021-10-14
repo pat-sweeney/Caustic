@@ -8,6 +8,7 @@
 #include "Base\Core\convertStr.h"
 #include "Rendering\Caustic\CausticFactory.h"
 #include <memory>
+#undef LoadImage
 
 namespace Caustic
 {
@@ -25,7 +26,7 @@ namespace Caustic
     // Returns:
     // Returns the created material object
     //**********************************************************************
-    CAUSTICAPI CRefObj<IMaterialAttrib> CreateStandardMaterialAttrib(FRGBColor ambientColor, FRGBColor diffuseColor, FRGBColor specularColor, float specularExp, float alpha)
+    CRefObj<IMaterialAttrib> CreateStandardMaterialAttrib(FRGBColor ambientColor, FRGBColor diffuseColor, FRGBColor specularColor, float specularExp, float alpha)
     {
         std::unique_ptr<CMaterialAttrib> spMaterial(new CMaterialAttrib());
         spMaterial->SetColor(L"ambientColor", ambientColor);
@@ -43,7 +44,7 @@ namespace Caustic
     // Returns:
     // Returns the created material object
     //**********************************************************************
-    CAUSTICAPI CRefObj<IMaterialAttrib> CreateMaterialAttrib()
+    CRefObj<IMaterialAttrib> CreateMaterialAttrib()
     {
         return CRefObj<IMaterialAttrib>(new CMaterialAttrib());
     }

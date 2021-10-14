@@ -8,12 +8,14 @@
 // http://paulbourke.net/dataformats/mtl/
 //**********************************************************************
 #include "stdafx.h"
-#include "Base\Core\Core.h"
-#include "Base\Core\error.h"
+#include <Windows.h>
+import Base.Core.Core;
+import Base.Core.Error;
+#include <string>
+#include <vector>
+#include "Base\Math\Vector.h"
 #include "Base\Core\convertStr.h"
 #include "Rendering\Caustic\Caustic.h"
-#include <atlbase.h>
-#include <map>
 
 namespace Caustic
 {

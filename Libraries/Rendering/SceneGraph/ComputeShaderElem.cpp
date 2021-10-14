@@ -11,7 +11,7 @@
 
 namespace Caustic
 {
-    CAUSTICAPI CRefObj<ISceneComputeShaderElem> CreateComputeShaderElem(IShader *pComputeShader)
+    CRefObj<ISceneComputeShaderElem> CreateComputeShaderElem(IShader *pComputeShader)
     {
         return CRefObj<ISceneComputeShaderElem>(new CSceneComputeShaderElem(pComputeShader));
     }

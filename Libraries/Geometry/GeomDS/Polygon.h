@@ -5,8 +5,8 @@
 //**********************************************************************
 #pragma once
 #include "Base\Math\vector.h"
-#include "Base\Core\RefCount.h"
-#include "Base\Core\core.h"
+import Base.Core.Core;
+import Base.Core.RefCount;
 #include "Base\Math\BBox.h"
 #include <vector>
 #include "IPolygon.h"

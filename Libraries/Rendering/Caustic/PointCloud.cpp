@@ -5,12 +5,14 @@
 //**********************************************************************
 #pragma once
 #include "stdafx.h"
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.RefCount;
+import Base.Core.Event;
+import Base.Core.CritSec;
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\IRenderMesh.h"
 #include "IRenderable.h"
-#include "Base\Core\RefCount.h"
-#include "Base\Core\CritSec.h"
-#include "Base\Core\Event.h"
 #include "Shader.h"
 #include "PointCloud.h"
 #include "IPointCloud.h"
@@ -106,7 +108,7 @@ namespace Caustic
         m_renderable.Render(pRenderer, lights, pRenderCtx);
     }
 
-    CAUSTICAPI CRefObj<IPointCloud> CreatePointCloud(IRenderer* pRenderer, uint32 width, uint32 height)
+    CRefObj<IPointCloud> CreatePointCloud(IRenderer* pRenderer, uint32 width, uint32 height)
     {
         std::unique_ptr<CPointCloud> spPointCloud(new CPointCloud(pRenderer, width, height));
         return CRefObj<IPointCloud>(spPointCloud.release());

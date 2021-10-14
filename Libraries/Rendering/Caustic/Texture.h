@@ -5,8 +5,8 @@
 //**********************************************************************
 #pragma once
 #include "Rendering\Caustic\Caustic.h"
-#include "Base\Core\Core.h"
-#include "Base\Core\RefCount.h"
+import Base.Core.Core;
+import Base.Core.RefCount;
 #include <d3d11.h>
 
 namespace Caustic

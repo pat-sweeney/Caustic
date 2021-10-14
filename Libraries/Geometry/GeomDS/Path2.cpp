@@ -4,11 +4,13 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "stdafx.h"
-#include "Base\Core\error.h"
+#include <memory>
+#include <stdarg.h>
+#include <winerror.h>
+import Base.Core.Core;
+import Base.Core.Error;
 #include "Path2.h"
 #include "Base/Math/Helper.h"
-#include <memory>
-#include <varargs.h>
 
 namespace Caustic {
 	//**********************************************************************

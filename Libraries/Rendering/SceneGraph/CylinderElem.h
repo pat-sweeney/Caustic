@@ -11,8 +11,8 @@
 
 namespace Caustic
 {
-    CAUSTICAPI CRefObj<ISceneGroupElem> CreateGroupElem();
-    CAUSTICAPI CRefObj<ISceneMeshElem> CreateMeshElem();
+    CRefObj<ISceneGroupElem> CreateGroupElem();
+    CRefObj<ISceneMeshElem> CreateMeshElem();
     
     //**********************************************************************
     // Class: CSceneCylinderElem

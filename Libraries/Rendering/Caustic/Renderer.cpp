@@ -13,7 +13,9 @@
 #include "Sampler.h"
 #include <vector>
 #include <any>
-#include "Base\Core\CritSec.h"
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.CritSec;
 #include <d3d11.h>
 #include <d3d11_4.h>
 #include <d3dcommon.h>
@@ -913,7 +915,7 @@ namespace Caustic
     // Returns:
     // Returns the created renderer
     //**********************************************************************
-    CAUSTICAPI CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring &shaderFolder, bool startFrozen /* = false */, int desktopIndex /* = 0 */)
+    CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring &shaderFolder, bool startFrozen /* = false */, int desktopIndex /* = 0 */)
     {
         std::unique_ptr<CRenderer> spRenderer(new CRenderer());
         spRenderer->Setup(hwnd, shaderFolder, true, startFrozen, desktopIndex);

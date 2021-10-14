@@ -4,8 +4,8 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Base\Core\Core.h"
-#include "Base\Core\IRefCount.h"
+import Base.Core.Core;
+import Base.Core.IRefCount;
 #include "Base\Math\Vector.h"
 #include "Base\Math\BBox.h"
 #include "Cameras\CameraBase\ICamera.h"
@@ -126,6 +126,6 @@ namespace Caustic
         // Header:
         // [Link:Cameras/AzureKinect/IAzureKinect.h]
         //**********************************************************************
-        CAUSTICAPI CRefObj<IAzureKinect> CreateAzureKinect(int deviceId, ColorMode colorMode, DepthMode depthMode, FPSMode fpsMode, bool captureBodies = false);
+        CRefObj<IAzureKinect> CreateAzureKinect(int deviceId, ColorMode colorMode, DepthMode depthMode, FPSMode fpsMode, bool captureBodies = false);
     }
 }

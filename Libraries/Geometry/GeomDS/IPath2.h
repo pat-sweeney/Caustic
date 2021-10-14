@@ -4,9 +4,9 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
+import Base.Core.Core;
 #include "Base\Math\vector.h"
-#include "Base\Core\IRefCount.h"
-#include "Base\Core\core.h"
+import Base.Core.IRefCount;
 #include "Base\Math\BBox.h"
 
 namespace Caustic
@@ -133,5 +133,5 @@ namespace Caustic
 		virtual bool PathInsideBbox(BBox2& bbox) = 0;
 	};
 
-	CAUSTICAPI CRefObj<IPath2> CreatePath2();
+	CRefObj<IPath2> CreatePath2();
 }

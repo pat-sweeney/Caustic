@@ -29,7 +29,7 @@ namespace Caustic
     // Returns:
     // Returns the newly created RendererMarshaller.
     //**********************************************************************
-    CAUSTICAPI CRefObj<IRendererMarshaller> CreateRendererMarshaller()
+    CRefObj<IRendererMarshaller> CreateRendererMarshaller()
     {
         return CRefObj<IRendererMarshaller>(new CRendererMarshaller());
     }

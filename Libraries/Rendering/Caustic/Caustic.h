@@ -7,7 +7,7 @@
 
 #include <d3d11.h>
 #include <atlbase.h>
-#include "Base\Core\Core.h"
+import Base.Core.Core;
 #include "Base\Math\Vector.h"
 #include "Base\Math\BBox.h"
 #include "Rendering\Caustic\IShaderMgr.h"
@@ -36,9 +36,9 @@
 //**********************************************************************
 namespace Caustic
 {
-	CAUSTICAPI CRefObj<IRenderSubMesh> BuildRenderSubMesh(IRenderer* pRenderer,
+	CRefObj<IRenderSubMesh> BuildRenderSubMesh(IRenderer* pRenderer,
 		std::vector<CGeomFace>& faces, std::vector<CGeomVertex>& verts,
 		IShader* pShader);
-	CAUSTICAPI CRefObj<IRenderSubMesh> CreateDepthGridMesh(IRenderer* pRenderer,
+	CRefObj<IRenderSubMesh> CreateDepthGridMesh(IRenderer* pRenderer,
 		uint32 width, uint32 height, IShader* pShader);
 }

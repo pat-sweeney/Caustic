@@ -11,6 +11,7 @@
 #include <memory>
 #include <vector>
 #include <any>
+#include <windows.h>
 #include <varargs.h>
 
 // Namespace: Caustic
@@ -223,7 +224,7 @@ namespace Caustic
 		return totalSize;
 	}
 	
-	CAUSTICAPI CRefObj<IJSonParser> CreateJSonParser()
+	CRefObj<IJSonParser> CreateJSonParser()
 	{
 		return CRefObj<IJSonParser>(new CJSonParser());
 	}

@@ -4,8 +4,10 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Base\Core\Core.h"
-#include "Base\Core\Property.h"
+import Base.Core.Core;
+import Base.Core.Property;
+#include <math.h>
+#include <functional>
 
 namespace Caustic
 {
@@ -277,8 +279,7 @@ namespace Caustic
             z = v.z;
         }
 
-        Property<Vector3> xyz = Property<Vector3>(
-            [this]() -> Vector3 { return Vector3(x, y, z); },
+        Property<Vector3> xyz = Property<Vector3>([this]() -> Vector3 { return Vector3(x, y, z); },
             [this](const Vector3& v) { x = v.x; y = v.y; z = v.z; });
         Property<Vector3> zyx = Property<Vector3>(
             [this]() -> Vector3 { return Vector3(z, y, x); },

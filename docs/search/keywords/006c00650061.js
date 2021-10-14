@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("lea",["Function"],[["Leave",,[["CCritSec",,,,0,"File:Base/Core/CritSec.h:CCritSec.Leave","CClass:CCritSec:Leave"]]]]);

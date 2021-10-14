@@ -5,8 +5,8 @@
 //**********************************************************************
 #pragma once
 
-#include "Base\Core\Core.h"
-#include "Base\Core\IRefCount.h"
+import Base.Core.Core;
+import Base.Core.IRefCount;
 #include <Windows.h>
 #include <functional>
 
@@ -135,5 +135,5 @@ namespace Caustic
     // Header:
     // [Link:Rendering/Caustic/IRendererMarshaller.h]
     //**********************************************************************
-    CAUSTICAPI CRefObj<IRendererMarshaller> CreateRendererMarshaller();
+    CRefObj<IRendererMarshaller> CreateRendererMarshaller();
 }

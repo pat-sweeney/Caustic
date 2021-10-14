@@ -4,8 +4,8 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "stdafx.h"
-#include "Base/Core/Core.h"
-#include "Base/Core/error.h"
+import Base.Core.Core;
+import Base.Core.Error;
 #include "ImagePool.h"
 
 namespace Caustic
@@ -58,7 +58,7 @@ namespace Caustic
         return CRefObj<IImage>(wpImg);
     }
 
-    CAUSTICAPI CRefObj<IImagePool> CreateImagePool(uint32 maxImages, uint32 width, uint32 height, uint32 bpp)
+    CRefObj<IImagePool> CreateImagePool(uint32 maxImages, uint32 width, uint32 height, uint32 bpp)
     {
         return CRefObj<IImagePool>(new CImagePool(maxImages, width, height, bpp));
     }

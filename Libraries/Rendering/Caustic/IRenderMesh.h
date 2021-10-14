@@ -10,7 +10,7 @@
 #include "Rendering\Caustic\IShaderInfo.h"
 #include "Rendering\Caustic\IRenderMesh.h"
 #include "Rendering\Caustic\IShader.h"
-#include "Base\Core\IRefCount.h"
+import Base.Core.IRefCount;
 #include "Base\Math\BBox.h"
 
 //**********************************************************************
@@ -255,8 +255,8 @@ namespace Caustic
         virtual void Render(IRenderer* pRenderer, IRenderCtx* pRenderCtx, IShader *pShader, IRenderMaterial*pMaterial, std::vector<CRefObj<ILight>> &lights, DirectX::XMMATRIX* pWorld) = 0;
     };
 
-    CAUSTICAPI CRefObj<IRenderSubMesh> BuildRenderSubMesh(IRenderer* pRenderer,
+    CRefObj<IRenderSubMesh> BuildRenderSubMesh(IRenderer* pRenderer,
         std::vector<CGeomFace>& faces, std::vector<CGeomVertex>& verts,
         IShader* pShader);
-    CAUSTICAPI CRefObj<IRenderSubMesh> CreatePointCloudSubMesh(IRenderer* pRenderer, IShader* pShader, IRenderMaterial* pFrontMaterial, IRenderMaterial* pBackMaterial, std::vector<CGeomVertex>& verts, bool useUVs = false);
+    CRefObj<IRenderSubMesh> CreatePointCloudSubMesh(IRenderer* pRenderer, IShader* pShader, IRenderMaterial* pFrontMaterial, IRenderMaterial* pBackMaterial, std::vector<CGeomVertex>& verts, bool useUVs = false);
 }

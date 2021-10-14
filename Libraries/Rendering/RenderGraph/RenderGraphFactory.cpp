@@ -4,8 +4,8 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Base\Core\Core.h"
-#include "Base\Core\RefCount.h"
+import Base.Core.Core;
+import Base.Core.RefCount;
 #include "RenderGraphFactory.h"
 #include "RenderGraph.h"
 #include "RGNMesh.h"
@@ -17,6 +17,7 @@
 #include "RGNPhongMaterial.h"
 #include "RGNDepthCameraSource.h"
 #include "RGNIMageToTexture.h"
+#include <windows.h>
 
 namespace Caustic
 {
@@ -28,7 +29,7 @@ namespace Caustic
     // Returns:
     // New render factory object
     //**********************************************************************
-    CAUSTICAPI CRefObj<IRenderGraphFactory> CreateRenderGraphFactory()
+    CRefObj<IRenderGraphFactory> CreateRenderGraphFactory()
     {
         return CRefObj<IRenderGraphFactory>(new CRenderGraphFactory());
     }

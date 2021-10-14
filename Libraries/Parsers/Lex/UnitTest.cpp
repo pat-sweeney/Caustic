@@ -4,7 +4,7 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "pch.h"
-#include "Base\Core\error.h"
+import Base.Core.Error;
 #include "Parsers\Lex\ILex.h"
 #include "UnitTest.h"
 #include <stdlib.h>

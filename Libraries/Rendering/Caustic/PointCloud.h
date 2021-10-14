@@ -4,11 +4,13 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.RefCount;
+import Base.Core.Event;
+import Base.Core.CritSec;
 #include "Rendering\Caustic\Caustic.h"
 #include "IRenderable.h"
-#include "Base\Core\RefCount.h"
-#include "Base\Core\CritSec.h"
-#include "Base\Core\Event.h"
 #include "Shader.h"
 #include "IPointCloud.h"
 #include <memory>

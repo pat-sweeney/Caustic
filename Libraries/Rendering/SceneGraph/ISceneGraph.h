@@ -3,7 +3,7 @@
 // All Rights Reserved
 //**********************************************************************
 #pragma once
-#include "Base\Core\Core.h"
+import Base.Core.Core;
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\Shader.h"
 #include "Rendering\Caustic\PathTrace.h"

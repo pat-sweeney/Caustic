@@ -12,7 +12,7 @@
 
 namespace Caustic
 {
-    CAUSTICAPI CRefObj<ISceneMaterialElem> CreateMaterialElem()
+    CRefObj<ISceneMaterialElem> CreateMaterialElem()
     {
         std::unique_ptr<CSceneMaterialElem> spMaterialElem(new CSceneMaterialElem());
 		CRefObj<IMaterialAttrib> spMaterial = Caustic::CreateMaterialAttrib();

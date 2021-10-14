@@ -3,9 +3,10 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+import Base.Core.Core;
+import Base.Core.Error;
 #include "Geometry\Mesh\Mesh.h"
 #include "Geometry\Mesh\MeshConstructor.h"
-#include "Base\Core\error.h"
 #include "Base\Math\Ray.h"
 #include "Rendering\Caustic\PathTrace.h"
 
@@ -182,12 +183,12 @@ namespace Caustic
         return pFace->index;
     };
 
-    CAUSTICAPI CRefObj<ISubMesh> CreateEmptySubMesh()
+    CRefObj<ISubMesh> CreateEmptySubMesh()
     {
         return CRefObj<ISubMesh>(new CSubMesh());
     }
 
-    CAUSTICAPI CRefObj<ISubMesh> CreateSubMesh(std::vector<CGeomVertex> &verts, std::vector<int> &faces, uint32 materialID)
+    CRefObj<ISubMesh> CreateSubMesh(std::vector<CGeomVertex> &verts, std::vector<int> &faces, uint32 materialID)
     {
         CMeshConstructor meshConstructor;
         meshConstructor.SubMeshOpen();
@@ -207,7 +208,7 @@ namespace Caustic
         return spSubMesh;
     }
 
-    CAUSTICAPI CRefObj<ISubMesh> CreateSubMesh(std::vector<Vector3> &vertPos,
+    CRefObj<ISubMesh> CreateSubMesh(std::vector<Vector3> &vertPos,
         std::vector<int> &faces,
         uint32 materialID)
     {
@@ -216,7 +217,7 @@ namespace Caustic
         return CreateSubMesh(vertPos, norms, uvs, faces, EVertexFlags::HasPosition, materialID);
     }
 
-    CAUSTICAPI CRefObj<ISubMesh> CreateSubMesh(std::vector<Vector3> &vertPos,
+    CRefObj<ISubMesh> CreateSubMesh(std::vector<Vector3> &vertPos,
                                   std::vector<Vector3> &vertNorms,
                                   std::vector<Vector2> &vertUVs, 
                                   std::vector<int> &faces, 

@@ -5,8 +5,8 @@
 //**********************************************************************
 #pragma once
 
-#include "Base\Core\Core.h"
-#include "Base\Core\IRefCount.h"
+import Base.Core.Core;
+import Base.Core.IRefCount;
 #include "Rendering\Caustic\ITexture.h"
 
 //**********************************************************************
@@ -108,5 +108,5 @@ namespace Caustic
     // Header:
     // [Link:Rendering/Caustic/ISampler.h]
     //**********************************************************************
-    CAUSTICAPI CRefObj<ISampler> CreateSampler(IRenderer* pRenderer, ITexture* pTexture);
+    CRefObj<ISampler> CreateSampler(IRenderer* pRenderer, ITexture* pTexture);
 }

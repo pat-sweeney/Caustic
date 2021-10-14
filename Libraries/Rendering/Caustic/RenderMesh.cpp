@@ -214,7 +214,7 @@ namespace Caustic
             submesh->Render(pRenderer, pRenderCtx, pShader, pMaterial, lights, pWorld);
     }
 
-    CAUSTICAPI CRefObj<IRenderSubMesh> CreatePointCloudSubMesh(IRenderer *pRenderer, IShader *pShader, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, std::vector<CGeomVertex>& verts, bool useUVs /* = false */)
+    CRefObj<IRenderSubMesh> CreatePointCloudSubMesh(IRenderer *pRenderer, IShader *pShader, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, std::vector<CGeomVertex>& verts, bool useUVs /* = false */)
     {
         if (verts.size() == 0)
             return CRefObj<IRenderSubMesh>(nullptr);

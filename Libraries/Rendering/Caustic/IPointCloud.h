@@ -5,8 +5,8 @@
 //**********************************************************************
 #pragma once
 
-#include "Base\Core\Core.h"
-#include "Base\Core\IRefCount.h"
+import Base.Core.Core;
+import Base.Core.IRefCount;
 #include "Base\Math\Vector.h"
 #include "Base\Math\Matrix.h"
 #include "Renderable.h"
@@ -99,5 +99,5 @@ namespace Caustic
     // Header:
     // [Link:Rendering/Caustic/IRenderable.h]
     //**********************************************************************
-    CAUSTICAPI CRefObj<IPointCloud> CreatePointCloud(IRenderer* pRenderer, uint32 width, uint32 height);
+    CRefObj<IPointCloud> CreatePointCloud(IRenderer* pRenderer, uint32 width, uint32 height);
 }

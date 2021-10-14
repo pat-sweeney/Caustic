@@ -7,8 +7,8 @@
 
 #include <d3d11.h>
 #include <atlbase.h>
-#include "Base\Core\Core.h"
-#include "Base\Core\IRefCount.h"
+import Base.Core.Core;
+import Base.Core.IRefCount;
 #include "Base\Math\BBox.h"
 #include "IShaderMgr.h"
 #include <string>
@@ -90,7 +90,7 @@ namespace Caustic
     // elemSize - size in bytes of each element (on CPU without unalignment)
     // bindFlags - additional bind flags
     //**********************************************************************
-    CAUSTICAPI CRefObj<IGPUBuffer> CreateGPUBuffer(IRenderer* pRenderer, EBufferType type, uint32 numElems, uint32 elemSize, uint32 bindFlags);
+    CRefObj<IGPUBuffer> CreateGPUBuffer(IRenderer* pRenderer, EBufferType type, uint32 numElems, uint32 elemSize, uint32 bindFlags);
 
         
     //**********************************************************************

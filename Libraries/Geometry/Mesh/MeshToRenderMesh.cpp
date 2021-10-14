@@ -3,8 +3,8 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "Base\Core\Core.h"
-#include "Base\Core\error.h"
+import Base.Core.Core;
+import Base.Core.Error;
 #include "Geometry\Mesh\Mesh.h"
 #include "Rendering\Caustic\RenderTypes.h"
 #include "Rendering\Caustic\IRenderer.h"

@@ -7,7 +7,7 @@
 #include <functional>
 #include <string>
 #include <vector>
-#include "Base\Core\Core.h"
+import Base.Core.Core;
 #include "Geometry\Mesh\IMeshConstructor.h"
 #include "Rendering\SceneGraph\SceneGraph.h"
 

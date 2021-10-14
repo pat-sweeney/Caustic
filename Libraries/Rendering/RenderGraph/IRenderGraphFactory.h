@@ -4,8 +4,8 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Base\Core\Core.h"
-#include "Base\Core\IRefCount.h"
+import Base.Core.Core;
+import Base.Core.IRefCount;
 #include "Rendering\RenderGraph\IRenderGraphNode.h"
 #include "Rendering\RenderGraph\IRGNCompute.h"
 #include "Rendering\RenderGraph\IRGNMesh.h"
@@ -183,5 +183,5 @@ namespace Caustic
         //**********************************************************************
         virtual CRefObj<IRenderGraphNode_ImageToTexture> CreateImageToTextureNode() = 0;
     };
-    CAUSTICAPI CRefObj<IRenderGraphFactory> CreateRenderGraphFactory();
+    CRefObj<IRenderGraphFactory> CreateRenderGraphFactory();
 }

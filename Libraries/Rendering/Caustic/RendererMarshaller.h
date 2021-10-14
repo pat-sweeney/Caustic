@@ -4,8 +4,10 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.RefCount;
 #include "Rendering\Caustic\Caustic.h"
-#include "Base\Core\RefCount.h"
 #include <functional>
 #include <queue>
 #include <type_traits>

@@ -9,6 +9,7 @@
 #include "UnitTest.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <Windows.h>
 
 using namespace Caustic;
 namespace CausticTestSuite

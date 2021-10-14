@@ -3,7 +3,7 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "Base\Core\Core.h"
+import Base.Core.Core;
 #include "Geometry\Mesh\UnitTest.h"
 #include "Cameras\AzureKinect\UnitTest.h"
 #include "Imaging\Image\UnitTest.h"

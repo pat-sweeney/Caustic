@@ -5,11 +5,12 @@
 //**********************************************************************
 #include "stdafx.h"
 #include "AzureKinect.h"
-#include "Base\Core\error.h"
+import Base.Core.Error;
 #include "Base\Math\BBox.h"
 #include "Imaging\Image\ImageIter.h"
 #include <k4a/k4a.h>
 #include <memory>
+#include <winerror.h>
 
 namespace Caustic
 {

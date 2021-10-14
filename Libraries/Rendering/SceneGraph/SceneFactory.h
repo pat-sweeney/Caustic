@@ -4,7 +4,7 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Base\Core\Core.h"
+import Base.Core.Core;
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\Shader.h"
 #include "Base\Math\Matrix.h"

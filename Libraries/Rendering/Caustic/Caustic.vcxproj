@@ -366,6 +366,9 @@
     <ProjectReference Include="..\..\..\Tools\ParseShader\ParseShader.vcxproj">
       <Project>{7c566027-e2d9-48eb-8f89-cb245f87e02c}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Base\Core\Core.vcxproj">
+      <Project>{aacfe62f-5400-4a81-87ad-b37573a1f5c9}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

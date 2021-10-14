@@ -5,8 +5,8 @@
 //**********************************************************************
 #pragma once
 #include "Base\Math\vector.h"
-#include "Base\Core\IRefCount.h"
-#include "Base\Core\core.h"
+import Base.Core.IRefCount;
+import Base.Core.Core;
 #include "Base\Math\BBox.h"
 
 namespace Caustic
@@ -80,5 +80,5 @@ namespace Caustic
 		virtual bool ContainsPoint(Vector2 &pt, float *pMinDist = nullptr, float *pMaxDist = nullptr) = 0;
     };
 
-    CAUSTICAPI CRefObj<IPolygon2> CreatePolygon2();
+    CRefObj<IPolygon2> CreatePolygon2();
 }

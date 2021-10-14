@@ -23,8 +23,8 @@
 // ImPlot v0.10 WIP
 
 #include "implot.h"
-#include "Base\Core\Core.h"
-#include "Base\Core\IRefCount.h"
+import Base.Core.Core;
+import Base.Core.IRefCount;
 #include "Rendering\RenderWindow\IRenderWindow.h"
 #include "Rendering\Caustic\ICausticFactory.h"
 #include "Rendering\Caustic\IShader.h"

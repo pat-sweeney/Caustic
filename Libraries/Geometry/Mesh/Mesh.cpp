@@ -3,8 +3,8 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "Base\Core\Core.h"
-#include "Base\Core\error.h"
+import Base.Core.Core;
+import Base.Core.Error;
 #include "Geometry\Mesh\Mesh.h"
 #include "Rendering\Caustic\MaterialAttrib.h"
 #include "Rendering\Caustic\PathTrace.h"
@@ -235,7 +235,7 @@ namespace Caustic
     // Returns:
     // Returns the newly created mesh object
     //**********************************************************************
-    CAUSTICAPI CRefObj<IMesh> CreateEmptyMesh()
+    CRefObj<IMesh> CreateEmptyMesh()
     {
         return CRefObj<IMesh>(new CMesh());
     }

@@ -42,7 +42,7 @@ namespace ImageToMesh
 
         private void BuildMeshClick(object sender, RoutedEventArgs e)
         {
-            this.image2.ExtractMesh();
+//            this.image2.ExtractMesh();
         }
     }
 }

@@ -4,17 +4,11 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "error.h"
+import Base.Core.Error;
 #include <math.h>
 #include <string>
 #include <stringapiset.h>
 #include <memory>
-
-#ifdef CAUSTIC_EXPORT
-#define CAUSTICAPI __declspec(dllexport)
-#else
-#define CAUSTICAPI extern
-#endif
 
 // Namespace: Caustic
 namespace Caustic

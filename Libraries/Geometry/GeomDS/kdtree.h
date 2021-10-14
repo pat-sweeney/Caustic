@@ -4,8 +4,8 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Base\Core\Core.h"
-#include "Base\Core\RefCount.h"
+import Base.Core.Core;
+import Base.Core.RefCount;
 #include "Geometry\GeomDS\IKDTree.h"
 #include "Base\Math\Vector.h"
 #include <vector>
@@ -70,5 +70,5 @@ namespace Caustic
         bool FindPoint(Caustic::Vector3 &vec, std::function<bool(void *data)> comparator, void **data);
     };
     
-    CAUSTICAPI CRefObj<IKDTree> CreateKDTree();
+    CRefObj<IKDTree> CreateKDTree();
 }

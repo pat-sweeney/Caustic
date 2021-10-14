@@ -32,7 +32,9 @@
         </Menu>
         <Grid Grid.Row="1" ClipToBounds="True">
             <Rectangle Grid.Column="0" Fill="Red"/>
+            <!--
             <rend:Renderer Stretch="Fill" x:Name="ImageHost" Focusable="True"/>
+            -->
         </Grid>
     </Grid>
 </Window>

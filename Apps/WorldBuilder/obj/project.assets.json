@@ -5,6 +5,7 @@
       "Caustic/1.0.0": {
         "type": "project",
         "dependencies": {
+          "Core": "1.0.0",
           "ParseShader": "1.0.0"
         },
         "compile": {
@@ -16,6 +17,9 @@
       },
       "Color/1.0.0": {
         "type": "project",
+        "dependencies": {
+          "Core": "1.0.0"
+        },
         "compile": {
           "bin/placeholder/Color.dll": {}
         },
@@ -34,6 +38,9 @@
       },
       "GeomDS/1.0.0": {
         "type": "project",
+        "dependencies": {
+          "Core": "1.0.0"
+        },
         "compile": {
           "bin/placeholder/GeomDS.dll": {}
         },
@@ -43,6 +50,9 @@
       },
       "Image/1.0.0": {
         "type": "project",
+        "dependencies": {
+          "Core": "1.0.0"
+        },
         "compile": {
           "bin/placeholder/Image.dll": {}
         },
@@ -70,6 +80,9 @@
       },
       "Math/1.0.0": {
         "type": "project",
+        "dependencies": {
+          "Core": "1.0.0"
+        },
         "compile": {
           "bin/placeholder/Math.dll": {}
         },
@@ -80,6 +93,7 @@
       "Mesh/1.0.0": {
         "type": "project",
         "dependencies": {
+          "Core": "1.0.0",
           "GeomDS": "1.0.0",
           "Image": "1.0.0"
         },
@@ -137,6 +151,9 @@
       },
       "RenderGraph/1.0.0": {
         "type": "project",
+        "dependencies": {
+          "Core": "1.0.0"
+        },
         "compile": {
           "bin/placeholder/RenderGraph.dll": {}
         },
@@ -146,6 +163,9 @@
       },
       "RenderWindow/1.0.0": {
         "type": "project",
+        "dependencies": {
+          "Core": "1.0.0"
+        },
         "compile": {
           "bin/placeholder/RenderWindow.dll": {}
         },
@@ -155,6 +175,9 @@
       },
       "SceneGraph/1.0.0": {
         "type": "project",
+        "dependencies": {
+          "Core": "1.0.0"
+        },
         "compile": {
           "bin/placeholder/SceneGraph.dll": {}
         },

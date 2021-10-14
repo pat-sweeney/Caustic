@@ -3,7 +3,9 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "Base\Core\RefCount.h"
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.RefCount;
 #include "Base\Math\Vector.h"
 #include "IDelaunay.h"
 #include <vector>

@@ -4,8 +4,8 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "Fomit.h"
-#include "Base\Core\Core.h"
-#include "Base\Core\IRefCount.h"
+import Base.Core.Core;
+import Base.Core.IRefCount;
 #include "Imaging\Image\ImageFilter.h"
 #include "Rendering\RenderWindow\IRenderWindow.h"
 #include "Rendering\Caustic\ICausticFactory.h"

@@ -12,7 +12,7 @@
 
 namespace Caustic
 {
-    CAUSTICAPI CRefObj<ISceneMarchingCubesElem> CreateMarchingCubesElem(IRenderer* pRenderer, uint32 subdivisions, std::function<float(Vector3&)> sdf, bool drawIndexed)
+    CRefObj<ISceneMarchingCubesElem> CreateMarchingCubesElem(IRenderer* pRenderer, uint32 subdivisions, std::function<float(Vector3&)> sdf, bool drawIndexed)
     {
         return CRefObj<ISceneMarchingCubesElem>(new CSceneMarchingCubesElem(pRenderer, subdivisions, sdf, drawIndexed));
     }

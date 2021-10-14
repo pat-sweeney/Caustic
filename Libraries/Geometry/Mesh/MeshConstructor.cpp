@@ -3,7 +3,7 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "Base\Core\error.h"
+import Base.Core.Error;
 #include "Geometry\Mesh\IMesh.h"
 #include "Geometry\Mesh\IMeshConstructor.h"
 #include "MeshConstructor.h"
@@ -458,7 +458,7 @@ namespace Caustic
 #endif
     }
 
-    CAUSTICAPI CRefObj<IMeshConstructor> CreateMeshConstructor()
+    CRefObj<IMeshConstructor> CreateMeshConstructor()
     {
         return CRefObj<IMeshConstructor>(new CMeshConstructor());
     }

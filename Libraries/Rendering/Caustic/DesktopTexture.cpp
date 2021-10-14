@@ -4,7 +4,7 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "stdafx.h"
-#include "Base\Core\Error.h"
+import Base.Core.Error;
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\CausticFactory.h"
 #include "DesktopTexture.h"
@@ -118,7 +118,7 @@ namespace Caustic
     // Returns:
     // Returns the new texture
     //**********************************************************************
-    CAUSTICAPI CRefObj<ITexture> CreateDesktopTexture(IRenderer* pRenderer)
+    CRefObj<ITexture> CreateDesktopTexture(IRenderer* pRenderer)
     {
         std::unique_ptr<CDesktopTexture> spTexture(new CDesktopTexture(pRenderer));
         return CRefObj<ITexture>(spTexture.release());

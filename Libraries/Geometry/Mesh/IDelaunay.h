@@ -4,8 +4,8 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Base\Core\Core.h"
-#include "Base\Core\IRefCount.h"
+import Base.Core.Core;
+import Base.Core.IRefCount;
 #include "Base\Math\Vector.h"
 
 namespace Caustic
@@ -68,5 +68,5 @@ namespace Caustic
 		virtual void WritePLY() = 0;
     };
 
-    CAUSTICAPI CRefObj<IDelaunay2> CreateDelaunay2(BBox2 &bb);
+    CRefObj<IDelaunay2> CreateDelaunay2(BBox2 &bb);
 }

@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("isz",["Function"],[["IsZero",,[["Caustic",,,,0,"File:Base/Core/Core.h:Caustic.IsZero","CClass:Caustic:IsZero"]]]]);

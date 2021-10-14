@@ -1,1 +1,0 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Base/Core/ISerialize.h","ISerialize.h");NDSummary.OnSummaryLoaded("File:Base/Core/ISerialize.h",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Interfaces","Interface"]],[[26,0,2,"ISerialize","ISerialize"],[27,0,1,"Functions","ISerialize.Functions"],[28,0,0,"Load","ISerialize.Load"],[29,0,0,"Store","ISerialize.Store"]]);
