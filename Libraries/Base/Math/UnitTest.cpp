@@ -4,7 +4,7 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "stdafx.h"
-#include "Vector.h"
+import Base.Math.Vector;
 #include "NewtonsMethod.h"
 #include "UnitTest.h"
 #include <stdlib.h>

@@ -6,7 +6,8 @@
 #pragma once
 #include "stdafx.h"
 import Base.Core.Core;
-#include "Base\Math\BBox.h"
+import Base.Math.BBox;
+import Base.Math.Vector;
 
 // Namespace: Caustic
 namespace Caustic

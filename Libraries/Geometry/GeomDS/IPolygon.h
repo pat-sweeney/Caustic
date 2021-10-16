@@ -4,10 +4,10 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Base\Math\vector.h"
 import Base.Core.IRefCount;
 import Base.Core.Core;
-#include "Base\Math\BBox.h"
+import Base.Math.Vector;
+import Base.Math.BBox;
 
 namespace Caustic
 {

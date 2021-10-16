@@ -8,7 +8,7 @@ import Base.Core.Error;
 #include "Geometry\Mesh\Mesh.h"
 #include "Rendering\Caustic\MaterialAttrib.h"
 #include "Rendering\Caustic\PathTrace.h"
-#include "Base\Math\Ray.h"
+import Base.Math.Ray;
 
 //**********************************************************************
 // File: Mesh.cpp

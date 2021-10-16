@@ -11,7 +11,7 @@
 #include "Rendering\Caustic\IRenderMesh.h"
 #include "Rendering\Caustic\IShader.h"
 import Base.Core.IRefCount;
-#include "Base\Math\BBox.h"
+import Base.Math.BBox;
 
 //**********************************************************************
 // File: IRenderMesh.h

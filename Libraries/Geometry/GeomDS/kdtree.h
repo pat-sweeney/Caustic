@@ -6,8 +6,8 @@
 #pragma once
 import Base.Core.Core;
 import Base.Core.RefCount;
+import Base.Math.Vector;
 #include "Geometry\GeomDS\IKDTree.h"
-#include "Base\Math\Vector.h"
 #include <vector>
 #include <functional>
 

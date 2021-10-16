@@ -5,9 +5,9 @@
 //**********************************************************************
 #pragma once
 import Base.Core.Core;
-#include "Base\Math\vector.h"
 import Base.Core.IRefCount;
-#include "Base\Math\BBox.h"
+import Base.Math.Vector;
+import Base.Math.BBox;
 
 namespace Caustic
 {

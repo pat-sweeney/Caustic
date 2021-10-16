@@ -7,7 +7,7 @@
 
 import Base.Core.Core;
 import Base.Core.IRefCount;
-#include "Base\Math\Vector.h"
+import Base.Math.Vector;
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <vector>

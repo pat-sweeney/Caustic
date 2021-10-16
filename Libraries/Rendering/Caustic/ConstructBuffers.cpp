@@ -5,8 +5,9 @@
 //**********************************************************************
 #pragma once
 #include "stdafx.h"
+import Base.Core.Core;
+import Base.Math.BBox;
 #include "Rendering\Caustic\Caustic.h"
-#include "Base\Math\BBox.h"
 #include "Rendering\Caustic\IRenderer.h"
 #include "Rendering\Caustic\IRenderMesh.h"
 #include "Rendering\Caustic\IShaderInfo.h"

@@ -8,254 +8,254 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="IMesh.h"></a><a name="Topic392"></a><div class="CTopic TFile LC first">
+<a name="IMesh.h"></a><a name="Topic213"></a><div class="CTopic TFile LC first">
  <div class="CTitle">IMesh.h</div>
  <div class="CBody"><p>Defines interface for mesh.</p></div>
 </div>
 
-<a name="CFaceVertex"></a><a name="Topic393"></a><div class="CTopic TStruct LC">
+<a name="CFaceVertex"></a><a name="Topic214"></a><div class="CTopic TStruct LC">
  <div class="CTitle">CFaceVertex</div>
- <div class="NDClassPrototype" id="NDClassPrototype393"><div class="CPEntry TStruct Current"><div class="CPModifiers"><span class="SHKeyword">struct</span></div><div class="CPName">CFaceVertex</div></div></div>
- <div class="CBody"><p>Defines a vertex data relative to a given face.&nbsp; See <a href="../../../index.html#File:Rendering/Caustic/RenderTypes.h:CGeomVertex" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,747);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CGeomVertex</a> for further information.</p></div>
+ <div class="NDClassPrototype" id="NDClassPrototype214"><div class="CPEntry TStruct Current"><div class="CPModifiers"><span class="SHKeyword">struct</span></div><div class="CPName">CFaceVertex</div></div></div>
+ <div class="CBody"><p>Defines a vertex data relative to a given face.&nbsp; See <a href="../../../index.html#File:Rendering/Caustic/RenderTypes.h:CGeomVertex" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,612);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CGeomVertex</a> for further information.</p></div>
 </div>
 
-<a name="CHalfEdge"></a><a name="Topic394"></a><div class="CTopic TClass LC">
+<a name="CHalfEdge"></a><a name="Topic215"></a><div class="CTopic TClass LC">
  <div class="CTitle">CHalfEdge</div>
- <div class="NDClassPrototype" id="NDClassPrototype394"><div class="CPEntry TClass Current"><div class="CPName">CHalfEdge</div></div></div>
+ <div class="NDClassPrototype" id="NDClassPrototype215"><div class="CPEntry TClass Current"><div class="CPName">CHalfEdge</div></div></div>
  <div class="CBody"><p>Defines a single half edge on our graph</p><div class="CHeading">Members</div><table class="CDefinitionList"><tr><td class="CDLEntry">m_pNext</td><td class="CDLDefinition"><p>Next half edge in edge loop</p></td></tr><tr><td class="CDLEntry">m_pPrev</td><td class="CDLDefinition"><p>Previous half edge in edge loop</p></td></tr><tr><td class="CDLEntry">m_pOpposite</td><td class="CDLDefinition"><p>Opposite half edge</p></td></tr><tr><td class="CDLEntry">m_pVertex</td><td class="CDLDefinition"><p>Vertex at head of edge</p></td></tr><tr><td class="CDLEntry">m_pFace</td><td class="CDLDefinition"><p>Face to the left of edge</p></td></tr><tr><td class="CDLEntry">m_smoothingGroup</td><td class="CDLDefinition"><p>Smoothing group this edge belongs to index -</p></td></tr></table></div>
 </div>
 
-<a name="CHalfEdge.Functions"></a><a name="Topic395"></a><div class="CTopic TGroup LC">
+<a name="CHalfEdge.Functions"></a><a name="Topic216"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="CHalfEdge.GetNextEdge"></a><a name="Topic396"></a><div class="CTopic TFunction LC">
+<a name="CHalfEdge.GetNextEdge"></a><a name="Topic217"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetNextEdge</div>
- <div id="NDPrototype396" class="NDPrototype"><div class="PSection PPlainSection"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:CHalfEdge" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,394);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CHalfEdge</a> *GetNextEdge()</div></div>
+ <div id="NDPrototype217" class="NDPrototype"><div class="PSection PPlainSection"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:CHalfEdge" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,215);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CHalfEdge</a> *GetNextEdge()</div></div>
  <div class="CBody"><p>Returns the next edge in our edge loop</p></div>
 </div>
 
-<a name="CHalfEdge.GetPrevEdge"></a><a name="Topic397"></a><div class="CTopic TFunction LC">
+<a name="CHalfEdge.GetPrevEdge"></a><a name="Topic218"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetPrevEdge</div>
- <div id="NDPrototype397" class="NDPrototype"><div class="PSection PPlainSection"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:CHalfEdge" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,394);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CHalfEdge</a> *GetPrevEdge()</div></div>
+ <div id="NDPrototype218" class="NDPrototype"><div class="PSection PPlainSection"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:CHalfEdge" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,215);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CHalfEdge</a> *GetPrevEdge()</div></div>
  <div class="CBody"><p>Returns the previous edge in our edge loop</p></div>
 </div>
 
-<a name="CHalfEdge.GetOppositeEdge"></a><a name="Topic398"></a><div class="CTopic TFunction LC">
+<a name="CHalfEdge.GetOppositeEdge"></a><a name="Topic219"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetOppositeEdge</div>
- <div id="NDPrototype398" class="NDPrototype"><div class="PSection PPlainSection"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:CHalfEdge" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,394);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CHalfEdge</a> *GetOppositeEdge()</div></div>
+ <div id="NDPrototype219" class="NDPrototype"><div class="PSection PPlainSection"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:CHalfEdge" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,215);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CHalfEdge</a> *GetOppositeEdge()</div></div>
  <div class="CBody"><p>Returns the half edge opposite to the current edge</p></div>
 </div>
 
-<a name="CHalfEdge.GetHeadVertex"></a><a name="Topic399"></a><div class="CTopic TFunction LC">
+<a name="CHalfEdge.GetHeadVertex"></a><a name="Topic220"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetHeadVertex</div>
- <div id="NDPrototype399" class="NDPrototype"><div class="PSection PPlainSection"><a href="../../../index.html#File:Rendering/Caustic/RenderTypes.h:CGeomVertex" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,747);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CGeomVertex</a> *GetHeadVertex()</div></div>
+ <div id="NDPrototype220" class="NDPrototype"><div class="PSection PPlainSection"><a href="../../../index.html#File:Rendering/Caustic/RenderTypes.h:CGeomVertex" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,612);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CGeomVertex</a> *GetHeadVertex()</div></div>
  <div class="CBody"><p>Returns the vertex at the head of this edge</p></div>
 </div>
 
-<a name="CHalfEdge.GetTailVertex"></a><a name="Topic400"></a><div class="CTopic TFunction LC">
+<a name="CHalfEdge.GetTailVertex"></a><a name="Topic221"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetTailVertex</div>
- <div id="NDPrototype400" class="NDPrototype"><div class="PSection PPlainSection"><a href="../../../index.html#File:Rendering/Caustic/RenderTypes.h:CGeomVertex" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,747);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CGeomVertex</a> *GetTailVertex()</div></div>
+ <div id="NDPrototype221" class="NDPrototype"><div class="PSection PPlainSection"><a href="../../../index.html#File:Rendering/Caustic/RenderTypes.h:CGeomVertex" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,612);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CGeomVertex</a> *GetTailVertex()</div></div>
  <div class="CBody"><p>Returns the vertex at the tail of this edge</p></div>
 </div>
 
-<a name="CHalfEdge.GetFace"></a><a name="Topic401"></a><div class="CTopic TFunction LC">
+<a name="CHalfEdge.GetFace"></a><a name="Topic222"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetFace</div>
- <div id="NDPrototype401" class="NDPrototype"><div class="PSection PPlainSection"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:CFace" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,403);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CFace</a> *GetFace()</div></div>
+ <div id="NDPrototype222" class="NDPrototype"><div class="PSection PPlainSection"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:CFace" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,224);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CFace</a> *GetFace()</div></div>
  <div class="CBody"><p>Returns the face this edge is a boundary of</p><div class="CHeading">Returns</div><p>Pointer to the current face</p></div>
 </div>
 
-<a name="CHalfEdge.GetSmoothingGroup"></a><a name="Topic402"></a><div class="CTopic TFunction LC">
+<a name="CHalfEdge.GetSmoothingGroup"></a><a name="Topic223"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetSmoothingGroup</div>
- <div id="NDPrototype402" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">uint32</span> GetSmoothingGroup()</div></div>
+ <div id="NDPrototype223" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">uint32</span> GetSmoothingGroup()</div></div>
  <div class="CBody"><p>Returns the smoothing group this edge belongs to</p><div class="CHeading">Returns</div><p>ID of the smoothing group this edge belongs to</p></div>
 </div>
 
-<a name="CFace"></a><a name="Topic403"></a><div class="CTopic TClass LC">
+<a name="CFace"></a><a name="Topic224"></a><div class="CTopic TClass LC">
  <div class="CTitle">CFace</div>
- <div class="NDClassPrototype" id="NDClassPrototype403"><div class="CPEntry TClass Current"><div class="CPName">CFace</div></div></div>
+ <div class="NDClassPrototype" id="NDClassPrototype224"><div class="CPEntry TClass Current"><div class="CPName">CFace</div></div></div>
  <div class="CBody"><p>Defines a face in our CMesh</p></div>
 </div>
 
-<a name="CFace.Types"></a><a name="Topic404"></a><div class="CTopic TGroup LC">
+<a name="CFace.Types"></a><a name="Topic225"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Types</div>
 </div>
 
-<a name="CFace.EVertexFlags"></a><a name="Topic405"></a><div class="CTopic TEnumeration LC">
+<a name="CFace.EVertexFlags"></a><a name="Topic226"></a><div class="CTopic TEnumeration LC">
  <div class="CTitle">EVertexFlags</div>
  <div class="CBody"><p>Define flags describing what fields are available in a SVertex</p></div>
 </div>
 
-<a name="CFace.ETriangulateMethod"></a><a name="Topic406"></a><div class="CTopic TEnumeration LC">
+<a name="CFace.ETriangulateMethod"></a><a name="Topic227"></a><div class="CTopic TEnumeration LC">
  <div class="CTitle">ETriangulateMethod</div>
  <div class="CBody"><p>Defines the method used for converting a polygonal mesh into a trianglar mesh.</p></div>
 </div>
 
-<a name="EMeshFlags"></a><a name="Topic407"></a><div class="CTopic TClass LC">
+<a name="EMeshFlags"></a><a name="Topic228"></a><div class="CTopic TClass LC">
  <div class="CTitle">EMeshFlags</div>
- <div class="NDClassPrototype" id="NDClassPrototype407"><div class="CPEntry TClass Current"><div class="CPModifiers"><span class="SHKeyword">enum</span> </div><div class="CPName">EMeshFlags</div></div></div>
+ <div class="NDClassPrototype" id="NDClassPrototype228"><div class="CPEntry TClass Current"><div class="CPModifiers"><span class="SHKeyword">enum</span> </div><div class="CPName">EMeshFlags</div></div></div>
  <div class="CBody"><p>Defines various flags associated with an ISubMesh</p><table class="CDefinitionList"><tr><td class="CDLEntry">TwoSided</td><td class="CDLDefinition"><p>Mesh is considered to be two sided</p></td></tr></table></div>
 </div>
 
-<a name="ISubMesh"></a><a name="Topic408"></a><div class="CTopic TInterface LC">
+<a name="ISubMesh"></a><a name="Topic229"></a><div class="CTopic TInterface LC">
  <div class="CTitle">ISubMesh</div>
  <div class="CBody"><p>ISubMesh is used by clients for manipulating a submesh. A submesh contains actual mesh data. This is different from a mesh object which is just a collection of submesh objects.</p></div>
 </div>
 
-<a name="ISubMesh.Functions"></a><a name="Topic409"></a><div class="CTopic TGroup LC">
+<a name="ISubMesh.Functions"></a><a name="Topic230"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="ISubMesh.RayIntersect"></a><a name="Topic410"></a><div class="CTopic TFunction LC">
+<a name="ISubMesh.RayIntersect"></a><a name="Topic231"></a><div class="CTopic TFunction LC">
  <div class="CTitle">RayIntersect</div>
- <div id="NDPrototype410" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">bool</span> RayIntersect(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="first"></td><td class="PType"><a href="../../../index.html#File:Base/Math/Ray.h:Ray3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,145);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Ray3</a>&amp;&nbsp;</td><td class="PName last">ray,</td></tr><tr><td class="first"></td><td class="PType"><a href="../../../index.html#File:Base/Math/Ray.h:RayIntersect3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,144);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >RayIntersect3</a>*&nbsp;</td><td class="PName last">pIntersection,</td></tr><tr><td class="first"></td><td class="PType"><a href="../../../index.html#File:Rendering/Caustic/IMaterialAttrib.h:IMaterialAttrib" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1180);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMaterialAttrib</a>**&nbsp;</td><td class="PName last">pMaterial,</td></tr><tr><td class="PModifierQualifier first">std::</td><td class="PType">vector&lt;CRefObj&lt;<a href="../../../index.html#File:Rendering/Caustic/IMaterialAttrib.h:IMaterialAttrib" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1180);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMaterialAttrib</a>&gt;&gt;&nbsp;</td><td class="PName last">materials</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
- <div class="CBody"><p>Computes the intersection between a ray and a mesh.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">ray<div class="CDLParameterType"><a href="../../../index.html#File:Base/Math/Ray.h:Ray3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,145);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Ray3</a>&amp;</div></td><td class="CDLDefinition"><p>Ray to intersect against</p></td></tr><tr><td class="CDLEntry">pIntersection<div class="CDLParameterType"><a href="../../../index.html#File:Base/Math/Ray.h:RayIntersect3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,144);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >RayIntersect3</a>*</div></td><td class="CDLDefinition"><p>Returns the point of intersection if ray intersects mesh</p></td></tr><tr><td class="CDLEntry">pMaterial<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/Caustic/IMaterialAttrib.h:IMaterialAttrib" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1180);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMaterialAttrib</a>**</div></td><td class="CDLDefinition"><p>Material of face that ray intersects</p></td></tr><tr><td class="CDLEntry">materials<div class="CDLParameterType">std::vector&lt;CRefObj&lt;<a href="../../../index.html#File:Rendering/Caustic/IMaterialAttrib.h:IMaterialAttrib" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1180);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMaterialAttrib</a>&gt;&gt;</div></td><td class="CDLDefinition"><p>list of possible materials</p></td></tr></table><div class="CHeading">Returns</div><p>Returns true if ray intersects mesh. False otherwise.</p></div>
+ <div id="NDPrototype231" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">bool</span> RayIntersect(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="first"></td><td class="PType">Ray3&amp;&nbsp;</td><td class="PName last">ray,</td></tr><tr><td class="first"></td><td class="PType">RayIntersect3*&nbsp;</td><td class="PName last">pIntersection,</td></tr><tr><td class="first"></td><td class="PType"><a href="../../../index.html#File:Rendering/Caustic/IMaterialAttrib.h:IMaterialAttrib" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1076);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMaterialAttrib</a>**&nbsp;</td><td class="PName last">pMaterial,</td></tr><tr><td class="PModifierQualifier first">std::</td><td class="PType">vector&lt;CRefObj&lt;<a href="../../../index.html#File:Rendering/Caustic/IMaterialAttrib.h:IMaterialAttrib" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1076);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMaterialAttrib</a>&gt;&gt;&nbsp;</td><td class="PName last">materials</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div class="CBody"><p>Computes the intersection between a ray and a mesh.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">ray<div class="CDLParameterType">Ray3&amp;</div></td><td class="CDLDefinition"><p>Ray to intersect against</p></td></tr><tr><td class="CDLEntry">pIntersection<div class="CDLParameterType">RayIntersect3*</div></td><td class="CDLDefinition"><p>Returns the point of intersection if ray intersects mesh</p></td></tr><tr><td class="CDLEntry">pMaterial<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/Caustic/IMaterialAttrib.h:IMaterialAttrib" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1076);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMaterialAttrib</a>**</div></td><td class="CDLDefinition"><p>Material of face that ray intersects</p></td></tr><tr><td class="CDLEntry">materials<div class="CDLParameterType">std::vector&lt;CRefObj&lt;<a href="../../../index.html#File:Rendering/Caustic/IMaterialAttrib.h:IMaterialAttrib" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1076);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMaterialAttrib</a>&gt;&gt;</div></td><td class="CDLDefinition"><p>list of possible materials</p></td></tr></table><div class="CHeading">Returns</div><p>Returns true if ray intersects mesh. False otherwise.</p></div>
 </div>
 
-<a name="ISubMesh.SetName"></a><a name="Topic411"></a><div class="CTopic TFunction LC">
+<a name="ISubMesh.SetName"></a><a name="Topic232"></a><div class="CTopic TFunction LC">
  <div class="CTitle">SetName</div>
- <div id="NDPrototype411" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetName(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><span class="SHKeyword">char</span>*&nbsp;</td><td class="PName last">pName</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div id="NDPrototype232" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetName(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><span class="SHKeyword">char</span>*&nbsp;</td><td class="PName last">pName</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
  <div class="CBody"><p>Sets the name of the submesh</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pName<div class="CDLParameterType"><span class="SHKeyword">const</span> <span class="SHKeyword">char</span>*</div></td><td class="CDLDefinition"><p>name to assign</p></td></tr></table></div>
 </div>
 
-<a name="ISubMesh.GetName"></a><a name="Topic412"></a><div class="CTopic TFunction LC">
+<a name="ISubMesh.GetName"></a><a name="Topic233"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetName</div>
- <div id="NDPrototype412" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> std::<span class="SHKeyword">string</span> GetName() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype233" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> std::<span class="SHKeyword">string</span> GetName() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Returns the name of the submesh</p></div>
 </div>
 
-<a name="ISubMesh.GetNumberFaces"></a><a name="Topic413"></a><div class="CTopic TFunction LC">
+<a name="ISubMesh.GetNumberFaces"></a><a name="Topic234"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetNumberFaces</div>
- <div id="NDPrototype413" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetNumberFaces() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype234" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetNumberFaces() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Returns the number of faces in the submesh</p></div>
 </div>
 
-<a name="ISubMesh.GetFace"></a><a name="Topic414"></a><div class="CTopic TFunction LC">
+<a name="ISubMesh.GetFace"></a><a name="Topic235"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetFace</div>
- <div id="NDPrototype414" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <a href="../../../index.html#File:Geometry/Mesh/IMesh.h:CFace" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,403);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CFace</a> *GetFace(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">index</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div id="NDPrototype235" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <a href="../../../index.html#File:Geometry/Mesh/IMesh.h:CFace" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,224);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CFace</a> *GetFace(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">index</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
  <div class="CBody"><p>Returns a pointer to the requested face</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">index<div class="CDLParameterType"><span class="SHKeyword">uint32</span></div></td><td class="CDLDefinition"><p>index of face</p></td></tr></table></div>
 </div>
 
-<a name="ISubMesh.GetNumberVertices"></a><a name="Topic415"></a><div class="CTopic TFunction LC">
+<a name="ISubMesh.GetNumberVertices"></a><a name="Topic236"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetNumberVertices</div>
- <div id="NDPrototype415" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetNumberVertices() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype236" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetNumberVertices() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Returns number of vertices in submesh</p></div>
 </div>
 
-<a name="ISubMesh.GetVertex"></a><a name="Topic416"></a><div class="CTopic TFunction LC">
+<a name="ISubMesh.GetVertex"></a><a name="Topic237"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetVertex</div>
- <div id="NDPrototype416" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <a href="../../../index.html#File:Rendering/Caustic/RenderTypes.h:CGeomVertex" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,747);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CGeomVertex</a> *GetVertex(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">index</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div id="NDPrototype237" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <a href="../../../index.html#File:Rendering/Caustic/RenderTypes.h:CGeomVertex" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,612);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CGeomVertex</a> *GetVertex(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">index</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
  <div class="CBody"><p>Returns a requested vertex</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">index<div class="CDLParameterType"><span class="SHKeyword">uint32</span></div></td><td class="CDLDefinition"><p>index of requested vertex</p></td></tr></table></div>
 </div>
 
-<a name="ISubMesh.GetNumberEdges"></a><a name="Topic417"></a><div class="CTopic TFunction LC">
+<a name="ISubMesh.GetNumberEdges"></a><a name="Topic238"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetNumberEdges</div>
- <div id="NDPrototype417" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetNumberEdges() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype238" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetNumberEdges() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Returns number of edges in submesh</p></div>
 </div>
 
-<a name="ISubMesh.GetEdge"></a><a name="Topic418"></a><div class="CTopic TFunction LC">
+<a name="ISubMesh.GetEdge"></a><a name="Topic239"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetEdge</div>
- <div id="NDPrototype418" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <a href="../../../index.html#File:Geometry/Mesh/IMesh.h:CHalfEdge" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,394);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CHalfEdge</a> *GetEdge(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">index</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div id="NDPrototype239" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <a href="../../../index.html#File:Geometry/Mesh/IMesh.h:CHalfEdge" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,215);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CHalfEdge</a> *GetEdge(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">index</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
  <div class="CBody"><p>Returns the requested edge</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">index<div class="CDLParameterType"><span class="SHKeyword">uint32</span></div></td><td class="CDLDefinition"><p>index of requested edge</p></td></tr></table></div>
 </div>
 
-<a name="ISubMesh.GetVertexFlags"></a><a name="Topic419"></a><div class="CTopic TFunction LC">
+<a name="ISubMesh.GetVertexFlags"></a><a name="Topic240"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetVertexFlags</div>
- <div id="NDPrototype419" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> EVertexFlags GetVertexFlags() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype240" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> EVertexFlags GetVertexFlags() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Returns vertex flags (which describe what fields a vertex contains)</p></div>
 </div>
 
-<a name="ISubMesh.SetVertexFlags"></a><a name="Topic420"></a><div class="CTopic TFunction LC">
+<a name="ISubMesh.SetVertexFlags"></a><a name="Topic241"></a><div class="CTopic TFunction LC">
  <div class="CTitle">SetVertexFlags</div>
- <div id="NDPrototype420" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetVertexFlags(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first">EVertexFlags&nbsp;</td><td class="PName last">flags</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div id="NDPrototype241" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetVertexFlags(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first">EVertexFlags&nbsp;</td><td class="PName last">flags</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
  <div class="CBody"><p>Sets which fields a vertex contains</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">flags<div class="CDLParameterType">EVertexFlags</div></td><td class="CDLDefinition"><p>flags indicating which fields a vertex contains</p></td></tr></table></div>
 </div>
 
-<a name="ISubMesh.GetMeshFlags"></a><a name="Topic421"></a><div class="CTopic TFunction LC">
+<a name="ISubMesh.GetMeshFlags"></a><a name="Topic242"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetMeshFlags</div>
- <div id="NDPrototype421" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <a href="../../../index.html#File:Geometry/Mesh/IMesh.h:EMeshFlags" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,407);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >EMeshFlags</a> GetMeshFlags() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype242" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <a href="../../../index.html#File:Geometry/Mesh/IMesh.h:EMeshFlags" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,228);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >EMeshFlags</a> GetMeshFlags() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Returns mesh flags (set of flags describing attributes of the submesh)</p></div>
 </div>
 
-<a name="ISubMesh.SetMeshFlags"></a><a name="Topic422"></a><div class="CTopic TFunction LC">
+<a name="ISubMesh.SetMeshFlags"></a><a name="Topic243"></a><div class="CTopic TFunction LC">
  <div class="CTitle">SetMeshFlags</div>
- <div id="NDPrototype422" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetMeshFlags(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:EMeshFlags" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,407);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >EMeshFlags</a>&nbsp;</td><td class="PName last">flags</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
- <div class="CBody"><p>Sets the mesh flags on the submesh</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">flags<div class="CDLParameterType"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:EMeshFlags" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,407);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >EMeshFlags</a></div></td><td class="CDLDefinition"><p>list of flags describing attributes of the submesh</p></td></tr></table></div>
+ <div id="NDPrototype243" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetMeshFlags(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:EMeshFlags" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,228);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >EMeshFlags</a>&nbsp;</td><td class="PName last">flags</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div class="CBody"><p>Sets the mesh flags on the submesh</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">flags<div class="CDLParameterType"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:EMeshFlags" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,228);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >EMeshFlags</a></div></td><td class="CDLDefinition"><p>list of flags describing attributes of the submesh</p></td></tr></table></div>
 </div>
 
-<a name="ISubMesh.GetMaterialID"></a><a name="Topic423"></a><div class="CTopic TFunction LC">
+<a name="ISubMesh.GetMaterialID"></a><a name="Topic244"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetMaterialID</div>
- <div id="NDPrototype423" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetMaterialID() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype244" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetMaterialID() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Returns the material ID associated with the submesh</p></div>
 </div>
 
-<a name="ISubMesh.SetMaterialID"></a><a name="Topic424"></a><div class="CTopic TFunction LC">
+<a name="ISubMesh.SetMaterialID"></a><a name="Topic245"></a><div class="CTopic TFunction LC">
  <div class="CTitle">SetMaterialID</div>
- <div id="NDPrototype424" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetMaterialID(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">materialID</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div id="NDPrototype245" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetMaterialID(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">materialID</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
  <div class="CBody"><p>Sets the material ID for the submesh</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">materialID<div class="CDLParameterType"><span class="SHKeyword">uint32</span></div></td><td class="CDLDefinition"><p>ID of material</p></td></tr></table></div>
 </div>
 
-<a name="ISubMesh.GetBBOX"></a><a name="Topic425"></a><div class="CTopic TFunction LC">
+<a name="ISubMesh.GetBBOX"></a><a name="Topic246"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetBBOX</div>
- <div id="NDPrototype425" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual const</span> <a href="../../../index.html#File:Base/Math/BBox.h:BBox3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,229);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >BBox3</a> &amp;GetBBox() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype246" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual const</span> BBox3 &amp;GetBBox() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Returns the bounding box of the submesh</p></div>
 </div>
 
-<a name="ISubMesh.Normalize"></a><a name="Topic426"></a><div class="CTopic TFunction LC">
+<a name="ISubMesh.Normalize"></a><a name="Topic247"></a><div class="CTopic TFunction LC">
  <div class="CTitle">Normalize</div>
- <div id="NDPrototype426" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> Normalize(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><a href="../../../index.html#File:Base/Math/BBox.h:BBox3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,229);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >BBox3</a>&nbsp;</td><td class="PSymbols">&amp;</td><td class="PName last">bbox</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
- <div class="CBody"><p>Rescales a mesh so fits inside a -0.5..+0.5 bounding box</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">bbox<div class="CDLParameterType"><span class="SHKeyword">const</span> <a href="../../../index.html#File:Base/Math/BBox.h:BBox3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,229);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >BBox3</a>&amp;</div></td><td class="CDLDefinition"><p>Bounding box of the mesh</p></td></tr></table></div>
+ <div id="NDPrototype247" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> Normalize(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType">BBox3&nbsp;</td><td class="PSymbols">&amp;</td><td class="PName last">bbox</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div class="CBody"><p>Rescales a mesh so fits inside a -0.5..+0.5 bounding box</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">bbox<div class="CDLParameterType"><span class="SHKeyword">const</span> BBox3&amp;</div></td><td class="CDLDefinition"><p>Bounding box of the mesh</p></td></tr></table></div>
 </div>
 
-<a name="ISubMesh.ComputeNormals"></a><a name="Topic427"></a><div class="CTopic TFunction LC">
+<a name="ISubMesh.ComputeNormals"></a><a name="Topic248"></a><div class="CTopic TFunction LC">
  <div class="CTitle">ComputeNormals</div>
- <div id="NDPrototype427" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> ComputeNormals() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype248" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> ComputeNormals() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>This method will compute all the vertex normals on the mesh by summing and normalizing the face vertices around each vertex (via Newell's method). NOTE: This makes an implicit assumption that each face is planar. This is not always the case and can thus result in incorrect normals (for instance, the faces from CreateSphere() will not be planar).&nbsp; To prevent incorrect normals, it is first recommended that the mesh be triangulated first via CSubMesh::Triangulate().</p></div>
 </div>
 
-<a name="ISubMesh.VertexToIndex"></a><a name="Topic428"></a><div class="CTopic TFunction LC">
+<a name="ISubMesh.VertexToIndex"></a><a name="Topic249"></a><div class="CTopic TFunction LC">
  <div class="CTitle">VertexToIndex</div>
- <div id="NDPrototype428" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> VertexToIndex(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/RenderTypes.h:CGeomVertex" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,747);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CGeomVertex</a>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pVertex</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
- <div class="CBody"><p>Given a vertex this returns the index of that vertex</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pVertex<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/Caustic/RenderTypes.h:CGeomVertex" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,747);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CGeomVertex</a>*</div></td><td class="CDLDefinition"><p>vertex to convert into index</p></td></tr></table></div>
+ <div id="NDPrototype249" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> VertexToIndex(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/RenderTypes.h:CGeomVertex" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,612);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CGeomVertex</a>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pVertex</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div class="CBody"><p>Given a vertex this returns the index of that vertex</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pVertex<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/Caustic/RenderTypes.h:CGeomVertex" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,612);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CGeomVertex</a>*</div></td><td class="CDLDefinition"><p>vertex to convert into index</p></td></tr></table></div>
 </div>
 
-<a name="ISubMesh.FaceToIndex"></a><a name="Topic429"></a><div class="CTopic TFunction LC">
+<a name="ISubMesh.FaceToIndex"></a><a name="Topic250"></a><div class="CTopic TFunction LC">
  <div class="CTitle">FaceToIndex</div>
- <div id="NDPrototype429" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> FaceToIndex(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:CFace" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,403);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CFace</a>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pFace</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
- <div class="CBody"><p>Given a face this returns the index of that face</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pFace<div class="CDLParameterType"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:CFace" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,403);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CFace</a>*</div></td><td class="CDLDefinition"><p>face to convert into index</p></td></tr></table></div>
+ <div id="NDPrototype250" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> FaceToIndex(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:CFace" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,224);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CFace</a>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pFace</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div class="CBody"><p>Given a face this returns the index of that face</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pFace<div class="CDLParameterType"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:CFace" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,224);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CFace</a>*</div></td><td class="CDLDefinition"><p>face to convert into index</p></td></tr></table></div>
 </div>
 
-<a name="ISubMesh.EdgeToIndex"></a><a name="Topic430"></a><div class="CTopic TFunction LC">
+<a name="ISubMesh.EdgeToIndex"></a><a name="Topic251"></a><div class="CTopic TFunction LC">
  <div class="CTitle">EdgeToIndex</div>
- <div id="NDPrototype430" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> EdgeToIndex(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:CHalfEdge" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,394);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CHalfEdge</a>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pEdge</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
- <div class="CBody"><p>Given a edge this returns the index of that edge</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pEdge<div class="CDLParameterType"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:CHalfEdge" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,394);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CHalfEdge</a>*</div></td><td class="CDLDefinition"><p>edge to convert into index</p></td></tr></table></div>
+ <div id="NDPrototype251" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> EdgeToIndex(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:CHalfEdge" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,215);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CHalfEdge</a>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pEdge</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div class="CBody"><p>Given a edge this returns the index of that edge</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pEdge<div class="CDLParameterType"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:CHalfEdge" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,215);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CHalfEdge</a>*</div></td><td class="CDLDefinition"><p>edge to convert into index</p></td></tr></table></div>
 </div>
 
-<a name="ISubMesh.Triangulate"></a><a name="Topic431"></a><div class="CTopic TFunction LC">
+<a name="ISubMesh.Triangulate"></a><a name="Topic252"></a><div class="CTopic TFunction LC">
  <div class="CTitle">Triangulate</div>
- <div id="NDPrototype431" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> Triangulate(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first">ETriangulateMethod&nbsp;</td><td class="PName last">method</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div id="NDPrototype252" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> Triangulate(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first">ETriangulateMethod&nbsp;</td><td class="PName last">method</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
  <div class="CBody"><p>Converts a mesh from arbitrary polygons into a triangulated mesh.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">method<div class="CDLParameterType">ETriangulateMethod</div></td><td class="CDLDefinition"><p>method to use for triangulation</p></td></tr></table></div>
 </div>
 
-<a name="ISubMesh.ToRenderSubMesh"></a><a name="Topic432"></a><div class="CTopic TFunction LC">
+<a name="ISubMesh.ToRenderSubMesh"></a><a name="Topic253"></a><div class="CTopic TFunction LC">
  <div class="CTitle">ToRenderSubMesh</div>
- <div id="NDPrototype432" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> CRefObj&lt;<a href="../../../index.html#File:Rendering/Caustic/IRenderMesh.h:IRenderSubMesh" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,945);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderSubMesh</a>&gt; ToRenderSubMesh(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1063);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer</a>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pRenderer,</td></tr><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/IShader.h:IShader" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1039);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IShader</a>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pShader</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
- <div class="CBody"><p>Converts a CSubMesh object into a renderable form</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pRenderer<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1063);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer</a>*</div></td><td class="CDLDefinition"><p>Renderer</p></td></tr><tr><td class="CDLEntry">pShader<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/Caustic/IShader.h:IShader" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1039);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IShader</a>*</div></td><td class="CDLDefinition"><p>shader</p></td></tr></table><div class="CHeading">Returns</div><p>Returns the new submesh</p></div>
+ <div id="NDPrototype253" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> CRefObj&lt;<a href="../../../index.html#File:Rendering/Caustic/IRenderMesh.h:IRenderSubMesh" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,919);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderSubMesh</a>&gt; ToRenderSubMesh(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,948);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer</a>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pRenderer,</td></tr><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/IShader.h:IShader" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,832);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IShader</a>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pShader</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div class="CBody"><p>Converts a CSubMesh object into a renderable form</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pRenderer<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/Caustic/IRenderer.h:IRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,948);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer</a>*</div></td><td class="CDLDefinition"><p>Renderer</p></td></tr><tr><td class="CDLEntry">pShader<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/Caustic/IShader.h:IShader" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,832);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IShader</a>*</div></td><td class="CDLDefinition"><p>shader</p></td></tr></table><div class="CHeading">Returns</div><p>Returns the new submesh</p></div>
 </div>
 
-<a name="IMesh"></a><a name="Topic433"></a><div class="CTopic TInterface LC">
+<a name="IMesh"></a><a name="Topic254"></a><div class="CTopic TInterface LC">
  <div class="CTitle">IMesh</div>
  <div class="CBody"><p>IMesh is simply a collection of submesh objects (ISubMesh).</p><p>NOTE: This mesh is different from a renderable mesh. There is a function MeshToD3D which will convert the mesh into a renderable mesh.</p></div>
 </div>
 
-<a name="IMesh.Functions"></a><a name="Topic434"></a><div class="CTopic TGroup LC">
+<a name="IMesh.Functions"></a><a name="Topic255"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="IMesh.CreateEmptySubMesh"></a><a name="Topic116"></a><div class="CTopic TFunction LC last">
+<a name="IMesh.CreateEmptySubMesh"></a><a name="Topic256"></a><div class="CTopic TFunction LC last">
  <div class="CTitle">CreateEmptySubMesh</div>
- <div id="NDPrototype116" class="NDPrototype"><div class="PSection PPlainSection">CRefObj&lt;<a href="../../../index.html#File:Geometry/Mesh/IMesh.h:ISubMesh" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,408);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ISubMesh</a>&gt; CreateEmptySubMesh()</div></div>
+ <div id="NDPrototype256" class="NDPrototype"><div class="PSection PPlainSection">CRefObj&lt;<a href="../../../index.html#File:Geometry/Mesh/IMesh.h:ISubMesh" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,229);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ISubMesh</a>&gt; CreateEmptySubMesh()</div></div>
  <div class="CBody"><p>Creates a empty submesh.</p></div>
 </div>
 

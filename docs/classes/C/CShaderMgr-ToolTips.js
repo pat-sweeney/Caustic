@@ -1,1 +1,1 @@
-﻿NDContentPage.OnToolTipsLoaded({940:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Manages shaders within the renderer</div></div>"});
+﻿NDContentPage.OnToolTipsLoaded({764:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Manages shaders within the renderer</div></div>"});

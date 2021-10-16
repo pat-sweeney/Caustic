@@ -5,8 +5,8 @@
 //**********************************************************************
 #pragma once
 import Base.Core.Core;
-#include "Base\Core\RefCount.h"
-#include "Base\Math\Vector.h"
+import Base.Core.RefCount;
+import Base.Math.Vector;
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\CausticFactory.h"
 #include "RenderGraphNode.h"

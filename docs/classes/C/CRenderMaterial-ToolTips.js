@@ -1,1 +1,1 @@
-﻿NDContentPage.OnToolTipsLoaded({983:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines a material that has its associated render element (as opposed to an IMaterialAttrib which only defines the attributes of the material).</div></div>"});
+﻿NDContentPage.OnToolTipsLoaded({817:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines a material that has its associated render element (as opposed to an IMaterialAttrib which only defines the attributes of the material).</div></div>"});

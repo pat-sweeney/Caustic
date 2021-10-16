@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/RenderTypes.h","RenderTypes.h");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/RenderTypes.h",[["C/C++","C"]],[["Structs","Struct"]],[[747,0,0,"CGeomVertex","CGeomVertex"],[748,0,0,"CGeomFace","CGeomFace"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/RenderTypes.h","RenderTypes.h");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/RenderTypes.h",[["C/C++","C"]],[["Structs","Struct"]],[[612,0,0,"CGeomVertex","CGeomVertex"],[613,0,0,"CGeomFace","CGeomFace"]]);

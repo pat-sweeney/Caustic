@@ -11,6 +11,7 @@ module;
 #pragma warning(disable:5050)
 
 export module Base.Core.Core;
+export import :Part1;
 
 // Namespace: Caustic
 export namespace Caustic

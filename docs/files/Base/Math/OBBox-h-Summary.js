@@ -1,1 +1,0 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Base/Math/OBBox.h","OBBox.h");NDSummary.OnSummaryLoaded("File:Base/Math/OBBox.h",[["C/C++","C"]],[["Structs","Struct"]],[[190,0,0,"OBBox2","OBBox2"],[191,0,0,"OBBox3","OBBox3"]]);

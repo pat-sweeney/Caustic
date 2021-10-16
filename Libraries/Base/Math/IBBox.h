@@ -5,7 +5,8 @@
 //**********************************************************************
 #pragma once
 import Base.Core.Core;
-#include "Base\Math\Point.h"
+import Base.Math.Point;
+#include <limits>
 
 namespace Caustic
 {

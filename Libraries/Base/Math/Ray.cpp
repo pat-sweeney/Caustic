@@ -5,7 +5,7 @@
 //**********************************************************************
 #include "stdafx.h"
 import Base.Core.Core;
-#include "Base\Math\Ray.h"
+import Base.Math.Ray;
 #include "Base\Math\Matrix.h"
 
 namespace Caustic

@@ -6,7 +6,7 @@
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
-#include "Base\Math\Vector.h"
+import Base.Math.Vector;
 #include "IDelaunay.h"
 #include <vector>
 

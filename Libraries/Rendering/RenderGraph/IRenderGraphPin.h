@@ -6,7 +6,7 @@
 #pragma once
 import Base.Core.Core;
 import Base.Core.IRefCount;
-#include "Base\Math\Vector.h"
+import Base.Math.Vector;
 #include "Base\Math\Matrix.h"
 #include "Rendering\Caustic\Caustic.h"
 #include <vector>

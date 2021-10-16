@@ -4,8 +4,9 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
+import Base.Core.Core;
+import Base.Math.BBox;
 #include "Rendering\Caustic\Caustic.h"
-#include "Base/Math/BBox.h"
 #include "IRenderMesh.h"
 #include "Shader.h"
 #include <d3d11.h>

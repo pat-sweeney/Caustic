@@ -1,1 +1,0 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:Point2","Point2");NDSummary.OnSummaryLoaded("CClass:Point2",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Structs","Struct"]],[[99,0,2,"Point2"],[100,0,1,"Functions","Functions"],[101,0,0,"Point2","Point2"],[102,0,0,"Point2","Point2(2)"],[103,0,0,"IsEq","IsEq"],[104,0,0,"Length","Length"]]);

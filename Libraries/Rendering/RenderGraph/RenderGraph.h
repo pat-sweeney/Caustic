@@ -6,7 +6,7 @@
 #pragma once
 import Base.Core.Core;
 import Base.Core.RefCount;
-#include "Base\Math\Ray.h"
+import Base.Math.Ray;
 #include "Rendering\Caustic\Caustic.h"
 #include "IRenderGraph.h"
 #include "IRenderGraphNode.h"

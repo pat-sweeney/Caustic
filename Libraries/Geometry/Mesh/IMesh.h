@@ -8,8 +8,8 @@ import Base.Core.Core;
 import Base.Core.IRefCount;
 import Base.Core.ISerialize;
 import Base.Core.RefCount;
-#include "Base\Math\Vector.h"
-#include "Base\Math\BBox.h"
+import Base.Math.Vector;
+import Base.Math.BBox;
 #include "Rendering\Caustic\RenderTypes.h"
 #include "Rendering\Caustic\IMaterialAttrib.h"
 #include "Rendering\Caustic\PathTrace.h"

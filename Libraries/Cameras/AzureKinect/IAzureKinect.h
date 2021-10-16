@@ -6,8 +6,8 @@
 #pragma once
 import Base.Core.Core;
 import Base.Core.IRefCount;
-#include "Base\Math\Vector.h"
-#include "Base\Math\BBox.h"
+import Base.Math.Vector;
+import Base.Math.BBox;
 #include "Cameras\CameraBase\ICamera.h"
 #include <vector>
 

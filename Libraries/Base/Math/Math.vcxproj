@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -47,7 +47,7 @@
   <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -63,7 +63,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -80,25 +80,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Basis.h" />
-    <ClInclude Include="BBox.h" />
     <ClInclude Include="Covariance.h" />
     <ClInclude Include="FuncFilter.h" />
     <ClInclude Include="Helper.h" />
     <ClInclude Include="IBBox.h" />
     <ClInclude Include="Matrix.h" />
-    <ClInclude Include="MCSampler.h" />
     <ClInclude Include="NewtonsMethod.h" />
-    <ClInclude Include="OBBox.h" />
-    <ClInclude Include="Point.h" />
     <ClInclude Include="Quaternion.h" />
-    <ClInclude Include="Ray.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="UnitTest.h" />
-    <ClInclude Include="Vector.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Basis.ixx" />
+    <ClCompile Include="BBox.ixx" />
     <ClCompile Include="BBox2.cpp" />
     <ClCompile Include="BBox3.cpp" />
     <ClCompile Include="Covariance.cpp" />
@@ -106,16 +101,21 @@
     <ClCompile Include="Matrix3x3.cpp" />
     <ClCompile Include="Matrix4x3.cpp" />
     <ClCompile Include="Matrix4x4.cpp" />
+    <ClCompile Include="MCSampler.ixx" />
     <ClCompile Include="NewtonsMethod.cpp" />
+    <ClCompile Include="OBBox.ixx" />
     <ClCompile Include="OBBox2.cpp" />
     <ClCompile Include="OBBox3.cpp" />
+    <ClCompile Include="Point.ixx" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="Ray.cpp" />
+    <ClCompile Include="Ray.ixx" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="UnitTest.cpp" />
+    <ClCompile Include="Vector.ixx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.vcxproj">

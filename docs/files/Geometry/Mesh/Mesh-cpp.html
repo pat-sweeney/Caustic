@@ -8,102 +8,102 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="Mesh.cpp"></a><a name="Topic321"></a><div class="CTopic TFile LC first">
+<a name="Mesh.cpp"></a><a name="Topic192"></a><div class="CTopic TFile LC first">
  <div class="CTitle">Mesh.cpp</div>
  <div class="CBody"><p>Contains the methods used to implement the CMesh object.</p></div>
 </div>
 
-<a name="Functions"></a><a name="Topic322"></a><div class="CTopic TGroup LC">
+<a name="Functions"></a><a name="Topic193"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="ComputeFaceNormal"></a><a name="Topic323"></a><div class="CTopic TFunction LC">
+<a name="ComputeFaceNormal"></a><a name="Topic194"></a><div class="CTopic TFunction LC">
  <div class="CTitle">ComputeFaceNormal</div>
- <div id="NDPrototype323" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">void</span> CFace::ComputeFaceNormal()</div></div>
+ <div id="NDPrototype194" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">void</span> CFace::ComputeFaceNormal()</div></div>
  <div class="CBody"><p>Computes the normal for a face using Newell's method (so convex polygons are handled correctly)</p></div>
 </div>
 
-<a name="IsDegenerate"></a><a name="Topic324"></a><div class="CTopic TFunction LC">
+<a name="IsDegenerate"></a><a name="Topic195"></a><div class="CTopic TFunction LC">
  <div class="CTitle">IsDegenerate</div>
- <div id="NDPrototype324" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">bool</span> CFace::IsDegenerate()</div></div>
+ <div id="NDPrototype195" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">bool</span> CFace::IsDegenerate()</div></div>
  <div class="CBody"><p>Returns whether the face is degenerate (based on the normal vector)</p></div>
 </div>
 
-<a name="CMesh"></a><a name="Topic325"></a><div class="CTopic TFunction LC">
+<a name="CMesh"></a><a name="Topic196"></a><div class="CTopic TFunction LC">
  <div class="CTitle">CMesh</div>
- <div id="NDPrototype325" class="NDPrototype"><div class="PSection PPlainSection">CMesh::CMesh()</div></div>
+ <div id="NDPrototype196" class="NDPrototype"><div class="PSection PPlainSection">CMesh::CMesh()</div></div>
  <div class="CBody"><p>Default ctor for our mesh object. A mesh is simply a collection of submeshes (submeshes define geometry and material attributes)</p></div>
 </div>
 
-<a name="RayIntersect"></a><a name="Topic326"></a><div class="CTopic TFunction LC">
+<a name="RayIntersect"></a><a name="Topic197"></a><div class="CTopic TFunction LC">
  <div class="CTitle">RayIntersect</div>
- <div id="NDPrototype326" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">bool</span> CMesh::RayIntersect(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Base/Math/Ray.h:Ray3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,145);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Ray3</a>&amp;&nbsp;</td><td class="PName last">ray,</td></tr><tr><td class="PType first"><a href="../../../index.html#File:Base/Math/Ray.h:RayIntersect3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,144);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >RayIntersect3</a>*&nbsp;</td><td class="PName last">pIntersection,</td></tr><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/IMaterialAttrib.h:IMaterialAttrib" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1180);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMaterialAttrib</a>**&nbsp;</td><td class="PName last">pMaterial</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
- <div class="CBody"><p>Computes the intersection of a ray with a mesh</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pCtx</td><td class="CDLDefinition"><p>path tracing context</p></td></tr><tr><td class="CDLEntry">ray<div class="CDLParameterType"><a href="../../../index.html#File:Base/Math/Ray.h:Ray3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,145);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Ray3</a>&amp;</div></td><td class="CDLDefinition"><p>ray direction to trace</p></td></tr><tr><td class="CDLEntry">pRadiance</td><td class="CDLDefinition"><p>Returns the radiance returned along 'ray'</p></td></tr></table></div>
+ <div id="NDPrototype197" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">bool</span> CMesh::RayIntersect(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first">Ray3&amp;&nbsp;</td><td class="PName last">ray,</td></tr><tr><td class="PType first">RayIntersect3*&nbsp;</td><td class="PName last">pIntersection,</td></tr><tr><td class="PType first"><a href="../../../index.html#File:Rendering/Caustic/IMaterialAttrib.h:IMaterialAttrib" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1076);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMaterialAttrib</a>**&nbsp;</td><td class="PName last">pMaterial</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
+ <div class="CBody"><p>Computes the intersection of a ray with a mesh</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pCtx</td><td class="CDLDefinition"><p>path tracing context</p></td></tr><tr><td class="CDLEntry">ray<div class="CDLParameterType">Ray3&amp;</div></td><td class="CDLDefinition"><p>ray direction to trace</p></td></tr><tr><td class="CDLEntry">pRadiance</td><td class="CDLDefinition"><p>Returns the radiance returned along 'ray'</p></td></tr></table></div>
 </div>
 
-<a name="GetSubMesh"></a><a name="Topic327"></a><div class="CTopic TFunction LC">
+<a name="GetSubMesh"></a><a name="Topic198"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetSubMesh</div>
- <div id="NDPrototype327" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters">CRefObj&lt;<a href="../../../index.html#File:Geometry/Mesh/IMesh.h:ISubMesh" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,408);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ISubMesh</a>&gt; CMesh::GetSubMesh(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">index</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
+ <div id="NDPrototype198" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters">CRefObj&lt;<a href="../../../index.html#File:Geometry/Mesh/IMesh.h:ISubMesh" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,229);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ISubMesh</a>&gt; CMesh::GetSubMesh(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">index</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
  <div class="CBody"><p>Returns the Nth submesh</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">index<div class="CDLParameterType"><span class="SHKeyword">uint32</span></div></td><td class="CDLDefinition"><p>Index of submesh to retrieve</p></td></tr></table><div class="CHeading">Returns</div><p>Returns the Nth submesh</p></div>
 </div>
 
-<a name="AddSubMesh"></a><a name="Topic328"></a><div class="CTopic TFunction LC">
+<a name="AddSubMesh"></a><a name="Topic199"></a><div class="CTopic TFunction LC">
  <div class="CTitle">AddSubMesh</div>
- <div id="NDPrototype328" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CMesh::AddSubMesh(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:ISubMesh" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,408);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ISubMesh</a>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pSubMesh</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
- <div class="CBody"><p>Adds a submesh to the mesh</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pSubMesh<div class="CDLParameterType"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:ISubMesh" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,408);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ISubMesh</a>*</div></td><td class="CDLDefinition"><p>Adds the specified submesh to our mesh</p></td></tr></table></div>
+ <div id="NDPrototype199" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CMesh::AddSubMesh(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:ISubMesh" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,229);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ISubMesh</a>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pSubMesh</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
+ <div class="CBody"><p>Adds a submesh to the mesh</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pSubMesh<div class="CDLParameterType"><a href="../../../index.html#File:Geometry/Mesh/IMesh.h:ISubMesh" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,229);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ISubMesh</a>*</div></td><td class="CDLDefinition"><p>Adds the specified submesh to our mesh</p></td></tr></table></div>
 </div>
 
-<a name="GetBBox"></a><a name="Topic329"></a><div class="CTopic TFunction LC">
+<a name="GetBBox"></a><a name="Topic200"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetBBox</div>
- <div id="NDPrototype329" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CMesh::GetBBox(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Base/Math/BBox.h:BBox3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,229);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >BBox3</a>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pBBox</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
- <div class="CBody"><p>Returns the bounding box for the mesh</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pBBox<div class="CDLParameterType"><a href="../../../index.html#File:Base/Math/BBox.h:BBox3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,229);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >BBox3</a>*</div></td><td class="CDLDefinition"><p>Returns the bounding box of the mesh</p></td></tr></table></div>
+ <div id="NDPrototype200" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CMesh::GetBBox(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first">BBox3&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pBBox</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
+ <div class="CBody"><p>Returns the bounding box for the mesh</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pBBox<div class="CDLParameterType">BBox3*</div></td><td class="CDLDefinition"><p>Returns the bounding box of the mesh</p></td></tr></table></div>
 </div>
 
-<a name="Normalize"></a><a name="Topic330"></a><div class="CTopic TFunction LC">
+<a name="Normalize"></a><a name="Topic201"></a><div class="CTopic TFunction LC">
  <div class="CTitle">Normalize</div>
- <div id="NDPrototype330" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">void</span> CMesh::Normalize()</div></div>
+ <div id="NDPrototype201" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">void</span> CMesh::Normalize()</div></div>
  <div class="CBody"><p>Rescales a mesh so that it has unit size</p></div>
 </div>
 
-<a name="SetMaterials"></a><a name="Topic331"></a><div class="CTopic TFunction LC">
+<a name="SetMaterials"></a><a name="Topic202"></a><div class="CTopic TFunction LC">
  <div class="CTitle">SetMaterials</div>
- <div id="NDPrototype331" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CMesh::SetMaterials(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first">std::</td><td class="PType">vector&lt;CRefObj&lt;<a href="../../../index.html#File:Rendering/Caustic/IMaterialAttrib.h:IMaterialAttrib" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1180);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMaterialAttrib</a>&gt;&gt;&nbsp;</td><td class="PSymbols">&amp;</td><td class="PName last">materials</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
- <div class="CBody"><p>Sets the mesh's material list</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">materials<div class="CDLParameterType">std::vector&lt;CRefObj&lt;<a href="../../../index.html#File:Rendering/Caustic/IMaterialAttrib.h:IMaterialAttrib" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1180);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMaterialAttrib</a>&gt;&gt;&amp;</div></td><td class="CDLDefinition"><p>Assigns the mesh the specified list of materials</p></td></tr></table></div>
+ <div id="NDPrototype202" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CMesh::SetMaterials(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first">std::</td><td class="PType">vector&lt;CRefObj&lt;<a href="../../../index.html#File:Rendering/Caustic/IMaterialAttrib.h:IMaterialAttrib" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1076);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMaterialAttrib</a>&gt;&gt;&nbsp;</td><td class="PSymbols">&amp;</td><td class="PName last">materials</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
+ <div class="CBody"><p>Sets the mesh's material list</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">materials<div class="CDLParameterType">std::vector&lt;CRefObj&lt;<a href="../../../index.html#File:Rendering/Caustic/IMaterialAttrib.h:IMaterialAttrib" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1076);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMaterialAttrib</a>&gt;&gt;&amp;</div></td><td class="CDLDefinition"><p>Assigns the mesh the specified list of materials</p></td></tr></table></div>
 </div>
 
-<a name="GetNumberMaterials"></a><a name="Topic332"></a><div class="CTopic TFunction LC">
+<a name="GetNumberMaterials"></a><a name="Topic203"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetNumberMaterials</div>
- <div id="NDPrototype332" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">uint32</span> CMesh::GetNumberMaterials()</div></div>
+ <div id="NDPrototype203" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">uint32</span> CMesh::GetNumberMaterials()</div></div>
  <div class="CBody"><p>Returns number of materials currently assigned to mesh</p><div class="CHeading">Returns</div><p>Returns number of materials</p></div>
 </div>
 
-<a name="GetMaterial"></a><a name="Topic333"></a><div class="CTopic TFunction LC">
+<a name="GetMaterial"></a><a name="Topic204"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetMaterial</div>
- <div id="NDPrototype333" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters">CRefObj&lt;<a href="../../../index.html#File:Rendering/Caustic/IMaterialAttrib.h:IMaterialAttrib" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1180);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMaterialAttrib</a>&gt; CMesh::GetMaterial(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">materialID</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
+ <div id="NDPrototype204" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters">CRefObj&lt;<a href="../../../index.html#File:Rendering/Caustic/IMaterialAttrib.h:IMaterialAttrib" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1076);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMaterialAttrib</a>&gt; CMesh::GetMaterial(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">materialID</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
  <div class="CBody"><p>Returns the Nth material</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">materialID<div class="CDLParameterType"><span class="SHKeyword">uint32</span></div></td><td class="CDLDefinition"><p>Index of material to retrieve</p></td></tr></table><div class="CHeading">Returns</div><p>Returns the Nth material</p></div>
 </div>
 
-<a name="Load"></a><a name="Topic334"></a><div class="CTopic TFunction LC">
+<a name="Load"></a><a name="Topic205"></a><div class="CTopic TFunction LC">
  <div class="CTitle">Load</div>
- <div id="NDPrototype334" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CMesh::Load(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first">IStream&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pStream</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
+ <div id="NDPrototype205" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CMesh::Load(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first">IStream&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pStream</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
  <div class="CBody"><p>Loads a previously save Mesh</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pStream<div class="CDLParameterType">IStream*</div></td><td class="CDLDefinition"><p>Loads the material from the specified stream</p></td></tr></table></div>
 </div>
 
-<a name="Store"></a><a name="Topic335"></a><div class="CTopic TFunction LC">
+<a name="Store"></a><a name="Topic206"></a><div class="CTopic TFunction LC">
  <div class="CTitle">Store</div>
- <div id="NDPrototype335" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CMesh::Store(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first">IStream&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pStream</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
+ <div id="NDPrototype206" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> CMesh::Store(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first">IStream&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pStream</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
  <div class="CBody"><p>Stores a mesh to a stream</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pStream<div class="CDLParameterType">IStream*</div></td><td class="CDLDefinition"><p>Stores the material to the specified stream</p></td></tr></table></div>
 </div>
 
-<a name="ComputeNormals"></a><a name="Topic336"></a><div class="CTopic TFunction LC">
+<a name="ComputeNormals"></a><a name="Topic207"></a><div class="CTopic TFunction LC">
  <div class="CTitle">ComputeNormals</div>
- <div id="NDPrototype336" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">void</span> CMesh::ComputeNormals()</div></div>
+ <div id="NDPrototype207" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">void</span> CMesh::ComputeNormals()</div></div>
  <div class="CBody"><p>Computes normal vectors for each vertex on the mesh</p></div>
 </div>
 
-<a name="CreateEmptyMesh"></a><a name="Topic109"></a><div class="CTopic TFunction LC last">
+<a name="CreateEmptyMesh"></a><a name="Topic208"></a><div class="CTopic TFunction LC last">
  <div class="CTitle">CreateEmptyMesh</div>
- <div id="NDPrototype109" class="NDPrototype"><div class="PSection PPlainSection">CRefObj&lt;<a href="../../../index.html#File:Geometry/Mesh/IMesh.h:IMesh" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,433);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMesh</a>&gt; CreateEmptyMesh()</div></div>
+ <div id="NDPrototype208" class="NDPrototype"><div class="PSection PPlainSection">CRefObj&lt;<a href="../../../index.html#File:Geometry/Mesh/IMesh.h:IMesh" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,254);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMesh</a>&gt; CreateEmptyMesh()</div></div>
  <div class="CBody"><p>Returns an empty mesh</p><div class="CHeading">Returns</div><p>Returns the newly created mesh object</p></div>
 </div>
 

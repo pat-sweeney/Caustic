@@ -5,8 +5,8 @@
 //**********************************************************************
 #pragma once
 import Base.Core.Core;
-#include "Base\Core\RefCount.h"
-#include "Base\Math\Vector.h"
+import Base.Core.RefCount;
+import Base.Math.Vector;
 #include <vector>
 #include <string>
 #include <any>

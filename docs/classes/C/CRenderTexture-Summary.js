@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CRenderTexture","CRenderTexture");NDSummary.OnSummaryLoaded("CClass:CRenderTexture",[["C/C++","C"]],[["Classes","Class"]],[[753,0,0,"CRenderTexture"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CRenderTexture","CRenderTexture");NDSummary.OnSummaryLoaded("CClass:CRenderTexture",[["C/C++","C"]],[["Classes","Class"]],[[599,0,0,"CRenderTexture"]]);

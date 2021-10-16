@@ -1,1 +1,1 @@
-﻿NDContentPage.OnToolTipsLoaded({361:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines the interface used for creating Delaunay triangulations from a set of 2D points.</div></div>"});
+﻿NDContentPage.OnToolTipsLoaded({390:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines the interface used for creating Delaunay triangulations from a set of 2D points.</div></div>"});

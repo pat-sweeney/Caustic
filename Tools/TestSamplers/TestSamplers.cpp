@@ -4,7 +4,7 @@
 #include "framework.h"
 #include "TestSamplers.h"
 #include "Base\Math\FuncFilter.h"
-#include "Base\Math\Vector.h"
+import Base.Math.Vector;
 #include "Imaging\Image\Image.h"
 #include "Geometry\Rast\Bresenham.h"
 

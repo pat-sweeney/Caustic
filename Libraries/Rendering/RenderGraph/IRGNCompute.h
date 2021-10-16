@@ -6,7 +6,7 @@
 #pragma once
 import Base.Core.Core;
 import Base.Core.RefCount;
-#include "Base\Math\Vector.h"
+import Base.Math.Vector;
 #include "IRenderGraphNode.h"
 #include <vector>
 #include <string>

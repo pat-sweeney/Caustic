@@ -1,1 +1,1 @@
-﻿NDSummary.OnToolTipsLoaded("CClass:ISceneCylinderElem",{1567:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines a cylinder element in our scene graph.</div></div>"});
+﻿NDSummary.OnToolTipsLoaded("CClass:ISceneCylinderElem",{1412:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines a cylinder element in our scene graph.</div></div>"});

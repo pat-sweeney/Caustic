@@ -6,8 +6,8 @@
 #define _USE_MATH_DEFINES
 import Base.Core.Core;
 import Base.Core.Error;
+import Base.Math.Vector;
 #include <cmath>
-#include "Base\Math\Vector.h"
 #include "Geometry\Mesh\IMesh.h"
 #include "Geometry\Mesh\IMeshConstructor.h"
 #include "UnitTest.h"

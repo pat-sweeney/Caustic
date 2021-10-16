@@ -4,10 +4,10 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Base\Math\vector.h"
 import Base.Core.Core;
 import Base.Core.RefCount;
-#include "Base\Math\BBox.h"
+import Base.Math.Vector;
+import Base.Math.BBox;
 #include <vector>
 #include "IPath2.h"
 

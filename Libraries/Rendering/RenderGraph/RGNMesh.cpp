@@ -6,7 +6,7 @@
 #pragma once
 import Base.Core.Core;
 import Base.Core.RefCount;
-#include "Base\Math\Vector.h"
+import Base.Math.Vector;
 #include "IRGNMesh.h"
 #include "RGNMesh.h"
 #include "ILightCollection.h"

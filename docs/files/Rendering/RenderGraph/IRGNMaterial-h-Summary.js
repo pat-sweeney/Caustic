@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Rendering/RenderGraph/IRGNMaterial.h","IRGNMaterial.h");NDSummary.OnSummaryLoaded("File:Rendering/RenderGraph/IRGNMaterial.h",[["C/C++","C"]],[["Interfaces","Interface"]],[[1331,0,0,"IRenderGraphNode_Material","IRenderGraphNode_Material"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/RenderGraph/IRGNMaterial.h","IRGNMaterial.h");NDSummary.OnSummaryLoaded("File:Rendering/RenderGraph/IRGNMaterial.h",[["C/C++","C"]],[["Interfaces","Interface"]],[[1185,0,0,"IRenderGraphNode_Material","IRenderGraphNode_Material"]]);

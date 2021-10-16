@@ -4,8 +4,8 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Base\Math\BBox.h"
-#include "Base\Math\Vector.h"
+import Base.Math.Vector;
+import Base.Math.BBox;
 
 namespace Caustic
 {

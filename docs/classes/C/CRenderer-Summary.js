@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CRenderer","CRenderer");NDSummary.OnSummaryLoaded("CClass:CRenderer",[["C/C++","C"]],[["Classes","Class"]],[[804,0,0,"CRenderer"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CRenderer","CRenderer");NDSummary.OnSummaryLoaded("CClass:CRenderer",[["C/C++","C"]],[["Classes","Class"]],[[627,0,0,"CRenderer"]]);

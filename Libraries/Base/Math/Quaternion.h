@@ -5,7 +5,7 @@
 //**********************************************************************
 #pragma once
 import Base.Core.Core;
-#include "Base\Math\Vector.h"
+import Base.Math.Vector;
 #include <math.h>
 
 namespace Caustic

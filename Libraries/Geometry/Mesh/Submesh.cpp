@@ -7,7 +7,7 @@ import Base.Core.Core;
 import Base.Core.Error;
 #include "Geometry\Mesh\Mesh.h"
 #include "Geometry\Mesh\MeshConstructor.h"
-#include "Base\Math\Ray.h"
+import Base.Math.Ray;
 #include "Rendering\Caustic\PathTrace.h"
 
 //**********************************************************************

@@ -5,9 +5,9 @@
 //**********************************************************************
 import Base.Core.Core;
 import Base.Core.Error;
+import Base.Math.BBox;
 #include "Geometry\Mesh\Mesh.h"
 #include "Base\Math\Helper.h"
-#include "Base\Math\BBox.h"
 #include "Imaging\Image\Image.h"
 #include <map>
 #include "Delaunay.h"

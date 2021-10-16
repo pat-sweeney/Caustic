@@ -6,7 +6,7 @@
 #pragma once
 
 import Base.Core.Core;
-#include "Base\Math\Vector.h"
+import Base.Math.Vector;
 #include "Geometry\Mesh\Mesh.h"
 #include "Imaging\Image\Image.h"
 #include "Rendering\Caustic\Caustic.h"

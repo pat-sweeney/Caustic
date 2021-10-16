@@ -5,10 +5,10 @@
 //**********************************************************************
 module;
 #include <string>
-module Base.Core.Core;
+export module Base.Core.Core:Part1;
 
 // Namespace: Caustic
-namespace Caustic
+export namespace Caustic
 {
 	//**********************************************************************
 	// Function: GetCausticRootDirectory

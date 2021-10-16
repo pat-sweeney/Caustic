@@ -6,7 +6,7 @@
 #pragma once
 
 import Base.Core.IRefCount;
-#include "Base\Math\BBox.h"
+import Base.Math.BBox;
 
 //**********************************************************************
 // File: IBuffer.h

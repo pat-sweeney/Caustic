@@ -108,6 +108,9 @@
             "projectReferences": {
               "G:\\GitHub\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
                 "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              },
+              "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
               }
             }
           }
@@ -127,6 +130,9 @@
             "projectReferences": {
               "G:\\GitHub\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
                 "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              },
+              "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
               },
               "G:\\GitHub\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
                 "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
@@ -181,6 +187,9 @@
             "projectReferences": {
               "G:\\GitHub\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
                 "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              },
+              "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
               }
             }
           }
@@ -256,6 +265,9 @@
               "G:\\GitHub\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
                 "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
               },
+              "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              },
               "G:\\GitHub\\Caustic\\Tools\\ParseShader\\ParseShader.vcxproj": {
                 "projectPath": "G:\\GitHub\\Caustic\\Tools\\ParseShader\\ParseShader.vcxproj"
               }
@@ -297,6 +309,9 @@
             "projectReferences": {
               "G:\\GitHub\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
                 "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              },
+              "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
               }
             }
           }
@@ -316,6 +331,9 @@
             "projectReferences": {
               "G:\\GitHub\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
                 "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              },
+              "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
               }
             }
           }
@@ -335,6 +353,9 @@
             "projectReferences": {
               "G:\\GitHub\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
                 "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              },
+              "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
               }
             }
           }

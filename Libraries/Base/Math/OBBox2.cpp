@@ -4,8 +4,10 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "stdafx.h"
+#include <float.h>
+#include <math.h>
 import Base.Core.Core;
-#include "Base\Math\OBBox.h"
+import Base.Math.OBBox;
 
 namespace Caustic
 {
@@ -85,8 +87,8 @@ namespace Caustic
         //
         // First determine size of bounding box when it is aligned with world axis
         //
-        float xlen = (float)sqrt(u.x * u.x + u.y * u.y);
-        float ylen = (float)sqrt(v.x * v.x + v.y * v.y);
+        float xlen = (float)sqrtf(u.x * u.x + u.y * u.y);
+        float ylen = (float)sqrtf(v.x * v.x + v.y * v.y);
         //
         // Rotate/scale point into local coordinate space (bbox space)
         //

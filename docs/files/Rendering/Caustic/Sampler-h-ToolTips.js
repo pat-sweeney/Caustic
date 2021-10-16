@@ -1,1 +1,1 @@
-﻿NDContentPage.OnToolTipsLoaded({971:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines a sampler. Samplers define how the underlying texture is accessed by shaders.</div></div>"});
+﻿NDContentPage.OnToolTipsLoaded({898:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines a sampler. Samplers define how the underlying texture is accessed by shaders.</div></div>"});

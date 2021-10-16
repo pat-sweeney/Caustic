@@ -11,9 +11,9 @@
 #include <Windows.h>
 import Base.Core.Core;
 import Base.Core.Error;
+import Base.Math.Vector;
 #include <string>
 #include <vector>
-#include "Base\Math\Vector.h"
 #include "Base\Core\convertStr.h"
 #include "Rendering\Caustic\Caustic.h"
 

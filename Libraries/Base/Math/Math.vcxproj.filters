@@ -7,15 +7,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BBox.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OBBox.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Quaternion.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -23,9 +14,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="UnitTest.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Ray.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Covariance.h">
@@ -43,16 +31,7 @@
     <ClInclude Include="IBBox.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Point.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="NewtonsMethod.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Basis.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MCSampler.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="FuncFilter.h">
@@ -61,12 +40,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="BBox2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="BBox3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OBBox2.cpp">
@@ -100,6 +73,33 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Matrix3x3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BBox.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BBox2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BBox3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OBBox.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Point.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ray.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Basis.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MCSampler.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

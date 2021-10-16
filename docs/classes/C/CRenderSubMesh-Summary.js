@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CRenderSubMesh","CRenderSubMesh");NDSummary.OnSummaryLoaded("CClass:CRenderSubMesh",[["C/C++","C"]],[["Classes","Class"]],[[750,0,0,"CRenderSubMesh"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CRenderSubMesh","CRenderSubMesh");NDSummary.OnSummaryLoaded("CClass:CRenderSubMesh",[["C/C++","C"]],[["Classes","Class"]],[[595,0,0,"CRenderSubMesh"]]);

@@ -6,8 +6,8 @@
 #include "stdafx.h"
 #define _USE_MATH_DEFINES
 #include <cmath>
-#include "Base\Math\Vector.h"
 import Base.Core.Error;
+import Base.Math.Vector;
 #include "Image.h"
 #include "UnitTest.h"
 #include <stdlib.h>

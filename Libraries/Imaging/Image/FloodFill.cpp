@@ -7,7 +7,7 @@
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
-#include "Base\Math\Point.h"
+import Base.Math.Point;
 #include "Base\Math\IBBox.h"
 #include "Image.h"
 #include "ImageImpl.h"

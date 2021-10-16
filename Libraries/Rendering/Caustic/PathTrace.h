@@ -3,8 +3,9 @@
 // All Rights Reserved
 //**********************************************************************
 #pragma once
-#include "Base\Math\Ray.h"
-#include "Base\Math\MCSampler.h"
+import Base.Core.Core;
+import Base.Math.Ray;
+import Base.Math.MCSampler;
 
 namespace Caustic
 {

@@ -3,9 +3,11 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "stdafx.h"
+module;
+#include <float.h>
+
+module Base.Math.BBox;
 import Base.Core.Core;
-#include "Base\Math\BBox.h"
 
 namespace Caustic
 {

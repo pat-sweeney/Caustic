@@ -6,7 +6,7 @@
 #pragma once
 import Base.Core.Core;
 import Base.Core.IRefCount;
-#include "Base\Math\Vector.h"
+import Base.Math.Vector;
 #include "Geometry\GeomDS\IPath2.h"
 
 // Namespace: Caustic

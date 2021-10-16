@@ -8,7 +8,7 @@
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Base.Core.ISerialize;
-#include "Base\Math\Vector.h"
+import Base.Math.Vector;
 #include "Imaging\Image\Image.h"
 #include "Imaging\Color\Color.h"
 #include <vector>

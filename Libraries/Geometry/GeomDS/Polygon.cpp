@@ -5,7 +5,8 @@
 //**********************************************************************
 #include "stdafx.h"
 #include "Polygon.h"
-#include "Base\Math\Ray.h"
+import Base.Core.Core;
+import Base.Math.Ray;
 #include "Base\Math\Helper.h"
 #include <memory>
 

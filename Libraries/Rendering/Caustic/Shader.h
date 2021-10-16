@@ -10,7 +10,7 @@ import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
-#include "Base\Math\BBox.h"
+import Base.Math.BBox;
 #include "Rendering\Caustic\Caustic.h"
 #include <string>
 #include <atlbase.h>

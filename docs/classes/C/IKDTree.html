@@ -8,24 +8,24 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="Topic292"></a><div class="CTopic TInterface LC first">
+<a name="Topic134"></a><div class="CTopic TInterface LC first">
  <div class="CTitle">IKDTree</div>
  <div class="CBody"><p>Defines an interface for manipulating a KD Tree.</p></div>
 </div>
 
-<a name="Functions"></a><a name="Topic293"></a><div class="CTopic TGroup LC">
+<a name="Functions"></a><a name="Topic135"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="AddPoint"></a><a name="Topic294"></a><div class="CTopic TFunction LC">
+<a name="AddPoint"></a><a name="Topic136"></a><div class="CTopic TFunction LC">
  <div class="CTitle">AddPoint</div>
- <div id="NDPrototype294" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> AddPoint(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first">Caustic::</td><td class="PType">Vector3&nbsp;</td><td class="PSymbols">&amp;</td><td class="PName last">vec,</td></tr><tr><td class="first"></td><td class="PType"><span class="SHKeyword">void</span>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">data</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div id="NDPrototype136" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> AddPoint(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first">Caustic::</td><td class="PType">Vector3&nbsp;</td><td class="PSymbols">&amp;</td><td class="PName last">vec,</td></tr><tr><td class="first"></td><td class="PType"><span class="SHKeyword">void</span>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">data</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
  <div class="CBody"><p>Adds a point to our KD tree</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">vec<div class="CDLParameterType">Caustic::Vector3&amp;</div></td><td class="CDLDefinition"><p>point to add to tree</p></td></tr><tr><td class="CDLEntry">data<div class="CDLParameterType"><span class="SHKeyword">void</span>*</div></td><td class="CDLDefinition"><p>user data to associate with the point. This data is saved in the tree along with the point. During calls to FindPoint this data will be returned to the client.</p></td></tr></table></div>
 </div>
 
-<a name="FindPoint"></a><a name="Topic295"></a><div class="CTopic TFunction LC last">
+<a name="FindPoint"></a><a name="Topic137"></a><div class="CTopic TFunction LC last">
  <div class="CTitle">FindPoint</div>
- <div id="NDPrototype295" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">bool</span> FindPoint(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first">Caustic::</td><td class="PType">Vector3&nbsp;</td><td class="PSymbols">&amp;</td><td class="PName last">vec,</td></tr><tr><td class="PModifierQualifier first">std::</td><td class="PType"><span class="SHKeyword">function</span>&lt;<span class="SHKeyword">bool</span>(<span class="SHKeyword">void</span> *data)&gt;&nbsp;</td><td></td><td class="PName last">comparator,</td></tr><tr><td class="first"></td><td class="PType"><span class="SHKeyword">void</span>&nbsp;</td><td class="PSymbols">**</td><td class="PName last">data</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div id="NDPrototype137" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">bool</span> FindPoint(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first">Caustic::</td><td class="PType">Vector3&nbsp;</td><td class="PSymbols">&amp;</td><td class="PName last">vec,</td></tr><tr><td class="PModifierQualifier first">std::</td><td class="PType"><span class="SHKeyword">function</span>&lt;<span class="SHKeyword">bool</span>(<span class="SHKeyword">void</span> *data)&gt;&nbsp;</td><td></td><td class="PName last">comparator,</td></tr><tr><td class="first"></td><td class="PType"><span class="SHKeyword">void</span>&nbsp;</td><td class="PSymbols">**</td><td class="PName last">data</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
  <div class="CBody"><p>Checks if the specified point is in the tree</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">vec<div class="CDLParameterType">Caustic::Vector3&amp;</div></td><td class="CDLDefinition"><p>point to find</p></td></tr><tr><td class="CDLEntry">comparator<div class="CDLParameterType">std::<span class="SHKeyword">function</span>&lt;<span class="SHKeyword">bool</span>(<span class="SHKeyword">void</span> *data)&gt;</div></td><td class="CDLDefinition"><p>user defined comparison function</p></td></tr><tr><td class="CDLEntry">data<div class="CDLParameterType"><span class="SHKeyword">void</span>**</div></td><td class="CDLDefinition"><p>user data associated with found point</p></td></tr></table><div class="CHeading">Returns</div><p>True if point is found in tree. False otherwise.</p></div>
 </div>
 

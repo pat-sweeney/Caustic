@@ -6,6 +6,7 @@
         "type": "project",
         "dependencies": {
           "Core": "1.0.0",
+          "Math": "1.0.0",
           "ParseShader": "1.0.0"
         },
         "compile": {
@@ -39,7 +40,8 @@
       "GeomDS/1.0.0": {
         "type": "project",
         "dependencies": {
-          "Core": "1.0.0"
+          "Core": "1.0.0",
+          "Math": "1.0.0"
         },
         "compile": {
           "bin/placeholder/GeomDS.dll": {}
@@ -51,7 +53,8 @@
       "Image/1.0.0": {
         "type": "project",
         "dependencies": {
-          "Core": "1.0.0"
+          "Core": "1.0.0",
+          "Math": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Image.dll": {}
@@ -95,7 +98,8 @@
         "dependencies": {
           "Core": "1.0.0",
           "GeomDS": "1.0.0",
-          "Image": "1.0.0"
+          "Image": "1.0.0",
+          "Math": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Mesh.dll": {}
@@ -152,7 +156,8 @@
       "RenderGraph/1.0.0": {
         "type": "project",
         "dependencies": {
-          "Core": "1.0.0"
+          "Core": "1.0.0",
+          "Math": "1.0.0"
         },
         "compile": {
           "bin/placeholder/RenderGraph.dll": {}
@@ -164,7 +169,8 @@
       "RenderWindow/1.0.0": {
         "type": "project",
         "dependencies": {
-          "Core": "1.0.0"
+          "Core": "1.0.0",
+          "Math": "1.0.0"
         },
         "compile": {
           "bin/placeholder/RenderWindow.dll": {}
@@ -176,7 +182,8 @@
       "SceneGraph/1.0.0": {
         "type": "project",
         "dependencies": {
-          "Core": "1.0.0"
+          "Core": "1.0.0",
+          "Math": "1.0.0"
         },
         "compile": {
           "bin/placeholder/SceneGraph.dll": {}

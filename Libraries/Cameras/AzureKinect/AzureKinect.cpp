@@ -6,7 +6,7 @@
 #include "stdafx.h"
 #include "AzureKinect.h"
 import Base.Core.Error;
-#include "Base\Math\BBox.h"
+import Base.Math.BBox;
 #include "Imaging\Image\ImageIter.h"
 #include <k4a/k4a.h>
 #include <memory>

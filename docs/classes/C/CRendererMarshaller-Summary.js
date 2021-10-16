@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CRendererMarshaller","CRendererMarshaller");NDSummary.OnSummaryLoaded("CClass:CRendererMarshaller",[["C/C++","C"]],[["Classes","Class"]],[[846,0,0,"CRendererMarshaller"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CRendererMarshaller","CRendererMarshaller");NDSummary.OnSummaryLoaded("CClass:CRendererMarshaller",[["C/C++","C"]],[["Classes","Class"]],[[618,0,0,"CRendererMarshaller"]]);

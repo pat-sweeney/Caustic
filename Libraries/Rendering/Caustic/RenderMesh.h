@@ -5,7 +5,8 @@
 //**********************************************************************
 #pragma once
 #include "Rendering\Caustic\Caustic.h"
-#include "Base/Math/BBox.h"
+import Base.Core.Core;
+import Base.Math.BBox;
 #include "IRenderMesh.h"
 #include "Shader.h"
 #include <d3d11.h>

@@ -9,7 +9,7 @@
 #include <atlbase.h>
 import Base.Core.Core;
 import Base.Core.IRefCount;
-#include "Base\Math\BBox.h"
+import Base.Math.BBox;
 #include "IShaderMgr.h"
 #include <string>
 #include <any>

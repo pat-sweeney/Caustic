@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CShader","CShader");NDSummary.OnSummaryLoaded("CClass:CShader",[["C/C++","C"]],[["Classes","Class"]],[[735,0,0,"CShader"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CShader","CShader");NDSummary.OnSummaryLoaded("CClass:CShader",[["C/C++","C"]],[["Classes","Class"]],[[592,0,0,"CShader"]]);

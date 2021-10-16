@@ -1,1 +1,1 @@
-﻿NDContentPage.OnToolTipsLoaded({682:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines an interface to our basic JSON object returned by the parser.</div></div>"});
+﻿NDContentPage.OnToolTipsLoaded({531:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines an interface to our basic JSON object returned by the parser.</div></div>"});

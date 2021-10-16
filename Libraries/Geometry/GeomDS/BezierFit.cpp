@@ -7,7 +7,7 @@
 #include "stdafx.h"
 #include "BezierFit.h"
 #include "Base\Math\Matrix.h"
-#include "Base\Math\Basis.h"
+import Base.Math.Basis;
 
 namespace Caustic
 {

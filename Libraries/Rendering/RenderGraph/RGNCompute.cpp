@@ -10,7 +10,7 @@
 #include <windows.h>
 import Base.Core.Core;
 import Base.Core.RefCount;
-#include "Base\Math\Vector.h"
+import Base.Math.Vector;
 #include "Base\Core\convertStr.h"
 #include "IRGNCompute.h"
 #include "RGNCompute.h"

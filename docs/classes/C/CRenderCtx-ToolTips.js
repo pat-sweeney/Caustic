@@ -1,1 +1,1 @@
-﻿NDContentPage.OnToolTipsLoaded({1006:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines the main interface for setting various features in the renderer</div></div>"});
+﻿NDContentPage.OnToolTipsLoaded({866:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines the main interface for setting various features in the renderer</div></div>"});

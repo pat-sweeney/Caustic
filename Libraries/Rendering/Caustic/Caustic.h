@@ -8,8 +8,8 @@
 #include <d3d11.h>
 #include <atlbase.h>
 import Base.Core.Core;
-#include "Base\Math\Vector.h"
-#include "Base\Math\BBox.h"
+import Base.Math.BBox;
+import Base.Math.Vector;
 #include "Rendering\Caustic\IShaderMgr.h"
 #include "Rendering\Caustic\ITexture.h"
 #include "Rendering\Caustic\ISampler.h"

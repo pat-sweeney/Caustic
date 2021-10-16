@@ -5,7 +5,9 @@
 //**********************************************************************
 #include "stdafx.h"
 import Base.Core.Core;
-#include "Base\Math\BBox.h"
+import Base.Math.BBox;
+import Base.Math.Vector;
+#include <math.h>
 
 namespace Caustic
 {
