@@ -7,6 +7,7 @@
 
 import Base.Core.Core;
 import Base.Math.Vector;
+import Imaging.Color;
 #include "Geometry\Mesh\Mesh.h"
 #include "Imaging\Image\Image.h"
 #include "Rendering\Caustic\Caustic.h"

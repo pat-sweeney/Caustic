@@ -16,9 +16,6 @@
     <ClInclude Include="UnitTest.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Covariance.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -26,9 +23,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Helper.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IBBox.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="NewtonsMethod.h">
@@ -100,6 +94,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MCSampler.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Covariance.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IBBox.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

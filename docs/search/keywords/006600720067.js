@@ -1,1 +1,1 @@
-﻿NDSearch.OnPrefixDataLoaded("frg",["Class"],[["FRGBAColor",,[[,,,,0,"File:Imaging/Color/Color.h:FRGBAColor","CClass:FRGBAColor"]]],["FRGBColor",,[[,,,,0,"File:Imaging/Color/Color.h:FRGBColor","CClass:FRGBColor"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("frg",["Class"],[["FRGBAColor",,[[,,,,0,"File:Imaging/Color/Color.ixx:FRGBAColor","CClass:FRGBAColor"]]],["FRGBColor",,[[,,,,0,"File:Imaging/Color/Color.ixx:FRGBColor","CClass:FRGBColor"]]]]);

@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:Imaging/Color/Color.ixx","Color.ixx");NDSummary.OnSummaryLoaded("File:Imaging/Color/Color.ixx",[["C/C++","C"]],[["Classes","Class"]],[[89,0,0,"YIQColor","YIQColor"],[101,0,0,"FRGBColor","FRGBColor"],[102,0,0,"FRGBAColor","FRGBAColor"],[1065,0,0,"RGBColor","RGBColor"],[1069,0,0,"HLSColor","HLSColor"]]);

@@ -3,12 +3,13 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
+export module Imaging.Color;
 import Base.Core.Core;
+import Base.Math.Vector;
 
 #pragma warning(push)
 #pragma warning(disable:26495) // Turn off warnings about uninitialized variables
-namespace Caustic
+export namespace Caustic
 {
 	struct HLSColor;
 	struct RGBColor;
@@ -22,8 +23,8 @@ namespace Caustic
 	// <uint8 at Caustic::uint8> i - I component
 	// <uint8 at Caustic::uint8> q - Q component
 	//
-	// Header:
-	// {Link:#include "Imaging/Color/Color.h"{Imaging/Color/Color.h}}
+	// Module:
+	// {Link:import Imaging.Color{Imaging/Color/Color.ixx}}
 	//**********************************************************************
 	struct YIQColor
 	{
@@ -46,8 +47,8 @@ namespace Caustic
 	// <uint8 at Caustic::uint8> g - G component
 	// <uint8 at Caustic::uint8> b - B component
 	//
-	// Header:
-	// {Link:#include "Imaging/Color/Color.h"{Imaging/Color/Color.h}}
+	// Module:
+	// {Link:import Imaging.Color{Imaging/Color/Color.ixx}}
 	//**********************************************************************
 	struct FRGBColor
 	{
@@ -83,8 +84,8 @@ namespace Caustic
 	// <uint8 at Caustic::uint8> b - Blue component
 	// <uint8 at Caustic::uint8> a - Alpha component
 	//
-	// Header:
-	// {Link:#include "Imaging/Color/Color.h"{Imaging/Color/Color.h}}
+	// Module:
+	// {Link:import Imaging.Color{Imaging/Color/Color.ixx}}
 	//**********************************************************************
 	struct FRGBAColor
 	{
@@ -121,8 +122,8 @@ namespace Caustic
 	// <uint8 at Caustic::uint8> g - G component
 	// <uint8 at Caustic::uint8> b - B component
 	//
-	// Header:
-	// {Link:#include "Imaging/Color/Color.h"{Imaging/Color/Color.h}}
+	// Module:
+	// {Link:import Imaging.Color{Imaging/Color/Color.ixx}}
 	//**********************************************************************
 	struct RGBColor
 	{
@@ -168,8 +169,8 @@ namespace Caustic
 	// <uint8 at Caustic::uint8> g - G component
 	// <uint8 at Caustic::uint8> b - B component
 	//
-	// Header:
-	// {Link:#include "Imaging/Color/Color.h"{Imaging/Color/Color.h}}
+	// Module:
+	// {Link:import Imaging.Color{Imaging/Color/Color.ixx}}
 	//**********************************************************************
 	struct HLSColor
 	{

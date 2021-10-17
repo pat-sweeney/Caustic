@@ -1,1 +1,0 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Base/Math/Covariance.h","Covariance.h");NDSummary.OnSummaryLoaded("File:Base/Math/Covariance.h",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[88,0,0,"Caustic","Caustic"],[89,0,2,"Functions","Caustic.Functions"],[32,0,1,"Covariance","Caustic.Covariance"]]);

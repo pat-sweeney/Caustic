@@ -8,7 +8,7 @@
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Base.Math.Vector;
-#include "Imaging\Color\Color.h"
+import Imaging.Color;
 
 //**********************************************************************
 // File: ILight.h

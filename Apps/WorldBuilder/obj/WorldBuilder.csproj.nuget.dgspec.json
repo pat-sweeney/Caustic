@@ -137,6 +137,9 @@
               "G:\\GitHub\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
                 "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
               },
+              "G:\\GitHub\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
+                "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
+              },
               "G:\\GitHub\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
                 "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj"
               }
@@ -168,6 +171,9 @@
             "projectReferences": {
               "G:\\GitHub\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
                 "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              },
+              "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
               }
             }
           }
@@ -190,6 +196,9 @@
               },
               "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
                 "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              },
+              "G:\\GitHub\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
+                "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
               }
             }
           }
@@ -268,6 +277,9 @@
               "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
                 "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
               },
+              "G:\\GitHub\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
+                "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
+              },
               "G:\\GitHub\\Caustic\\Tools\\ParseShader\\ParseShader.vcxproj": {
                 "projectPath": "G:\\GitHub\\Caustic\\Tools\\ParseShader\\ParseShader.vcxproj"
               }
@@ -312,6 +324,9 @@
               },
               "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
                 "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              },
+              "G:\\GitHub\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
+                "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
               }
             }
           }
@@ -334,6 +349,9 @@
               },
               "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
                 "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              },
+              "G:\\GitHub\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
+                "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
               }
             }
           }
@@ -356,6 +374,9 @@
               },
               "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
                 "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              },
+              "G:\\GitHub\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
+                "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
               }
             }
           }

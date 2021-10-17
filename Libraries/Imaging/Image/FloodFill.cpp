@@ -8,7 +8,7 @@ import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Math.Point;
-#include "Base\Math\IBBox.h"
+import Base.Math.IBBox;
 #include "Image.h"
 #include "ImageImpl.h"
 #include "ImageFilter.h"

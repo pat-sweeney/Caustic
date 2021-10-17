@@ -4,6 +4,7 @@
 //**********************************************************************
 #pragma once
 import Base.Core.Core;
+import Imaging.Color;
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\Shader.h"
 #include "Rendering\Caustic\PathTrace.h"

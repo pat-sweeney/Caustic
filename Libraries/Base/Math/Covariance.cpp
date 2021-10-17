@@ -3,12 +3,14 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
+module;
 #include "stdafx.h"
-import Base.Core.Core;
-import Base.Core.Error;
 #include <vector>
 #include <winerror.h>
+
+module Base.Core.Covariance;
+import Base.Core.Core;
+import Base.Core.Error;
 
 namespace Caustic
 {

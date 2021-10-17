@@ -7,12 +7,12 @@
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
+import Imaging.Color;
 #include "Image.h"
 #include "ImageImpl.h"
 #include "ImageFilter.h"
 #include "ImageIter.h"
 #include "Geometry\Rast\Bresenham.h"
-#include "Imaging\Color\Color.h"
 
 namespace Caustic
 {

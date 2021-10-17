@@ -117,6 +117,9 @@
     <ProjectReference Include="..\..\Libraries\Geometry\Mesh\Mesh.vcxproj">
       <Project>{e7cf4287-e8ff-4d29-8883-5a05a6590af3}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Imaging\Color\Color.vcxproj">
+      <Project>{6bd55e78-59f0-402f-9bbd-650c8fe563f3}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Imaging\Image\Image.vcxproj">
       <Project>{f7bef797-220c-4585-a489-f06df155ea60}</Project>
     </ProjectReference>

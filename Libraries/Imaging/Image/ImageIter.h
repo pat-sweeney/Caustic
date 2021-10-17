@@ -7,8 +7,8 @@
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Base.Math.Vector;
+import Imaging.Color;
 #include "Imaging\Image\Image.h"
-#include "Imaging\Color\Color.h"
 #include <assert.h>
 
 // Namespace: Caustic

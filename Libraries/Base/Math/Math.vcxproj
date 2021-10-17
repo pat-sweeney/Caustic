@@ -80,10 +80,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Covariance.h" />
     <ClInclude Include="FuncFilter.h" />
     <ClInclude Include="Helper.h" />
-    <ClInclude Include="IBBox.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="NewtonsMethod.h" />
     <ClInclude Include="Quaternion.h" />
@@ -97,7 +95,9 @@
     <ClCompile Include="BBox2.cpp" />
     <ClCompile Include="BBox3.cpp" />
     <ClCompile Include="Covariance.cpp" />
+    <ClCompile Include="Covariance.ixx" />
     <ClCompile Include="Helper.cpp" />
+    <ClCompile Include="IBBox.ixx" />
     <ClCompile Include="Matrix3x3.cpp" />
     <ClCompile Include="Matrix4x3.cpp" />
     <ClCompile Include="Matrix4x4.cpp" />
