@@ -40,7 +40,7 @@ namespace Caustic
     // m_numIndices - Number of indices. Maybe 0
     //
     // Header:
-    // [Link:Rendering/Caustic/IRenderer.h]
+    // {Link:#include "Rendering/Caustic/IRenderer.h"{Rendering/Caustic/IRenderer.h}}
     //**********************************************************************
     struct MeshData
     {
@@ -76,7 +76,7 @@ namespace Caustic
     // c_LowResShadowMap - selects the low-res shadow map
     //
     // Header:
-    // [Link:Rendering/Caustic/Renderer.h]
+    // {Link:#include "Rendering/Caustic/Renderer.h"{Rendering/Caustic/Renderer.h}}
     //**********************************************************************
     const int c_PassFirst = 0;
     const int c_PassObjID = 0;
@@ -102,7 +102,7 @@ namespace Caustic
     // It is generally expected that this object is running on its own thread.
     //
     // Header:
-    // [Link:Rendering/Caustic/IRenderer.h]
+    // {Link:#include "Rendering/Caustic/IRenderer.h"{Rendering/Caustic/IRenderer.h}}
     //**********************************************************************
     struct IRenderer : public IRefCount
     {
@@ -461,7 +461,7 @@ namespace Caustic
     // Returns the created renderer
     //
     // Header:
-    // [Link:Rendering/Caustic/IRenderer.h]
+    // {Link:#include "Rendering/Caustic/IRenderer.h"{Rendering/Caustic/IRenderer.h}}
     //**********************************************************************
     CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring& shaderFolder, bool startFrozen = false, int desktopIndex = 0);
 }

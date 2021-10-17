@@ -32,7 +32,7 @@ namespace Caustic
     // m_flags - Mesh flags inherited from the ISubMesh
 	//
 	// Header:
-	// [Link:Rendering/Caustic/RenderMesh.h]
+	// {Link:#include "Rendering/Caustic/RenderMesh.h"{Rendering/Caustic/RenderMesh.h}}
 	//**********************************************************************
     class CRenderSubMesh : public IRenderSubMesh, public CRefCount
 	{
@@ -87,7 +87,7 @@ namespace Caustic
 	// m_materials - list of materials used by the submeshes
 	//
 	// Header:
-	// [Link:Rendering/Caustic/RenderMesh.h]
+	// {Link:#include "Rendering/Caustic/RenderMesh.h"{Rendering/Caustic/RenderMesh.h}}
 	//**********************************************************************
 	class CRenderMesh : public IRenderMesh, public CRefCount
 	{

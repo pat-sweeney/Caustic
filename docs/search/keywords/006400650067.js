@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("deg",["Function"],[["DegreesToRadians",,[["Caustic",,,,0,"File:Base/Core/Core.ixx:Caustic.DegreesToRadians","CClass:Caustic:DegreesToRadians"]]]]);

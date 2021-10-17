@@ -24,7 +24,7 @@ namespace Caustic
 	// <std::map< std::string, std::any> > params - parameters specific to a filter type
 	//
 	// Header:
-	// [Link:Imaging/Image/ImageFilter.h]
+	// {Link:#include "Imaging/Image/ImageFilter.h"{Imaging/Image/ImageFilter.h}}
 	//**********************************************************************
 	struct ImageFilterParams
 	{
@@ -37,7 +37,7 @@ namespace Caustic
     // Interface for objects that apply some sort of filter on a <IImage>
 	//
 	// Header:
-	// [Link:Imaging/Image/ImageFilter.h]
+	// {Link:#include "Imaging/Image/ImageFilter.h"{Imaging/Image/ImageFilter.h}}
 	//**********************************************************************
     struct IImageFilter : public IRefCount
 	{

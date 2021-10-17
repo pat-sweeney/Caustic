@@ -17,7 +17,7 @@ namespace Caustic
 	// Defines intrinsics for a camera
 	//
 	// Header:
-	// [Link:Cameras/CameraBase/ICamera.h]
+	// {Link:#include "Cameras/CameraBase/ICamera.h"{Cameras/CameraBase/ICamera.h}}
 	//**********************************************************************
 	struct CameraIntrinsics
 	{
@@ -44,7 +44,7 @@ namespace Caustic
 	// Base interface shared across all camera types
 	//
 	// Header:
-	// [Link:Cameras/CameraBase/ICamera.h]
+	// {Link:#include "Cameras/CameraBase/ICamera.h"{Cameras/CameraBase/ICamera.h}}
 	//**********************************************************************
 	struct ICameraDevice : public IRefCount
 	{

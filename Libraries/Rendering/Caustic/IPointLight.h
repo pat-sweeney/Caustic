@@ -23,7 +23,7 @@ namespace Caustic
     // Defines a point light
     //
     // Header:
-    // [Link:Rendering/Caustic/IPointLight.h]
+    // {Link:#include "Rendering/Caustic/IPointLight.h"{Rendering/Caustic/IPointLight.h}}
     //**********************************************************************
     struct IPointLight : public ILight
     {
@@ -40,7 +40,7 @@ namespace Caustic
     // casts - indicates whether this light participates in shadow mapping
     //
     // Header:
-    // [Link:Rendering/Caustic/IPointLight.h]
+    // {Link:#include "Rendering/Caustic/IPointLight.h"{Rendering/Caustic/IPointLight.h}}
     //**********************************************************************
     CRefObj<IPointLight> CreatePointLight(Vector3& pos, FRGBColor& color, float intensity, bool casts = true);
 }

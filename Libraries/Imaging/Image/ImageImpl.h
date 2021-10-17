@@ -29,7 +29,7 @@ namespace Caustic
     // bool m_isRGB - Order pixel data is layed out in memory
     //
     // Header:
-    // [Link:Imaging/Image/ImageImpl.h]
+    // {Link:#include "Imaging/Image/ImageImpl.h"{Imaging/Image/ImageImpl.h}}
     //**********************************************************************
     class CImage : public IImage, public CRefCount
     {

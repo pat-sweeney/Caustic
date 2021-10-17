@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("ctw",["Macro"],[["CTWIN32",,[["CausticException",,,,0,"File:Base/Core/Error.ixx:CausticException.CTWIN32","CClass:CausticException:CTWIN32"]]]]);

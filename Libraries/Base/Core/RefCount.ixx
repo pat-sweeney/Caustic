@@ -17,8 +17,8 @@ export namespace Caustic
     // objects are derived from. When an obejcts reference count goes to 0
     // the object will be deleted.
     //
-    // Header:
-    // [Link:Base/Core/RefCount.h]
+    // Module:
+    // {Link:import Base.Core.RefCount;{Base/Core/RefCount.ixx}}
     //**********************************************************************
     class CRefCount
     {

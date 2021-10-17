@@ -20,8 +20,8 @@ export namespace Caustic
     // <Vector2> minPt - Minimum point defining one coroner of the bbox
     // <Vector2> maxPt - Maximum point defining one coroner of the bbox
     //
-    // Header:
-    // [Link:Base/Math/BBox.h]
+    // Module:
+    // {Link:import Base.Math.BBox;{Base/Math/BBox.ixx}}
     //**********************************************************************
     struct BBox2
     {
@@ -143,8 +143,8 @@ export namespace Caustic
     // <Vector3> minPt - Minimum point defining one coroner of the bbox
     // <Vector3> maxPt - Maximum point defining one coroner of the bbox
     //
-    // Header:
-    // [Link:Base/Math/BBox.h]
+    // Module:
+    // {Link:import Base.Math.BBox;{Base/Math/BBox.ixx}}
     //**********************************************************************
     struct BBox3
     {

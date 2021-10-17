@@ -31,7 +31,7 @@ namespace Caustic
     // <Vector3> m_startPos - Position of m_startX,m_startY on trackball surface
     //
     // Header:
-    // [Link:Rendering/Caustic/Trackball.h]
+    // {Link:#include "Rendering/Caustic/Trackball.h"{Rendering/Caustic/Trackball.h}}
     //**********************************************************************
     class CTrackball : public ITrackball, public CRefCount
     {

@@ -21,8 +21,8 @@ export namespace Caustic
     // float x - x component
     // float y - y component
     //
-    // Header:
-    // [Link:Base/Math/Vector.h]
+    // Module:
+    // {Link:Base.Math.Vector{Base/Math/Vector.ixx}}
     //**********************************************************************
     struct Vector2
     {
@@ -129,8 +129,8 @@ export namespace Caustic
     // float y - y component
     // float z - z component
     //
-    // Header:
-    // [Link:Base/Math/Vector.h]
+    // Module:
+    // {Link:Base.Math.Vector{Base/Math/Vector.ixx}}
     //**********************************************************************
     struct Vector3
     {
@@ -269,8 +269,8 @@ export namespace Caustic
     // path (in terms of speed) code. The usage generally looks like:
     //        Vector3 newv = ((Vector3Ext)v).zyx;
     //
-    // Header:
-    // [Link:Base/Math/Vector.h]
+    // Module:
+    // {Link:Base.Math.Vector{Base/Math/Vector.ixx}}
     //**********************************************************************
     struct Vector3Ext : Vector3
     {
@@ -316,8 +316,8 @@ export namespace Caustic
     // float z - z component
     // float w - w component
     //
-    // Header:
-    // [Link:Base/Math/Vector.h]
+    // Module:
+    // {Link:Base.Math.Vector{Base/Math/Vector.ixx}}
     //**********************************************************************
     struct Vector4
     {
@@ -374,8 +374,8 @@ export namespace Caustic
     // path (in terms of speed) code. The usage generally looks like:
     //        Vector4 newv = ((Vector4Ext)v).zyx;
     //
-    // Header:
-    // [Link:Base/Math/Vector.h]
+    // Module:
+    // {Link:Base.Math.Vector{Base/Math/Vector.ixx}}
     //**********************************************************************
     struct Vector4Ext : Vector4
     {

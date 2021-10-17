@@ -15,6 +15,9 @@ export namespace Caustic
     //**********************************************************************
     // Class: CBlockAllocator
 	// A simple block allocator for creating lots of objects that are the same size.
+    // 
+    // Module:
+    // {Link:import Base.Core.BlockAllocator;{Base/Core/BlockAllocator.ixx}}
     //**********************************************************************
     template <typename T>
     class CBlockAllocator

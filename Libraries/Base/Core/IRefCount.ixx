@@ -13,7 +13,7 @@ export namespace Caustic
 	// Defines the basic interface used by reference counted objects
     //
     // Header:
-    // [Link:Base/Core/IRefCount.h]
+    // {Link:#include "Base/Core/IRefCount.h"{Base/Core/IRefCount.h}}
     //**********************************************************************
     struct IRefCount
     {
@@ -40,7 +40,7 @@ export namespace Caustic
 	// T - type of object to manage
     //
     // Header:
-    // [Link:Base/Core/IRefCount.h]
+    // {Link:#include "Base/Core/IRefCount.h"{Base/Core/IRefCount.h}}
     //**********************************************************************
     template <typename T>
     struct CRefObj

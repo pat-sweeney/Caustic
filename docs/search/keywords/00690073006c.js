@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("isl",["Function"],[["IsLess",,[["Caustic",,,,0,"File:Base/Core/Core.ixx:Caustic.IsLess","CClass:Caustic:IsLess"]]],["IsLessEq",,[["Caustic",,,,0,"File:Base/Core/Core.ixx:Caustic.IsLessEq","CClass:Caustic:IsLessEq"]]]]);

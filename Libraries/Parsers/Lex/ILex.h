@@ -16,7 +16,7 @@ namespace Caustic
 	// starting at c_LexToken_Last.
 	//
 	// Header:
-	// [Link:Parsers/Lex/ILex.h]
+	// {Link:#include "Parsers/Lex/ILex.h"{Parsers/Lex/ILex.h}}
 	//**********************************************************************
 	const int c_LexToken_EOF = 0;
 	const int c_LexToken_Whitespace = 1;
@@ -53,7 +53,7 @@ namespace Caustic
 	// Defines a token returned by the parser
 	//
 	// Header:
-	// [Link:Parsers/Lex/ILex.h]
+	// {Link:#include "Parsers/Lex/ILex.h"{Parsers/Lex/ILex.h}}
 	//**********************************************************************
 	struct LexToken
 	{
@@ -75,7 +75,7 @@ namespace Caustic
 	// Defines a string to be treated as a token along with its associated Id
 	//
 	// Header:
-	// [Link:Parsers/Lex/ILex.h]
+	// {Link:#include "Parsers/Lex/ILex.h"{Parsers/Lex/ILex.h}}
 	//**********************************************************************
 	struct ParseTableEntry
 	{
@@ -88,7 +88,7 @@ namespace Caustic
 	// Base interface shared across all image types
 	//
 	// Header:
-	// [Link:Parsers/Lex/ILex.h]
+	// {Link:#include "Parsers/Lex/ILex.h"{Parsers/Lex/ILex.h}}
 	//**********************************************************************
 	struct ILex : public IRefCount
 	{

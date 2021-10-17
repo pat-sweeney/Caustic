@@ -14,8 +14,8 @@ export namespace Caustic
 	// Class: CCritSec
 	// Defines a smart object for managing a critical section
 	//
-	// Header:
-	// [Link:Base/Core/CritSec.h]
+	// Module:
+	// {Link:import Base.Core.CritSec;{Base/Core/CritSec.ixx}}
 	//**********************************************************************
 	class CCritSec
     {
@@ -63,8 +63,8 @@ export namespace Caustic
 	// Class: CAutoLock
 	// Provides smart object management of critical sections
 	//
-	// Header:
-	// [Link:Base/Core/CritSec.h]
+	// Module:
+	// {Link:import Base.Core.CritSec;{Base/Core/CritSec.ixx}}
 	//**********************************************************************
 	class CAutoLock
     {

@@ -30,7 +30,7 @@ namespace Caustic
     // the attributes of the material).
     //
     // Header:
-    // [Link:Rendering/Caustic/IRenderMaterial.h]
+    // {Link:#include "Rendering/Caustic/IRenderMaterial.h"{Rendering/Caustic/IRenderMaterial.h}}
     //**********************************************************************
     struct IRenderMaterial : public IRefCount
     {

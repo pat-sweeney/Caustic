@@ -1,1 +1,1 @@
-﻿NDSearch.OnPrefixDataLoaded("~cc",["Function"],[["~CCamera",,[[,,,,0,"File:Rendering/Caustic/Camera.cpp:~CCamera"]]],["~CCausticFactory",,[[,,,,0,"File:Rendering/Caustic/CausticFactory.cpp:~CCausticFactory"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("~cc",["Function"],[["~CCamera",,[[,,,,0,"File:Rendering/Caustic/Camera.cpp:~CCamera"]]],["~CCausticFactory",,[[,,,,0,"File:Rendering/Caustic/CausticFactory.cpp:~CCausticFactory"]]],["~CCritSec",,[["CCritSec",,,,0,"File:Base/Core/CritSec.ixx:CCritSec.~CCritSec","CClass:CCritSec:~CCritSec"]]]]);

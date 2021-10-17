@@ -21,7 +21,7 @@ namespace Caustic
     // Defines the basic material
     //
     // Header:
-    // [Link:Rendering/Caustic/MaterialAttrib.h]
+    // {Link:#include "Rendering/Caustic/MaterialAttrib.h"{Rendering/Caustic/MaterialAttrib.h}}
     //**********************************************************************
     struct CMaterialAttrib : public IMaterialAttrib, public CRefCount
     {

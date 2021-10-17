@@ -19,7 +19,7 @@ namespace Caustic
     // the simpliest fix
     //
     // Header:
-    // [Link:Rendering/Caustic/Sampler.h]
+    // {Link:#include "Rendering/Caustic/Sampler.h"{Rendering/Caustic/Sampler.h}}
     //**********************************************************************
     struct CSamplerRef
     {
@@ -36,7 +36,7 @@ namespace Caustic
     // Implementation of <ISampler>
     //
     // Header:
-    // [Link:Rendering/Caustic/Sampler.h]
+    // {Link:#include "Rendering/Caustic/Sampler.h"{Rendering/Caustic/Sampler.h}}
     //**********************************************************************
     class CSampler : public ISampler, public CRefCount
     {

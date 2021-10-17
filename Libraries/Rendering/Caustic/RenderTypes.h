@@ -30,7 +30,7 @@ namespace Caustic
     // at material boundaries or smoothing groups contain CFaceVertex data.
     //
     // Header:
-    // [Link:Rendering/Caustic/RenderTypes.h]
+    // {Link:#include "Rendering/Caustic/RenderTypes.h"{Rendering/Caustic/RenderTypes.h}}
     //**********************************************************************
     struct CGeomVertex
     {

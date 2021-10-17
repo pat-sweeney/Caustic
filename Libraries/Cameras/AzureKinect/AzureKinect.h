@@ -36,7 +36,7 @@ namespace Caustic
     // bool m_cameraStarted - Has the camera been started?
     //
     // Header:
-    // [Link:Cameras/AzureKinect/AzureKinect.h]
+    // {Link:#include "Cameras/AzureKinect/AzureKinect.h"{Cameras/AzureKinect/AzureKinect.h}}
     //**********************************************************************
     class CAzureKinectDevice : public IAzureKinect, public CRefCount
     {

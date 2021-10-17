@@ -30,7 +30,7 @@ namespace Caustic
     // The renderer is on a separate thread where the client is calling from.
     //
     // Header:
-    // [Link:Rendering/Caustic/IRendererMarshaller.h]
+    // {Link:#include "Rendering/Caustic/IRendererMarshaller.h"{Rendering/Caustic/IRendererMarshaller.h}}
     //**********************************************************************
     struct IRendererMarshaller : public IRefCount
     {
@@ -133,7 +133,7 @@ namespace Caustic
     // Returns the newly created RendererMarshaller.
     //
     // Header:
-    // [Link:Rendering/Caustic/IRendererMarshaller.h]
+    // {Link:#include "Rendering/Caustic/IRendererMarshaller.h"{Rendering/Caustic/IRendererMarshaller.h}}
     //**********************************************************************
     CRefObj<IRendererMarshaller> CreateRendererMarshaller();
 }

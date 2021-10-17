@@ -15,8 +15,8 @@ export namespace Caustic
     // Interface: ISerialize
     // Defines an interface for serializing out objects to some stream. 
 	//
-	// Header:
-	// [Link:Base/Core/ISerialize.h]
+	// Module:
+	// {Link:import Base.Core.ISerialize;{Base/Core/ISerialize.ixx}}
 	//**********************************************************************
     struct ISerialize : public IRefCount
     {

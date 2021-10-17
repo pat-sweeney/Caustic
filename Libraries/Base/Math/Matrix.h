@@ -21,7 +21,7 @@ namespace Caustic
     // float v[2][2] - Elements of the matrix
     //
     // Header:
-    // [Link:Base/Math/Matrix.h]
+    // {Link:#include "Base/Math/Matrix.h"{Base/Math/Matrix.h}}
     //**********************************************************************
 	struct Matrix2x2
     {
@@ -41,7 +41,7 @@ namespace Caustic
     // float v[3][3] - Elements of the matrix
     //
     // Header:
-    // [Link:Base/Math/Matrix.h]
+    // {Link:#include "Base/Math/Matrix.h"{Base/Math/Matrix.h}}
     //**********************************************************************
     struct Matrix3x3
     {
@@ -194,7 +194,7 @@ namespace Caustic
     // float v[4][3] - Elements of the matrix
     //
     // Header:
-    // [Link:Base/Math/Matrix.h]
+    // {Link:#include "Base/Math/Matrix.h"{Base/Math/Matrix.h}}
     //**********************************************************************
 	struct Matrix4x3
     {
@@ -232,7 +232,7 @@ namespace Caustic
     // float v[4][4] - Elements of the matrix
     //
     // Header:
-    // [Link:Base/Math/Matrix.h]
+    // {Link:#include "Base/Math/Matrix.h"{Base/Math/Matrix.h}}
     //**********************************************************************
 	struct Matrix4x4
     {

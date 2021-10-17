@@ -26,8 +26,8 @@ export namespace Caustic
     // <Vector2> normu - Normalized version of the u azis
     // <Vector2> normv - Normalized version of the v azis
     //
-    // Header:
-    // [Link:Base/Math/OBBox.h]
+    // Module:
+    // {Link:import Base.Math.OBBox;{Base/Math/OBBox.ixx}}
     //**********************************************************************
     struct OBBox2
     {
@@ -61,8 +61,8 @@ export namespace Caustic
     // <Vector3> normv - Normalized version of the v azis
     // <Vector3> normn - Normalized version of the n azis
     //
-    // Header:
-    // [Link:Base/Math/OBBox.h]
+    // Module:
+    // {Link:import Base.Math.OBBox;{Base/Math/OBBox.ixx}}
     //**********************************************************************
     struct OBBox3
     {

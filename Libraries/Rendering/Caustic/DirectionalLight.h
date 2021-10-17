@@ -24,7 +24,7 @@ namespace Caustic
     // Implementation of IDirectionalLight
     //
     // Header:
-    // [Link:Rendering/Caustic/DirectionalLight.h]
+    // {Link:#include "Rendering/Caustic/DirectionalLight.h"{Rendering/Caustic/DirectionalLight.h}}
     //**********************************************************************
     class CDirectionalLight : public CLightBase, public IDirectionalLight, public CRefCount
     {

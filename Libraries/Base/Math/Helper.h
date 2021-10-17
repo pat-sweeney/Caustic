@@ -18,7 +18,7 @@ namespace Caustic
 	// See https://en.wikipedia.org/wiki/Integer_square_root for details.
 	//
 	// Header:
-	// [Link:Base/Math/Helper.h]
+	// {Link:#include "Base/Math/Helper.h"{Base/Math/Helper.h}}
 	//**********************************************************************
 	inline uint32 isqrt(uint32 n)
 	{
@@ -47,7 +47,7 @@ namespace Caustic
 	// pt - point to test
 	//
 	// Header:
-	// [Link:Base/Math/Helper.h]
+	// {Link:#include "Base/Math/Helper.h"{Base/Math/Helper.h}}
 	//**********************************************************************
 	float DistancePointToLine(Caustic::Vector2& p0, Caustic::Vector2& p1, Caustic::Vector2& pt);
 
@@ -63,7 +63,7 @@ namespace Caustic
 	// -------------
 	//
 	// Header:
-	// [Link:Base/Math/Helper.h]
+	// {Link:#include "Base/Math/Helper.h"{Base/Math/Helper.h}}
 	//**********************************************************************
 	extern float Determinant2x2(float a00, float a01, float a10, float a11);
 
@@ -80,7 +80,7 @@ namespace Caustic
 	// -------------
 	//
 	// Header:
-	// [Link:Base/Math/Helper.h]
+	// {Link:#include "Base/Math/Helper.h"{Base/Math/Helper.h}}
 	//**********************************************************************
 	extern float Determinant3x3(float a00, float a01, float a02, float a10, float a11, float a12, float a20, float a21, float a22);
 
@@ -96,7 +96,7 @@ namespace Caustic
 	// pRadius - returns the radius of the circumcircle
 	//
 	// Header:
-	// [Link:Base/Math/Helper.h]
+	// {Link:#include "Base/Math/Helper.h"{Base/Math/Helper.h}}
 	//**********************************************************************
 	extern void CircumCircle(Vector2 &p0, Vector2 &p1, Vector2 &p2, Vector2 *pCircumCenter, float *pRadius);
 
@@ -114,7 +114,7 @@ namespace Caustic
 	// True if point is in circumcircle. False otherwise.
 	//
 	// Header:
-	// [Link:Base/Math/Helper.h]
+	// {Link:#include "Base/Math/Helper.h"{Base/Math/Helper.h}}
 	//**********************************************************************
 	extern bool PointInTriangleCircumcircle(Vector2 &p0, Vector2 &p1, Vector2 &p2, Vector2 &pt);
 }

@@ -19,8 +19,8 @@ export namespace Caustic
     // int32 x - x component
     // int32 y - y component
     //
-    // Header:
-    // [Link:Base/Math/Point.h]
+    // Module:
+    // {Link:import Base.Math.Point;{Base/Math/Point.ixx}}
     //**********************************************************************
     struct Point2
     {

@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("cev",["Class"],[["CEvent",,[[,,,,0,"File:Base/Core/Event.ixx:CEvent","CClass:CEvent"]]]]);

@@ -37,7 +37,7 @@ namespace Caustic
     // m_normalVB - vertex buffer with normal vectors
 	//
 	// Header:
-	// [Link:Rendering/Caustic/Renderable.h]
+	// {Link:#include "Rendering/Caustic/Renderable.h"{Rendering/Caustic/Renderable.h}}
 	//**********************************************************************
 	class CRenderable : public IRenderable, public CRefCount
 	{

@@ -17,7 +17,7 @@ namespace Caustic
     // Internal class used to store texture and sampler information.
     //
     // Header:
-    // [Link:Rendering/Caustic/RenderMaterial.h]
+    // {Link:#include "Rendering/Caustic/RenderMaterial.h"{Rendering/Caustic/RenderMaterial.h}}
     //**********************************************************************
     struct CRenderTexture
     {
@@ -33,7 +33,7 @@ namespace Caustic
 	// This can be applied to a renderable object.
     //
     // Header:
-    // [Link:Rendering/Caustic/RenderMaterial.h]
+    // {Link:#include "Rendering/Caustic/RenderMaterial.h"{Rendering/Caustic/RenderMaterial.h}}
     //**********************************************************************
     class CRenderMaterial :
         public IRenderMaterial,

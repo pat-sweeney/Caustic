@@ -27,7 +27,7 @@ namespace Caustic
 	// Defines an interface to our basic JSON object returned by the parser.
 	//
 	// Header:
-	// [Link:Parsers/JSon/IJsonParser.h]
+	// {Link:#include "Parsers/JSon/IJsonParser.h"{Parsers/JSon/IJsonParser.h}}
 	//**********************************************************************
 	struct IJSonObj : public IRefCount
 	{
@@ -55,7 +55,7 @@ namespace Caustic
 	// Defines an interface for parsing JSON files.
 	//
 	// Header:
-	// [Link:Parsers/JSon/IJsonParser.h]
+	// {Link:#include "Parsers/JSon/IJsonParser.h"{Parsers/JSon/IJsonParser.h}}
 	//**********************************************************************
 	struct IJSonParser : public IRefCount
 	{

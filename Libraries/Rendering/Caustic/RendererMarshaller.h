@@ -26,7 +26,7 @@ namespace Caustic
     // in this queue until the render thread picks them up and executes them.
     //
     // Header:
-    // [Link:Rendering/Caustic/RendererMarshaller.h]
+    // {Link:#include "Rendering/Caustic/RendererMarshaller.h"{Rendering/Caustic/RendererMarshaller.h}}
     //**********************************************************************
     struct CRenderQueue
     {
@@ -58,7 +58,7 @@ namespace Caustic
     // m_thread - Handle to the renderer thread
     //
     // Header:
-    // [Link:Rendering/Caustic/RendererMarshaller.h]
+    // {Link:#include "Rendering/Caustic/RendererMarshaller.h"{Rendering/Caustic/RendererMarshaller.h}}
     //**********************************************************************
     class CRendererMarshaller :
         public IRenderer,

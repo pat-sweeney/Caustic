@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("CClass:Ray2","Ray2");NDSummary.OnSummaryLoaded("CClass:Ray2",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Structs","Struct"]],[[45,0,2,"Ray2"],[1569,0,1,"Functions","Functions"],[1570,0,0,"Ray2","Ray2"],[1571,0,0,"Ray2","Ray2(2)"],[1572,0,0,"IntersectWithLine","IntersectWithLine"]]);

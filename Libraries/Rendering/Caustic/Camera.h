@@ -35,7 +35,7 @@ namespace Caustic
     // m_View - Current view matrix (world to camera transform)
     //
     // Header:
-    // [Link:Rendering/Caustic/Camera.h]
+    // {Link:#include "Rendering/Caustic/Camera.h"{Rendering/Caustic/Camera.h}}
     //**********************************************************************
     _declspec(align(16)) class CCamera : public ICamera, public CRefCount
     {

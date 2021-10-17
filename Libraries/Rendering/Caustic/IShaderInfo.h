@@ -28,7 +28,7 @@ namespace Caustic
     // Defines the various types of shaders
     //
     // Header:
-    // [Link:Rendering/Caustic/IShaderInfo.h]
+    // {Link:#include "Rendering/Caustic/IShaderInfo.h"{Rendering/Caustic/IShaderInfo.h}}
     //**********************************************************************
     enum EShaderType
     {
@@ -47,7 +47,7 @@ namespace Caustic
 	// load from disk to create a shader (i.e. data from .shi file)
     //
     // Header:
-    // [Link:Rendering/Caustic/IShaderInfo.h]
+    // {Link:#include "Rendering/Caustic/IShaderInfo.h"{Rendering/Caustic/IShaderInfo.h}}
     //**********************************************************************
 	struct IShaderInfo : public IRefCount
 	{

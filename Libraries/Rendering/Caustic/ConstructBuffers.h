@@ -24,7 +24,7 @@ namespace Caustic
     // pMeshData - created vertex buffer is stored in this structure
     //
 	// Header:
-	// [Link:Rendering/Caustic/ConstructBuffer.h]
+	// {Link:#include "Rendering/Caustic/ConstructBuffer.h"{Rendering/Caustic/ConstructBuffer.h}}
     //**********************************************************************
     extern void BuildVertexBuffer(IRenderer* pRenderer, IShaderInfo* pShaderInfo, std::vector<CGeomVertex>& pts, MeshData* pMeshData);
 	
@@ -38,7 +38,7 @@ namespace Caustic
     // pMeshData - created index buffer is stored in this structure
     //
     // Header:
-    // [Link:Rendering/Caustic/ConstructBuffer.h]
+    // {Link:#include "Rendering/Caustic/ConstructBuffer.h"{Rendering/Caustic/ConstructBuffer.h}}
     //**********************************************************************
     extern void BuildIndexBuffer(IRenderer* pRenderer, std::vector<uint32>& faces, MeshData* pMeshData);
 }

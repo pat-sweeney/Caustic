@@ -21,8 +21,8 @@ export namespace Caustic
     // float hitTimeRay - Value of 'u' on ray equation where ray intersects line
     // <Vector2> hitPtRay - Point on ray where line intersects
     //
-    // Header:
-    // [Link:Base/Math/Ray.h]
+    // Module:
+    // {Link:import Base.Math.Ray;{Base/Math/Ray.ixx}}
     //**********************************************************************
     struct RayIntersect2
     {
@@ -40,8 +40,8 @@ export namespace Caustic
     // <Vector2> pos - Starting point of the ray
     // <Vector2> dir - Direction of the ray
     //
-    // Header:
-    // [Link:Base/Math/Ray.h]
+    // Module:
+    // {Link:import Base.Math.Ray;{Base/Math/Ray.ixx}}
     //**********************************************************************
     struct Ray2
     {
@@ -101,8 +101,8 @@ export namespace Caustic
     // <Vector2> hitPt - Point on ray where ray intersects surface
     // <Vector2> hitNorm - Normal vector where ray intersects surface
     //
-    // Header:
-    // [Link:Base/Math/Ray.h]
+    // Module:
+    // {Link:import Base.Math.Ray;{Base/Math/Ray.ixx}}
     //**********************************************************************
     struct RayIntersect3
     {
@@ -118,6 +118,9 @@ export namespace Caustic
     // Members:
     // <Vector3> pos - starting position of ray
     // <Vector3> dir - ray direction
+    //
+    // Module:
+    // {Link:import Base.Math.Ray;{Base/Math/Ray.ixx}}
     //**********************************************************************
     struct Ray3
     {

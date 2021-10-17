@@ -23,7 +23,7 @@ namespace Caustic
     // Implementation of ISpotLight
     //
     // Header:
-    // [Link:Rendering/Caustic/SpotLight.h]
+    // {Link:#include "Rendering/Caustic/SpotLight.h"{Rendering/Caustic/SpotLight.h}}
     //**********************************************************************
     class CSpotLight : public CLightBase, public ISpotLight, public CRefCount
     {

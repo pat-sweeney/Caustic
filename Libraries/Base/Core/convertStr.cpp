@@ -33,7 +33,7 @@ namespace Caustic
     // Returns the converted string
     //
     // Header:
-    // [Link:Base/Core/convertStr.h]
+    // {Link:#include "Base/Core/convertStr.h"{Base/Core/convertStr.h}}
     //**********************************************************************
     std::wstring str2wstr(const std::string& str)
     {
@@ -57,7 +57,7 @@ namespace Caustic
     // Returns the converted string
     //
     // Header:
-    // [Link:Base/Core/convertStr.h]
+    // {Link:#include "Base/Core/convertStr.h"{Base/Core/convertStr.h}}
     //**********************************************************************
     std::string wstr2str(const std::wstring& wstr)
     {

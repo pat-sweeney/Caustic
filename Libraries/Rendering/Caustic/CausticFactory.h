@@ -25,7 +25,7 @@ namespace Caustic
     // factory - The CausticFactory singleton
 	//
 	// Header:
-	// [Link:Rendering/Caustic/CausticFactory.h]
+	// {Link:#include "Rendering/Caustic/CausticFactory.h"{Rendering/Caustic/CausticFactory.h}}
 	//**********************************************************************
     class CCausticFactory : public ICausticFactory, public CRefCount
 	{

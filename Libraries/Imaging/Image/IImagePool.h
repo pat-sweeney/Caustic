@@ -16,7 +16,7 @@ namespace Caustic
 	// Interface that allocates a pool of images
 	//
 	// Header:
-	// [Link:Imaging/Image/IImagePool.h]
+	// {Link:#include "Imaging/Image/IImagePool.h"{Imaging/Image/IImagePool.h}}
 	//**********************************************************************
 	struct IImagePool : public IRefCount
 	{

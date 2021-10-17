@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("ber",["Function"],[["BersteinBasis",,[[,,,,0,"File:Base/Math/Basis.ixx:BersteinBasis"]]]]);

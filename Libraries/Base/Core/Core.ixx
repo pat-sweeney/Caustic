@@ -14,6 +14,8 @@ export module Base.Core.Core;
 export import :Part1;
 
 // Namespace: Caustic
+// Module:
+// {Link:import Base.Core.Core;{Base/Core/Core.ixx}}
 export namespace Caustic
 {
     // Define the basic types used throughout Caustic

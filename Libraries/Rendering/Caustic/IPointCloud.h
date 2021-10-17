@@ -31,7 +31,7 @@ namespace Caustic
     // A PointCloud renders a depth map as a set of points.
     //
     // Header:
-    // [Link:Rendering/Caustic/IPointCloud.h]
+    // {Link:#include "Rendering/Caustic/IPointCloud.h"{Rendering/Caustic/IPointCloud.h}}
     //**********************************************************************
     struct IPointCloud : public IRenderable
     {
@@ -97,7 +97,7 @@ namespace Caustic
     // Returns the created renderable
     //
     // Header:
-    // [Link:Rendering/Caustic/IRenderable.h]
+    // {Link:#include "Rendering/Caustic/IRenderable.h"{Rendering/Caustic/IRenderable.h}}
     //**********************************************************************
     CRefObj<IPointCloud> CreatePointCloud(IRenderer* pRenderer, uint32 width, uint32 height);
 }

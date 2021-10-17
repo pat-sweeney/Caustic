@@ -28,7 +28,7 @@ namespace Caustic
 	// Float4_128bpp - type is floating point image with 4 channels
 	//
 	// Header:
-	// [Link:Imaging/Image/Image.h]
+	// {Link:#include "Imaging/Image/Image.h"{Imaging/Image/Image.h}}
 	//**********************************************************************
 	enum class EImageType
 	{
@@ -50,7 +50,7 @@ namespace Caustic
 	// Base interface shared across all image types
 	//
 	// Header:
-	// [Link:Imaging/Image/Image.h]
+	// {Link:#include "Imaging/Image/Image.h"{Imaging/Image/Image.h}}
 	//**********************************************************************
 	struct IImageBase : public IRefCount
 	{
@@ -132,7 +132,7 @@ namespace Caustic
 	// Interface to an image (CPU based)
 	//
 	// Header:
-	// [Link:Imaging/Image/Image.h]
+	// {Link:#include "Imaging/Image/Image.h"{Imaging/Image/Image.h}}
 	//**********************************************************************
 	struct IImage : public IImageBase
 	{
@@ -236,7 +236,7 @@ namespace Caustic
 	// Interface to an integral image (see https://en.wikipedia.org/wiki/Summed-area_table)
 	//
 	// Header:
-	// [Link:Imaging/Image/Image.h]
+	// {Link:#include "Imaging/Image/Image.h"{Imaging/Image/Image.h}}
 	//**********************************************************************
 	struct IIntegralImage : public IImageBase
 	{
@@ -284,7 +284,7 @@ namespace Caustic
 	// Returns the loaded image
 	//
 	// Header:
-	// [Link:Imaging/Image/Image.h]
+	// {Link:#include "Imaging/Image/Image.h"{Imaging/Image/Image.h}}
 	//**********************************************************************
 	CRefObj<IImage> LoadImage(const wchar_t *pFilename);
 
@@ -297,7 +297,7 @@ namespace Caustic
 	// pImage - Image to save
 	//
 	// Header:
-	// [Link:Imaging/Image/Image.h]
+	// {Link:#include "Imaging/Image/Image.h"{Imaging/Image/Image.h}}
 	//**********************************************************************
 	void StoreImage(const wchar_t *pFilename, IImage *pImage);
 }

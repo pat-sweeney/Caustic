@@ -19,7 +19,7 @@ namespace Caustic
     // <Point2> p2 - Maximum point defining one coroner of the bbox
     //
     // Header:
-    // [Link:Base/Math/IBBox.h]
+    // {Link:#include "Base/Math/IBBox.h"{Base/Math/IBBox.h}}
     //**********************************************************************
     struct IBBox2
     {

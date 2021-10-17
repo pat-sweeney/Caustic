@@ -16,7 +16,7 @@ namespace Caustic
     // Implementation of ITexture
     //
     // Header:
-    // [Link:Rendering/Caustic/Texture.h]
+    // {Link:#include "Rendering/Caustic/Texture.h"{Rendering/Caustic/Texture.h}}
     //**********************************************************************
     class CTexture :
         public ITexture,

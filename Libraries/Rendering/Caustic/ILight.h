@@ -30,7 +30,7 @@ namespace Caustic
     // Defines a properties common to all lights
     //
     // Header:
-    // [Link:Rendering/Caustic/ILight.h]
+    // {Link:#include "Rendering/Caustic/ILight.h"{Rendering/Caustic/ILight.h}}
     //**********************************************************************
     struct ILight : public IRefCount
     {

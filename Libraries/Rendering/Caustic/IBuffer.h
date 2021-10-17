@@ -20,7 +20,7 @@ namespace Caustic
     // This is mostly used by compute shaders.
     //
     // Header:
-    // [Link:Rendering/Caustic/IBuffer.h]
+    // {Link:#include "Rendering/Caustic/IBuffer.h"{Rendering/Caustic/IBuffer.h}}
     //**********************************************************************
     struct IBuffer : public IRefCount
     {

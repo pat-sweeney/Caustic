@@ -29,7 +29,7 @@ namespace Caustic
 	// Defines the main factory for creating Caustic objects
 	//
 	// Header:
-	// [Link:Rendering/Caustic/ICausticFactory.h]
+	// {Link:#include "Rendering/Caustic/ICausticFactory.h"{Rendering/Caustic/ICausticFactory.h}}
 	//**********************************************************************
 	struct ICausticFactory : public IRefCount
 	{
@@ -342,7 +342,7 @@ namespace Caustic
     // Function used by clients to create a Caustic factory
 	//
 	// Header:
-	// [Link:Rendering/Caustic/ICausticFactory.h]
+	// {Link:#include "Rendering/Caustic/ICausticFactory.h"{Rendering/Caustic/ICausticFactory.h}}
 	//**********************************************************************
     CRefObj<ICausticFactory> CreateCausticFactory();
 }

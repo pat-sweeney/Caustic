@@ -23,7 +23,7 @@ namespace Caustic
     // Defines a directional light (i.e. the Sun)
     //
     // Header:
-    // [Link:Rendering/Caustic/IDirectionalLight.h]
+    // {Link:#include "Rendering/Caustic/IDirectionalLight.h"{Rendering/Caustic/IDirectionalLight.h}}
     //**********************************************************************
     struct IDirectionalLight : public ILight
     {
@@ -57,7 +57,7 @@ namespace Caustic
     // intensity - intensity of light
     //
     // Header:
-    // [Link:Rendering/Caustic/IPointLight.h]
+    // {Link:#include "Rendering/Caustic/IPointLight.h"{Rendering/Caustic/IPointLight.h}}
     //**********************************************************************
     CRefObj<IDirectionalLight> CreateDirectionalLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity = 1000.0f, bool casts = true);
 }

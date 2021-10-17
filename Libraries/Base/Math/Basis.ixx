@@ -22,8 +22,8 @@ export namespace Caustic
 	// index - which variable (0 - 3)
 	// u - parameteric value to evaluate at (0.0 - 1.0)
 	//
-	// Header:
-	// [Link:Base/Math/Basis.h]
+	// Module:
+	// {Link:import Base.Math.Basis;{Base/Math/Basis.ixx}}
 	//**********************************************************************
 	float BersteinBasis(int index, float u)
 	{

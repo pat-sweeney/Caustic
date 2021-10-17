@@ -30,7 +30,7 @@ namespace Caustic
     // c_DisplayGrid - Render an XY grid plane at the origin
     //
     // Header:
-    // [Link:Rendering/Caustic/IRenderCtx.h]
+    // {Link:#include "Rendering/Caustic/IRenderCtx.h"{Rendering/Caustic/IRenderCtx.h}}
     //**********************************************************************
     namespace RenderCtxFlags
     {
@@ -50,7 +50,7 @@ namespace Caustic
     // the renderer
     //
     // Header:
-    // [Link:Rendering/Caustic/IRenderCtx.h]
+    // {Link:#include "Rendering/Caustic/IRenderCtx.h"{Rendering/Caustic/IRenderCtx.h}}
     //**********************************************************************
     struct IRenderCtx : public IRefCount
     {

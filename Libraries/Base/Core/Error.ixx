@@ -15,8 +15,8 @@ export namespace Caustic
 	// Class: CausticException
 	// Class for handling throwing of exceptions
 	//
-	// Header:
-	// [Link:Base/Core/error.h]
+	// Module:
+	// {Link:import Base.Core.Error;{Base/Core/Error.ixx}}
 	//**********************************************************************
 	class CausticException : public std::exception
     {
@@ -47,8 +47,8 @@ export namespace Caustic
 //
 // hr - HRESULT to throw
 //
-// Header:
-// [Link:Base/Core/error.h]
+// Module:
+// {Link:import Base.Core.Error;{Base/Core/Error.ixx}}
 //**********************************************************************
 export inline void CT(HRESULT hr)
 {
@@ -63,8 +63,8 @@ export inline void CT(HRESULT hr)
 //
 // func - function to call
 //
-// Header:
-// [Link:Base/Core/error.h]
+// Module:
+// {Link:import Base.Core.Error;{Base/Core/Error.ixx}}
 //**********************************************************************
 export inline void CTWIN32(bool func)
 {

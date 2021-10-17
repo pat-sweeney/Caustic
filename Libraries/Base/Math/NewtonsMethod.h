@@ -21,7 +21,7 @@ namespace Caustic
 	// objFunc - underlying function being evaluated
 	//
 	// Header:
-	// [Link:Base/Math/NewtonsMethod.h]
+	// {Link:#include "Base/Math/NewtonsMethod.h"{Base/Math/NewtonsMethod.h}}
 	//**********************************************************************
 	extern float NumericalDifferentiation(float x, ObjectiveFunction objFunc);
 
@@ -35,7 +35,7 @@ namespace Caustic
 	// derivativeFunc - objFunc's derivative. By default will use numerical differentation to compute.
 	//
 	// Header:
-	// [Link:Base/Math/NewtonsMethod.h]
+	// {Link:#include "Base/Math/NewtonsMethod.h"{Base/Math/NewtonsMethod.h}}
 	//**********************************************************************
 	extern float NewtonsMethod(float initialGuess, ObjectiveFunction objFunc, DerivativeFunction derivativeFunc = NumericalDifferentiation);
 }

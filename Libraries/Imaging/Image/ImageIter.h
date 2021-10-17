@@ -22,7 +22,7 @@ namespace Caustic
 	// to walk across an image.
 	//
 	// Header:
-	// [Link:Imaging/Image/ImageIter.h]
+	// {Link:#include "Imaging/Image/ImageIter.h"{Imaging/Image/ImageIter.h}}
 	//
 	// Example:
 	// --- Code
@@ -68,7 +68,7 @@ namespace Caustic
 	// each pixel is floating point value.
 	//
 	// Header:
-	// [Link:Imaging/Image/ImageIter.h]
+	// {Link:#include "Imaging/Image/ImageIter.h"{Imaging/Image/ImageIter.h}}
 	//**********************************************************************
 	class CImageIterFloat1 : public CImageIter
 	{
@@ -115,7 +115,7 @@ namespace Caustic
 	// each pixel is 2 floating point values.
 	//
 	// Header:
-	// [Link:Imaging/Image/ImageIter.h]
+	// {Link:#include "Imaging/Image/ImageIter.h"{Imaging/Image/ImageIter.h}}
 	//**********************************************************************
 	class CImageIterFloat2 : public CImageIter
 	{
@@ -164,7 +164,7 @@ namespace Caustic
 	// each pixel is 3 floating point values.
 	//
 	// Header:
-	// [Link:Imaging/Image/ImageIter.h]
+	// {Link:#include "Imaging/Image/ImageIter.h"{Imaging/Image/ImageIter.h}}
 	//**********************************************************************
 	class CImageIterFloat3 : public CImageIter
 	{
@@ -214,7 +214,7 @@ namespace Caustic
 	// each pixel is 4 floating point values.
 	//
 	// Header:
-	// [Link:Imaging/Image/ImageIter.h]
+	// {Link:#include "Imaging/Image/ImageIter.h"{Imaging/Image/ImageIter.h}}
 	//**********************************************************************
 	class CImageIterFloat4 : public CImageIter
 	{
@@ -265,7 +265,7 @@ namespace Caustic
 	// each pixel is 1 bit in width.
 	//
 	// Header:
-	// [Link:Imaging/Image/ImageIter.h]
+	// {Link:#include "Imaging/Image/ImageIter.h"{Imaging/Image/ImageIter.h}}
 	//**********************************************************************
 	class CImageIter1 : public CImageIter
 	{
@@ -334,7 +334,7 @@ namespace Caustic
 	// each pixel is 8 bits in width.
 	//
 	// Header:
-	// [Link:Imaging/Image/ImageIter.h]
+	// {Link:#include "Imaging/Image/ImageIter.h"{Imaging/Image/ImageIter.h}}
 	//**********************************************************************
 	class CImageIter8 : public CImageIter
 	{
@@ -380,7 +380,7 @@ namespace Caustic
 	// each pixel is 16 bits in width.
 	//
 	// Header:
-	// [Link:Imaging/Image/ImageIter.h]
+	// {Link:#include "Imaging/Image/ImageIter.h"{Imaging/Image/ImageIter.h}}
 	//**********************************************************************
 	class CImageIter16 : public CImageIter
 	{
@@ -426,7 +426,7 @@ namespace Caustic
 	// each pixel is 24 bits in width.
 	//
 	// Header:
-	// [Link:Imaging/Image/ImageIter.h]
+	// {Link:#include "Imaging/Image/ImageIter.h"{Imaging/Image/ImageIter.h}}
 	//**********************************************************************
 	class CImageIter24 : public CImageIter
 	{
@@ -477,7 +477,7 @@ namespace Caustic
 	// each pixel is 32 bits in width.
 	//
 	// Header:
-	// [Link:Imaging/Image/ImageIter.h]
+	// {Link:#include "Imaging/Image/ImageIter.h"{Imaging/Image/ImageIter.h}}
 	//**********************************************************************
 	class CImageIter32 : public CImageIter
 	{
@@ -529,7 +529,7 @@ namespace Caustic
 	// each pixel is 128 bits in width (i.e. single float per channel)
 	//
 	// Header:
-	// [Link:Imaging/Image/ImageIter.h]
+	// {Link:#include "Imaging/Image/ImageIter.h"{Imaging/Image/ImageIter.h}}
 	//**********************************************************************
 	class CImageIter128 : public CImageIter
 	{
@@ -582,7 +582,7 @@ namespace Caustic
 	// the iterator that matches the given image's pixel depth.
 	//
 	// Header:
-	// [Link:Imaging/Image/ImageIter.h]
+	// {Link:#include "Imaging/Image/ImageIter.h"{Imaging/Image/ImageIter.h}}
 	//**********************************************************************
 	class CImageIterGeneric : public CImageIter
 	{

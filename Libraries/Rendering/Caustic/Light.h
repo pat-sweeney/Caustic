@@ -22,7 +22,7 @@ namespace Caustic
     // Contains the implementation of stuff common to all lights
     //
     // Header:
-    // [Link:Rendering/Caustic/Light.h]
+    // {Link:#include "Rendering/Caustic/Light.h"{Rendering/Caustic/Light.h}}
     //**********************************************************************
     class CLightBase
     {

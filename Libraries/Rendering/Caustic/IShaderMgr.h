@@ -22,7 +22,7 @@ namespace Caustic
     // Manages shaders within the renderer
     //
     // Header:
-    // [Link:Rendering/Caustic/IShaderMgr.h]
+    // {Link:#include "Rendering/Caustic/IShaderMgr.h"{Rendering/Caustic/IShaderMgr.h}}
     //**********************************************************************
     struct IShaderMgr : public IRefCount
     {

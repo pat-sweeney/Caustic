@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("ct",["Macro"],[["CT",,[["CausticException",,,,0,"File:Base/Core/Error.ixx:CausticException.CT","CClass:CausticException:CT"]]]]);

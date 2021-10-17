@@ -30,7 +30,7 @@ namespace Caustic
     // be passed to a CShader
     //
     // Header:
-    // [Link:Rendering/Caustic/Shader.h]
+    // {Link:#include "Rendering/Caustic/Shader.h"{Rendering/Caustic/Shader.h}}
     //**********************************************************************
     enum EShaderParamType
     {
@@ -71,7 +71,7 @@ namespace Caustic
     // m_elemSize - sizeof a single element in bytes (used by buffers)
     //
     // Header:
-    // [Link:Rendering/Caustic/Shader.h]
+    // {Link:#include "Rendering/Caustic/Shader.h"{Rendering/Caustic/Shader.h}}
     //**********************************************************************
     struct ShaderParamDef
     {
@@ -94,7 +94,7 @@ namespace Caustic
     // m_dirty - Is parameter dirty and needs to be pushed to constant buffer
     //
     // Header:
-    // [Link:Rendering/Caustic/Shader.h]
+    // {Link:#include "Rendering/Caustic/Shader.h"{Rendering/Caustic/Shader.h}}
     //**********************************************************************
     struct ShaderParamInstance : public ShaderParamDef
     {
@@ -191,7 +191,7 @@ namespace Caustic
     // m_heapSize - size of the total heap the buffer is contained in
     //
     // Header:
-    // [Link:Rendering/Caustic/Shader.h]
+    // {Link:#include "Rendering/Caustic/Shader.h"{Rendering/Caustic/Shader.h}}
     //**********************************************************************
     struct SBuffer
     {
@@ -218,7 +218,7 @@ namespace Caustic
     // data from a compute shader.
     //
     // Header:
-    // [Link:Rendering/Caustic/Shader.h]
+    // {Link:#include "Rendering/Caustic/Shader.h"{Rendering/Caustic/Shader.h}}
     //**********************************************************************
     class CGPUBuffer : public IGPUBuffer, public CRefCount
     {
@@ -279,7 +279,7 @@ namespace Caustic
     // shader, a vertex shader, and constants passed to those shaders.
     //
     // Header:
-    // [Link:Rendering/Caustic/Shader.h]
+    // {Link:#include "Rendering/Caustic/Shader.h"{Rendering/Caustic/Shader.h}}
     //**********************************************************************
     class CShader : public IShader, public CRefCount
     {
@@ -404,7 +404,7 @@ namespace Caustic
     // Defines our shader manager. Each shader is registered with this manager.
     //
     // Header:
-    // [Link:Rendering/Caustic/Shader.h]
+    // {Link:#include "Rendering/Caustic/Shader.h"{Rendering/Caustic/Shader.h}}
     //**********************************************************************
     class CShaderMgr : public IShaderMgr, public CRefCount
     {

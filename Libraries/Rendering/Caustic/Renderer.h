@@ -34,7 +34,7 @@ namespace Caustic
     // Vertex structure for drawing lines
     //
     // Header:
-    // [Link:Rendering/Caustic/Renderer.h]
+    // {Link:#include "Rendering/Caustic/Renderer.h"{Rendering/Caustic/Renderer.h}}
     //**********************************************************************
     struct CLineVertex
     {
@@ -46,7 +46,7 @@ namespace Caustic
     // Vertex structure for drawing screen space quads
     //
     // Header:
-    // [Link:Rendering/Caustic/Renderer.h]
+    // {Link:#include "Rendering/Caustic/Renderer.h"{Rendering/Caustic/Renderer.h}}
     //**********************************************************************
     struct CQuadVertex
     {
@@ -59,7 +59,7 @@ namespace Caustic
     // Class implementing <IPointLight>
     //
     // Header:
-    // [Link:Rendering/Caustic/Renderer.h]
+    // {Link:#include "Rendering/Caustic/Renderer.h"{Rendering/Caustic/Renderer.h}}
     //**********************************************************************
     class CLight : public IPointLight, public CRefCount
     {
@@ -81,7 +81,7 @@ namespace Caustic
     // c_MaxShadowMaps - maximum number of shadow maps that can be active during a frame
     //
     // Header:
-    // [Link:Rendering/Caustic/Renderer.h]
+    // {Link:#include "Rendering/Caustic/Renderer.h"{Rendering/Caustic/Renderer.h}}
     //**********************************************************************
     class CRenderCtx : public IRenderCtx, public CRefCount
     {
@@ -132,7 +132,7 @@ namespace Caustic
     // Defines the data shared between our CGraphics and CRenderer objects
     //
     // Header:
-    // [Link:Rendering/Caustic/Renderer.h]
+    // {Link:#include "Rendering/Caustic/Renderer.h"{Rendering/Caustic/Renderer.h}}
     //**********************************************************************
     class CGraphicsBase : public CRefCount
     {
@@ -202,7 +202,7 @@ namespace Caustic
     // m_spQuadShader - Shader used to draw screen space quads
     //
     // Header:
-    // [Link:Rendering/Caustic/Renderer.h]
+    // {Link:#include "Rendering/Caustic/Renderer.h"{Rendering/Caustic/Renderer.h}}
     //**********************************************************************
     class CRenderer : 
         public CGraphicsBase,

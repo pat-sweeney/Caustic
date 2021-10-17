@@ -23,7 +23,7 @@ namespace Caustic
     // Implementation of IPointLight
     //
     // Header:
-    // [Link:Rendering/Caustic/PointLight.h]
+    // {Link:#include "Rendering/Caustic/PointLight.h"{Rendering/Caustic/PointLight.h}}
     //**********************************************************************
     class CPointLight : public CLightBase, public IPointLight, public CRefCount
     {

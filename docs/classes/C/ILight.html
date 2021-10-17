@@ -8,9 +8,9 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="Topic994"></a><div class="CTopic TInterface LC first">
+<a name="Topic898"></a><div class="CTopic TInterface LC first">
  <div class="CTitle">ILight</div>
- <div class="CBody"><p>Defines a properties common to all lights</p><div class="CHeading">Header</div><p><a href='../../index.html#File:Rendering/Caustic/ILight.h' target='_top'>Rendering/Caustic/ILight.h</a></p></div>
+ <div class="CBody"><p>Defines a properties common to all lights</p><div class="CHeading">Header</div><p><a href='../../index.html#File:Rendering/Caustic/ILight.h' target='_top'>#include &quot;Rendering/Caustic/ILight.h&quot;</a></p></div>
 </div>
 
 <a name="Functions"></a><a name="Topic995"></a><div class="CTopic TGroup LC">
@@ -61,37 +61,37 @@
 
 <a name="SetPosition"></a><a name="Topic1003"></a><div class="CTopic TFunction LC">
  <div class="CTitle">SetPosition</div>
- <div id="NDPrototype1003" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetPosition(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first">Vector3&amp;&nbsp;</td><td class="PName last">pos</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
- <div class="CBody"><p>Sets the position of the light</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pos<div class="CDLParameterType">Vector3&amp;</div></td><td class="CDLDefinition"><p>Position of the light in world coordinates</p></td></tr></table></div>
+ <div id="NDPrototype1003" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetPosition(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:Vector3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1606);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector3</a>&amp;&nbsp;</td><td class="PName last">pos</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div class="CBody"><p>Sets the position of the light</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pos<div class="CDLParameterType"><a href="../../index.html#CClass:Vector3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1606);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector3</a>&amp;</div></td><td class="CDLDefinition"><p>Position of the light in world coordinates</p></td></tr></table></div>
 </div>
 
 <a name="GetPosition"></a><a name="Topic1004"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetPosition</div>
- <div id="NDPrototype1004" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> Vector3 GetPosition() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype1004" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <a href="../../index.html#CClass:Vector3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1606);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector3</a> GetPosition() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Gets the position of the light</p><div class="CHeading">Returns</div><p>Position of the light in world coordinates</p></div>
 </div>
 
 <a name="GetDirection"></a><a name="Topic1005"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetDirection</div>
- <div id="NDPrototype1005" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> Vector3 GetDirection() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype1005" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <a href="../../index.html#CClass:Vector3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1606);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector3</a> GetDirection() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Gets the direction the light is pointing. For nondirectional lights this will return a zero vector</p><div class="CHeading">Returns</div><p>Direction of the light in world coordinates</p></div>
 </div>
 
 <a name="SetDirection"></a><a name="Topic1006"></a><div class="CTopic TFunction LC">
  <div class="CTitle">SetDirection</div>
- <div id="NDPrototype1006" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetDirection(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first">Vector3&amp;&nbsp;</td><td class="PName last">dir</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
- <div class="CBody"><p>Sets the direction the light is pointing. For nondirectional lights this will be a zero vector</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">dir<div class="CDLParameterType">Vector3&amp;</div></td><td class="CDLDefinition"><p>Direction of the light in world coordinates</p></td></tr></table></div>
+ <div id="NDPrototype1006" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetDirection(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:Vector3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1606);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector3</a>&amp;&nbsp;</td><td class="PName last">dir</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div class="CBody"><p>Sets the direction the light is pointing. For nondirectional lights this will be a zero vector</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">dir<div class="CDLParameterType"><a href="../../index.html#CClass:Vector3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1606);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector3</a>&amp;</div></td><td class="CDLDefinition"><p>Direction of the light in world coordinates</p></td></tr></table></div>
 </div>
 
 <a name="SetColor"></a><a name="Topic1007"></a><div class="CTopic TFunction LC">
  <div class="CTitle">SetColor</div>
- <div id="NDPrototype1007" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetColor(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:FRGBColor" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,306);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >FRGBColor</a>&amp;&nbsp;</td><td class="PName last">color</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
- <div class="CBody"><p>Sets the color of the light</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">color<div class="CDLParameterType"><a href="../../index.html#CClass:FRGBColor" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,306);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >FRGBColor</a>&amp;</div></td><td class="CDLDefinition"><p>Color of the light</p></td></tr></table></div>
+ <div id="NDPrototype1007" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetColor(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:FRGBColor" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,102);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >FRGBColor</a>&amp;&nbsp;</td><td class="PName last">color</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div class="CBody"><p>Sets the color of the light</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">color<div class="CDLParameterType"><a href="../../index.html#CClass:FRGBColor" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,102);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >FRGBColor</a>&amp;</div></td><td class="CDLDefinition"><p>Color of the light</p></td></tr></table></div>
 </div>
 
 <a name="GetColor"></a><a name="Topic1008"></a><div class="CTopic TFunction LC last">
  <div class="CTitle">GetColor</div>
- <div id="NDPrototype1008" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <a href="../../index.html#CClass:FRGBColor" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,306);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >FRGBColor</a> GetColor() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype1008" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <a href="../../index.html#CClass:FRGBColor" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,102);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >FRGBColor</a> GetColor() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Gets the color of the light</p><div class="CHeading">Returns</div><p>Color of the light</p></div>
 </div>
 

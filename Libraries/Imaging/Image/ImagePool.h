@@ -85,7 +85,7 @@ namespace Caustic
     // <uint32 at Caustic::uint32> m_bpp - width of each pixel in bits
     //
     // Header:
-    // [Link:Imaging/Image/ImagePool.h]
+    // {Link:#include "Imaging/Image/ImagePool.h"{Imaging/Image/ImagePool.h}}
     //**********************************************************************
     class CImagePool : public IImagePool, public CRefCount
     {

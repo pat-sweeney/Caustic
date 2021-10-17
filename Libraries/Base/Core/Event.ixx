@@ -14,8 +14,8 @@ export namespace Caustic
     // Class: CEvent
 	// Defines a smart wrapper for handling events
 	//
-	// Header:
-	// [Link:Base/Core/Event.h]
+	// Module:
+	// {Link:import Base.Core.Event;{Base/Core/Event.ixx}}
 	//**********************************************************************
     class CEvent
     {

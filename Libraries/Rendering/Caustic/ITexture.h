@@ -23,7 +23,7 @@ namespace Caustic
     // Defines how clients interact with textures
     //
     // Header:
-    // [Link:Rendering/Caustic/ITexture.h]
+    // {Link:#include "Rendering/Caustic/ITexture.h"{Rendering/Caustic/ITexture.h}}
     //**********************************************************************
     struct ITexture : public IRefCount
     {
@@ -141,7 +141,7 @@ namespace Caustic
     // Returns the created texture
     //
     // Header:
-    // [Link:Rendering/Caustic/ITexture.h]
+    // {Link:#include "Rendering/Caustic/ITexture.h"{Rendering/Caustic/ITexture.h}}
     //**********************************************************************
     CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags);
     
@@ -159,7 +159,7 @@ namespace Caustic
     // Returns the created texture
     //
     // Header:
-    // [Link:Rendering/Caustic/ITexture.h]
+    // {Link:#include "Rendering/Caustic/ITexture.h"{Rendering/Caustic/ITexture.h}}
     //**********************************************************************
     CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, uint32 width, uint32 height, DXGI_FORMAT format);
     
@@ -177,7 +177,7 @@ namespace Caustic
     // Returns the created texture
     //
     // Header:
-    // [Link:Rendering/Caustic/ITexture.h]
+    // {Link:#include "Rendering/Caustic/ITexture.h"{Rendering/Caustic/ITexture.h}}
     //**********************************************************************
     CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, IImage* pImage, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags);
     
@@ -192,7 +192,7 @@ namespace Caustic
     // blocksize - size of each square in checkerboard pattern
     //
     // Header:
-    // [Link:Rendering/Caustic/ITexture.h]
+    // {Link:#include "Rendering/Caustic/ITexture.h"{Rendering/Caustic/ITexture.h}}
     //**********************************************************************
     CRefObj<ITexture> CheckerboardTexture(IRenderer* pRenderer, int w = 32, int h = 32, int blocksize = 4);
 
@@ -208,7 +208,7 @@ namespace Caustic
     // Returns the new texture
     //
     // Header:
-    // [Link:Rendering/Caustic/ITexture.h]
+    // {Link:#include "Rendering/Caustic/ITexture.h"{Rendering/Caustic/ITexture.h}}
     //**********************************************************************
     CRefObj<ITexture> LoadTexture(const wchar_t* pFilename, IRenderer* pRenderer);
 
@@ -224,7 +224,7 @@ namespace Caustic
     // Returns the new texture
     //
     // Header:
-    // [Link:Rendering/Caustic/ITexture.h]
+    // {Link:#include "Rendering/Caustic/ITexture.h"{Rendering/Caustic/ITexture.h}}
     //**********************************************************************
     CRefObj<ITexture> LoadVideoTexture(const wchar_t* pFilename, IRenderer* pRenderer);
 
@@ -239,7 +239,7 @@ namespace Caustic
     // Returns the new texture
     //
     // Header:
-    // [Link:Rendering/Caustic/ITexture.h]
+    // {Link:#include "Rendering/Caustic/ITexture.h"{Rendering/Caustic/ITexture.h}}
     //**********************************************************************
     CRefObj<ITexture> VideoTextureFromWebcam(IRenderer* pRenderer);
 
@@ -254,7 +254,7 @@ namespace Caustic
     // Returns the new texture
     //
     // Header:
-    // [Link:Rendering/Caustic/ITexture.h]
+    // {Link:#include "Rendering/Caustic/ITexture.h"{Rendering/Caustic/ITexture.h}}
     //**********************************************************************
     CRefObj<ITexture> CreateDesktopTexture(IRenderer* pRenderer);
 }

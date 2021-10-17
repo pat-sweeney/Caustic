@@ -37,7 +37,7 @@ namespace Caustic
     // to maintain an entire scene graph.
     //
     // Header:
-    // [Link:Rendering/Caustic/IRenderable.h]
+    // {Link:#include "Rendering/Caustic/IRenderable.h"{Rendering/Caustic/IRenderable.h}}
     //**********************************************************************
     struct IRenderable : public IRefCount
     {
@@ -145,7 +145,7 @@ namespace Caustic
     // Returns the created renderable
     //
     // Header:
-    // [Link:Rendering/Caustic/IRenderable.h]
+    // {Link:#include "Rendering/Caustic/IRenderable.h"{Rendering/Caustic/IRenderable.h}}
     //**********************************************************************
     CRefObj<IRenderable> CreateRenderable(IRenderSubMesh* pSubMesh, IRenderMaterial* pFrontMaterial, IRenderMaterial* pBackMaterial, DirectX::XMMATRIX& mat);
 }

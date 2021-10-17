@@ -24,40 +24,64 @@ namespace PostProcDoc
                     Console.WriteLine($"Processing file: {fileEntry}");
                     if (fileEntry.Contains("Vector"))
                         System.Diagnostics.Debug.WriteLine("blah");
-                    MemoryStream ms = new MemoryStream();
+
                     var data = File.ReadAllBytes(fileEntry);
-                    // scan text and find [Link:...] tags
+                    // scan text and find {Link:#include "..."{...}} tags
                     bool changed = false;
-                    for (int j = 0; j < data.Length; j++)
+                    string s2 = System.Text.Encoding.UTF8.GetString(data, 0, data.Length);
+                    char[] convertedText = new char[s2.Length * 2];
+                    int outputIndex = 0;
+                    int inputIndex = 0;
+                    while (inputIndex < s2.Length)
                     {
-                        if (data[j] == '[')
+                        if (inputIndex == 1000)
+                            System.Diagnostics.Debug.WriteLine("blah");
+                        if (s2[inputIndex] == '{')
                         {
-                            string s = System.Text.Encoding.UTF8.GetString(data, j, 10);
-                            if ("[Link:" == s.Substring(0, 6))
+                            if ("{Link:" == s2.Substring(inputIndex, 6))
                             {
-                                j += 6;
-                                int l = j;
-                                while (data[l] != ']')
+                                inputIndex += 6;
+                                int l = inputIndex;
+                                while (s2[l] != '}' && s2[l] != '{')
                                     l++;
-                                string refpath = System.Text.Encoding.UTF8.GetString(data, j, l - j);
-                                j = l;
+                                string linkName = s2.Substring(inputIndex, l - inputIndex);
+                                inputIndex = l;
+
+                                string refpath = string.Empty;
+                                if (s2[l] == '{')
+                                {
+                                    l = ++inputIndex;
+                                    while (s2[l] != '}')
+                                        l++;
+                                    refpath = s2.Substring(inputIndex, l - inputIndex);
+                                    inputIndex = l + 1;
+                                }
+                                inputIndex++; // skip final ']'
                                 string levels = "";
                                 for (int k = 0; k < level; k++)
                                     levels += "../";
-                                string newlink = $"<a href='{levels}index.html#File:{refpath}' target='_top'>{refpath}</a>";
-                                ms.Write(System.Text.Encoding.UTF8.GetBytes(newlink));
+                                if (refpath.Length == 0)
+                                    refpath = linkName;
+                                string newlink = $"<a href='{levels}index.html#File:{refpath}' target='_top'>{linkName}</a>";
+                                for (int i = 0; i < newlink.Length; i++)
+                                    convertedText[outputIndex++] = newlink[i];
                                 changed = true;
+                            }
+                            else
+                            {
+                                convertedText[outputIndex++] = s2[inputIndex++];
                             }
                         }
                         else
                         {
-                            ms.Write(data, j, 1);
+                            convertedText[outputIndex++] = s2[inputIndex++];
                         }
                     }
                     if (changed)
                     {
                         FileStream fs = File.Create(fileEntry);
-                        fs.Write(ms.ToArray());
+                        byte[] convertedBytes = System.Text.Encoding.UTF8.GetBytes(convertedText, 0, outputIndex);
+                        fs.Write(convertedBytes, 0, convertedBytes.Length);
                         fs.Close();
                     }
                 }

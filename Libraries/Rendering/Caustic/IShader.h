@@ -46,7 +46,7 @@ namespace Caustic
     // will pass one of these objects via IShader::SetCSParam().
     //
     // Header:
-    // [Link:Rendering/Caustic/IShader.h]
+    // {Link:#include "Rendering/Caustic/IShader.h"{Rendering/Caustic/IShader.h}}
     //**********************************************************************
     struct IGPUBuffer : public IRefCount
     {
@@ -98,7 +98,7 @@ namespace Caustic
     // Defines the public interface for using <CShader>
     //
     // Header:
-    // [Link:Rendering/Caustic/IShader.h]
+    // {Link:#include "Rendering/Caustic/IShader.h"{Rendering/Caustic/IShader.h}}
     //**********************************************************************
     struct IShader : public IRefCount
     {

@@ -27,7 +27,7 @@ namespace Caustic
 	// Indicates whether a material is used by a pixel or vertex shader or both
 	//
 	// Header:
-	// [Link:Rendering/Caustic/IMaterialAttrib.h]
+	// {Link:#include "Rendering/Caustic/IMaterialAttrib.h"{Rendering/Caustic/IMaterialAttrib.h}}
 	//**********************************************************************
 	enum EShaderAccess
 	{
@@ -41,7 +41,7 @@ namespace Caustic
 	// Used for manipulating the materials assigned to a mesh.
 	//
 	// Header:
-	// [Link:Rendering/Caustic/IMaterialAttrib.h]
+	// {Link:#include "Rendering/Caustic/IMaterialAttrib.h"{Rendering/Caustic/IMaterialAttrib.h}}
 	//**********************************************************************
 	struct IMaterialAttrib : public ISerialize
 	{
@@ -282,7 +282,7 @@ namespace Caustic
 	// Returns the new material object
 	//
 	// Header:
-	// [Link:Rendering/Caustic/IMaterialAttrib.h]
+	// {Link:#include "Rendering/Caustic/IMaterialAttrib.h"{Rendering/Caustic/IMaterialAttrib.h}}
 	//**********************************************************************
 	CRefObj<IMaterialAttrib> CreateStandardMaterialAttrib(FRGBColor ambientColor, FRGBColor diffuseColor,
 		FRGBColor specularColor, float specularExp, float alpha);
@@ -295,7 +295,7 @@ namespace Caustic
 	// Returns the new material object
 	//
 	// Header:
-	// [Link:Rendering/Caustic/IMaterialAttrib.h]
+	// {Link:#include "Rendering/Caustic/IMaterialAttrib.h"{Rendering/Caustic/IMaterialAttrib.h}}
 	//**********************************************************************
 	CRefObj<IMaterialAttrib> CreateMaterialAttrib();
 }

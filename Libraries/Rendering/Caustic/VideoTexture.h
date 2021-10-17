@@ -27,7 +27,7 @@ namespace Caustic
     // RECT m_rect - Video rect corrected for pixel aspect ratio
     //
     // Header:
-    // [Link:Rendering/Caustic/VideoTexture.h]
+    // {Link:#include "Rendering/Caustic/VideoTexture.h"{Rendering/Caustic/VideoTexture.h}}
     //**********************************************************************
     struct CVideoFormat
     {
@@ -57,7 +57,7 @@ namespace Caustic
     // <CRefObj> < <ITexture> > m_spTexture - texture for decoded video frame
     //
     // Header:
-    // [Link:Rendering/Caustic/VideoTexture.h]
+    // {Link:#include "Rendering/Caustic/VideoTexture.h"{Rendering/Caustic/VideoTexture.h}}
     //**********************************************************************
     class CVideoTexture :
         public ITexture,

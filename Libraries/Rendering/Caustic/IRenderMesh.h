@@ -28,7 +28,7 @@ namespace Caustic
 	// to a vertex and index buffer).
     //
     // Header:
-    // [Link:Rendering/Caustic/IRenderMesh.h]
+    // {Link:#include "Rendering/Caustic/IRenderMesh.h"{Rendering/Caustic/IRenderMesh.h}}
     //**********************************************************************
 	struct IRenderSubMesh : public IRefCount
 	{
@@ -159,7 +159,7 @@ namespace Caustic
 	// IRenderMesh is simply a collection of submesh objects (IRenderSubMesh).
     //
     // Header:
-    // [Link:Rendering/Caustic/IRenderMesh.h]
+    // {Link:#include "Rendering/Caustic/IRenderMesh.h"{Rendering/Caustic/IRenderMesh.h}}
     //**********************************************************************
 	struct IRenderMesh : public ISerialize
 	{

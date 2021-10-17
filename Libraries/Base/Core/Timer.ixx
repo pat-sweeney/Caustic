@@ -17,8 +17,8 @@ export namespace Caustic
 	// Class: CTimer
 	// CPU based timer
 	//
-	// Header:
-	// [Link:Base/Core/CritSec.h]
+	// Module:
+	// {Link:import Base.Core.Timer;{Base/Core/Timer.ixx}}
 	//**********************************************************************
 	class CTimer
 	{
