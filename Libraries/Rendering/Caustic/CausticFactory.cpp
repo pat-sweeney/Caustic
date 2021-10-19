@@ -9,7 +9,7 @@
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
-#include "Imaging\Image\Image.h"
+import Imaging.Image.IImage;
 #include "RenderMesh.h"
 #include "ShaderInfo.h"
 #include <d3d11.h>

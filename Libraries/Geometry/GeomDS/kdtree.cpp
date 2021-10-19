@@ -3,12 +3,13 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "stdafx.h"
-#include "Geometry\GeomDS\KDTree.h"
+module;
 #include <memory>
 #include <tuple>
 #include <algorithm>
 #include <functional>
+
+module Geometry.GeomDS.KDTree;
 
 namespace Caustic
 {

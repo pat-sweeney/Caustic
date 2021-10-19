@@ -6,8 +6,8 @@
 #include "stdafx.h"
 import Base.Core.Core;
 import Base.Core.Error;
-#include "Image.h"
-#include "ImageImpl.h"
+import Imaging.Image.IImage;
+import Imaging.Image.Image;
 #include <atlbase.h>
 #include <wincodec.h>
 

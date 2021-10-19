@@ -3,13 +3,13 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
+export module Geometry.GeomDS.IPolygon;
 import Base.Core.IRefCount;
 import Base.Core.Core;
 import Base.Math.Vector;
 import Base.Math.BBox;
 
-namespace Caustic
+export namespace Caustic
 {
 	//**********************************************************************
 	// Interface: IPolygon2

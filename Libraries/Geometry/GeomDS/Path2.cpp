@@ -3,16 +3,21 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "stdafx.h"
+module;
 #include <memory>
 #include <stdarg.h>
 #include <winerror.h>
-import Base.Core.Core;
-import Base.Core.Error;
-#include "Path2.h"
 #include "Base/Math/Helper.h"
 
-namespace Caustic {
+module Geometry.GeomDS.Path2;
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.IRefCount;
+import Geometry.GeomDS.IPath2;
+import Geometry.GeomDS.Path2;
+
+namespace Caustic
+{
 	//**********************************************************************
 	// Function: CreatePath2
 	// Creates a new path
@@ -20,7 +25,7 @@ namespace Caustic {
 	// Returns:
 	// Returns new path object
 	//**********************************************************************
-	CRefObj<IPath2> CreatePath2()
+	CRefObj<IPath2> CPath2::CreatePath2()
 	{
 		return CRefObj<IPath2>(new CPath2());
 	}

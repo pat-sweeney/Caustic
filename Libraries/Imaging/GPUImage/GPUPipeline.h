@@ -5,7 +5,7 @@
 //**********************************************************************
 #pragma once
 import Base.Core.Core;
-#include "Imaging\Image\Image.h"
+import Imaging.Image.IImage;
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\Shader.h"
 #include <varargs.h>

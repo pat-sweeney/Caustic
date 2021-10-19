@@ -4,15 +4,17 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "stdafx.h"
+#include <winerror.h>
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Math.Point;
 import Base.Math.IBBox;
-#include "Image.h"
-#include "ImageImpl.h"
+import Imaging.Image.IImage;
+import Imaging.Image.ImageIter;
+import Imaging.Color;
+import Imaging.Image.Image;
 #include "ImageFilter.h"
-#include "ImageIter.h"
 #include <stack>
 
 // Namespace: Caustic

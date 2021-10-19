@@ -196,6 +196,9 @@ $(CausticRoot)\x64\Debug\RenderGraph.lib;
     <ProjectReference Include="..\..\Libraries\Cameras\AzureKinect\AzureKinect.vcxproj">
       <Project>{cacc2b4b-984d-49b1-8f5b-aa5b48a9d686}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Geometry\GeomDS\GeomDS.vcxproj">
+      <Project>{163426b2-af7c-4713-8e3c-1a56a9cc0abf}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Geometry\MeshImport\MeshImport.vcxproj">
       <Project>{f51b95ed-2f23-4d3c-8176-c51ca1ce9ea2}</Project>
     </ProjectReference>

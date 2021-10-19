@@ -10,7 +10,7 @@ import Base.Core.IRefCount;
 import Base.Core.ISerialize;
 import Base.Math.Vector;
 import Imaging.Color;
-#include "Imaging\Image\Image.h"
+import Imaging.Image.IImage;
 #include <vector>
 #include <string>
 #include <functional>

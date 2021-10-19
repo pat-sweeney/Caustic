@@ -6,9 +6,9 @@
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Math.BBox;
+import Imaging.Image.IImage;
 #include "Geometry\Mesh\Mesh.h"
 #include "Base\Math\Helper.h"
-#include "Imaging\Image\Image.h"
 #include <map>
 #include "Delaunay.h"
 #include <stack>
@@ -38,7 +38,6 @@ namespace Caustic
         m_numTriangles = 2;
     }
 #if 0
-#include "Imaging\Image\Image.h"
     const int c_ShowEdges_BigPoint = 0;
     const int c_ShowRemovedTriangles = 1;
     const int c_ShowEdges_SmallPoint = 2;

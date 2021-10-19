@@ -3,14 +3,17 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
+export module Imaging.Image.IImage;
 import Base.Core.Core;
+import Base.Core.Error;
 import Base.Core.IRefCount;
 import Base.Math.Vector;
-#include "Geometry\GeomDS\IPath2.h"
+import Geometry.GeomDS.IPath2;
 
 // Namespace: Caustic
-namespace Caustic
+// Module:
+// {Link:import Imaging.Image.Image{Imaging/Image/Image.ixx}}
+export namespace Caustic
 {
 	//**********************************************************************
 	// Class: EImageType
@@ -27,8 +30,8 @@ namespace Caustic
 	// Float_32bpp - type is floating point image
 	// Float4_128bpp - type is floating point image with 4 channels
 	//
-	// Header:
-	// {Link:#include "Imaging/Image/Image.h"{Imaging/Image/Image.h}}
+	// Module:
+	// {Link:import Imaging.Image.Image{Imaging/Image/Image.ixx}}
 	//**********************************************************************
 	enum class EImageType
 	{
@@ -49,8 +52,8 @@ namespace Caustic
 	// Interface: IImageBase
 	// Base interface shared across all image types
 	//
-	// Header:
-	// {Link:#include "Imaging/Image/Image.h"{Imaging/Image/Image.h}}
+	// Module:
+	// {Link:import Imaging.Image.Image{Imaging/Image/Image.ixx}}
 	//**********************************************************************
 	struct IImageBase : public IRefCount
 	{
@@ -64,7 +67,7 @@ namespace Caustic
 		// Method: GetData
 		// Returns a pointer to the image data
 		//**********************************************************************
-		virtual uint8 *GetData() = 0;
+		virtual uint8* GetData() = 0;
 
 		//**********************************************************************
 		// Method: GetWidth
@@ -131,8 +134,8 @@ namespace Caustic
 	// Interface: IImage
 	// Interface to an image (CPU based)
 	//
-	// Header:
-	// {Link:#include "Imaging/Image/Image.h"{Imaging/Image/Image.h}}
+	// Module:
+	// {Link:import Imaging.Image.Image{Imaging/Image/Image.ixx}}
 	//**********************************************************************
 	struct IImage : public IImageBase
 	{
@@ -206,7 +209,7 @@ namespace Caustic
 		// radius - radius of the circle (in pixels)
 		// color - color used for rendering the circle
 		//**********************************************************************
-		virtual void DrawCircle(Vector2 &center, uint32 radius, uint8 color[4]) = 0;
+		virtual void DrawCircle(Vector2& center, uint32 radius, uint8 color[4]) = 0;
 
 		//**********************************************************************
 		// Method: DrawLine
@@ -217,7 +220,7 @@ namespace Caustic
 		// v1 - end of line (in pixel coordinates)
 		// color - color used for rendering the line
 		//**********************************************************************
-		virtual void DrawLine(const Vector2 &v0, const Vector2 &v1, uint8 color[4]) = 0;
+		virtual void DrawLine(const Vector2& v0, const Vector2& v1, uint8 color[4]) = 0;
 
 		//**********************************************************************
 		// Method: DrawPath
@@ -229,14 +232,12 @@ namespace Caustic
 		virtual void DrawPath(IPath2* pPath) = 0;
 	};
 
-	CRefObj<IImage> CreateImage(uint32 width, uint32 height, uint32 bpp);
-
 	//**********************************************************************
 	// Interface: IIntegralImage
 	// Interface to an integral image (see https://en.wikipedia.org/wiki/Summed-area_table)
 	//
-	// Header:
-	// {Link:#include "Imaging/Image/Image.h"{Imaging/Image/Image.h}}
+	// Module:
+	// {Link:import Imaging.Image.Image{Imaging/Image/Image.ixx}}
 	//**********************************************************************
 	struct IIntegralImage : public IImageBase
 	{
@@ -266,15 +267,12 @@ namespace Caustic
 		//**********************************************************************
 		virtual CRefObj<IImage> BoxBlur(int width, int height) = 0;
 	};
-	CRefObj<IIntegralImage> CreateIntegralImage(IImage *pImage);
 
-#undef LoadImage
-}
-// Namespace: Caustic
-namespace Caustic
-{
+	CRefObj<IImage> CreateImage(uint32 width, uint32 height, uint32 bpp);
+	CRefObj<IIntegralImage> CreateIntegralImage(IImage* pImage);
+
 	//**********************************************************************
-	// Function: LoadImage
+	// Function: LoadImageFile
 	// Loads an image from a file
 	//
 	// Parameters:
@@ -283,10 +281,10 @@ namespace Caustic
 	// Returns:
 	// Returns the loaded image
 	//
-	// Header:
-	// {Link:#include "Imaging/Image/Image.h"{Imaging/Image/Image.h}}
+	// Module:
+	// {Link:import Imaging.Image.Image{Imaging/Image/Image.ixx}}
 	//**********************************************************************
-	CRefObj<IImage> LoadImage(const wchar_t *pFilename);
+	CRefObj<IImage> LoadImageFile(const wchar_t* pFilename);
 
 	//**********************************************************************
 	// Function: StoreImage
@@ -296,8 +294,8 @@ namespace Caustic
 	// pFilename - path to save image file
 	// pImage - Image to save
 	//
-	// Header:
-	// {Link:#include "Imaging/Image/Image.h"{Imaging/Image/Image.h}}
+	// Module:
+	// {Link:import Imaging.Image.Image{Imaging/Image/Image.ixx}}
 	//**********************************************************************
-	void StoreImage(const wchar_t *pFilename, IImage *pImage);
+	void StoreImage(const wchar_t* pFilename, IImage* pImage);
 }

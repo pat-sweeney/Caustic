@@ -7,7 +7,7 @@
 
 import Base.Core.Core;
 import Base.Core.IRefCount;
-#include "Imaging\Image\Image.h"
+import Imaging.Image.IImage;
 #include "Rendering/Caustic/IRenderer.h"
 
 

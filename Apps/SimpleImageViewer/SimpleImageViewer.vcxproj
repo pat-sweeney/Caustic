@@ -122,6 +122,9 @@
     <ProjectReference Include="..\..\Libraries\Cameras\CameraBase\CameraBase.vcxproj">
       <Project>{6bfeacf4-1bac-46ef-9945-eb31a8151b21}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Geometry\GeomDS\GeomDS.vcxproj">
+      <Project>{163426b2-af7c-4713-8e3c-1a56a9cc0abf}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Imaging\Image\Image.vcxproj">
       <Project>{f7bef797-220c-4585-a489-f06df155ea60}</Project>
     </ProjectReference>

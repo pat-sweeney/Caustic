@@ -117,6 +117,9 @@
     <ProjectReference Include="..\..\Libraries\Base\Math\Math.vcxproj">
       <Project>{a82bd627-0746-4f67-856f-396335084fee}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Geometry\GeomDS\GeomDS.vcxproj">
+      <Project>{163426b2-af7c-4713-8e3c-1a56a9cc0abf}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Geometry\Rast\Rast.vcxproj">
       <Project>{1310081f-25f3-48cb-bb3b-b302d973902e}</Project>
     </ProjectReference>

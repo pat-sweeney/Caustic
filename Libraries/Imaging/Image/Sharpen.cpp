@@ -7,10 +7,11 @@
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
-#include "Image.h"
-#include "ImageImpl.h"
+import Imaging.Image.IImage;
+import Imaging.Image.ImageIter;
+import Imaging.Color;
+import Imaging.Image.Image;
 #include "ImageFilter.h"
-#include "ImageIter.h"
 
 namespace Caustic
 {

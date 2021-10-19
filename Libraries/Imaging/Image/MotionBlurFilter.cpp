@@ -7,10 +7,10 @@
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
+import Imaging.Image.IImage;
+import Imaging.Image.ImageIter;
 #include "Geometry/Rast/Bresenham.h"
-#include "Image.h"
 #include "ImageFilter.h"
-#include "ImageIter.h"
 #include <memory>
 #include <any>
 #include <winerror.h>

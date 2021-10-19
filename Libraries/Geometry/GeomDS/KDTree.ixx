@@ -3,15 +3,17 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
-import Base.Core.Core;
-import Base.Core.RefCount;
-import Base.Math.Vector;
-#include "Geometry\GeomDS\IKDTree.h"
+module;
 #include <vector>
 #include <functional>
 
-namespace Caustic
+export module Geometry.GeomDS.KDTree;
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Math.Vector;
+import Geometry.GeomDS.IKDTree;
+
+export namespace Caustic
 {
     enum CutAxis
     {

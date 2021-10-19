@@ -129,6 +129,9 @@
     <ProjectReference Include="..\..\Libraries\Cameras\CameraBase\CameraBase.vcxproj">
       <Project>{6bfeacf4-1bac-46ef-9945-eb31a8151b21}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Geometry\GeomDS\GeomDS.vcxproj">
+      <Project>{163426b2-af7c-4713-8e3c-1a56a9cc0abf}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Geometry\MeshImport\MeshImport.vcxproj">
       <Project>{f51b95ed-2f23-4d3c-8176-c51ca1ce9ea2}</Project>
     </ProjectReference>
@@ -137,6 +140,9 @@
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Imaging\Color\Color.vcxproj">
       <Project>{6bd55e78-59f0-402f-9bbd-650c8fe563f3}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Imaging\Image\Image.vcxproj">
+      <Project>{f7bef797-220c-4585-a489-f06df155ea60}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Rendering\Caustic\Caustic.vcxproj">
       <Project>{60a04400-10f9-4c6d-b34c-d5c7ebafa262}</Project>

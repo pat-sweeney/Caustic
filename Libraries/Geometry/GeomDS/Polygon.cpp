@@ -3,9 +3,11 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "stdafx.h"
-#include "Polygon.h"
+import Geometry.GeomDS.Polygon;
+import Geometry.GeomDS.IPolygon;
 import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
 import Base.Math.Ray;
 #include "Base\Math\Helper.h"
 #include <memory>

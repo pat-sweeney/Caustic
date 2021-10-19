@@ -7,7 +7,7 @@
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Base.Math.Vector;
-#include "Imaging\Image\Image.h"
+import Imaging.Image.IImage;
 #include <map>
 #include <string>
 #include <any>

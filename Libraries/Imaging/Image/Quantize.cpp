@@ -8,9 +8,9 @@ import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
 #include "Geometry/Rast/Bresenham.h"
-#include "Image.h"
+import Imaging.Image.IImage;
+import Imaging.Image.ImageIter;
 #include "ImageFilter.h"
-#include "ImageIter.h"
 #include <memory>
 #include <any>
 #include <winerror.h>

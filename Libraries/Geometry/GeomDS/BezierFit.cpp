@@ -4,9 +4,10 @@
 // by Philip J. Schneider
 // Graphic Gems
 //**********************************************************************
-#include "stdafx.h"
-#include "BezierFit.h"
+module;
 #include "Base\Math\Matrix.h"
+
+module Geometry.GeomDS.BezierFit;
 import Base.Math.Basis;
 
 namespace Caustic

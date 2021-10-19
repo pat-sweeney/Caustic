@@ -3,14 +3,16 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
-import Base.Core.Core;
-import Base.Core.IRefCount;
-import Base.Math.Vector;
+module;
 #include <vector>
 #include <functional>
 
-namespace Caustic
+export module Geometry.GeomDS.IKDTree;
+import Base.Core.Core;
+import Base.Core.IRefCount;
+import Base.Math.Vector;
+
+export namespace Caustic
 {
     //**********************************************************************
     // Interface: IKDTree

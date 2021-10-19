@@ -6,14 +6,13 @@
 #include "stdafx.h"
 import Base.Core.Core;
 import Base.Core.Error;
-#include "Imaging\Image\Image.h"
-#include "Imaging\Image\ImageIter.h"
+import Imaging.Image.IImage;
+import Imaging.Image.ImageIter;
 #include "Texture.h"
 #include <memory>
 #include <wincodec.h>
 #include <objbase.h>
 #include <map>
-#undef LoadImage
 
 namespace Caustic
 {
@@ -158,7 +157,7 @@ namespace Caustic
         std::map<std::wstring, CRefObj<ITexture>>::iterator it;
         if ((it = cache.find(pFilename)) != cache.end())
             return CRefObj<ITexture>(it->second);
-        CRefObj<IImage> spImage = LoadImage(pFilename);
+        CRefObj<IImage> spImage = Caustic::LoadImageFile(pFilename);
         CRefObj<ITexture> spTexture = CreateTexture(pRenderer, spImage, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
         cache[pFilename] = spTexture;
         return spTexture;
@@ -348,7 +347,7 @@ namespace Caustic
             bpp = 128;
             break;
         }
-        CRefObj<IImage> spImage = CreateImage(m_Width, m_Height, bpp);
+        CRefObj<IImage> spImage = Caustic::CreateImage(m_Width, m_Height, bpp);
         CopyToImage(pRenderer, spImage);
         return spImage;
     }

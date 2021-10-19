@@ -8,8 +8,8 @@ import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Math.Vector;
 import Base.Math.BBox;
+import Imaging.Image.IImage;
 #include "Base\Math\Matrix.h"
-#include "Imaging\Image\Image.h"
 #include "Imaging\Image\IImagePool.h"
 #include "Cameras\AzureKinect\IAzureKinect.h"
 #include <k4a/k4a.h>

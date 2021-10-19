@@ -7,38 +7,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="kdtree.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IKDTree.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IPolygon.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Polygon.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IPath2.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Path2.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BezierFit.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="kdtree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -49,6 +17,27 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BezierFit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IPath2.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Path2.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IPolygon.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IKDTree.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BezierFit.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Polygon.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="KDTree.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

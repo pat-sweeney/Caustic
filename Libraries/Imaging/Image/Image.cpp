@@ -3,16 +3,15 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "stdafx.h"
-import Base.Core.Core;
-import Base.Core.Error;
-#include "Image.h"
-#include "ImageImpl.h"
+module;
 #include <atlbase.h>
 #include <wincodec.h>
 #include "Geometry\Rast\Bresenham.h"
 #include "Geometry\Rast\BresenhamCircle.h"
-#include "Imaging\Image\ImageIter.h"
+
+module Imaging.Image.Image;
+import Base.Core.Core;
+import Base.Core.Error;
 
 namespace Caustic
 {
@@ -29,53 +28,6 @@ namespace Caustic
         CT(CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&s_wic.m_spFactory)));
     }
 
-    CRefObj<IIntegralImage> CreateIntegralImage(IImage *pImage)
-    {
-        std::unique_ptr<CIntegralImage> spIntegralImage(new CIntegralImage(pImage->GetWidth(), pImage->GetHeight()));
-        uint32 *pDstRow = (uint32*)spIntegralImage->GetData();
-        BYTE *pSrcRow = pImage->GetData();
-        int w = (int)spIntegralImage->GetWidth();
-        for (uint32 y = 0; y < pImage->GetHeight(); y++)
-        {
-            uint32 *pDstCol = pDstRow;
-            BYTE *pSrcCol = pSrcRow;
-            for (uint32 x = 0; x < pImage->GetWidth(); x++)
-            {
-                uint32 sum[3];
-                sum[0] = pSrcCol[0];
-                sum[1] = pSrcCol[1];
-                sum[2] = pSrcCol[2];
-                if (x > 0)
-                {
-                    sum[0] += pDstCol[-3];
-                    sum[1] += pDstCol[-2];
-                    sum[2] += pDstCol[-1];
-                }
-                if (y > 0)
-                {
-                    sum[0] += pDstCol[-3 * w + 0];
-                    sum[1] += pDstCol[-3 * w + 1];
-                    sum[2] += pDstCol[-3 * w + 2];
-                }
-                if (x > 0 && y > 0)
-                {
-                    sum[0] -= pDstCol[-3 * w + -3];
-                    sum[1] -= pDstCol[-3 * w + -2];
-                    sum[2] -= pDstCol[-3 * w + -1];
-                }
-                pDstCol[0] = sum[0];
-                pDstCol[1] = sum[1];
-                pDstCol[2] = sum[2];
-                pSrcCol += pImage->GetBytesPerPixel();
-                pDstCol += 3;
-            }
-            pSrcRow += pImage->GetStride();
-            pDstRow += 3 * w;
-        }
-        spIntegralImage->m_spImage = pImage;
-        return CRefObj<IIntegralImage>(spIntegralImage.release());
-    }
-
     uint32 CIntegralImage::GetSum(int channel, int x1, int y1, int x2, int y2)
     {
         /*  . . . . . . . . . .
@@ -84,7 +36,7 @@ namespace Caustic
             . . . . . . . . o .
             . . . . . . . . . .
             */
-        uint32 *pData = (uint32*)GetData();
+        uint32* pData = (uint32*)GetData();
         x1 = Caustic::Clamp<int>(x1, 0, GetWidth() - 1);
         x2 = Caustic::Clamp<int>(x2, 0, GetWidth() - 1);
         y1 = Caustic::Clamp<int>(y1, 0, GetHeight() - 1);
@@ -103,14 +55,14 @@ namespace Caustic
     CRefObj<IImage> CIntegralImage::BoxBlur(int width, int height)
     {
         std::unique_ptr<CImage> spDstImage(new CImage(GetWidth(), GetHeight(), 32));
-        BYTE *rowSrc = m_spImage->GetData();
-        BYTE *rowDst = spDstImage->GetData();
+        BYTE* rowSrc = m_spImage->GetData();
+        BYTE* rowDst = spDstImage->GetData();
         int miny = -height / 2;
         int maxy = (height - 1) / 2;
         for (int y = 0; y < (int)GetHeight(); y++)
         {
-            BYTE *colSrc = rowSrc;
-            BYTE *colDst = rowDst;
+            BYTE* colSrc = rowSrc;
+            BYTE* colDst = rowDst;
             int minx = -width / 2;
             int maxx = (width - 1) / 2;
             for (int x = 0; x < (int)GetWidth(); x++)
@@ -130,12 +82,6 @@ namespace Caustic
             maxy++;
         }
         return CRefObj<IImage>(spDstImage.release());
-    }
-
-
-    CRefObj<IImage> CreateImage(uint32 width, uint32 height, uint32 bpp)
-    {
-        return CRefObj<IImage>(new CImage(width, height, bpp));
     }
 
     CRefObj<IImage> CImage::Clone()
@@ -177,7 +123,7 @@ namespace Caustic
         pData[0] = v;
     }
 
-    void CImage::DrawCircle(Vector2 &center, uint32 radius, uint8 color[4])
+    void CImage::DrawCircle(Vector2& center, uint32 radius, uint8 color[4])
     {
         if (m_bytesPerPixel != 4)
             CT(E_UNEXPECTED);
@@ -191,7 +137,7 @@ namespace Caustic
                 int32 ny = (int32)center.y + y;
                 if (nx >= 0 && nx < (int32)GetWidth() && ny >= 0 && ny < (int32)GetHeight())
                 {
-                    BYTE *pData = GetData() + ny * this->GetStride() + nx * m_bytesPerPixel;
+                    BYTE* pData = GetData() + ny * this->GetStride() + nx * m_bytesPerPixel;
                     pData[0] = color[2];
                     pData[1] = color[1];
                     pData[2] = color[0];
@@ -224,7 +170,7 @@ namespace Caustic
         }
     }
 
-    void CImage::DrawLine(const Vector2 &v0, const Vector2 &v1, uint8 color[4])
+    void CImage::DrawLine(const Vector2& v0, const Vector2& v1, uint8 color[4])
     {
         if (m_bytesPerPixel != 4)
             CT(E_UNEXPECTED);
@@ -233,7 +179,7 @@ namespace Caustic
         {
             if (b.get_x() >= 0 && b.get_x() < (int32)GetWidth() && b.get_y() >= 0 && b.get_y() < (int32)GetHeight())
             {
-                BYTE *pData = GetData() + b.get_y() * this->GetStride() + b.get_x() * m_bytesPerPixel;
+                BYTE* pData = GetData() + b.get_y() * this->GetStride() + b.get_x() * m_bytesPerPixel;
                 pData[0] = color[2];
                 pData[1] = color[1];
                 pData[2] = color[0];
@@ -243,8 +189,7 @@ namespace Caustic
         }
     }
 
-#undef LoadImage
-    CRefObj<IImage> LoadImage(const wchar_t *pFilename)
+    CRefObj<IImage> LoadImageFileImpl(const wchar_t* pFilename)
     {
         CComPtr<IWICBitmapDecoder> spDecoder;
         CT(s_wic.m_spFactory->CreateDecoderFromFilename(pFilename, NULL, GENERIC_READ, WICDecodeMetadataCacheOnDemand, &spDecoder));
@@ -274,7 +219,7 @@ namespace Caustic
         return spImage;
     }
 
-    void StoreImage(const wchar_t *pFilename, IImage *pImage)
+    void StoreImageImpl(const wchar_t* pFilename, IImage* pImage)
     {
         CComPtr<IWICStream> spStream;
         CT(s_wic.m_spFactory->CreateStream(&spStream));
@@ -320,5 +265,57 @@ namespace Caustic
         }
         CT(spBitmapFrame->Commit());
         CT(spEncoder->Commit());
+    }
+
+    CRefObj<IImage> CreateImageImpl(uint32 width, uint32 height, uint32 bpp)
+    {
+        return CRefObj<IImage>(new CImage(width, height, bpp));
+    }
+
+    CRefObj<IIntegralImage> CreateIntegralImageImpl(IImage* pImage)
+    {
+        std::unique_ptr<CIntegralImage> spIntegralImage(new CIntegralImage(pImage->GetWidth(), pImage->GetHeight()));
+        uint32* pDstRow = (uint32*)spIntegralImage->GetData();
+        BYTE* pSrcRow = pImage->GetData();
+        int w = (int)spIntegralImage->GetWidth();
+        for (uint32 y = 0; y < pImage->GetHeight(); y++)
+        {
+            uint32* pDstCol = pDstRow;
+            BYTE* pSrcCol = pSrcRow;
+            for (uint32 x = 0; x < pImage->GetWidth(); x++)
+            {
+                uint32 sum[3];
+                sum[0] = pSrcCol[0];
+                sum[1] = pSrcCol[1];
+                sum[2] = pSrcCol[2];
+                if (x > 0)
+                {
+                    sum[0] += pDstCol[-3];
+                    sum[1] += pDstCol[-2];
+                    sum[2] += pDstCol[-1];
+                }
+                if (y > 0)
+                {
+                    sum[0] += pDstCol[-3 * w + 0];
+                    sum[1] += pDstCol[-3 * w + 1];
+                    sum[2] += pDstCol[-3 * w + 2];
+                }
+                if (x > 0 && y > 0)
+                {
+                    sum[0] -= pDstCol[-3 * w + -3];
+                    sum[1] -= pDstCol[-3 * w + -2];
+                    sum[2] -= pDstCol[-3 * w + -1];
+                }
+                pDstCol[0] = sum[0];
+                pDstCol[1] = sum[1];
+                pDstCol[2] = sum[2];
+                pSrcCol += pImage->GetBytesPerPixel();
+                pDstCol += 3;
+            }
+            pSrcRow += pImage->GetStride();
+            pDstRow += 3 * w;
+        }
+        spIntegralImage->m_spImage = pImage;
+        return CRefObj<IIntegralImage>(spIntegralImage.release());
     }
 }

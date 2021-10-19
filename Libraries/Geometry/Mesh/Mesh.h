@@ -5,7 +5,8 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "Geometry\Mesh\IMesh.h"
-#include "Geometry\GeomDS\kdtree.h"
+import Geometry.GeomDS.KDTree;
+import Geometry.GeomDS.IKDTree;
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.BlockAllocator;

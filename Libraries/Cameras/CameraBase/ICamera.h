@@ -6,7 +6,7 @@
 #pragma once
 import Base.Core.Core;
 import Base.Core.IRefCount;
-#include "Imaging\Image\Image.h"
+import Imaging.Image.IImage;
 #include "Base\Math\Matrix.h"
 
 // Namespace: Caustic

@@ -3,16 +3,18 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
+module;
 #include <memory>
 #include <Windows.h>
+
+export module Imaging.Image.Image;
 import Base.Core.Core;
 import Base.Core.RefCount;
-#include "Image.h"
-#include "ImageIter.h"
-#include "Geometry\GeomDS\IPath2.h"
+import Geometry.GeomDS.IPath2;
+import Imaging.Image.ImageIter;
+import Imaging.Image.IImage;
 
-namespace Caustic
+export namespace Caustic
 {
     //**********************************************************************
     // Class: CImage
@@ -45,8 +47,8 @@ namespace Caustic
         bool m_isRGB;                   // Is pixel memory layed out in RGB or BGR order?
 
         friend class CImageIter;
-        friend CRefObj<IImage> LoadImage(const wchar_t *pFilename);
-        friend void StoreImage(const wchar_t *pFilename, IImage *pImage);
+        friend CRefObj<IImage> LoadImageFileImpl(const wchar_t *pFilename);
+        friend void StoreImageImpl(const wchar_t *pFilename, IImage *pImage);
     public:
         CImage() :
             m_imageType(EImageType::Unknown),
@@ -123,7 +125,7 @@ namespace Caustic
         uint32 m_height;
         CRefObj<IImage> m_spImage;
 
-        friend extern CRefObj<IIntegralImage> CreateIntegralImage(IImage *pImage);
+        friend extern CRefObj<IIntegralImage> CreateIntegralImageImpl(IImage *pImage);
     public:
         CIntegralImage()
         {
@@ -163,4 +165,9 @@ namespace Caustic
         virtual uint32 GetSum(int channel, int x1, int y1, int x2, int y2) override;
         virtual CRefObj<IImage> BoxBlur(int width, int height) override;
     };
+
+    CRefObj<IImage> CreateImageImpl(uint32 width, uint32 height, uint32 bpp);
+    CRefObj<IIntegralImage> CreateIntegralImageImpl(IImage* pImage);
+    CRefObj<IImage> LoadImageFileImpl(const wchar_t* pFilename);
+    void StoreImageImpl(const wchar_t* pFilename, IImage* pImage);
 }

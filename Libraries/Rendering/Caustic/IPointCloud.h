@@ -8,6 +8,7 @@
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Base.Math.Vector;
+import Imaging.Image.IImage;
 #include "Base\Math\Matrix.h"
 #include "Renderable.h"
 #include <d3d11.h>

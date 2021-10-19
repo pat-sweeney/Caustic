@@ -6,9 +6,12 @@
 #include "stdafx.h"
 #define _USE_MATH_DEFINES
 #include <cmath>
+import Base.Core.Core;
+import Base.Core.IRefCount;
 import Base.Core.Error;
 import Base.Math.Vector;
-#include "Image.h"
+import Geometry.GeomDS.Path2;
+import Imaging.Image.IImage;
 #include "UnitTest.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -25,12 +28,12 @@ namespace CausticTestSuite
     static bool Test2()
     {
         CRefObj<IImage> spImage = CreateImage(512, 512, 32);
-        CRefObj<IPath2> spPath = CreatePath2();
+        CRefObj<IPath2> spPath = CPath2::CreatePath2();
         spPath->AppendPathElems(
             EPathElem::MoveTo, 50.0, 50.0,
             EPathElem::CurveTo, 200.0, 50.0, 200.0, 100.0, 50.0, 100.0,
             EPathElem::Null);
-        CRefObj<IPath2> spFlatPath = spPath->Flatten(1.0f);
+        CRefObj<IPath2> spFlatPath = spPath->Flatten(1.0f, nullptr);
         spImage->DrawPath(spFlatPath);
         StoreImage(L"c:\\temp\\Curve.jpg", spImage);
         return true;

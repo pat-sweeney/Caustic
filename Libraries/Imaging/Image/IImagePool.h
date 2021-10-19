@@ -6,7 +6,7 @@
 #pragma once
 import Base.Core.Core;
 import Base.Core.IRefCount;
-#include "Image.h"
+import Imaging.Image.IImage;
 
 // Namespace: Caustic
 namespace Caustic

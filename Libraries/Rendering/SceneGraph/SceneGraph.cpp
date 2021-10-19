@@ -5,7 +5,8 @@
 //**********************************************************************
 #include "stdafx.h"
 #include "Rendering\SceneGraph\ISceneGraph.h"
-#include "Imaging\Image\ImageIter.h"
+import Imaging.Image.IImage;
+import Imaging.Image.ImageIter;
 #include "SceneGraph.h"
 #include "SceneFactory.h"
 

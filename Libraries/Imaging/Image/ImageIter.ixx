@@ -3,16 +3,18 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
+module;
+#include <assert.h>
+
+export module Imaging.Image.ImageIter;
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Base.Math.Vector;
 import Imaging.Color;
-#include "Imaging\Image\Image.h"
-#include <assert.h>
+import Imaging.Image.IImage;
 
 // Namespace: Caustic
-namespace Caustic
+export namespace Caustic
 {
 	//**********************************************************************
 	// Class: CImageIter
@@ -21,8 +23,8 @@ namespace Caustic
 	// classes (CImageIter1, CImageIter8, CImageIter16, CImageIter24, or CImageIter32)
 	// to walk across an image.
 	//
-	// Header:
-	// {Link:#include "Imaging/Image/ImageIter.h"{Imaging/Image/ImageIter.h}}
+	// Module:
+	// {Link:import Imaging.Image.ImageIter{Imaging/Image/ImageIter.ixx}}
 	//
 	// Example:
 	// --- Code
@@ -67,8 +69,8 @@ namespace Caustic
 	// Defines an iterator for walking across the pixels in an image where
 	// each pixel is floating point value.
 	//
-	// Header:
-	// {Link:#include "Imaging/Image/ImageIter.h"{Imaging/Image/ImageIter.h}}
+	// Module:
+	// {Link:import Imaging.Image.ImageIter{Imaging/Image/ImageIter.ixx}}
 	//**********************************************************************
 	class CImageIterFloat1 : public CImageIter
 	{
@@ -114,8 +116,8 @@ namespace Caustic
 	// Defines an iterator for walking across the pixels in an image where
 	// each pixel is 2 floating point values.
 	//
-	// Header:
-	// {Link:#include "Imaging/Image/ImageIter.h"{Imaging/Image/ImageIter.h}}
+	// Module:
+	// {Link:import Imaging.Image.ImageIter{Imaging/Image/ImageIter.ixx}}
 	//**********************************************************************
 	class CImageIterFloat2 : public CImageIter
 	{
@@ -163,8 +165,8 @@ namespace Caustic
 	// Defines an iterator for walking across the pixels in an image where
 	// each pixel is 3 floating point values.
 	//
-	// Header:
-	// {Link:#include "Imaging/Image/ImageIter.h"{Imaging/Image/ImageIter.h}}
+	// Module:
+	// {Link:import Imaging.Image.ImageIter{Imaging/Image/ImageIter.ixx}}
 	//**********************************************************************
 	class CImageIterFloat3 : public CImageIter
 	{
@@ -213,8 +215,8 @@ namespace Caustic
 	// Defines an iterator for walking across the pixels in an image where
 	// each pixel is 4 floating point values.
 	//
-	// Header:
-	// {Link:#include "Imaging/Image/ImageIter.h"{Imaging/Image/ImageIter.h}}
+	// Module:
+	// {Link:import Imaging.Image.ImageIter{Imaging/Image/ImageIter.ixx}}
 	//**********************************************************************
 	class CImageIterFloat4 : public CImageIter
 	{
@@ -264,8 +266,8 @@ namespace Caustic
 	// Defines an iterator for walking across the pixels in an image where
 	// each pixel is 1 bit in width.
 	//
-	// Header:
-	// {Link:#include "Imaging/Image/ImageIter.h"{Imaging/Image/ImageIter.h}}
+	// Module:
+	// {Link:import Imaging.Image.ImageIter{Imaging/Image/ImageIter.ixx}}
 	//**********************************************************************
 	class CImageIter1 : public CImageIter
 	{
@@ -333,8 +335,8 @@ namespace Caustic
 	// Defines an iterator for walking across the pixels in an image where
 	// each pixel is 8 bits in width.
 	//
-	// Header:
-	// {Link:#include "Imaging/Image/ImageIter.h"{Imaging/Image/ImageIter.h}}
+	// Module:
+	// {Link:import Imaging.Image.ImageIter{Imaging/Image/ImageIter.ixx}}
 	//**********************************************************************
 	class CImageIter8 : public CImageIter
 	{
@@ -379,8 +381,8 @@ namespace Caustic
 	// Defines an iterator for walking across the pixels in an image where
 	// each pixel is 16 bits in width.
 	//
-	// Header:
-	// {Link:#include "Imaging/Image/ImageIter.h"{Imaging/Image/ImageIter.h}}
+	// Module:
+	// {Link:import Imaging.Image.ImageIter{Imaging/Image/ImageIter.ixx}}
 	//**********************************************************************
 	class CImageIter16 : public CImageIter
 	{
@@ -425,8 +427,8 @@ namespace Caustic
 	// Defines an iterator for walking across the pixels in an image where
 	// each pixel is 24 bits in width.
 	//
-	// Header:
-	// {Link:#include "Imaging/Image/ImageIter.h"{Imaging/Image/ImageIter.h}}
+	// Module:
+	// {Link:import Imaging.Image.ImageIter{Imaging/Image/ImageIter.ixx}}
 	//**********************************************************************
 	class CImageIter24 : public CImageIter
 	{
@@ -476,8 +478,8 @@ namespace Caustic
 	// Defines an iterator for walking across the pixels in an image where
 	// each pixel is 32 bits in width.
 	//
-	// Header:
-	// {Link:#include "Imaging/Image/ImageIter.h"{Imaging/Image/ImageIter.h}}
+	// Module:
+	// {Link:import Imaging.Image.ImageIter{Imaging/Image/ImageIter.ixx}}
 	//**********************************************************************
 	class CImageIter32 : public CImageIter
 	{
@@ -528,8 +530,8 @@ namespace Caustic
 	// Defines an iterator for walking across the pixels in an image where
 	// each pixel is 128 bits in width (i.e. single float per channel)
 	//
-	// Header:
-	// {Link:#include "Imaging/Image/ImageIter.h"{Imaging/Image/ImageIter.h}}
+	// Module:
+	// {Link:import Imaging.Image.ImageIter{Imaging/Image/ImageIter.ixx}}
 	//**********************************************************************
 	class CImageIter128 : public CImageIter
 	{
@@ -581,8 +583,8 @@ namespace Caustic
 	// arbitrary pixel depth. NOTE: These iterators are slower than using
 	// the iterator that matches the given image's pixel depth.
 	//
-	// Header:
-	// {Link:#include "Imaging/Image/ImageIter.h"{Imaging/Image/ImageIter.h}}
+	// Module:
+	// {Link:import Imaging.Image.ImageIter{Imaging/Image/ImageIter.ixx}}
 	//**********************************************************************
 	class CImageIterGeneric : public CImageIter
 	{

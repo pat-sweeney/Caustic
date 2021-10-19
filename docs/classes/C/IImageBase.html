@@ -8,78 +8,78 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="Topic420"></a><div class="CTopic TInterface LC first">
+<a name="Topic1532"></a><div class="CTopic TInterface LC first">
  <div class="CTitle">IImageBase</div>
- <div class="CBody"><p>Base interface shared across all image types</p><div class="CHeading">Header</div><p><a href='../../index.html#File:Imaging/Image/Image.h' target='_top'>#include &quot;Imaging/Image/Image.h&quot;</a></p></div>
+ <div class="CBody"><p>Base interface shared across all image types</p><div class="CHeading">Module</div><p><a href='../../index.html#File:Imaging/Image/Image.ixx' target='_top'>import Imaging.Image.Image</a></p></div>
 </div>
 
-<a name="Functions"></a><a name="Topic445"></a><div class="CTopic TGroup LC">
+<a name="Functions"></a><a name="Topic1568"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="GetImageType"></a><a name="Topic446"></a><div class="CTopic TFunction LC">
+<a name="GetImageType"></a><a name="Topic1573"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetImageType</div>
- <div id="NDPrototype446" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <a href="../../index.html#CClass:EImageType" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,419);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >EImageType</a> GetImageType() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype1573" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <a href="../../index.html#CClass:EImageType" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1150);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >EImageType</a> GetImageType() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Returns the type of data stored in the image</p></div>
 </div>
 
-<a name="GetData"></a><a name="Topic447"></a><div class="CTopic TFunction LC">
+<a name="GetData"></a><a name="Topic1574"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetData</div>
- <div id="NDPrototype447" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint8</span> *GetData() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype1574" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint8</span>* GetData() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Returns a pointer to the image data</p></div>
 </div>
 
-<a name="GetWidth"></a><a name="Topic448"></a><div class="CTopic TFunction LC">
+<a name="GetWidth"></a><a name="Topic1585"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetWidth</div>
- <div id="NDPrototype448" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetWidth() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype1585" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetWidth() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Returns the image's width in pixels</p></div>
 </div>
 
-<a name="GetHeight"></a><a name="Topic449"></a><div class="CTopic TFunction LC">
+<a name="GetHeight"></a><a name="Topic1611"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetHeight</div>
- <div id="NDPrototype449" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetHeight() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype1611" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetHeight() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Returns the image's height in pixels</p></div>
 </div>
 
-<a name="GetSubX"></a><a name="Topic450"></a><div class="CTopic TFunction LC">
+<a name="GetSubX"></a><a name="Topic1612"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetSubX</div>
- <div id="NDPrototype450" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetSubX() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype1612" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetSubX() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Returns the X offset into our parent image (if this is a subimage)</p></div>
 </div>
 
-<a name="GetSubY"></a><a name="Topic451"></a><div class="CTopic TFunction LC">
+<a name="GetSubY"></a><a name="Topic1613"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetSubY</div>
- <div id="NDPrototype451" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetSubY() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype1613" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetSubY() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Returns the Y offset into our parent image (if this is a subimage)</p></div>
 </div>
 
-<a name="GetBPP"></a><a name="Topic452"></a><div class="CTopic TFunction LC">
+<a name="GetBPP"></a><a name="Topic1614"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetBPP</div>
- <div id="NDPrototype452" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetBPP() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype1614" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetBPP() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Returns the image's bites per pixel</p></div>
 </div>
 
-<a name="GetStride"></a><a name="Topic453"></a><div class="CTopic TFunction LC">
+<a name="GetStride"></a><a name="Topic1615"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetStride</div>
- <div id="NDPrototype453" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetStride() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype1615" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetStride() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Returns the image's stride (bytes/scanline)</p></div>
 </div>
 
-<a name="GetBytesPerPixel"></a><a name="Topic454"></a><div class="CTopic TFunction LC">
+<a name="GetBytesPerPixel"></a><a name="Topic1616"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetBytesPerPixel</div>
- <div id="NDPrototype454" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetBytesPerPixel() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype1616" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetBytesPerPixel() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Returns the number of bytes in each pixel</p></div>
 </div>
 
-<a name="GetRGBOrder"></a><a name="Topic455"></a><div class="CTopic TFunction LC">
+<a name="GetRGBOrder"></a><a name="Topic1617"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetRGBOrder</div>
- <div id="NDPrototype455" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">bool</span> GetRGBOrder() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype1617" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">bool</span> GetRGBOrder() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Returns whethers the pixel component layout in memory is Red/Green/Blue.&nbsp; This is the default. Otherwise, it's in Blue/Green/Red ordering.</p></div>
 </div>
 
-<a name="SetRGBOrder"></a><a name="Topic456"></a><div class="CTopic TFunction LC">
+<a name="SetRGBOrder"></a><a name="Topic1618"></a><div class="CTopic TFunction LC">
  <div class="CTitle">SetRGBOrder</div>
- <div id="NDPrototype456" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetRGBOrder(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">bool</span>&nbsp;</td><td class="PName last">isRGB</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div id="NDPrototype1618" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetRGBOrder(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">bool</span>&nbsp;</td><td class="PName last">isRGB</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
  <div class="CBody"><p>Sets whethers the pixel component layout in memory is Red/Green/Blue.&nbsp; This is the default. Otherwise, it's in Blue/Green/Red ordering.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">isRGB<div class="CDLParameterType"><span class="SHKeyword">bool</span></div></td><td class="CDLDefinition"><p>bool indicating whether memory is layed out in RGB order. Otherwise, it is in BGR order.</p></td></tr></table></div>
 </div>
 

@@ -1,1 +1,0 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Imaging/Image/ImageImpl.h","ImageImpl.h");NDSummary.OnSummaryLoaded("File:Imaging/Image/ImageImpl.h",[["C/C++","C"]],[["Classes","Class"]],[[306,0,0,"CImage","CImage"]]);

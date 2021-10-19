@@ -8,7 +8,7 @@
 #include <commdlg.h>
 import Base.Core.Core;
 import Base.Core.IRefCount;
-#include "Imaging\Image\Image.h"
+import Imaging.Image.IImage;
 #include "Imaging\Image\ImageFilter.h"
 #include "Cameras\AzureKinect\IAzureKinect.h"
 
@@ -307,7 +307,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     ofn.Flags = OFN_ENABLESIZING | OFN_FILEMUSTEXIST;
                     if (GetOpenFileName(&ofn))
                     {
-                        Caustic::CRefObj<Caustic::IImage> spImage = Caustic::LoadImage(ofn.lpstrFile);
+                        Caustic::CRefObj<Caustic::IImage> spImage = Caustic::LoadImageFile(ofn.lpstrFile);
                         spSourceImage = spImage;
                         if (spFilter)
                             spImage = spFilter->Apply(spImage, nullptr);

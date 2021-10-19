@@ -7,8 +7,8 @@
 #include "IMaterialAttrib.h"
 import Base.Core.Core;
 import Base.Core.RefCount;
-#include "Imaging\Image\Image.h"
-#include "Imaging\Image\ImageIter.h"
+import Imaging.Image.IImage;
+import Imaging.Image.ImageIter;
 #include <vector>
 #include <map>
 #include <string>

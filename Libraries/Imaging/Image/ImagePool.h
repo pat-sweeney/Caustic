@@ -8,7 +8,7 @@
 #include <Windows.h>
 import Base.Core.Core;
 import Base.Core.RefCount;
-#include "Image.h"
+import Imaging.Image.IImage;
 #include "IImagePool.h"
 #include <vector>
 

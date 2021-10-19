@@ -8,8 +8,8 @@
 import Base.Core.Core;
 import Base.Math.Vector;
 import Imaging.Color;
+import Imaging.Image.IImage;
 #include "Geometry\Mesh\Mesh.h"
-#include "Imaging\Image\Image.h"
 #include "Rendering\Caustic\Caustic.h"
 #include <Windows.h>
 #include <atlbase.h>

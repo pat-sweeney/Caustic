@@ -7,7 +7,8 @@
 #include "AzureKinect.h"
 import Base.Core.Error;
 import Base.Math.BBox;
-#include "Imaging\Image\ImageIter.h"
+import Imaging.Image.IImage;
+import Imaging.Image.ImageIter;
 #include <k4a/k4a.h>
 #include <memory>
 #include <winerror.h>
