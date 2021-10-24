@@ -3,19 +3,21 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
-import Base.Core.Core;
-import Imaging.Image.IImage;
+module;
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\Shader.h"
 #include <varargs.h>
 
-namespace Caustic
+export module Imaging.Image.IGPUPipeline;
+import Base.Core.Core;
+import Imaging.Image.IImage;
+
+export namespace Caustic
 {
     struct IGPUPipeline;
 
     //**********************************************************************
-    // Interface: IGPUPipelineNode
+    // Interface: IGPUPipelineNodea
     // Defines the base class for each node in a GPU pipeline
     //**********************************************************************
     struct IGPUPipelineNode : public IRefCount
@@ -148,9 +150,9 @@ namespace Caustic
     };
 
     // Define list of predefined filter names
-    static const wchar_t *g_GaussianVerticalFilter = L"GaussianVertical"; // Name of GPU node that performs a gaussian blur in the vertical direction
-    static const wchar_t *g_GaussianHorizontalFilter = L"GaussianHorizontal"; // Name of GPU node that performs a gaussian blur in the horizontal direction
-    static const wchar_t *g_RawCopyFilter = L"RawCopy"; // Name of GPU node that performs a raw copy of the data
+    const wchar_t *g_GaussianVerticalFilter = L"GaussianVertical"; // Name of GPU node that performs a gaussian blur in the vertical direction
+    const wchar_t *g_GaussianHorizontalFilter = L"GaussianHorizontal"; // Name of GPU node that performs a gaussian blur in the horizontal direction
+    const wchar_t *g_RawCopyFilter = L"RawCopy"; // Name of GPU node that performs a raw copy of the data
 
     //**********************************************************************
     // Interface: IGPUPipeline
@@ -269,7 +271,7 @@ namespace Caustic
     // <uint32> colorHeight - height in pixels of color map
     // <DXGI_FORMAT> colorFormat - pixel format for color image
     //**********************************************************************
-    static const wchar_t* c_CustomNode_DepthMeshNode = L"DepthMeshNode";
+    const wchar_t* c_CustomNode_DepthMeshNode = L"DepthMeshNode";
 
     //**********************************************************************
     // Constant: c_CustomNode_Color2Depth
@@ -284,7 +286,5 @@ namespace Caustic
     // <uint32> colorWidth - width in pixels of color map
     // <uint32> colorHeight - height in pixels of color map
     //**********************************************************************
-    static const wchar_t* c_CustomNode_Color2Depth = L"Color2DepthNode";
-
-    CRefObj<IGPUPipeline> CreateGPUPipeline(IRenderer *pRenderer);
+    const wchar_t* c_CustomNode_Color2Depth = L"Color2DepthNode";
 }

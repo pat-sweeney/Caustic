@@ -3,17 +3,19 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
-#include "GPUPipeline.h"
-import Base.Core.Core;
-import Base.Core.RefCount;
+module;
 #include "Rendering\Caustic\Caustic.h"
 #include "Cameras\CameraBase\ICamera.h"
 #include <vector>
 #include <atlbase.h>
 #include <d3d11.h>
 
-namespace Caustic
+export module Imaging.Image.GPUPipeline;
+import Imaging.Image.IGPUPipeline;
+import Base.Core.Core;
+import Base.Core.RefCount;
+
+export namespace Caustic
 {
     //**********************************************************************
     // Class: CGPUPipelineNodeBase
@@ -274,4 +276,6 @@ namespace Caustic
         virtual void IncrementCurrentEpoch() override { m_epoch++; }
         virtual uint32 GetCurrentEpoch() override { return m_epoch; }
     };
+
+    CRefObj<IGPUPipeline> CreateGPUPipeline(IRenderer* pRenderer);
 }

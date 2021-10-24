@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:Imaging/GPUImage/GPUPipeline.ixx","GPUPipeline.ixx");NDSummary.OnSummaryLoaded("File:Imaging/GPUImage/GPUPipeline.ixx",[["C/C++","C"]],[["Classes","Class"]],[[310,0,0,"CGPUPipelineNodeBase","CGPUPipelineNodeBase"],[311,0,0,"CGPUPipelineNode","CGPUPipelineNode"],[312,0,0,"CGPUPipelineDepthMeshNode","CGPUPipelineDepthMeshNode"]]);

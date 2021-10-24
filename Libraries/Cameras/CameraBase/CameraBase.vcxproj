@@ -53,8 +53,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -74,8 +73,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -91,13 +89,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CameraBase.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="ICamera.h" />
+    <ClCompile Include="ICamera.ixx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Base\Core\Core.vcxproj">
       <Project>{aacfe62f-5400-4a81-87ad-b37573a1f5c9}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Base\Math\Math.vcxproj">
+      <Project>{a82bd627-0746-4f67-856f-396335084fee}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Imaging\Image\Image.vcxproj">
+      <Project>{f7bef797-220c-4585-a489-f06df155ea60}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

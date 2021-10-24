@@ -3,9 +3,7 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "stdafx.h"
-import Base.Core.Core;
-import Base.Core.Error;
+module;
 #include "Rendering\Caustic\Shader.h"
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\Sampler.h"
@@ -13,12 +11,16 @@ import Base.Core.Error;
 #include "Cameras\CameraBase\ICamera.h"
 #include <memory>
 #include <Windows.h>
-#include "GPUPipelineImpl.h"
 #include <any>
 #include <d3d11.h>
 #include <d3d11_4.h>
 #include <d3dcommon.h>
 #include <varargs.h>
+
+module Imaging.Image.GPUPipeline;
+import Base.Core.Core;
+import Base.Core.Error;
+import Imaging.Image.IGPUPipeline;
 
 // Namespace: Caustic
 namespace Caustic

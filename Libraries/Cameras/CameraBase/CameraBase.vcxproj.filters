@@ -14,10 +14,8 @@
     <ClCompile Include="CameraBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="ICamera.h">
+    <ClCompile Include="ICamera.ixx">
       <Filter>Source Files</Filter>
-    </ClInclude>
+    </ClCompile>
   </ItemGroup>
 </Project>

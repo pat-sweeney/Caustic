@@ -125,6 +125,9 @@
     <ProjectReference Include="..\..\Libraries\Imaging\Color\Color.vcxproj">
       <Project>{6bd55e78-59f0-402f-9bbd-650c8fe563f3}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Imaging\GPUImage\GPUImage.vcxproj">
+      <Project>{da295723-0117-49d6-b2e1-372592bb1851}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Imaging\Image\Image.vcxproj">
       <Project>{f7bef797-220c-4585-a489-f06df155ea60}</Project>
     </ProjectReference>

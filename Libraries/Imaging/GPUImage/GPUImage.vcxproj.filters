@@ -10,27 +10,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GPUPipelineImpl.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GPUPipeline.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="defs.h">
       <Filter>Source Files\Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="GPUPipeline.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GPUPipeline.cpp">
+    <ClCompile Include="IGPUPipeline.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GPUPipeline.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

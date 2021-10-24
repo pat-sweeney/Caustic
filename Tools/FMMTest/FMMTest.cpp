@@ -25,11 +25,11 @@
 #include "implot.h"
 import Base.Core.Core;
 import Base.Core.IRefCount;
+import Imaging.Image.GPUPipeline;
+import Imaging.Image.IGPUPipeline;
 #include "Rendering\RenderWindow\IRenderWindow.h"
 #include "Rendering\Caustic\ICausticFactory.h"
 #include "Rendering\Caustic\IShader.h"
-#include "Imaging\GPUImage\GPUPipeline.h"
-#include "Imaging\GPUImage\GPUPipelineImpl.h"
 #include "Cameras\AzureKinect\IAzureKinect.h"
 #include "Rendering\SceneImport\Collada.h"
 #include "Rendering\SceneGraph\ISceneFactory.h"
