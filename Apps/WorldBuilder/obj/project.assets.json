@@ -2,6 +2,20 @@
   "version": 3,
   "targets": {
     "net5.0-windows7.0": {
+      "CameraBase/1.0.0": {
+        "type": "project",
+        "dependencies": {
+          "Core": "1.0.0",
+          "Image": "1.0.0",
+          "Math": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/CameraBase.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/CameraBase.dll": {}
+        }
+      },
       "Caustic/1.0.0": {
         "type": "project",
         "dependencies": {
@@ -167,6 +181,7 @@
       "RenderGraph/1.0.0": {
         "type": "project",
         "dependencies": {
+          "CameraBase": "1.0.0",
           "Color": "1.0.0",
           "Core": "1.0.0",
           "GeomDS": "1.0.0",
@@ -183,6 +198,7 @@
       "RenderWindow/1.0.0": {
         "type": "project",
         "dependencies": {
+          "CameraBase": "1.0.0",
           "Color": "1.0.0",
           "Core": "1.0.0",
           "GeomDS": "1.0.0",
@@ -215,6 +231,11 @@
     }
   },
   "libraries": {
+    "CameraBase/1.0.0": {
+      "type": "project",
+      "path": "../../Libraries/Cameras/CameraBase/CameraBase.vcxproj",
+      "msbuildProject": "../../Libraries/Cameras/CameraBase/CameraBase.vcxproj"
+    },
     "Caustic/1.0.0": {
       "type": "project",
       "path": "../../Libraries/Rendering/Caustic/Caustic.vcxproj",

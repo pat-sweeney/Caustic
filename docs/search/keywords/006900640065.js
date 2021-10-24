@@ -1,1 +1,1 @@
-﻿NDSearch.OnPrefixDataLoaded("ide",["Interface"],[["IDelaunay2",,[[,,,,0,"File:Geometry/Mesh/IDelaunay.h:IDelaunay2","CClass:IDelaunay2"]]],["IDepthCameraDevice",,[[,,,,0,"File:Cameras/CameraBase/ICamera.h:IDepthCameraDevice","CClass:IDepthCameraDevice"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("ide",["Interface"],[["IDelaunay2",,[[,,,,0,"File:Geometry/Mesh/IDelaunay.h:IDelaunay2","CClass:IDelaunay2"]]],["IDepthCameraDevice",,[[,,,,0,"File:Cameras/CameraBase/ICamera.ixx:IDepthCameraDevice","CClass:IDepthCameraDevice"]]]]);

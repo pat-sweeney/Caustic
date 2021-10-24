@@ -7,9 +7,9 @@
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Math.Vector;
+import Cameras.CameraBase.ICamera;
 #include "IRGNDepthCameraSource.h"
 #include "RGNDepthCameraSource.h"
-#include "Cameras\CameraBase\ICamera.h"
 #include <vector>
 #include <string>
 #include <any>

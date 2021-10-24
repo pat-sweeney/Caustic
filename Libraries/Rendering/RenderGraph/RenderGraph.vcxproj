@@ -142,6 +142,9 @@
     <ProjectReference Include="..\..\Base\Math\Math.vcxproj">
       <Project>{a82bd627-0746-4f67-856f-396335084fee}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Cameras\CameraBase\CameraBase.vcxproj">
+      <Project>{6bfeacf4-1bac-46ef-9945-eb31a8151b21}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Geometry\GeomDS\GeomDS.vcxproj">
       <Project>{163426b2-af7c-4713-8e3c-1a56a9cc0abf}</Project>
     </ProjectReference>

@@ -7,8 +7,8 @@
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Math.Ray;
+import Cameras.CameraBase.ICamera;
 #include "Rendering\Caustic\Caustic.h"
-#include "Cameras\CameraBase\ICamera.h"
 #include "IRenderGraph.h"
 #include "IRenderGraphFactory.h"
 #include "IRGNMaterial.h"

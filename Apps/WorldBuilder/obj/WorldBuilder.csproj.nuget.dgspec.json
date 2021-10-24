@@ -103,6 +103,31 @@
         "native": {}
       }
     },
+    "G:\\GitHub\\Caustic\\Libraries\\Cameras\\CameraBase\\CameraBase.vcxproj": {
+      "restore": {
+        "projectUniqueName": "G:\\GitHub\\Caustic\\Libraries\\Cameras\\CameraBase\\CameraBase.vcxproj",
+        "projectName": "CameraBase",
+        "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Cameras\\CameraBase\\CameraBase.vcxproj",
+        "frameworks": {
+          "native": {
+            "projectReferences": {
+              "G:\\GitHub\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              },
+              "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              },
+              "G:\\GitHub\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
+                "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "native": {}
+      }
+    },
     "G:\\GitHub\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
       "restore": {
         "projectUniqueName": "G:\\GitHub\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj",
@@ -361,6 +386,9 @@
               "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
                 "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
               },
+              "G:\\GitHub\\Caustic\\Libraries\\Cameras\\CameraBase\\CameraBase.vcxproj": {
+                "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Cameras\\CameraBase\\CameraBase.vcxproj"
+              },
               "G:\\GitHub\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
                 "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
               },
@@ -391,6 +419,9 @@
               },
               "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
                 "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              },
+              "G:\\GitHub\\Caustic\\Libraries\\Cameras\\CameraBase\\CameraBase.vcxproj": {
+                "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Cameras\\CameraBase\\CameraBase.vcxproj"
               },
               "G:\\GitHub\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
                 "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"

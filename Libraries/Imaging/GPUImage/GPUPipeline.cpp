@@ -8,7 +8,6 @@ module;
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\Sampler.h"
 #include "Rendering\Caustic\CausticFactory.h"
-#include "Cameras\CameraBase\ICamera.h"
 #include <memory>
 #include <Windows.h>
 #include <any>
@@ -21,6 +20,7 @@ module Imaging.Image.GPUPipeline;
 import Base.Core.Core;
 import Base.Core.Error;
 import Imaging.Image.IGPUPipeline;
+import Cameras.CameraBase.ICamera;
 
 // Namespace: Caustic
 namespace Caustic

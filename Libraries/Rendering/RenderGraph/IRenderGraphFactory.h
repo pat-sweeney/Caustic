@@ -6,6 +6,7 @@
 #pragma once
 import Base.Core.Core;
 import Base.Core.IRefCount;
+import Cameras.CameraBase.ICamera;
 #include "Rendering\RenderGraph\IRenderGraphNode.h"
 #include "Rendering\RenderGraph\IRGNCompute.h"
 #include "Rendering\RenderGraph\IRGNMesh.h"
@@ -15,7 +16,6 @@ import Base.Core.IRefCount;
 #include "Rendering\RenderGraph\IRGNPhongMaterial.h"
 #include "Rendering\RenderGraph\IRGNDepthCameraSource.h"
 #include "Rendering\RenderGraph\IRGNImageToTexture.h"
-#include "Cameras\CameraBase\ICamera.h"
 
 namespace Caustic
 {

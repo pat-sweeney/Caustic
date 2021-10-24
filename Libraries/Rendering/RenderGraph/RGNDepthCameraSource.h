@@ -6,7 +6,7 @@
 #pragma once
 import Base.Core.Core;
 import Base.Core.IRefCount;
-#include "Cameras\CameraBase\ICamera.h"
+import Cameras.CameraBase.ICamera;
 #include "IRenderGraphNode.h"
 #include "RenderGraphNode.h"
 #include "IRGNDepthCameraSource.h"

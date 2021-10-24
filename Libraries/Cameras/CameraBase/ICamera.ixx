@@ -12,7 +12,7 @@ import Base.Core.IRefCount;
 import Imaging.Image.IImage;
 
 // Namespace: Caustic
-namespace Caustic
+export namespace Caustic
 {
 	//**********************************************************************
 	// Struct: CameraIntrinsics

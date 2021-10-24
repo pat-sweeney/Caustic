@@ -5,12 +5,12 @@
 //**********************************************************************
 module;
 #include "Rendering\Caustic\Caustic.h"
-#include "Cameras\CameraBase\ICamera.h"
 #include <vector>
 #include <atlbase.h>
 #include <d3d11.h>
 
 export module Imaging.Image.GPUPipeline;
+import Cameras.CameraBase.ICamera;
 import Imaging.Image.IGPUPipeline;
 import Base.Core.Core;
 import Base.Core.RefCount;

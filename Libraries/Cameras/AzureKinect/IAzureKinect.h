@@ -8,7 +8,7 @@ import Base.Core.Core;
 import Base.Core.IRefCount;
 import Base.Math.Vector;
 import Base.Math.BBox;
-#include "Cameras\CameraBase\ICamera.h"
+import Cameras.CameraBase.ICamera;
 #include <vector>
 
 // Namespace: Caustic

@@ -119,6 +119,9 @@
     <ProjectReference Include="..\..\Imaging\Image\Image.vcxproj">
       <Project>{f7bef797-220c-4585-a489-f06df155ea60}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\CameraBase\CameraBase.vcxproj">
+      <Project>{6bfeacf4-1bac-46ef-9945-eb31a8151b21}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
