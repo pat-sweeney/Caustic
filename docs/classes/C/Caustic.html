@@ -8,87 +8,38 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="Topic6"></a><div class="CTopic TClass LC first">
+<a name="Topic452"></a><div class="CTopic TClass LC first">
  <div class="CTitle">Caustic</div>
- <div class="NDClassPrototype" id="NDClassPrototype6"><div class="CPEntry TClass Current"><div class="CPModifiers"><span class="SHKeyword">export namespace</span> </div><div class="CPName">Caustic</div></div></div>
- <div class="CBody"><div class="CHeading">Module</div><p>{Link:import Base.Core.Core;{Base/Core/Core.ixx}}</p></div>
+ <div class="NDClassPrototype" id="NDClassPrototype452"><div class="CPEntry TClass Current"><div class="CPModifiers"><span class="SHKeyword">export namespace</span> </div><div class="CPName">Caustic</div></div></div>
+ <div class="CBody"><div class="CHeading">Module</div><p>{Link:import Imaging.Image.ImageFilter.DepthOfField;{Imaging/Image/DepthOfField.ixx}}</p></div>
 </div>
 
-<a name="Types"></a><a name="Topic1503"></a><div class="CTopic TGroup LC">
- <div class="CTitle">Types</div>
-</div>
-
-<a name="uint8"></a><a name="Topic1504"></a><div class="CTopic TType LC">
- <div class="CTitle">uint8</div>
- <div class="CBody"><p>An unsigned 8b value</p></div>
-</div>
-
-<a name="uint16"></a><a name="Topic1505"></a><div class="CTopic TType LC">
- <div class="CTitle">uint16</div>
- <div class="CBody"><p>An unsigned 16b value</p></div>
-</div>
-
-<a name="uint32"></a><a name="Topic1506"></a><div class="CTopic TType LC">
- <div class="CTitle">uint32</div>
- <div class="CBody"><p>An unsigned 32b value</p></div>
-</div>
-
-<a name="uint64"></a><a name="Topic1507"></a><div class="CTopic TType LC">
- <div class="CTitle">uint64</div>
- <div class="CBody"><p>An unsigned 64b value</p></div>
-</div>
-
-<a name="int8"></a><a name="Topic1508"></a><div class="CTopic TType LC">
- <div class="CTitle">int8</div>
- <div class="CBody"><p>A signed 8b value</p></div>
-</div>
-
-<a name="int16"></a><a name="Topic1509"></a><div class="CTopic TType LC">
- <div class="CTitle">int16</div>
- <div class="CBody"><p>A signed 16b value</p></div>
-</div>
-
-<a name="int32"></a><a name="Topic1510"></a><div class="CTopic TType LC">
- <div class="CTitle">int32</div>
- <div class="CBody"><p>A signed 32b value</p></div>
-</div>
-
-<a name="int64"></a><a name="Topic1511"></a><div class="CTopic TType LC">
- <div class="CTitle">int64</div>
- <div class="CBody"><p>A signed 64b value</p></div>
-</div>
-
-<a name="float1"></a><a name="Topic1512"></a><div class="CTopic TType LC">
- <div class="CTitle">float1</div>
- <div class="CBody"><p>A single floating point value. Same as 'float'. Here for symetry with HLSL.</p></div>
-</div>
-
-<a name="float2"></a><a name="Topic1513"></a><div class="CTopic TType LC">
- <div class="CTitle">float2</div>
- <div class="CBody"><p>A 2-tuple floating point value.</p></div>
-</div>
-
-<a name="float3"></a><a name="Topic1514"></a><div class="CTopic TType LC">
- <div class="CTitle">float3</div>
- <div class="CBody"><p>A 3-tuple floating point value.</p></div>
-</div>
-
-<a name="float4"></a><a name="Topic1515"></a><div class="CTopic TType LC">
- <div class="CTitle">float4</div>
- <div class="CBody"><p>A 4-tuple floating point value.</p></div>
-</div>
-
-<a name="Constants"></a><a name="Topic1516"></a><div class="CTopic TGroup LC">
- <div class="CTitle">Constants</div>
-</div>
-
-<a name="c_Epsilon"></a><a name="Topic1517"></a><div class="CTopic TConstant LC">
- <div class="CTitle">c_Epsilon</div>
- <div class="CBody"><p>Value considered close to 0.0</p></div>
-</div>
-
-<a name="Functions"></a><a name="Topic1518"></a><div class="CTopic TGroup LC">
+<a name="Functions"></a><a name="Topic85"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
+</div>
+
+<a name="str2wstr"></a><a name="Topic1471"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">str2wstr</div>
+ <div id="NDPrototype1471" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters">std::wstring str2wstr(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span> std::</td><td class="PType"><span class="SHKeyword">string</span>&amp;&nbsp;</td><td class="PName last">str</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
+ <div class="CBody"><p>Converts a UTF8 string into a UTF16 string</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">str<div class="CDLParameterType"><span class="SHKeyword">const</span> std::<span class="SHKeyword">string</span>&amp;</div></td><td class="CDLDefinition"><p>String to convert</p></td></tr></table><div class="CHeading">Returns</div><p>Returns the converted string</p><div class="CHeading">Header</div><p>{Link:#include &quot;Base/Core/convertStr.h&quot;{Base/Core/convertStr.h}}</p></div>
+</div>
+
+<a name="wstr2str"></a><a name="Topic1565"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">wstr2str</div>
+ <div id="NDPrototype1565" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters">std::<span class="SHKeyword">string</span> wstr2str(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span> std::</td><td class="PType">wstring&amp;&nbsp;</td><td class="PName last">wstr</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
+ <div class="CBody"><p>Converts a UTF16 string into a UTF8 string</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">str</td><td class="CDLDefinition"><p>String to convert</p></td></tr></table><div class="CHeading">Returns</div><p>Returns the converted string</p><div class="CHeading">Header</div><p>{Link:#include &quot;Base/Core/convertStr.h&quot;{Base/Core/convertStr.h}}</p></div>
+</div>
+
+<a name="GetCausticRootDirectory"></a><a name="Topic1484"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetCausticRootDirectory</div>
+ <div id="NDPrototype1484" class="NDPrototype"><div class="PSection PPlainSection">std::wstring GetCausticRootDirectory()</div></div>
+ <div class="CBody"><p>Returns the default folder for the Caustic library</p></div>
+</div>
+
+<a name="GetCausticShaderDirectory"></a><a name="Topic1485"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetCausticShaderDirectory</div>
+ <div id="NDPrototype1485" class="NDPrototype"><div class="PSection PPlainSection">std::wstring GetCausticShaderDirectory()</div></div>
+ <div class="CBody"><p>Returns the default folder for the Caustic shaders</p></div>
 </div>
 
 <a name="Abs"></a><a name="Topic1519"></a><div class="CTopic TFunction LC">
@@ -155,30 +106,6 @@
  <div class="CTitle">Swap</div>
  <div id="NDPrototype1529" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">template</span> &lt;typename T&gt; <span class="SHKeyword">void</span> Swap(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first">T&nbsp;</td><td class="PSymbols">&amp;</td><td class="PName last">t1,</td></tr><tr><td class="PType first">T&nbsp;</td><td class="PSymbols">&amp;</td><td class="PName last">t2</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
  <div class="CBody"><p>Swaps value t1 with t2</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">t1<div class="CDLParameterType">T&amp;</div></td><td class="CDLDefinition"><p>first value</p></td></tr><tr><td class="CDLEntry">t2<div class="CDLParameterType">T&amp;</div></td><td class="CDLDefinition"><p>second value</p></td></tr></table></div>
-</div>
-
-<a name="GetCausticRootDirectory"></a><a name="Topic1484"></a><div class="CTopic TFunction LC">
- <div class="CTitle">GetCausticRootDirectory</div>
- <div id="NDPrototype1484" class="NDPrototype"><div class="PSection PPlainSection">std::wstring GetCausticRootDirectory()</div></div>
- <div class="CBody"><p>Returns the default folder for the Caustic library</p></div>
-</div>
-
-<a name="GetCausticShaderDirectory"></a><a name="Topic1485"></a><div class="CTopic TFunction LC">
- <div class="CTitle">GetCausticShaderDirectory</div>
- <div id="NDPrototype1485" class="NDPrototype"><div class="PSection PPlainSection">std::wstring GetCausticShaderDirectory()</div></div>
- <div class="CBody"><p>Returns the default folder for the Caustic shaders</p></div>
-</div>
-
-<a name="str2wstr"></a><a name="Topic1471"></a><div class="CTopic TFunction LC">
- <div class="CTitle">str2wstr</div>
- <div id="NDPrototype1471" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters">std::wstring str2wstr(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span> std::</td><td class="PType"><span class="SHKeyword">string</span>&amp;&nbsp;</td><td class="PName last">str</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
- <div class="CBody"><p>Converts a UTF8 string into a UTF16 string</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">str<div class="CDLParameterType"><span class="SHKeyword">const</span> std::<span class="SHKeyword">string</span>&amp;</div></td><td class="CDLDefinition"><p>String to convert</p></td></tr></table><div class="CHeading">Returns</div><p>Returns the converted string</p><div class="CHeading">Header</div><p>{Link:#include &quot;Base/Core/convertStr.h&quot;{Base/Core/convertStr.h}}</p></div>
-</div>
-
-<a name="wstr2str"></a><a name="Topic1565"></a><div class="CTopic TFunction LC">
- <div class="CTitle">wstr2str</div>
- <div id="NDPrototype1565" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters">std::<span class="SHKeyword">string</span> wstr2str(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span> std::</td><td class="PType">wstring&amp;&nbsp;</td><td class="PName last">wstr</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
- <div class="CBody"><p>Converts a UTF16 string into a UTF8 string</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">str</td><td class="CDLDefinition"><p>String to convert</p></td></tr></table><div class="CHeading">Returns</div><p>Returns the converted string</p><div class="CHeading">Header</div><p>{Link:#include &quot;Base/Core/convertStr.h&quot;{Base/Core/convertStr.h}}</p></div>
 </div>
 
 <a name="Covariance"></a><a name="Topic88"></a><div class="CTopic TFunction LC">
@@ -253,10 +180,83 @@
  <div class="CBody"><p>See <a href="../../index.html#CClass:IGPUPipeline:Process" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,364);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipeline::Process</a></p></div>
 </div>
 
-<a name="GetRenderer"></a><a name="Topic320"></a><div class="CTopic TFunction LC last">
+<a name="GetRenderer"></a><a name="Topic320"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetRenderer</div>
  <div id="NDPrototype320" class="NDPrototype"><div class="PSection PPlainSection"><a href="../../index.html#CClass:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,94);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../index.html#CClass:IRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,883);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer</a>&gt; CGPUPipeline::GetRenderer()</div></div>
  <div class="CBody"><p>See <a href="../../index.html#CClass:IGPUPipeline:GetRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,362);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IGPUPipeline::GetRenderer</a></p></div>
+</div>
+
+<a name="Types"></a><a name="Topic1503"></a><div class="CTopic TGroup LC">
+ <div class="CTitle">Types</div>
+</div>
+
+<a name="uint8"></a><a name="Topic1504"></a><div class="CTopic TType LC">
+ <div class="CTitle">uint8</div>
+ <div class="CBody"><p>An unsigned 8b value</p></div>
+</div>
+
+<a name="uint16"></a><a name="Topic1505"></a><div class="CTopic TType LC">
+ <div class="CTitle">uint16</div>
+ <div class="CBody"><p>An unsigned 16b value</p></div>
+</div>
+
+<a name="uint32"></a><a name="Topic1506"></a><div class="CTopic TType LC">
+ <div class="CTitle">uint32</div>
+ <div class="CBody"><p>An unsigned 32b value</p></div>
+</div>
+
+<a name="uint64"></a><a name="Topic1507"></a><div class="CTopic TType LC">
+ <div class="CTitle">uint64</div>
+ <div class="CBody"><p>An unsigned 64b value</p></div>
+</div>
+
+<a name="int8"></a><a name="Topic1508"></a><div class="CTopic TType LC">
+ <div class="CTitle">int8</div>
+ <div class="CBody"><p>A signed 8b value</p></div>
+</div>
+
+<a name="int16"></a><a name="Topic1509"></a><div class="CTopic TType LC">
+ <div class="CTitle">int16</div>
+ <div class="CBody"><p>A signed 16b value</p></div>
+</div>
+
+<a name="int32"></a><a name="Topic1510"></a><div class="CTopic TType LC">
+ <div class="CTitle">int32</div>
+ <div class="CBody"><p>A signed 32b value</p></div>
+</div>
+
+<a name="int64"></a><a name="Topic1511"></a><div class="CTopic TType LC">
+ <div class="CTitle">int64</div>
+ <div class="CBody"><p>A signed 64b value</p></div>
+</div>
+
+<a name="float1"></a><a name="Topic1512"></a><div class="CTopic TType LC">
+ <div class="CTitle">float1</div>
+ <div class="CBody"><p>A single floating point value. Same as 'float'. Here for symetry with HLSL.</p></div>
+</div>
+
+<a name="float2"></a><a name="Topic1513"></a><div class="CTopic TType LC">
+ <div class="CTitle">float2</div>
+ <div class="CBody"><p>A 2-tuple floating point value.</p></div>
+</div>
+
+<a name="float3"></a><a name="Topic1514"></a><div class="CTopic TType LC">
+ <div class="CTitle">float3</div>
+ <div class="CBody"><p>A 3-tuple floating point value.</p></div>
+</div>
+
+<a name="float4"></a><a name="Topic1515"></a><div class="CTopic TType LC">
+ <div class="CTitle">float4</div>
+ <div class="CBody"><p>A 4-tuple floating point value.</p></div>
+</div>
+
+<a name="Constants"></a><a name="Topic1516"></a><div class="CTopic TGroup LC">
+ <div class="CTitle">Constants</div>
+</div>
+
+<a name="c_Epsilon"></a><a name="Topic1517"></a><div class="CTopic TConstant LC last">
+ <div class="CTitle">c_Epsilon</div>
+ <div class="CBody"><p>Value considered close to 0.0</p></div>
 </div>
 
 </body></html>

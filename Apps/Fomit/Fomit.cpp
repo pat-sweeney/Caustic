@@ -6,7 +6,7 @@
 #include "Fomit.h"
 import Base.Core.Core;
 import Base.Core.IRefCount;
-#include "Imaging\Image\ImageFilter.h"
+import Imaging.Image.ImageFilter;
 #include "Rendering\RenderWindow\IRenderWindow.h"
 #include "Rendering\Caustic\ICausticFactory.h"
 #include "Rendering\RenderGraph\IRenderGraph.h"

@@ -4,9 +4,10 @@
 #include "framework.h"
 #include "TestSamplers.h"
 #include "Base\Math\FuncFilter.h"
+import Base.Core.Core;
 import Base.Math.Vector;
 import Imaging.Image.IImage;
-#include "Geometry\Rast\Bresenham.h"
+import Geometry.Rast.Bresenham;
 
 #define MAX_LOADSTRING 100
 

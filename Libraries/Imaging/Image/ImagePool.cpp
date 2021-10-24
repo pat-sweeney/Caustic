@@ -3,10 +3,15 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "stdafx.h"
+module;
+#include <winerror.h>
+#include <vector>
+
+module Imaging.Image.ImagePool;
 import Base.Core.Core;
 import Base.Core.Error;
-#include "ImagePool.h"
+import Imaging.Image.IImagePool;
+import Imaging.Image.ImagePool;
 
 namespace Caustic
 {

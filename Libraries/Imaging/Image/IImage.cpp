@@ -6,13 +6,13 @@
 module;
 #include <atlbase.h>
 #include <wincodec.h>
-#include "Geometry\Rast\Bresenham.h"
-#include "Geometry\Rast\BresenhamCircle.h"
 
 module Imaging.Image.IImage;
 import Base.Core.Core;
 import Base.Core.Error;
 import Imaging.Image.Image;
+import Geometry.Rast.Bresenham;
+import Geometry.Rast.BresenhamCircle;
 
 namespace Caustic
 {

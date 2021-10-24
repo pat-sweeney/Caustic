@@ -3,7 +3,6 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "stdafx.h"
 #define _USE_MATH_DEFINES
 #include <cmath>
 import Base.Core.Core;

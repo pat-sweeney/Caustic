@@ -60,7 +60,8 @@
           "Color": "1.0.0",
           "Core": "1.0.0",
           "GeomDS": "1.0.0",
-          "Math": "1.0.0"
+          "Math": "1.0.0",
+          "Rast": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Image.dll": {}
@@ -129,6 +130,9 @@
       },
       "Rast/1.0.0": {
         "type": "project",
+        "dependencies": {
+          "Core": "1.0.0"
+        },
         "compile": {
           "bin/placeholder/Rast.dll": {}
         },
@@ -357,7 +361,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.401\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100-rc.2.21505.57\\RuntimeIdentifierGraph.json"
       }
     }
   }

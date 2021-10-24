@@ -20,13 +20,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -80,42 +80,37 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="IImagePool.h" />
-    <ClInclude Include="ImageFilter.h" />
-    <ClInclude Include="ImagePool.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
     <ClInclude Include="UnitTest.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BoxFilter.cpp" />
-    <ClCompile Include="Coloriize.cpp" />
-    <ClCompile Include="Convert.cpp" />
-    <ClCompile Include="CustomFilter.cpp" />
-    <ClCompile Include="DepthOfField.cpp" />
-    <ClCompile Include="EqualizeFilter.cpp" />
-    <ClCompile Include="FloodFill.cpp" />
-    <ClCompile Include="GaussianBlur.cpp" />
-    <ClCompile Include="HarrisCorners.cpp" />
+    <ClCompile Include="AllFilters.ixx" />
+    <ClCompile Include="BoxFilter.ixx" />
+    <ClCompile Include="Colorize.ixx" />
+    <ClCompile Include="Convert.ixx" />
+    <ClCompile Include="CustomFilter.ixx" />
+    <ClCompile Include="DepthOfField.ixx" />
+    <ClCompile Include="EqualizeFilter.ixx" />
+    <ClCompile Include="FloodFill.ixx" />
+    <ClCompile Include="GaussianBlur.ixx" />
+    <ClCompile Include="HarrisCorners.ixx" />
     <ClCompile Include="IImage.cpp" />
     <ClCompile Include="IImage.ixx" />
+    <ClCompile Include="IImagePool.ixx" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Image.ixx" />
+    <ClCompile Include="ImageFilter.ixx" />
     <ClCompile Include="ImageIter.ixx" />
     <ClCompile Include="ImagePool.cpp" />
-    <ClCompile Include="MedianFilter.cpp" />
-    <ClCompile Include="MosaicFilter.cpp" />
-    <ClCompile Include="MotionBlurFilter.cpp" />
-    <ClCompile Include="Quantize.cpp" />
-    <ClCompile Include="Sharpen.cpp" />
-    <ClCompile Include="Sobel.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
+    <ClCompile Include="ImagePool.ixx" />
+    <ClCompile Include="MedianFilter.ixx" />
+    <ClCompile Include="MosaicFilter.ixx" />
+    <ClCompile Include="MotionBlurFilter.ixx" />
+    <ClCompile Include="Quantize.ixx" />
+    <ClCompile Include="Sharpen.ixx" />
+    <ClCompile Include="Sobel.ixx" />
     <ClCompile Include="SuperPixel.cpp" />
     <ClCompile Include="UnitTest.cpp" />
-    <ClCompile Include="UnsharpMask.cpp" />
+    <ClCompile Include="UnsharpMask.ixx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Base\Core\Core.vcxproj">
@@ -126,6 +121,9 @@
     </ProjectReference>
     <ProjectReference Include="..\..\Geometry\GeomDS\GeomDS.vcxproj">
       <Project>{163426b2-af7c-4713-8e3c-1a56a9cc0abf}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Geometry\Rast\Rast.vcxproj">
+      <Project>{1310081f-25f3-48cb-bb3b-b302d973902e}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Color\Color.vcxproj">
       <Project>{6bd55e78-59f0-402f-9bbd-650c8fe563f3}</Project>

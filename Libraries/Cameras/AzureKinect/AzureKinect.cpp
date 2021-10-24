@@ -9,6 +9,7 @@ import Base.Core.Error;
 import Base.Math.BBox;
 import Imaging.Image.IImage;
 import Imaging.Image.ImageIter;
+import Imaging.Image.ImagePool;
 #include <k4a/k4a.h>
 #include <memory>
 #include <winerror.h>

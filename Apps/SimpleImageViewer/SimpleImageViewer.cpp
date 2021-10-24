@@ -9,8 +9,11 @@
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Imaging.Image.IImage;
-#include "Imaging\Image\ImageFilter.h"
+import Imaging.Image.AllImageFilters;
 #include "Cameras\AzureKinect\IAzureKinect.h"
+#include <map>
+#include <any>
+#include <string>
 
 #define MAX_LOADSTRING 100
 
@@ -29,7 +32,7 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
-using namespace Caustic;
+using namespace Caustic;  
 CRefObj<IAzureKinect> spAzure;
 CRefObj<IImage> spSourceImage;
 CRefObj<IImage> spFilteredSourceImage;
