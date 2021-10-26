@@ -24,6 +24,7 @@
           "GeomDS": "1.0.0",
           "Image": "1.0.0",
           "Math": "1.0.0",
+          "Mesh": "1.0.0",
           "ParseShader": "1.0.0"
         },
         "compile": {
@@ -186,7 +187,8 @@
           "Core": "1.0.0",
           "GeomDS": "1.0.0",
           "Image": "1.0.0",
-          "Math": "1.0.0"
+          "Math": "1.0.0",
+          "Mesh": "1.0.0"
         },
         "compile": {
           "bin/placeholder/RenderGraph.dll": {}
@@ -203,7 +205,8 @@
           "Core": "1.0.0",
           "GeomDS": "1.0.0",
           "Image": "1.0.0",
-          "Math": "1.0.0"
+          "Math": "1.0.0",
+          "Mesh": "1.0.0"
         },
         "compile": {
           "bin/placeholder/RenderWindow.dll": {}
@@ -219,7 +222,8 @@
           "Core": "1.0.0",
           "GeomDS": "1.0.0",
           "Image": "1.0.0",
-          "Math": "1.0.0"
+          "Math": "1.0.0",
+          "Mesh": "1.0.0"
         },
         "compile": {
           "bin/placeholder/SceneGraph.dll": {}

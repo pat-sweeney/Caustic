@@ -6,8 +6,8 @@
 #include "stdafx.h"
 import Base.Core.Core;
 import Base.Core.Error;
+import Geometry.Mesh.RenderTypes;
 #include "Rendering\Caustic\CausticFactory.h"
-#include "Rendering\Caustic\RenderTypes.h"
 #include "Rendering\Caustic\IRenderer.h"
 #include "Rendering\Caustic\IRenderMesh.h"
 #include "Rendering\Caustic\IShaderInfo.h"

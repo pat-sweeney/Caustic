@@ -10,7 +10,7 @@ import Base.Core.ISerialize;
 import Base.Core.RefCount;
 import Base.Math.Vector;
 import Base.Math.BBox;
-#include "Rendering\Caustic\RenderTypes.h"
+import Geometry.Mesh.RenderTypes;
 #include "Rendering\Caustic\IMaterialAttrib.h"
 #include "Rendering\Caustic\PathTrace.h"
 #include <memory>

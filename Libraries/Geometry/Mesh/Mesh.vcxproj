@@ -91,6 +91,7 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshConstructor.cpp" />
     <ClCompile Include="MeshToRenderMesh.cpp" />
+    <ClCompile Include="RenderTypes.ixx" />
     <ClCompile Include="Submesh.cpp" />
     <ClCompile Include="UnitTest.cpp" />
   </ItemGroup>

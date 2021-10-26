@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:Geometry/Mesh/RenderTypes.ixx","RenderTypes.ixx");NDSummary.OnSummaryLoaded("File:Geometry/Mesh/RenderTypes.ixx",[["C/C++","C"]],[["Structs","Struct"]],[[100,0,0,"CGeomVertex","CGeomVertex"],[343,0,0,"CGeomFace","CGeomFace"]]);

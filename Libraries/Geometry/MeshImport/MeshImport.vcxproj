@@ -110,6 +110,9 @@
     <ProjectReference Include="..\GeomDS\GeomDS.vcxproj">
       <Project>{163426b2-af7c-4713-8e3c-1a56a9cc0abf}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Mesh\Mesh.vcxproj">
+      <Project>{e7cf4287-e8ff-4d29-8883-5a05a6590af3}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
