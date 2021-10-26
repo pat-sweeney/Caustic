@@ -29,37 +29,6 @@ namespace Caustic
     struct ISampler;
 
     //**********************************************************************
-    // Struct: MeshData
-    // Defines class for holding mesh data (i.e. vertices and indices)
-    //
-    // Members:
-    // m_spVB - The vertex buffer
-    // m_spIB - The index buffer (maybe null)
-    // m_vertexSize - Size in bytes of each vertex
-    // m_numVertices - Number of vertices
-    // m_numIndices - Number of indices. Maybe 0
-    //
-    // Header:
-    // {Link:#include "Rendering/Caustic/IRenderer.h"{Rendering/Caustic/IRenderer.h}}
-    //**********************************************************************
-    struct MeshData
-    {
-        CComPtr<ID3D11Buffer> m_spVB;
-        CComPtr<ID3D11Buffer> m_spIB;
-        uint32 m_vertexSize;
-        uint32 m_numVertices;
-        uint32 m_numIndices;
-        BBox3 m_bbox;
-
-        MeshData() :
-            m_vertexSize(0),
-            m_numVertices(0),
-            m_numIndices(0)
-        {
-        }
-    };
-
-    //**********************************************************************
     // Group: Pass Flags
     // c_PassFirst - first pass
     // c_PassObjID - renders pass writing object IDs to output texture

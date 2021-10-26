@@ -3,7 +3,12 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+module;
+#include <atlbase.h>
+#include <d3d11.h>
+
 export module Geometry.Mesh.RenderTypes;
+import Base.Core.Core;
 import Base.Math.Vector;
 import Base.Math.BBox;
 
@@ -41,5 +46,36 @@ export namespace Caustic
     struct CGeomFace
     {
         int indices[3];
+    };
+
+    //**********************************************************************
+    // Struct: MeshData
+    // Defines class for holding mesh data (i.e. vertices and indices)
+    //
+    // Members:
+    // m_spVB - The vertex buffer
+    // m_spIB - The index buffer (maybe null)
+    // m_vertexSize - Size in bytes of each vertex
+    // m_numVertices - Number of vertices
+    // m_numIndices - Number of indices. Maybe 0
+    //
+    // Module:
+    // {Link:import Geometry.Mesh.RenderTypes"{Geometry/Mesh/RenderTypes.ixx}}
+    //**********************************************************************
+    struct MeshData
+    {
+        CComPtr<ID3D11Buffer> m_spVB;
+        CComPtr<ID3D11Buffer> m_spIB;
+        uint32 m_vertexSize;
+        uint32 m_numVertices;
+        uint32 m_numIndices;
+        BBox3 m_bbox;
+
+        MeshData() :
+            m_vertexSize(0),
+            m_numVertices(0),
+            m_numIndices(0)
+        {
+        }
     };
 }
