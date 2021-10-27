@@ -6,6 +6,7 @@
 module;
 #include <atlbase.h>
 #include <d3d11.h>
+#include <string>
 
 export module Geometry.Mesh.RenderTypes;
 import Base.Core.Core;
@@ -70,6 +71,7 @@ export namespace Caustic
         uint32 m_numVertices;
         uint32 m_numIndices;
         BBox3 m_bbox;
+        std::string m_name;
 
         MeshData() :
             m_vertexSize(0),

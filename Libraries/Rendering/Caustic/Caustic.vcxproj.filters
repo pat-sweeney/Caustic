@@ -70,9 +70,6 @@
     <ClInclude Include="ConstructBuffers.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="MaterialAttrib.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="IBuffer.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
@@ -80,9 +77,6 @@
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="ICausticFactory.h">
-      <Filter>Source Files\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="IMaterialAttrib.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="IPointLight.h">
@@ -205,9 +199,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ConstructBuffers.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MaterialAttrib.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DirectionalLight.cpp">

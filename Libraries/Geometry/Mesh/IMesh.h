@@ -10,9 +10,10 @@ import Base.Core.ISerialize;
 import Base.Core.RefCount;
 import Base.Math.Vector;
 import Base.Math.BBox;
+import Base.Math.Ray;
 import Geometry.Mesh.RenderTypes;
-#include "Rendering\Caustic\IMaterialAttrib.h"
-#include "Rendering\Caustic\PathTrace.h"
+#include "Geometry\Mesh\MaterialAttrib.h"
+#include "Geometry\Mesh\IMaterialAttrib.h"
 #include <memory>
 #include <atlbase.h>
 #include <vector>
@@ -28,8 +29,6 @@ namespace Caustic
 {
     struct IRenderer;
     struct IShader;
-    struct IRenderSubMesh;
-    struct IRenderMesh;
 
     //**********************************************************************
     // Struct: CFaceVertex
@@ -206,7 +205,7 @@ namespace Caustic
         // Returns:
         // Returns true if ray intersects mesh. False otherwise.
         //**********************************************************************
-        virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** pMaterial, std::vector<CRefObj<IMaterialAttrib>> materials) = 0;
+        virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, uint32* pMaterialID) = 0;
 
         //**********************************************************************
         // Method: SetName
@@ -379,17 +378,18 @@ namespace Caustic
         virtual void Triangulate(ETriangulateMethod method) = 0;
 
         //**********************************************************************
-        // Method: ToRenderSubMesh
+        // Method: ToMeshData
         // Converts a CSubMesh object into a renderable form
         //
         // Parameters:
-        // pRenderer - Renderer
-        // pShader - shader
+        // pDevice - device
+        // vertexLayout - description of each vertex's layout
+        // vertexSize - size of each vertex in bytes
         //
         // Returns:
-        // Returns the new submesh
+        // Returns renderable form of the mesh
         //**********************************************************************
-        virtual CRefObj<IRenderSubMesh> ToRenderSubMesh(IRenderer *pRenderer, IShader *pShader) = 0;
+        virtual MeshData ToMeshData(ID3D11Device* pDevice, std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout, uint32 vertexSize) = 0;
     };
 
     //**********************************************************************
@@ -401,7 +401,7 @@ namespace Caustic
     //**********************************************************************
     struct IMesh : public ISerialize
     {
-        virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** pMaterial) = 0;
+        virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, uint32* pMaterialID) = 0;
         virtual uint32 NumberSubMeshes() = 0;
         virtual CRefObj<ISubMesh> GetSubMesh(uint32 index) = 0;
         virtual void AddSubMesh(ISubMesh *pSubMesh) = 0;
@@ -411,8 +411,7 @@ namespace Caustic
         virtual uint32 GetNumberMaterials() = 0;
         virtual CRefObj<IMaterialAttrib> GetMaterial(uint32 materialID) = 0;
         virtual void ComputeNormals() = 0;
-		virtual CRefObj<IRenderMesh> ToRenderMesh(IRenderer *pRenderer, IShader *pShader) = 0;
-        virtual void ToRenderMaterials(IRenderer* pRenderer, IShader* pShader, IRenderMesh* pRenderMesh, IMaterialAttrib* pDefaultMaterial) = 0;
+        virtual std::vector<MeshData> ToMeshData(ID3D11Device* pDevice, std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout, uint32 vertexSize) = 0;
     };
     
 

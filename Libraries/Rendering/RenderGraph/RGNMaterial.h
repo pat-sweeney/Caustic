@@ -6,7 +6,7 @@
 #pragma once
 import Base.Core.Core;
 import Base.Core.IRefCount;
-#include "Rendering\Caustic\MaterialAttrib.h"
+#include "Geometry\Mesh\MaterialAttrib.h"
 #include "Rendering\Caustic\IRenderMaterial.h"
 #include "IRenderGraphNode.h"
 #include "RenderGraphNode.h"

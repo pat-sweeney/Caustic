@@ -10,8 +10,6 @@ import Geometry.GeomDS.IKDTree;
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.BlockAllocator;
-#include "Rendering\Caustic\Caustic.h"
-#include "Rendering\Caustic\PathTrace.h"
 #include <vector>
 #include <map>
 
@@ -173,23 +171,24 @@ namespace Caustic
         // Creates a vertex buffer using the specified submesh.
         //
         // Parameters:
-        // pRenderer - Graphics device
-        // pShaderInfo - Information about the shader
+        // pDevice - device
+        // vertexLayout - layout of each vertex
+        // vertexSize - size of each vertex in bytes
         // vertexReferenced - List of vertices that are referenced
         // MeshData - place to store created vertex buffer
         //**********************************************************************
-        void BuildVertexBuffer(IRenderer *pRenderer, IShaderInfo *pShaderInfo, std::vector<int> &vertexReferenced, MeshData *pMeshData);
+        void BuildVertexBuffer(ID3D11Device* pDevice, std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout, uint32 vertexSize, std::vector<int> &vertexReferenced, MeshData *pMeshData);
 
         //**********************************************************************
         // Method: BuildIndexBuffer
         // Creates a index buffer using the specified submesh.
         //
         // Parameters:
-        // pRenderer - Graphics device
+        // pDevice - device
         // vertexReferenced - List of vertices that are referenced
         // MeshData - place to store created index buffer
         //**********************************************************************
-        void BuildIndexBuffer(IRenderer *pRenderer, std::vector<int> &vertexReferenced, MeshData *pMeshData);
+        void BuildIndexBuffer(ID3D11Device* pDevice, std::vector<int> &vertexReferenced, MeshData *pMeshData);
 
         void BuildReferencedVertexList(std::vector<int> &vertexReferenced);
 
@@ -230,7 +229,7 @@ namespace Caustic
         //**********************************************************************
         // ISubMesh
         //**********************************************************************
-        virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** pMaterial, std::vector<CRefObj<IMaterialAttrib>> materials);
+        virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, uint32* pMaterialID) override;
         virtual void SetName(const char* pName) override { m_name = std::string(pName); }
         virtual std::string GetName() override { return m_name; }
         virtual uint32 GetNumberFaces() override { return (uint32)m_faces.size(); }
@@ -252,7 +251,7 @@ namespace Caustic
         virtual uint32 FaceToIndex(CFace *pFace) override;
         virtual uint32 EdgeToIndex(CHalfEdge *pEdge) override;
         virtual void Triangulate(ETriangulateMethod method) override;
-        virtual CRefObj<IRenderSubMesh> ToRenderSubMesh(IRenderer *pRenderer, IShader *pShader) override;
+        virtual MeshData ToMeshData(ID3D11Device* pDevice, std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout, uint32 vertexSize) override;
 
         //**********************************************************************
         // ISerialize
@@ -283,7 +282,7 @@ namespace Caustic
         //**********************************************************************
         // IMesh
         //**********************************************************************
-        virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** pMaterial);
+        virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, uint32* pMaterialID);
         virtual uint32 NumberSubMeshes() override { return (uint32)m_subMeshes.size(); };
         virtual CRefObj<ISubMesh> GetSubMesh(uint32 index) override;
         virtual void AddSubMesh(ISubMesh *pSubMesh) override;
@@ -293,8 +292,7 @@ namespace Caustic
         virtual uint32 GetNumberMaterials() override;
         virtual CRefObj<IMaterialAttrib> GetMaterial(uint32 materialID) override;
         virtual void ComputeNormals() override;
-        virtual CRefObj<IRenderMesh> ToRenderMesh(IRenderer* pRenderer, IShader* pShader) override;
-        virtual void ToRenderMaterials(IRenderer* pRenderer, IShader* pShader, IRenderMesh* pRenderMesh, IMaterialAttrib* pDefaultMaterial) override;
+        virtual std::vector<MeshData> ToMeshData(ID3D11Device* pDevice, std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout, uint32 vertexSize) override;
 
         //**********************************************************************
         // ISerialize

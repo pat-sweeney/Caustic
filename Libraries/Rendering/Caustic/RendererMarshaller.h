@@ -100,6 +100,8 @@ namespace Caustic
         //**********************************************************************
         // IRenderer methods
         //**********************************************************************
+        virtual CRefObj<IRenderMesh> ToRenderMesh(IMesh* pMesh, IShader* pShader) override;
+        virtual void ToRenderMaterials(IMesh* pMesh, IShader* pShader, IRenderMesh* pRenderMesh, IMaterialAttrib* pDefaultMaterial) override;
         virtual bool IsRenderThread() override { return false; }
         virtual void RunOnRenderer(std::function<void(IRenderer*)> callback, bool wait /* = false */) override;
         virtual bool EnableDepthTest(bool enable) override;

@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:Geometry/Mesh/MaterialAttrib.h","MaterialAttrib.h");NDSummary.OnSummaryLoaded("File:Geometry/Mesh/MaterialAttrib.h",[["C/C++","C"]],[["Structs","Struct"]],[[352,0,0,"CMaterialAttrib","CMaterialAttrib"]]);

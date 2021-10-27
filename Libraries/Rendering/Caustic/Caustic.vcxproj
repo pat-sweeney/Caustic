@@ -267,7 +267,6 @@
     <ClInclude Include="ICausticFactory.h" />
     <ClInclude Include="IDirectionalLight.h" />
     <ClInclude Include="ILight.h" />
-    <ClInclude Include="IMaterialAttrib.h" />
     <ClInclude Include="IPointCloud.h" />
     <ClInclude Include="IPointLight.h" />
     <ClInclude Include="IRenderable.h" />
@@ -284,7 +283,6 @@
     <ClInclude Include="ITexture.h" />
     <ClInclude Include="ITrackball.h" />
     <ClInclude Include="Light.h" />
-    <ClInclude Include="MaterialAttrib.h" />
     <ClInclude Include="PathTrace.h" />
     <ClInclude Include="PointCloud.h" />
     <ClInclude Include="PointLight.h" />
@@ -313,7 +311,6 @@
     <ClCompile Include="ConstructBuffers.cpp" />
     <ClCompile Include="DesktopTexture.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
-    <ClCompile Include="MaterialAttrib.cpp" />
     <ClCompile Include="PointCloud.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="RendererMarshaller.cpp" />

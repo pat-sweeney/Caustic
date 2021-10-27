@@ -76,6 +76,28 @@ namespace Caustic
     struct IRenderer : public IRefCount
     {
         //**********************************************************************
+        // Method: ToRenderMesh
+        // Converts a mesh to a render mesh
+        // 
+        // Parameters:
+        // pMesh - mesh to convert
+        // pShader - shader to use (for vertex definition)
+        //**********************************************************************
+        virtual CRefObj<IRenderMesh> ToRenderMesh(IMesh* pMesh, IShader* pShader) = 0;
+
+        //**********************************************************************
+        // Method: ToRenderMaterials
+        // Converts a list of material definitions into a list of renderable materials
+        // 
+        // Parameters:
+        // pMesh - mesh whose materials need to be generated
+        // pShader - shader to use (for vertex definition)
+        // pRenderMesh - renderable version of 'pMesh'
+        // pDefaultMaterial - default material to use if mesh/submesh has no associated material
+        //**********************************************************************
+        virtual void ToRenderMaterials(IMesh* pMesh, IShader* pShader, IRenderMesh* pRenderMesh, IMaterialAttrib* pDefaultMaterial) = 0;
+
+        //**********************************************************************
         // Method: RunOnRenderer
         // Runs the specified function on the render thread.
         //**********************************************************************

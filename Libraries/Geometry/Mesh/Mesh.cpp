@@ -6,8 +6,6 @@
 import Base.Core.Core;
 import Base.Core.Error;
 #include "Geometry\Mesh\Mesh.h"
-#include "Rendering\Caustic\MaterialAttrib.h"
-#include "Rendering\Caustic\PathTrace.h"
 import Base.Math.Ray;
 
 //**********************************************************************
@@ -69,11 +67,11 @@ namespace Caustic
     // ray - ray direction to trace
     // pRadiance - Returns the radiance returned along 'ray'
     //**********************************************************************
-    bool CMesh::RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** pMaterial)
+    bool CMesh::RayIntersect(Ray3& ray, RayIntersect3* pIntersection, uint32* pMaterialID)
     {
         bool hitMesh = false;
         for (size_t i = 0; i < m_subMeshes.size(); i++)
-            if (m_subMeshes[i]->RayIntersect(ray, pIntersection, pMaterial, m_materials))
+            if (m_subMeshes[i]->RayIntersect(ray, pIntersection, pMaterialID))
                 hitMesh = true;
         return hitMesh;
     }

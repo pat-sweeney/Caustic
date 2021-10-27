@@ -44,6 +44,32 @@ namespace Caustic
     {
     }
 
+    CRefObj<IRenderMesh> CRendererMarshaller::ToRenderMesh(IMesh* pMesh, IShader* pShader)
+    {
+        HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+        CRefObj<IRenderMesh> spRenderMesh;
+        m_renderQueue.AddLambda(
+            [this, evt, pMesh, pShader, &spRenderMesh]()
+            {
+                spRenderMesh = m_spRenderer->ToRenderMesh(pMesh, pShader);
+                SetEvent(evt);
+            }
+        );
+        WaitForSingleObject(evt, INFINITE);
+        CloseHandle(evt);
+        return spRenderMesh;
+    }
+
+    void CRendererMarshaller::ToRenderMaterials(IMesh* pMesh, IShader* pShader, IRenderMesh* pRenderMesh, IMaterialAttrib* pDefaultMaterial)
+    {
+        m_renderQueue.AddLambda(
+            [this, pMesh, pShader, pRenderMesh, pDefaultMaterial]()
+            {
+                m_spRenderer->ToRenderMaterials(pMesh, pShader, pRenderMesh, pDefaultMaterial);
+            }
+        );
+    }
+
     //**********************************************************************
     // Method: EnableDepthTest
     // See <IRenderer::EnableDepthTest>

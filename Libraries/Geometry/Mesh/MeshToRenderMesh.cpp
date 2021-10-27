@@ -7,9 +7,6 @@ import Base.Core.Core;
 import Base.Core.Error;
 import Geometry.Mesh.RenderTypes;
 #include "Geometry\Mesh\Mesh.h"
-#include "Rendering\Caustic\IRenderer.h"
-#include "Rendering\Caustic\IRenderMesh.h"
-#include "Rendering\Caustic\IShaderInfo.h"
 #include <d3d11.h>
 
 namespace Caustic
@@ -37,13 +34,10 @@ namespace Caustic
 	}
 
     //**********************************************************************
-	void CSubMesh::BuildVertexBuffer(IRenderer* pRenderer,
-		IShaderInfo* pShaderInfo, std::vector<int>& vertexReferenced, MeshData* pMeshData)
+	void CSubMesh::BuildVertexBuffer(ID3D11Device* pDevice, std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout, uint32 vertexSize,
+		std::vector<int>& vertexReferenced, MeshData* pMeshData)
 	{
-		CComPtr<ID3D11Device> spDevice = pRenderer->GetDevice();
-		std::vector<D3D11_INPUT_ELEMENT_DESC> vertexLayout = pShaderInfo->VertexLayout();
 		uint32 numVerts = GetNumberVertices();
-		uint32 vertexSize = pShaderInfo->GetVertexSize();
 
 		if (numVerts == 0)
 			return;
@@ -108,7 +102,7 @@ namespace Caustic
 		data.SysMemPitch = 0;
 		data.SysMemSlicePitch = 0;
 		CComPtr<ID3D11Buffer> spVB;
-		CT(spDevice->CreateBuffer(&desc, &data, &spVB));
+		CT(pDevice->CreateBuffer(&desc, &data, &spVB));
 		pMeshData->m_numVertices = vout;
 		pMeshData->m_vertexSize = vertexSize;
 		pMeshData->m_spVB = spVB;
@@ -116,9 +110,8 @@ namespace Caustic
 	}
 
 	//**********************************************************************
-    void CSubMesh::BuildIndexBuffer(IRenderer *pRenderer, std::vector<int> &vertexReferenced, MeshData *pMeshData)
+    void CSubMesh::BuildIndexBuffer(ID3D11Device* pDevice, std::vector<int> &vertexReferenced, MeshData *pMeshData)
 	{
-        CComPtr<ID3D11Device> spDevice = pRenderer->GetDevice();
         uint32 numFaces = GetNumberFaces();
 		uint32 *pIndexBuffer = new uint32[numFaces * 6 /* 6 is worst case */];
 		std::unique_ptr<uint32> spIndexBuffer(pIndexBuffer);
@@ -183,7 +176,7 @@ namespace Caustic
         data.SysMemPitch = 0;
         data.SysMemSlicePitch = 0;
         CComPtr<ID3D11Buffer> spIB;
-        CT(spDevice->CreateBuffer(&desc, &data, &spIB));
+        CT(pDevice->CreateBuffer(&desc, &data, &spIB));
         pMeshData->m_numIndices = numIndices;
         pMeshData->m_spIB = spIB;
 	}
@@ -231,40 +224,19 @@ namespace Caustic
 	}
 
 	//**********************************************************************
-	CRefObj<IRenderSubMesh> CSubMesh::ToRenderSubMesh(IRenderer *pRenderer, IShader *pShader)
+	MeshData CSubMesh::ToMeshData(ID3D11Device* pDevice, std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout, uint32 vertexSize)
 	{
-        CRefObj<ICausticFactory> spFactory = Caustic::CreateCausticFactory();
-		CRefObj<IRenderSubMesh> spRenderSubMesh = spFactory->CreateRenderSubMesh();
 		std::vector<int> vertexReferenced(GetNumberVertices(), c_Vertex_Unreferenced);
 		BuildReferencedVertexList(vertexReferenced);
-		CRefObj<IShaderInfo> spShaderInfo = pShader->GetShaderInfo();
         MeshData md;
-		BuildVertexBuffer(pRenderer, spShaderInfo, vertexReferenced, &md);
-		BuildIndexBuffer(pRenderer, vertexReferenced, &md);
-        spRenderSubMesh->SetMeshData(md);
-		spRenderSubMesh->SetName(GetName().c_str());
-		return spRenderSubMesh;
-	}
-
-	void CMesh::ToRenderMaterials(IRenderer* pRenderer, IShader* pShader, IRenderMesh* pRenderMesh, IMaterialAttrib *pDefaultMaterial)
-	{
-		CRefObj<ICausticFactory> spFactory = CreateCausticFactory();
-		for (int i = 0; i < m_subMeshes.size(); i++)
-		{
-			ISubMesh* pSubMesh = m_subMeshes[i];
-			CRefObj<IRenderSubMesh> spRenderSubMesh = pRenderMesh->GetSubMesh(i);
-			
-			// Assign appropriate materials
-			CRefObj<IMaterialAttrib> spMaterialAttrib = this->GetMaterial(pSubMesh->GetMaterialID());
-			CRefObj<IRenderMaterial> spRenderMaterial = spFactory->CreateRenderMaterial(pRenderer, (spMaterialAttrib) ? spMaterialAttrib.p : pDefaultMaterial, pShader);
-			spRenderSubMesh->SetFrontMaterial(spRenderMaterial);
-
-			// For now assume now back material
-		}
+		BuildVertexBuffer(pDevice, vertexLayout, vertexSize, vertexReferenced, &md);
+		BuildIndexBuffer(pDevice, vertexReferenced, &md);
+		md.m_name = std::string(GetName().c_str());
+		return md;
 	}
 
 	//**********************************************************************
-    // Method: ToRenderMesh
+    // Method: ToMeshData
     // Converts a CMesh object into a renderable form. NOTE: The client will
 	// also have to convert the mesh's materials to a RenderMaterial via
 	// <ToRenderMaterial>. The reason this is split out as a separate call
@@ -273,20 +245,20 @@ namespace Caustic
     //
     // Parameters:
     // pRenderer - Renderer
-    // pShader - shader
+    // vertexLayout - layout of each vertex
+	// vertexSize - size of each vertex in bytes
 	//
 	// Returns:
-    // Returns the new mesh
+    // Returns array of meshData for each submesh
     //**********************************************************************
-    CRefObj<IRenderMesh> CMesh::ToRenderMesh(IRenderer *pRenderer, IShader *pShader)
+	std::vector<MeshData> CMesh::ToMeshData(ID3D11Device* pDevice, std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout, uint32 vertexSize)
     {
-        CRefObj<ICausticFactory> spFactory = CreateCausticFactory();
-        CRefObj<IRenderMesh> spRenderMesh = spFactory->CreateRenderMesh();
+		std::vector<MeshData> mdv;
         for (auto pSubMesh : m_subMeshes)
         {
-            CRefObj<IRenderSubMesh> spRenderSubMesh = pSubMesh->ToRenderSubMesh(pRenderer, pShader);
-            spRenderMesh->AddSubMesh(spRenderSubMesh);
+			MeshData md = pSubMesh->ToMeshData(pDevice, vertexLayout, vertexSize);
+			mdv.push_back(md);
         }
-        return spRenderMesh;
+        return mdv;
     }
 };

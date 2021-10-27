@@ -6,7 +6,7 @@
 #include "stdafx.h"
 #include "Renderer.h"
 #include "RenderMaterial.h"
-#include "MaterialAttrib.h"
+#include "Geometry\Mesh\MaterialAttrib.h"
 #include "CausticFactory.h"
 #include "Sampler.h"
 #include <string>

@@ -52,6 +52,39 @@ namespace Caustic
     }
 
     //**********************************************************************
+    CRefObj<IRenderMesh> CRenderer::ToRenderMesh(IMesh* pMesh, IShader* pShader)
+    {
+        CRefObj<ICausticFactory> spFactory = CreateCausticFactory();
+        CRefObj<IShaderInfo> spShaderInfo = pShader->GetShaderInfo();
+        CRefObj<IRenderMesh> spRenderMesh = spFactory->CreateRenderMesh();
+        std::vector<MeshData> mdv = pMesh->ToMeshData(GetDevice(), spShaderInfo->VertexLayout(), spShaderInfo->GetVertexSize());
+        for (MeshData md : mdv)
+        {
+            CRefObj<IRenderSubMesh> spRenderSubMesh = spFactory->CreateRenderSubMesh();
+            spRenderSubMesh->SetMeshData(md);
+            spRenderSubMesh->SetName(md.m_name.c_str());
+            spRenderMesh->AddSubMesh(spRenderSubMesh);
+        }
+        return spRenderMesh;
+    }
+
+    void CRenderer::ToRenderMaterials(IMesh* pMesh, IShader* pShader, IRenderMesh* pRenderMesh, IMaterialAttrib* pDefaultMaterial)
+    {
+        CRefObj<ICausticFactory> spFactory = CreateCausticFactory();
+        for (uint32 i = 0; i < pMesh->NumberSubMeshes(); i++)
+        {
+            ISubMesh* pSubMesh = pMesh->GetSubMesh(i);
+            CRefObj<IRenderSubMesh> spRenderSubMesh = pRenderMesh->GetSubMesh(i);
+
+            // Assign appropriate materials
+            CRefObj<IMaterialAttrib> spMaterialAttrib = pMesh->GetMaterial(pSubMesh->GetMaterialID());
+            CRefObj<IRenderMaterial> spRenderMaterial = spFactory->CreateRenderMaterial(this, (spMaterialAttrib) ? spMaterialAttrib.p : pDefaultMaterial, pShader);
+            spRenderSubMesh->SetFrontMaterial(spRenderMaterial);
+
+            // For now assume now back material
+        }
+    }
+    //**********************************************************************
     // Method: InitializeD3D
     // Initializes the server side renderer. Clients should call this method indirectly (via <IRenderer::Setup>)
     // at application startup.

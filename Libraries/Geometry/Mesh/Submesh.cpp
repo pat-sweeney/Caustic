@@ -26,10 +26,10 @@ namespace Caustic
     // Method: RayIntersect
     // See <ISubMesh::RayIntersect>
     //**********************************************************************
-    bool CSubMesh::RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** ppMaterial, std::vector<CRefObj<IMaterialAttrib>> materials)
+    bool CSubMesh::RayIntersect(Ray3& ray, RayIntersect3* pIntersection, uint32* pMaterialID)
     {
         bool hitMesh = false;
-        CRefObj<IMaterialAttrib> spMinMaterial;
+        uint32 minMaterial = 0;
         for (size_t i = 0; i < m_faces.size(); i++)
         {
             _ASSERT(m_faces[i]->m_vertices.size() == 3);
@@ -41,14 +41,14 @@ namespace Caustic
             {
                 if (rayInfo.hitTime < pIntersection->hitTime)
                 {
-                    spMinMaterial = materials[m_materialID];
+                    minMaterial = m_materialID;
                     *pIntersection = rayInfo;
                     hitMesh = true;
                 }
             }
         }
         if (hitMesh)
-            *ppMaterial = spMinMaterial.Detach();
+            *pMaterialID = minMaterial;
         return hitMesh;
     }
 
