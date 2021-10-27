@@ -7,10 +7,10 @@ import Base.Core.Core;
 import Base.Core.Error;
 import Base.Math.BBox;
 import Imaging.Image.IImage;
+import Geometry.Mesh.Delaunay;
 #include "Geometry\Mesh\Mesh.h"
 #include "Base\Math\Helper.h"
 #include <map>
-#include "Delaunay.h"
 #include <stack>
 
 namespace Caustic

@@ -3,18 +3,28 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-import Base.Core.Core;
-import Base.Core.Error;
-import Base.Core.RefCount;
-import Base.Math.Vector;
-#include "IDelaunay.h"
+module;
 #include <vector>
+#include <map>
 
 #if 1
 #define DEBUGGING_AIDS // Determine whether to dump debug
 #endif
 
-namespace Caustic
+export module Geometry.Mesh.Delaunay;
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.RefCount;
+import Base.Math.Vector;
+import Base.Math.BBox;
+import Geometry.Mesh.IDelaunay;
+
+//**********************************************************************
+// File: Delaunay.ixx
+// Header with class/methods for performing Delaunay triangulation
+//**********************************************************************
+
+export namespace Caustic
 {
     const int c_TriangleBad = 0x1;      // Flag indicating whether triangle was removed due to violating Delaunay property
     const int c_ExteriorTriangle = 0x2; // Flag indicating whether triangle is a part of the exterior (super triangle)

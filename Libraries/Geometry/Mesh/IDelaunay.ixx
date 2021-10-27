@@ -3,12 +3,18 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
+export module Geometry.Mesh.IDelaunay;
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Base.Math.Vector;
+import Base.Math.BBox;
 
-namespace Caustic
+//**********************************************************************
+// File: Delaunay.ixx
+// Header with class/methods for performing Delaunay triangulation
+//**********************************************************************
+
+export namespace Caustic
 {
     //**********************************************************************
     // Interface: IDelaunay2

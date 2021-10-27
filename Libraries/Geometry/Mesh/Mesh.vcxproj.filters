@@ -22,12 +22,6 @@
     <ClInclude Include="UnitTest.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Delaunay.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IDelaunay.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="IMaterialAttrib.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -61,6 +55,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MaterialAttrib.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Delaunay.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IDelaunay.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
