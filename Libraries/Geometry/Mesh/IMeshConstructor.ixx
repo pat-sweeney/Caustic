@@ -3,11 +3,13 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
-import Base.Core.Core;
+module;
 #include "IMesh.h"
 
-namespace Caustic
+export module Geometry.Mesh.IMeshConstructor;
+import Base.Core.Core;
+
+export namespace Caustic
 {
     //**********************************************************************
     // Interface: IMeshConstructor
@@ -16,6 +18,7 @@ namespace Caustic
     //**********************************************************************
     struct IMeshConstructor : public IRefCount
     {
+        static CRefObj<IMeshConstructor> Create();
         virtual void MeshOpen() = 0;
         virtual CRefObj<IMesh> MeshClose() = 0;
         virtual void SubMeshOpen() = 0;
@@ -35,6 +38,4 @@ namespace Caustic
         //**********************************************************************
         virtual CRefObj<IMesh> MeshFromDensityFunction(int numBlocks, std::function<float(Vector3&)> fn) = 0;
     };
-
-    CRefObj<IMeshConstructor> CreateMeshConstructor();
 }

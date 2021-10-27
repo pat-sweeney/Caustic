@@ -504,7 +504,7 @@ while(*p)//        for (int i = 0; i < pPolylist->m_count; i++)
                     CRefObj<Caustic::ISceneMeshElem> spMeshElem = CSceneFactory::Instance()->CreateMeshElem();
 
                     Collada::SGeometry *pGeometry = pCollada->m_geometries[pNode->m_url.substr(1)];
-                    CRefObj<IMeshConstructor> spMeshConstructor = CreateMeshConstructor();
+                    CRefObj<IMeshConstructor> spMeshConstructor = IMeshConstructor::Create();
                     spMeshConstructor->MeshOpen();
                     pGeometry->BuildMesh(spMeshConstructor);
                     CRefObj<IMesh> spMesh = spMeshConstructor->MeshClose();

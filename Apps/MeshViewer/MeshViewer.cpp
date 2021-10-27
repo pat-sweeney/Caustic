@@ -7,12 +7,12 @@
 #include "MeshViewer.h"
 import Base.Core.Core;
 import Base.Core.IRefCount;
+import Geometry.Mesh.IMeshConstructor;
 #include "Rendering\RenderWindow\IRenderWindow.h"
 #include "Rendering\Caustic\ICausticFactory.h"
 #include "Rendering\SceneGraph\ISceneFactory.h"
 #include "Geometry\MeshImport\MeshImport.h"
 #include "Geometry\Mesh\Mesh.h"
-#include "Geometry\Mesh\IMeshConstructor.h"
 #include <Windows.h>
 #include <commdlg.h>
 #include <string>
@@ -177,7 +177,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 break;
             case ID_PDF_SPHERE:
             {
-                CRefObj<IMeshConstructor> spMeshConstructor = Caustic::CreateMeshConstructor();
+                CRefObj<IMeshConstructor> spMeshConstructor = IMeshConstructor::Create();
                 auto spherePDF = [](Vector3& v)->float
                 {
                     static Vector3 center(0.5f, 0.5f, 0.5f);

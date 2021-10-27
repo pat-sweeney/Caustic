@@ -7,9 +7,9 @@
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Math.Vector;
+import Geometry.Mesh.IMeshConstructor;
 #include <cmath>
 #include "Geometry\Mesh\IMesh.h"
-#include "Geometry\Mesh\IMeshConstructor.h"
 #include "UnitTest.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -25,7 +25,7 @@ namespace CausticTestSuite
 
     static bool Test2()
     {
-        CRefObj<IMeshConstructor> spMeshConstructor = CreateMeshConstructor();
+        CRefObj<IMeshConstructor> spMeshConstructor = IMeshConstructor::Create();
         spMeshConstructor->MeshOpen();
         spMeshConstructor->SubMeshOpen();
         spMeshConstructor->FaceOpen();

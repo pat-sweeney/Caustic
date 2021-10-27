@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 import Base.Core.Core;
-#include "Geometry\Mesh\IMeshConstructor.h"
+import Geometry.Mesh.IMeshConstructor;
 #include "Rendering\SceneGraph\SceneGraph.h"
 
 namespace Caustic

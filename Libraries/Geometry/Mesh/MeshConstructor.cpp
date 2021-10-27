@@ -3,10 +3,12 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-import Base.Core.Error;
+module;
 #include "Geometry\Mesh\IMesh.h"
-#include "Geometry\Mesh\IMeshConstructor.h"
 #include "MeshConstructor.h"
+
+module Geometry.Mesh.IMeshConstructor;
+import Base.Core.Error;
 
 namespace Caustic
 {
@@ -456,11 +458,6 @@ namespace Caustic
         MeshClose();
         return m_spMesh;
 #endif
-    }
-
-    CRefObj<IMeshConstructor> CreateMeshConstructor()
-    {
-        return CRefObj<IMeshConstructor>(new CMeshConstructor());
     }
 
     CMeshConstructor::CMeshConstructor() :

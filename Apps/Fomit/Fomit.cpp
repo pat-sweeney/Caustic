@@ -7,13 +7,13 @@
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Imaging.Image.ImageFilter;
+import Geometry.Mesh.IMeshConstructor;
 #include "Rendering\RenderWindow\IRenderWindow.h"
 #include "Rendering\Caustic\ICausticFactory.h"
 #include "Rendering\RenderGraph\IRenderGraph.h"
 #include "Geometry\MeshImport\MeshImport.h"
 #include "Cameras\AzureKinect\IAzureKinect.h"
 #include "Rendering\Caustic\ConstructBuffers.h"
-#include "Geometry\Mesh\IMeshConstructor.h"
 #include "Rendering\RenderGraph\IRenderGraph.h"
 #include "Rendering\RenderGraph\IRenderGraphFactory.h"
 #include <Windows.h>

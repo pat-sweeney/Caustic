@@ -13,9 +13,6 @@
     <ClInclude Include="IMesh.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="IMeshConstructor.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Mesh.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -61,6 +58,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="IDelaunay.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IMeshConstructor.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IMeshConstructor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

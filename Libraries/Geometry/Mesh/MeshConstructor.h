@@ -5,7 +5,7 @@
 //**********************************************************************
 #include "Geometry\Mesh\Mesh.h"
 #include "Geometry\Mesh\IMesh.h"
-#include "Geometry\Mesh\IMeshConstructor.h"
+import Geometry.Mesh.IMeshConstructor;
 #include <vector>
 
 namespace Caustic

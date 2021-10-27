@@ -5,8 +5,8 @@
 //**********************************************************************
 import Base.Core.Core;
 import Base.Core.IRefCount;
+import Geometry.Mesh.IMeshConstructor;
 #include "Geometry\Mesh\IMesh.h"
-#include "Geometry\Mesh\IMeshConstructor.h"
 #include "Mesh.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -30,7 +30,7 @@ namespace Caustic
     //**********************************************************************
     CRefObj<IMesh> CreateSurfaceRevolution(std::vector<Vector3> &pts, uint32 npts, uint32 subdivisions, float maxAngle)
     {
-        CRefObj<IMeshConstructor> spMeshConstructor = Caustic::CreateMeshConstructor();
+        CRefObj<IMeshConstructor> spMeshConstructor = IMeshConstructor::Create();
         spMeshConstructor->MeshOpen();
         spMeshConstructor->SubMeshOpen();
 
@@ -239,7 +239,7 @@ namespace Caustic
             { 1, 3, 0 },
             { 2, 3, 1 }
         };
-        CRefObj<IMeshConstructor> spMeshConstructor = CreateMeshConstructor();
+        CRefObj<IMeshConstructor> spMeshConstructor = IMeshConstructor::Create();
         spMeshConstructor->MeshOpen();
         spMeshConstructor->SubMeshOpen();
         for (int i = 0; i < (int)(sizeof(vertFaces) / sizeof(vertFaces[0])); i++)
@@ -272,7 +272,7 @@ namespace Caustic
     //**********************************************************************
     CRefObj<IMesh> CreateGrid(uint32 width, uint32 height)
     {
-        CRefObj<IMeshConstructor> spMeshConstructor = Caustic::CreateMeshConstructor();
+        CRefObj<IMeshConstructor> spMeshConstructor = IMeshConstructor::Create();
 
         spMeshConstructor->MeshOpen();
         spMeshConstructor->SubMeshOpen();
