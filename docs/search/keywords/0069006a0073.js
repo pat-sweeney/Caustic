@@ -1,1 +1,1 @@
-﻿NDSearch.OnPrefixDataLoaded("ijs",["Interface"],[["IJSonObj",,[[,,,,0,"File:Parsers/JSon/IJSonParser.h:IJSonObj","CClass:IJSonObj"]]],["IJSonParser",,[[,,,,0,"File:Parsers/JSon/IJSonParser.h:IJSonParser","CClass:IJSonParser"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("ijs",["Interface"],[["IJSonObj",,[[,,,,0,"File:Parsers/JSon/IJSonParser.ixx:IJSonObj","CClass:IJSonObj"]]],["IJSonParser",,[[,,,,0,"File:Parsers/JSon/IJSonParser.ixx:IJSonParser","CClass:IJSonParser"]]]]);

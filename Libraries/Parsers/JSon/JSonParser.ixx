@@ -3,17 +3,19 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "pch.h"
+module;
 #include "Parsers\Lex\Lex.h"
-#include "Parsers\JSon\IJSonParser.h"
 #include <map>
 #include <string>
 #include <memory>
 #include <vector>
 #include <any>
 
+export module Parsers.JSon.JSonParser;
+import Parsers.JSon.IJSonParser;
+
 // Namespace: Caustic
-namespace Caustic
+export namespace Caustic
 {
 	//**********************************************************************
 	// Class: CJSonObj

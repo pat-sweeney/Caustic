@@ -3,9 +3,9 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "pch.h"
 #include "Parsers\Lex\Lex.h"
-#include "Parsers\JSon\JSonParser.h"
+import Parsers.JSon.JSonParser;
+import Parsers.JSon.IJSonParser;
 #include <map>
 #include <string>
 #include <memory>
@@ -222,10 +222,5 @@ namespace Caustic
 			ConditionalWrite((pBuffer) ? &pBuffer : nullptr, &totalSize, "%s : ", dom->GetName().c_str());
 		WriteValue(dom, (pBuffer) ? &pBuffer : nullptr, &totalSize);
 		return totalSize;
-	}
-	
-	CRefObj<IJSonParser> CreateJSonParser()
-	{
-		return CRefObj<IJSonParser>(new CJSonParser());
 	}
 }

@@ -3,16 +3,15 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "pch.h"
+module;
 #include <map>
 #include <any>
 #include <string>
 #include <stdio.h>
 #include <vector>
 #include "..\External\imgui\imgui.h"
-#include "Parsers\JSon\IJSonParser.h"
 
-using namespace Caustic;
+module Parsers.JSon.IJSonParser;
 
 namespace Caustic
 {

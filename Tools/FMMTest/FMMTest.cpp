@@ -27,6 +27,7 @@ import Base.Core.Core;
 import Base.Core.IRefCount;
 import Imaging.Image.GPUPipeline;
 import Imaging.Image.IGPUPipeline;
+import Parsers.JSon.IJSonParser;
 #include "Rendering\RenderWindow\IRenderWindow.h"
 #include "Rendering\Caustic\ICausticFactory.h"
 #include "Rendering\Caustic\IShader.h"
@@ -35,7 +36,6 @@ import Imaging.Image.IGPUPipeline;
 #include "Rendering\SceneGraph\ISceneFactory.h"
 #include "Rendering\SceneGraph\ISceneGraph.h"
 #include "Geometry\MeshImport\MeshImport.h"
-#include "Parsers\JSon\IJSonParser.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>

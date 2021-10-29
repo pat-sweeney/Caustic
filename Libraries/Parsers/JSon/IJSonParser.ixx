@@ -3,14 +3,18 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-import Base.Core.Core;
-import Base.Core.IRefCount;
+module;
 #include <string>
 #include <memory>
 #include <any>
 
+export module Parsers.JSon.IJSonParser;
+import Base.Core.Core;
+import Base.Core.IRefCount;
+import Base.Core.RefCount;
+
 // Namespace: Caustic
-namespace Caustic
+export namespace Caustic
 {
 	enum class CJSonType
 	{
@@ -26,8 +30,8 @@ namespace Caustic
 	// Interface: IJSonObj 
 	// Defines an interface to our basic JSON object returned by the parser.
 	//
-	// Header:
-	// {Link:#include "Parsers/JSon/IJsonParser.h"{Parsers/JSon/IJsonParser.h}}
+	// Module:
+	// {Link:import Parsers.JSon.IJsonParser{Parsers/JSon/IJsonParser.ixx}}
 	//**********************************************************************
 	struct IJSonObj : public IRefCount
 	{
@@ -54,8 +58,8 @@ namespace Caustic
 	// Interface: IJSonParser 
 	// Defines an interface for parsing JSON files.
 	//
-	// Header:
-	// {Link:#include "Parsers/JSon/IJsonParser.h"{Parsers/JSon/IJsonParser.h}}
+	// Module:
+	// {Link:import Parsers.JSon.IJsonParser{Parsers/JSon/IJsonParser.ixx}}
 	//**********************************************************************
 	struct IJSonParser : public IRefCount
 	{
@@ -109,5 +113,5 @@ namespace Caustic
 	};
 	
 	CRefObj<IJSonParser> CreateJSonParser();
-	extern void JSONTree(IJSonObj* pObj, const char* pTreeName);
+	void JSONTree(IJSonObj* pObj, const char* pTreeName);
 }

@@ -1,0 +1,1 @@
+﻿NDSummary.OnToolTipsLoaded("File:Parsers/JSon/IJSonParser.cpp",{1080:"<div class=\"NDToolTip TClass LC\"><div class=\"NDClassPrototype\" id=\"NDClassPrototype1080\"><div class=\"CPEntry TClass Current\"><div class=\"CPModifiers\"><span class=\"SHKeyword\">namespace</span> </div><div class=\"CPName\">Caustic</div></div></div></div>"});
