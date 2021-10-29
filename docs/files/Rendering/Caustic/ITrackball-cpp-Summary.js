@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/ITrackball.cpp","ITrackball.cpp");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/ITrackball.cpp",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"]],[[1082,0,1,"Functions","Functions"],[1083,0,0,"CreateTrackball","CreateTrackball"]]);

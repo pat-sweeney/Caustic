@@ -280,7 +280,6 @@
     <ClInclude Include="IShaderMgr.h" />
     <ClInclude Include="ISpotLight.h" />
     <ClInclude Include="ITexture.h" />
-    <ClInclude Include="ITrackball.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="PathTrace.h" />
     <ClInclude Include="PointCloud.h" />
@@ -295,7 +294,6 @@
     <ClInclude Include="ShaderInfo.h" />
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="Trackball.h" />
     <ClInclude Include="VideoTexture.h" />
   </ItemGroup>
   <ItemGroup>
@@ -309,6 +307,8 @@
     <ClCompile Include="DesktopTexture.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="IBuffer.ixx" />
+    <ClCompile Include="ITrackball.cpp" />
+    <ClCompile Include="ITrackball.ixx" />
     <ClCompile Include="PointCloud.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="RendererMarshaller.cpp" />
@@ -322,6 +322,7 @@
     <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Trackball.cpp" />
+    <ClCompile Include="Trackball.ixx" />
     <ClCompile Include="VideoTexture.cpp" />
   </ItemGroup>
   <ItemGroup>

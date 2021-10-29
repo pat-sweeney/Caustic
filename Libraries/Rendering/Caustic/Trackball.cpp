@@ -3,8 +3,13 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "Trackball.h"
+module;
+#include <d3d11.h>
+#include <DirectXMath.h>
+#undef min
 #include <algorithm>
+
+module Rendering.Caustic.Trackball;
 
 //**********************************************************************
 // File: Trackball.cpp
@@ -13,19 +18,6 @@
 
 namespace Caustic
 {
-    //**********************************************************************
-    // Function: CreateTrackball
-    // Global function for creating a track ball. This method should generally
-    // not be called. Use the ICausticFactory to create new Caustic objects.
-    //
-    // Returns:
-    // Returns the newly created trackball.
-    //**********************************************************************
-    CRefObj<ITrackball> CreateTrackball()
-    {
-        return CRefObj<ITrackball>(new CTrackball());
-    }
-
     //**********************************************************************
     // Method: ComputeSurfacePosition
     // Converts a screen coordinate into a point on our trackball surface
