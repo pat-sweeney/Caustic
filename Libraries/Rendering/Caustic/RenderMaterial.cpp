@@ -3,7 +3,6 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "stdafx.h"
 #include "Renderer.h"
 #include "RenderMaterial.h"
 #include "Geometry\Mesh\MaterialAttrib.h"

@@ -183,6 +183,7 @@
         "type": "project",
         "dependencies": {
           "CameraBase": "1.0.0",
+          "Caustic": "1.0.0",
           "Color": "1.0.0",
           "Core": "1.0.0",
           "GeomDS": "1.0.0",
@@ -201,6 +202,7 @@
         "type": "project",
         "dependencies": {
           "CameraBase": "1.0.0",
+          "Caustic": "1.0.0",
           "Color": "1.0.0",
           "Core": "1.0.0",
           "GeomDS": "1.0.0",
@@ -218,6 +220,7 @@
       "SceneGraph/1.0.0": {
         "type": "project",
         "dependencies": {
+          "Caustic": "1.0.0",
           "Color": "1.0.0",
           "Core": "1.0.0",
           "GeomDS": "1.0.0",

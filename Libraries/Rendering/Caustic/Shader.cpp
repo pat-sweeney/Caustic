@@ -3,7 +3,6 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "stdafx.h"
 #include "Shader.h"
 #include "Sampler.h"
 #include "IShaderInfo.h"

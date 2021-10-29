@@ -4,7 +4,6 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "stdafx.h"
 import Base.Core.Core;
 import Base.Math.BBox;
 #include "Rendering\Caustic\Caustic.h"

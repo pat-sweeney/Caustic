@@ -11,11 +11,11 @@
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Math.Vector;
+import Rendering.Caustic.IBuffer;
 #include "Base\Core\convertStr.h"
 #include "IRGNCompute.h"
 #include "RGNCompute.h"
 #include "ILightCollection.h"
-#include "Rendering\Caustic\IBuffer.h"
 #include "Rendering\Caustic\Shader.h"
 #include "Rendering\Caustic\ShaderInfo.h"
 

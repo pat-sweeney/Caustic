@@ -4,7 +4,6 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "stdafx.h"
 #include "Rendering\Caustic\Caustic.h"
 import Base.Core.Core;
 import Base.Core.Error;

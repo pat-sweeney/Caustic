@@ -4,7 +4,6 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "stdafx.h"
 #include <windows.h>
 import Base.Core.Core;
 #include "Base/Core/convertStr.h"

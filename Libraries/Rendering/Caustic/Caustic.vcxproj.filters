@@ -46,12 +46,6 @@
     <ClInclude Include="RenderMaterial.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Caustic.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -69,9 +63,6 @@
     </ClInclude>
     <ClInclude Include="ConstructBuffers.h">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IBuffer.h">
-      <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="ICamera.h">
       <Filter>Source Files\Interfaces</Filter>
@@ -153,9 +144,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -215,6 +203,9 @@
     </ClCompile>
     <ClCompile Include="DesktopTexture.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IBuffer.ixx">
+      <Filter>Source Files\Interfaces</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

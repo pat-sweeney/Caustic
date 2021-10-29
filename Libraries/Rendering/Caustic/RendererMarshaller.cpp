@@ -3,7 +3,6 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "stdafx.h"
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\RendererMarshaller.h"
 #include "Renderer.h"

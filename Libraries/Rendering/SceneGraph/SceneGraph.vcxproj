@@ -203,6 +203,9 @@
     <ProjectReference Include="..\..\Imaging\Image\Image.vcxproj">
       <Project>{f7bef797-220c-4585-a489-f06df155ea60}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Caustic\Caustic.vcxproj">
+      <Project>{60a04400-10f9-4c6d-b34c-d5c7ebafa262}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,1 +1,1 @@
-﻿NDSummary.OnToolTipsLoaded("CClass:IBuffer",{908:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Wrapper around arbitrary buffers (StructuredBuffer, RWStructuredBuffer, ...)&nbsp; This is mostly used by compute shaders.</div></div>"});
+﻿NDSummary.OnToolTipsLoaded("CClass:IBuffer",{1056:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Wrapper around arbitrary buffers (StructuredBuffer, RWStructuredBuffer, ...)&nbsp; This is mostly used by compute shaders.</div></div>"});

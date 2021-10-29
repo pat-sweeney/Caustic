@@ -1,1 +1,0 @@
-﻿NDSummary.OnToolTipsLoaded("File:Rendering/Caustic/IBuffer.h",{1056:"<div class=\"NDToolTip TFile LC\"><div class=\"TTSummary\">Defines interface for buffers.</div></div>",908:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Wrapper around arbitrary buffers (StructuredBuffer, RWStructuredBuffer, ...)&nbsp; This is mostly used by compute shaders.</div></div>"});
