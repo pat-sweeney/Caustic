@@ -34,9 +34,6 @@
     <ClInclude Include="RendererMarshaller.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="VideoTexture.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="PointLight.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -208,6 +205,9 @@
       <Filter>Source Files\Interfaces</Filter>
     </ClCompile>
     <ClCompile Include="ITrackball.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoTexture.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -3,18 +3,20 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
+module;
 #include "Rendering\Caustic\Caustic.h"
-import Base.Core.Core;
-import Base.Core.Error;
-import Base.Core.RefCount;
 #include <d3d11.h>
 #include <mfapi.h>
 #include <mfidl.h>
 #include <mfreadwrite.h>
 #include <mfcaptureengine.h>
 
-namespace Caustic
+export module Rendering.Caustic.VideoTexture;
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.RefCount;
+
+export namespace Caustic
 {
     //**********************************************************************
     // Class: CVideoFormat

@@ -294,7 +294,6 @@
     <ClInclude Include="ShaderInfo.h" />
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="VideoTexture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BuildRenderMesh.cpp" />
@@ -324,6 +323,7 @@
     <ClCompile Include="Trackball.cpp" />
     <ClCompile Include="Trackball.ixx" />
     <ClCompile Include="VideoTexture.cpp" />
+    <ClCompile Include="VideoTexture.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ColorNormal.ps" />

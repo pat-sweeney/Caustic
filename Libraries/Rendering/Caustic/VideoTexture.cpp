@@ -5,14 +5,19 @@
 //**********************************************************************
 import Base.Core.Core;
 import Base.Core.Error;
+import Rendering.Caustic.VideoTexture;
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\CausticFactory.h"
-#include "VideoTexture.h"
 #include <memory>
 #include <wincodec.h>
 #include <objbase.h>
 #include <assert.h>
 #include <Mferror.h>
+#include <d3d11.h>
+#include <mfapi.h>
+#include <mfidl.h>
+#include <mfreadwrite.h>
+#include <mfcaptureengine.h>
 
 namespace Caustic
 {
