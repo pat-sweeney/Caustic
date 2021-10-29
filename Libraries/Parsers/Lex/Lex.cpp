@@ -3,17 +3,17 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "pch.h"
-#include "Lex.h"
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Parsers.Lex.Lex;
+import Parsers.Lex.ILex;
+#include <ctype.h>
+#include <string>
 
 // Namespace: Caustic
 namespace Caustic
 {
-	CRefObj<ILex> CreateLex(const char* buffer, bool returnWhitespace /* = false */)
-	{
-		return CRefObj<ILex>(new CLex(buffer, returnWhitespace));
-	}
-
 	void CLex::SetParseTable(ParseTableEntry* pTable)
 	{
 		m_pUserTokens = pTable;

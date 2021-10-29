@@ -3,7 +3,11 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "Parsers\Lex\Lex.h"
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Base.Core.Error;
+import Parsers.Lex.ILex;
 import Parsers.JSon.JSonParser;
 import Parsers.JSon.IJSonParser;
 #include <map>

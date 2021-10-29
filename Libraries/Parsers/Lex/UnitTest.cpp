@@ -3,9 +3,11 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "pch.h"
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
 import Base.Core.Error;
-#include "Parsers\Lex\ILex.h"
+import Parsers.Lex.ILex;
 #include "UnitTest.h"
 #include <stdlib.h>
 #include <stdio.h>

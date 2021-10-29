@@ -105,6 +105,9 @@
     <ProjectReference Include="..\..\Rendering\ImGui\ImGui.vcxproj">
       <Project>{fd63d447-4b42-4f14-be8d-392fa277ee0e}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Lex\Lex.vcxproj">
+      <Project>{e96c27e0-989e-4fd1-af44-06c378e1794e}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

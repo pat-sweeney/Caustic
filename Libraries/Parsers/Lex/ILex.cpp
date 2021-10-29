@@ -3,25 +3,18 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-module;
-#include <map>
-#include <string>
-#include <memory>
-#include <vector>
-#include <any>
-#include <windows.h>
-#include <varargs.h>
-
-module Parsers.JSon.IJSonParser;
-import Parsers.JSon.JSonParser;
+module Parsers.Lex.ILex;
 import Parsers.Lex.Lex;
-import Parsers.Lex.ILex;
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
 
 // Namespace: Caustic
 namespace Caustic
 {
-	CRefObj<IJSonParser> CreateJSonParser()
+	CRefObj<ILex> CreateLex(const char* buffer, bool returnWhitespace /* = false */)
 	{
-		return CRefObj<IJSonParser>(new CJSonParser());
+		return CRefObj<ILex>(new CLex(buffer, returnWhitespace));
 	}
 }
+

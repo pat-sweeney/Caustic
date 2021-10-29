@@ -1,1 +1,1 @@
-﻿NDSearch.OnPrefixDataLoaded("lex",["Struct"],[["LexToken",,[[,,,,0,"File:Parsers/Lex/ILex.h:LexToken","CClass:LexToken"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("lex",["Struct"],[["LexToken",,[[,,,,0,"File:Parsers/Lex/ILex.ixx:LexToken","CClass:LexToken"]]]]);

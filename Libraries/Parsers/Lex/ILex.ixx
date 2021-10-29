@@ -3,20 +3,22 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
-import Base.Core.Core;
-import Base.Core.IRefCount;
+module;
 #include <string>
 
+export module Parsers.Lex.ILex;
+import Base.Core.Core;
+import Base.Core.IRefCount;
+
 // Namespace: Caustic
-namespace Caustic
+export namespace Caustic
 {
 	//**********************************************************************
 	// List of predefined tokens. User defined token should start with id
 	// starting at c_LexToken_Last.
 	//
-	// Header:
-	// {Link:#include "Parsers/Lex/ILex.h"{Parsers/Lex/ILex.h}}
+	// Module:
+	// {Link:import Parsers.Lex.ILex{Parsers/Lex/ILex.ixx}}
 	//**********************************************************************
 	const int c_LexToken_EOF = 0;
 	const int c_LexToken_Whitespace = 1;
@@ -52,8 +54,8 @@ namespace Caustic
 	// Struct: LexToken
 	// Defines a token returned by the parser
 	//
-	// Header:
-	// {Link:#include "Parsers/Lex/ILex.h"{Parsers/Lex/ILex.h}}
+	// Module:
+	// {Link:import Parsers.Lex.ILex{Parsers/Lex/ILex.ixx}}
 	//**********************************************************************
 	struct LexToken
 	{
@@ -74,8 +76,8 @@ namespace Caustic
 	// Struct: ParseTableEntry
 	// Defines a string to be treated as a token along with its associated Id
 	//
-	// Header:
-	// {Link:#include "Parsers/Lex/ILex.h"{Parsers/Lex/ILex.h}}
+	// Module:
+	// {Link:import Parsers.Lex.ILex{Parsers/Lex/ILex.ixx}}
 	//**********************************************************************
 	struct ParseTableEntry
 	{
@@ -87,8 +89,8 @@ namespace Caustic
 	// Interface: IImageBase
 	// Base interface shared across all image types
 	//
-	// Header:
-	// {Link:#include "Parsers/Lex/ILex.h"{Parsers/Lex/ILex.h}}
+	// Module:
+	// {Link:import Parsers.Lex.ILex{Parsers/Lex/ILex.ixx}}
 	//**********************************************************************
 	struct ILex : public IRefCount
 	{

@@ -4,7 +4,6 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "Parsers\Lex\Lex.h"
 #include <map>
 #include <string>
 #include <memory>
@@ -12,7 +11,12 @@ module;
 #include <any>
 
 export module Parsers.JSon.JSonParser;
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
 import Parsers.JSon.IJSonParser;
+import Parsers.Lex.Lex;
+import Parsers.Lex.ILex;
 
 // Namespace: Caustic
 export namespace Caustic
