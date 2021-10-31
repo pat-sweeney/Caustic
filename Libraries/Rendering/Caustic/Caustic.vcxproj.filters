@@ -73,9 +73,6 @@
     <ClInclude Include="IRenderCtx.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="IRenderer.h">
-      <Filter>Source Files\Interfaces</Filter>
-    </ClInclude>
     <ClInclude Include="IRendererMarshaller.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
@@ -209,6 +206,9 @@
     </ClCompile>
     <ClCompile Include="VideoTexture.ixx">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IRenderer.ixx">
+      <Filter>Source Files\Interfaces</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

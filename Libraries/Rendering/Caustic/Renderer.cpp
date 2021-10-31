@@ -934,7 +934,7 @@ namespace Caustic
     }
 
     //**********************************************************************
-    // Function: CreateRenderer
+    // Function: CreateRendererInternal
     // Creates a renderer
     //
     // Parameters:
@@ -947,7 +947,7 @@ namespace Caustic
     // Returns:
     // Returns the created renderer
     //**********************************************************************
-    CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring &shaderFolder, bool startFrozen /* = false */, int desktopIndex /* = 0 */)
+    CRefObj<IRenderer> CreateRendererInternal(HWND hwnd, std::wstring &shaderFolder, bool startFrozen /* = false */, int desktopIndex /* = 0 */)
     {
         std::unique_ptr<CRenderer> spRenderer(new CRenderer());
         spRenderer->Setup(hwnd, shaderFolder, true, startFrozen, desktopIndex);

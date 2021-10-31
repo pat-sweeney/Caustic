@@ -5,6 +5,7 @@
 //**********************************************************************
 #pragma once
 
+#include "Geometry\Mesh\IMaterialAttrib.h"
 import Base.Core.Core;
 import Base.Core.IRefCount;
 #include <vector>

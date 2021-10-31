@@ -8,7 +8,7 @@
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Imaging.Image.IImage;
-#include "Rendering/Caustic/IRenderer.h"
+import Rendering.Caustic.IRenderer;
 
 
 //**********************************************************************

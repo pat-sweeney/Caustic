@@ -270,7 +270,6 @@
     <ClInclude Include="IPointLight.h" />
     <ClInclude Include="IRenderable.h" />
     <ClInclude Include="IRenderCtx.h" />
-    <ClInclude Include="IRenderer.h" />
     <ClInclude Include="IRendererMarshaller.h" />
     <ClInclude Include="IRenderMaterial.h" />
     <ClInclude Include="IRenderMesh.h" />
@@ -306,6 +305,7 @@
     <ClCompile Include="DesktopTexture.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="IBuffer.ixx" />
+    <ClCompile Include="IRenderer.ixx" />
     <ClCompile Include="ITrackball.cpp" />
     <ClCompile Include="ITrackball.ixx" />
     <ClCompile Include="PointCloud.cpp" />

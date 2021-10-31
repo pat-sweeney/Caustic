@@ -11,6 +11,7 @@ import Base.Core.Core;
 import Base.Math.BBox;
 import Base.Math.Vector;
 import Rendering.Caustic.ITrackball;
+import Rendering.Caustic.IRenderer;
 #include "Rendering\Caustic\IShaderMgr.h"
 #include "Rendering\Caustic\ITexture.h"
 #include "Rendering\Caustic\ISampler.h"
@@ -20,7 +21,6 @@ import Rendering.Caustic.ITrackball;
 #include "Rendering\Caustic\ISpotLight.h"
 #include "Rendering\Caustic\IPointCloud.h"
 #include "Rendering\Caustic\IShader.h"
-#include "Rendering\Caustic\IRenderer.h"
 #include "Rendering\Caustic\IRenderCtx.h"
 #include "Rendering\Caustic\IPointLight.h"
 #include "Rendering\Caustic\IRenderMaterial.h"

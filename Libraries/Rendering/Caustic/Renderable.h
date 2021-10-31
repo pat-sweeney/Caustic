@@ -6,6 +6,7 @@
 #pragma once
 #include "Rendering\Caustic\Caustic.h"
 #include "IRenderable.h"
+#include "Rendering\Caustic\IRenderable.h"
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.Event;
