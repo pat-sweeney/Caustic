@@ -58,9 +58,6 @@
     <ClInclude Include="ConstructBuffers.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="ICamera.h">
-      <Filter>Source Files\Interfaces</Filter>
-    </ClInclude>
     <ClInclude Include="ICausticFactory.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
@@ -208,6 +205,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="IRenderer.ixx">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="ICamera.ixx">
       <Filter>Source Files\Interfaces</Filter>
     </ClCompile>
   </ItemGroup>

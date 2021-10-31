@@ -262,7 +262,6 @@
     <ClInclude Include="defs.h" />
     <ClInclude Include="DesktopTexture.h" />
     <ClInclude Include="DirectionalLight.h" />
-    <ClInclude Include="ICamera.h" />
     <ClInclude Include="ICausticFactory.h" />
     <ClInclude Include="IDirectionalLight.h" />
     <ClInclude Include="ILight.h" />
@@ -305,6 +304,7 @@
     <ClCompile Include="DesktopTexture.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="IBuffer.ixx" />
+    <ClCompile Include="ICamera.ixx" />
     <ClCompile Include="IRenderer.ixx" />
     <ClCompile Include="ITrackball.cpp" />
     <ClCompile Include="ITrackball.ixx" />

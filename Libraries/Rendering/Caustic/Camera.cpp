@@ -18,7 +18,7 @@ import Base.Core.Error;
 namespace Caustic
 {
     //**********************************************************************
-    // Function: CreateCamera
+    // Function: CreateCameraInternal
     // Global function for creating a camera. This method should generally
     // not be called. Use the ICausticFactory to create new Caustic objects.
     //
@@ -29,7 +29,7 @@ namespace Caustic
     // Returns:
     // Returns the newly created camera.
     //**********************************************************************
-    CRefObj<ICamera> CreateCamera(bool leftHanded)
+    CRefObj<ICamera> CreateCameraInternal(bool leftHanded)
     {
         return CRefObj<ICamera>(new CCamera(leftHanded));
     }

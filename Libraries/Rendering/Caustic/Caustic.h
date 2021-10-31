@@ -12,10 +12,10 @@ import Base.Math.BBox;
 import Base.Math.Vector;
 import Rendering.Caustic.ITrackball;
 import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.ICamera;
 #include "Rendering\Caustic\IShaderMgr.h"
 #include "Rendering\Caustic\ITexture.h"
 #include "Rendering\Caustic\ISampler.h"
-#include "Rendering\Caustic\ICamera.h"
 #include "Rendering\Caustic\IDirectionalLight.h"
 #include "Rendering\Caustic\IPointLight.h"
 #include "Rendering\Caustic\ISpotLight.h"
