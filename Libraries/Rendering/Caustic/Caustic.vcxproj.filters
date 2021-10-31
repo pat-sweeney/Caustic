@@ -67,9 +67,6 @@
     <ClInclude Include="IRenderable.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="IRenderCtx.h">
-      <Filter>Source Files\Interfaces</Filter>
-    </ClInclude>
     <ClInclude Include="IRendererMarshaller.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
@@ -208,6 +205,9 @@
       <Filter>Source Files\Interfaces</Filter>
     </ClCompile>
     <ClCompile Include="ICamera.ixx">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="IRenderCtx.ixx">
       <Filter>Source Files\Interfaces</Filter>
     </ClCompile>
   </ItemGroup>

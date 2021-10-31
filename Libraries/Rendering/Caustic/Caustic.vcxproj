@@ -268,7 +268,6 @@
     <ClInclude Include="IPointCloud.h" />
     <ClInclude Include="IPointLight.h" />
     <ClInclude Include="IRenderable.h" />
-    <ClInclude Include="IRenderCtx.h" />
     <ClInclude Include="IRendererMarshaller.h" />
     <ClInclude Include="IRenderMaterial.h" />
     <ClInclude Include="IRenderMesh.h" />
@@ -305,6 +304,7 @@
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="IBuffer.ixx" />
     <ClCompile Include="ICamera.ixx" />
+    <ClCompile Include="IRenderCtx.ixx" />
     <ClCompile Include="IRenderer.ixx" />
     <ClCompile Include="ITrackball.cpp" />
     <ClCompile Include="ITrackball.ixx" />

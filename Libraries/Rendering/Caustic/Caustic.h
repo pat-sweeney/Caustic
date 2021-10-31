@@ -13,6 +13,7 @@ import Base.Math.Vector;
 import Rendering.Caustic.ITrackball;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.ICamera;
+import Rendering.Caustic.IRenderCtx;
 #include "Rendering\Caustic\IShaderMgr.h"
 #include "Rendering\Caustic\ITexture.h"
 #include "Rendering\Caustic\ISampler.h"
@@ -21,7 +22,6 @@ import Rendering.Caustic.ICamera;
 #include "Rendering\Caustic\ISpotLight.h"
 #include "Rendering\Caustic\IPointCloud.h"
 #include "Rendering\Caustic\IShader.h"
-#include "Rendering\Caustic\IRenderCtx.h"
 #include "Rendering\Caustic\IPointLight.h"
 #include "Rendering\Caustic\IRenderMaterial.h"
 #include "Rendering\Caustic\IRendererMarshaller.h"
