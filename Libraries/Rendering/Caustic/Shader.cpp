@@ -4,7 +4,7 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "Shader.h"
-#include "Sampler.h"
+import Rendering.Caustic.Sampler;
 #include "IShaderInfo.h"
 #include "IRenderMaterial.h"
 #include "IPointLight.h"

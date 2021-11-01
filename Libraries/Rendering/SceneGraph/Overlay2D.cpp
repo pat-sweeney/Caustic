@@ -7,7 +7,7 @@
 #include "Rendering\SceneGraph\ISceneGraph.h"
 #include "Overlay2D.h"
 #include "SceneFactory.h"
-#include "Rendering\Caustic\Sampler.h"
+import Rendering.Caustic.Sampler;
 
 namespace Caustic
 {

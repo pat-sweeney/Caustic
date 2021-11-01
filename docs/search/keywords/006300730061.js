@@ -1,1 +1,1 @@
-﻿NDSearch.OnPrefixDataLoaded("csa",["Class","Struct"],[["CSampler",,[[,,,,0,"File:Rendering/Caustic/Sampler.h:CSampler","CClass:CSampler"]]],["CSamplerRef",,[[,,,,1,"File:Rendering/Caustic/Sampler.h:CSamplerRef","CClass:CSamplerRef"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("csa",["Class","Struct"],[["CSampler",,[[,,,,0,"File:Rendering/Caustic/Sampler.ixx:CSampler","CClass:CSampler"]]],["CSamplerRef",,[[,,,,1,"File:Rendering/Caustic/Sampler.ixx:CSamplerRef","CClass:CSamplerRef"]]]]);

@@ -285,7 +285,6 @@
     <ClInclude Include="RendererMarshaller.h" />
     <ClInclude Include="RenderMaterial.h" />
     <ClInclude Include="RenderMesh.h" />
-    <ClInclude Include="Sampler.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderInfo.h" />
     <ClInclude Include="SpotLight.h" />
@@ -316,6 +315,7 @@
     <ClCompile Include="RenderMaterial.cpp" />
     <ClCompile Include="RenderMesh.cpp" />
     <ClCompile Include="Sampler.cpp" />
+    <ClCompile Include="Sampler.ixx" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderInfo.cpp" />
     <ClCompile Include="SpotLight.cpp" />

@@ -6,7 +6,6 @@
 module;
 #include "Rendering\Caustic\Shader.h"
 #include "Rendering\Caustic\Caustic.h"
-#include "Rendering\Caustic\Sampler.h"
 #include "Rendering\Caustic\CausticFactory.h"
 #include <memory>
 #include <Windows.h>
@@ -21,6 +20,7 @@ import Base.Core.Core;
 import Base.Core.Error;
 import Imaging.Image.IGPUPipeline;
 import Cameras.CameraBase.ICamera;
+import Rendering.Caustic.Sampler;
 
 // Namespace: Caustic
 namespace Caustic

@@ -3,7 +3,7 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "Sampler.h"
+import Rendering.Caustic.Sampler;
 #include "CausticFactory.h"
 
 namespace Caustic

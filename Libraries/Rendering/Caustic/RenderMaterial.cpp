@@ -10,7 +10,7 @@ import Rendering.Caustic.Renderer;
 #include "RenderMaterial.h"
 #include "Geometry\Mesh\MaterialAttrib.h"
 #include "CausticFactory.h"
-#include "Sampler.h"
+import Rendering.Caustic.Sampler;
 #include <string>
 
 namespace Caustic

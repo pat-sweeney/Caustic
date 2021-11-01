@@ -8,7 +8,7 @@
 #include "Texture.h"
 #include "Renderable.h"
 #include "ShaderInfo.h"
-#include "Sampler.h"
+import Rendering.Caustic.Sampler;
 #include <vector>
 #include <any>
 import Base.Core.Core;
