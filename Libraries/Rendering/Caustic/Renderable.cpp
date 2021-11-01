@@ -3,7 +3,10 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "Renderer.h"
+#include "Rendering\Caustic\Caustic.h"
+#include "Geometry\Mesh\Mesh.h"
+#include "Shader.h"
+import Rendering.Caustic.Renderer;
 #include "Sampler.h"
 #include "Rendering\Caustic\RenderMaterial.h"
 #include "Rendering\Caustic\CausticFactory.h"

@@ -283,7 +283,6 @@
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Renderable.h" />
     <ClInclude Include="RendererMarshaller.h" />
-    <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderMaterial.h" />
     <ClInclude Include="RenderMesh.h" />
     <ClInclude Include="Sampler.h" />
@@ -310,6 +309,7 @@
     <ClCompile Include="ITrackball.ixx" />
     <ClCompile Include="PointCloud.cpp" />
     <ClCompile Include="PointLight.cpp" />
+    <ClCompile Include="Renderer.ixx" />
     <ClCompile Include="RendererMarshaller.cpp" />
     <ClCompile Include="Renderable.cpp" />
     <ClCompile Include="Renderer.cpp" />

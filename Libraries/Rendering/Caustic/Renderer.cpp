@@ -6,7 +6,6 @@
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\CausticFactory.h"
 #include "Texture.h"
-#include "Renderer.h"
 #include "Renderable.h"
 #include "ShaderInfo.h"
 #include "Sampler.h"
@@ -15,6 +14,7 @@
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.CritSec;
+import Rendering.Caustic.Renderer;
 #include <d3d11.h>
 #include <d3d11_4.h>
 #include <d3dcommon.h>
@@ -196,7 +196,7 @@ namespace Caustic
     //**********************************************************************
     bool CRenderer::EnableDepthTest(bool enable)
     {
-        CHECKTHREAD;
+        CheckThread();
         bool oldEnable = m_depthTestEnabled;
         
         CComPtr<ID3D11DepthStencilState> oldState;
@@ -288,7 +288,7 @@ namespace Caustic
     //**********************************************************************
     void CRenderer::DrawScreenQuadWithCustomShader(IShader *pShader, float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler* pSampler, bool disableDepth /* = false */)
     {
-        CHECKTHREAD;
+        CheckThread();
 #ifdef _DEBUG
         CComPtr<ID3D11DeviceContext2> spCtx2;
         CT(m_spContext->QueryInterface<ID3D11DeviceContext2>(&spCtx2));
@@ -351,7 +351,7 @@ namespace Caustic
     //**********************************************************************
     void CRenderer::DrawScreenQuad(float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler *pSampler, bool disableDepth /* = false */)
     {
-        CHECKTHREAD;
+        CheckThread();
 #ifdef _DEBUG
         CComPtr<ID3D11DeviceContext2> spCtx2;
         CT(m_spContext->QueryInterface<ID3D11DeviceContext2>(&spCtx2));
@@ -433,7 +433,7 @@ namespace Caustic
     //**********************************************************************
     void CRenderer::AddPointLight(IPointLight *pLight)
     {
-        CHECKTHREAD;
+        CheckThread();
         m_lights.push_back(CRefObj<ILight>(pLight));
     }
 
@@ -443,7 +443,7 @@ namespace Caustic
     //**********************************************************************
     CRefObj<IRenderCtx> CRenderer::GetRenderCtx()
     {
-        CHECKTHREAD;
+        CheckThread();
         return CRefObj<IRenderCtx>(m_spRenderCtx);
     }
 
@@ -453,7 +453,7 @@ namespace Caustic
     //**********************************************************************
     void CRenderer::ClearDepth()
     {
-        CHECKTHREAD;
+        CheckThread();
         m_spContext->ClearDepthStencilView(m_spStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
     }
 
@@ -463,7 +463,7 @@ namespace Caustic
     //**********************************************************************
     void CRenderer::DrawLine(Vector3 p1, Vector3 p2, Vector4 clr)
     {
-        CHECKTHREAD;
+        CheckThread();
         UINT offset = 0;
         UINT vertexSize = sizeof(CLineVertex);
         ID3D11DeviceContext *pContext = GetContext();

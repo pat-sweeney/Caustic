@@ -1,1 +1,1 @@
-﻿NDSearch.OnPrefixDataLoaded("cqu",["Class"],[["CQuadVertex",,[[,,,,0,"File:Rendering/Caustic/Renderer.h:CQuadVertex","CClass:CQuadVertex"]]],["CQuantizeFilter",,[[,,,,0,"File:Imaging/Image/Quantize.ixx:CQuantizeFilter","CClass:CQuantizeFilter"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("cqu",["Class"],[["CQuadVertex",,[[,,,,0,"File:Rendering/Caustic/Renderer.ixx:CQuadVertex","CClass:CQuadVertex"]]],["CQuantizeFilter",,[[,,,,0,"File:Imaging/Image/Quantize.ixx:CQuantizeFilter","CClass:CQuantizeFilter"]]]]);

@@ -4,8 +4,10 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "Rendering\Caustic\Caustic.h"
+#include "Geometry\Mesh\Mesh.h"
+import Rendering.Caustic.Renderer;
+#include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\RendererMarshaller.h"
-#include "Renderer.h"
 #include "Rendering\SceneGraph\ISceneGraph.h"
 #include "Rendering\Caustic\CausticFactory.h"
 #include <queue>

@@ -9,11 +9,11 @@ import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
 import Imaging.Image.IImage;
+import Rendering.Caustic.Renderer;
 #include "RenderMesh.h"
 #include "ShaderInfo.h"
 #include <d3d11.h>
 #include <DirectXMath.h>
-#include "Renderer.h"
 #include "CausticFactory.h"
 #include <mfapi.h>
 #include <mfidl.h>
