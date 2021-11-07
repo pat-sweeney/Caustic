@@ -3,11 +3,9 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-module;
-#include "Base\Math\Helper.h"
-
 export module Base.Math.Point;
 import Base.Core.Core;
+import Base.Math.Helper;
 
 export namespace Caustic
 {

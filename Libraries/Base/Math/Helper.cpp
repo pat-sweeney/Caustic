@@ -3,11 +3,13 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "stdafx.h"
+module;
+#include <math.h>
+
+module Base.Math.Helper;
 import Base.Core.Core;
 import Base.Math.BBox;
 import Base.Math.Vector;
-#include <math.h>
 
 namespace Caustic
 {

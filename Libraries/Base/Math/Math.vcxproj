@@ -81,7 +81,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="FuncFilter.h" />
-    <ClInclude Include="Helper.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="NewtonsMethod.h" />
     <ClInclude Include="Quaternion.h" />
@@ -97,6 +96,7 @@
     <ClCompile Include="Covariance.cpp" />
     <ClCompile Include="Covariance.ixx" />
     <ClCompile Include="Helper.cpp" />
+    <ClCompile Include="Helper.ixx" />
     <ClCompile Include="IBBox.ixx" />
     <ClCompile Include="Matrix3x3.cpp" />
     <ClCompile Include="Matrix4x3.cpp" />

@@ -6,10 +6,10 @@
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Math.BBox;
+import Base.Math.Helper;
 import Imaging.Image.IImage;
 import Geometry.Mesh.Delaunay;
 #include "Geometry\Mesh\Mesh.h"
-#include "Base\Math\Helper.h"
 #include <map>
 #include <stack>
 

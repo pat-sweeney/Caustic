@@ -9,7 +9,7 @@ import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Base.Math.Ray;
-#include "Base\Math\Helper.h"
+import Base.Math.Helper;
 #include <memory>
 
 namespace Caustic

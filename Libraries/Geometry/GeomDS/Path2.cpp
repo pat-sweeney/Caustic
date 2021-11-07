@@ -7,12 +7,12 @@ module;
 #include <memory>
 #include <stdarg.h>
 #include <winerror.h>
-#include "Base/Math/Helper.h"
 
 module Geometry.GeomDS.Path2;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.IRefCount;
+import Base.Math.Helper;
 import Geometry.GeomDS.IPath2;
 import Geometry.GeomDS.Path2;
 
