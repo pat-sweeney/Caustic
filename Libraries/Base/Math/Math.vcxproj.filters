@@ -16,23 +16,8 @@
     <ClInclude Include="UnitTest.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="NewtonsMethod.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FuncFilter.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="OBBox2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -100,6 +85,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Helper.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FuncFilter.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewtonsMethod.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

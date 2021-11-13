@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:Matrix2x2","Matrix2x2");NDSummary.OnSummaryLoaded("CClass:Matrix2x2",[["C/C++","C"]],[["Structs","Struct"]],[[60,0,0,"Matrix2x2"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:Matrix2x2","Matrix2x2");NDSummary.OnSummaryLoaded("CClass:Matrix2x2",[["C/C++","C"]],[["Structs","Struct"]],[[169,0,0,"Matrix2x2"]]);

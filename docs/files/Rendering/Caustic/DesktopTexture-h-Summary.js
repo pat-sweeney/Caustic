@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/DesktopTexture.h","DesktopTexture.h");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/DesktopTexture.h",[["C/C++","C"]],[["Classes","Class"]],[[992,0,0,"CVideoFormat","CVideoFormat"],[994,0,0,"CDesktopTexture","CDesktopTexture"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/DesktopTexture.h","DesktopTexture.h");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/DesktopTexture.h",[["C/C++","C"]],[["Classes","Class"]],[[1250,0,0,"CVideoFormat","CVideoFormat"],[1251,0,0,"CDesktopTexture","CDesktopTexture"]]);

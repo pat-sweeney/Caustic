@@ -3,7 +3,8 @@
 
 #include "framework.h"
 #include "TestSamplers.h"
-#include "Base\Math\FuncFilter.h"
+#include <vector>
+import Base.Math.FuncFilter;
 import Base.Core.Core;
 import Base.Math.Vector;
 import Imaging.Image.IImage;

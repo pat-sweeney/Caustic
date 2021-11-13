@@ -1,1 +1,1 @@
-﻿NDSearch.OnPrefixDataLoaded("new",["Function"],[["NewtonsMethod",,[[,,,,0,"File:Base/Math/NewtonsMethod.h:NewtonsMethod"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("new",["Function"],[["NewtonsMethod",,[[,,,,0,"File:Base/Math/NewtonsMethod.ixx:NewtonsMethod"]]]]);

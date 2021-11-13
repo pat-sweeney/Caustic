@@ -3,11 +3,13 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+module;
 #include <vector>
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-namespace Caustic
+export module Base.Math.FuncFilter;
+export namespace Caustic
 {
     //**********************************************************************
     // Class: MovingAverage

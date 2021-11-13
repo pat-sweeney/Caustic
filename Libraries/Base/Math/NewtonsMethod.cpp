@@ -3,10 +3,11 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "stdafx.h"
-import Base.Core.Core;
-#include "NewtonsMethod.h"
+module;
 #include <functional>
+
+module Base.Math.NewtonsMethod;
+import Base.Core.Core;
 
 namespace Caustic
 {

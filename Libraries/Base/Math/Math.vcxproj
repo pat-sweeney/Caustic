@@ -80,12 +80,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="FuncFilter.h" />
     <ClInclude Include="Matrix.h" />
-    <ClInclude Include="NewtonsMethod.h" />
     <ClInclude Include="Quaternion.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
     <ClInclude Include="UnitTest.h" />
   </ItemGroup>
   <ItemGroup>
@@ -95,6 +91,7 @@
     <ClCompile Include="BBox3.cpp" />
     <ClCompile Include="Covariance.cpp" />
     <ClCompile Include="Covariance.ixx" />
+    <ClCompile Include="FuncFilter.ixx" />
     <ClCompile Include="Helper.cpp" />
     <ClCompile Include="Helper.ixx" />
     <ClCompile Include="IBBox.ixx" />
@@ -103,6 +100,7 @@
     <ClCompile Include="Matrix4x4.cpp" />
     <ClCompile Include="MCSampler.ixx" />
     <ClCompile Include="NewtonsMethod.cpp" />
+    <ClCompile Include="NewtonsMethod.ixx" />
     <ClCompile Include="OBBox.ixx" />
     <ClCompile Include="OBBox2.cpp" />
     <ClCompile Include="OBBox3.cpp" />
@@ -110,10 +108,6 @@
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Ray.ixx" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="UnitTest.cpp" />
     <ClCompile Include="Vector.ixx" />
   </ItemGroup>

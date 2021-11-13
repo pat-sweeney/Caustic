@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:Base/Math/NewtonsMethod.ixx","NewtonsMethod.ixx");NDSummary.OnSummaryLoaded("File:Base/Math/NewtonsMethod.ixx",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"]],[[154,0,1,"Functions","Functions"],[155,0,0,"NumericalDifferentiation","NumericalDifferentiation"],[156,0,0,"NewtonsMethod","NewtonsMethod"]]);

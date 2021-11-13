@@ -1,1 +1,1 @@
-﻿NDSummary.OnToolTipsLoaded("CClass:ISceneLineElem",{1409:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines a line element in our scene graph.</div></div>"});
+﻿NDSummary.OnToolTipsLoaded("CClass:ISceneLineElem",{1566:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines a line element in our scene graph.</div></div>"});

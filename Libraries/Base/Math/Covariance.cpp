@@ -4,7 +4,6 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "stdafx.h"
 #include <vector>
 #include <winerror.h>
 

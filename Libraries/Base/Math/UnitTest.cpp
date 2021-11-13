@@ -3,9 +3,9 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "stdafx.h"
 import Base.Math.Vector;
-#include "NewtonsMethod.h"
+import Base.Math.NewtonsMethod;
+#include <functional>
 #include "UnitTest.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -49,7 +49,7 @@ namespace CausticTestSuite
             return false;
         val = NewtonsMethod(5.0f, [](float x)->float {
             return x * x - 4 * x;
-            });
+            }, NumericalDifferentiation);
         if (!Caustic::IsEq(val, 4.0))
             return false;
         return true;
