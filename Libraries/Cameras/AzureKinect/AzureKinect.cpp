@@ -10,6 +10,7 @@ import Base.Math.BBox;
 import Imaging.Image.IImage;
 import Imaging.Image.ImageIter;
 import Imaging.Image.ImagePool;
+import Base.Math.Quaternion;
 #include <k4a/k4a.h>
 #include <memory>
 #include <winerror.h>
@@ -583,7 +584,7 @@ namespace Caustic
         q.y = skeleton.joints[jointIndex].orientation.wxyz.y;
         q.z = skeleton.joints[jointIndex].orientation.wxyz.z;
         q.w = skeleton.joints[jointIndex].orientation.wxyz.w;
-        Matrix4x4 mat(q);
+        Matrix4x4 mat = Quaternion::ToMatrix4x4(q);
         mat.v[3][0] = skeleton.joints[jointIndex].position.xyz.x / 1000.0f;
         mat.v[3][1] = skeleton.joints[jointIndex].position.xyz.y / 1000.0f;
         mat.v[3][2] = skeleton.joints[jointIndex].position.xyz.z / 1000.0f;

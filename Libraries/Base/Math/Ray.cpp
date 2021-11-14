@@ -5,7 +5,8 @@
 //**********************************************************************
 import Base.Core.Core;
 import Base.Math.Ray;
-#include "Base\Math\Matrix.h"
+import Base.Math.Matrix;
+#include <math.h>
 
 namespace Caustic
 {

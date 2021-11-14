@@ -5,10 +5,10 @@
 #pragma once
 import Base.Core.Core;
 import Imaging.Color;
+import Base.Math.Matrix;
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\Shader.h"
 #include "Rendering\Caustic\PathTrace.h"
-#include "Base\Math\Matrix.h"
 
 namespace Caustic
 {

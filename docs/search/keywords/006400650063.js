@@ -1,1 +1,1 @@
-﻿NDSearch.OnPrefixDataLoaded("dec",["Function"],[["Decompose",,[["Matrix4x4",,,,0,"File:Base/Math/Matrix.h:Matrix4x4.Decompose","CClass:Matrix4x4:Decompose"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("dec",["Function"],[["Decompose",,[["Matrix4x4",,,,0,"File:Base/Math/Matrix4x4.ixx:Matrix4x4.Decompose","CClass:Matrix4x4:Decompose"]]]]);

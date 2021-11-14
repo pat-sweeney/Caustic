@@ -3,9 +3,12 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+module;
+#include <math.h>
+
+module Base.Math.Quaternion;
 import Base.Core.Core;
-#include "Base\Math\Quaternion.h"
-#include "Base\Math\Matrix.h"
+import Base.Math.Matrix;
 
 namespace Caustic
 {
@@ -210,5 +213,75 @@ namespace Caustic
         nq.z = -z;
         nq.w = w;
         return nq;
+    }
+
+    Matrix4x3 Quaternion::ToMatrix4x3(const Quaternion& q)
+    {
+        Matrix4x3 m;
+        float nq = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w;
+        float s = (nq > 0.0F) ? (2.0F / nq) : 0.0F;
+        float xs = q.x * s;
+        float ys = q.y * s;
+        float zs = q.z * s;
+        float wx = q.w * xs;
+        float wy = q.w * ys;
+        float wz = q.w * zs;
+        float xx = q.x * xs;
+        float xy = q.x * ys;
+        float xz = q.x * zs;
+        float yy = q.y * ys;
+        float yz = q.y * zs;
+        float zz = q.z * zs;
+
+        m.v[0][0] = 1.0F - (yy + zz);
+        m.v[1][0] = xy - wz;
+        m.v[2][0] = xz + wy;
+        m.v[0][1] = xy + wz;
+        m.v[1][1] = 1.0F - (xx + zz);
+        m.v[2][1] = yz - wx;
+        m.v[0][2] = xz - wy;
+        m.v[1][2] = yz + wx;
+        m.v[2][2] = 1.0F - (xx + yy);
+        m.v[3][0] = 0.0F;
+        m.v[3][1] = 0.0F;
+        m.v[3][2] = 0.0F;
+        return m;
+    }
+    
+    Matrix4x4 Quaternion::ToMatrix4x4(const Quaternion& q)
+    {
+        Matrix4x4 m;
+        float nq = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w;
+        float s = (nq > 0.0) ? (2.0F / nq) : 0.0F;
+        float xs = q.x * s;
+        float ys = q.y * s;
+        float zs = q.z * s;
+        float wx = q.w * xs;
+        float wy = q.w * ys;
+        float wz = q.w * zs;
+        float xx = q.x * xs;
+        float xy = q.x * ys;
+        float xz = q.x * zs;
+        float yy = q.y * ys;
+        float yz = q.y * zs;
+        float zz = q.z * zs;
+
+        m.v[0][0] = 1.0F - (yy + zz);
+        m.v[1][0] = xy - wz;
+        m.v[2][0] = xz + wy;
+        m.v[0][1] = xy + wz;
+        m.v[1][1] = 1.0F - (xx + zz);
+        m.v[2][1] = yz - wx;
+        m.v[0][2] = xz - wy;
+        m.v[1][2] = yz + wx;
+        m.v[2][2] = 1.0F - (xx + yy);
+        m.v[0][3] = 0.0F;
+        m.v[1][3] = 0.0F;
+        m.v[2][3] = 0.0F;
+        m.v[3][0] = 0.0F;
+        m.v[3][1] = 0.0F;
+        m.v[3][2] = 0.0F;
+        m.v[3][3] = 1.0F;
+        return m;
     }
 }

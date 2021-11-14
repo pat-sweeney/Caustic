@@ -4,7 +4,9 @@
 // See file LICENSE for details.
 //**********************************************************************
 import Base.Core.Core;
-#include "Base\Math\Matrix.h"
+import Base.Math.Matrix.Matrix3x3;
+#include <memory.h>
+#include <math.h>
 
 namespace Caustic
 {

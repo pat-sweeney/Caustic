@@ -7,7 +7,7 @@
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Base.Math.Vector;
-#include "Base\Math\Matrix.h"
+import Base.Math.Matrix;
 #include "Rendering\Caustic\Caustic.h"
 #include <vector>
 #include <string>

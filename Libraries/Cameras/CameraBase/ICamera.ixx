@@ -3,13 +3,11 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-module;
-#include "Base\Math\Matrix.h"
-
 export module Cameras.CameraBase.ICamera;
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Imaging.Image.IImage;
+import Base.Math.Matrix;
 
 // Namespace: Caustic
 export namespace Caustic

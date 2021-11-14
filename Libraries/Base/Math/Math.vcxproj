@@ -80,8 +80,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Matrix.h" />
-    <ClInclude Include="Quaternion.h" />
     <ClInclude Include="UnitTest.h" />
   </ItemGroup>
   <ItemGroup>
@@ -95,9 +93,13 @@
     <ClCompile Include="Helper.cpp" />
     <ClCompile Include="Helper.ixx" />
     <ClCompile Include="IBBox.ixx" />
+    <ClCompile Include="Matrix.ixx" />
     <ClCompile Include="Matrix3x3.cpp" />
+    <ClCompile Include="Matrix3x3.ixx" />
     <ClCompile Include="Matrix4x3.cpp" />
+    <ClCompile Include="Matrix4x3.ixx" />
     <ClCompile Include="Matrix4x4.cpp" />
+    <ClCompile Include="Matrix4x4.ixx" />
     <ClCompile Include="MCSampler.ixx" />
     <ClCompile Include="NewtonsMethod.cpp" />
     <ClCompile Include="NewtonsMethod.ixx" />
@@ -106,6 +108,7 @@
     <ClCompile Include="OBBox3.cpp" />
     <ClCompile Include="Point.ixx" />
     <ClCompile Include="Quaternion.cpp" />
+    <ClCompile Include="Quaternion.ixx" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Ray.ixx" />
     <ClCompile Include="UnitTest.cpp" />

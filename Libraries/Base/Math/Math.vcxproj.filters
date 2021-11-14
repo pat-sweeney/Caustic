@@ -7,12 +7,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Quaternion.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Matrix.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="UnitTest.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -91,6 +85,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="NewtonsMethod.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix3x3.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix4x3.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix4x4.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Quaternion.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

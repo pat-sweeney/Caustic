@@ -3,13 +3,11 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-module;
-#include "Base\Math\Matrix.h"
-
 export module Base.Math.OBBox;
 import Base.Core.Core;
 import Base.Math.Vector;
 import Base.Math.BBox;
+import Base.Math.Matrix;
 
 export namespace Caustic
 {

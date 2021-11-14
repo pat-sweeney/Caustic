@@ -1,1 +1,1 @@
-﻿NDSearch.OnPrefixDataLoaded("sca",["Function"],[["ScalingMatrix",,[["Matrix3x3",,,,0,"File:Base/Math/Matrix.h:Matrix3x3.ScalingMatrix","CClass:Matrix3x3:ScalingMatrix"],["Matrix4x4",,,,0,"File:Base/Math/Matrix.h:Matrix4x4.ScalingMatrix","CClass:Matrix4x4:ScalingMatrix"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("sca",["Function"],[["ScalingMatrix",,[["Matrix3x3",,,,0,"File:Base/Math/Matrix3x3.ixx:Matrix3x3.ScalingMatrix","CClass:Matrix3x3:ScalingMatrix"],["Matrix4x4",,,,0,"File:Base/Math/Matrix4x4.ixx:Matrix4x4.ScalingMatrix","CClass:Matrix4x4:ScalingMatrix"]]]]);

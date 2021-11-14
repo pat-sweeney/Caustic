@@ -7,7 +7,7 @@
 import Base.Core.Core;
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\Shader.h"
-#include "Base\Math\Matrix.h"
+import Base.Math.Matrix;
 #include "ISceneGraph.h"
 #include "ISceneFactory.h"
 

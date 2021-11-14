@@ -1,1 +1,1 @@
-﻿NDSearch.OnPrefixDataLoaded("inv",["Function"],[["Inverse",,[["Matrix3x3",,,,0,"File:Base/Math/Matrix.h:Matrix3x3.Inverse","CClass:Matrix3x3:Inverse"],["Matrix4x4",,,,0,"File:Base/Math/Matrix.h:Matrix4x4.Inverse","CClass:Matrix4x4:Inverse"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("inv",["Function"],[["Inverse",,[["Matrix3x3",,,,0,"File:Base/Math/Matrix3x3.ixx:Matrix3x3.Inverse","CClass:Matrix3x3:Inverse"],["Matrix4x4",,,,0,"File:Base/Math/Matrix4x4.ixx:Matrix4x4.Inverse","CClass:Matrix4x4:Inverse"]]]]);

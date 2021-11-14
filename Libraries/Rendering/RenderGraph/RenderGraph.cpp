@@ -7,7 +7,7 @@
 import Base.Core.Core;
 import Base.Core.RefCount;
 #include "Rendering\Caustic\Caustic.h"
-#include "Base\Math\Matrix.h"
+import Base.Math.Matrix;
 #include "IRenderGraphNode.h"
 #include "RenderGraph.h"
 #include <vector>

@@ -10,7 +10,7 @@ import Base.Math.Vector;
 import Base.Math.BBox;
 import Imaging.Image.IImage;
 import Imaging.Image.IImagePool;
-#include "Base\Math\Matrix.h"
+import Base.Math.Matrix;
 #include "Cameras\AzureKinect\IAzureKinect.h"
 #include <k4a/k4a.h>
 #include <k4abt.h>

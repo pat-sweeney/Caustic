@@ -4,7 +4,7 @@
 // See file LICENSE for details.
 //**********************************************************************
 import Base.Core.Core;
-#include "Base\Math\Matrix.h"
+import Base.Math.Matrix.Matrix4x3;
 
 namespace Caustic
 {
@@ -33,37 +33,6 @@ namespace Caustic
         v[3][0] = v30;
         v[3][1] = v31;
         v[3][2] = v32;
-    }
-
-    Matrix4x3::Matrix4x3(const Quaternion &q)
-    {
-        float nq = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w;
-        float s = (nq > 0.0F) ? (2.0F / nq) : 0.0F;
-        float xs = q.x * s;
-        float ys = q.y * s;
-        float zs = q.z * s;
-        float wx = q.w * xs;
-        float wy = q.w * ys;
-        float wz = q.w * zs;
-        float xx = q.x * xs;
-        float xy = q.x * ys;
-        float xz = q.x * zs;
-        float yy = q.y * ys;
-        float yz = q.y * zs;
-        float zz = q.z * zs;
-
-        v[0][0] = 1.0F - (yy + zz);
-        v[1][0] = xy - wz;
-        v[2][0] = xz + wy;
-        v[0][1] = xy + wz;
-        v[1][1] = 1.0F - (xx + zz);
-        v[2][1] = yz - wx;
-        v[0][2] = xz - wy;
-        v[1][2] = yz + wx;
-        v[2][2] = 1.0F - (xx + yy);
-        v[3][0] = 0.0F;
-        v[3][1] = 0.0F;
-        v[3][2] = 0.0F;
     }
 
     Matrix4x3 Matrix4x3::operator *(const Matrix4x3 &r)

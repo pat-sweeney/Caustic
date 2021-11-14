@@ -4,10 +4,11 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "Base\Math\Matrix.h"
 export module Base.Math.Ray;
 import Base.Core.Core;
 import Base.Math.BBox;
+import Base.Math.Matrix;
+import Base.Math.Vector;
 
 export namespace Caustic
 {

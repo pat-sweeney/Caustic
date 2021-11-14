@@ -5,10 +5,12 @@
 // Graphic Gems
 //**********************************************************************
 module;
-#include "Base\Math\Matrix.h"
+#include <math.h>
+#include <vector>
 
 module Geometry.GeomDS.BezierFit;
 import Base.Math.Basis;
+import Base.Math.Matrix;
 
 namespace Caustic
 {

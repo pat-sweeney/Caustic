@@ -11,8 +11,8 @@ import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Base.Math.BBox;
+import Base.Math.Matrix;
 #include "Rendering\Caustic\Caustic.h"
-#include "Base\Math\Matrix.h"
 #include <string>
 #include <atlbase.h>
 #include <d3d11.h>
