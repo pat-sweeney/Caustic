@@ -3,13 +3,12 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "stdafx.h"
 import Base.Core.Core;
 import Base.Core.Error;
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\SceneGraph\SceneGraph.h"
 #include "Rendering\SceneGraph\SceneFactory.h"
-#include "Collada.h"
+import Rendering.SceneImport.Collada;
 
 namespace Caustic
 {

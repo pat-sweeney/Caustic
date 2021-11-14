@@ -7,11 +7,11 @@ import Base.Core.Core;
 import Base.Core.IRefCount;
 import Imaging.Image.GPUPipeline;
 import Imaging.Image.IGPUPipeline;
+import Rendering.SceneImport.Collada;
 #include "Rendering\RenderWindow\IRenderWindow.h"
 #include "Rendering\Caustic\ICausticFactory.h"
 #include "Rendering\Caustic\IShader.h"
 #include "Cameras\AzureKinect\IAzureKinect.h"
-#include "Rendering\SceneImport\Collada.h"
 #include "Rendering\SceneGraph\ISceneFactory.h"
 #include "Rendering\SceneGraph\ISceneGraph.h"
 #include "Geometry\MeshImport\MeshImport.h"

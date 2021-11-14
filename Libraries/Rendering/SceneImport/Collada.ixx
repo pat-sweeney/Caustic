@@ -3,15 +3,17 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
+module;
 #include <functional>
 #include <string>
 #include <vector>
-import Base.Core.Core;
-import Geometry.Mesh.IMeshConstructor;
 #include "Rendering\SceneGraph\SceneGraph.h"
 
-namespace Caustic
+export module Rendering.SceneImport.Collada;
+import Base.Core.Core;
+import Geometry.Mesh.IMeshConstructor;
+
+export namespace Caustic
 {
     namespace Collada
     {

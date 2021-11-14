@@ -10,21 +10,10 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Collada.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="Collada.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Collada.cpp">
+    <ClCompile Include="Collada.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
