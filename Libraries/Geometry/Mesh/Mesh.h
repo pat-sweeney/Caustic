@@ -4,7 +4,7 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "Geometry\Mesh\IMesh.h"
+import Geometry.Mesh.IMesh;
 import Geometry.GeomDS.KDTree;
 import Geometry.GeomDS.IKDTree;
 import Base.Core.Core;
@@ -12,6 +12,7 @@ import Base.Core.RefCount;
 import Base.Core.BlockAllocator;
 #include <vector>
 #include <map>
+#include <string>
 
 namespace Caustic
 {
@@ -300,4 +301,31 @@ namespace Caustic
         virtual void Load(IStream *pStream) override;
         virtual void Store(IStream *pStream) override;
     };
+
+
+    CRefObj<IMesh> CreateSurfaceRevolution(std::vector<Vector3>& pts, uint32 npts, uint32 subdivisions, float maxAngle);
+    CRefObj<IMesh> CreateEmptyMesh();
+    CRefObj<ISubMesh> CreateSubMesh(std::vector<CGeomVertex>& verts,
+        std::vector<int>& faces,
+        uint32 materialID);
+    CRefObj<ISubMesh> CreateSubMesh(std::vector<Vector3>& vertPos,
+        std::vector<Vector3>& vertNorms,
+        std::vector<Vector2>& vertUVs,
+        std::vector<int>& faces,
+        EVertexFlags flags,
+        uint32 materialID);
+    CRefObj<ISubMesh> CreateSubMesh(std::vector<Vector3>& vertPos,
+        std::vector<int>& faces,
+        uint32 materialID);
+
+    //**********************************************************************
+    // Method: CreateEmptySubMesh
+    // Creates a empty submesh.
+    //**********************************************************************
+    CRefObj<ISubMesh> CreateEmptySubMesh();
+    CRefObj<IMesh> CreateCube();
+    CRefObj<IMesh> CreateSphere(uint32 subdivisions);
+    CRefObj<IMesh> CreateTetrahedron();
+    CRefObj<IMesh> CreateGrid(uint32 subdivisions);
+    CRefObj<IMesh> CreateGrid(uint32 width, uint32 height);
 };

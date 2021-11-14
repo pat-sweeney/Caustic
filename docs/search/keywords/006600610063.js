@@ -1,1 +1,1 @@
-﻿NDSearch.OnPrefixDataLoaded("fac",["Function"],[["FaceToIndex",,[[,,,,0,"File:Geometry/Mesh/Submesh.cpp:FaceToIndex"],["ISubMesh",,,,0,"File:Geometry/Mesh/IMesh.h:ISubMesh.FaceToIndex","CClass:ISubMesh:FaceToIndex"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("fac",["Function"],[["FaceToIndex",,[[,,,,0,"File:Geometry/Mesh/Submesh.cpp:FaceToIndex"],["ISubMesh",,,,0,"File:Geometry/Mesh/IMesh.ixx:ISubMesh.FaceToIndex","CClass:ISubMesh:FaceToIndex"]]]]);

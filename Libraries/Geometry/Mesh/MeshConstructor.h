@@ -4,7 +4,7 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "Geometry\Mesh\Mesh.h"
-#include "Geometry\Mesh\IMesh.h"
+import Geometry.Mesh.IMesh;
 import Geometry.Mesh.IMeshConstructor;
 #include <vector>
 

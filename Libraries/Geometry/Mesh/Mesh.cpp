@@ -7,6 +7,7 @@ import Base.Core.Core;
 import Base.Core.Error;
 #include "Geometry\Mesh\Mesh.h"
 import Base.Math.Ray;
+#include <Windows.h>
 
 //**********************************************************************
 // File: Mesh.cpp

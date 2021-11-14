@@ -4,11 +4,15 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "Geometry\Mesh\IMesh.h"
 #include "MeshConstructor.h"
+#include <Windows.h>
 
 module Geometry.Mesh.IMeshConstructor;
+import Base.Core.Core;
 import Base.Core.Error;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Geometry.Mesh.IMesh;
 
 namespace Caustic
 {

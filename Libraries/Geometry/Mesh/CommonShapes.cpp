@@ -6,10 +6,11 @@
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Geometry.Mesh.IMeshConstructor;
-#include "Geometry\Mesh\IMesh.h"
+import Geometry.Mesh.IMesh;
 #include "Mesh.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <memory>
 
 namespace Caustic
 {

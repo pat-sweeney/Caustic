@@ -12,6 +12,7 @@ import Geometry.Mesh.Delaunay;
 #include "Geometry\Mesh\Mesh.h"
 #include <map>
 #include <stack>
+#include <Windows.h>
 
 namespace Caustic
 {

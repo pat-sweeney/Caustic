@@ -4,12 +4,17 @@
 // See file LICENSE for details.
 //**********************************************************************
 #define _USE_MATH_DEFINES
+#include <shlwapi.h>
 import Base.Core.Core;
 import Base.Core.Error;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
 import Base.Math.Vector;
 import Geometry.Mesh.IMeshConstructor;
+import Geometry.Mesh.IMesh;
+#include "Geometry\Mesh\IMaterialAttrib.h"
+#include "Geometry\Mesh\Mesh.h"
 #include <cmath>
-#include "Geometry\Mesh\IMesh.h"
 #include "UnitTest.h"
 #include <stdlib.h>
 #include <stdio.h>

@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CMesh","CMesh");NDSummary.OnSummaryLoaded("CClass:CMesh",[["C/C++","C"]],[["Classes","Class"]],[[364,0,0,"CMesh"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CMesh","CMesh");NDSummary.OnSummaryLoaded("CClass:CMesh",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[364,0,0,"CMesh"],[426,0,2,"Functions","Functions"],[427,0,1,"CreateEmptySubMesh","CreateEmptySubMesh"]]);

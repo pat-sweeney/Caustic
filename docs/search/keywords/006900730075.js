@@ -1,1 +1,1 @@
-﻿NDSearch.OnPrefixDataLoaded("isu",["Interface"],[["ISubMesh",,[[,,,,0,"File:Geometry/Mesh/IMesh.h:ISubMesh","CClass:ISubMesh"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("isu",["Interface"],[["ISubMesh",,[[,,,,0,"File:Geometry/Mesh/IMesh.ixx:ISubMesh","CClass:ISubMesh"]]]]);

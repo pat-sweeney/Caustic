@@ -3,11 +3,14 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+#include <d3d11.h>
+#include <memory>
+#include <atlbase.h>
+#include <Windows.h>
 import Base.Core.Core;
 import Base.Core.Error;
 import Geometry.Mesh.RenderTypes;
 #include "Geometry\Mesh\Mesh.h"
-#include <d3d11.h>
 
 namespace Caustic
 {

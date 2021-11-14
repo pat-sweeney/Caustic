@@ -4,10 +4,13 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "IMesh.h"
+#include <functional>
 
 export module Geometry.Mesh.IMeshConstructor;
 import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Geometry.Mesh.IMesh;
 
 export namespace Caustic
 {

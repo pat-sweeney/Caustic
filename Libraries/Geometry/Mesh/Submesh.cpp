@@ -9,6 +9,7 @@ import Base.Core.Error;
 #include "Geometry\Mesh\MeshConstructor.h"
 import Base.Math.Ray;
 #include "Rendering\Caustic\PathTrace.h"
+#include <Windows.h>
 
 //**********************************************************************
 // File: SubMesh.cpp
