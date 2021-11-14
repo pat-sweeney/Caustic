@@ -7,7 +7,7 @@
 import Base.Core.Core;
 import Base.Core.IRefCount;
 #include "Rendering\Caustic\Caustic.h"
-#include "Rendering\Caustic\Texture.h"
+#include "Rendering\Caustic\ITexture.h"
 #include "IRenderGraphNode.h"
 #include "RenderGraphNode.h"
 #include "IRGNImageToTexture.h"

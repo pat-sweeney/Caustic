@@ -5,7 +5,7 @@
 //**********************************************************************
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\CausticFactory.h"
-#include "Texture.h"
+import Rendering.Caustic.Texture;
 #include "Renderable.h"
 #include "ShaderInfo.h"
 import Rendering.Caustic.Sampler;

@@ -7,11 +7,13 @@ import Base.Core.Core;
 import Base.Core.Error;
 import Imaging.Image.IImage;
 import Imaging.Image.ImageIter;
-#include "Texture.h"
+import Rendering.Caustic.Texture;
+#include "Rendering/Caustic/ITexture.h"
 #include <memory>
 #include <wincodec.h>
 #include <objbase.h>
 #include <map>
+#include <d3d11.h>
 
 namespace Caustic
 {

@@ -1,1 +1,1 @@
-﻿NDSearch.OnPrefixDataLoaded("cte",["Class"],[["CTexture",,[[,,,,0,"File:Rendering/Caustic/Texture.h:CTexture","CClass:CTexture"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("cte",["Class"],[["CTexture",,[[,,,,0,"File:Rendering/Caustic/Texture.ixx:CTexture","CClass:CTexture"]]]]);

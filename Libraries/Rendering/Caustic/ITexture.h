@@ -5,6 +5,9 @@
 //**********************************************************************
 #pragma once
 
+#include <d3d11.h>
+#include <atlbase.h>
+#include <string>
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Imaging.Image.IImage;

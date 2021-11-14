@@ -1,0 +1,1 @@
+﻿NDSummary.OnToolTipsLoaded("File:Rendering/Caustic/Texture.ixx",{760:"<div class=\"NDToolTip TClass LC\"><div class=\"NDClassPrototype\" id=\"NDClassPrototype760\"><div class=\"CPEntry TClass Current\"><div class=\"CPName\">CTexture</div></div></div><div class=\"TTSummary\">Implementation of ITexture</div></div>"});
