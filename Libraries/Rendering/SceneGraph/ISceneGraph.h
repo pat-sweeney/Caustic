@@ -6,9 +6,9 @@
 import Base.Core.Core;
 import Imaging.Color;
 import Base.Math.Matrix;
+import Rendering.Caustic.PathTrace;
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\Shader.h"
-#include "Rendering\Caustic\PathTrace.h"
 
 namespace Caustic
 {

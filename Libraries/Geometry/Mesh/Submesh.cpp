@@ -3,13 +3,12 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-import Base.Core.Core;
-import Base.Core.Error;
 #include "Geometry\Mesh\Mesh.h"
 #include "Geometry\Mesh\MeshConstructor.h"
-import Base.Math.Ray;
-#include "Rendering\Caustic\PathTrace.h"
 #include <Windows.h>
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Math.Ray;
 
 //**********************************************************************
 // File: SubMesh.cpp

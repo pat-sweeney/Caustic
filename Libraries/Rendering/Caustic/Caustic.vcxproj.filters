@@ -91,16 +91,10 @@
     <ClInclude Include="defs.h">
       <Filter>Source Files\Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="PointCloud.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="IPointCloud.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="DesktopTexture.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PathTrace.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -208,6 +202,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SpotLight.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PathTrace.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PointCloud.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

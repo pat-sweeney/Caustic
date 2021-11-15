@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/PointCloud.ixx","PointCloud.ixx");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/PointCloud.ixx",[["C/C++","C"]],[["Classes","Class"],["Files","File"]],[[937,0,1,"Renderable.h","Renderable.h"],[938,0,0,"CPointCloud","CPointCloud"]]);

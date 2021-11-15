@@ -9,11 +9,11 @@ import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.Event;
 import Base.Core.CritSec;
+import Rendering.Caustic.PointCloud;
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\IRenderMesh.h"
 #include "IRenderable.h"
 #include "Shader.h"
-#include "PointCloud.h"
 #include "IPointCloud.h"
 #include "CausticFactory.h"
 #include <memory>

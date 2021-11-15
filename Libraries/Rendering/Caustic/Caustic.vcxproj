@@ -276,8 +276,6 @@
     <ClInclude Include="IShaderMgr.h" />
     <ClInclude Include="ISpotLight.h" />
     <ClInclude Include="ITexture.h" />
-    <ClInclude Include="PathTrace.h" />
-    <ClInclude Include="PointCloud.h" />
     <ClInclude Include="Renderable.h" />
     <ClInclude Include="RendererMarshaller.h" />
     <ClInclude Include="RenderMaterial.h" />
@@ -303,7 +301,9 @@
     <ClCompile Include="ITrackball.cpp" />
     <ClCompile Include="ITrackball.ixx" />
     <ClCompile Include="Light.ixx" />
+    <ClCompile Include="PathTrace.ixx" />
     <ClCompile Include="PointCloud.cpp" />
+    <ClCompile Include="PointCloud.ixx" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="PointLight.ixx" />
     <ClCompile Include="Renderer.ixx" />
