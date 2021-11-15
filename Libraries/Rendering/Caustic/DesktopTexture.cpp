@@ -3,16 +3,16 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-import Base.Core.Error;
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\CausticFactory.h"
-#include "DesktopTexture.h"
 #include <memory>
 #include <objbase.h>
 #include <assert.h>
 #include <dxgi1_6.h>
 #include <functional>
 #include <string>
+import Base.Core.Error;
+import Rendering.Caustic.DesktopTexture;
 
 namespace Caustic
 {
