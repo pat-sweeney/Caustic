@@ -6,12 +6,12 @@
 #include "Rendering\Caustic\Caustic.h"
 #include "Geometry\Mesh\Mesh.h"
 #include "Shader.h"
-import Rendering.Caustic.Renderer;
-import Rendering.Caustic.Sampler;
 #include "Rendering\Caustic\RenderMaterial.h"
 #include "Rendering\Caustic\CausticFactory.h"
-#include "Renderable.h"
 #include <d3d11.h>
+import Rendering.Caustic.Renderer;
+import Rendering.Caustic.Sampler;
+import Rendering.Caustic.Renderable;
 
 //**********************************************************************
 // File: Renderable.cpp

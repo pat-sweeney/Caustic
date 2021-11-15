@@ -40,9 +40,6 @@
     <ClInclude Include="RenderMesh.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Renderable.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="ConstructBuffers.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -208,6 +205,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PointCloud.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderable.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -10,7 +10,7 @@ import Base.Core.IRefCount;
 import Base.Math.Vector;
 import Imaging.Image.IImage;
 import Base.Math.Matrix;
-#include "Renderable.h"
+#include "Rendering/Caustic/IRenderable.h"
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <vector>

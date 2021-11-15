@@ -20,6 +20,7 @@ import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.Event;
 import Base.Core.CritSec;
+import Rendering.Caustic.Renderable;
 
 //**********************************************************************
 // File: Renderable.h

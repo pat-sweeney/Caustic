@@ -7,13 +7,6 @@
 
 #include <d3d11.h>
 #include <atlbase.h>
-import Base.Core.Core;
-import Base.Math.BBox;
-import Base.Math.Vector;
-import Rendering.Caustic.ITrackball;
-import Rendering.Caustic.IRenderer;
-import Rendering.Caustic.ICamera;
-import Rendering.Caustic.IRenderCtx;
 #include "Rendering\Caustic\IShaderMgr.h"
 #include "Rendering\Caustic\ITexture.h"
 #include "Rendering\Caustic\ISampler.h"
@@ -28,6 +21,13 @@ import Rendering.Caustic.IRenderCtx;
 #include "Rendering\Caustic\IRenderMesh.h"
 #include "Rendering\Caustic\IRenderable.h"
 #include "Rendering\Caustic\ICausticFactory.h"
+import Base.Core.Core;
+import Base.Math.BBox;
+import Base.Math.Vector;
+import Rendering.Caustic.ITrackball;
+import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.ICamera;
+import Rendering.Caustic.IRenderCtx;
 
 //**********************************************************************
 // File: Caustic.h

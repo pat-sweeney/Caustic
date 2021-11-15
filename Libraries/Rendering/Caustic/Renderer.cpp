@@ -5,22 +5,22 @@
 //**********************************************************************
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\CausticFactory.h"
-import Rendering.Caustic.Texture;
-#include "Renderable.h"
 #include "ShaderInfo.h"
-import Rendering.Caustic.Sampler;
 #include <vector>
 #include <any>
-import Base.Core.Core;
-import Base.Core.Error;
-import Base.Core.CritSec;
-import Rendering.Caustic.Renderer;
 #include <d3d11.h>
 #include <d3d11_4.h>
 #include <d3dcommon.h>
 #include <d3dcompiler.h>
 #include <algorithm>
 #include <dxgi1_6.h>
+import Rendering.Caustic.Texture;
+import Rendering.Caustic.Renderable;
+import Rendering.Caustic.Sampler;
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.CritSec;
+import Rendering.Caustic.Renderer;
 
 //**********************************************************************
 // File: Renderer.cpp
