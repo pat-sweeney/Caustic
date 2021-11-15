@@ -274,7 +274,6 @@
     <ClInclude Include="IShaderMgr.h" />
     <ClInclude Include="ISpotLight.h" />
     <ClInclude Include="ITexture.h" />
-    <ClInclude Include="RendererMarshaller.h" />
     <ClInclude Include="Shader.h" />
   </ItemGroup>
   <ItemGroup>
@@ -307,6 +306,7 @@
     <ClCompile Include="RendererMarshaller.cpp" />
     <ClCompile Include="Renderable.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="RendererMarshaller.ixx" />
     <ClCompile Include="RenderMaterial.cpp" />
     <ClCompile Include="RenderMaterial.ixx" />
     <ClCompile Include="RenderMesh.cpp" />

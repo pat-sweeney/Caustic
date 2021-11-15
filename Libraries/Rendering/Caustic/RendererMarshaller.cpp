@@ -5,14 +5,17 @@
 //**********************************************************************
 #include "Rendering\Caustic\Caustic.h"
 #include "Geometry\Mesh\Mesh.h"
-import Rendering.Caustic.Renderer;
 #include "Rendering\Caustic\Caustic.h"
-#include "Rendering\Caustic\RendererMarshaller.h"
 #include "Rendering\SceneGraph\ISceneGraph.h"
 #include "Rendering\Caustic\CausticFactory.h"
 #include <queue>
 #include <functional>
 #include <algorithm>
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Rendering.Caustic.Renderer;
+import Rendering.Caustic.RendererMarshaller;
 
 //**********************************************************************
 // File: RendererMarshaller.cpp
