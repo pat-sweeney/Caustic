@@ -3,12 +3,16 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-import Base.Core.Core;
-import Base.Core.Error;
-#include "Camera.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <DirectXMath.h>
+#include <Windows.h>
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Rendering.Caustic.Camera;
+import Rendering.Caustic.ICamera;
 
 //**********************************************************************
 // File: Camera.cpp

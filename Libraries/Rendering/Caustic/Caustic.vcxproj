@@ -255,7 +255,6 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.h" />
     <ClInclude Include="Caustic.h" />
     <ClInclude Include="CausticFactory.h" />
     <ClInclude Include="ConstructBuffers.h" />
@@ -285,6 +284,7 @@
       <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</PreprocessToFile>
       <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</PreprocessToFile>
     </ClCompile>
+    <ClCompile Include="Camera.ixx" />
     <ClCompile Include="CausticFactory.cpp" />
     <ClCompile Include="ConstructBuffers.cpp" />
     <ClCompile Include="DesktopTexture.cpp" />
