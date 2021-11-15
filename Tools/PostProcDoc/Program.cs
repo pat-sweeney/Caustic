@@ -34,8 +34,6 @@ namespace PostProcDoc
                     int inputIndex = 0;
                     while (inputIndex < s2.Length)
                     {
-                        if (inputIndex == 1000)
-                            System.Diagnostics.Debug.WriteLine("blah");
                         if (s2[inputIndex] == '{')
                         {
                             if ("{Link:" == s2.Substring(inputIndex, 6))

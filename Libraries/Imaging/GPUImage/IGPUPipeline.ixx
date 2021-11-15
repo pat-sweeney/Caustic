@@ -17,7 +17,7 @@ export namespace Caustic
     struct IGPUPipeline;
 
     //**********************************************************************
-    // Interface: IGPUPipelineNodea
+    // Interface: IGPUPipelineNode
     // Defines the base class for each node in a GPU pipeline
     //**********************************************************************
     struct IGPUPipelineNode : public IRefCount

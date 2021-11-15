@@ -25,9 +25,6 @@
     <ClInclude Include="CausticFactory.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="ConstructBuffers.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="ICausticFactory.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
@@ -208,6 +205,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RendererMarshaller.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstructBuffers.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

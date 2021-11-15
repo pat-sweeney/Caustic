@@ -4,10 +4,12 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "Rendering\Caustic\Caustic.h"
-#include "ConstructBuffers.h"
 #include <d3d12.h>
+import Base.Core.Core;
+import Base.Core.Error;
 import Rendering.Caustic.ShaderInfo;
 import Rendering.Caustic.RenderMesh;
+import Rendering.Caustic.ConstructBuffer;
 
 namespace Caustic
 {
