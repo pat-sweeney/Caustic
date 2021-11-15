@@ -25,9 +25,6 @@
     <ClInclude Include="RendererMarshaller.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="RenderMaterial.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Caustic.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -208,6 +205,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Renderable.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderMaterial.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

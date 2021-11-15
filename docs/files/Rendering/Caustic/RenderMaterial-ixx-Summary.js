@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/RenderMaterial.ixx","RenderMaterial.ixx");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/RenderMaterial.ixx",[["C/C++","C"]],[["Classes","Class"]],[[791,0,0,"CRenderTexture","CRenderTexture"],[792,0,0,"CRenderMaterial","CRenderMaterial"]]);

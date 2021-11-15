@@ -6,12 +6,12 @@
 #include "Rendering\Caustic\Caustic.h"
 #include "Geometry\Mesh\Mesh.h"
 #include "Shader.h"
-import Rendering.Caustic.Renderer;
-#include "RenderMaterial.h"
 #include "Geometry\Mesh\MaterialAttrib.h"
 #include "CausticFactory.h"
-import Rendering.Caustic.Sampler;
 #include <string>
+import Rendering.Caustic.Sampler;
+import Rendering.Caustic.Renderer;
+import Rendering.Caustic.RenderMaterial;
 
 namespace Caustic
 {
