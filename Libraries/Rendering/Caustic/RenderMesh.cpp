@@ -6,8 +6,8 @@
 #include "Rendering\Caustic\Caustic.h"
 #include "ConstructBuffers.h"
 #include "RenderMesh.h"
-#include "ShaderInfo.h"
 #include <d3d12.h>
+import Rendering.Caustic.ShaderInfo;
 
 namespace Caustic
 {

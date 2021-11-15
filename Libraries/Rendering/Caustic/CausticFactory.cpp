@@ -5,13 +5,7 @@
 //**********************************************************************
 #pragma once
 #include "Rendering\Caustic\Caustic.h"
-import Base.Core.Core;
-import Base.Core.Error;
-import Base.Core.RefCount;
-import Imaging.Image.IImage;
-import Rendering.Caustic.Renderer;
 #include "RenderMesh.h"
-#include "ShaderInfo.h"
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include "CausticFactory.h"
@@ -19,6 +13,12 @@ import Rendering.Caustic.Renderer;
 #include <mfidl.h>
 #include <mfreadwrite.h>
 #include <mfcaptureengine.h>
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.RefCount;
+import Imaging.Image.IImage;
+import Rendering.Caustic.Renderer;
+import Rendering.Caustic.ShaderInfo;
 
 //**********************************************************************
 // File: CausticFactory.cpp

@@ -1,0 +1,1 @@
+﻿NDSummary.OnToolTipsLoaded("File:Rendering/Caustic/ShaderInfo.ixx",{776:"<div class=\"NDToolTip TClass LC\"><div class=\"NDClassPrototype\" id=\"NDClassPrototype776\"><div class=\"CPEntry TClass Current\"><div class=\"CPName\">CShaderInfo</div></div></div><div class=\"TTSummary\">Defines information parsed from a shader</div></div>"});

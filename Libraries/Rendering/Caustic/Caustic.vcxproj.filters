@@ -31,9 +31,6 @@
     <ClInclude Include="CausticFactory.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="ShaderInfo.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="RenderMesh.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -208,6 +205,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RenderMaterial.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderInfo.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

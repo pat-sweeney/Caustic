@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/ShaderInfo.ixx","ShaderInfo.ixx");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/ShaderInfo.ixx",[["C/C++","C"]],[["Classes","Class"]],[[776,0,0,"CShaderInfo","CShaderInfo"]]);

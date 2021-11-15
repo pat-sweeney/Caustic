@@ -5,7 +5,6 @@
 //**********************************************************************
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\CausticFactory.h"
-#include "ShaderInfo.h"
 #include <vector>
 #include <any>
 #include <d3d11.h>
@@ -21,6 +20,7 @@ import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.CritSec;
 import Rendering.Caustic.Renderer;
+import Rendering.Caustic.ShaderInfo;
 
 //**********************************************************************
 // File: Renderer.cpp
