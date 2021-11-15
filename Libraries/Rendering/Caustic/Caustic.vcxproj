@@ -259,7 +259,6 @@
     <ClInclude Include="defs.h" />
     <ClInclude Include="ICausticFactory.h" />
     <ClInclude Include="IDirectionalLight.h" />
-    <ClInclude Include="ILight.h" />
     <ClInclude Include="IPointCloud.h" />
     <ClInclude Include="IPointLight.h" />
     <ClInclude Include="IRenderable.h" />
@@ -290,6 +289,7 @@
     <ClCompile Include="DirectionalLight.ixx" />
     <ClCompile Include="IBuffer.ixx" />
     <ClCompile Include="ICamera.ixx" />
+    <ClCompile Include="ILight.ixx" />
     <ClCompile Include="IRenderCtx.ixx" />
     <ClCompile Include="IRenderer.ixx" />
     <ClCompile Include="ITrackball.cpp" />

@@ -9,7 +9,7 @@ import Base.Core.Core;
 import Base.Core.IRefCount;
 import Base.Math.Vector;
 import Imaging.Color;
-#include "Rendering\Caustic\ILight.h"
+import Rendering.Caustic.ILight;
 
 //**********************************************************************
 // File: IDirectionLight.h

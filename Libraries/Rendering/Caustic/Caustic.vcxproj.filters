@@ -55,9 +55,6 @@
     <ClInclude Include="IDirectionalLight.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="ILight.h">
-      <Filter>Source Files\Interfaces</Filter>
-    </ClInclude>
     <ClInclude Include="ISpotLight.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
@@ -209,6 +206,9 @@
     </ClCompile>
     <ClCompile Include="CausticFactory.ixx">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ILight.ixx">
+      <Filter>Source Files\Interfaces</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
