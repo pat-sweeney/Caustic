@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/DirectionalLight.ixx","DirectionalLight.ixx");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/DirectionalLight.ixx",[["C/C++","C"]],[["Classes","Class"],["Files","File"]],[[862,0,1,"SpotLight.h","SpotLight.h"],[863,0,0,"CDirectionalLight","CDirectionalLight"]]);

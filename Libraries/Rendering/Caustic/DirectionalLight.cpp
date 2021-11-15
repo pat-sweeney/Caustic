@@ -3,11 +3,11 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+#include "Rendering\Caustic\Caustic.h"
+#include "Rendering\Caustic\IDirectionalLight.h"
 import Base.Core.Core;
 import Base.Core.Error;
-#include "Rendering\Caustic\Caustic.h"
-#include "Rendering\Caustic\DirectionalLight.h"
-#include "Rendering\Caustic\IDirectionalLight.h"
+import Rendering.Caustic.DirectionalLight;
 
 //**********************************************************************
 // File: DirectionalLight.cpp

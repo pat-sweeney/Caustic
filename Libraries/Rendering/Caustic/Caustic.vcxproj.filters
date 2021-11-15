@@ -25,9 +25,6 @@
     <ClInclude Include="RendererMarshaller.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="PointLight.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="RenderMaterial.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -90,15 +87,6 @@
     </ClInclude>
     <ClInclude Include="ISpotLight.h">
       <Filter>Source Files\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectionalLight.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SpotLight.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Light.h">
-      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="defs.h">
       <Filter>Source Files\Shaders</Filter>
@@ -208,6 +196,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Texture.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectionalLight.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SpotLight.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

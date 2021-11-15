@@ -261,7 +261,6 @@
     <ClInclude Include="ConstructBuffers.h" />
     <ClInclude Include="defs.h" />
     <ClInclude Include="DesktopTexture.h" />
-    <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="ICausticFactory.h" />
     <ClInclude Include="IDirectionalLight.h" />
     <ClInclude Include="ILight.h" />
@@ -277,17 +276,14 @@
     <ClInclude Include="IShaderMgr.h" />
     <ClInclude Include="ISpotLight.h" />
     <ClInclude Include="ITexture.h" />
-    <ClInclude Include="Light.h" />
     <ClInclude Include="PathTrace.h" />
     <ClInclude Include="PointCloud.h" />
-    <ClInclude Include="PointLight.h" />
     <ClInclude Include="Renderable.h" />
     <ClInclude Include="RendererMarshaller.h" />
     <ClInclude Include="RenderMaterial.h" />
     <ClInclude Include="RenderMesh.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderInfo.h" />
-    <ClInclude Include="SpotLight.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BuildRenderMesh.cpp" />
@@ -299,14 +295,17 @@
     <ClCompile Include="ConstructBuffers.cpp" />
     <ClCompile Include="DesktopTexture.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
+    <ClCompile Include="DirectionalLight.ixx" />
     <ClCompile Include="IBuffer.ixx" />
     <ClCompile Include="ICamera.ixx" />
     <ClCompile Include="IRenderCtx.ixx" />
     <ClCompile Include="IRenderer.ixx" />
     <ClCompile Include="ITrackball.cpp" />
     <ClCompile Include="ITrackball.ixx" />
+    <ClCompile Include="Light.ixx" />
     <ClCompile Include="PointCloud.cpp" />
     <ClCompile Include="PointLight.cpp" />
+    <ClCompile Include="PointLight.ixx" />
     <ClCompile Include="Renderer.ixx" />
     <ClCompile Include="RendererMarshaller.cpp" />
     <ClCompile Include="Renderable.cpp" />
@@ -318,6 +317,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderInfo.cpp" />
     <ClCompile Include="SpotLight.cpp" />
+    <ClCompile Include="SpotLight.ixx" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Texture.ixx" />
     <ClCompile Include="Trackball.cpp" />
