@@ -3,6 +3,8 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+import Base.Core.Core;
+import Base.Core.Error;
 import Rendering.Caustic.Sampler;
 #include "CausticFactory.h"
 

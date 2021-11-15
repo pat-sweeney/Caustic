@@ -5,6 +5,7 @@
 //**********************************************************************
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\CausticFactory.h"
+#include "Rendering\Caustic\Shader.h"
 #include <vector>
 #include <any>
 #include <d3d11.h>

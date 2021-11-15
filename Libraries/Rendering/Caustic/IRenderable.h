@@ -5,13 +5,12 @@
 //**********************************************************************
 #pragma once
 
-import Base.Core.Core;
-import Base.Core.IRefCount;
-import Base.Math.Vector;
-#include "Rendering\Caustic\RenderMesh.h"
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <vector>
+import Base.Core.Core;
+import Base.Core.IRefCount;
+import Base.Math.Vector;
 
 //**********************************************************************
 // File: IRenderable.h
