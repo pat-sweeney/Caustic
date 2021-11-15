@@ -3,7 +3,7 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "Rendering\Caustic\Caustic.h"
+module Rendering.Caustic.IPointLight;
 import Base.Core.Core;
 import Base.Core.Error;
 import Rendering.Caustic.PointLight;

@@ -5,7 +5,6 @@
 //**********************************************************************
 #include "IShaderInfo.h"
 #include "IRenderMaterial.h"
-#include "IPointLight.h"
 #include "ITexture.h"
 #include "ISampler.h"
 #include "IShader.h"
@@ -19,6 +18,8 @@ import Base.Core.Error;
 import Rendering.Caustic.Sampler;
 import Rendering.Caustic.Shader;
 import Rendering.Caustic.ICamera;
+import Rendering.Caustic.ILight;
+import Rendering.Caustic.IPointLight;
 
 namespace Caustic
 {

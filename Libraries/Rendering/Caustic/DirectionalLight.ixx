@@ -5,13 +5,13 @@
 //**********************************************************************
 module;
 #include "Rendering\Caustic\Caustic.h"
-#include "Rendering\Caustic\IDirectionalLight.h"
 
 export module Rendering.Caustic.DirectionalLight;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
 import Rendering.Caustic.Light;
+import Rendering.Caustic.IDirectionalLight;
 
 //**********************************************************************
 // File: SpotLight.h

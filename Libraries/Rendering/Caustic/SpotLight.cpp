@@ -3,11 +3,12 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "Rendering\Caustic\Caustic.h"
-#include "Rendering\Caustic\ISpotLight.h"
+module Rendering.Caustic.ISpotLight;
 import Base.Core.Core;
 import Base.Core.Error;
 import Rendering.Caustic.SpotLight;
+import Rendering.Caustic.ILight;
+import Rendering.Caustic.ISpotLight;
 
 //**********************************************************************
 // File: SpotLight.cpp

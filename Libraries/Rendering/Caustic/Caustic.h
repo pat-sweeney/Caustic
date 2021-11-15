@@ -10,12 +10,8 @@
 #include "Rendering\Caustic\IShaderMgr.h"
 #include "Rendering\Caustic\ITexture.h"
 #include "Rendering\Caustic\ISampler.h"
-#include "Rendering\Caustic\IDirectionalLight.h"
-#include "Rendering\Caustic\IPointLight.h"
-#include "Rendering\Caustic\ISpotLight.h"
 #include "Rendering\Caustic\IPointCloud.h"
 #include "Rendering\Caustic\IShader.h"
-#include "Rendering\Caustic\IPointLight.h"
 #include "Rendering\Caustic\IRenderMaterial.h"
 #include "Rendering\Caustic\IRendererMarshaller.h"
 #include "Rendering\Caustic\IRenderMesh.h"
@@ -28,6 +24,9 @@ import Rendering.Caustic.ITrackball;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.ICamera;
 import Rendering.Caustic.IRenderCtx;
+import Rendering.Caustic.IDirectionalLight;
+import Rendering.Caustic.IPointLight;
+import Rendering.Caustic.ISpotLight;
 
 //**********************************************************************
 // File: Caustic.h

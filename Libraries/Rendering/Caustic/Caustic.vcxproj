@@ -258,9 +258,7 @@
     <ClInclude Include="Caustic.h" />
     <ClInclude Include="defs.h" />
     <ClInclude Include="ICausticFactory.h" />
-    <ClInclude Include="IDirectionalLight.h" />
     <ClInclude Include="IPointCloud.h" />
-    <ClInclude Include="IPointLight.h" />
     <ClInclude Include="IRenderable.h" />
     <ClInclude Include="IRendererMarshaller.h" />
     <ClInclude Include="IRenderMaterial.h" />
@@ -269,7 +267,6 @@
     <ClInclude Include="IShader.h" />
     <ClInclude Include="IShaderInfo.h" />
     <ClInclude Include="IShaderMgr.h" />
-    <ClInclude Include="ISpotLight.h" />
     <ClInclude Include="ITexture.h" />
   </ItemGroup>
   <ItemGroup>
@@ -289,9 +286,12 @@
     <ClCompile Include="DirectionalLight.ixx" />
     <ClCompile Include="IBuffer.ixx" />
     <ClCompile Include="ICamera.ixx" />
+    <ClCompile Include="IDirectionalLight.ixx" />
     <ClCompile Include="ILight.ixx" />
+    <ClCompile Include="IPointLight.ixx" />
     <ClCompile Include="IRenderCtx.ixx" />
     <ClCompile Include="IRenderer.ixx" />
+    <ClCompile Include="ISpotLight.ixx" />
     <ClCompile Include="ITrackball.cpp" />
     <ClCompile Include="ITrackball.ixx" />
     <ClCompile Include="Light.ixx" />

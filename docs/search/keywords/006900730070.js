@@ -1,1 +1,1 @@
-﻿NDSearch.OnPrefixDataLoaded("isp",["Interface","File"],[["ISpotLight",,[[,,,,0,"File:Rendering/Caustic/ISpotLight.h:ISpotLight","CClass:ISpotLight"],[,"ISpotLight.h",,,1,"File:Rendering/Caustic/ISpotLight.h:ISpotLight.h"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("isp",["Interface","File"],[["ISpotLight",,[[,,,,0,"File:Rendering/Caustic/ISpotLight.ixx:ISpotLight","CClass:ISpotLight"],[,"ISpotLight.h",,,1,"File:Rendering/Caustic/ISpotLight.ixx:ISpotLight.h"]]]]);

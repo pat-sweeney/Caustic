@@ -5,11 +5,6 @@
 //**********************************************************************
 #pragma once
 
-import Base.Core.Core;
-import Base.Math.Vector;
-import Imaging.Color;
-import Imaging.Image.IImage;
-import Rendering.Caustic.ITrackball;
 #include "Geometry\Mesh\Mesh.h"
 #include "Rendering\Caustic\Caustic.h"
 #include <Windows.h>
@@ -18,6 +13,14 @@ import Rendering.Caustic.ITrackball;
 #include <DirectXMath.h>
 #include <vector>
 #include <any>
+import Base.Core.Core;
+import Base.Math.Vector;
+import Imaging.Color;
+import Imaging.Image.IImage;
+import Rendering.Caustic.ITrackball;
+import Rendering.Caustic.ISpotLight;
+import Rendering.Caustic.IPointLight;
+import Rendering.Caustic.IDirectionalLight;
 
 //**********************************************************************
 // File: ICausticFactory.h

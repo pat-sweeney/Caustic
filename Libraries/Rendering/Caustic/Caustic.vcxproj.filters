@@ -22,9 +22,6 @@
     <ClInclude Include="ICausticFactory.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="IPointLight.h">
-      <Filter>Source Files\Interfaces</Filter>
-    </ClInclude>
     <ClInclude Include="IRenderable.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
@@ -50,12 +47,6 @@
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="ITexture.h">
-      <Filter>Source Files\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="IDirectionalLight.h">
-      <Filter>Source Files\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="ISpotLight.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="defs.h">
@@ -208,6 +199,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ILight.ixx">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="IDirectionalLight.ixx">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="IPointLight.ixx">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="ISpotLight.ixx">
       <Filter>Source Files\Interfaces</Filter>
     </ClCompile>
   </ItemGroup>
