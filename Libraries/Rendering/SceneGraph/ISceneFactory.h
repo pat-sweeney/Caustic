@@ -4,12 +4,12 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-import Base.Core.Core;
 #include "Rendering\Caustic\Caustic.h"
-#include "Rendering\Caustic\Shader.h"
-import Base.Math.Matrix;
 #include "ISceneGraph.h"
 #include "ISceneFactory.h"
+import Base.Core.Core;
+import Base.Math.Matrix;
+import Rendering.Caustic.Shader;
 
 namespace Caustic
 {

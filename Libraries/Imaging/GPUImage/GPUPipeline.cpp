@@ -4,7 +4,6 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "Rendering\Caustic\Shader.h"
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\CausticFactory.h"
 #include <memory>
@@ -21,6 +20,7 @@ import Base.Core.Error;
 import Imaging.Image.IGPUPipeline;
 import Cameras.CameraBase.ICamera;
 import Rendering.Caustic.Sampler;
+import Rendering.Caustic.Shader;
 
 // Namespace: Caustic
 namespace Caustic

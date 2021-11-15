@@ -6,12 +6,12 @@
 module;
 #include "Rendering\Caustic\Caustic.h"
 #include "IRenderMesh.h"
-#include "Shader.h"
 #include <d3d11.h>
 
 export module Rendering.Caustic.RenderMesh;
 import Base.Core.Core;
 import Base.Math.BBox;
+import Rendering.Caustic.Shader;
 
 //**********************************************************************
 // File: RenderMesh.h

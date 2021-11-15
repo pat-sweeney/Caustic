@@ -7,7 +7,6 @@ module;
 #include "Rendering\Caustic\Caustic.h"
 #include "IRenderable.h"
 #include "Rendering\Caustic\IRenderable.h"
-#include "Shader.h"
 #include <memory>
 #include <any>
 #include <vector>
@@ -19,6 +18,7 @@ import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.Event;
 import Base.Core.CritSec;
+import Rendering.Caustic.Shader;
 
 //**********************************************************************
 // File: Renderable.h

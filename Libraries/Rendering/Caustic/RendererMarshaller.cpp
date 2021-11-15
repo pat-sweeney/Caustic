@@ -12,6 +12,7 @@
 #include <functional>
 #include <algorithm>
 import Base.Core.Core;
+import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Rendering.Caustic.Renderer;

@@ -5,6 +5,7 @@
 //**********************************************************************
 #pragma once
 import Base.Core.Core;
+import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Math.Ray;
 #include "Rendering\Caustic\Caustic.h"

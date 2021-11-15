@@ -273,7 +273,6 @@
     <ClInclude Include="IShaderMgr.h" />
     <ClInclude Include="ISpotLight.h" />
     <ClInclude Include="ITexture.h" />
-    <ClInclude Include="Shader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BuildRenderMesh.cpp" />
@@ -314,6 +313,7 @@
     <ClCompile Include="Sampler.cpp" />
     <ClCompile Include="Sampler.ixx" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Shader.ixx" />
     <ClCompile Include="ShaderInfo.cpp" />
     <ClCompile Include="ShaderInfo.ixx" />
     <ClCompile Include="SpotLight.cpp" />

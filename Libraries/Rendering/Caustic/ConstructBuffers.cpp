@@ -7,13 +7,13 @@ module;
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\IRenderMesh.h"
 #include "Rendering\Caustic\IShaderInfo.h"
-#include "Shader.h"
 #include <d3d11.h>
 
 module Rendering.Caustic.ConstructBuffer;
 import Base.Core.Core;
 import Base.Math.BBox;
 import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.Shader;
 
 namespace Caustic
 {

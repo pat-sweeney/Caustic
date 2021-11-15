@@ -5,12 +5,12 @@
 //**********************************************************************
 module;
 #include "Rendering\Caustic\Caustic.h"
-#include "Rendering\Caustic\Shader.h"
 #include <varargs.h>
 
 export module Imaging.Image.IGPUPipeline;
 import Base.Core.Core;
 import Imaging.Image.IImage;
+import Rendering.Caustic.Shader;
 
 export namespace Caustic
 {

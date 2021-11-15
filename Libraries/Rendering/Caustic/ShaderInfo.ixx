@@ -6,12 +6,12 @@
 module;
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\IShaderInfo.h"
-#include "Shader.h"
 
 export module Rendering.Caustic.ShaderInfo;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
+import Rendering.Caustic.Shader;
 
 export namespace Caustic
 {

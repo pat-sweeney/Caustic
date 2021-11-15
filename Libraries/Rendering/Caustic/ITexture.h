@@ -13,7 +13,6 @@ import Base.Core.IRefCount;
 import Imaging.Image.IImage;
 import Rendering.Caustic.IRenderer;
 
-
 //**********************************************************************
 // File: ITexture.h
 // This file defines the published interface for textures.

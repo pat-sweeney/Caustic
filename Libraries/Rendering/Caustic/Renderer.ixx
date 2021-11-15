@@ -6,7 +6,6 @@
 module;
 #include "Rendering\Caustic\Caustic.h"
 #include "Geometry\Mesh\Mesh.h"
-#include "Shader.h"
 #include <memory>
 #include <any>
 #include <vector>
@@ -17,9 +16,11 @@ module;
 
 export module Rendering.Caustic.Renderer;
 import Base.Core.Core;
+import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.Event;
 import Base.Core.CritSec;
+import Rendering.Caustic.Shader;
 
 //**********************************************************************
 // File: Renderer.h

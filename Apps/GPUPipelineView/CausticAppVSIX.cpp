@@ -4,6 +4,7 @@
 #include "pch.h"
 #include "CausticAppVSIX.h"
 import Base.Core.Core;
+import Base.Core.Error;
 import Base.Core.IRefCount;
 import Imaging.Image.GPUPipeline;
 import Imaging.Image.IGPUPipeline;

@@ -3,14 +3,22 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "Shader.h"
-import Rendering.Caustic.Sampler;
 #include "IShaderInfo.h"
 #include "IRenderMaterial.h"
 #include "IPointLight.h"
+#include "ITexture.h"
+#include "ISampler.h"
+#include "IShader.h"
 #include <DirectXMath.h>
 #include <memory>
 #include <d3d11_4.h>
+#include <atlbase.h>
+#include <any>
+import Base.Core.Core;
+import Base.Core.Error;
+import Rendering.Caustic.Sampler;
+import Rendering.Caustic.Shader;
+import Rendering.Caustic.ICamera;
 
 namespace Caustic
 {

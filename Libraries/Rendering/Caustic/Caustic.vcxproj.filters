@@ -16,9 +16,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Shader.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Caustic.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -208,6 +205,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ConstructBuffers.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

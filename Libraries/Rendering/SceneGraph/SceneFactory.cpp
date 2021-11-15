@@ -5,12 +5,12 @@
 //**********************************************************************
 #pragma once
 #include "stdafx.h"
-import Base.Core.Core;
 #include "Rendering\Caustic\Caustic.h"
-#include "Rendering\Caustic\Shader.h"
-import Base.Math.Matrix;
 #include "ISceneFactory.h"
 #include "SceneFactory.h"
+import Base.Core.Core;
+import Rendering.Caustic.Shader;
+import Base.Math.Matrix;
 
 namespace Caustic
 {

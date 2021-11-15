@@ -4,16 +4,9 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-import Base.Core.Core;
-import Base.Core.Error;
-import Base.Core.RefCount;
-import Base.Core.Event;
-import Base.Core.CritSec;
-import Rendering.Caustic.PointCloud;
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\Caustic\IRenderMesh.h"
 #include "IRenderable.h"
-#include "Shader.h"
 #include "IPointCloud.h"
 #include "CausticFactory.h"
 #include <memory>
@@ -21,6 +14,13 @@ import Rendering.Caustic.PointCloud;
 #include <vector>
 #include <atlbase.h>
 #include <d3d11.h>
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.RefCount;
+import Base.Core.Event;
+import Base.Core.CritSec;
+import Rendering.Caustic.PointCloud;
+import Rendering.Caustic.Shader;
 
 //**********************************************************************
 // File: Renderable.h

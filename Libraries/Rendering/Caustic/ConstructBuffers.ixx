@@ -6,12 +6,15 @@
 module;
 #include "Rendering\Caustic\Caustic.h"
 #include "IRenderMesh.h"
-#include "Shader.h"
 #include <d3d11.h>
 
 export module Rendering.Caustic.ConstructBuffer;
 import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
 import Base.Math.BBox;
+import Rendering.Caustic.Shader;
 
 export namespace Caustic
 {

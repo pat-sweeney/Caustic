@@ -6,7 +6,6 @@
 module;
 #include "Rendering\Caustic\Caustic.h"
 #include "IRenderable.h"
-#include "Shader.h"
 #include "IPointCloud.h"
 #include <memory>
 #include <any>
@@ -21,6 +20,7 @@ import Base.Core.RefCount;
 import Base.Core.Event;
 import Base.Core.CritSec;
 import Rendering.Caustic.Renderable;
+import Rendering.Caustic.Shader;
 
 //**********************************************************************
 // File: Renderable.h

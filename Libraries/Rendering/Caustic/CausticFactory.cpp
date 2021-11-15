@@ -5,7 +5,6 @@
 //**********************************************************************
 #pragma once
 #include "Rendering\Caustic\Caustic.h"
-#include "Rendering\Caustic\Shader.h"
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include "CausticFactory.h"
@@ -20,6 +19,7 @@ import Imaging.Image.IImage;
 import Rendering.Caustic.Renderer;
 import Rendering.Caustic.ShaderInfo;
 import Rendering.Caustic.RenderMesh;
+import Rendering.Caustic.Shader;
 
 //**********************************************************************
 // File: CausticFactory.cpp
