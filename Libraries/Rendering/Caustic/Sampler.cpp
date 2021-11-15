@@ -3,10 +3,13 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+module;
+#include "Rendering\Caustic\ISampler.h"
+
+module Rendering.Caustic.Sampler;
 import Base.Core.Core;
 import Base.Core.Error;
-import Rendering.Caustic.Sampler;
-#include "CausticFactory.h"
+import Rendering.Caustic.CausticFactory;
 
 namespace Caustic
 {

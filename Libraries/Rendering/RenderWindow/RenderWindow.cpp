@@ -4,12 +4,12 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "stdafx.h"
-import Base.Core.Core;
 #include "Rendering\RenderWindow\RenderWindow.h"
 #include "Rendering\RenderGraph\RenderGraph.h"
 #include "Rendering\SceneGraph\SceneGraph.h"
-#include "Rendering\Caustic\CausticFactory.h"
 #include <Windows.h>
+import Base.Core.Core;
+import Rendering.Caustic.CausticFactory;
 
 namespace Caustic
 {

@@ -5,10 +5,10 @@
 //**********************************************************************
 #include "stdafx.h"
 #include "Rendering\SceneGraph\ISceneGraph.h"
-#include "Rendering\Caustic\CausticFactory.h"
 #include "MeshElem.h"
 #include <string>
 #include <d3d11_4.h>
+import Rendering.Caustic.CausticFactory;
 
 namespace Caustic
 {

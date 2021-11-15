@@ -5,9 +5,9 @@
 //**********************************************************************
 #include "stdafx.h"
 #include "Rendering\SceneGraph\ISceneGraph.h"
-#include "Rendering\Caustic\CausticFactory.h"
 #include "CustomRenderElem.h"
 #include <string>
+import Rendering.Caustic.CausticFactory;
 
 namespace Caustic
 {

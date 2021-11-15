@@ -6,8 +6,8 @@
 #include "stdafx.h"
 #include "Rendering\SceneGraph\ISceneGraph.h"
 #include "ComputeShaderElem.h"
-#include "Rendering\Caustic\CausticFactory.h"
 #include <string>
+import Rendering.Caustic.CausticFactory;
 
 namespace Caustic
 {

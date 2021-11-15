@@ -7,7 +7,6 @@
 #include "Rendering\Caustic\Caustic.h"
 #include <d3d11.h>
 #include <DirectXMath.h>
-#include "CausticFactory.h"
 #include <mfapi.h>
 #include <mfidl.h>
 #include <mfreadwrite.h>
@@ -20,6 +19,7 @@ import Rendering.Caustic.Renderer;
 import Rendering.Caustic.ShaderInfo;
 import Rendering.Caustic.RenderMesh;
 import Rendering.Caustic.Shader;
+import Rendering.Caustic.CausticFactory;
 
 //**********************************************************************
 // File: CausticFactory.cpp

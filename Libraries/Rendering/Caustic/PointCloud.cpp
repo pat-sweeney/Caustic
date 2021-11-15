@@ -8,7 +8,6 @@
 #include "Rendering\Caustic\IRenderMesh.h"
 #include "IRenderable.h"
 #include "IPointCloud.h"
-#include "CausticFactory.h"
 #include <memory>
 #include <any>
 #include <vector>
@@ -21,6 +20,7 @@ import Base.Core.Event;
 import Base.Core.CritSec;
 import Rendering.Caustic.PointCloud;
 import Rendering.Caustic.Shader;
+import Rendering.Caustic.CausticFactory;
 
 //**********************************************************************
 // File: Renderable.h

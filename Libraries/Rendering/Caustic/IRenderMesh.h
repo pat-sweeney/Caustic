@@ -12,6 +12,7 @@
 import Base.Core.IRefCount;
 import Base.Math.BBox;
 import Rendering.Caustic.IRenderer;
+import Geometry.Mesh.RenderTypes;
 
 //**********************************************************************
 // File: IRenderMesh.h

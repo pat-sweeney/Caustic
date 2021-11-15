@@ -9,12 +9,12 @@ module;
 #include <memory>
 #include <d3d11.h>
 #include <DirectXMath.h>
-#include "CausticFactory.h"
 
 export module Rendering.Caustic.Trackball;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
+import Rendering.Caustic.CausticFactory;
 
 export namespace Caustic
 {

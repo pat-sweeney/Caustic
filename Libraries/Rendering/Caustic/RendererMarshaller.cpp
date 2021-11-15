@@ -7,7 +7,6 @@
 #include "Geometry\Mesh\Mesh.h"
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\SceneGraph\ISceneGraph.h"
-#include "Rendering\Caustic\CausticFactory.h"
 #include <queue>
 #include <functional>
 #include <algorithm>
@@ -17,6 +16,7 @@ import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Rendering.Caustic.Renderer;
 import Rendering.Caustic.RendererMarshaller;
+import Rendering.Caustic.CausticFactory;
 
 //**********************************************************************
 // File: RendererMarshaller.cpp

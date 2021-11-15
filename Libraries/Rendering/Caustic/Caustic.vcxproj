@@ -256,7 +256,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Caustic.h" />
-    <ClInclude Include="CausticFactory.h" />
     <ClInclude Include="defs.h" />
     <ClInclude Include="ICausticFactory.h" />
     <ClInclude Include="IDirectionalLight.h" />
@@ -282,6 +281,7 @@
     </ClCompile>
     <ClCompile Include="Camera.ixx" />
     <ClCompile Include="CausticFactory.cpp" />
+    <ClCompile Include="CausticFactory.ixx" />
     <ClCompile Include="ConstructBuffers.cpp" />
     <ClCompile Include="ConstructBuffers.ixx" />
     <ClCompile Include="DesktopTexture.cpp" />

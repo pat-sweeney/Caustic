@@ -19,9 +19,6 @@
     <ClInclude Include="Caustic.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="CausticFactory.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="ICausticFactory.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
@@ -208,6 +205,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Shader.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CausticFactory.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

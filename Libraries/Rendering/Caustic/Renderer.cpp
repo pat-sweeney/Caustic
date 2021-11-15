@@ -4,7 +4,6 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "Rendering\Caustic\Caustic.h"
-#include "Rendering\Caustic\CausticFactory.h"
 #include <vector>
 #include <any>
 #include <d3d11.h>
@@ -22,6 +21,7 @@ import Base.Core.CritSec;
 import Rendering.Caustic.Renderer;
 import Rendering.Caustic.ShaderInfo;
 import Rendering.Caustic.Shader;
+import Rendering.Caustic.CausticFactory;
 
 //**********************************************************************
 // File: Renderer.cpp

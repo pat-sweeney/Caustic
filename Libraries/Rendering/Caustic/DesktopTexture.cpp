@@ -4,7 +4,6 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "Rendering\Caustic\Caustic.h"
-#include "Rendering\Caustic\CausticFactory.h"
 #include <memory>
 #include <objbase.h>
 #include <assert.h>
@@ -13,6 +12,7 @@
 #include <string>
 import Base.Core.Error;
 import Rendering.Caustic.DesktopTexture;
+import Rendering.Caustic.CausticFactory;
 
 namespace Caustic
 {
