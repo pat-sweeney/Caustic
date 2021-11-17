@@ -20,6 +20,7 @@ import Rendering.Caustic.ShaderInfo;
 import Rendering.Caustic.RenderMesh;
 import Rendering.Caustic.Shader;
 import Rendering.Caustic.CausticFactory;
+import Geometry.Mesh.MaterialAttrib;
 
 //**********************************************************************
 // File: CausticFactory.cpp

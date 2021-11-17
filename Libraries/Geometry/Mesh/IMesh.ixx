@@ -4,8 +4,6 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "Geometry\Mesh\MaterialAttrib.h"
-#include "Geometry\Mesh\IMaterialAttrib.h"
 #include <memory>
 #include <atlbase.h>
 #include <vector>
@@ -21,6 +19,8 @@ import Base.Math.Vector;
 import Base.Math.BBox;
 import Base.Math.Ray;
 import Geometry.Mesh.RenderTypes;
+import Geometry.Mesh.MaterialAttrib;
+import Geometry.Mesh.IMaterialAttrib;
 
 //**********************************************************************
 // File: IMesh.h

@@ -8,6 +8,7 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <vector>
+#include "Rendering\Caustic\IRenderMesh.h"
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Base.Math.Vector;

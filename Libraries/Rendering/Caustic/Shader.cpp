@@ -3,6 +3,7 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+#include <string>
 #include "IShaderInfo.h"
 #include "IRenderMaterial.h"
 #include "ITexture.h"

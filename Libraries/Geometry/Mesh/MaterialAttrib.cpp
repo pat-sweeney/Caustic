@@ -3,9 +3,12 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "Geometry\Mesh\MaterialAttrib.h"
+module;
+#include <Windows.h>
 #include "Base\Core\convertStr.h"
 #include <memory>
+
+module Geometry.Mesh.MaterialAttrib;
 import Imaging.Image.Image;
 
 namespace Caustic

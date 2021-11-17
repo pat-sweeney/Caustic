@@ -5,10 +5,10 @@
 //**********************************************************************
 #include "Rendering\Caustic\Caustic.h"
 #include "Geometry\Mesh\Mesh.h"
-#include "Geometry\Mesh\MaterialAttrib.h"
 #include <string>
 import Base.Core.Core;
 import Base.Core.Error;
+import Geometry.Mesh.MaterialAttrib;
 import Rendering.Caustic.Sampler;
 import Rendering.Caustic.Renderer;
 import Rendering.Caustic.RenderMaterial;

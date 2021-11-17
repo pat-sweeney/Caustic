@@ -3,10 +3,11 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+#include <d3d11.h>
+#include <string>
 #include "Rendering\Caustic\IRenderMesh.h"
 #include "Rendering\Caustic\IShaderInfo.h"
 #include "Rendering\Caustic\ICausticFactory.h"
-#include <d3d11.h>
 import Base.Core.Core;
 import Base.Core.Error;
 import Geometry.Mesh.RenderTypes;

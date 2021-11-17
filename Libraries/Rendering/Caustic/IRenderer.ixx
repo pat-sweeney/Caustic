@@ -9,7 +9,6 @@ module;
 #include <d3d11.h>
 #include <directxmath.h>
 #include <dxgi1_6.h>
-#include "Geometry\Mesh\IMaterialAttrib.h"
 
 export module Rendering.Caustic.IRenderer;
 import Base.Core.Core;
@@ -17,6 +16,7 @@ import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Geometry.Mesh.IMesh;
+import Geometry.Mesh.IMaterialAttrib;
 
 //**********************************************************************
 // File: IRenderer.h

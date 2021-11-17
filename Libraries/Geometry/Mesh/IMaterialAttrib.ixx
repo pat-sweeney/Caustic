@@ -3,31 +3,32 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
+module;
+#include <vector>
+#include <string>
+#include <functional>
+#include <d3d11.h>
 
+export module Geometry.Mesh.IMaterialAttrib;
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Base.Core.ISerialize;
 import Base.Math.Vector;
 import Imaging.Color;
 import Imaging.Image.IImage;
-#include <vector>
-#include <string>
-#include <functional>
-#include <d3d11.h>
 
 //**********************************************************************
 // File: IRenderMaterial.h
 // This file defines the published interface for render materials.
 //**********************************************************************
-namespace Caustic
+export namespace Caustic
 {
 	//**********************************************************************
 	// Enum: EShaderAccess
 	// Indicates whether a material is used by a pixel or vertex shader or both
 	//
-	// Header:
-	// {Link:#include "Rendering/Caustic/IMaterialAttrib.h"{Rendering/Caustic/IMaterialAttrib.h}}
+	// Module:
+	// {Link:import Rendering.Caustic.IMaterialAttrib;{Rendering/Caustic/IMaterialAttrib.ixx}}
 	//**********************************************************************
 	enum EShaderAccess
 	{
@@ -40,8 +41,8 @@ namespace Caustic
 	// Interface: IMaterialAttrib
 	// Used for manipulating the materials assigned to a mesh.
 	//
-	// Header:
-	// {Link:#include "Rendering/Caustic/IMaterialAttrib.h"{Rendering/Caustic/IMaterialAttrib.h}}
+	// Module:
+	// {Link:import Rendering.Caustic.IMaterialAttrib;{Rendering/Caustic/IMaterialAttrib.ixx}}
 	//**********************************************************************
 	struct IMaterialAttrib : public ISerialize
 	{
@@ -266,36 +267,4 @@ namespace Caustic
 		//**********************************************************************
 		virtual void SetMaterialID(uint32 v) = 0;
 	};
-
-	//**********************************************************************
-	// Function: CreateStandardMaterial
-	// Creates a standard material (as specified in the Phong lighting model)
-	//
-	// Parameters:
-	// ambientColor - ambient color
-	// diffuseColor - diffuse color
-	// specularColor - specular color
-	// specularExp - value of exponent in specular
-	// alpha - transparency value
-	//
-	// Returns:
-	// Returns the new material object
-	//
-	// Header:
-	// {Link:#include "Rendering/Caustic/IMaterialAttrib.h"{Rendering/Caustic/IMaterialAttrib.h}}
-	//**********************************************************************
-	CRefObj<IMaterialAttrib> CreateStandardMaterialAttrib(FRGBColor ambientColor, FRGBColor diffuseColor,
-		FRGBColor specularColor, float specularExp, float alpha);
-
-	//**********************************************************************
-	// Function: CreateMaterial
-	// Creates an empty material object
-	//
-	// Returns:
-	// Returns the new material object
-	//
-	// Header:
-	// {Link:#include "Rendering/Caustic/IMaterialAttrib.h"{Rendering/Caustic/IMaterialAttrib.h}}
-	//**********************************************************************
-	CRefObj<IMaterialAttrib> CreateMaterialAttrib();
 }

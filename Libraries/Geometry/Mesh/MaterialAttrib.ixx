@@ -3,25 +3,27 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
-#include "Geometry\Mesh\IMaterialAttrib.h"
-import Base.Core.Core;
-import Base.Core.RefCount;
-import Imaging.Image.IImage;
-import Imaging.Image.ImageIter;
+module;
 #include <vector>
 #include <map>
 #include <string>
 #include <functional>
 
-namespace Caustic
+export module Geometry.Mesh.MaterialAttrib;
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Imaging.Image.IImage;
+import Imaging.Image.ImageIter;
+import Geometry.Mesh.IMaterialAttrib;
+
+export namespace Caustic
 {
     //**********************************************************************
     // Structure: CMaterialAttrib
     // Defines the basic material
     //
-    // Header:
-    // {Link:#include "Rendering/Caustic/MaterialAttrib.h"{Rendering/Caustic/MaterialAttrib.h}}
+    // Module:
+    // {Link:import Rendering.Caustic.MaterialAttrib;{Rendering/Caustic/MaterialAttrib.ixx}}
     //**********************************************************************
     struct CMaterialAttrib : public IMaterialAttrib, public CRefCount
     {
@@ -84,4 +86,36 @@ namespace Caustic
         virtual void Load(IStream* pStream) override;
         virtual void Store(IStream* pStream) override;
     };
+
+    //**********************************************************************
+    // Function: CreateStandardMaterial
+    // Creates a standard material (as specified in the Phong lighting model)
+    //
+    // Parameters:
+    // ambientColor - ambient color
+    // diffuseColor - diffuse color
+    // specularColor - specular color
+    // specularExp - value of exponent in specular
+    // alpha - transparency value
+    //
+    // Returns:
+    // Returns the new material object
+    //
+    // Module:
+    // {Link:import Rendering.Caustic.IMaterialAttrib;{Rendering/Caustic/IMaterialAttrib.ixx}}
+    //**********************************************************************
+    CRefObj<IMaterialAttrib> CreateStandardMaterialAttrib(FRGBColor ambientColor, FRGBColor diffuseColor,
+        FRGBColor specularColor, float specularExp, float alpha);
+
+    //**********************************************************************
+    // Function: CreateMaterial
+    // Creates an empty material object
+    //
+    // Returns:
+    // Returns the new material object
+    //
+    // Module:
+    // {Link:import Rendering.Caustic.IMaterialAttrib;{Rendering/Caustic/IMaterialAttrib.ixx}}
+    //**********************************************************************
+    CRefObj<IMaterialAttrib> CreateMaterialAttrib();
 }

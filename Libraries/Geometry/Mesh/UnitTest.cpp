@@ -12,7 +12,8 @@ import Base.Core.IRefCount;
 import Base.Math.Vector;
 import Geometry.Mesh.IMeshConstructor;
 import Geometry.Mesh.IMesh;
-#include "Geometry\Mesh\IMaterialAttrib.h"
+import Geometry.Mesh.IMaterialAttrib;
+import Geometry.Mesh.MaterialAttrib;
 #include "Geometry\Mesh\Mesh.h"
 #include <cmath>
 #include "UnitTest.h"

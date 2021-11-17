@@ -16,12 +16,6 @@
     <ClInclude Include="UnitTest.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="IMaterialAttrib.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MaterialAttrib.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Submesh.cpp">
@@ -64,6 +58,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="IMesh.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialAttrib.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IMaterialAttrib.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

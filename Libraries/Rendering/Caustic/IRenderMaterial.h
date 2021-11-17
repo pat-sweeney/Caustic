@@ -5,10 +5,11 @@
 //**********************************************************************
 #pragma once
 
-#include "Geometry\Mesh\IMaterialAttrib.h"
-import Base.Core.Core;
-import Base.Core.IRefCount;
 #include <vector>
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Geometry.Mesh.IMaterialAttrib;
 
 //**********************************************************************
 // File: IRenderMaterial.h

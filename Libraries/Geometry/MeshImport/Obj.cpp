@@ -12,6 +12,7 @@
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Math.Vector;
+import Geometry.Mesh.MaterialAttrib;
 #include <string>
 #include <vector>
 #include "Base\Core\convertStr.h"
