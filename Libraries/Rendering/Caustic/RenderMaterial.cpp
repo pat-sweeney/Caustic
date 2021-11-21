@@ -4,11 +4,11 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "Rendering\Caustic\Caustic.h"
-#include "Geometry\Mesh\Mesh.h"
 #include <string>
 import Base.Core.Core;
 import Base.Core.Error;
 import Geometry.Mesh.MaterialAttrib;
+import Geometry.Mesh.Mesh;
 import Rendering.Caustic.Sampler;
 import Rendering.Caustic.Renderer;
 import Rendering.Caustic.RenderMaterial;

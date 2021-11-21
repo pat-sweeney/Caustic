@@ -23,19 +23,12 @@
 // ImPlot v0.10 WIP
 
 #include "implot.h"
-import Base.Core.Core;
-import Base.Core.IRefCount;
-import Imaging.Image.GPUPipeline;
-import Imaging.Image.IGPUPipeline;
-import Parsers.JSon.IJSonParser;
-import Rendering.SceneImport.Collada;
 #include "Rendering\RenderWindow\IRenderWindow.h"
 #include "Rendering\Caustic\ICausticFactory.h"
 #include "Rendering\Caustic\IShader.h"
 #include "Cameras\AzureKinect\IAzureKinect.h"
 #include "Rendering\SceneGraph\ISceneFactory.h"
 #include "Rendering\SceneGraph\ISceneGraph.h"
-#include "Geometry\MeshImport\MeshImport.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -47,6 +40,13 @@ import Rendering.SceneImport.Collada;
 #include <d3d11.h>
 #include <d3d11_4.h>
 #include <d3dcommon.h>
+import Base.Core.Core;
+import Base.Core.IRefCount;
+import Imaging.Image.GPUPipeline;
+import Imaging.Image.IGPUPipeline;
+import Parsers.JSon.IJSonParser;
+import Rendering.SceneImport.Collada;
+import Geometry.MeshImport;
 
 #ifdef _MSC_VER
 #define sprintf sprintf_s

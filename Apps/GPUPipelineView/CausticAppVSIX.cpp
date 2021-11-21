@@ -3,19 +3,12 @@
 
 #include "pch.h"
 #include "CausticAppVSIX.h"
-import Base.Core.Core;
-import Base.Core.Error;
-import Base.Core.IRefCount;
-import Imaging.Image.GPUPipeline;
-import Imaging.Image.IGPUPipeline;
-import Rendering.SceneImport.Collada;
 #include "Rendering\RenderWindow\IRenderWindow.h"
 #include "Rendering\Caustic\ICausticFactory.h"
 #include "Rendering\Caustic\IShader.h"
 #include "Cameras\AzureKinect\IAzureKinect.h"
 #include "Rendering\SceneGraph\ISceneFactory.h"
 #include "Rendering\SceneGraph\ISceneGraph.h"
-#include "Geometry\MeshImport\MeshImport.h"
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
@@ -26,6 +19,13 @@ import Rendering.SceneImport.Collada;
 #include <d3d11.h>
 #include <d3d11_4.h>
 #include <d3dcommon.h>
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.IRefCount;
+import Imaging.Image.GPUPipeline;
+import Imaging.Image.IGPUPipeline;
+import Rendering.SceneImport.Collada;
+import Geometry.MeshImport;
 
 #define MAX_LOADSTRING 100
 

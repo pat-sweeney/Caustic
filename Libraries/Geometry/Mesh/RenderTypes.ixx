@@ -30,7 +30,7 @@ export namespace Caustic
     // at material boundaries or smoothing groups contain CFaceVertex data.
     //
     // Module:
-    // {Link: import Rendering.Caustic.RenderTypes{Rendering/Caustic/RenderTypes.ixx}}
+    // {Link: import Rendering.Caustic.RenderTypes;{Rendering/Caustic/RenderTypes.ixx}}
     //**********************************************************************
     struct CGeomVertex
     {

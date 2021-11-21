@@ -3,12 +3,20 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "stdafx.h"
-import Base.Core.Core;
-import Base.Core.Error;
-#include "MeshImport.h"
+module;
 #include <memory>
 #include <vector>
+#include <Windows.h>
+
+module Geometry.MeshImport.Lightwave;
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Base.Math.Vector;
+import Geometry.Mesh.Mesh;
+import Geometry.Mesh.IMesh;
+import Geometry.MeshImport;
 
 namespace Caustic
 {

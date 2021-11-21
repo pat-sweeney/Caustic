@@ -77,8 +77,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="MeshConstructor.h" />
-    <ClInclude Include="Mesh.h" />
     <ClInclude Include="UnitTest.h" />
   </ItemGroup>
   <ItemGroup>
@@ -93,7 +91,10 @@
     <ClCompile Include="MaterialAttrib.cpp" />
     <ClCompile Include="MaterialAttrib.ixx" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Mesh.ixx" />
     <ClCompile Include="MeshConstructor.cpp" />
+    <ClCompile Include="MeshConstructor.ixx" />
+    <ClCompile Include="MeshFuncs.ixx" />
     <ClCompile Include="MeshToRenderMesh.cpp" />
     <ClCompile Include="RenderTypes.ixx" />
     <ClCompile Include="Submesh.cpp" />

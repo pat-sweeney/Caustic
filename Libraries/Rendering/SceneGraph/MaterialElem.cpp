@@ -5,9 +5,9 @@
 //**********************************************************************
 #include "stdafx.h"
 #include "Rendering\SceneGraph\ISceneGraph.h"
-#include "Geometry\Mesh\Mesh.h"
 #include "MaterialElem.h"
 #include <string>
+import Geometry.Mesh.Mesh;
 import Geometry.Mesh.MaterialAttrib;
 
 namespace Caustic

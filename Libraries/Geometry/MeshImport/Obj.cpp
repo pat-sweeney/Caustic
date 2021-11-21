@@ -7,16 +7,20 @@
 // For complete details on the format see:
 // http://paulbourke.net/dataformats/mtl/
 //**********************************************************************
-#include "stdafx.h"
+module;
 #include <Windows.h>
+#include <string>
+#include <vector>
+#include <map>
+#include "Base\Core\convertStr.h"
+#include "Rendering\Caustic\Caustic.h"
+
+module Geometry.MeshImport.Obj;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Math.Vector;
 import Geometry.Mesh.MaterialAttrib;
-#include <string>
-#include <vector>
-#include "Base\Core\convertStr.h"
-#include "Rendering\Caustic\Caustic.h"
+import Geometry.MeshImport;
 
 namespace Caustic
 {

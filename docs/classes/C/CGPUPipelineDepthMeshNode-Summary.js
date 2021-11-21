@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CGPUPipelineDepthMeshNode","CGPUPipelineDepthMeshNode");NDSummary.OnSummaryLoaded("CClass:CGPUPipelineDepthMeshNode",[["C/C++","C"]],[["Classes","Class"]],[[513,0,0,"CGPUPipelineDepthMeshNode"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CGPUPipelineDepthMeshNode","CGPUPipelineDepthMeshNode");NDSummary.OnSummaryLoaded("CClass:CGPUPipelineDepthMeshNode",[["C/C++","C"]],[["Classes","Class"]],[[572,0,0,"CGPUPipelineDepthMeshNode"]]);

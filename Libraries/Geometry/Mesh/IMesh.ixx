@@ -61,6 +61,7 @@ export namespace Caustic
     //**********************************************************************
     class CHalfEdge
     {
+    public: // Temporary work around due to module issue where friending doesn't appear to work properly
         CHalfEdge *m_pNext;            // Next half edge in edge loop
         CHalfEdge *m_pPrev;            // Previous half edge in edge loop
         CHalfEdge *m_pOpposite;        // Opposite half edge
@@ -69,9 +70,9 @@ export namespace Caustic
         uint32 m_smoothingGroup;       // Smoothing group this edge belongs to
         int index;
 
-        friend class CFace;
-        friend class CSubMesh;
-        friend class CMeshConstructor;
+        //friend class CFace;
+        //friend class CSubMesh;
+        //friend class CMeshConstructor;
     public:
         //**********************************************************************
         // Method: GetNextEdge
@@ -128,6 +129,7 @@ export namespace Caustic
     //**********************************************************************
     class CFace
     {
+    public: // Temporary work around due to module issue where friending doesn't appear to work properly
         Vector3 m_normal;                      // Face's normal vector
         Vector3 m_center;                      // Center position of face
         CHalfEdge *m_pEdge;                    // First edge in this face

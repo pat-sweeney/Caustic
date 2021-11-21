@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/SpotLight.ixx","SpotLight.ixx");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/SpotLight.ixx",[["C/C++","C"]],[["Classes","Class"],["Files","File"]],[[939,0,1,"SpotLight.h","SpotLight.h"],[940,0,0,"CSpotLight","CSpotLight"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/SpotLight.ixx","SpotLight.ixx");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/SpotLight.ixx",[["C/C++","C"]],[["Classes","Class"],["Files","File"]],[[758,0,1,"SpotLight.h","SpotLight.h"],[759,0,0,"CSpotLight","CSpotLight"]]);

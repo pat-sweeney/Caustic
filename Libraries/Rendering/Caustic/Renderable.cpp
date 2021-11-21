@@ -4,8 +4,8 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "Rendering\Caustic\Caustic.h"
-#include "Geometry\Mesh\Mesh.h"
 #include <d3d11.h>
+import Geometry.Mesh.Mesh;
 import Rendering.Caustic.Renderer;
 import Rendering.Caustic.Sampler;
 import Rendering.Caustic.Renderable;

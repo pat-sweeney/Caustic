@@ -1,1 +1,1 @@
-﻿NDSummary.OnToolTipsLoaded("CClass:ISceneSphereElem",{1567:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines a sphere element in our scene graph.</div></div>"});
+﻿NDSummary.OnToolTipsLoaded("CClass:ISceneSphereElem",{1558:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines a sphere element in our scene graph.</div></div>"});

@@ -1,0 +1,1 @@
+﻿NDSummary.OnToolTipsLoaded("File:Geometry/Mesh/MeshFuncs.ixx",{1614:"<div class=\"NDToolTip TFunction LC\"><div id=\"NDPrototype1614\" class=\"NDPrototype\"><div class=\"PSection PPlainSection\">CRefObj&lt;ISubMesh&gt; CreateEmptySubMesh()</div></div><div class=\"TTSummary\">Creates a empty submesh.</div></div>"});

@@ -3,12 +3,22 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "stdafx.h"
-import Base.Core.Core;
-import Base.Core.Error;
-#include "Rendering\Caustic\Caustic.h"
+module;
 #include <atlbase.h>
 #include <map>
+#include <string>
+#include <memory>
+
+module Geometry.MeshImport.PLY;
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Geometry.Mesh.Mesh;
+import Geometry.Mesh.IMesh;
+import Geometry.Mesh.MeshConstructor;
+import Geometry.Mesh.IMeshConstructor;
+import Geometry.MeshImport;
 
 namespace Caustic
 {

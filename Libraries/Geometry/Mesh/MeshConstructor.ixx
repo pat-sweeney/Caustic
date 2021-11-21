@@ -3,12 +3,20 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "Geometry\Mesh\Mesh.h"
-import Geometry.Mesh.IMesh;
-import Geometry.Mesh.IMeshConstructor;
+module;
 #include <vector>
 
-namespace Caustic
+export module Geometry.Mesh.MeshConstructor;
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Geometry.Mesh.Mesh;
+import Geometry.Mesh.IMesh;
+import Geometry.Mesh.IMeshConstructor;
+import Geometry.Mesh.RenderTypes;
+
+export namespace Caustic
 {
     //**********************************************************************
     // Class: CMeshConstructor

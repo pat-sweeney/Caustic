@@ -3,14 +3,19 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-import Base.Core.Core;
-import Base.Core.IRefCount;
-import Geometry.Mesh.IMeshConstructor;
-import Geometry.Mesh.IMesh;
-#include "Mesh.h"
+module;
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <memory>
+#include <vector>
+
+module Geometry.Mesh.MeshFuncs;
+import Base.Core.Core;
+import Base.Core.IRefCount;
+import Geometry.Mesh.IMeshConstructor;
+import Geometry.Mesh.MeshConstructor;
+import Geometry.Mesh.IMesh;
+import Geometry.Mesh.Mesh;
 
 namespace Caustic
 {
@@ -451,5 +456,83 @@ namespace Caustic
         CRefObj<ISubMesh> spSubMesh = CreateSubMesh(vpos, norm, uvs, faces, EVertexFlags(HasNormal | HasPosition | HasUV0), 0);
         spMesh->AddSubMesh(spSubMesh);
         return spMesh;
+    }
+
+    //**********************************************************************
+    // Function: CreateEmptyMesh
+    // Returns an empty mesh
+    //
+    // Returns:
+    // Returns the newly created mesh object
+    //**********************************************************************
+    CRefObj<IMesh> CreateEmptyMesh()
+    {
+        return CRefObj<IMesh>(new CMesh());
+    }
+
+    CRefObj<ISubMesh> CreateEmptySubMesh()
+    {
+        return CRefObj<ISubMesh>(new CSubMesh());
+    }
+
+    CRefObj<ISubMesh> CreateSubMesh(std::vector<CGeomVertex>& verts, std::vector<int>& faces, uint32 materialID)
+    {
+        CMeshConstructor meshConstructor;
+        meshConstructor.SubMeshOpen();
+        for (size_t i = 0; i < faces.size();)
+        {
+            meshConstructor.FaceOpen();
+            uint32 vIndex = faces[i++];
+            meshConstructor.VertexAdd(verts[vIndex].pos, verts[vIndex].norm, verts[vIndex].uvs[0]);
+            vIndex = faces[i++];
+            meshConstructor.VertexAdd(verts[vIndex].pos, verts[vIndex].norm, verts[vIndex].uvs[0]);
+            vIndex = faces[i++];
+            meshConstructor.VertexAdd(verts[vIndex].pos, verts[vIndex].norm, verts[vIndex].uvs[0]);
+            meshConstructor.FaceClose();
+        }
+        CRefObj<ISubMesh> spSubMesh = meshConstructor.SubMeshClose();
+        spSubMesh->SetMaterialID(materialID);
+        return spSubMesh;
+    }
+
+    CRefObj<ISubMesh> CreateSubMesh(std::vector<Vector3>& vertPos,
+        std::vector<int>& faces,
+        uint32 materialID)
+    {
+        std::vector<Vector3> norms;
+        std::vector<Vector2> uvs;
+        return CreateSubMesh(vertPos, norms, uvs, faces, EVertexFlags::HasPosition, materialID);
+    }
+
+    CRefObj<ISubMesh> CreateSubMesh(std::vector<Vector3>& vertPos,
+        std::vector<Vector3>& vertNorms,
+        std::vector<Vector2>& vertUVs,
+        std::vector<int>& faces,
+        EVertexFlags flags,
+        uint32 materialID)
+    {
+        CMeshConstructor meshConstructor;
+        meshConstructor.SubMeshOpen();
+        for (size_t i = 0; i < faces.size(); i += 3)
+        {
+            meshConstructor.FaceOpen();
+            uint32 vIndex = faces[i];
+            Vector3 norm = (vIndex < vertNorms.size()) ? vertNorms[vIndex] : Vector3(0.0f, 0.0f, 0.0f);
+            Vector2 uv = (vIndex < vertUVs.size()) ? vertUVs[vIndex] : Vector2(0.0f, 0.0f);
+            meshConstructor.VertexAdd(vertPos[vIndex], norm, uv);
+            vIndex = faces[i + 1];
+            norm = (vIndex < vertNorms.size()) ? vertNorms[vIndex] : Vector3(0.0f, 0.0f, 0.0f);
+            uv = (vIndex < vertUVs.size()) ? vertUVs[vIndex] : Vector2(0.0f, 0.0f);
+            meshConstructor.VertexAdd(vertPos[vIndex], norm, uv);
+            vIndex = faces[i + 2];
+            norm = (vIndex < vertNorms.size()) ? vertNorms[vIndex] : Vector3(0.0f, 0.0f, 0.0f);
+            uv = (vIndex < vertUVs.size()) ? vertUVs[vIndex] : Vector2(0.0f, 0.0f);
+            meshConstructor.VertexAdd(vertPos[vIndex], norm, uv);
+            meshConstructor.FaceClose();
+        }
+        CRefObj<ISubMesh> spSubMesh = meshConstructor.SubMeshClose();
+        spSubMesh->SetVertexFlags(flags);
+        spSubMesh->SetMaterialID(materialID);
+        return spSubMesh;
     }
 }

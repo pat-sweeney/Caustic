@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CPointCloud","CPointCloud");NDSummary.OnSummaryLoaded("CClass:CPointCloud",[["C/C++","C"]],[["Classes","Class"]],[[938,0,0,"CPointCloud"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CPointCloud","CPointCloud");NDSummary.OnSummaryLoaded("CClass:CPointCloud",[["C/C++","C"]],[["Classes","Class"]],[[937,0,0,"CPointCloud"]]);

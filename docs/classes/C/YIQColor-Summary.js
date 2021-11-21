@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:YIQColor","YIQColor");NDSummary.OnSummaryLoaded("CClass:YIQColor",[["C/C++","C"]],[["Classes","Class"]],[[506,0,0,"YIQColor"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:YIQColor","YIQColor");NDSummary.OnSummaryLoaded("CClass:YIQColor",[["C/C++","C"]],[["Classes","Class"]],[[481,0,0,"YIQColor"]]);

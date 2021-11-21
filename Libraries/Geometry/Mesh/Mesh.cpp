@@ -3,11 +3,15 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+module;
+#include <Windows.h>
+#include <float.h>
+#include <vector>
+
+module Geometry.Mesh.Mesh;
 import Base.Core.Core;
 import Base.Core.Error;
-#include "Geometry\Mesh\Mesh.h"
 import Base.Math.Ray;
-#include <Windows.h>
 
 //**********************************************************************
 // File: Mesh.cpp
@@ -225,17 +229,5 @@ namespace Caustic
     {
         for (auto pSubMesh : m_subMeshes)
             pSubMesh->ComputeNormals();
-    }
-    
-    //**********************************************************************
-    // Function: CreateEmptyMesh
-    // Returns an empty mesh
-    //
-    // Returns:
-    // Returns the newly created mesh object
-    //**********************************************************************
-    CRefObj<IMesh> CreateEmptyMesh()
-    {
-        return CRefObj<IMesh>(new CMesh());
     }
 }

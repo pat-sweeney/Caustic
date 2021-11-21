@@ -14,7 +14,7 @@ import Geometry.Mesh.IMeshConstructor;
 import Geometry.Mesh.IMesh;
 import Geometry.Mesh.IMaterialAttrib;
 import Geometry.Mesh.MaterialAttrib;
-#include "Geometry\Mesh\Mesh.h"
+import Geometry.Mesh.Mesh;
 #include <cmath>
 #include "UnitTest.h"
 #include <stdlib.h>

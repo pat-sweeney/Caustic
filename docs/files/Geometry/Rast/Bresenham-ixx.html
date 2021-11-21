@@ -8,97 +8,97 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="Bresenham"></a><a name="Topic490"></a><div class="CTopic TClass LC first">
+<a name="Bresenham"></a><a name="Topic455"></a><div class="CTopic TClass LC first">
  <div class="CTitle">Bresenham</div>
- <div class="NDClassPrototype" id="NDClassPrototype490"><div class="CPEntry TClass Current"><div class="CPName">Bresenham</div></div></div>
- <div class="CBody"><p>Defines a class for walking a line using Bresenham's algorithm</p><div class="CHeading">Module</div><p><a href='../../../index.html#File:Geometry/Rast/Bresenham.ixx' target='_top'>import Geometry.Rast.Bresenham</a></p></div>
+ <div class="NDClassPrototype" id="NDClassPrototype455"><div class="CPEntry TClass Current"><div class="CPName">Bresenham</div></div></div>
+ <div class="CBody"><p>Defines a class for walking a line using Bresenham's algorithm</p><div class="CHeading">Module</div><p>{Link:import Geometry.Rast.Bresenham{Geometry/Rast/Bresenham.ixx}}</p></div>
 </div>
 
-<a name="Bresenham.Functions"></a><a name="Topic491"></a><div class="CTopic TGroup LC">
+<a name="Bresenham.Functions"></a><a name="Topic456"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="Bresenham.Bresenham"></a><a name="Topic492"></a><div class="CTopic TFunction LC">
+<a name="Bresenham.Bresenham"></a><a name="Topic457"></a><div class="CTopic TFunction LC">
  <div class="CTitle">Bresenham</div>
- <div id="NDPrototype492" class="NDPrototype"><div class="PSection PPlainSection">Bresenham()</div></div>
+ <div id="NDPrototype457" class="NDPrototype"><div class="PSection PPlainSection">Bresenham()</div></div>
  <div class="CBody"><p>Default constructor</p></div>
 </div>
 
-<a name="Bresenham.Bresenham(2)"></a><a name="Topic493"></a><div class="CTopic TFunction LC">
+<a name="Bresenham.Bresenham(2)"></a><a name="Topic458"></a><div class="CTopic TFunction LC">
  <div class="CTitle">Bresenham</div>
- <div id="NDPrototype493" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters">Bresenham(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">int32</span>&nbsp;</td><td class="PName last">fx,</td></tr><tr><td class="PType first"><span class="SHKeyword">int32</span>&nbsp;</td><td class="PName last">fy,</td></tr><tr><td class="PType first"><span class="SHKeyword">int32</span>&nbsp;</td><td class="PName last">tx,</td></tr><tr><td class="PType first"><span class="SHKeyword">int32</span>&nbsp;</td><td class="PName last">ty</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
+ <div id="NDPrototype458" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters">Bresenham(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">int32</span>&nbsp;</td><td class="PName last">fx,</td></tr><tr><td class="PType first"><span class="SHKeyword">int32</span>&nbsp;</td><td class="PName last">fy,</td></tr><tr><td class="PType first"><span class="SHKeyword">int32</span>&nbsp;</td><td class="PName last">tx,</td></tr><tr><td class="PType first"><span class="SHKeyword">int32</span>&nbsp;</td><td class="PName last">ty</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
  <div class="CBody"><p>Constructor</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">fx<div class="CDLParameterType"><span class="SHKeyword">int32</span></div></td><td class="CDLDefinition"><p>starting X coordinate of line</p></td></tr><tr><td class="CDLEntry">fy<div class="CDLParameterType"><span class="SHKeyword">int32</span></div></td><td class="CDLDefinition"><p>starting Y coordinate of line</p></td></tr><tr><td class="CDLEntry">tx<div class="CDLParameterType"><span class="SHKeyword">int32</span></div></td><td class="CDLDefinition"><p>ending X coordinate of line</p></td></tr><tr><td class="CDLEntry">ty<div class="CDLParameterType"><span class="SHKeyword">int32</span></div></td><td class="CDLDefinition"><p>ending Y coordinate of line</p></td></tr></table></div>
 </div>
 
-<a name="Bresenham.get_x"></a><a name="Topic494"></a><div class="CTopic TFunction LC">
+<a name="Bresenham.get_x"></a><a name="Topic459"></a><div class="CTopic TFunction LC">
  <div class="CTitle">get_x</div>
- <div id="NDPrototype494" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">int32</span> get_x()</div></div>
+ <div id="NDPrototype459" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">int32</span> get_x()</div></div>
  <div class="CBody"><p>Returns the X coordinate where the iterator is currently positioned</p></div>
 </div>
 
-<a name="Bresenham.get_y"></a><a name="Topic495"></a><div class="CTopic TFunction LC">
+<a name="Bresenham.get_y"></a><a name="Topic460"></a><div class="CTopic TFunction LC">
  <div class="CTitle">get_y</div>
- <div id="NDPrototype495" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">int32</span> get_y()</div></div>
+ <div id="NDPrototype460" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">int32</span> get_y()</div></div>
  <div class="CBody"><p>Returns the Y coordinate where the iterator is currently positioned</p></div>
 </div>
 
-<a name="Bresenham.get_endx"></a><a name="Topic496"></a><div class="CTopic TFunction LC">
+<a name="Bresenham.get_endx"></a><a name="Topic461"></a><div class="CTopic TFunction LC">
  <div class="CTitle">get_endx</div>
- <div id="NDPrototype496" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">int32</span> get_endx()</div></div>
+ <div id="NDPrototype461" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">int32</span> get_endx()</div></div>
  <div class="CBody"><p>Returns the ending pixel's X coordinate</p></div>
 </div>
 
-<a name="Bresenham.get_endy"></a><a name="Topic497"></a><div class="CTopic TFunction LC">
+<a name="Bresenham.get_endy"></a><a name="Topic462"></a><div class="CTopic TFunction LC">
  <div class="CTitle">get_endy</div>
- <div id="NDPrototype497" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">int32</span> get_endy()</div></div>
+ <div id="NDPrototype462" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">int32</span> get_endy()</div></div>
  <div class="CBody"><p>Returns the ending pixel's Y coordinate</p></div>
 </div>
 
-<a name="Bresenham.eol"></a><a name="Topic498"></a><div class="CTopic TFunction LC">
+<a name="Bresenham.eol"></a><a name="Topic463"></a><div class="CTopic TFunction LC">
  <div class="CTitle">eol</div>
- <div id="NDPrototype498" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">bool</span> eol()</div></div>
+ <div id="NDPrototype463" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">bool</span> eol()</div></div>
  <div class="CBody"><p>Returns true if iterator has reached end of line. False otherwise.</p></div>
 </div>
 
-<a name="Bresenham.step"></a><a name="Topic499"></a><div class="CTopic TFunction LC">
+<a name="Bresenham.step"></a><a name="Topic464"></a><div class="CTopic TFunction LC">
  <div class="CTitle">step</div>
- <div id="NDPrototype499" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">void</span> step()</div></div>
+ <div id="NDPrototype464" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">void</span> step()</div></div>
  <div class="CBody"><p>Steps one unit along the line</p></div>
 </div>
 
-<a name="Bresenham.step_in_x"></a><a name="Topic500"></a><div class="CTopic TFunction LC">
+<a name="Bresenham.step_in_x"></a><a name="Topic465"></a><div class="CTopic TFunction LC">
  <div class="CTitle">step_in_x</div>
- <div id="NDPrototype500" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">bool</span> step_in_x()</div></div>
+ <div id="NDPrototype465" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">bool</span> step_in_x()</div></div>
  <div class="CBody"><p>Returns if a call to step() will result in a step in the X direction</p></div>
 </div>
 
-<a name="Bresenham.step_in_y"></a><a name="Topic501"></a><div class="CTopic TFunction LC">
+<a name="Bresenham.step_in_y"></a><a name="Topic466"></a><div class="CTopic TFunction LC">
  <div class="CTitle">step_in_y</div>
- <div id="NDPrototype501" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">bool</span> step_in_y()</div></div>
+ <div id="NDPrototype466" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">bool</span> step_in_y()</div></div>
  <div class="CBody"><p>Returns if a call to step() will result in a step in the Y direction</p></div>
 </div>
 
-<a name="Bresenham.step_in_minor"></a><a name="Topic502"></a><div class="CTopic TFunction LC">
+<a name="Bresenham.step_in_minor"></a><a name="Topic467"></a><div class="CTopic TFunction LC">
  <div class="CTitle">step_in_minor</div>
- <div id="NDPrototype502" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">bool</span> step_in_minor()</div></div>
+ <div id="NDPrototype467" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">bool</span> step_in_minor()</div></div>
  <div class="CBody"><p>Determines whether we are about to step along the minor axis.</p></div>
 </div>
 
-<a name="Bresenham.step_x"></a><a name="Topic503"></a><div class="CTopic TFunction LC">
+<a name="Bresenham.step_x"></a><a name="Topic468"></a><div class="CTopic TFunction LC">
  <div class="CTitle">step_x</div>
- <div id="NDPrototype503" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> step_x(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">int32</span>&nbsp;</td><td class="PName last">dx</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
+ <div id="NDPrototype468" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> step_x(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">int32</span>&nbsp;</td><td class="PName last">dx</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
  <div class="CBody"><p>Moves the iterator 'dx' units along the x axis</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">dx<div class="CDLParameterType"><span class="SHKeyword">int32</span></div></td><td class="CDLDefinition"><p>Number of units to step along the x axis</p></td></tr></table></div>
 </div>
 
-<a name="Bresenham.step_y"></a><a name="Topic504"></a><div class="CTopic TFunction LC">
+<a name="Bresenham.step_y"></a><a name="Topic469"></a><div class="CTopic TFunction LC">
  <div class="CTitle">step_y</div>
- <div id="NDPrototype504" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> step_y(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">int32</span>&nbsp;</td><td class="PName last">dy</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
+ <div id="NDPrototype469" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> step_y(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">int32</span>&nbsp;</td><td class="PName last">dy</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
  <div class="CBody"><p>Moves the iterator 'dy' units along the y axis</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">dy<div class="CDLParameterType"><span class="SHKeyword">int32</span></div></td><td class="CDLDefinition"><p>Number of units to step along the y axis</p></td></tr></table></div>
 </div>
 
-<a name="Bresenham.step_inc"></a><a name="Topic505"></a><div class="CTopic TFunction LC last">
+<a name="Bresenham.step_inc"></a><a name="Topic470"></a><div class="CTopic TFunction LC last">
  <div class="CTitle">step_inc</div>
- <div id="NDPrototype505" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> step_inc(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">int32</span>&nbsp;</td><td class="PName last">delta</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
+ <div id="NDPrototype470" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">void</span> step_inc(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">int32</span>&nbsp;</td><td class="PName last">delta</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
  <div class="CBody"><p>Moves 'delta' units along the major axis</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">delta<div class="CDLParameterType"><span class="SHKeyword">int32</span></div></td><td class="CDLDefinition"><p>Number of units to step along the major axis</p></td></tr></table></div>
 </div>
 

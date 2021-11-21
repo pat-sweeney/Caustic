@@ -5,7 +5,6 @@
 //**********************************************************************
 module;
 #include "Rendering\Caustic\Caustic.h"
-#include "Geometry\Mesh\Mesh.h"
 #include <memory>
 #include <any>
 #include <vector>
@@ -20,6 +19,7 @@ import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.Event;
 import Base.Core.CritSec;
+import Geometry.Mesh.Mesh;
 import Rendering.Caustic.Shader;
 
 //**********************************************************************

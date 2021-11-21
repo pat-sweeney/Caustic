@@ -8,34 +8,34 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="CausticException"></a><a name="Topic13"></a><div class="CTopic TClass LC first">
+<a name="CausticException"></a><a name="Topic22"></a><div class="CTopic TClass LC first">
  <div class="CTitle">CausticException</div>
- <div class="NDClassPrototype HasParents" id="NDClassPrototype13"><div class="CPEntry Parent TClass"><div class="CPModifiers"><span class="SHKeyword">public</span></div><div class="CPName"><span class="Qualifier">std.</span>&#8203;exception</div></div><div class="CPEntry TClass Current"><div class="CPName">CausticException</div></div></div>
- <div class="CBody"><p>Class for handling throwing of exceptions</p><div class="CHeading">Module</div><p><a href='../../../index.html#File:Base/Core/Error.ixx' target='_top'>import Base.Core.Error;</a></p></div>
+ <div class="NDClassPrototype HasParents" id="NDClassPrototype22"><div class="CPEntry Parent TClass"><div class="CPModifiers"><span class="SHKeyword">public</span></div><div class="CPName"><span class="Qualifier">std.</span>&#8203;exception</div></div><div class="CPEntry TClass Current"><div class="CPName">CausticException</div></div></div>
+ <div class="CBody"><p>Class for handling throwing of exceptions</p><div class="CHeading">Module</div><p>{Link:import Base.Core.Error;{Base/Core/Error.ixx}}</p></div>
 </div>
 
-<a name="CausticException.Functions"></a><a name="Topic14"></a><div class="CTopic TGroup LC">
+<a name="CausticException.Functions"></a><a name="Topic23"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="CausticException.CausticException"></a><a name="Topic15"></a><div class="CTopic TFunction LC">
+<a name="CausticException.CausticException"></a><a name="Topic24"></a><div class="CTopic TFunction LC">
  <div class="CTitle">CausticException</div>
- <div id="NDPrototype15" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters">CausticException(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="first"></td><td class="PType">HRESULT&nbsp;</td><td></td><td class="PName last">hr,</td></tr><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><span class="SHKeyword">char</span>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pFilename,</td></tr><tr><td class="first"></td><td class="PType"><span class="SHKeyword">int</span>&nbsp;</td><td></td><td class="PName last">line</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
+ <div id="NDPrototype24" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters">CausticException(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="first"></td><td class="PType">HRESULT&nbsp;</td><td></td><td class="PName last">hr,</td></tr><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><span class="SHKeyword">char</span>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pFilename,</td></tr><tr><td class="first"></td><td class="PType"><span class="SHKeyword">int</span>&nbsp;</td><td></td><td class="PName last">line</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
  <div class="CBody"><p>Constructor</p><table class="CDefinitionList"><tr><td class="CDLEntry">hr</td><td class="CDLDefinition"><p>HRESULT to throw</p></td></tr><tr><td class="CDLEntry">pFilename</td><td class="CDLDefinition"><p>Name of source file where exception was thrown from</p></td></tr><tr><td class="CDLEntry">line</td><td class="CDLDefinition"><p>Line number in source file where exception was thrown from</p></td></tr></table></div>
 </div>
 
-<a name="CausticException.Macros"></a><a name="Topic16"></a><div class="CTopic TGroup LC">
+<a name="CausticException.Macros"></a><a name="Topic25"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Macros</div>
 </div>
 
-<a name="CausticException.CT"></a><a name="Topic17"></a><div class="CTopic TMacro LC">
+<a name="CausticException.CT"></a><a name="Topic26"></a><div class="CTopic TMacro LC">
  <div class="CTitle">CT</div>
- <div class="CBody"><p>Macro for testing result from function and throwing an exception if the result is an error</p><table class="CDefinitionList"><tr><td class="CDLEntry">hr</td><td class="CDLDefinition"><p>HRESULT to throw</p></td></tr></table><div class="CHeading">Module</div><p><a href='../../../index.html#File:Base/Core/Error.ixx' target='_top'>import Base.Core.Error;</a></p></div>
+ <div class="CBody"><p>Macro for testing result from function and throwing an exception if the result is an error</p><table class="CDefinitionList"><tr><td class="CDLEntry">hr</td><td class="CDLDefinition"><p>HRESULT to throw</p></td></tr></table><div class="CHeading">Module</div><p>{Link:import Base.Core.Error;{Base/Core/Error.ixx}}</p></div>
 </div>
 
-<a name="CausticException.CTWIN32"></a><a name="Topic18"></a><div class="CTopic TMacro LC last">
+<a name="CausticException.CTWIN32"></a><a name="Topic27"></a><div class="CTopic TMacro LC last">
  <div class="CTitle">CTWIN32</div>
- <div class="CBody"><p>Macro for calling a Win32 function and throwing if it fails</p><table class="CDefinitionList"><tr><td class="CDLEntry">func</td><td class="CDLDefinition"><p>function to call</p></td></tr></table><div class="CHeading">Module</div><p><a href='../../../index.html#File:Base/Core/Error.ixx' target='_top'>import Base.Core.Error;</a></p></div>
+ <div class="CBody"><p>Macro for calling a Win32 function and throwing if it fails</p><table class="CDefinitionList"><tr><td class="CDLEntry">func</td><td class="CDLDefinition"><p>function to call</p></td></tr></table><div class="CHeading">Module</div><p>{Link:import Base.Core.Error;{Base/Core/Error.ixx}}</p></div>
 </div>
 
 </body></html>

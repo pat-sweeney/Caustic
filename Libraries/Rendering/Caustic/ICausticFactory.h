@@ -5,7 +5,6 @@
 //**********************************************************************
 #pragma once
 
-#include "Geometry\Mesh\Mesh.h"
 #include "Rendering\Caustic\Caustic.h"
 #include <Windows.h>
 #include <atlbase.h>
@@ -17,6 +16,7 @@ import Base.Core.Core;
 import Base.Math.Vector;
 import Imaging.Color;
 import Imaging.Image.IImage;
+import Geometry.Mesh.Mesh;
 import Rendering.Caustic.ITrackball;
 import Rendering.Caustic.ISpotLight;
 import Rendering.Caustic.IPointLight;

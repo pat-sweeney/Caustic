@@ -7,10 +7,11 @@
 #include <memory>
 #include <atlbase.h>
 #include <Windows.h>
+#include <string>
 import Base.Core.Core;
 import Base.Core.Error;
 import Geometry.Mesh.RenderTypes;
-#include "Geometry\Mesh\Mesh.h"
+import Geometry.Mesh.Mesh;
 
 namespace Caustic
 {

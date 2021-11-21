@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CDesktopTexture","CDesktopTexture");NDSummary.OnSummaryLoaded("CClass:CDesktopTexture",[["C/C++","C"]],[["Classes","Class"]],[[1251,0,0,"CDesktopTexture"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CDesktopTexture","CDesktopTexture");NDSummary.OnSummaryLoaded("CClass:CDesktopTexture",[["C/C++","C"]],[["Classes","Class"]],[[1220,0,0,"CDesktopTexture"]]);

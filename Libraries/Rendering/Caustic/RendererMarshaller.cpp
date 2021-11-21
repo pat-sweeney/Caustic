@@ -4,7 +4,6 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "Rendering\Caustic\Caustic.h"
-#include "Geometry\Mesh\Mesh.h"
 #include "Rendering\Caustic\Caustic.h"
 #include "Rendering\SceneGraph\ISceneGraph.h"
 #include <queue>
@@ -14,6 +13,7 @@ import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
+import Geometry.Mesh.Mesh;
 import Rendering.Caustic.Renderer;
 import Rendering.Caustic.RendererMarshaller;
 import Rendering.Caustic.CausticFactory;

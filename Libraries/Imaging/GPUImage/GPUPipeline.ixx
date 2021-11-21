@@ -8,6 +8,7 @@ module;
 #include <vector>
 #include <atlbase.h>
 #include <d3d11.h>
+#include <map>
 
 export module Imaging.Image.GPUPipeline;
 import Cameras.CameraBase.ICamera;

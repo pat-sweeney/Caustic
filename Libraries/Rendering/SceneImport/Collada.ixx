@@ -8,6 +8,8 @@ module;
 #include <string>
 #include <vector>
 #include "Rendering\SceneGraph\SceneGraph.h"
+#include <any>
+#include <map>
 
 export module Rendering.SceneImport.Collada;
 import Base.Core.Core;

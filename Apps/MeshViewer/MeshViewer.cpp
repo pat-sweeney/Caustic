@@ -5,17 +5,18 @@
 //**********************************************************************
 #include "stdafx.h"
 #include "MeshViewer.h"
-import Base.Core.Core;
-import Base.Core.IRefCount;
-import Geometry.Mesh.IMeshConstructor;
 #include "Rendering\RenderWindow\IRenderWindow.h"
 #include "Rendering\Caustic\ICausticFactory.h"
 #include "Rendering\SceneGraph\ISceneFactory.h"
-#include "Geometry\MeshImport\MeshImport.h"
-#include "Geometry\Mesh\Mesh.h"
 #include <Windows.h>
 #include <commdlg.h>
 #include <string>
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Geometry.Mesh.IMeshConstructor;
+import Geometry.MeshImport;
+import Geometry.Mesh.Mesh;
 
 #define MAX_LOADSTRING 100
 

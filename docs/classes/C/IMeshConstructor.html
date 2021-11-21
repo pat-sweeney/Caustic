@@ -8,18 +8,18 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="Topic370"></a><div class="CTopic TInterface LC first">
+<a name="Topic372"></a><div class="CTopic TInterface LC first">
  <div class="CTitle">IMeshConstructor</div>
  <div class="CBody"><p>Defines the public interface used to create new meshes IMeshConstructor works on building a mesh up face by face (via FaceOpen/FaceClose).</p></div>
 </div>
 
-<a name="Functions"></a><a name="Topic371"></a><div class="CTopic TGroup LC">
+<a name="Functions"></a><a name="Topic373"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="MeshFromDensityFunction"></a><a name="Topic372"></a><div class="CTopic TFunction LC last">
+<a name="MeshFromDensityFunction"></a><a name="Topic374"></a><div class="CTopic TFunction LC last">
  <div class="CTitle">MeshFromDensityFunction</div>
- <div id="NDPrototype372" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <a href="../../index.html#CClass:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,7);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../index.html#CClass:IMesh" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,425);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMesh</a>&gt; MeshFromDensityFunction(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="first"></td><td class="PType"><span class="SHKeyword">int</span>&nbsp;</td><td class="PName last">numBlocks,</td></tr><tr><td class="PModifierQualifier first">std::</td><td class="PType"><span class="SHKeyword">function</span>&lt;<span class="SHKeyword">float</span>(<a href="../../index.html#CClass:Vector3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,102);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector3</a>&amp;)&gt;&nbsp;</td><td class="PName last">fn</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div id="NDPrototype374" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <a href="../../index.html#CClass:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,16);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../index.html#CClass:IMesh" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,425);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMesh</a>&gt; MeshFromDensityFunction(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="first"></td><td class="PType"><span class="SHKeyword">int</span>&nbsp;</td><td class="PName last">numBlocks,</td></tr><tr><td class="PModifierQualifier first">std::</td><td class="PType"><span class="SHKeyword">function</span>&lt;<span class="SHKeyword">float</span>(<a href="../../index.html#CClass:Vector3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,102);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector3</a>&amp;)&gt;&nbsp;</td><td class="PName last">fn</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
  <div class="CBody"><p>Creates a mesh from a density function using the marching cubes algorithm.&nbsp; It is assumed that the density function occupies a unit cube.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">numBlocks<div class="CDLParameterType"><span class="SHKeyword">int</span></div></td><td class="CDLDefinition"><p>number of blocks to subdivide space in each direction</p></td></tr><tr><td class="CDLEntry">fn<div class="CDLParameterType">std::<span class="SHKeyword">function</span>&lt;<span class="SHKeyword">float</span>(<a href="../../index.html#CClass:Vector3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,102);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector3</a>&amp;)&gt;</div></td><td class="CDLDefinition"><p>density function</p></td></tr></table></div>
 </div>
 

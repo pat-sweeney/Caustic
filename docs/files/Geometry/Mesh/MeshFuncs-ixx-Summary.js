@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:Geometry/Mesh/MeshFuncs.ixx","MeshFuncs.ixx");NDSummary.OnSummaryLoaded("File:Geometry/Mesh/MeshFuncs.ixx",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"]],[[1613,0,1,"Functions","Functions"],[1614,0,0,"CreateEmptySubMesh","CreateEmptySubMesh"]]);

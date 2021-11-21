@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "TMbmuBraB9XIBUt5ek3PKFqmbP2iQ0gE+A8oUVNCvcT5nZpboaAGPzaEOjgT8R1fzYsdmc3EU+dN7GfYLoP3jg==",
+  "dgSpecHash": "8d4Lzfz/AMrsS72A94iVBGjvsFh2gpsrMJG4csDuHC0xcbidQkdxDM6/+7HoY4JxKHGVn/F5Yr5BkKIX2gUoRQ==",
   "success": true,
   "projectFilePath": "G:\\GitHub\\Caustic\\Apps\\WorldBuilder\\WorldBuilder.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\patricsw\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\5.0.12\\microsoft.netcore.app.host.win-x64.5.0.12.nupkg.sha512"
+  ],
   "logs": []
 }

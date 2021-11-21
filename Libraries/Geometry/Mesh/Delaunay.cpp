@@ -9,7 +9,7 @@ import Base.Math.BBox;
 import Base.Math.Helper;
 import Imaging.Image.IImage;
 import Geometry.Mesh.Delaunay;
-#include "Geometry\Mesh\Mesh.h"
+import Geometry.Mesh.Mesh;
 #include <map>
 #include <stack>
 #include <Windows.h>

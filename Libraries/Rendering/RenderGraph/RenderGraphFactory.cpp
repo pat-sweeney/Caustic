@@ -10,7 +10,6 @@ import Base.Core.RefCount;
 #include "RenderGraph.h"
 #include "RGNMesh.h"
 #include "RGNCompute.h"
-#include "RGNMesh.h"
 #include "RGNLightCollection.h"
 #include "RGNGroup.h"
 #include "RGNMaterial.h"

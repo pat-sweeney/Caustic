@@ -7,7 +7,6 @@
 #include "Rendering\RenderWindow\IRenderWindow.h"
 #include "Rendering\Caustic\ICausticFactory.h"
 #include "Rendering\RenderGraph\IRenderGraph.h"
-#include "Geometry\MeshImport\MeshImport.h"
 #include "Cameras\AzureKinect\IAzureKinect.h"
 #include "Rendering\RenderGraph\IRenderGraph.h"
 #include "Rendering\RenderGraph\IRenderGraphFactory.h"
@@ -17,6 +16,7 @@ import Base.Core.Core;
 import Base.Core.IRefCount;
 import Imaging.Image.ImageFilter;
 import Geometry.Mesh.IMeshConstructor;
+import Geometry.MeshImport;
 import Rendering.Caustic.ConstructBuffer;
 
 using namespace Caustic;
