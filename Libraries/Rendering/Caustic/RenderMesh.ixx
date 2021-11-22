@@ -12,6 +12,7 @@ export module Rendering.Caustic.RenderMesh;
 import Base.Core.Core;
 import Base.Math.BBox;
 import Rendering.Caustic.Shader;
+import Rendering.Caustic.IRenderMaterial;
 
 //**********************************************************************
 // File: RenderMesh.h

@@ -11,6 +11,8 @@ export module Rendering.Caustic.RenderMaterial;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Rendering.Caustic.IRenderMaterial;
 
 export namespace Caustic
 {

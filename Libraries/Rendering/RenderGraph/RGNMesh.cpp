@@ -4,15 +4,18 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-import Base.Core.Core;
-import Base.Core.RefCount;
-import Base.Math.Vector;
 #include "IRGNMesh.h"
 #include "RGNMesh.h"
 #include "ILightCollection.h"
 #include <vector>
 #include <string>
 #include <any>
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.IRefCount;
+import Base.Core.RefCount;
+import Base.Math.Vector;
+import Rendering.Caustic.IRenderMaterial;
 
 namespace Caustic
 {

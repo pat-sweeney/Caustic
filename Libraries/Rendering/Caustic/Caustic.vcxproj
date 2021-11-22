@@ -261,7 +261,6 @@
     <ClInclude Include="IPointCloud.h" />
     <ClInclude Include="IRenderable.h" />
     <ClInclude Include="IRendererMarshaller.h" />
-    <ClInclude Include="IRenderMaterial.h" />
     <ClInclude Include="IRenderMesh.h" />
     <ClInclude Include="ISampler.h" />
     <ClInclude Include="IShader.h" />
@@ -291,6 +290,8 @@
     <ClCompile Include="IPointLight.ixx" />
     <ClCompile Include="IRenderCtx.ixx" />
     <ClCompile Include="IRenderer.ixx" />
+    <ClCompile Include="IRenderMaterial.cpp" />
+    <ClCompile Include="IRenderMaterial.ixx" />
     <ClCompile Include="ISpotLight.ixx" />
     <ClCompile Include="ITrackball.cpp" />
     <ClCompile Include="ITrackball.ixx" />

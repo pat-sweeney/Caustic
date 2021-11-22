@@ -28,9 +28,6 @@
     <ClInclude Include="IRendererMarshaller.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="IRenderMaterial.h">
-      <Filter>Source Files\Interfaces</Filter>
-    </ClInclude>
     <ClInclude Include="IRenderMesh.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
@@ -209,6 +206,12 @@
     </ClCompile>
     <ClCompile Include="ISpotLight.ixx">
       <Filter>Source Files\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="IRenderMaterial.ixx">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="IRenderMaterial.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

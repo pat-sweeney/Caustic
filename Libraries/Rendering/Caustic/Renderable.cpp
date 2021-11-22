@@ -10,6 +10,7 @@ import Rendering.Caustic.Renderer;
 import Rendering.Caustic.Sampler;
 import Rendering.Caustic.Renderable;
 import Rendering.Caustic.RenderMaterial;
+import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.Shader;
 import Rendering.Caustic.CausticFactory;
 

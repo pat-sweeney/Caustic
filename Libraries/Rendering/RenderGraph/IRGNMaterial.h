@@ -4,10 +4,13 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-import Base.Core.Core;
-import Base.Core.IRefCount;
 #include "IRenderGraphNode.h"
 #include "ILightCollection.h"
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Rendering.Caustic.IRenderMaterial;
 
 namespace Caustic
 {

@@ -19,6 +19,7 @@ import Base.Core.RefCount;
 import Base.Core.Event;
 import Base.Core.CritSec;
 import Rendering.Caustic.Shader;
+import Rendering.Caustic.IRenderMaterial;
 
 //**********************************************************************
 // File: Renderable.h

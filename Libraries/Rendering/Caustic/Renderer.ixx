@@ -21,6 +21,7 @@ import Base.Core.Event;
 import Base.Core.CritSec;
 import Geometry.Mesh.Mesh;
 import Rendering.Caustic.Shader;
+import Rendering.Caustic.IRenderMaterial;
 
 //**********************************************************************
 // File: Renderer.h
@@ -29,8 +30,6 @@ import Rendering.Caustic.Shader;
 
 export namespace Caustic
 {
-    struct IRenderMaterial;
-
     //**********************************************************************
     // Class: CLineVertex
     // Vertex structure for drawing lines

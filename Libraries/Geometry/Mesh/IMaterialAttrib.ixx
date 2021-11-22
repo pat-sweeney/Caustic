@@ -18,7 +18,7 @@ import Imaging.Color;
 import Imaging.Image.IImage;
 
 //**********************************************************************
-// File: IRenderMaterial.h
+// File: IRenderMaterial.ixx
 // This file defines the published interface for render materials.
 //**********************************************************************
 export namespace Caustic
@@ -28,7 +28,7 @@ export namespace Caustic
 	// Indicates whether a material is used by a pixel or vertex shader or both
 	//
 	// Module:
-	// {Link:import Rendering.Caustic.IMaterialAttrib;{Rendering/Caustic/IMaterialAttrib.ixx}}
+	// {Link:import Geometry.Mesh.IMaterialAttrib;{Geometry/Mesh/IMaterialAttrib.ixx}}
 	//**********************************************************************
 	enum EShaderAccess
 	{
@@ -42,7 +42,7 @@ export namespace Caustic
 	// Used for manipulating the materials assigned to a mesh.
 	//
 	// Module:
-	// {Link:import Rendering.Caustic.IMaterialAttrib;{Rendering/Caustic/IMaterialAttrib.ixx}}
+	// {Link:import Geometry.Mesh.IMaterialAttrib;{Geometry/Mesh/IMaterialAttrib.ixx}}
 	//**********************************************************************
 	struct IMaterialAttrib : public ISerialize
 	{

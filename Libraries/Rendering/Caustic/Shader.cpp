@@ -5,7 +5,6 @@
 //**********************************************************************
 #include <string>
 #include "IShaderInfo.h"
-#include "IRenderMaterial.h"
 #include "ITexture.h"
 #include "ISampler.h"
 #include "IShader.h"
@@ -21,6 +20,7 @@ import Rendering.Caustic.Shader;
 import Rendering.Caustic.ICamera;
 import Rendering.Caustic.ILight;
 import Rendering.Caustic.IPointLight;
+import Rendering.Caustic.IRenderMaterial;
 
 namespace Caustic
 {

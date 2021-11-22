@@ -10,6 +10,7 @@ import Base.Core.Error;
 import Rendering.Caustic.ShaderInfo;
 import Rendering.Caustic.RenderMesh;
 import Rendering.Caustic.ConstructBuffer;
+import Rendering.Caustic.IRenderMaterial;
 
 namespace Caustic
 {

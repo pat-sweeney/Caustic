@@ -12,6 +12,7 @@
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Base.Math.Vector;
+import Rendering.Caustic.IRenderMaterial;
 
 //**********************************************************************
 // File: IRenderable.h

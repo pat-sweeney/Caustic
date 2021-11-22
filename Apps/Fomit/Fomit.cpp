@@ -18,6 +18,7 @@ import Imaging.Image.ImageFilter;
 import Geometry.Mesh.IMeshConstructor;
 import Geometry.MeshImport;
 import Rendering.Caustic.ConstructBuffer;
+import Rendering.Caustic.IRenderMaterial;
 
 using namespace Caustic;
 namespace Caustic {

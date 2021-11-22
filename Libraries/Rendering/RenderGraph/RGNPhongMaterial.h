@@ -4,13 +4,13 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Rendering\Caustic\IRenderMaterial.h"
 #include "IRenderGraphNode.h"
 #include "RenderGraphNode.h"
 #include "IRGNPhongMaterial.h"
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Geometry.Mesh.MaterialAttrib;
+import Rendering.Caustic.IRenderMaterial;
 
 namespace Caustic
 {

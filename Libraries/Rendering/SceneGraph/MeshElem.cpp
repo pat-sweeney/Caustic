@@ -8,7 +8,11 @@
 #include "MeshElem.h"
 #include <string>
 #include <d3d11_4.h>
-import Rendering.Caustic.CausticFactory;
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Rendering.Caustic.IRenderMaterial;
 
 namespace Caustic
 {

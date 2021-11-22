@@ -6,13 +6,13 @@
 #pragma once
 #include <d3d11.h>
 #include <string>
-#include "Rendering\Caustic\IRenderMaterial.h"
 #include "IRenderGraphNode.h"
 #include "RenderGraphNode.h"
 #include "RGNPhongMaterial.h"
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Geometry.Mesh.MaterialAttrib;
+import Rendering.Caustic.IRenderMaterial;
 
 namespace Caustic
 {

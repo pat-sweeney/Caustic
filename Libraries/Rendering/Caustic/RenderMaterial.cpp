@@ -12,32 +12,12 @@ import Geometry.Mesh.Mesh;
 import Rendering.Caustic.Sampler;
 import Rendering.Caustic.Renderer;
 import Rendering.Caustic.RenderMaterial;
+import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.Shader;
 import Rendering.Caustic.CausticFactory;
 
 namespace Caustic
 {
-    CRefObj<IRenderMaterial> CreateRenderMaterial(IRenderer* pRenderer, IMaterialAttrib* pMaterialAttrib, IShader* pShader)
-    {
-        std::unique_ptr<CRenderMaterial> spRenderMaterial(new CRenderMaterial());
-        CRenderMaterial* wpRenderMaterial = spRenderMaterial.get();
-        spRenderMaterial->SetMaterial(pMaterialAttrib);
-        spRenderMaterial->SetShader(pShader);
-        if (pMaterialAttrib)
-        {
-            pMaterialAttrib->EnumerateTextures(
-                [pRenderer, wpRenderMaterial ](const wchar_t* pName, IImage* pImage, EShaderAccess access) {
-                    if (pImage != nullptr)
-                    {
-                        CRefObj<ITexture> spTexture = Caustic::CCausticFactory::Instance()->CreateTexture(pRenderer, pImage, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_SHADER_RESOURCE);
-                        wpRenderMaterial->SetTexture(pRenderer, pName, spTexture, access);
-                    }
-                });
-        }
-
-        return CRefObj<IRenderMaterial>(spRenderMaterial.release());
-    }
-
     void CRenderMaterial::SetTexture(IRenderer* pRenderer, const wchar_t* pName, ITexture* pTexture, EShaderAccess access)
     {
         std::map<std::wstring, CRenderTexture>::iterator it = m_textures.find(pName);

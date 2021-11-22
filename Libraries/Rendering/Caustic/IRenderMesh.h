@@ -5,13 +5,13 @@
 //**********************************************************************
 #pragma once
 
-#include "Rendering\Caustic\IRenderMaterial.h"
 #include "Rendering\Caustic\IShaderInfo.h"
 #include "Rendering\Caustic\IRenderMesh.h"
 #include "Rendering\Caustic\IShader.h"
 import Base.Core.IRefCount;
 import Base.Math.BBox;
 import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IRenderMaterial;
 import Geometry.Mesh.RenderTypes;
 
 //**********************************************************************

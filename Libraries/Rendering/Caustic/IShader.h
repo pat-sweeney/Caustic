@@ -7,9 +7,6 @@
 
 #include <d3d11.h>
 #include <atlbase.h>
-import Base.Core.Core;
-import Base.Core.IRefCount;
-import Base.Math.BBox;
 #include "IShaderMgr.h"
 #include <string>
 #include <any>
@@ -17,6 +14,12 @@ import Base.Math.BBox;
 #include <DirectXMath.h>
 #include <vector>
 #include <memory>
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Base.Math.BBox;
+import Rendering.Caustic.IRenderMaterial;
 
 //**********************************************************************
 // File: IShader.h
@@ -26,7 +29,6 @@ import Base.Math.BBox;
 namespace Caustic
 {
     struct IShaderInfo;
-    struct IRenderMaterial;
     struct ILight;
     struct IRenderer;
 

@@ -21,6 +21,7 @@ import Rendering.Caustic.ITrackball;
 import Rendering.Caustic.ISpotLight;
 import Rendering.Caustic.IPointLight;
 import Rendering.Caustic.IDirectionalLight;
+import Rendering.Caustic.IRenderMaterial;
 
 //**********************************************************************
 // File: ICausticFactory.h
