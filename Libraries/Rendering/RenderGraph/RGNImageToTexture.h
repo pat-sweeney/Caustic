@@ -4,13 +4,14 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-import Base.Core.Core;
-import Base.Core.IRefCount;
 #include "Rendering\Caustic\Caustic.h"
-#include "Rendering\Caustic\ITexture.h"
 #include "IRenderGraphNode.h"
 #include "RenderGraphNode.h"
 #include "IRGNImageToTexture.h"
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Rendering.Caustic.Texture;
 
 namespace Caustic
 {

@@ -21,6 +21,7 @@ import Cameras.CameraBase.ICamera;
 import Rendering.Caustic.Sampler;
 import Rendering.Caustic.Shader;
 import Rendering.Caustic.CausticFactory;
+import Rendering.Caustic.ISampler;
 
 // Namespace: Caustic
 namespace Caustic

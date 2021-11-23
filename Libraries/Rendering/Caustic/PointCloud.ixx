@@ -22,6 +22,7 @@ import Base.Core.CritSec;
 import Rendering.Caustic.Renderable;
 import Rendering.Caustic.Shader;
 import Rendering.Caustic.IRenderMaterial;
+import Rendering.Caustic.ISampler;
 
 //**********************************************************************
 // File: Renderable.h

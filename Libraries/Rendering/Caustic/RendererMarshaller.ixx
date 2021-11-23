@@ -14,6 +14,7 @@ export module Rendering.Caustic.RendererMarshaller;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
+import Rendering.Caustic.ISampler;
 
 //**********************************************************************
 // File: RendererMarshaller.h

@@ -8,8 +8,6 @@
 #include <d3d11.h>
 #include <atlbase.h>
 #include "Rendering\Caustic\IShaderMgr.h"
-#include "Rendering\Caustic\ITexture.h"
-#include "Rendering\Caustic\ISampler.h"
 #include "Rendering\Caustic\IPointCloud.h"
 #include "Rendering\Caustic\IShader.h"
 #include "Rendering\Caustic\IRendererMarshaller.h"
@@ -27,6 +25,8 @@ import Rendering.Caustic.IDirectionalLight;
 import Rendering.Caustic.IPointLight;
 import Rendering.Caustic.ISpotLight;
 import Rendering.Caustic.IRenderMaterial;
+import Rendering.Caustic.ISampler;
+//import Rendering.Caustic.ITexture;
 
 //**********************************************************************
 // File: Caustic.h

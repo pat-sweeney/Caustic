@@ -31,9 +31,6 @@
     <ClInclude Include="IRenderMesh.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="ISampler.h">
-      <Filter>Source Files\Interfaces</Filter>
-    </ClInclude>
     <ClInclude Include="IShader.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
@@ -41,9 +38,6 @@
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="IShaderMgr.h">
-      <Filter>Source Files\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="ITexture.h">
       <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="defs.h">
@@ -211,6 +205,18 @@
       <Filter>Source Files\Interfaces</Filter>
     </ClCompile>
     <ClCompile Include="IRenderMaterial.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ISampler.ixx">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="ITexture.ixx">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="ISampler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ITexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

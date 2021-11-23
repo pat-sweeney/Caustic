@@ -21,6 +21,10 @@ import Rendering.Caustic.RenderMesh;
 import Rendering.Caustic.Shader;
 import Rendering.Caustic.CausticFactory;
 import Rendering.Caustic.IRenderMaterial;
+import Rendering.Caustic.ISampler;
+import Rendering.Caustic.VideoTexture;
+import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.DesktopTexture;
 import Geometry.Mesh.MaterialAttrib;
 
 //**********************************************************************

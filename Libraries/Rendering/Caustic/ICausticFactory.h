@@ -22,6 +22,7 @@ import Rendering.Caustic.ISpotLight;
 import Rendering.Caustic.IPointLight;
 import Rendering.Caustic.IDirectionalLight;
 import Rendering.Caustic.IRenderMaterial;
+import Rendering.Caustic.ISampler;
 
 //**********************************************************************
 // File: ICausticFactory.h

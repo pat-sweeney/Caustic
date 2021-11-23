@@ -6,12 +6,13 @@
 module;
 #include <d3d11.h>
 #include <atlbase.h>
-#include "Rendering\Caustic\ISampler.h"
 
 export module Rendering.Caustic.Sampler;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Rendering.Caustic.ISampler;
 
 export namespace Caustic
 {
@@ -21,8 +22,8 @@ export namespace Caustic
     // adding CRefObj<ISampler> to std::any(). This seemed like
     // the simpliest fix
     //
-    // Header:
-    // {Link:#include "Rendering/Caustic/Sampler.h"{Rendering/Caustic/Sampler.h}}
+    // Module:
+    // {Link:import Rendering.Caustic.Sampler;{Rendering/Caustic/Sampler.ixx}}
     //**********************************************************************
     struct CSamplerRef
     {
@@ -38,8 +39,8 @@ export namespace Caustic
     // Class: CSampler
     // Implementation of <ISampler>
     //
-    // Header:
-    // {Link:#include "Rendering/Caustic/Sampler.h"{Rendering/Caustic/Sampler.h}}
+    // Module:
+    // {Link:import Rendering.Caustic.Sampler;{Rendering/Caustic/Sampler.ixx}}
     //**********************************************************************
     class CSampler : public ISampler, public CRefCount
     {

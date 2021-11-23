@@ -269,39 +269,4 @@ namespace Caustic
         m_Height = m_format.m_height;
         m_spTexture = CCausticFactory::Instance()->CreateTexture(pRenderer, m_Width, m_Height, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
     }
-
-    //**********************************************************************
-    // Function: LoadVideoTexture
-    // LoadVideoTexture loads a video and uses it as the texture source
-    //
-    // Parameters:
-    // pFilename - Name of file to load
-    // pRenderer - Renderer
-    //
-    // Returns:
-    // Returns the new texture
-    //**********************************************************************
-    CRefObj<ITexture> LoadVideoTexture(const wchar_t* pFilename, IRenderer* pRenderer)
-    {
-        std::unique_ptr<CVideoTexture> spTexture(new CVideoTexture(pRenderer));
-        spTexture->LoadFromFile(pFilename, pRenderer);
-        return CRefObj<ITexture>(spTexture.release());
-    }
-
-    //**********************************************************************
-    // Function: VideoTextureFromWebcam
-    // VideoTextureFromWebcam uses a webcam to receive a video texture
-    //
-    // Parameters:
-    // pRenderer - Renderer
-    //
-    // Returns:
-    // Returns the new texture
-    //**********************************************************************
-    CRefObj<ITexture> VideoTextureFromWebcam(IRenderer* pRenderer)
-    {
-        std::unique_ptr<CVideoTexture> spTexture(new CVideoTexture(pRenderer));
-        spTexture->CreateFromWebcam(pRenderer);
-        return CRefObj<ITexture>(spTexture.release());
-    }
 }

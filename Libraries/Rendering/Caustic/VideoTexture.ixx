@@ -15,6 +15,7 @@ export module Rendering.Caustic.VideoTexture;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
+//import Rendering.Caustic.ITexture;
 
 export namespace Caustic
 {
@@ -28,8 +29,8 @@ export namespace Caustic
     // bool m_topDown - is video oriented from top to bottom (pixel 0,0 in top left corner)
     // RECT m_rect - Video rect corrected for pixel aspect ratio
     //
-    // Header:
-    // {Link:#include "Rendering/Caustic/VideoTexture.h"{Rendering/Caustic/VideoTexture.h}}
+    // Module:
+    // {Link:import Rendering.Caustic.VideoTexture;{Rendering/Caustic/VideoTexture.ixx}}
     //**********************************************************************
     struct CVideoFormat
     {
@@ -58,8 +59,8 @@ export namespace Caustic
     // <CVideoFormat> m_format - format of the video
     // <CRefObj> < <ITexture> > m_spTexture - texture for decoded video frame
     //
-    // Header:
-    // {Link:#include "Rendering/Caustic/VideoTexture.h"{Rendering/Caustic/VideoTexture.h}}
+    // Module:
+    // {Link:import Rendering.Caustic.VideoTexture;{Rendering/Caustic/VideoTexture.ixx}}
     //**********************************************************************
     class CVideoTexture :
         public ITexture,
@@ -102,4 +103,39 @@ export namespace Caustic
         virtual CRefObj<IImage> CopyToImage(IRenderer* pRenderer) override;
         virtual void CopyToImage(IRenderer* pRenderer, IImage *pImage) override;
     };
+
+    //**********************************************************************
+    // Function: LoadVideoTexture
+    // LoadVideoTexture loads a video and uses it as the texture source
+    //
+    // Parameters:
+    // pFilename - Name of file to load
+    // pRenderer - Renderer
+    //
+    // Returns:
+    // Returns the new texture
+    //**********************************************************************
+    CRefObj<ITexture> LoadVideoTexture(const wchar_t* pFilename, IRenderer* pRenderer)
+    {
+        std::unique_ptr<CVideoTexture> spTexture(new CVideoTexture(pRenderer));
+        spTexture->LoadFromFile(pFilename, pRenderer);
+        return CRefObj<ITexture>(spTexture.release());
+    }
+
+    //**********************************************************************
+    // Function: VideoTextureFromWebcam
+    // VideoTextureFromWebcam uses a webcam to receive a video texture
+    //
+    // Parameters:
+    // pRenderer - Renderer
+    //
+    // Returns:
+    // Returns the new texture
+    //**********************************************************************
+    CRefObj<ITexture> VideoTextureFromWebcam(IRenderer* pRenderer)
+    {
+        std::unique_ptr<CVideoTexture> spTexture(new CVideoTexture(pRenderer));
+        spTexture->CreateFromWebcam(pRenderer);
+        return CRefObj<ITexture>(spTexture.release());
+    }
 };

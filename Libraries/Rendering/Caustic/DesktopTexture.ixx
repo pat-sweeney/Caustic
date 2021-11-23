@@ -4,16 +4,18 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "Rendering\Caustic\Caustic.h"
+//#include "Rendering\Caustic\Caustic.h"
 #include <d3d11.h>
 #include <mfapi.h>
 #include <mfidl.h>
 #include <mfreadwrite.h>
 #include <mfcaptureengine.h>
+#include <atlbase.h>
 
 export module Rendering.Caustic.DesktopTexture;
 import Base.Core.Core;
 import Base.Core.RefCount;
+import Rendering.Caustic.ITexture;
 
 export namespace Caustic
 {
@@ -90,4 +92,19 @@ export namespace Caustic
         virtual CRefObj<IImage> CopyToImage(IRenderer* pRenderer) override;
         virtual void CopyToImage(IRenderer* pRenderer, IImage* pImage) override;
     };
+
+    //**********************************************************************
+    // Function: CreateDesktopTexture
+    // CreateDesktopTexture creates a texture containing a copy of the windows desktop
+    //
+    // Parameters:
+    // pRenderer - Renderer
+    //
+    // Returns:
+    // Returns the new texture
+    //
+    // Module:
+    // {Link:import Rendering.Caustic.ITexture;{Rendering/Caustic/ITexture.ixx}}
+    //**********************************************************************
+    CRefObj<ITexture> CreateDesktopTexture(IRenderer* pRenderer);
 };

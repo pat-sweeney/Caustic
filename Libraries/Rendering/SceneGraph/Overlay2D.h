@@ -6,6 +6,7 @@
 #pragma once
 #include "SceneGraph.h"
 #include <functional>
+import Rendering.Caustic.ISampler;
 
 namespace Caustic
 {

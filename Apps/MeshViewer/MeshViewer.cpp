@@ -17,6 +17,8 @@ import Base.Core.IRefCount;
 import Geometry.Mesh.IMeshConstructor;
 import Geometry.MeshImport;
 import Geometry.Mesh.Mesh;
+import Rendering.Caustic.ISpotLight;
+import Rendering.Caustic.ISampler;
 
 #define MAX_LOADSTRING 100
 

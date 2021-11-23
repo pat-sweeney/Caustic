@@ -17,6 +17,7 @@ import Geometry.Mesh.Mesh;
 import Rendering.Caustic.Renderer;
 import Rendering.Caustic.RendererMarshaller;
 import Rendering.Caustic.CausticFactory;
+import Rendering.Caustic.ISampler;
 
 //**********************************************************************
 // File: RendererMarshaller.cpp

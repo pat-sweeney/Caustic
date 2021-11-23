@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CVideoTexture","CVideoTexture");NDSummary.OnSummaryLoaded("CClass:CVideoTexture",[["C/C++","C"]],[["Classes","Class"]],[[749,0,0,"CVideoTexture"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CVideoTexture","CVideoTexture");NDSummary.OnSummaryLoaded("CClass:CVideoTexture",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[1016,0,0,"CVideoTexture"],[755,0,2,"Functions","Functions"],[756,0,1,"LoadVideoTexture","LoadVideoTexture"],[767,0,1,"VideoTextureFromWebcam","VideoTextureFromWebcam"]]);

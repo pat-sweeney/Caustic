@@ -5,8 +5,6 @@
 //**********************************************************************
 #include <string>
 #include "IShaderInfo.h"
-#include "ITexture.h"
-#include "ISampler.h"
 #include "IShader.h"
 #include <DirectXMath.h>
 #include <memory>
@@ -21,6 +19,8 @@ import Rendering.Caustic.ICamera;
 import Rendering.Caustic.ILight;
 import Rendering.Caustic.IPointLight;
 import Rendering.Caustic.IRenderMaterial;
+import Rendering.Caustic.ISampler;
+import Rendering.Caustic.ITexture;
 
 namespace Caustic
 {

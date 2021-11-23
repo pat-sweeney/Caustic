@@ -23,6 +23,7 @@ import Rendering.Caustic.ShaderInfo;
 import Rendering.Caustic.Shader;
 import Rendering.Caustic.CausticFactory;
 import Rendering.Caustic.IRenderMaterial;
+import Rendering.Caustic.ISampler;
 
 //**********************************************************************
 // File: Renderer.cpp

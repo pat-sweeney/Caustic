@@ -26,6 +26,8 @@ import Imaging.Image.GPUPipeline;
 import Imaging.Image.IGPUPipeline;
 import Rendering.SceneImport.Collada;
 import Geometry.MeshImport;
+import Rendering.Caustic.VideoTexture;
+import Rendering.Caustic.DesktopTexture;
 
 #define MAX_LOADSTRING 100
 

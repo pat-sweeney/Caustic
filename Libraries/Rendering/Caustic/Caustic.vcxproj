@@ -262,11 +262,9 @@
     <ClInclude Include="IRenderable.h" />
     <ClInclude Include="IRendererMarshaller.h" />
     <ClInclude Include="IRenderMesh.h" />
-    <ClInclude Include="ISampler.h" />
     <ClInclude Include="IShader.h" />
     <ClInclude Include="IShaderInfo.h" />
     <ClInclude Include="IShaderMgr.h" />
-    <ClInclude Include="ITexture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BuildRenderMesh.cpp" />
@@ -292,7 +290,11 @@
     <ClCompile Include="IRenderer.ixx" />
     <ClCompile Include="IRenderMaterial.cpp" />
     <ClCompile Include="IRenderMaterial.ixx" />
+    <ClCompile Include="ISampler.cpp" />
+    <ClCompile Include="ISampler.ixx" />
     <ClCompile Include="ISpotLight.ixx" />
+    <ClCompile Include="ITexture.cpp" />
+    <ClCompile Include="ITexture.ixx" />
     <ClCompile Include="ITrackball.cpp" />
     <ClCompile Include="ITrackball.ixx" />
     <ClCompile Include="Light.ixx" />

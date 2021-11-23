@@ -6,8 +6,6 @@
 module;
 #include <d3d11.h>
 #include <memory>
-#include "Rendering\Caustic\ITexture.h"
-#include "Rendering\Caustic\ISampler.h"
 
 module Rendering.Caustic.IRenderMaterial;
 import Base.Core.Core;
@@ -20,6 +18,8 @@ import Rendering.Caustic.Renderer;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.RenderMaterial;
 import Rendering.Caustic.CausticFactory;
+import Rendering.Caustic.ISampler;
+import Rendering.Caustic.ITexture;
 
 namespace Caustic
 {

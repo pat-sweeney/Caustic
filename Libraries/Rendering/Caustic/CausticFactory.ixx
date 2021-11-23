@@ -12,6 +12,7 @@ export module Rendering.Caustic.CausticFactory;
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Rendering.Caustic.IRenderMaterial;
+import Rendering.Caustic.ISampler;
 
 //**********************************************************************
 // File: CausticFactory.h

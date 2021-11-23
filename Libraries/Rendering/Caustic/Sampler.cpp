@@ -4,12 +4,13 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "Rendering\Caustic\ISampler.h"
+#include <d3d11.h>
 
 module Rendering.Caustic.Sampler;
 import Base.Core.Core;
 import Base.Core.Error;
 import Rendering.Caustic.CausticFactory;
+import Rendering.Caustic.ISampler;
 
 namespace Caustic
 {
@@ -59,11 +60,6 @@ namespace Caustic
         desc.AddressV = address;
         m_spSamplerState = nullptr;
         CT(pRenderer->GetDevice()->CreateSamplerState(&desc, &m_spSamplerState));
-    }
-
-    CRefObj<ISampler> CreateSampler(IRenderer *pRenderer, ITexture *pTexture)
-    {
-        return CRefObj<ISampler>(new CSampler(pRenderer, pTexture));
     }
 
     void CSampler::Render(IRenderer *pRenderer, int slot, bool isPixelShader)

@@ -1,1 +1,1 @@
-﻿NDSearch.OnPrefixDataLoaded("gen",["Function"],[["GenerateMips",,[[,,,,0,"File:Rendering/Caustic/Texture.cpp:GenerateMips"],["ITexture",,,,0,"File:Rendering/Caustic/ITexture.h:ITexture.GenerateMips","CClass:ITexture:GenerateMips"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("gen",["Function"],[["GenerateMips",,[[,,,,0,"File:Rendering/Caustic/Texture.cpp:GenerateMips"],["ITexture",,,,0,"File:Rendering/Caustic/ITexture.ixx:ITexture.GenerateMips","CClass:ITexture:GenerateMips"]]]]);
