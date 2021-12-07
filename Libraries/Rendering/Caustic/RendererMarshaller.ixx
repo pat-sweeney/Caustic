@@ -4,17 +4,21 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "Rendering\Caustic\Caustic.h"
 #include <functional>
 #include <queue>
 #include <type_traits>
 #include <dxgi1_6.h>
+#include <atlbase.h>
 
 export module Rendering.Caustic.RendererMarshaller;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
+import Base.Core.IRefCount;
 import Rendering.Caustic.ISampler;
+import Rendering.Caustic.IRendererMarshaller;
+import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IShaderMgr;
 
 //**********************************************************************
 // File: RendererMarshaller.h

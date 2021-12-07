@@ -10,12 +10,17 @@
 #include <vector>
 #include <string>
 #include <any>
+#include <Windows.h>
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.IRefCount;
 import Base.Core.RefCount;
 import Base.Math.Vector;
 import Rendering.Caustic.IRenderMaterial;
+import Rendering.Caustic.IRenderCtx;
+import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IShader;
+import Rendering.Caustic.IShaderMgr;
 
 namespace Caustic
 {

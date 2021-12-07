@@ -3,27 +3,33 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "Rendering\Caustic\Caustic.h"
+module;
 #include <vector>
 #include <any>
 #include <d3d11.h>
 #include <d3d11_4.h>
 #include <d3dcommon.h>
 #include <d3dcompiler.h>
+#include <DirectXMath.h>
 #include <algorithm>
 #include <dxgi1_6.h>
-import Rendering.Caustic.Texture;
-import Rendering.Caustic.Renderable;
-import Rendering.Caustic.Sampler;
+#include <string>
+#include <atlbase.h>
+#include <memory>
+
+module Rendering.Caustic.Renderer;
 import Base.Core.Core;
 import Base.Core.Error;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
 import Base.Core.CritSec;
-import Rendering.Caustic.Renderer;
-import Rendering.Caustic.ShaderInfo;
-import Rendering.Caustic.Shader;
+import Rendering.Caustic.Texture;
+//import Rendering.Caustic.ITexture;
+import Rendering.Caustic.Renderable;
+import Rendering.Caustic.Sampler;
+import Rendering.Caustic.ShaderMgr;
 import Rendering.Caustic.CausticFactory;
-import Rendering.Caustic.IRenderMaterial;
-import Rendering.Caustic.ISampler;
+import Rendering.Caustic.ICausticFactory;
 
 //**********************************************************************
 // File: Renderer.cpp

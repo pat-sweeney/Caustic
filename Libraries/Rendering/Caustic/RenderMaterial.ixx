@@ -4,8 +4,8 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "Rendering\Caustic\Caustic.h"
 #include <map>
+#include <string>
 
 export module Rendering.Caustic.RenderMaterial;
 import Base.Core.Core;
@@ -13,7 +13,9 @@ import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Rendering.Caustic.IRenderMaterial;
+import Rendering.Caustic.ITexture;
 import Rendering.Caustic.ISampler;
+import Geometry.Mesh.IMaterialAttrib;
 
 export namespace Caustic
 {

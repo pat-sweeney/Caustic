@@ -12,15 +12,16 @@ export module Rendering.Caustic.ITexture;
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Imaging.Image.IImage;
-import Rendering.Caustic.IRenderer;
 
 //**********************************************************************
-// File: ITexture.h
+// File: ITexture.ixx
 // This file defines the published interface for textures.
 //**********************************************************************
 
 export namespace Caustic
 {
+    struct IRenderer;
+
     //**********************************************************************
     // Interface: ITexture
     // Defines how clients interact with textures

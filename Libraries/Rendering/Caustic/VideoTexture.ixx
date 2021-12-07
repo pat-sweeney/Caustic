@@ -4,18 +4,20 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "Rendering\Caustic\Caustic.h"
 #include <d3d11.h>
 #include <mfapi.h>
 #include <mfidl.h>
 #include <mfreadwrite.h>
 #include <mfcaptureengine.h>
+#include <atlbase.h>
+#include <memory>
 
 export module Rendering.Caustic.VideoTexture;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
-//import Rendering.Caustic.ITexture;
+import Base.Core.IRefCount;
+import Rendering.Caustic.ITexture;
 
 export namespace Caustic
 {

@@ -3,17 +3,15 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-module;
-#include "Rendering\Caustic\Caustic.h"
-
 export module Rendering.Caustic.SpotLight;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
 import Rendering.Caustic.Light;
+import Rendering.Caustic.ISpotLight;
 
 //**********************************************************************
-// File: SpotLight.h
+// File: SpotLight.ixx
 // Contains declaration for CSpotLight
 //**********************************************************************
 
@@ -23,8 +21,8 @@ export namespace Caustic
     // Class: CSpotLight
     // Implementation of ISpotLight
     //
-    // Header:
-    // {Link:#include "Rendering/Caustic/SpotLight.h"{Rendering/Caustic/SpotLight.h}}
+    // Module:
+    // {Link:import Rendering.Caustic.SpotLight;{Rendering/Caustic/SpotLight.ixx}}
     //**********************************************************************
     class CSpotLight : public CLightBase, public ISpotLight, public CRefCount
     {

@@ -4,16 +4,17 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "Rendering\Caustic\Caustic.h"
-#include "Rendering\Caustic\IRenderMesh.h"
-#include "Rendering\Caustic\IShaderInfo.h"
 #include <d3d11.h>
+#include <atlbase.h>
+#include <memory>
 
 module Rendering.Caustic.ConstructBuffer;
 import Base.Core.Core;
 import Base.Math.BBox;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.Shader;
+import Rendering.Caustic.IRenderMesh;
+import Rendering.Caustic.IShaderInfo;
 
 namespace Caustic
 {

@@ -3,21 +3,24 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "Rendering\Caustic\Caustic.h"
-#include "Rendering\Caustic\Caustic.h"
+module;
 #include "Rendering\SceneGraph\ISceneGraph.h"
 #include <queue>
 #include <functional>
 #include <algorithm>
+
+module Rendering.Caustic.RendererMarshaller;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Geometry.Mesh.Mesh;
-import Rendering.Caustic.Renderer;
-import Rendering.Caustic.RendererMarshaller;
+//import Rendering.Caustic.Renderer;
+import Rendering.Caustic.IRendererMarshaller;
+import Rendering.Caustic.IRenderCtx;
 import Rendering.Caustic.CausticFactory;
 import Rendering.Caustic.ISampler;
+import Rendering.Caustic.ICamera;
 
 //**********************************************************************
 // File: RendererMarshaller.cpp
@@ -27,19 +30,6 @@ import Rendering.Caustic.ISampler;
 
 namespace Caustic
 {
-    //**********************************************************************
-    // Function: CreateRendererMarshaller
-    // Global function for creating the RendererMarshaller. This method should generally
-    // not be called. Use the ICausticFactory to create new Caustic objects.
-    //
-    // Returns:
-    // Returns the newly created RendererMarshaller.
-    //**********************************************************************
-    CRefObj<IRendererMarshaller> CreateRendererMarshaller()
-    {
-        return CRefObj<IRendererMarshaller>(new CRendererMarshaller());
-    }
-
     //**********************************************************************
     // Method: CRendererMarshaller
     // Defines the implementation of <IRendererMarshaller>

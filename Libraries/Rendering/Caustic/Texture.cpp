@@ -20,6 +20,7 @@ import Base.Core.IRefCount;
 import Imaging.Image.IImage;
 import Imaging.Image.ImageIter;
 import Rendering.Caustic.ITexture;
+import Rendering.Caustic.IRenderer;
 
 namespace Caustic
 {

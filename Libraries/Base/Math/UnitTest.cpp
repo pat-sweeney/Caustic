@@ -3,13 +3,14 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-import Base.Math.Vector;
-import Base.Math.NewtonsMethod;
 #include <functional>
 #include "UnitTest.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <Windows.h>
+import Base.Core.Core;
+import Base.Math.Vector;
+import Base.Math.NewtonsMethod;
 
 using namespace Caustic;
 namespace CausticTestSuite

@@ -13,8 +13,12 @@ module;
 #include <atlbase.h>
 
 module Rendering.Caustic.DesktopTexture;
+import Base.Core.Core;
 import Base.Core.Error;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
 import Rendering.Caustic.CausticFactory;
+import Rendering.Caustic.IRenderer;
 
 namespace Caustic
 {

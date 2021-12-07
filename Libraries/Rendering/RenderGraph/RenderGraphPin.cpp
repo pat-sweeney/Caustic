@@ -4,17 +4,17 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-import Base.Core.Core;
-import Base.Core.Error;
-import Base.Core.RefCount;
-#include "Rendering\Caustic\Caustic.h"
-#include "RenderGraphPin.h"
-#include "RenderGraphNode.h"
-#include "RenderGraphDiagnostics.h"
 #include <vector>
 #include <string>
 #include <any>
 #include <map>
+#include <Windows.h>
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.RefCount;
+#include "RenderGraphPin.h"
+#include "RenderGraphNode.h"
+#include "RenderGraphDiagnostics.h"
 
 namespace Caustic
 {

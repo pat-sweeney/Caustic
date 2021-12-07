@@ -715,9 +715,9 @@ namespace Caustic
                 CComBSTR var;
                 CT(spNode->get_text(&var));
                 if (var == L"Line")
-                    this->m_topologyType = D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_LINELIST;
+                    this->m_topologyType = D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
                 else
-                    this->m_topologyType = D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+                    this->m_topologyType = D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
             }
 		}
 	}

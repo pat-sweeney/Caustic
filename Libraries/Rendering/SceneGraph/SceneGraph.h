@@ -4,14 +4,17 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
+#include <vector>
+#include <string>
+#include <functional>
+#include "Rendering\SceneGraph\ISceneGraph.h"
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Base.Math.BBox;
 import Base.Math.Ray;
-#include "Rendering\Caustic\Caustic.h"
-#include "Rendering\SceneGraph\ISceneGraph.h"
-#include <vector>
-#include <string>
+import Rendering.Caustic.IRenderer;
 
 namespace Caustic
 {

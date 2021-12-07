@@ -5,7 +5,6 @@
 //**********************************************************************
 #pragma once
 #include "stdafx.h"
-#include "Rendering\Caustic\Caustic.h"
 #include "ISceneFactory.h"
 #include "SceneFactory.h"
 import Base.Core.Core;

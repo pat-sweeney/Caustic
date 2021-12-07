@@ -9,11 +9,12 @@
 //**********************************************************************
 module;
 #include <Windows.h>
+#include <ShlWapi.h>
 #include <string>
 #include <vector>
 #include <map>
+#include <d3d11.h>
 #include "Base\Core\convertStr.h"
-#include "Rendering\Caustic\Caustic.h"
 
 module Geometry.MeshImport.Obj;
 import Base.Core.Core;

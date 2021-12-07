@@ -4,6 +4,7 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
+#include <windows.h>
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Base.Core.Error;

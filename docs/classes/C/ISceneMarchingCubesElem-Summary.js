@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:ISceneMarchingCubesElem","ISceneMarchingCubesElem");NDSummary.OnSummaryLoaded("CClass:ISceneMarchingCubesElem",[["C/C++","C"]],[["Interfaces","Interface"]],[[1574,0,0,"ISceneMarchingCubesElem"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:ISceneMarchingCubesElem","ISceneMarchingCubesElem");NDSummary.OnSummaryLoaded("CClass:ISceneMarchingCubesElem",[["C/C++","C"]],[["Interfaces","Interface"]],[[1579,0,0,"ISceneMarchingCubesElem"]]);

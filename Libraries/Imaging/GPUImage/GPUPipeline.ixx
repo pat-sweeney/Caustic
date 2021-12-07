@@ -4,17 +4,22 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "Rendering\Caustic\Caustic.h"
 #include <vector>
 #include <atlbase.h>
 #include <d3d11.h>
 #include <map>
+#include <string>
 
 export module Imaging.Image.GPUPipeline;
-import Cameras.CameraBase.ICamera;
-import Imaging.Image.IGPUPipeline;
 import Base.Core.Core;
 import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Cameras.CameraBase.ICamera;
+import Imaging.Image.IGPUPipeline;
+import Geometry.Mesh.IMesh;
+import Rendering.Caustic.IRenderMesh;
+import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IRenderCtx;
 
 export namespace Caustic
 {

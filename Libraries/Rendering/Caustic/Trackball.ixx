@@ -5,7 +5,6 @@
 //**********************************************************************
 module;
 #define NOMINMAX 
-#include "Caustic.h"
 #include <memory>
 #include <d3d11.h>
 #include <DirectXMath.h>
@@ -14,7 +13,9 @@ export module Rendering.Caustic.Trackball;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
+import Base.Math.Vector;
 import Rendering.Caustic.CausticFactory;
+import Rendering.Caustic.ITrackball;
 
 export namespace Caustic
 {
@@ -32,8 +33,8 @@ export namespace Caustic
     // <uint32> m_startY - Y Position of mouse when drag was started
     // <Vector3> m_startPos - Position of m_startX,m_startY on trackball surface
     //
-    // Header:
-    // {Link:#include "Rendering/Caustic/Trackball.h"{Rendering/Caustic/Trackball.h}}
+    // Module:
+    // {Link:import Rendering.Caustic.Trackball;{Rendering/Caustic/Trackball.ixx}}
     //**********************************************************************
     class CTrackball : public ITrackball, public CRefCount
     {

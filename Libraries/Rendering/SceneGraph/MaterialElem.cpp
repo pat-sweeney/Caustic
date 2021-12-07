@@ -7,8 +7,13 @@
 #include "Rendering\SceneGraph\ISceneGraph.h"
 #include "MaterialElem.h"
 #include <string>
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
 import Geometry.Mesh.Mesh;
 import Geometry.Mesh.MaterialAttrib;
+import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IRenderCtx;
 
 namespace Caustic
 {

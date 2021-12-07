@@ -3,28 +3,31 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
-#include "Rendering\Caustic\Caustic.h"
-#include "Rendering\Caustic\IRenderMesh.h"
-#include "IRenderable.h"
-#include "IPointCloud.h"
+module;
 #include <memory>
 #include <any>
 #include <vector>
 #include <atlbase.h>
 #include <d3d11.h>
+
+module Rendering.Caustic.PointCloud;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
-import Base.Core.Event;
+import Base.Core.IRefCount;
 import Base.Core.CritSec;
-import Rendering.Caustic.PointCloud;
 import Rendering.Caustic.Shader;
 import Rendering.Caustic.CausticFactory;
+import Rendering.Caustic.IRenderMesh;
+import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IRenderable;
+import Rendering.Caustic.IPointCloud;
+import Rendering.Caustic.IShaderMgr;
+import Rendering.Caustic.BuildRenderMesh;
 
 //**********************************************************************
-// File: Renderable.h
-// Contains the declaration for the <CRenderable> class.
+// File: PointCloud.cpp
+// Contains the implementation for the <CPointCloud> class.
 //**********************************************************************
 
 namespace Caustic
@@ -105,11 +108,5 @@ namespace Caustic
         m_spShader->SetPSParam(L"colorInt", std::any(m1));
 
         m_renderable.Render(pRenderer, lights, pRenderCtx);
-    }
-
-    CRefObj<IPointCloud> CreatePointCloud(IRenderer* pRenderer, uint32 width, uint32 height)
-    {
-        std::unique_ptr<CPointCloud> spPointCloud(new CPointCloud(pRenderer, width, height));
-        return CRefObj<IPointCloud>(spPointCloud.release());
     }
 }

@@ -1,21 +1,22 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2019
+// Copyright Patrick Sweeney 2019-21
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "Rendering\Caustic\Caustic.h"
 #include <d3d11.h>
 #include <DirectXMath.h>
+#include <string>
 
 export module Rendering.Caustic.CausticFactory;
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.ISampler;
+import Rendering.Caustic.ICausticFactory;
 
 //**********************************************************************
-// File: CausticFactory.h
+// File: CausticFactory.ixx
 // Contains the declaration for our <CCausticFactory> class.
 //**********************************************************************
 

@@ -4,7 +4,6 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-//#include "Rendering\Caustic\Caustic.h"
 #include <d3d11.h>
 #include <mfapi.h>
 #include <mfidl.h>

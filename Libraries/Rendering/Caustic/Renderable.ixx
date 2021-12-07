@@ -4,25 +4,26 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "Rendering\Caustic\Caustic.h"
-#include "IRenderable.h"
-#include "Rendering\Caustic\IRenderable.h"
 #include <memory>
 #include <any>
 #include <vector>
 #include <atlbase.h>
 #include <d3d11.h>
+#include <DirectXMath.h>
 
 export module Rendering.Caustic.Renderable;
 import Base.Core.Core;
 import Base.Core.RefCount;
+import Base.Core.IRefCount;
 import Base.Core.Event;
 import Base.Core.CritSec;
 import Rendering.Caustic.Shader;
 import Rendering.Caustic.IRenderMaterial;
+import Rendering.Caustic.IRenderable;
+import Rendering.Caustic.RendererFlags;
 
 //**********************************************************************
-// File: Renderable.h
+// File: Renderable.ixx
 // Contains the declaration for the <CRenderable> class.
 //**********************************************************************
 

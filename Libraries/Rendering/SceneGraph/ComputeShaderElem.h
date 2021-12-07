@@ -4,9 +4,15 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "SceneGraph.h"
 #include <d3d11.h>
 #include <atlbase.h>
+#include "SceneGraph.h"
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Rendering.Caustic.IRenderCtx;
+import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IShader;
 
 namespace Caustic
 {

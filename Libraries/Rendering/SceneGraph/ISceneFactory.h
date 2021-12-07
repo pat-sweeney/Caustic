@@ -4,7 +4,6 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "Rendering\Caustic\Caustic.h"
 #include "ISceneGraph.h"
 #include "ISceneFactory.h"
 import Base.Core.Core;

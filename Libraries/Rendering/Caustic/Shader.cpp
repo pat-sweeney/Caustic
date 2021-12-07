@@ -3,24 +3,26 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+module;
 #include <string>
-#include "IShaderInfo.h"
-#include "IShader.h"
 #include <DirectXMath.h>
 #include <memory>
 #include <d3d11_4.h>
 #include <atlbase.h>
 #include <any>
+module Rendering.Caustic.Shader;
 import Base.Core.Core;
 import Base.Core.Error;
 import Rendering.Caustic.Sampler;
-import Rendering.Caustic.Shader;
 import Rendering.Caustic.ICamera;
 import Rendering.Caustic.ILight;
 import Rendering.Caustic.IPointLight;
 import Rendering.Caustic.IRenderMaterial;
+import Rendering.Caustic.IShaderInfo;
+import Rendering.Caustic.IShader;
 import Rendering.Caustic.ISampler;
 import Rendering.Caustic.ITexture;
+import Rendering.Caustic.IRenderer;
 
 namespace Caustic
 {
@@ -1118,25 +1120,6 @@ namespace Caustic
     }
     
     //**********************************************************************
-    // Method: CreateGPUBuffer
-    // A helper function to create a shader
-    //
-    // Parameters:
-    // pRenderer - Graphics device to use
-    // type - which type of buffer are we creating
-    // elemSize - size in bytes of each element in the buffer
-    //
-    // Returns:
-    // Returns the created buffer
-    //**********************************************************************
-    CRefObj<IGPUBuffer> CreateGPUBuffer(IRenderer* pRenderer, EBufferType type, uint32 numElems, uint32 elemSize, uint32 bindFlags)
-    {
-        std::unique_ptr<CGPUBuffer> spBuffer(new CGPUBuffer());
-        spBuffer->Create(pRenderer, type, numElems, elemSize, bindFlags);
-        return CRefObj<IGPUBuffer>(spBuffer.release());
-    }
-
-    //**********************************************************************
     // Method: CreateBuffer
     // Helper function that creates a buffer for the shader (Constant buffer
     // or StructuredBuffer)
@@ -1314,40 +1297,5 @@ namespace Caustic
         std::unique_ptr<CShader> spShader(new CShader());
         spShader->Create(pRenderer, pShaderName, pShaderInfo, pPSBlob, pVSBlob, pCSBlob);
         return CRefObj<IShader>(spShader.release());
-    }
-    
-    //**********************************************************************
-    // Method: FindShader
-    // Returns the requested shader
-    //
-    // Parameters:
-    // pShaderName - Name of shader to locate
-    //
-    // Returns:
-    // Returns the requested shader
-    //**********************************************************************
-    CRefObj<IShader> CShaderMgr::FindShader(const wchar_t *pShaderName)
-    {
-        std::map<std::wstring,CRefObj<IShader>>::iterator it = m_shaders.find(pShaderName);
-        if (it == m_shaders.end())
-            return CRefObj<IShader>(nullptr);
-        return it->second;
-    }
-
-    //**********************************************************************
-    // Method: RegisterShader
-    // Registers the specified shader with the shader manager
-    //
-    // Parameters:
-    // pShaderName - Name of shader
-    // pShader - Shader to register
-    //**********************************************************************
-    void CShaderMgr::RegisterShader(const wchar_t *pShaderName, IShader *pShader)
-    {
-        std::map<std::wstring,CRefObj<IShader>>::iterator it = m_shaders.find(pShaderName);
-        if (it == m_shaders.end())
-        {
-            m_shaders[std::wstring(pShaderName)] = CRefObj<IShader>(pShader);
-        }
     }
 };

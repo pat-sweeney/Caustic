@@ -8,6 +8,14 @@
 #include "ISceneGraph.h"
 #include <d3d11.h>
 #include <atlbase.h>
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Base.Math.BBox;
+import Base.Math.Vector;
+import Geometry.Mesh.IMaterialAttrib;
+import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IRenderCtx;
 
 namespace Caustic
 {

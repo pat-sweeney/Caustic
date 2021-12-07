@@ -6,7 +6,10 @@
 #pragma once
 import Base.Core.Core;
 import Base.Core.RefCount;
+import Base.Core.IRefCount;
 import Base.Math.Vector;
+import Rendering.Caustic.IShader;
+import Rendering.Caustic.IRenderer;
 #include "IRenderGraphNode.h"
 #include <vector>
 #include <string>

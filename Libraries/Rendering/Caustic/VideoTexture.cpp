@@ -3,7 +3,7 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "Rendering\Caustic\Caustic.h"
+module;
 #include <memory>
 #include <wincodec.h>
 #include <objbase.h>
@@ -14,9 +14,11 @@
 #include <mfidl.h>
 #include <mfreadwrite.h>
 #include <mfcaptureengine.h>
+#include <atlbase.h>
+
+module Rendering.Caustic.VideoTexture;
 import Base.Core.Core;
 import Base.Core.Error;
-import Rendering.Caustic.VideoTexture;
 import Rendering.Caustic.CausticFactory;
 
 namespace Caustic

@@ -4,15 +4,16 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-import Base.Core.Core;
-import Base.Core.RefCount;
-#include "Rendering\Caustic\Caustic.h"
-import Base.Math.Matrix;
-#include "IRenderGraphNode.h"
-#include "RenderGraph.h"
 #include <vector>
 #include <string>
 #include <any>
+#include <d3d11.h>
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Math.Matrix;
+import Rendering.Caustic.IRenderCtx;
+#include "IRenderGraphNode.h"
+#include "RenderGraph.h"
 
 namespace Caustic
 {

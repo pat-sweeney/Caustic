@@ -16,35 +16,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Caustic.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ICausticFactory.h">
-      <Filter>Source Files\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="IRenderable.h">
-      <Filter>Source Files\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="IRendererMarshaller.h">
-      <Filter>Source Files\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="IRenderMesh.h">
-      <Filter>Source Files\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="IShader.h">
-      <Filter>Source Files\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="IShaderInfo.h">
-      <Filter>Source Files\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="IShaderMgr.h">
-      <Filter>Source Files\Interfaces</Filter>
-    </ClInclude>
     <ClInclude Include="defs.h">
       <Filter>Source Files\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="IPointCloud.h">
-      <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -218,6 +191,60 @@
     </ClCompile>
     <ClCompile Include="ITexture.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ICausticFactory.ixx">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="IPointCloud.ixx">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="IRenderable.ixx">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="IRenderMesh.ixx">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="IRendererMarshaller.ixx">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="IShader.ixx">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="IShaderInfo.ixx">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="IShaderMgr.ixx">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="Caustic.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderMgr.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RendererFlags.ixx">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildRenderMesh.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderMgr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ICausticFactory.cpp">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="IRendererMarshaller.cpp">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="IShader.cpp">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="IPointCloud.cpp">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="IRenderable.cpp">
+      <Filter>Source Files\Interfaces</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

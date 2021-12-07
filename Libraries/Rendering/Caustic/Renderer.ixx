@@ -4,7 +4,6 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "Rendering\Caustic\Caustic.h"
 #include <memory>
 #include <any>
 #include <vector>
@@ -12,20 +11,30 @@ module;
 #include <atlbase.h>
 #include <d3d11.h>
 #include <d3d11_4.h>
+#include <string>
 
 export module Rendering.Caustic.Renderer;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
+import Base.Core.IRefCount;
 import Base.Core.Event;
 import Base.Core.CritSec;
 import Geometry.Mesh.Mesh;
 import Rendering.Caustic.Shader;
+import Rendering.Caustic.IShaderInfo;
+import Rendering.Caustic.IShaderMgr;
+import Rendering.Caustic.ICamera;
 import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.ISampler;
+import Rendering.Caustic.IPointLight;
+import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IRenderCtx;
+import Rendering.Caustic.ITexture;
+import Rendering.Caustic.RendererFlags;
 
 //**********************************************************************
-// File: Renderer.h
+// File: Renderer.ixx
 // Contains the declarations related to the CRenderer class which implements <IRenderer>
 //**********************************************************************
 
@@ -66,7 +75,7 @@ export namespace Caustic
     class CLight : public IPointLight, public CRefCount
     {
     public:
-        void Render(IRenderer* /*pRenderer*/) {}
+//        void Render([[maybe_unused]]IRenderer* pRenderer) {}
     };
 
     //**********************************************************************

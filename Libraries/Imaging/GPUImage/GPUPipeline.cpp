@@ -4,14 +4,17 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "Rendering\Caustic\Caustic.h"
 #include <memory>
 #include <Windows.h>
 #include <any>
 #include <d3d11.h>
 #include <d3d11_4.h>
 #include <d3dcommon.h>
+#include <DirectXMath.h>
 #include <varargs.h>
+#include <string>
+#include <atlbase.h>
+#include <functional>
 
 module Imaging.Image.GPUPipeline;
 import Base.Core.Core;
@@ -20,8 +23,12 @@ import Imaging.Image.IGPUPipeline;
 import Cameras.CameraBase.ICamera;
 import Rendering.Caustic.Sampler;
 import Rendering.Caustic.Shader;
+import Rendering.Caustic.IShader;
+import Rendering.Caustic.IShaderMgr;
 import Rendering.Caustic.CausticFactory;
 import Rendering.Caustic.ISampler;
+import Rendering.Caustic.BuildRenderMesh;
+
 
 // Namespace: Caustic
 namespace Caustic

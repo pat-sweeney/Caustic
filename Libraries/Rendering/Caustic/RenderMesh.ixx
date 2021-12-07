@@ -4,18 +4,20 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "Rendering\Caustic\Caustic.h"
-#include "IRenderMesh.h"
 #include <d3d11.h>
+#include <string>
 
 export module Rendering.Caustic.RenderMesh;
 import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
 import Base.Math.BBox;
 import Rendering.Caustic.Shader;
 import Rendering.Caustic.IRenderMaterial;
+import Rendering.Caustic.IRenderMesh;
 
 //**********************************************************************
-// File: RenderMesh.h
+// File: RenderMesh.ixx
 // Contains the declaration for the <CRenderMesh> class.
 //**********************************************************************
 

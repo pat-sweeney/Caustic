@@ -8,9 +8,11 @@
 #include "RenderGraphNode.h"
 #include "IRGNPhongMaterial.h"
 import Base.Core.Core;
+import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Geometry.Mesh.MaterialAttrib;
 import Rendering.Caustic.IRenderMaterial;
+import Rendering.Caustic.ICausticFactory;
 
 namespace Caustic
 {

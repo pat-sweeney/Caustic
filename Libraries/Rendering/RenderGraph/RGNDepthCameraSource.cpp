@@ -4,15 +4,17 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
+#include <vector>
+#include <string>
+#include <any>
+#include <atlbase.h>
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Math.Vector;
 import Cameras.CameraBase.ICamera;
+import Rendering.Caustic.IRenderCtx;
 #include "IRGNDepthCameraSource.h"
 #include "RGNDepthCameraSource.h"
-#include <vector>
-#include <string>
-#include <any>
 
 namespace Caustic
 {

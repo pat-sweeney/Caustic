@@ -1,1 +1,1 @@
-﻿NDSummary.OnToolTipsLoaded("File:Rendering/Caustic/PointCloud.cpp",{941:"<div class=\"NDToolTip TFile LC\"><div class=\"TTSummary\">Contains the declaration for the CRenderable class.</div></div>"});
+﻿NDSummary.OnToolTipsLoaded("File:Rendering/Caustic/PointCloud.cpp",{891:"<div class=\"NDToolTip TFile LC\"><div class=\"TTSummary\">Contains the implementation for the CPointCloud class.</div></div>"});

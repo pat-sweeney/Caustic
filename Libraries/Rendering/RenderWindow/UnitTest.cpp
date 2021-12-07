@@ -5,14 +5,20 @@
 //**********************************************************************
 #include "stdafx.h"
 #define _USE_MATH_DEFINES
-#include <cmath>
-import Base.Core.Error;
-import Base.Math.Vector;
-#include "RenderWindow.h"
-#include "Rendering/RenderGraph/RenderGraph.h"
+#include <atlbase.h>
+#include <Windows.h>
+#include <d3d11.h>
+#include "Rendering\RenderGraph\RenderGraphFactory.h"
+#include "Rendering\RenderWindow\RenderWindow.h"
 #include "UnitTest.h"
-#include <stdlib.h>
-#include <stdio.h>
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Base.Math.Vector;
+import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IRenderCtx;
+import Rendering.Caustic.ICausticFactory;
 
 using namespace Caustic;
 namespace CausticTestSuite

@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/ShaderMgr.cpp","ShaderMgr.cpp");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/ShaderMgr.cpp",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"]],[[764,0,1,"Functions","Functions"],[808,0,0,"FindShader","FindShader"],[810,0,0,"RegisterShader","RegisterShader"]]);

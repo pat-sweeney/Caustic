@@ -13,6 +13,12 @@ import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Rendering.Caustic.IRenderMaterial;
+import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IRenderCtx;
+import Rendering.Caustic.IRenderMesh;
+import Rendering.Caustic.IShader;
+import Rendering.Caustic.IShaderMgr;
+import Geometry.Mesh.MeshFuncs;
 
 namespace Caustic
 {

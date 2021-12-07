@@ -11,6 +11,11 @@
 #include <string>
 #include <functional>
 #include <d3d11_4.h>
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Rendering.Caustic.IRenderCtx;
+import Rendering.Caustic.IRenderer;
 
 namespace Caustic
 {

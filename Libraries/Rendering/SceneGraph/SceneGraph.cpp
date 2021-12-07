@@ -5,10 +5,16 @@
 //**********************************************************************
 #include "stdafx.h"
 #include "Rendering\SceneGraph\ISceneGraph.h"
-import Imaging.Image.IImage;
-import Imaging.Image.ImageIter;
 #include "SceneGraph.h"
 #include "SceneFactory.h"
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Rendering.Caustic.ICamera;
+import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IRenderCtx;
+import Imaging.Image.IImage;
+import Imaging.Image.ImageIter;
 
 namespace Caustic
 {

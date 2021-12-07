@@ -5,8 +5,10 @@
 //**********************************************************************
 #pragma once
 import Base.Core.Core;
+import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Base.Core.Error;
+import Rendering.Caustic.ILight;
 #include "RenderGraphNode.h"
 #include "ILightCollection.h"
 #include <vector>

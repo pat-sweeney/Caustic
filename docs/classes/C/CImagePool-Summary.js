@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CImagePool","CImagePool");NDSummary.OnSummaryLoaded("CClass:CImagePool",[["C/C++","C"]],[["Classes","Class"]],[[609,0,0,"CImagePool"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CImagePool","CImagePool");NDSummary.OnSummaryLoaded("CClass:CImagePool",[["C/C++","C"]],[["Classes","Class"]],[[570,0,0,"CImagePool"]]);

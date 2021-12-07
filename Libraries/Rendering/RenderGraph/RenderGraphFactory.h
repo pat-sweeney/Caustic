@@ -6,9 +6,10 @@
 #pragma once
 import Base.Core.Core;
 import Base.Core.RefCount;
+import Base.Core.IRefCount;
 import Base.Math.Ray;
 import Cameras.CameraBase.ICamera;
-#include "Rendering\Caustic\Caustic.h"
+import Geometry.Mesh.IMesh;
 #include "IRenderGraph.h"
 #include "IRenderGraphFactory.h"
 #include "IRGNMaterial.h"

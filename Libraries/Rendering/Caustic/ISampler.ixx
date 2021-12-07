@@ -9,7 +9,6 @@ module;
 export module Rendering.Caustic.ISampler;
 import Base.Core.Core;
 import Base.Core.IRefCount;
-import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.ITexture;
 
 //**********************************************************************
@@ -19,6 +18,8 @@ import Rendering.Caustic.ITexture;
 
 export namespace Caustic
 {
+    struct IRenderer;
+
     //**********************************************************************
     // Interface: ISampler
     // Defines a sampler. Samplers define how the underlying texture is accessed by shaders.

@@ -3,9 +3,6 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-module;
-#include "Rendering\Caustic\Caustic.h"
-
 export module Rendering.Caustic.DirectionalLight;
 import Base.Core.Core;
 import Base.Core.Error;
@@ -14,7 +11,7 @@ import Rendering.Caustic.Light;
 import Rendering.Caustic.IDirectionalLight;
 
 //**********************************************************************
-// File: SpotLight.h
+// File: DirectionalLight.ixx
 // Contains declaration for CDirectionalLight
 //**********************************************************************
 
@@ -24,8 +21,8 @@ export namespace Caustic
     // Class: CDirectionalLight
     // Implementation of IDirectionalLight
     //
-    // Header:
-    // {Link:#include "Rendering/Caustic/DirectionalLight.h"{Rendering/Caustic/DirectionalLight.h}}
+    // Module:
+    // {Link:import Rendering.Caustic.DirectionalLight;{Rendering/Caustic/DirectionalLight.ixx}}
     //**********************************************************************
     class CDirectionalLight : public CLightBase, public IDirectionalLight, public CRefCount
     {

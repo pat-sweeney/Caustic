@@ -4,14 +4,16 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "Rendering\Caustic\Caustic.h"
-#include "Rendering\Caustic\IShaderInfo.h"
+#include <d3d11.h>
+#include <vector>
+#include <string>
 
 export module Rendering.Caustic.ShaderInfo;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
 import Rendering.Caustic.Shader;
+import Rendering.Caustic.IShaderInfo;
 
 export namespace Caustic
 {
@@ -31,7 +33,7 @@ export namespace Caustic
 		uint32 m_shaderTypeFlags;
 		uint32 m_vertexSize;
 		int m_xThreads, m_yThreads, m_zThreads;
-        D3D10_PRIMITIVE_TOPOLOGY m_topologyType;
+        D3D11_PRIMITIVE_TOPOLOGY m_topologyType;
 
 		void ParseShaderDef(IXMLDOMNode *pNode);
         void ParseSamplersOrTextures(IXMLDOMNode *pNode, EShaderType shaderType);
@@ -49,7 +51,7 @@ export namespace Caustic
 			m_yThreads(1),
 			m_zThreads(1)
 		{
-            m_topologyType = D3D10_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+            m_topologyType = D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
         }
 
 		void LoadShaderDef(std::wstring &fn);
@@ -69,7 +71,7 @@ export namespace Caustic
 		{
 			return (type & m_shaderTypeFlags);
 		}
-		virtual D3D10_PRIMITIVE_TOPOLOGY GetTopologyType() override;
+		virtual D3D11_PRIMITIVE_TOPOLOGY GetTopologyType() override;
         virtual std::vector<ShaderParamDef> &PixelShaderParameterDefs() override;
 		virtual std::vector<ShaderParamDef>& VertexShaderParameterDefs() override;
 		virtual std::vector<ShaderParamDef>& ComputeShaderParameterDefs() override;

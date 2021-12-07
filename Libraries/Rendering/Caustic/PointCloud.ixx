@@ -4,9 +4,6 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "Rendering\Caustic\Caustic.h"
-#include "IRenderable.h"
-#include "IPointCloud.h"
 #include <memory>
 #include <any>
 #include <vector>
@@ -23,10 +20,13 @@ import Rendering.Caustic.Renderable;
 import Rendering.Caustic.Shader;
 import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.ISampler;
+import Rendering.Caustic.IRenderable;
+import Rendering.Caustic.IPointCloud;
+import Rendering.Caustic.ITexture;
 
 //**********************************************************************
-// File: Renderable.h
-// Contains the declaration for the <CRenderable> class.
+// File: PointCloud.ixx
+// Contains the declaration for the <CPointCloud> class.
 //**********************************************************************
 
 export namespace Caustic
@@ -43,8 +43,8 @@ export namespace Caustic
 	// m_vertexBuffer - vertex buffer
 	// m_normalVB - vertex buffer with normal vectors
 	//
-	// Header:
-	// {Link:#include "Rendering/Caustic/Renderable.h"{Rendering/Caustic/Renderable.h}}
+	// Module:
+	// {Link:import Rendering.Caustic.PointCloud;{Rendering/Caustic/PointCloud.ixx}}
 	//**********************************************************************
 	class CPointCloud : public IPointCloud, public CRefCount
 	{

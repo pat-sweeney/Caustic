@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Base/Math/Ray.cpp","Ray.cpp");NDSummary.OnSummaryLoaded("File:Base/Math/Ray.cpp",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"]],[[138,0,1,"Functions","Functions"],[139,0,0,"Intersect","Intersect"],[140,0,0,"Intersect","Intersect(2)"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:Base/Math/Ray.cpp","Ray.cpp");NDSummary.OnSummaryLoaded("File:Base/Math/Ray.cpp",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"]],[[105,0,1,"Functions","Functions"],[106,0,0,"Intersect","Intersect"],[107,0,0,"Intersect","Intersect(2)"]]);

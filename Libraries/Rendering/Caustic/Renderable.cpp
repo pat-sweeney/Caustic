@@ -3,16 +3,23 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "Rendering\Caustic\Caustic.h"
+module;
 #include <d3d11.h>
+#include <atlbase.h>
+
+module Rendering.Caustic.Renderable;
 import Geometry.Mesh.Mesh;
 import Rendering.Caustic.Renderer;
 import Rendering.Caustic.Sampler;
-import Rendering.Caustic.Renderable;
 import Rendering.Caustic.RenderMaterial;
 import Rendering.Caustic.IRenderMaterial;
+import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IRenderCtx;
 import Rendering.Caustic.Shader;
+import Rendering.Caustic.IShader;
+import Rendering.Caustic.IShaderMgr;
 import Rendering.Caustic.CausticFactory;
+import Rendering.Caustic.RendererFlags;
 
 //**********************************************************************
 // File: Renderable.cpp
@@ -31,6 +38,9 @@ namespace Caustic
     // pFrontMaterial Material to apply to front facing polygons
     // pBackMaterial Material to apply to back facing polygons
     // mat - world matrix to apply
+    // 
+    // Module:
+    // {Link:import Rendering.Caustic.Renderable;{Rendering/Caustic/Renderable.cpp}}
     //**********************************************************************
     CRenderable::CRenderable(IRenderSubMesh *pSubMesh,
         IRenderMaterial *pFrontMaterial,

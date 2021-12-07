@@ -4,9 +4,6 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include <d3d11.h>
-#include <atlbase.h>
-#include "Rendering\Caustic\Caustic.h"
 #include <string>
 #include <atlbase.h>
 #include <d3d11.h>
@@ -21,6 +18,7 @@ import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Base.Math.BBox;
 import Base.Math.Matrix;
+import Rendering.Caustic.IShader;
 
 // A shader is a object that manages the vertex and pixel shader
 //
@@ -400,29 +398,5 @@ export namespace Caustic
         virtual void EndRender(IRenderer* pRenderer) override;
         virtual CRefObj<IShaderInfo> GetShaderInfo() override;
         virtual void Dispatch(IRenderer* pRenderer, int xThreads, int yThreads, int zThreads) override;
-    };
-
-    //**********************************************************************
-    // Class: CShaderMgr
-    // Defines our shader manager. Each shader is registered with this manager.
-    //
-    // Module:
-    // {Link:import Rendering.Caustic.Shader;{Rendering/Caustic/Shader.ixx}}
-    //**********************************************************************
-    class CShaderMgr : public IShaderMgr, public CRefCount
-    {
-        std::map<std::wstring, CRefObj<IShader>> m_shaders; // List of registered shaders
-    public:
-        //**********************************************************************
-        // IRefCount
-        //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
-
-        //**********************************************************************
-        // IShaderMgr
-        //**********************************************************************
-        virtual CRefObj<IShader> FindShader(const wchar_t *pShaderName) override;
-        virtual void RegisterShader(const wchar_t *pShaderName, IShader *pShader) override;
     };
 }

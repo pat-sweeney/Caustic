@@ -5,8 +5,10 @@
 //**********************************************************************
 #pragma once
 import Base.Core.Core;
+import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Cameras.CameraBase.ICamera;
+import Geometry.Mesh.IMesh;
 #include "Rendering\RenderGraph\IRenderGraphNode.h"
 #include "Rendering\RenderGraph\IRGNCompute.h"
 #include "Rendering\RenderGraph\IRGNMesh.h"

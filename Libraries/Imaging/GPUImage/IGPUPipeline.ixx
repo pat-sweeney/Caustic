@@ -4,13 +4,16 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "Rendering\Caustic\Caustic.h"
 #include <varargs.h>
 
 export module Imaging.Image.IGPUPipeline;
 import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
 import Imaging.Image.IImage;
 import Rendering.Caustic.Shader;
+import Rendering.Caustic.IShader;
+import Rendering.Caustic.ITexture;
 
 export namespace Caustic
 {

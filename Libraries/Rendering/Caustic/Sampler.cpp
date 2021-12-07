@@ -11,6 +11,7 @@ import Base.Core.Core;
 import Base.Core.Error;
 import Rendering.Caustic.CausticFactory;
 import Rendering.Caustic.ISampler;
+import Rendering.Caustic.IRenderer;
 
 namespace Caustic
 {

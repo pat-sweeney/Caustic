@@ -6,7 +6,8 @@
 #pragma once
 import Base.Core.Core;
 import Base.Core.RefCount;
-#include "Rendering\Caustic\Caustic.h"
+import Base.Core.IRefCount;
+import Rendering.Caustic.IRenderer;
 #include "IRenderGraphPin.h"
 #include "RenderGraphDiagnostics.h"
 #include <vector>

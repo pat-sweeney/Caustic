@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/Caustic.ixx","Caustic.ixx");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/Caustic.ixx",[["C/C++","C"]],[["Files","File"]],[[1238,0,0,"Caustic.h","Caustic.h"]]);

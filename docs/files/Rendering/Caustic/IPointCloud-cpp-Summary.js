@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/IPointCloud.cpp","IPointCloud.cpp");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/IPointCloud.cpp",[["C/C++","C"]],[["Files","File"]],[[1625,0,0,"IPointCloud.cpp","IPointCloud.cpp"]]);

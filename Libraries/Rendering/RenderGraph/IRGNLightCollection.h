@@ -5,7 +5,10 @@
 //**********************************************************************
 #pragma once
 import Base.Core.Core;
+import Base.Core.RefCount;
 import Base.Core.IRefCount;
+import Rendering.Caustic.ILight;
+import Rendering.Caustic.IPointLight;
 #include "ILightCollection.h"
 #include <vector>
 

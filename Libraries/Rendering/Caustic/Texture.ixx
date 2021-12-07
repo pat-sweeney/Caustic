@@ -4,7 +4,6 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-//#include "Rendering\Caustic\Caustic.h"
 #include <d3d11.h>
 #include <atlbase.h>
 
@@ -15,6 +14,8 @@ import Rendering.Caustic.ITexture;
 
 export namespace Caustic
 {
+    struct IRenderer;
+
     //**********************************************************************
     // Class: CTexture
     // Implementation of ITexture

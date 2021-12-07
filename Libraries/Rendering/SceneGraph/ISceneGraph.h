@@ -3,12 +3,25 @@
 // All Rights Reserved
 //**********************************************************************
 #pragma once
-#include "Rendering\Caustic\Caustic.h"
+#include <d3d11.h>
+#include <atlbase.h>
+#include <vector>
+#include <string>
 import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
 import Imaging.Color;
 import Base.Math.Matrix;
+import Base.Math.Ray;
 import Rendering.Caustic.PathTrace;
 import Rendering.Caustic.Shader;
+import Rendering.Caustic.IPointLight;
+import Rendering.Caustic.ILight;
+import Rendering.Caustic.IShader;
+import Rendering.Caustic.ITexture;
+import Rendering.Caustic.RendererFlags;
+import Geometry.Mesh.IMaterialAttrib;
+import Geometry.Mesh.IMesh;
 
 namespace Caustic
 {
@@ -98,7 +111,7 @@ namespace Caustic
 		// Property: m_spCurrentShader
 		// Defines the current shader
 		//**********************************************************************
-		CRefObj<Caustic::IShader> m_spCurrentShader;
+		CRefObj<IShader> m_spCurrentShader;
 	};
 
 	//**********************************************************************

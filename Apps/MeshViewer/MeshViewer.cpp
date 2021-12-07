@@ -4,9 +4,10 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "stdafx.h"
+#include <d3d11.h>
+#include <atlbase.h>
 #include "MeshViewer.h"
 #include "Rendering\RenderWindow\IRenderWindow.h"
-#include "Rendering\Caustic\ICausticFactory.h"
 #include "Rendering\SceneGraph\ISceneFactory.h"
 #include <Windows.h>
 #include <commdlg.h>
@@ -19,6 +20,9 @@ import Geometry.MeshImport;
 import Geometry.Mesh.Mesh;
 import Rendering.Caustic.ISpotLight;
 import Rendering.Caustic.ISampler;
+import Rendering.Caustic.ICausticFactory;
+import Rendering.Caustic.IShader;
+import Rendering.Caustic.IShaderMgr;
 
 #define MAX_LOADSTRING 100
 

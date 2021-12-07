@@ -3,14 +3,23 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "Rendering\Caustic\Caustic.h"
-#include <d3d12.h>
+module;
+#include <d3d11.h>
+#include <atlbase.h>
+#include <float.h>
+
+module Rendering.Caustic.RenderMesh;
 import Base.Core.Core;
 import Base.Core.Error;
 import Rendering.Caustic.ShaderInfo;
-import Rendering.Caustic.RenderMesh;
 import Rendering.Caustic.ConstructBuffer;
 import Rendering.Caustic.IRenderMaterial;
+import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IRenderCtx;
+import Rendering.Caustic.RendererFlags;
+import Rendering.Caustic.IShaderMgr;
+import Rendering.Caustic.IShader;
+import Rendering.Caustic.ICausticFactory;
 
 namespace Caustic
 {

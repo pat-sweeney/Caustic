@@ -13,6 +13,7 @@ import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Geometry.Mesh.MaterialAttrib;
 import Rendering.Caustic.IRenderMaterial;
+import Rendering.Caustic.IRenderCtx;
 
 namespace Caustic
 {

@@ -16,6 +16,7 @@ import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Base.Math.Vector;
 import Rendering.Caustic.IRenderMaterial;
+import Rendering.Caustic.ICausticFactory;
 
 namespace Caustic
 {

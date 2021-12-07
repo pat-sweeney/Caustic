@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CQuadVertex","CQuadVertex");NDSummary.OnSummaryLoaded("CClass:CQuadVertex",[["C/C++","C"]],[["Classes","Class"]],[[814,0,0,"CQuadVertex"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CQuadVertex","CQuadVertex");NDSummary.OnSummaryLoaded("CClass:CQuadVertex",[["C/C++","C"]],[["Classes","Class"]],[[843,0,0,"CQuadVertex"]]);

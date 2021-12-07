@@ -3,28 +3,36 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
-#include "Rendering\Caustic\Caustic.h"
+module;
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <mfapi.h>
 #include <mfidl.h>
 #include <mfreadwrite.h>
 #include <mfcaptureengine.h>
+#include <string>
+#include <memory>
+
+module Rendering.Caustic.CausticFactory;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
+import Base.Core.IRefCount;
 import Imaging.Image.IImage;
 import Rendering.Caustic.Renderer;
 import Rendering.Caustic.ShaderInfo;
 import Rendering.Caustic.RenderMesh;
 import Rendering.Caustic.Shader;
 import Rendering.Caustic.CausticFactory;
+import Rendering.Caustic.ICausticFactory;
 import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.ISampler;
 import Rendering.Caustic.VideoTexture;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.DesktopTexture;
+import Rendering.Caustic.IRendererMarshaller;
+import Rendering.Caustic.IRenderMesh;
+import Rendering.Caustic.ICamera;
 import Geometry.Mesh.MaterialAttrib;
 
 //**********************************************************************
@@ -34,20 +42,6 @@ import Geometry.Mesh.MaterialAttrib;
 
 namespace Caustic
 {
-    CRefObj<ICausticFactory> CCausticFactory::factory;
-
-    //**********************************************************************
-    // Function: CreateCausticFactory
-    // Global function for creating the main Caustic factory.
-    //
-    // Returns:
-    // ppFactory - Returns the newly created Caustic factory.
-    //**********************************************************************
-    CRefObj<ICausticFactory> CreateCausticFactory()
-	{
-		return CRefObj<ICausticFactory>(new CCausticFactory());
-	}
-
     static bool setupRequired = true;
 
     //**********************************************************************

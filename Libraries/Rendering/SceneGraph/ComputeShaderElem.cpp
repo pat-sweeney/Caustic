@@ -4,9 +4,9 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "stdafx.h"
-#include "Rendering\SceneGraph\ISceneGraph.h"
-#include "ComputeShaderElem.h"
 #include <string>
+#include <any>
+#include "ComputeShaderElem.h"
 import Rendering.Caustic.CausticFactory;
 
 namespace Caustic

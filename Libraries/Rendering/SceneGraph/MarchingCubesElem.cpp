@@ -9,6 +9,15 @@
 #include <d3d11.h>
 #include <atlbase.h>
 #include <d3d11_4.h>
+#include <any>
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Rendering.Caustic.IShader;
+import Rendering.Caustic.IShaderMgr;
+import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IRenderCtx;
+import Rendering.Caustic.ICausticFactory;
 
 namespace Caustic
 {

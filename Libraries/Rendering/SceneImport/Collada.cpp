@@ -5,7 +5,6 @@
 //**********************************************************************
 import Base.Core.Core;
 import Base.Core.Error;
-#include "Rendering\Caustic\Caustic.h"
 #include "Rendering\SceneGraph\SceneGraph.h"
 #include "Rendering\SceneGraph\SceneFactory.h"
 import Rendering.SceneImport.Collada;

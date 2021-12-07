@@ -6,7 +6,6 @@
 #pragma once
 import Base.Core.Core;
 import Base.Core.RefCount;
-#include "Rendering\Caustic\Caustic.h"
 #include "Rendering\RenderGraph\IRenderGraphNode.h"
 #include <vector>
 #include <string>

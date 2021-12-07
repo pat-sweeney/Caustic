@@ -11,6 +11,14 @@
 #include <string>
 #include <functional>
 #include <d3d11_4.h>
+#include <atlbase.h>
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Base.Math.BBox;
+import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IRenderCtx;
+import Rendering.Caustic.ILight;
 
 namespace Caustic
 {

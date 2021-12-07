@@ -3,16 +3,22 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+module;
 #include <d3d11.h>
 #include <string>
-#include "Rendering\Caustic\IRenderMesh.h"
-#include "Rendering\Caustic\IShaderInfo.h"
-#include "Rendering\Caustic\ICausticFactory.h"
+#include <atlbase.h>
+#include <memory>
+#include <vector>
+
+module Rendering.Caustic.BuildRenderMesh;
 import Base.Core.Core;
 import Base.Core.Error;
 import Geometry.Mesh.RenderTypes;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.CausticFactory;
+import Rendering.Caustic.IRenderMesh;
+import Rendering.Caustic.IShaderInfo;
+import Rendering.Caustic.ICausticFactory;
 
 namespace Caustic
 {
@@ -236,7 +242,7 @@ namespace Caustic
 		BuildVertexBuffer(pRenderer, verts, spShaderInfo, vertexReferenced, &md);
 		BuildIndexBuffer(pRenderer, faces, verts, vertexReferenced, &md);
 		spRenderSubMesh->SetMeshData(md);
-		//// spRenderSubMesh->SetShader(pShader);
+////		spRenderSubMesh->SetShader(pShader);
 		return spRenderSubMesh;
 	}
 

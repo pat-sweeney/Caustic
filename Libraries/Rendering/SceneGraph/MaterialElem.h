@@ -5,7 +5,6 @@
 //**********************************************************************
 #pragma once
 #include "SceneGraph.h"
-#include "Rendering\Caustic\Caustic.h"
 #include "GroupElem.h"
 
 namespace Caustic

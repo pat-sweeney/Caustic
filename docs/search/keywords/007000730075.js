@@ -1,1 +1,1 @@
-﻿NDSearch.OnPrefixDataLoaded("psu",["Function"],[["PSUsesVariable",,[["IShaderInfo",,,,0,"File:Rendering/Caustic/IShaderInfo.h:IShaderInfo.PSUsesVariable","CClass:IShaderInfo:PSUsesVariable"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("psu",["Function"],[["PSUsesVariable",,[["IShaderInfo",,,,0,"File:Rendering/Caustic/IShaderInfo.ixx:IShaderInfo.PSUsesVariable","CClass:IShaderInfo:PSUsesVariable"]]]]);

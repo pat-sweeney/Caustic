@@ -3,17 +3,15 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-module;
-#include "Rendering\Caustic\Caustic.h"
-
 export module Rendering.Caustic.PointLight;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
 import Rendering.Caustic.Light;
+import Rendering.Caustic.IPointLight;
 
 //**********************************************************************
-// File: PointLight.h
+// File: PointLight.ixx
 // Contains declaration for CPointLight
 //**********************************************************************
 
@@ -23,8 +21,8 @@ export namespace Caustic
     // Class: CPointLight
     // Implementation of IPointLight
     //
-    // Header:
-    // {Link:#include "Rendering/Caustic/PointLight.h"{Rendering/Caustic/PointLight.h}}
+    // Module:
+    // {Link:import Rendering.Caustic.PointLight;{Rendering/Caustic/PointLight.ixx}}
     //**********************************************************************
     class CPointLight : public CLightBase, public IPointLight, public CRefCount
     {

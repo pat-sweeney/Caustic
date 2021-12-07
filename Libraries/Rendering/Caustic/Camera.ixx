@@ -4,16 +4,16 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "Rendering\Caustic\Caustic.h"
 #include <d3d11.h>
 #include <DirectXMath.h>
 
 export module Rendering.Caustic.Camera;
 import Base.Core.Core;
 import Base.Core.RefCount;
+import Rendering.Caustic.ICamera;
 
 //**********************************************************************
-// File: Camera.h
+// File: Camera.ixx
 // Contains the declaration for the <CCamera> class.
 //**********************************************************************
 
@@ -96,4 +96,6 @@ export namespace Caustic
         virtual void Load(IStream *pStream) override;
         virtual void Store(IStream *pStream) override;
     };
+
+    CRefObj<ICamera> CreateCameraInternal(bool leftHanded);
 };

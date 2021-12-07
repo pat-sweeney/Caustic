@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/RendererFlags.ixx","RendererFlags.ixx");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/RendererFlags.ixx",[["C/C++","C"]],[["Files","File"],["Groups","Group"]],[[1629,0,0,"RendererFlags.ixx","RendererFlags.ixx"],[809,0,1,"Pass Flags","Pass_Flags"],[1630,0,1,"Shadow map selection","Shadow_map_selection"]]);

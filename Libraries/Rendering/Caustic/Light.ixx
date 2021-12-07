@@ -3,17 +3,16 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-module;
-#include "Rendering\Caustic\Caustic.h"
-
 export module Rendering.Caustic.Light;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
+import Base.Math.Vector;
+import Imaging.Color;
 
 //**********************************************************************
-// File: Light.h
+// File: Light.ixx
 // Contains declaration for CLightBase
 //**********************************************************************
 
@@ -23,8 +22,8 @@ export namespace Caustic
     // Class: CLightBase
     // Contains the implementation of stuff common to all lights
     //
-    // Header:
-    // {Link:#include "Rendering/Caustic/Light.h"{Rendering/Caustic/Light.h}}
+    // Module:
+    // {Link:import Rendering.Caustic.Light;{Rendering/Caustic/Light.ixx}}
     //**********************************************************************
     class CLightBase
     {

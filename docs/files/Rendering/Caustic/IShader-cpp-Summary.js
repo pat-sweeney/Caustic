@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/IShader.cpp","IShader.cpp");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/IShader.cpp",[["C/C++","C"]],[["Files","File"],["Functions","Function"],["Groups","Group"]],[[1620,0,0,"IShader.cpp","IShader.cpp"],[1621,0,2,"Functions","Functions"],[1186,0,1,"CreateGPUBuffer","CreateGPUBuffer"]]);

@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:LexToken","LexToken");NDSummary.OnSummaryLoaded("CClass:LexToken",[["C/C++","C"]],[["Structs","Struct"]],[[739,0,0,"LexToken"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:LexToken","LexToken");NDSummary.OnSummaryLoaded("CClass:LexToken",[["C/C++","C"]],[["Structs","Struct"]],[[777,0,0,"LexToken"]]);

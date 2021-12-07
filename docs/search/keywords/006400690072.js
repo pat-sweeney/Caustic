@@ -1,1 +1,1 @@
-﻿NDSearch.OnPrefixDataLoaded("dir",["File"],[["DirectionalLight",,[[,"DirectionalLight.cpp",,,0,"File:Rendering/Caustic/DirectionalLight.cpp:DirectionalLight.cpp"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("dir",["File"],[["DirectionalLight",,[[,"DirectionalLight.cpp",,,0,"File:Rendering/Caustic/DirectionalLight.cpp:DirectionalLight.cpp"],[,"DirectionalLight.ixx",,,0,"File:Rendering/Caustic/DirectionalLight.ixx:DirectionalLight.ixx"]]]]);
