@@ -3,11 +3,13 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
+module;
 #include "SceneGraph.h"
 #include "ISceneGraph.h"
 #include <d3d11.h>
 #include <atlbase.h>
+
+export module Rendering.SceneGraph.CubeElem;
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
@@ -18,12 +20,8 @@ import Geometry.Mesh.MeshFuncs;
 import Rendering.Caustic.IRenderCtx;
 import Rendering.Caustic.IRenderer;
 
-
-namespace Caustic
+export namespace Caustic
 {
-    CRefObj<ISceneGroupElem> CreateGroupElem();
-    CRefObj<ISceneMeshElem> CreateMeshElem();
-    
     //**********************************************************************
     // Class: CSceneCubeElem
     // Defines a cube element in our scene graph
