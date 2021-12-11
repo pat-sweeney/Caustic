@@ -3,14 +3,16 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+module;
 #include "Rendering\SceneGraph\ISceneGraph.h"
 #include "SceneGraph.h"
 #include "SceneFactory.h"
-#include "LightCollectionElem.h"
 #include <string>
 #include <functional>
 #include <d3d11_4.h>
 #include <atlbase.h>
+
+module Rendering.SceneGraph.LightCollectionElem;
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;

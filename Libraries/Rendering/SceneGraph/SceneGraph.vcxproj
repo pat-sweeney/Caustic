@@ -85,7 +85,6 @@
     <ClInclude Include="ComputeShaderElem.h" />
     <ClInclude Include="GroupElem.h" />
     <ClInclude Include="ISceneFactory.h" />
-    <ClInclude Include="LightCollectionElem.h" />
     <ClInclude Include="SceneFactory.h" />
     <ClInclude Include="SceneGraph.h" />
     <ClInclude Include="SceneGraphImpl.h" />
@@ -100,6 +99,7 @@
     <ClCompile Include="CylinderElem.ixx" />
     <ClCompile Include="GroupElem.cpp" />
     <ClCompile Include="LightCollectionElem.cpp" />
+    <ClCompile Include="LightCollectionElem.ixx" />
     <ClCompile Include="LineElem.cpp" />
     <ClCompile Include="LineElem.ixx" />
     <ClCompile Include="MarchingCubesElem.cpp" />
