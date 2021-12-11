@@ -85,11 +85,9 @@
     <ClInclude Include="ComputeShaderElem.h" />
     <ClInclude Include="CubeElem.h" />
     <ClInclude Include="CustomRenderElem.h" />
-    <ClInclude Include="CylinderElem.h" />
     <ClInclude Include="GroupElem.h" />
     <ClInclude Include="ISceneFactory.h" />
     <ClInclude Include="LightCollectionElem.h" />
-    <ClInclude Include="LineElem.h" />
     <ClInclude Include="MarchingCubesElem.h" />
     <ClInclude Include="MaterialElem.h" />
     <ClInclude Include="MeshElem.h" />
@@ -103,9 +101,11 @@
     <ClCompile Include="CubeElem.cpp" />
     <ClCompile Include="CustomRenderElem.cpp" />
     <ClCompile Include="CylinderElem.cpp" />
+    <ClCompile Include="CylinderElem.ixx" />
     <ClCompile Include="GroupElem.cpp" />
     <ClCompile Include="LightCollectionElem.cpp" />
     <ClCompile Include="LineElem.cpp" />
+    <ClCompile Include="LineElem.ixx" />
     <ClCompile Include="MarchingCubesElem.cpp" />
     <ClCompile Include="MaterialElem.cpp" />
     <ClCompile Include="MeshElem.cpp" />

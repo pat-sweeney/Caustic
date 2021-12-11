@@ -3,11 +3,13 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
+module;
 #include "SceneGraph.h"
 #include "ISceneGraph.h"
 #include <d3d11.h>
 #include <atlbase.h>
+
+export module Rendering.SceneGraph.LineElem;
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
@@ -17,7 +19,7 @@ import Geometry.Mesh.IMaterialAttrib;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IRenderCtx;
 
-namespace Caustic
+export namespace Caustic
 {
     //**********************************************************************
     // Class: CSceneLineElem

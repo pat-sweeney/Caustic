@@ -46,13 +46,7 @@
     <ClInclude Include="Overlay2D.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="LineElem.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="CubeElem.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CylinderElem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="MarchingCubesElem.h">
@@ -103,6 +97,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SphereElem.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CylinderElem.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LineElem.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

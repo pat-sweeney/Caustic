@@ -4,7 +4,11 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "Rendering\SceneGraph\ISceneGraph.h"
-#include "LineElem.h"
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Base.Math.Vector;
+import Rendering.SceneGraph.LineElem;
 import Rendering.Caustic.CausticFactory;
 
 namespace Caustic
