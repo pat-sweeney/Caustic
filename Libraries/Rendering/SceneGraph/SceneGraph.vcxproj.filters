@@ -28,9 +28,6 @@
     <ClInclude Include="SceneFactory.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="CustomRenderElem.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="ComputeShaderElem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -103,6 +100,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MarchingCubesElem.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomRenderElem.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

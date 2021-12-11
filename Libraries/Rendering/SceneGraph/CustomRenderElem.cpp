@@ -3,10 +3,18 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+module;
 #include "Rendering\SceneGraph\ISceneGraph.h"
-#include "CustomRenderElem.h"
 #include <string>
+#include <functional>
+
+module Rendering.SceneGraph.CustomRenderElem;
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
 import Rendering.Caustic.CausticFactory;
+import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IRenderCtx;
 
 namespace Caustic
 {
