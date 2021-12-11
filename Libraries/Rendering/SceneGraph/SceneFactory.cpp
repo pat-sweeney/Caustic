@@ -4,7 +4,6 @@
 // See file LICENSE for details.
 //**********************************************************************
 #pragma once
-#include "stdafx.h"
 #include "ISceneFactory.h"
 #include "SceneFactory.h"
 import Base.Core.Core;

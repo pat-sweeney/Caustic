@@ -3,7 +3,6 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "stdafx.h"
 #include <string>
 #include <any>
 #include "ComputeShaderElem.h"

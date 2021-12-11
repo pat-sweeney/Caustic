@@ -3,7 +3,6 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "stdafx.h"
 #include "Rendering\SceneGraph\ISceneGraph.h"
 #include "LineElem.h"
 import Rendering.Caustic.CausticFactory;

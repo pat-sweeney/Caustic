@@ -11,6 +11,9 @@
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
+import Base.Core.ISerialize;
+import Base.Math.Vector;
+import Base.Math.Ray;
 import Geometry.Mesh.MeshFuncs;
 import Rendering.Caustic.IRenderCtx;
 import Rendering.Caustic.IRenderer;

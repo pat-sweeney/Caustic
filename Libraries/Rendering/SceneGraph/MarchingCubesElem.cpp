@@ -3,7 +3,6 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "stdafx.h"
 #include "SceneGraph.h"
 #include "MarchingCubesElem.h"
 #include <d3d11.h>

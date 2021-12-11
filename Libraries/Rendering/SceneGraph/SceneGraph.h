@@ -18,6 +18,9 @@ import Rendering.Caustic.IRenderer;
 
 namespace Caustic
 {
+    CRefObj<ISceneGroupElem> CreateGroupElem();
+    CRefObj<ISceneMeshElem> CreateMeshElem();
+
     //**********************************************************************
     // Class: CSceneElem
 	// Defines the base class for all our scene graph elements

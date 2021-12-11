@@ -3,9 +3,12 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "stdafx.h"
 #include "Rendering\SceneGraph\ISceneGraph.h"
-#include "SphereElem.h"
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Base.Math.Vector;
+import Rendering.SceneGraph.SphereElem;
 import Rendering.Caustic.CausticFactory;
 
 namespace Caustic

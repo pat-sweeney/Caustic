@@ -61,7 +61,7 @@
       <Command>"G:\GitHub\Caustic\External\NaturalDocs\CLI\bin\Release\NaturalDocs.exe" $(CausticRoot)\docs</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>call $(CausticRoot)\DocumentOverrides\FinalizeDocs.cmd $(Configuration)</Command>
+      <Command>call $(CausticRoot)\DocumentOverrides\FinalizeDocs.cmd $(Platform)\$(Configuration)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -75,7 +75,7 @@
       <Command>"G:\GitHub\Caustic\External\NaturalDocs\CLI\bin\Release\NaturalDocs.exe" $(CausticRoot)\docs</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>call $(CausticRoot)\DocumentOverrides\FinalizeDocs.cmd $(Configuration)</Command>
+      <Command>call $(CausticRoot)\DocumentOverrides\FinalizeDocs.cmd $(Platform)\$(Configuration)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
