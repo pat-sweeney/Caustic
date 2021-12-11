@@ -82,7 +82,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="GroupElem.h" />
     <ClInclude Include="ISceneFactory.h" />
     <ClInclude Include="SceneFactory.h" />
     <ClInclude Include="SceneGraph.h" />
@@ -98,6 +97,7 @@
     <ClCompile Include="CylinderElem.cpp" />
     <ClCompile Include="CylinderElem.ixx" />
     <ClCompile Include="GroupElem.cpp" />
+    <ClCompile Include="GroupElem.ixx" />
     <ClCompile Include="LightCollectionElem.cpp" />
     <ClCompile Include="LightCollectionElem.ixx" />
     <ClCompile Include="LineElem.cpp" />

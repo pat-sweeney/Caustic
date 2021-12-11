@@ -5,7 +5,6 @@
 //**********************************************************************
 module;
 #include "SceneGraph.h"
-#include "GroupElem.h"
 #include <string>
 
 export module Rendering.SceneGraph.MaterialElem;
@@ -16,6 +15,7 @@ import Base.Core.ISerialize;
 import Base.Math.Vector;
 import Base.Math.Ray;
 import Rendering.Caustic.IShader;
+import Rendering.SceneGraph.GroupElem;
 import Geometry.Mesh.IMaterialAttrib;
 
 export namespace Caustic

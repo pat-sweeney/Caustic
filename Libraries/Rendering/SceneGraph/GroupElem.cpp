@@ -3,18 +3,28 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+module;
 #include "Rendering\SceneGraph\ISceneGraph.h"
 #include "SceneGraph.h"
 #include "SceneFactory.h"
-#include "GroupElem.h"
 #include <string>
 #include <functional>
 #include <d3d11_4.h>
+
+module Rendering.SceneGraph.GroupElem;
 import Base.Core.Core;
+import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
-import Rendering.Caustic.IRenderCtx;
+import Base.Core.ISerialize;
+import Base.Math.Vector;
+import Base.Math.Ray;
+import Base.Math.Vector;
+import Base.Math.BBox;
+import Geometry.Mesh.IMaterialAttrib;
+import Rendering.Caustic.IShader;
 import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IRenderCtx;
 
 namespace Caustic
 {

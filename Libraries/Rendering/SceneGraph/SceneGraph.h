@@ -68,7 +68,6 @@ namespace Caustic
         uint32 GetInPass() { return m_passes; }
     };
 }
-#include "GroupElem.h"
 
 namespace Caustic
 {

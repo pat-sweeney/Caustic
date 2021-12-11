@@ -21,6 +21,7 @@ import Geometry.Mesh.IMaterialAttrib;
 import Rendering.Caustic.ILight;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IRenderCtx;
+import Rendering.SceneGraph.GroupElem;
 
 export namespace Caustic
 {
