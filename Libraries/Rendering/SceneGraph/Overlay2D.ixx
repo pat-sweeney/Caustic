@@ -3,12 +3,14 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
+module;
 #include "SceneGraph.h"
 #include <functional>
+
+export module Rendering.SceneGraph.Overlay2D;
 import Rendering.Caustic.ISampler;
 
-namespace Caustic
+export namespace Caustic
 {
 	//**********************************************************************
 	// Class: CSceneOverlay2DElem

@@ -43,9 +43,6 @@
     <ClInclude Include="LightCollectionElem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Overlay2D.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="MarchingCubesElem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -103,6 +100,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CubeElem.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Overlay2D.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
