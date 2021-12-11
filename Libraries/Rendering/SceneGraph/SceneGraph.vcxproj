@@ -82,7 +82,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="ComputeShaderElem.h" />
     <ClInclude Include="GroupElem.h" />
     <ClInclude Include="ISceneFactory.h" />
     <ClInclude Include="SceneFactory.h" />
@@ -91,6 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ComputeShaderElem.cpp" />
+    <ClCompile Include="ComputeShaderElem.ixx" />
     <ClCompile Include="CubeElem.cpp" />
     <ClCompile Include="CubeElem.ixx" />
     <ClCompile Include="CustomRenderElem.cpp" />

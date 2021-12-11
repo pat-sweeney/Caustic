@@ -28,9 +28,6 @@
     <ClInclude Include="SceneFactory.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="ComputeShaderElem.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SceneGraph.cpp">
@@ -103,6 +100,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LightCollectionElem.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputeShaderElem.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

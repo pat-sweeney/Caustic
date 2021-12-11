@@ -3,18 +3,27 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
+module;
 #include <d3d11.h>
 #include <atlbase.h>
 #include "SceneGraph.h"
+
+export module Rendering.SceneGraph.ComputeShaderElem;
 import Base.Core.Core;
+import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
-import Rendering.Caustic.IRenderCtx;
-import Rendering.Caustic.IRenderer;
+import Base.Core.ISerialize;
+import Base.Math.Vector;
+import Base.Math.Ray;
+import Base.Math.Vector;
+import Base.Math.BBox;
+import Geometry.Mesh.IMaterialAttrib;
 import Rendering.Caustic.IShader;
+import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IRenderCtx;
 
-namespace Caustic
+export namespace Caustic
 {
     //**********************************************************************
     // Class: CSceneComputeShaderElem

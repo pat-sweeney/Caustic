@@ -3,9 +3,20 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+module;
 #include <string>
 #include <any>
-#include "ComputeShaderElem.h"
+#include <d3d11.h>
+#include <atlbase.h>
+#include "Rendering\SceneGraph\SceneGraph.h"
+
+module Rendering.SceneGraph.ComputeShaderElem;
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Base.Math.BBox;
+import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IRenderCtx;
 import Rendering.Caustic.CausticFactory;
 
 namespace Caustic
