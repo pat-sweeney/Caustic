@@ -3,12 +3,25 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
+module;
 #include "SceneGraph.h"
 #include <d3d11.h>
 #include <atlbase.h>
+#include <functional>
 
-namespace Caustic
+export module Rendering.SceneGraph.MarchingCubesElem;
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Base.Core.ISerialize;
+import Base.Math.Vector;
+import Base.Math.Ray;
+import Rendering.Caustic.IShader;
+import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IRenderCtx;
+
+export namespace Caustic
 {
     //**********************************************************************
     // Class: CSceneMarchingCubesElem

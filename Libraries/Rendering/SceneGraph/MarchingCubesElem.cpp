@@ -4,7 +4,6 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "SceneGraph.h"
-#include "MarchingCubesElem.h"
 #include <d3d11.h>
 #include <atlbase.h>
 #include <d3d11_4.h>
@@ -17,6 +16,7 @@ import Rendering.Caustic.IShaderMgr;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IRenderCtx;
 import Rendering.Caustic.ICausticFactory;
+import Rendering.SceneGraph.MarchingCubesElem;
 
 namespace Caustic
 {

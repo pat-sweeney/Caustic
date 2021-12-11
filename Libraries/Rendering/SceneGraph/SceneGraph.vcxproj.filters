@@ -37,9 +37,6 @@
     <ClInclude Include="LightCollectionElem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="MarchingCubesElem.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SceneGraph.cpp">
@@ -103,6 +100,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MaterialElem.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MarchingCubesElem.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
