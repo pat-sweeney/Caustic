@@ -89,7 +89,6 @@
     <ClInclude Include="LightCollectionElem.h" />
     <ClInclude Include="MarchingCubesElem.h" />
     <ClInclude Include="MaterialElem.h" />
-    <ClInclude Include="MeshElem.h" />
     <ClInclude Include="SceneFactory.h" />
     <ClInclude Include="SceneGraph.h" />
     <ClInclude Include="SceneGraphImpl.h" />
@@ -108,6 +107,7 @@
     <ClCompile Include="MarchingCubesElem.cpp" />
     <ClCompile Include="MaterialElem.cpp" />
     <ClCompile Include="MeshElem.cpp" />
+    <ClCompile Include="MeshElem.ixx" />
     <ClCompile Include="Overlay2D.cpp" />
     <ClCompile Include="Overlay2D.ixx" />
     <ClCompile Include="SceneFactory.cpp" />

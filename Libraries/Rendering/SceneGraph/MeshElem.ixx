@@ -3,12 +3,21 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
+module;
 #include "SceneGraph.h"
 #include <d3d11.h>
 #include <atlbase.h>
 
-namespace Caustic
+export module Rendering.SceneGraph.MeshElem;
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Base.Core.ISerialize;
+import Rendering.Caustic.IRenderMesh;
+import Rendering.Caustic.IShader;
+import Geometry.Mesh.IMesh;
+
+export namespace Caustic
 {
 	//**********************************************************************
 	// Class: CSceneMeshElem

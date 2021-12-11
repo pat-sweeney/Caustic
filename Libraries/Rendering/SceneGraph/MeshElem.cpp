@@ -4,7 +4,6 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "Rendering\SceneGraph\ISceneGraph.h"
-#include "MeshElem.h"
 #include <string>
 #include <d3d11_4.h>
 import Base.Core.Core;
@@ -17,6 +16,7 @@ import Rendering.Caustic.IRenderCtx;
 import Rendering.Caustic.IRenderMesh;
 import Rendering.Caustic.IShader;
 import Rendering.Caustic.IShaderMgr;
+import Rendering.SceneGraph.MeshElem;
 import Geometry.Mesh.MeshFuncs;
 
 namespace Caustic
