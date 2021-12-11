@@ -4,8 +4,8 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "Rendering\SceneGraph\ISceneGraph.h"
-#include "MaterialElem.h"
 #include <string>
+#include <memory>
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
@@ -13,6 +13,7 @@ import Geometry.Mesh.Mesh;
 import Geometry.Mesh.MaterialAttrib;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IRenderCtx;
+import Rendering.SceneGraph.MaterialElem;
 
 namespace Caustic
 {

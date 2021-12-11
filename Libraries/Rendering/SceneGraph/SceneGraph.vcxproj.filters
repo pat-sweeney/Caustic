@@ -19,9 +19,6 @@
     <ClInclude Include="GroupElem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="MaterialElem.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="SceneGraph.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -103,6 +100,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MeshElem.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialElem.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

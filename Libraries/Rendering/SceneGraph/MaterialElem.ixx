@@ -3,11 +3,22 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
+module;
 #include "SceneGraph.h"
 #include "GroupElem.h"
+#include <string>
 
-namespace Caustic
+export module Rendering.SceneGraph.MaterialElem;
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Base.Core.ISerialize;
+import Base.Math.Vector;
+import Base.Math.Ray;
+import Rendering.Caustic.IShader;
+import Geometry.Mesh.IMaterialAttrib;
+
+export namespace Caustic
 {
 	//**********************************************************************
 	// Class: CSceneMaterialElem
