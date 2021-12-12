@@ -83,7 +83,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ISceneFactory.h" />
-    <ClInclude Include="SceneFactory.h" />
     <ClInclude Include="SceneGraph.h" />
     <ClInclude Include="SceneGraphImpl.h" />
   </ItemGroup>
@@ -111,6 +110,7 @@
     <ClCompile Include="Overlay2D.cpp" />
     <ClCompile Include="Overlay2D.ixx" />
     <ClCompile Include="SceneFactory.cpp" />
+    <ClCompile Include="SceneFactory.ixx" />
     <ClCompile Include="SceneGraph.cpp" />
     <ClCompile Include="SphereElem.cpp" />
     <ClCompile Include="SphereElem.ixx" />

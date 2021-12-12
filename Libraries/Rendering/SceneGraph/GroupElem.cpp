@@ -5,8 +5,8 @@
 //**********************************************************************
 module;
 #include "Rendering\SceneGraph\ISceneGraph.h"
+#include "ISceneFactory.h"
 #include "SceneGraph.h"
-#include "SceneFactory.h"
 #include <string>
 #include <functional>
 #include <d3d11_4.h>
@@ -25,6 +25,7 @@ import Geometry.Mesh.IMaterialAttrib;
 import Rendering.Caustic.IShader;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IRenderCtx;
+import Rendering.SceneGraph.SceneFactory;
 
 namespace Caustic
 {

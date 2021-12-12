@@ -4,7 +4,6 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "Rendering\SceneGraph\ISceneGraph.h"
-#include "SceneFactory.h"
 #include <any>
 import Base.Core.Core;
 import Base.Core.Error;
@@ -16,6 +15,7 @@ import Rendering.Caustic.IShaderMgr;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IRenderCtx;
 import Rendering.Caustic.ICausticFactory;
+import Rendering.SceneGraph.SceneFactory;
 import Rendering.SceneGraph.Overlay2D;
 
 namespace Caustic

@@ -5,13 +5,13 @@
 //**********************************************************************
 #include "Rendering\SceneGraph\ISceneGraph.h"
 #include "SceneGraph.h"
-#include "SceneFactory.h"
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Rendering.Caustic.ICamera;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IRenderCtx;
+import Rendering.SceneGraph.SceneFactory;
 import Imaging.Image.IImage;
 import Imaging.Image.ImageIter;
 

@@ -3,10 +3,10 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+#include "Rendering\SceneGraph\SceneGraph.h"
 import Base.Core.Core;
 import Base.Core.Error;
-#include "Rendering\SceneGraph\SceneGraph.h"
-#include "Rendering\SceneGraph\SceneFactory.h"
+import Rendering.SceneGraph.SceneFactory;
 import Rendering.SceneImport.Collada;
 
 namespace Caustic

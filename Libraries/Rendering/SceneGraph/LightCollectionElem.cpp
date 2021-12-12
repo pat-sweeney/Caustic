@@ -6,7 +6,6 @@
 module;
 #include "Rendering\SceneGraph\ISceneGraph.h"
 #include "SceneGraph.h"
-#include "SceneFactory.h"
 #include <string>
 #include <functional>
 #include <d3d11_4.h>
@@ -20,6 +19,7 @@ import Base.Math.BBox;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IRenderCtx;
 import Rendering.Caustic.ILight;
+import Rendering.SceneGraph.SceneFactory;
 
 namespace Caustic
 {

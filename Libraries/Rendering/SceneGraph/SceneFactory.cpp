@@ -3,9 +3,10 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
+module;
 #include "ISceneFactory.h"
-#include "SceneFactory.h"
+
+module Rendering.SceneGraph.SceneFactory;
 import Base.Core.Core;
 import Rendering.Caustic.Shader;
 import Base.Math.Matrix;

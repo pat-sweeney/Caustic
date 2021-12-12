@@ -3,14 +3,20 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
+module;
 #include "ISceneFactory.h"
 #include "ISceneGraph.h"
+#include <functional>
+
+export module Rendering.SceneGraph.SceneFactory;
 import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
 import Rendering.Caustic.Shader;
 import Base.Math.Matrix;
+import Base.Math.Vector;
 
-namespace Caustic
+export namespace Caustic
 {
 	class CSceneFactory : public ISceneFactory, public CRefCount
 	{
