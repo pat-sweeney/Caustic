@@ -4,14 +4,12 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "Rendering\SceneGraph\ISceneGraph.h"
-#include "SceneGraph.h"
 #include <string>
 #include <functional>
 #include <d3d11_4.h>
 #include <atlbase.h>
 
-module Rendering.SceneGraph.LightCollectionElem;
+module Rendering.SceneGraph.SceneLightCollectionElem;
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
@@ -20,14 +18,10 @@ import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IRenderCtx;
 import Rendering.Caustic.ILight;
 import Rendering.SceneGraph.SceneFactory;
+import Rendering.SceneGraph.ISceneLightCollectionElem;
 
 namespace Caustic
 {
-    CRefObj<ISceneLightCollectionElem> CreateLightCollectionElem()
-    {
-        return CRefObj<ISceneLightCollectionElem>(new CSceneLightCollectionElem());
-    }
-
     uint32 CSceneLightCollectionElem::NumberLights()
     {
         return (uint32)m_lights.size();

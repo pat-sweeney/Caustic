@@ -7,16 +7,16 @@
 
 #include <d3d11.h>
 #include "Rendering\RenderWindow\IRenderWindow.h"
-#include "Rendering\SceneGraph\ISceneGraph.h"
-#include "Rendering\SceneGraph\ISceneFactory.h"
 #include "Rendering\RenderGraph\IRenderGraph.h"
 #include "Rendering\RenderGraph\IRenderGraphFactory.h"
 #include <functional>
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
-import Rendering.Caustic.IRendererMarshaller;
+import Rendering.RendererMarshaller.IRendererMarshaller;
 import Rendering.Caustic.ITrackball;
+import Rendering.SceneGraph.ISceneGraph;
+import Rendering.SceneGraph.ISceneFactory;
 
 namespace Caustic
 {

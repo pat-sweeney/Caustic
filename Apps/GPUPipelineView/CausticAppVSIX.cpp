@@ -12,15 +12,15 @@
 #include "CausticAppVSIX.h"
 #include "Rendering\RenderWindow\IRenderWindow.h"
 #include "Cameras\AzureKinect\IAzureKinect.h"
-#include "Rendering\SceneGraph\ISceneFactory.h"
-#include "Rendering\SceneGraph\ISceneGraph.h"
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 #include "imgui_internal.h"
 import Base.Core.Core;
 import Base.Core.Error;
+import Base.Core.RefCount;
 import Base.Core.IRefCount;
+import Base.Math.Matrix;
 import Imaging.Image.GPUPipeline;
 import Imaging.Image.IGPUPipeline;
 import Rendering.SceneImport.Collada;
@@ -31,6 +31,13 @@ import Rendering.Caustic.DesktopTexture;
 import Rendering.Caustic.ICausticFactory;
 import Rendering.Caustic.IShader;
 import Rendering.Caustic.IShaderMgr;
+import Rendering.Caustic.Shader;
+import Rendering.Caustic.RendererFlags;
+import Rendering.SceneGraph.ISceneFactory;
+import Rendering.SceneGraph.ISceneGraph;
+import Rendering.SceneGraph.ISceneLightCollectionElem;
+import Rendering.SceneGraph.ISceneMaterialElem;
+import Rendering.SceneGraph.ISceneMeshElem;
 
 #define MAX_LOADSTRING 100
 

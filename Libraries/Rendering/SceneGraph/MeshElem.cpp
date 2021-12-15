@@ -3,9 +3,11 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "Rendering\SceneGraph\ISceneGraph.h"
+module;
 #include <string>
 #include <d3d11_4.h>
+
+module Rendering.SceneGraph.SceneMeshElem;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
@@ -14,18 +16,13 @@ import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IRenderCtx;
 import Rendering.Caustic.IRenderMesh;
+import Rendering.Caustic.RendererFlags;
 import Rendering.Caustic.IShader;
 import Rendering.Caustic.IShaderMgr;
-import Rendering.SceneGraph.MeshElem;
 import Geometry.Mesh.MeshFuncs;
 
 namespace Caustic
 {
-    CRefObj<ISceneMeshElem> CreateMeshElem()
-    {
-        return CRefObj<ISceneMeshElem>(new CSceneMeshElem());
-    }
-
     void CSceneElem::DrawSelected(IRenderer *pRenderer, ISceneElem *pElem, SceneCtx *pSceneCtx)
     {
         // Draw manipulator around currently selected object

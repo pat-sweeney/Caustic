@@ -8,9 +8,8 @@ module;
 #include <any>
 #include <d3d11.h>
 #include <atlbase.h>
-#include "Rendering\SceneGraph\SceneGraph.h"
 
-module Rendering.SceneGraph.ComputeShaderElem;
+module Rendering.SceneGraph.SceneComputeShaderElem;
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
@@ -18,14 +17,13 @@ import Base.Math.BBox;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IRenderCtx;
 import Rendering.Caustic.CausticFactory;
+import Rendering.Caustic.Shader;
+import Rendering.Caustic.IShader;
+import Rendering.SceneGraph.SceneElem;
+import Rendering.SceneGraph.ISceneComputeShaderElem;
 
 namespace Caustic
 {
-    CRefObj<ISceneComputeShaderElem> CreateComputeShaderElem(IShader *pComputeShader)
-    {
-        return CRefObj<ISceneComputeShaderElem>(new CSceneComputeShaderElem(pComputeShader));
-    }
-
     void CSceneComputeShaderElem::SetInputThreads(uint32 width, uint32 height, uint32 depth /* = 1 */)
     {
         uint32 xThreads, yThreads, zThreads;

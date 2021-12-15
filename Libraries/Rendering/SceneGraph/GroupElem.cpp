@@ -4,14 +4,11 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "Rendering\SceneGraph\ISceneGraph.h"
-#include "ISceneFactory.h"
-#include "SceneGraph.h"
 #include <string>
 #include <functional>
 #include <d3d11_4.h>
 
-module Rendering.SceneGraph.GroupElem;
+module Rendering.SceneGraph.SceneGroupElem;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
@@ -26,6 +23,8 @@ import Rendering.Caustic.IShader;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IRenderCtx;
 import Rendering.SceneGraph.SceneFactory;
+import Rendering.SceneGraph.ISceneFactory;
+import Rendering.SceneGraph.ISceneGroupElem;
 
 namespace Caustic
 {

@@ -1,0 +1,1 @@
+﻿NDSummary.OnToolTipsLoaded("File:Rendering/SceneGraph/ISceneSphereElem.ixx",{1519:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines a sphere element in our scene graph.</div></div>"});

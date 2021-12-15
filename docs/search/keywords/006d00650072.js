@@ -1,1 +1,1 @@
-﻿NDSearch.OnPrefixDataLoaded("mer",["Function"],[["Merge",,[["ISceneGraph",,,,0,"File:Rendering/SceneGraph/ISceneGraph.h:ISceneGraph.Merge","CClass:ISceneGraph:Merge"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("mer",["Function"],[["Merge",,[["ISceneGraph",,,,0,"File:Rendering/SceneGraph/ISceneGraph.ixx:ISceneGraph.Merge","CClass:ISceneGraph:Merge"]]]]);

@@ -1,6 +1,7 @@
 //**********************************************************************
 // Copyright Patrick Sweeney 2021
-// All Rights Reserved
+// Licensed under the MIT license.
+// See file LICENSE for details.
 //**********************************************************************
 export module Rendering.Caustic.PathTrace;
 import Base.Core.Core;

@@ -10,10 +10,12 @@
 #include <DirectXMath.h>
 #include "Rendering\RenderWindow\RenderWindow.h"
 #include "Rendering\RenderGraph\RenderGraph.h"
-#include "Rendering\SceneGraph\SceneGraph.h"
 import Base.Core.Core;
 import Rendering.Caustic.CausticFactory;
 import Rendering.Caustic.ICamera;
+import Rendering.RendererMarshaller.IRendererMarshaller;
+import Rendering.SceneGraph.SceneGraph;
+import Rendering.SceneGraph.SceneElem;
 
 namespace Caustic
 {
@@ -37,7 +39,7 @@ namespace Caustic
         m_callback = callback;
         m_prePresentCallback = prePresentCallback;
         m_useRenderGraph = useRenderGraph;
-        m_spMarshaller = Caustic::CCausticFactory::Instance()->CreateRendererMarshaller();
+        m_spMarshaller = CreateRendererMarshaller();
         if (useRenderGraph)
         {
             m_spRenderGraphFactory = Caustic::CreateRenderGraphFactory();

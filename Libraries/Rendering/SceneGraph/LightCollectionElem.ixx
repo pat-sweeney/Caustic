@@ -4,10 +4,9 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "SceneGraph.h"
 #include <functional>
 
-export module Rendering.SceneGraph.LightCollectionElem;
+export module Rendering.SceneGraph.SceneLightCollectionElem;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
@@ -21,7 +20,11 @@ import Geometry.Mesh.IMaterialAttrib;
 import Rendering.Caustic.ILight;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IRenderCtx;
-import Rendering.SceneGraph.GroupElem;
+import Rendering.Caustic.RendererFlags;
+import Rendering.SceneGraph.SceneGroupElem;
+import Rendering.SceneGraph.SceneGraph;
+import Rendering.SceneGraph.SceneElem;
+import Rendering.SceneGraph.ISceneLightCollectionElem;
 
 export namespace Caustic
 {

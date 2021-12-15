@@ -83,23 +83,46 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ISceneFactory.h" />
-    <ClInclude Include="SceneGraph.h" />
-    <ClInclude Include="SceneGraphImpl.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ComputeShaderElem.cpp" />
     <ClCompile Include="ComputeShaderElem.ixx" />
-    <ClCompile Include="CubeElem.cpp" />
     <ClCompile Include="CubeElem.ixx" />
-    <ClCompile Include="CustomRenderElem.cpp" />
     <ClCompile Include="CustomRenderElem.ixx" />
-    <ClCompile Include="CylinderElem.cpp" />
     <ClCompile Include="CylinderElem.ixx" />
     <ClCompile Include="GroupElem.cpp" />
     <ClCompile Include="GroupElem.ixx" />
+    <ClCompile Include="ISceneComputeShaderElem.cpp" />
+    <ClCompile Include="ISceneComputeShaderElem.ixx" />
+    <ClCompile Include="ISceneCubeElem.cpp" />
+    <ClCompile Include="ISceneCubeElem.ixx" />
+    <ClCompile Include="ISceneCustomRenderElem.cpp" />
+    <ClCompile Include="ISceneCustomRenderElem.ixx" />
+    <ClCompile Include="ISceneCylinderElem.cpp" />
+    <ClCompile Include="ISceneCylinderElem.ixx" />
+    <ClCompile Include="ISceneElem.ixx" />
+    <ClCompile Include="ISceneFactory.cpp" />
+    <ClCompile Include="ISceneFactory.ixx" />
+    <ClCompile Include="ISceneGraph.cpp" />
+    <ClCompile Include="ISceneGraph.ixx" />
+    <ClCompile Include="ISceneGroupElem.cpp" />
+    <ClCompile Include="ISceneGroupElem.ixx" />
+    <ClCompile Include="ISceneLightCollectionElem.cpp" />
+    <ClCompile Include="ISceneLightCollectionElem.ixx" />
+    <ClCompile Include="ISceneLineElem.cpp" />
+    <ClCompile Include="ISceneLineElem.ixx" />
+    <ClCompile Include="ISceneMarchingCubesElem.cpp" />
+    <ClCompile Include="ISceneMarchingCubesElem.ixx" />
+    <ClCompile Include="ISceneMaterialElem.cpp" />
+    <ClCompile Include="ISceneMaterialElem.ixx" />
+    <ClCompile Include="ISceneMeshElem.cpp" />
+    <ClCompile Include="ISceneMeshElem.ixx" />
+    <ClCompile Include="ISceneOverlay2DElem.cpp" />
+    <ClCompile Include="ISceneOverlay2DElem.ixx" />
+    <ClCompile Include="ISceneSphereElem.cpp" />
+    <ClCompile Include="ISceneSphereElem.ixx" />
     <ClCompile Include="LightCollectionElem.cpp" />
     <ClCompile Include="LightCollectionElem.ixx" />
-    <ClCompile Include="LineElem.cpp" />
     <ClCompile Include="LineElem.ixx" />
     <ClCompile Include="MarchingCubesElem.cpp" />
     <ClCompile Include="MarchingCubesElem.ixx" />
@@ -109,10 +132,12 @@
     <ClCompile Include="MeshElem.ixx" />
     <ClCompile Include="Overlay2D.cpp" />
     <ClCompile Include="Overlay2D.ixx" />
+    <ClCompile Include="SceneCtx.ixx" />
+    <ClCompile Include="SceneElem.ixx" />
     <ClCompile Include="SceneFactory.cpp" />
     <ClCompile Include="SceneFactory.ixx" />
     <ClCompile Include="SceneGraph.cpp" />
-    <ClCompile Include="SphereElem.cpp" />
+    <ClCompile Include="SceneGraph.ixx" />
     <ClCompile Include="SphereElem.ixx" />
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,7 @@
 //**********************************************************************
 // Copyright Patrick Sweeney 2021
-// All Rights Reserved
+// Licensed under the MIT license.
+// See file LICENSE for details.
 //**********************************************************************
 module;
 #define _USE_MATH_DEFINES

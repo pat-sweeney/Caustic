@@ -1,0 +1,1 @@
+﻿NDSummary.OnToolTipsLoaded("File:Rendering/SceneGraph/SceneElem.ixx",{1426:"<div class=\"NDToolTip TClass LC\"><div class=\"NDClassPrototype\" id=\"NDClassPrototype1426\"><div class=\"CPEntry TClass Current\"><div class=\"CPName\">CSceneElem</div></div></div><div class=\"TTSummary\">Defines the base class for all our scene graph elements</div></div>"});

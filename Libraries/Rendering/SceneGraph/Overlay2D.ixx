@@ -4,11 +4,17 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "SceneGraph.h"
 #include <functional>
+#include <atlbase.h>
 
-export module Rendering.SceneGraph.Overlay2D;
+export module Rendering.SceneGraph.SceneOverlay2DElem;
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
 import Rendering.Caustic.ISampler;
+import Rendering.SceneGraph.SceneGraph;
+import Rendering.SceneGraph.SceneElem;
+import Rendering.SceneGraph.ISceneOverlay2DElem;
 
 export namespace Caustic
 {

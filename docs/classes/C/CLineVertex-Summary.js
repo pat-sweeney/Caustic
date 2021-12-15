@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CLineVertex","CLineVertex");NDSummary.OnSummaryLoaded("CClass:CLineVertex",[["C/C++","C"]],[["Classes","Class"]],[[842,0,0,"CLineVertex"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CLineVertex","CLineVertex");NDSummary.OnSummaryLoaded("CClass:CLineVertex",[["C/C++","C"]],[["Classes","Class"]],[[810,0,0,"CLineVertex"]]);

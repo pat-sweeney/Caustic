@@ -1,1 +1,1 @@
-﻿NDSearch.OnPrefixDataLoaded("lig",["File","Constant"],[["Light",,[[,"Light.ixx",,,0,"File:Rendering/Caustic/Light.ixx:Light.ixx"]]],["LightCollection",,[[,,,,1,"File:Rendering/SceneGraph/ISceneGraph.h:LightCollection"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("lig",["File","Constant"],[["Light",,[[,"Light.ixx",,,0,"File:Rendering/Caustic/Light.ixx:Light.ixx"]]],["LightCollection",,[[,,,,1,"File:Rendering/SceneGraph/ISceneElem.ixx:LightCollection"]]]]);

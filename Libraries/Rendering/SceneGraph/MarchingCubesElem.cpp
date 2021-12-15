@@ -3,28 +3,26 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "SceneGraph.h"
+module;
 #include <d3d11.h>
 #include <atlbase.h>
 #include <d3d11_4.h>
 #include <any>
+
+module Rendering.SceneGraph.SceneMarchingCubesElem;
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
+import Rendering.Caustic.Shader;
 import Rendering.Caustic.IShader;
 import Rendering.Caustic.IShaderMgr;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IRenderCtx;
 import Rendering.Caustic.ICausticFactory;
-import Rendering.SceneGraph.MarchingCubesElem;
+import Rendering.SceneGraph.ISceneMarchingCubesElem;
 
 namespace Caustic
 {
-    CRefObj<ISceneMarchingCubesElem> CreateMarchingCubesElem(IRenderer* pRenderer, uint32 subdivisions, std::function<float(Vector3&)> sdf, bool drawIndexed)
-    {
-        return CRefObj<ISceneMarchingCubesElem>(new CSceneMarchingCubesElem(pRenderer, subdivisions, sdf, drawIndexed));
-    }
-
     static int32 s_edgeTable[256][16] = {
         /* 00000000 */ { 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
         /* 00000001 */ { 1, 0,  8,  3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },

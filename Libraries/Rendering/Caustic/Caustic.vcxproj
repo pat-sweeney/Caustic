@@ -287,8 +287,6 @@
     <ClCompile Include="IRenderable.ixx" />
     <ClCompile Include="IRenderCtx.ixx" />
     <ClCompile Include="IRenderer.ixx" />
-    <ClCompile Include="IRendererMarshaller.cpp" />
-    <ClCompile Include="IRendererMarshaller.ixx" />
     <ClCompile Include="IRenderMaterial.cpp" />
     <ClCompile Include="IRenderMaterial.ixx" />
     <ClCompile Include="IRenderMesh.ixx" />
@@ -312,10 +310,8 @@
     <ClCompile Include="Renderable.ixx" />
     <ClCompile Include="Renderer.ixx" />
     <ClCompile Include="RendererFlags.ixx" />
-    <ClCompile Include="RendererMarshaller.cpp" />
     <ClCompile Include="Renderable.cpp" />
     <ClCompile Include="Renderer.cpp" />
-    <ClCompile Include="RendererMarshaller.ixx" />
     <ClCompile Include="RenderMaterial.cpp" />
     <ClCompile Include="RenderMaterial.ixx" />
     <ClCompile Include="RenderMesh.cpp" />

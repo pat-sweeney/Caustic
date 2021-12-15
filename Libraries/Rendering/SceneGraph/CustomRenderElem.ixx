@@ -4,12 +4,11 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "SceneGraph.h"
-#include "ISceneGraph.h"
 #include <d3d11.h>
 #include <atlbase.h>
+#include <string>
 
-export module Rendering.SceneGraph.CustomRenderElem;
+export module Rendering.SceneGraph.SceneCustomRenderElem;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
@@ -18,6 +17,9 @@ import Base.Core.ISerialize;
 import Geometry.Mesh.MeshFuncs;
 import Rendering.Caustic.IRenderCtx;
 import Rendering.Caustic.IRenderer;
+import Rendering.SceneGraph.SceneGraph;
+import Rendering.SceneGraph.SceneElem;
+import Rendering.SceneGraph.ISceneCustomRenderElem;
 
 export namespace Caustic
 {

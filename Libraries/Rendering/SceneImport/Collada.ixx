@@ -7,13 +7,17 @@ module;
 #include <functional>
 #include <string>
 #include <vector>
-#include "Rendering\SceneGraph\SceneGraph.h"
 #include <any>
 #include <map>
+#include <msxml6.h>
 
 export module Rendering.SceneImport.Collada;
 import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Base.Math.Vector;
 import Geometry.Mesh.IMeshConstructor;
+import Rendering.SceneGraph.ISceneGraph;
 
 export namespace Caustic
 {

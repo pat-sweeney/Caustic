@@ -33,8 +33,6 @@
 #include "implot.h"
 #include "Rendering\RenderWindow\IRenderWindow.h"
 #include "Cameras\AzureKinect\IAzureKinect.h"
-#include "Rendering\SceneGraph\ISceneFactory.h"
-#include "Rendering\SceneGraph\ISceneGraph.h"
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
@@ -47,7 +45,10 @@ import Parsers.JSon.IJSonParser;
 import Rendering.SceneImport.Collada;
 import Rendering.Caustic.ICausticFactory;
 import Rendering.Caustic.IShader;
+import Rendering.Caustic.RendererFlags;
 import Geometry.MeshImport;
+import Rendering.SceneGraph.ISceneFactory;
+import Rendering.SceneGraph.ISceneGraph;
 
 #ifdef _MSC_VER
 #define sprintf sprintf_s

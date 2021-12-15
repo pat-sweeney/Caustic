@@ -3,20 +3,24 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "Rendering\SceneGraph\ISceneGraph.h"
+module;
 #include <any>
+#include <d3d11.h>
+#include <atlbase.h>
+
+module Rendering.SceneGraph.SceneOverlay2DElem;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Rendering.Caustic.Sampler;
 import Rendering.Caustic.IShader;
+import Rendering.Caustic.Shader;
 import Rendering.Caustic.IShaderMgr;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IRenderCtx;
 import Rendering.Caustic.ICausticFactory;
 import Rendering.SceneGraph.SceneFactory;
-import Rendering.SceneGraph.Overlay2D;
 
 namespace Caustic
 {
@@ -25,11 +29,6 @@ namespace Caustic
         float pts[4];
         float uvs[2];
     };
-
-    CRefObj<ISceneOverlay2DElem> CreateOverlay2DElem(IShader *pShader = nullptr)
-    {
-        return CRefObj<ISceneOverlay2DElem>(new CSceneOverlay2DElem(pShader));
-    }
 
     void CSceneOverlay2DElem::CreateQuad(IRenderer* pRenderer)
     {

@@ -21,13 +21,13 @@ import Imaging.Color;
 import Imaging.Image.IImage;
 import Geometry.Mesh.Mesh;
 import Rendering.Caustic.ITrackball;
+import Rendering.Caustic.ICamera;
 import Rendering.Caustic.ISpotLight;
 import Rendering.Caustic.IPointLight;
 import Rendering.Caustic.IPointCloud;
 import Rendering.Caustic.IDirectionalLight;
 import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.ISampler;
-import Rendering.Caustic.IRendererMarshaller;
 
 //**********************************************************************
 // File: ICausticFactory.ixx
@@ -179,16 +179,6 @@ export namespace Caustic
 		// {Link:import Rendering/Caustic/ICausticFactory;{Rendering/Caustic/ICausticFactory.ixx}}
 		//**********************************************************************
 		virtual CRefObj<ITrackball> CreateTrackball() = 0;
-
-		//**********************************************************************
-		// Method: CreateRendererMarshaller
-		// Creates the marshalled version of the renderer. This renderer marshals
-		// all calls over to the render thread (i.e. can be called on any thread)
-		//
-		// Returns:
-		// Returns the created marshalled renderer
-		//**********************************************************************
-		virtual CRefObj<IRendererMarshaller> CreateRendererMarshaller() = 0;
 
 		//**********************************************************************
 		// Method: CreateMaterialAttrib

@@ -42,9 +42,6 @@
     <ClCompile Include="Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RendererMarshaller.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="VideoTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -150,9 +147,6 @@
     <ClCompile Include="RenderMesh.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RendererMarshaller.ixx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ConstructBuffers.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -204,9 +198,6 @@
     <ClCompile Include="IRenderMesh.ixx">
       <Filter>Source Files\Interfaces</Filter>
     </ClCompile>
-    <ClCompile Include="IRendererMarshaller.ixx">
-      <Filter>Source Files\Interfaces</Filter>
-    </ClCompile>
     <ClCompile Include="IShader.ixx">
       <Filter>Source Files\Interfaces</Filter>
     </ClCompile>
@@ -232,9 +223,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ICausticFactory.cpp">
-      <Filter>Source Files\Interfaces</Filter>
-    </ClCompile>
-    <ClCompile Include="IRendererMarshaller.cpp">
       <Filter>Source Files\Interfaces</Filter>
     </ClCompile>
     <ClCompile Include="IShader.cpp">

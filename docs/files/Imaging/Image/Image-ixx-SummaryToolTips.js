@@ -1,1 +1,1 @@
-﻿NDSummary.OnToolTipsLoaded("File:Imaging/Image/Image.ixx",{577:"<div class=\"NDToolTip TClass LC\"><div class=\"NDClassPrototype\" id=\"NDClassPrototype577\"><div class=\"CPEntry TClass Current\"><div class=\"CPName\">CImage</div></div></div></div>"});
+﻿NDSummary.OnToolTipsLoaded("File:Imaging/Image/Image.ixx",{616:"<div class=\"NDToolTip TClass LC\"><div class=\"NDClassPrototype\" id=\"NDClassPrototype616\"><div class=\"CPEntry TClass Current\"><div class=\"CPName\">CImage</div></div></div></div>"});

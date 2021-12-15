@@ -30,7 +30,6 @@ import Rendering.Caustic.ISampler;
 import Rendering.Caustic.VideoTexture;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.DesktopTexture;
-import Rendering.Caustic.IRendererMarshaller;
 import Rendering.Caustic.IRenderMesh;
 import Rendering.Caustic.ICamera;
 import Geometry.Mesh.MaterialAttrib;
@@ -144,15 +143,6 @@ namespace Caustic
     CRefObj<ITrackball> CCausticFactory::CreateTrackball()
 	{
 		return Caustic::CreateTrackball();
-	}
-
-    //**********************************************************************
-    // Method: CreateRendererMarshaller
-    // See <ICausticFactory::CreateRendererMarshaller>
-    //**********************************************************************
-    CRefObj<IRendererMarshaller> CCausticFactory::CreateRendererMarshaller()
-	{
-		return Caustic::CreateRendererMarshaller();
 	}
 
     //**********************************************************************

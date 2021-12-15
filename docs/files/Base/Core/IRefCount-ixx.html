@@ -8,59 +8,59 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="IRefCount"></a><a name="Topic20"></a><div class="CTopic TStruct LC first">
+<a name="IRefCount"></a><a name="Topic7"></a><div class="CTopic TStruct LC first">
  <div class="CTitle">IRefCount</div>
- <div class="NDClassPrototype" id="NDClassPrototype20"><div class="CPEntry TStruct Current"><div class="CPModifiers"><span class="SHKeyword">struct</span></div><div class="CPName">IRefCount</div></div></div>
+ <div class="NDClassPrototype" id="NDClassPrototype7"><div class="CPEntry TStruct Current"><div class="CPModifiers"><span class="SHKeyword">struct</span></div><div class="CPName">IRefCount</div></div></div>
  <div class="CBody"><p>Defines the basic interface used by reference counted objects</p><div class="CHeading">Header</div><p><a href='../../../index.html#File:Base/Core/IRefCount.h' target='_top'>#include &quot;Base/Core/IRefCount.h&quot;</a></p></div>
 </div>
 
-<a name="IRefCount.Functions"></a><a name="Topic21"></a><div class="CTopic TGroup LC">
+<a name="IRefCount.Functions"></a><a name="Topic8"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="IRefCount.AddRef"></a><a name="Topic22"></a><div class="CTopic TFunction LC">
+<a name="IRefCount.AddRef"></a><a name="Topic9"></a><div class="CTopic TFunction LC">
  <div class="CTitle">AddRef</div>
- <div id="NDPrototype22" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> AddRef() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype9" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> AddRef() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Increments the reference count</p></div>
 </div>
 
-<a name="IRefCount.Release"></a><a name="Topic23"></a><div class="CTopic TFunction LC">
+<a name="IRefCount.Release"></a><a name="Topic10"></a><div class="CTopic TFunction LC">
  <div class="CTitle">Release</div>
- <div id="NDPrototype23" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> Release() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype10" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> Release() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Decrements the reference count. If the reference count goes to zero the underlying object is destroyed.</p></div>
 </div>
 
-<a name="CRefObj"></a><a name="Topic24"></a><div class="CTopic TStruct LC">
+<a name="CRefObj"></a><a name="Topic11"></a><div class="CTopic TStruct LC">
  <div class="CTitle">CRefObj&lt;T&gt;</div>
- <div class="NDClassPrototype" id="NDClassPrototype24"><div class="CPEntry TStruct Current"><div class="CPModifiers"><span class="SHKeyword">template</span> &lt;typename T&gt; <span class="SHKeyword">struct</span></div><div class="CPName">CRefObj</div></div></div>
+ <div class="NDClassPrototype" id="NDClassPrototype11"><div class="CPEntry TStruct Current"><div class="CPModifiers"><span class="SHKeyword">template</span> &lt;typename T&gt; <span class="SHKeyword">struct</span></div><div class="CPName">CRefObj</div></div></div>
  <div class="CBody"><p>CRefObj is a smart class (similar to CComPtr) for managing a IRefCount-ed object's lifetime.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">T</td><td class="CDLDefinition"><p>type of object to manage</p></td></tr></table><div class="CHeading">Header</div><p><a href='../../../index.html#File:Base/Core/IRefCount.h' target='_top'>#include &quot;Base/Core/IRefCount.h&quot;</a></p></div>
 </div>
 
-<a name="CRefObj.Functions"></a><a name="Topic25"></a><div class="CTopic TGroup LC">
+<a name="CRefObj.Functions"></a><a name="Topic12"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="CRefObj.CRefObj"></a><a name="Topic26"></a><div class="CTopic TFunction LC">
+<a name="CRefObj.CRefObj"></a><a name="Topic13"></a><div class="CTopic TFunction LC">
  <div class="CTitle">CRefObj</div>
- <div id="NDPrototype26" class="NDPrototype"><div class="PSection PPlainSection">CRefObj()</div></div>
+ <div id="NDPrototype13" class="NDPrototype"><div class="PSection PPlainSection">CRefObj()</div></div>
  <div class="CBody"><p>Default constructor</p></div>
 </div>
 
-<a name="CRefObj.CRefObj(2)"></a><a name="Topic27"></a><div class="CTopic TFunction LC">
+<a name="CRefObj.CRefObj(2)"></a><a name="Topic14"></a><div class="CTopic TFunction LC">
  <div class="CTitle">CRefObj</div>
- <div id="NDPrototype27" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters">CRefObj(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><a href="../../../index.html#File:Base/Core/IRefCount.ixx:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,24);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&nbsp;</td><td class="PSymbols">&amp;</td><td class="PName last">v</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
+ <div id="NDPrototype14" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters">CRefObj(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><a href="../../../index.html#File:Base/Core/IRefCount.ixx:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,11);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&nbsp;</td><td class="PSymbols">&amp;</td><td class="PName last">v</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
  <div class="CBody"><p>Copy constructor</p></div>
 </div>
 
-<a name="CRefObj.CRefObj(3)"></a><a name="Topic28"></a><div class="CTopic TFunction LC">
+<a name="CRefObj.CRefObj(3)"></a><a name="Topic15"></a><div class="CTopic TFunction LC">
  <div class="CTitle">CRefObj</div>
- <div id="NDPrototype28" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters">CRefObj(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first">T&nbsp;</td><td class="PSymbols">*</td><td class="PName last">v</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
+ <div id="NDPrototype15" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters">CRefObj(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first">T&nbsp;</td><td class="PSymbols">*</td><td class="PName last">v</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
  <div class="CBody"><p>Constructor from base type</p></div>
 </div>
 
-<a name="CRefObj.~CRefObj"></a><a name="Topic29"></a><div class="CTopic TFunction LC last">
+<a name="CRefObj.~CRefObj"></a><a name="Topic16"></a><div class="CTopic TFunction LC last">
  <div class="CTitle">~CRefObj</div>
- <div id="NDPrototype29" class="NDPrototype"><div class="PSection PPlainSection">~CRefObj()</div></div>
+ <div id="NDPrototype16" class="NDPrototype"><div class="PSection PPlainSection">~CRefObj()</div></div>
  <div class="CBody"><p>Destructor</p></div>
 </div>
 

@@ -3,26 +3,26 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "Rendering\SceneGraph\ISceneGraph.h"
-#include "SceneGraph.h"
+module;
+#include <float.h>
+#include <math.h>
+#include <cstdlib>
+#include <Windows.h>
+
+module Rendering.SceneGraph.SceneGraph;
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Rendering.Caustic.ICamera;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IRenderCtx;
-import Rendering.SceneGraph.SceneFactory;
+import Rendering.SceneGraph.ISceneGraph;
+import Rendering.SceneGraph.ISceneElem;
 import Imaging.Image.IImage;
 import Imaging.Image.ImageIter;
 
 namespace Caustic
 {
-    CRefObj<ISceneGraph> CreateSceneGraph()
-    {
-		CRefObj<ISceneGroupElem> spGroup = CSceneFactory::Instance()->CreateGroupElem();
-		return CRefObj<ISceneGraph>(new CSceneGraph(spGroup));
-    }
-
     void CSceneGraph::PathTraceInternal(PathTraceCtx* pCtx, int depth, Ray3& ray, FRGBColor* pRadiance)
     {
         pRadiance->r = 0.0f;
@@ -74,7 +74,7 @@ namespace Caustic
                     float nearZ;
                     float farZ;
                     spCamera->GetParams(&fov, &aspectRatio, &nearZ, &farZ);
-                    float focalLen = 1.0f / tan(fov);
+                    float focalLen = 1.0f / (float)tan(fov);
                     float jx = float(rand()) / float(RAND_MAX) - 0.5f;
                     float jy = float(rand()) / float(RAND_MAX) - 0.5f;
                     float pu = 2.0f * (float(x + jx) / float(w)) - 1.0f;
@@ -135,7 +135,7 @@ namespace Caustic
             pElem->SetFlags(pElem->GetFlags() & ~ESceneElemFlags::Selected);
         m_Selected.clear();
         m_spRoot->AddChild(pElem);
-        m_Selected.push_back(pElem);
+//        m_Selected.push_back(pElem);
         pElem->SetFlags(pElem->GetFlags() | ESceneElemFlags::Selected);
         SetFlags(GetFlags() | ESceneElemFlags::BBoxDirty);
     }

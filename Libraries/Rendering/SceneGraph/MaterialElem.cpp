@@ -3,9 +3,11 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "Rendering\SceneGraph\ISceneGraph.h"
+module;
 #include <string>
 #include <memory>
+
+module Rendering.SceneGraph.SceneMaterialElem;
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
@@ -13,18 +15,11 @@ import Geometry.Mesh.Mesh;
 import Geometry.Mesh.MaterialAttrib;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IRenderCtx;
-import Rendering.SceneGraph.MaterialElem;
+import Rendering.Caustic.RendererFlags;
+import Rendering.SceneGraph.ISceneMaterialElem;
 
 namespace Caustic
 {
-    CRefObj<ISceneMaterialElem> CreateMaterialElem()
-    {
-        std::unique_ptr<CSceneMaterialElem> spMaterialElem(new CSceneMaterialElem());
-		CRefObj<IMaterialAttrib> spMaterial = Caustic::CreateMaterialAttrib();
-        spMaterialElem->SetMaterial(spMaterial);
-        return CRefObj<ISceneMaterialElem>(spMaterialElem.release());
-    }
-
     void CSceneMaterialElem::Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx)
     {
         if (!(m_passes & pRenderCtx->GetCurrentPass()))

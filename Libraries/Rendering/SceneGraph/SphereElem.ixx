@@ -6,16 +6,22 @@
 module;
 #include <d3d11.h>
 #include <atlbase.h>
-#include "SceneGraph.h"
+#include <string>
 
-export module Rendering.SceneGraph.SphereElem;
+export module Rendering.SceneGraph.SceneSphereElem;
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Base.Math.Vector;
 import Geometry.Mesh.MeshFuncs;
+import Geometry.Mesh.IMesh;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IRenderCtx;
+import Rendering.SceneGraph.SceneGraph;
+import Rendering.SceneGraph.SceneElem;
+import Rendering.SceneGraph.ISceneSphereElem;
+import Rendering.SceneGraph.ISceneGroupElem;
+import Rendering.SceneGraph.ISceneMeshElem;
 
 export namespace Caustic
 {

@@ -3,10 +3,14 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "Rendering\SceneGraph\SceneGraph.h"
+#include <msxml6.h>
+#include <atlbase.h>
+#include <string>
+#include <memory>
 import Base.Core.Core;
 import Base.Core.Error;
 import Rendering.SceneGraph.SceneFactory;
+import Rendering.SceneGraph.SceneGraph;
 import Rendering.SceneImport.Collada;
 
 namespace Caustic

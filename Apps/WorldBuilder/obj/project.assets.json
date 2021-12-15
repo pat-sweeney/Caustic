@@ -179,6 +179,24 @@
           "bin/placeholder/Renderer.dll": {}
         }
       },
+      "RendererMarshaller/1.0.0": {
+        "type": "project",
+        "dependencies": {
+          "Caustic": "1.0.0",
+          "Color": "1.0.0",
+          "Core": "1.0.0",
+          "GeomDS": "1.0.0",
+          "Math": "1.0.0",
+          "Mesh": "1.0.0",
+          "SceneGraph": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/RendererMarshaller.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/RendererMarshaller.dll": {}
+        }
+      },
       "RenderGraph/1.0.0": {
         "type": "project",
         "dependencies": {
@@ -208,7 +226,9 @@
           "GeomDS": "1.0.0",
           "Image": "1.0.0",
           "Math": "1.0.0",
-          "Mesh": "1.0.0"
+          "Mesh": "1.0.0",
+          "RendererMarshaller": "1.0.0",
+          "SceneGraph": "1.0.0"
         },
         "compile": {
           "bin/placeholder/RenderWindow.dll": {}
@@ -302,6 +322,11 @@
       "type": "project",
       "path": "../../Libraries/Interop/Renderer/Renderer.vcxproj",
       "msbuildProject": "../../Libraries/Interop/Renderer/Renderer.vcxproj"
+    },
+    "RendererMarshaller/1.0.0": {
+      "type": "project",
+      "path": "../../Libraries/Rendering/RendererMarshaller/RendererMarshaller.vcxproj",
+      "msbuildProject": "../../Libraries/Rendering/RendererMarshaller/RendererMarshaller.vcxproj"
     },
     "RenderGraph/1.0.0": {
       "type": "project",

@@ -381,6 +381,43 @@
         "native": {}
       }
     },
+    "G:\\GitHub\\Caustic\\Libraries\\Rendering\\RendererMarshaller\\RendererMarshaller.vcxproj": {
+      "restore": {
+        "projectUniqueName": "G:\\GitHub\\Caustic\\Libraries\\Rendering\\RendererMarshaller\\RendererMarshaller.vcxproj",
+        "projectName": "RendererMarshaller",
+        "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Rendering\\RendererMarshaller\\RendererMarshaller.vcxproj",
+        "frameworks": {
+          "native": {
+            "projectReferences": {
+              "G:\\GitHub\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              },
+              "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              },
+              "G:\\GitHub\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
+                "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
+              },
+              "G:\\GitHub\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj": {
+                "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj"
+              },
+              "G:\\GitHub\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
+                "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
+              },
+              "G:\\GitHub\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj": {
+                "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj"
+              },
+              "G:\\GitHub\\Caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj": {
+                "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "native": {}
+      }
+    },
     "G:\\GitHub\\Caustic\\Libraries\\Rendering\\RenderGraph\\RenderGraph.vcxproj": {
       "restore": {
         "projectUniqueName": "G:\\GitHub\\Caustic\\Libraries\\Rendering\\RenderGraph\\RenderGraph.vcxproj",
@@ -452,6 +489,12 @@
               },
               "G:\\GitHub\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj": {
                 "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj"
+              },
+              "G:\\GitHub\\Caustic\\Libraries\\Rendering\\RendererMarshaller\\RendererMarshaller.vcxproj": {
+                "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Rendering\\RendererMarshaller\\RendererMarshaller.vcxproj"
+              },
+              "G:\\GitHub\\Caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj": {
+                "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj"
               }
             }
           }

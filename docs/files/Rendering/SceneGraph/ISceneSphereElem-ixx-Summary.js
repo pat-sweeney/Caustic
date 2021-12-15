@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/SceneGraph/ISceneSphereElem.ixx","ISceneSphereElem.ixx");NDSummary.OnSummaryLoaded("File:Rendering/SceneGraph/ISceneSphereElem.ixx",[["C/C++","C"]],[["Interfaces","Interface"]],[[1519,0,0,"ISceneSphereElem","ISceneSphereElem"]]);

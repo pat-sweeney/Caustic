@@ -4,8 +4,6 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "ISceneFactory.h"
-#include "ISceneGraph.h"
 #include <functional>
 
 export module Rendering.SceneGraph.SceneFactory;
@@ -15,6 +13,7 @@ import Base.Core.IRefCount;
 import Rendering.Caustic.Shader;
 import Base.Math.Matrix;
 import Base.Math.Vector;
+import Rendering.SceneGraph.ISceneFactory;
 
 export namespace Caustic
 {

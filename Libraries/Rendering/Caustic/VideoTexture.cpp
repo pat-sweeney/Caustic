@@ -20,6 +20,7 @@ module Rendering.Caustic.VideoTexture;
 import Base.Core.Core;
 import Base.Core.Error;
 import Rendering.Caustic.CausticFactory;
+import Rendering.Caustic.IRenderer;
 
 namespace Caustic
 {

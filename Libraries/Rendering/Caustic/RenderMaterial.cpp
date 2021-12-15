@@ -16,6 +16,7 @@ import Geometry.Mesh.MaterialAttrib;
 import Geometry.Mesh.Mesh;
 import Rendering.Caustic.Sampler;
 import Rendering.Caustic.Renderer;
+import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.Shader;
 import Rendering.Caustic.CausticFactory;
 import Rendering.Caustic.RendererFlags;

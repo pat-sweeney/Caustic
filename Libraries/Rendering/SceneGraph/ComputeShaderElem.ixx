@@ -6,9 +6,9 @@
 module;
 #include <d3d11.h>
 #include <atlbase.h>
-#include "SceneGraph.h"
+#include <string>
 
-export module Rendering.SceneGraph.ComputeShaderElem;
+export module Rendering.SceneGraph.SceneComputeShaderElem;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
@@ -22,6 +22,9 @@ import Geometry.Mesh.IMaterialAttrib;
 import Rendering.Caustic.IShader;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IRenderCtx;
+import Rendering.SceneGraph.SceneGraph;
+import Rendering.SceneGraph.SceneElem;
+import Rendering.SceneGraph.ISceneComputeShaderElem;
 
 export namespace Caustic
 {
