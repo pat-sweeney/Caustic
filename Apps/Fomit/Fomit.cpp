@@ -5,7 +5,6 @@
 //**********************************************************************
 #include "Fomit.h"
 #include "Rendering\RenderGraph\IRenderGraph.h"
-#include "Cameras\AzureKinect\IAzureKinect.h"
 #include "Rendering\RenderGraph\IRenderGraph.h"
 #include "Rendering\RenderGraph\IRenderGraphFactory.h"
 #include <Windows.h>
@@ -15,6 +14,7 @@ import Base.Core.IRefCount;
 import Imaging.Image.ImageFilter;
 import Geometry.Mesh.IMeshConstructor;
 import Geometry.MeshImport;
+import Cameras.AzureKinect.IAzureKinect;
 import Rendering.Caustic.ConstructBuffer;
 import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.IRenderMesh;

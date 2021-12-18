@@ -32,7 +32,6 @@
 #include <atlbase.h>
 #include <string>
 #include "implot.h"
-#include "Cameras\AzureKinect\IAzureKinect.h"
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
@@ -42,6 +41,7 @@ import Base.Core.IRefCount;
 import Imaging.Image.GPUPipeline;
 import Imaging.Image.IGPUPipeline;
 import Parsers.JSon.IJSonParser;
+import Cameras.AzureKinect.IAzureKinect;
 import Rendering.SceneImport.Collada;
 import Rendering.Caustic.ICausticFactory;
 import Rendering.Caustic.IShader;

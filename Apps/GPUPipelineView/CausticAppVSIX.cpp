@@ -11,7 +11,6 @@
 #include <atlbase.h>
 #include <any>
 #include "CausticAppVSIX.h"
-#include "Cameras\AzureKinect\IAzureKinect.h"
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
@@ -26,6 +25,7 @@ import Imaging.Image.IGPUPipeline;
 import Rendering.SceneImport.Collada;
 import Geometry.MeshImport;
 import Geometry.Mesh.MeshFuncs;
+import Cameras.AzureKinect.IAzureKinect;
 import Rendering.Caustic.Shader;
 import Rendering.Caustic.VideoTexture;
 import Rendering.Caustic.DesktopTexture;

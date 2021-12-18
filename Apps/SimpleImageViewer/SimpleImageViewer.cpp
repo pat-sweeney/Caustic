@@ -6,14 +6,13 @@
 #include "SimpleImageViewer.h"
 #include <Windows.h>
 #include <commdlg.h>
+#include <any>
+#include <string>
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Imaging.Image.IImage;
 import Imaging.Image.AllImageFilters;
-#include "Cameras\AzureKinect\IAzureKinect.h"
-#include <map>
-#include <any>
-#include <string>
+import Cameras.AzureKinect.IAzureKinect;
 
 #define MAX_LOADSTRING 100
 

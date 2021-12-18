@@ -3,12 +3,16 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "stdafx.h"
-import Base.Core.Error;
-#include "Cameras\AzureKinect\IAzureKinect.h"
 #include "UnitTest.h"
 #include <stdlib.h>
 #include <stdio.h>
+
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Base.Core.Error;
+import Cameras.AzureKinect.AzureKinect;
+import Cameras.AzureKinect.IAzureKinect;
 
 using namespace Caustic;
 namespace CausticTestSuite
