@@ -7,7 +7,6 @@
 #include <d3d11.h>
 #include <atlbase.h>
 #include "MeshViewer.h"
-#include "Rendering\RenderWindow\IRenderWindow.h"
 #include <Windows.h>
 #include <commdlg.h>
 #include <string>
@@ -23,6 +22,7 @@ import Rendering.Caustic.ICausticFactory;
 import Rendering.Caustic.IShader;
 import Rendering.Caustic.IShaderMgr;
 import Rendering.Caustic.RendererFlags;
+import Rendering.RenderWindow.IRenderWindow;
 import Rendering.SceneGraph.ISceneFactory;
 
 #define MAX_LOADSTRING 100
@@ -190,8 +190,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 {
                     static Vector3 center(0.5f, 0.5f, 0.5f);
                     Vector3 q = v - center;
-                    return max(fabs(q.x), max(fabs(q.y), fabs(q.z))) - 0.5f;
-                    return (v - center).Length() - 0.5f;
+                    return static_cast<float>(max(fabs(q.x), max(fabs(q.y), fabs(q.z)))) - 0.5f;
+                    //return (v - center).Length() - 0.5f;
                 };
                 CRefObj<ISceneMeshElem> spMeshElem = spSceneFactory->CreateMeshElem();
                 CRefObj<IMesh> spMesh = spMeshConstructor->MeshFromDensityFunction(16, spherePDF);

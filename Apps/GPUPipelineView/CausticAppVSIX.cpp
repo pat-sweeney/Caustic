@@ -9,8 +9,8 @@
 #include <d3d11_4.h>
 #include <d3dcommon.h>
 #include <atlbase.h>
+#include <any>
 #include "CausticAppVSIX.h"
-#include "Rendering\RenderWindow\IRenderWindow.h"
 #include "Cameras\AzureKinect\IAzureKinect.h"
 #include "imgui.h"
 #include "imgui_impl_win32.h"
@@ -26,18 +26,20 @@ import Imaging.Image.IGPUPipeline;
 import Rendering.SceneImport.Collada;
 import Geometry.MeshImport;
 import Geometry.Mesh.MeshFuncs;
+import Rendering.Caustic.Shader;
 import Rendering.Caustic.VideoTexture;
 import Rendering.Caustic.DesktopTexture;
 import Rendering.Caustic.ICausticFactory;
 import Rendering.Caustic.IShader;
 import Rendering.Caustic.IShaderMgr;
-import Rendering.Caustic.Shader;
 import Rendering.Caustic.RendererFlags;
+import Rendering.Caustic.ITexture;
 import Rendering.SceneGraph.ISceneFactory;
 import Rendering.SceneGraph.ISceneGraph;
 import Rendering.SceneGraph.ISceneLightCollectionElem;
 import Rendering.SceneGraph.ISceneMaterialElem;
 import Rendering.SceneGraph.ISceneMeshElem;
+import Rendering.RenderWindow.IRenderWindow;
 
 #define MAX_LOADSTRING 100
 
@@ -579,7 +581,7 @@ void CApp::InitializeCaustic(HWND hwnd)
                          auto mat0 = app.spCamera->GetJointMatrix(0, Caustic::AzureKinect::Joint::Head);
                          app.focusDistance = mat0.v[3][2] / 8.0f;
                          auto mat1 = app.spCamera->GetJointMatrix(0, Caustic::AzureKinect::Joint::Neck);
-                         app.focusWidth = fabs(mat1.v[3][2] - mat0.v[3][2]) / 8.0f;
+                         app.focusWidth = static_cast<float>(fabs(mat1.v[3][2] - mat0.v[3][2]) / 8.0f);
                          app.focusWidth = 0.03f;
                      }
 

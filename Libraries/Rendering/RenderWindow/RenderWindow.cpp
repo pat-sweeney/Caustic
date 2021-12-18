@@ -3,13 +3,14 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "stdafx.h"
+module;
 #include <atlbase.h>
 #include <Windows.h>
 #include <d3d11.h>
 #include <DirectXMath.h>
-#include "Rendering\RenderWindow\RenderWindow.h"
 #include "Rendering\RenderGraph\RenderGraph.h"
+
+module Rendering.RenderWindow.RenderWindow;
 import Base.Core.Core;
 import Rendering.Caustic.CausticFactory;
 import Rendering.Caustic.ICamera;
@@ -19,14 +20,6 @@ import Rendering.SceneGraph.SceneElem;
 
 namespace Caustic
 {
-    CRefObj<IRenderWindow> CreateRenderWindow(HWND hwnd, std::wstring &shaderFolder,
-        std::function<void(IRenderer*,IRenderCtx*,int)> callback,
-        std::function<void(IRenderer*)> prePresentCallback,
-        bool startFrozen /* = false */, int desktopIndex /* = 0 */)
-    {
-        return CRefObj<IRenderWindow>(new CRenderWindow(hwnd, shaderFolder, callback, prePresentCallback, false, startFrozen, desktopIndex));
-    }
-
     CRenderWindow::CRenderWindow(HWND hwnd, std::wstring &shaderFolder,
         std::function<void(Caustic::IRenderer*, Caustic::IRenderCtx*, int)> callback,
         std::function<void(Caustic::IRenderer*)> prePresentCallback,

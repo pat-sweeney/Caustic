@@ -30,8 +30,8 @@
 #include <d3d11_4.h>
 #include <d3dcommon.h>
 #include <atlbase.h>
+#include <string>
 #include "implot.h"
-#include "Rendering\RenderWindow\IRenderWindow.h"
 #include "Cameras\AzureKinect\IAzureKinect.h"
 #include "imgui.h"
 #include "imgui_impl_win32.h"
@@ -49,6 +49,7 @@ import Rendering.Caustic.RendererFlags;
 import Geometry.MeshImport;
 import Rendering.SceneGraph.ISceneFactory;
 import Rendering.SceneGraph.ISceneGraph;
+import Rendering.RenderWindow.IRenderWindow;
 
 #ifdef _MSC_VER
 #define sprintf sprintf_s

@@ -3,13 +3,11 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "stdafx.h"
 #define _USE_MATH_DEFINES
 #include <atlbase.h>
 #include <Windows.h>
 #include <d3d11.h>
 #include "Rendering\RenderGraph\RenderGraphFactory.h"
-#include "Rendering\RenderWindow\RenderWindow.h"
 #include "UnitTest.h"
 import Base.Core.Core;
 import Base.Core.Error;
@@ -19,6 +17,8 @@ import Base.Math.Vector;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IRenderCtx;
 import Rendering.Caustic.ICausticFactory;
+import Rendering.RenderWindow.RenderWindow;
+import Rendering.RenderWindow.IRenderWindow;
 
 using namespace Caustic;
 namespace CausticTestSuite

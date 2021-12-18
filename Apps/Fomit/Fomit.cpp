@@ -4,7 +4,6 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "Fomit.h"
-#include "Rendering\RenderWindow\IRenderWindow.h"
 #include "Rendering\RenderGraph\IRenderGraph.h"
 #include "Cameras\AzureKinect\IAzureKinect.h"
 #include "Rendering\RenderGraph\IRenderGraph.h"
@@ -18,7 +17,11 @@ import Geometry.Mesh.IMeshConstructor;
 import Geometry.MeshImport;
 import Rendering.Caustic.ConstructBuffer;
 import Rendering.Caustic.IRenderMaterial;
+import Rendering.Caustic.IRenderMesh;
+import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IShader;
 import Rendering.Caustic.ICausticFactory;
+import Rendering.RenderWindow.IRenderWindow;
 
 using namespace Caustic;
 namespace Caustic {
