@@ -3,12 +3,12 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
+module;
 #include <d3d11.h>
 #include <string>
-#include "IRenderGraphNode.h"
-#include "RenderGraphNode.h"
-#include "RGNPhongMaterial.h"
+#include <any>
+
+module Rendering.RenderGraph.RGNPhongMaterial;
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Geometry.Mesh.MaterialAttrib;
@@ -16,6 +16,9 @@ import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.IShader;
 import Rendering.Caustic.IShaderMgr;
 import Rendering.Caustic.IRenderCtx;
+import Rendering.RenderGraph.IRenderGraphNode;
+import Rendering.RenderGraph.RenderGraphNode;
+import Rendering.RenderGraph.RGNPhongMaterial;
 
 namespace Caustic
 {

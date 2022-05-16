@@ -14,11 +14,12 @@ module;
 #include <vector>
 #include <map>
 #include <d3d11.h>
-#include "Base\Core\convertStr.h"
+#include <memory>
 
 module Geometry.MeshImport.Obj;
 import Base.Core.Core;
 import Base.Core.Error;
+import Base.Core.ConvertStr;
 import Base.Math.Vector;
 import Geometry.Mesh.MaterialAttrib;
 import Geometry.MeshImport;

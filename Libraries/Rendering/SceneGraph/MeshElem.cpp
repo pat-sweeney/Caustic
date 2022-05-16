@@ -5,6 +5,7 @@
 //**********************************************************************
 module;
 #include <string>
+#include <atlbase.h>
 #include <d3d11_4.h>
 
 module Rendering.SceneGraph.SceneMeshElem;

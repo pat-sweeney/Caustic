@@ -62,7 +62,7 @@
       <AdditionalIncludeDirectories>$(AzureKinectSDKDir)\sdk\include;$(AzureBodySDKDir)\sdk\include;$(CausticRoot)\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>true</EnableModules>
     </ClCompile>
     <Link>
@@ -81,7 +81,7 @@
       <AdditionalIncludeDirectories>$(AzureKinectSDKDir)\sdk\include;$(AzureBodySDKDir)\sdk\include;$(CausticRoot)\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>true</EnableModules>
     </ClCompile>
     <Link>

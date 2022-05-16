@@ -720,6 +720,11 @@ namespace Caustic
         );
     }
 
+    CRefObj<IRendererMarshaller> CreateRendererMarshallerInternal()
+    {
+        return CRefObj<IRendererMarshaller>(new CRendererMarshaller());
+    }
+
     //**********************************************************************
     // Method: SetFinalRenderTarget
     // See <IRenderer::SetFinalRenderTargetUsingSharedTexture>

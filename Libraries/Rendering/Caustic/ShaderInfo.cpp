@@ -5,12 +5,14 @@
 //**********************************************************************
 #pragma once
 #include <windows.h>
-#include "Base/Core/convertStr.h"
 #include <d3d11.h>
 #include <MsXml6.h>
 #include <atlbase.h>
+#include <string>
 import Base.Core.Core;
+import Base.Core.Error;
 import Rendering.Caustic.ShaderInfo;
+import Base.Core.ConvertStr;
 
 namespace Caustic
 {

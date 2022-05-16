@@ -3,18 +3,20 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
+module;
 #include <vector>
 #include <string>
 #include <any>
 #include <map>
 #include <Windows.h>
+
+module Rendering.RenderGraph.RGNCompute;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
-#include "RenderGraphPin.h"
-#include "RenderGraphNode.h"
-#include "RenderGraphDiagnostics.h"
+import Rendering.RenderGraph.RenderGraphPin;
+import Rendering.RenderGraph.RenderGraphNode;
+import Rendering.RenderGraph.RenderGraphDiagnostics;
 
 namespace Caustic
 {

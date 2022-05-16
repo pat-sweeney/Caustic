@@ -4,6 +4,7 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
+#include <atlbase.h>
 #include <string>
 #include <functional>
 #include <d3d11_4.h>

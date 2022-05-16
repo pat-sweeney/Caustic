@@ -3,14 +3,13 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
-#include "IRGNMesh.h"
-#include "RGNMesh.h"
-#include "ILightCollection.h"
+module;
 #include <vector>
 #include <string>
 #include <any>
 #include <Windows.h>
+
+module Rendering.RenderGraph.RGNMesh;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.IRefCount;
@@ -21,6 +20,9 @@ import Rendering.Caustic.IRenderCtx;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IShader;
 import Rendering.Caustic.IShaderMgr;
+import Rendering.RenderGraph.IRGNMesh;
+import Rendering.RenderGraph.RGNMesh;
+import Rendering.RenderGraph.ILightCollection;
 
 namespace Caustic
 {

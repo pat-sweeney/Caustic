@@ -3,18 +3,20 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
+module;
 #include <vector>
 #include <string>
 #include <any>
 #include <atlbase.h>
+
+module Rendering.RenderGraph.RGNDepthCameraSource;
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Math.Vector;
 import Cameras.CameraBase.ICamera;
 import Rendering.Caustic.IRenderCtx;
-#include "IRGNDepthCameraSource.h"
-#include "RGNDepthCameraSource.h"
+import Rendering.RenderGraph.IRGNDepthCameraSource;
+import Rendering.RenderGraph.RGNDepthCameraSource;
 
 namespace Caustic
 {

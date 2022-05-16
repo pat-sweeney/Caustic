@@ -54,7 +54,7 @@
       <PreprocessorDefinitions>DEFAULT_SHADER_PATH=LR"($(CausticRoot)\$(Configuration))";CAUSTIC_EXPORT;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(CausticRoot)\External\OculusSDK\LibOVRKernel\Src;$(CausticRoot)\External\OculusSDK;$(CausticRoot)\External\$(BoostVersion);$(CausticRoot)\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
       <EnableModules>true</EnableModules>
     </ClCompile>
@@ -73,7 +73,7 @@
       <PreprocessorDefinitions>DEFAULT_SHADER_PATH=LR"($(CausticRoot)\$(Configuration))";CAUSTIC_EXPORT;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(CausticRoot)\External\OculusSDK\LibOVRKernel\Src;$(CausticRoot)\External\OculusSDK;$(CausticRoot)\External\$(BoostVersion);$(CausticRoot)\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
       <EnableModules>true</EnableModules>
     </ClCompile>

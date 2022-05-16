@@ -67,6 +67,13 @@ export namespace Caustic
                 p->AddRef();
         }
 
+        CRefObj(CRefObj &v)
+        {
+            p = v.p;
+            if (p)
+                p->AddRef();
+        }
+
 		//**********************************************************************
 		// Constructor: CRefObj
 		// Constructor from base type

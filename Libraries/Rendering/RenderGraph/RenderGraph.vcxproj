@@ -61,7 +61,7 @@
       <AdditionalIncludeDirectories>$(CausticRoot)\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>true</EnableModules>
     </ClCompile>
     <Link>
@@ -81,7 +81,7 @@
       <AdditionalIncludeDirectories>$(CausticRoot)\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>true</EnableModules>
     </ClCompile>
     <Link>
@@ -92,8 +92,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="IRenderGraph.ixx" />
+    <ClCompile Include="IRenderGraphFactory.cpp" />
+    <ClCompile Include="IRenderGraphNode.ixx" />
+    <ClCompile Include="IRenderGraphPin.ixx" />
     <ClCompile Include="RenderGraph.cpp" />
+    <ClCompile Include="RenderGraph.ixx" />
     <ClCompile Include="RenderGraphFactory.cpp" />
+    <ClCompile Include="RenderGraphFactory.ixx" />
     <ClCompile Include="RenderGraphNode.cpp" />
     <ClCompile Include="RenderGraphPin.cpp" />
     <ClCompile Include="RGNCompute.cpp" />
@@ -102,38 +108,31 @@
     <ClCompile Include="RGNImageToTexture.cpp" />
     <ClCompile Include="RGNMesh.cpp" />
     <ClCompile Include="RGNPhongMaterial.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="ILightCollection.h" />
-    <ClInclude Include="IRenderGraph.h" />
-    <ClInclude Include="IRenderGraphFactory.h" />
-    <ClInclude Include="IRenderGraphNode.h" />
-    <ClInclude Include="IRenderGraphPin.h" />
-    <ClInclude Include="IRenderGraphPointLightNode.h" />
-    <ClInclude Include="IRGNDepthCameraSource.h" />
-    <ClInclude Include="IRGNGroup.h" />
-    <ClInclude Include="IRGNImageToTexture.h" />
-    <ClInclude Include="IRGNLightCollection.h" />
-    <ClInclude Include="IRGNCompute.h" />
-    <ClInclude Include="IRGNMaterial.h" />
-    <ClInclude Include="IRGNMesh.h" />
-    <ClInclude Include="IRGNPhongMaterial.h" />
-    <ClInclude Include="LightCollection.h" />
-    <ClInclude Include="RenderGraph.h" />
-    <ClInclude Include="RenderGraphDiagnostics.h" />
-    <ClInclude Include="RenderGraphFactory.h" />
-    <ClInclude Include="RenderGraphLightCollectionNode.h" />
-    <ClInclude Include="RenderGraphNode.h" />
-    <ClInclude Include="RenderGraphPin.h" />
-    <ClInclude Include="RenderGraphPointLightNode.h" />
-    <ClInclude Include="RGNCompute.h" />
-    <ClInclude Include="RGNDepthCameraSource.h" />
-    <ClInclude Include="RGNGroup.h" />
-    <ClInclude Include="RGNImageToTexture.h" />
-    <ClInclude Include="RGNLightCollection.h" />
-    <ClInclude Include="RGNMaterial.h" />
-    <ClInclude Include="RGNMesh.h" />
-    <ClInclude Include="RGNPhongMaterial.h" />
+    <ClCompile Include="ILightCollection.ixx" />
+    <ClCompile Include="IRenderGraphFactory.ixx" />
+    <ClCompile Include="IRenderGraphPointLightNode.ixx" />
+    <ClCompile Include="IRGNDepthCameraSource.ixx" />
+    <ClCompile Include="IRGNGroup.ixx" />
+    <ClCompile Include="IRGNImageToTexture.ixx" />
+    <ClCompile Include="IRGNLightCollection.ixx" />
+    <ClCompile Include="IRGNCompute.ixx" />
+    <ClCompile Include="IRGNMaterial.ixx" />
+    <ClCompile Include="IRGNMesh.ixx" />
+    <ClCompile Include="IRGNPhongMaterial.ixx" />
+    <ClCompile Include="LightCollection.ixx" />
+    <ClCompile Include="RenderGraphDiagnostics.ixx" />
+    <ClCompile Include="RenderGraphLightCollectionNode.ixx" />
+    <ClCompile Include="RenderGraphNode.ixx" />
+    <ClCompile Include="RenderGraphPin.ixx" />
+    <ClCompile Include="RenderGraphPointLightNode.ixx" />
+    <ClCompile Include="RGNCompute.ixx" />
+    <ClCompile Include="RGNDepthCameraSource.ixx" />
+    <ClCompile Include="RGNGroup.ixx" />
+    <ClCompile Include="RGNImageToTexture.ixx" />
+    <ClCompile Include="RGNLightCollection.ixx" />
+    <ClCompile Include="RGNMaterial.ixx" />
+    <ClCompile Include="RGNMesh.ixx" />
+    <ClCompile Include="RGNPhongMaterial.ixx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Base\Core\Core.vcxproj">

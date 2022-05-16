@@ -3,17 +3,18 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
+module;
 #include <vector>
 #include <string>
 #include <any>
 #include <d3d11.h>
+
+module Rendering.RenderGraph.RenderGraph;
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Math.Matrix;
 import Rendering.Caustic.IRenderCtx;
-#include "IRenderGraphNode.h"
-#include "RenderGraph.h"
+import Rendering.RenderGraph.IRenderGraphNode;
 
 namespace Caustic
 {

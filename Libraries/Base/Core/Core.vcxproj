@@ -11,12 +11,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="convertStr.h" />
     <ClInclude Include="UnitTests.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BlockAllocator.ixx" />
-    <ClCompile Include="convertStr.cpp" />
+    <ClCompile Include="convertStr.ixx" />
     <ClCompile Include="Core.cppm" />
     <ClCompile Include="Core.ixx" />
     <ClCompile Include="CritSec.ixx" />
@@ -64,7 +63,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;CAUSTIC_ROOT_DIRECTORY=LR"($(CausticRoot))";CAUSTIC_SHADER_DIRECTORY=LR"($(CausticRoot)\$(Configuration))";_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnableModules>true</EnableModules>
       <SDLCheck>true</SDLCheck>
@@ -79,7 +78,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <PreprocessorDefinitions>NDEBUG;_LIB;CAUSTIC_ROOT_DIRECTORY=LR"($(CausticRoot))";CAUSTIC_SHADER_DIRECTORY=LR"($(CausticRoot)\$(Configuration))";_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnableModules>true</EnableModules>
       <SDLCheck>true</SDLCheck>

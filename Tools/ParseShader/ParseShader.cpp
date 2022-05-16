@@ -17,7 +17,7 @@
 #include <atlbase.h>
 import Base.Core.Core;
 import Base.Core.Error;
-#include "Base/Core/convertStr.h"
+import Base.Core.ConvertStr;
 #include <MsXml6.h>
 #include <stdlib.h>
 #include <map>

@@ -3,21 +3,23 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
+module;
 #include <vector>
 #include <string>
 #include <any>
 #include <windows.h>
-#include "Base\Core\convertStr.h"
-#include "IRGNCompute.h"
-#include "RGNCompute.h"
-#include "ILightCollection.h"
+
+module Rendering.RenderGraph.RGNCompute;
+import Base.Core.ConvertStr;
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Math.Vector;
 import Rendering.Caustic.IBuffer;
 import Rendering.Caustic.ShaderInfo;
 import Rendering.Caustic.Shader;
+import Rendering.RenderGraph.IRGNCompute;
+import Rendering.RenderGraph.RGNCompute;
+import Rendering.RenderGraph.ILightCollection;
 
 namespace Caustic
 {

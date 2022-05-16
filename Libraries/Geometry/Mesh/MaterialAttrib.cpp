@@ -5,11 +5,12 @@
 //**********************************************************************
 module;
 #include <Windows.h>
-#include "Base\Core\convertStr.h"
 #include <memory>
+#include <string>
 
 module Geometry.Mesh.MaterialAttrib;
 import Imaging.Image.Image;
+import Base.Core.ConvertStr;
 
 namespace Caustic
 {

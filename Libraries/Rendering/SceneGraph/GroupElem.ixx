@@ -22,6 +22,7 @@ import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IRenderCtx;
 import Rendering.SceneGraph.SceneGraph;
 import Rendering.SceneGraph.SceneElem;
+import Rendering.SceneGraph.ISceneElem;
 import Rendering.SceneGraph.ISceneGroupElem;
 
 export namespace Caustic
@@ -36,9 +37,10 @@ export namespace Caustic
         public CRefCount
     {
     protected:
-        std::vector<CRefObj<ISceneElem>> m_Children;
-        Matrix4x4 m_Transform;
+		std::vector<CRefObj<ISceneElem>> m_Children;
+		Matrix4x4 m_Transform;
     public:
+		CSceneGroupElem() {}
 		//**********************************************************************
 		// Method: Load
 		// Loads a scene element from a stream

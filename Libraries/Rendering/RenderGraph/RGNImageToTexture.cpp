@@ -3,13 +3,16 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
-#include "IRenderGraphNode.h"
-#include "RGNImageToTexture.h"
+module;
+#include <any>
+
+module Rendering.RenderGraph.RGNImageToTexture;
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Rendering.Caustic.ICausticFactory;
+import Rendering.RenderGraph.IRenderGraphNode;
+import Rendering.RenderGraph.RGNImageToTexture;
 
 namespace Caustic
 {

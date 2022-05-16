@@ -61,7 +61,7 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SHADERPATH=LR"foo($(CausticRoot)\$(Configuration))foo";_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(CausticRoot)\External\imgui;$(CausticRoot)\External\imgui\backends;$(WXWidgetsInclude);$(CausticRoot)\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <TreatWarningAsError>false</TreatWarningAsError>
       <EnableModules>true</EnableModules>
     </ClCompile>
@@ -80,7 +80,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SHADERPATH=LR"foo($(CausticRoot)\$(Configuration))foo";NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(CausticRoot)\External\imgui;$(CausticRoot)\External\imgui\backends;$(CausticRoot)\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
       <ConformanceMode>true</ConformanceMode>
       <EnableModules>true</EnableModules>

@@ -3,14 +3,16 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
-import Base.Core.Core;
-import Base.Core.RefCount;
-#include "RenderGraphNode.h"
+module;
 #include <vector>
 #include <string>
 #include <any>
 #include <windows.h>
+
+module Rendering.RenderGraph.RenderGraphNode;
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Rendering.RenderGraph.RenderGraphNode;
 
 namespace Caustic
 {

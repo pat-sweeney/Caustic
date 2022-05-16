@@ -41,95 +41,50 @@
     <ClCompile Include="RGNPhongMaterial.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="IRenderGraph.h">
+    <ClCompile Include="IRenderGraph.ixx">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IRenderGraphPin.h">
+    </ClCompile>
+    <ClCompile Include="IRenderGraphNode.ixx">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderGraph.h">
+    </ClCompile>
+    <ClCompile Include="IRenderGraphPin.ixx">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IRenderGraphNode.h">
+    </ClCompile>
+    <ClCompile Include="RenderGraph.ixx">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderGraphPin.h">
+    </ClCompile>
+    <ClCompile Include="RenderGraphFactory.ixx">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderGraphDiagnostics.h">
+    </ClCompile>
+    <ClCompile Include="IRenderGraphFactory.ixx" />
+    <ClCompile Include="IRenderGraphPointLightNode.ixx" />
+    <ClCompile Include="IRGNDepthCameraSource.ixx" />
+    <ClCompile Include="IRGNGroup.ixx" />
+    <ClCompile Include="IRGNImageToTexture.ixx" />
+    <ClCompile Include="IRGNLightCollection.ixx" />
+    <ClCompile Include="IRGNCompute.ixx" />
+    <ClCompile Include="IRGNMaterial.ixx" />
+    <ClCompile Include="IRGNMesh.ixx" />
+    <ClCompile Include="IRGNPhongMaterial.ixx" />
+    <ClCompile Include="LightCollection.ixx" />
+    <ClCompile Include="RenderGraphDiagnostics.ixx" />
+    <ClCompile Include="RenderGraphLightCollectionNode.ixx" />
+    <ClCompile Include="RenderGraphNode.ixx" />
+    <ClCompile Include="RenderGraphPin.ixx" />
+    <ClCompile Include="RenderGraphPointLightNode.ixx" />
+    <ClCompile Include="RGNCompute.ixx" />
+    <ClCompile Include="RGNDepthCameraSource.ixx" />
+    <ClCompile Include="RGNGroup.ixx" />
+    <ClCompile Include="RGNImageToTexture.ixx" />
+    <ClCompile Include="RGNLightCollection.ixx" />
+    <ClCompile Include="RGNMaterial.ixx" />
+    <ClCompile Include="RGNMesh.ixx" />
+    <ClCompile Include="RGNPhongMaterial.ixx" />
+    <ClCompile Include="ILightCollection.ixx">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderGraphNode.h">
+    </ClCompile>
+    <ClCompile Include="IRenderGraphFactory.cpp">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IRenderGraphPointLightNode.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderGraphPointLightNode.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderGraphLightCollectionNode.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LightCollection.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ILightCollection.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IRGNMesh.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RGNMesh.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RGNCompute.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IRGNCompute.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderGraphFactory.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IRenderGraphFactory.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RGNLightCollection.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IRGNLightCollection.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RGNGroup.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IRGNGroup.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IRGNMaterial.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RGNMaterial.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RGNDepthCameraSource.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IRGNDepthCameraSource.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IRGNImageToTexture.h" />
-    <ClInclude Include="RGNImageToTexture.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RGNPhongMaterial.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IRGNPhongMaterial.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
+    </ClCompile>
   </ItemGroup>
 </Project>

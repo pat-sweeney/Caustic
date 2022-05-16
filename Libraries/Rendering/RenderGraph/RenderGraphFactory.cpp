@@ -3,36 +3,26 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
+module;
+#include <windows.h>
+#include <string>
+
+module Rendering.RenderGraph.RenderGraphFactory;
 import Base.Core.Core;
 import Base.Core.RefCount;
-#include "RenderGraphFactory.h"
-#include "RenderGraph.h"
-#include "RGNMesh.h"
-#include "RGNCompute.h"
-#include "RGNLightCollection.h"
-#include "RGNGroup.h"
-#include "RGNMaterial.h"
-#include "RGNPhongMaterial.h"
-#include "RGNDepthCameraSource.h"
-#include "RGNIMageToTexture.h"
-#include <windows.h>
+import Rendering.RenderGraph.RenderGraphFactory;
+import Rendering.RenderGraph.RenderGraph;
+import Rendering.RenderGraph.RGNMesh;
+import Rendering.RenderGraph.RGNCompute;
+import Rendering.RenderGraph.RGNLightCollection;
+import Rendering.RenderGraph.RGNGroup;
+import Rendering.RenderGraph.RGNMaterial;
+import Rendering.RenderGraph.RGNPhongMaterial;
+import Rendering.RenderGraph.RGNDepthCameraSource;
+import Rendering.RenderGraph.RGNImageToTexture;
 
 namespace Caustic
 {
-    //**********************************************************************
-    // Function: CreateRenderGraphFactory
-    // Creates a new RenderGraph factory. This factory is used to create nodes
-    // that will be added to the render graph
-    //
-    // Returns:
-    // New render factory object
-    //**********************************************************************
-    CRefObj<IRenderGraphFactory> CreateRenderGraphFactory()
-    {
-        return CRefObj<IRenderGraphFactory>(new CRenderGraphFactory());
-    }
-
     //**********************************************************************
     // Function: CreateRenderGraph
     // See <IRenderGraphFactory>
@@ -58,8 +48,13 @@ namespace Caustic
     CRefObj<IRenderGraphNode_Mesh> CRenderGraphFactory::CreateMeshNode(CRefObj<IMesh> spMesh)
     {
         auto spMeshNode = CRefObj<IRenderGraphNode_Mesh>(new CRenderGraphNode_Mesh());
-        if (spMesh)
-            spMeshNode->FindInputPin("mesh")->SetDefaultValue(spMesh);
+// TODO: The following 4 lines of code no longer compile. I'm not sure what the issue is.
+// Given that I no longer am supporting the RenderGraph (should use the SceneGraph instead)
+// I simply commented this out so it will compile.
+//        if (spMesh)
+//        {
+//            spMeshNode->FindInputPin("mesh")->SetDefaultValue(spMesh);
+//        }
         return spMeshNode;
     }
 

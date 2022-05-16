@@ -3,14 +3,17 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#pragma once
+module;
 #include <windows.h>
+#include <string>
+
+module Rendering.RenderGraph.RGNGroup;
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Base.Core.Error;
-#include "IRenderGraphNode.h"
-#include "RenderGraphNode.h"
-#include "RGNGroup.h"
+import Rendering.RenderGraph.IRenderGraphNode;
+import Rendering.RenderGraph.RenderGraphNode;
+import Rendering.RenderGraph.RGNGroup;
 
 namespace Caustic
 {
