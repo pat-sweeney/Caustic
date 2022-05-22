@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CRenderGraphNode_Material","CRenderGraphNode_Material");NDSummary.OnSummaryLoaded("CClass:CRenderGraphNode_Material",[["C/C++","C"]],[["Classes","Class"]],[[1337,0,0,"CRenderGraphNode_Material"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CRenderGraphNode_Material","CRenderGraphNode_Material");NDSummary.OnSummaryLoaded("CClass:CRenderGraphNode_Material",[["C/C++","C"]],[["Classes","Class"]],[[1292,0,0,"CRenderGraphNode_Material"]]);

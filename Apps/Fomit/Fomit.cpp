@@ -4,9 +4,6 @@
 // See file LICENSE for details.
 //**********************************************************************
 #include "Fomit.h"
-#include "Rendering\RenderGraph\IRenderGraph.h"
-#include "Rendering\RenderGraph\IRenderGraph.h"
-#include "Rendering\RenderGraph\IRenderGraphFactory.h"
 #include <Windows.h>
 #include <commdlg.h>
 import Base.Core.Core;
@@ -22,6 +19,9 @@ import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IShader;
 import Rendering.Caustic.ICausticFactory;
 import Rendering.RenderWindow.IRenderWindow;
+import Rendering.RenderGraph.IRenderGraph;
+import Rendering.RenderGraph.IRenderGraph;
+import Rendering.RenderGraph.IRenderGraphFactory;
 
 using namespace Caustic;
 namespace Caustic {

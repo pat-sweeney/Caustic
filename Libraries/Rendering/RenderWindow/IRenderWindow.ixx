@@ -4,13 +4,16 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include "Rendering\RenderGraph\IRenderGraph.h"
 #include <Windows.h>
 #include <functional>
 
 export module Rendering.RenderWindow.IRenderWindow;
 import Base.Core.Core;
 import Base.Core.IRefCount;
+import Base.Math.Vector;
+import Rendering.Caustic.IRenderer;
+import Rendering.RenderGraph.IRenderGraph;
+import Rendering.SceneGraph.ISceneGraph;
 
 export namespace Caustic
 {

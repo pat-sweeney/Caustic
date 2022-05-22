@@ -5,8 +5,6 @@
 //**********************************************************************
 module;
 #include <d3d11.h>
-#include "Rendering\RenderGraph\IRenderGraph.h"
-#include "Rendering\RenderGraph\IRenderGraphFactory.h"
 #include <functional>
 
 export module Rendering.RenderWindow.RenderWindow;
@@ -18,6 +16,8 @@ import Rendering.Caustic.ITrackball;
 import Rendering.SceneGraph.ISceneGraph;
 import Rendering.SceneGraph.ISceneFactory;
 import Rendering.RenderWindow.IRenderWindow;
+import Rendering.RenderGraph.IRenderGraph;
+import Rendering.RenderGraph.IRenderGraphFactory;
 
 export namespace Caustic
 {

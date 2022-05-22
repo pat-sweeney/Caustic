@@ -1,1 +1,1 @@
-﻿NDSummary.OnToolTipsLoaded("File:Rendering/Caustic/RendererFlags.ixx",{806:"<div class=\"NDToolTip TFile LC\"><div class=\"TTSummary\">This file defines the published interface for the renderer.</div></div>"});
+﻿NDSummary.OnToolTipsLoaded("File:Rendering/Caustic/RendererFlags.ixx",{804:"<div class=\"NDToolTip TFile LC\"><div class=\"TTSummary\">This file defines the published interface for the renderer.</div></div>"});

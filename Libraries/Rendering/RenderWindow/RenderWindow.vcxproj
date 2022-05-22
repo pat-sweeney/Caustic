@@ -129,6 +129,9 @@
     <ProjectReference Include="..\RendererMarshaller\RendererMarshaller.vcxproj">
       <Project>{39cbea68-484f-4320-bb2f-6f59c0fe5b25}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\RenderGraph\RenderGraph.vcxproj">
+      <Project>{c794b439-228e-4659-8895-5169bb46db55}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\SceneGraph\SceneGraph.vcxproj">
       <Project>{49433c2e-bf12-4b0f-8dd2-204c3339d5c5}</Project>
     </ProjectReference>

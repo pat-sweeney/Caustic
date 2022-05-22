@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="UserMacros">
-    <CausticRoot Condition="'$(CausticRoot)'==''">g:\github\Caustic</CausticRoot>
+    <CausticRoot Condition="'$(CausticRoot)'==''">d:\github\Caustic</CausticRoot>
     <CausticLibs>
 $(CausticRoot)\x64\Debug\Core.lib;
 $(CausticRoot)\x64\Debug\Math.lib;
@@ -222,6 +222,9 @@ $(CausticRoot)\x64\Debug\RenderGraph.lib;
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Rendering\ImGui\ImGui.vcxproj">
       <Project>{fd63d447-4b42-4f14-be8d-392fa277ee0e}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Rendering\RendererMarshaller\RendererMarshaller.vcxproj">
+      <Project>{39cbea68-484f-4320-bb2f-6f59c0fe5b25}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Rendering\RenderGraph\RenderGraph.vcxproj">
       <Project>{c794b439-228e-4659-8895-5169bb46db55}</Project>

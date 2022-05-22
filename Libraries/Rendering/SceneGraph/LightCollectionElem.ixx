@@ -25,6 +25,7 @@ import Rendering.SceneGraph.SceneGroupElem;
 import Rendering.SceneGraph.SceneGraph;
 import Rendering.SceneGraph.SceneElem;
 import Rendering.SceneGraph.ISceneLightCollectionElem;
+import Rendering.SceneGraph.ISceneCubeElem;
 
 export namespace Caustic
 {

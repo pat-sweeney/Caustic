@@ -79,5 +79,12 @@ export namespace Caustic
 		// Defines the current shader
 		//**********************************************************************
 		CRefObj<IShader> m_spCurrentShader;
+
+		//**********************************************************************
+		// Property: m_ShowProxyObjects
+		// If true renderer will draw a proxy object. This is useful for rendering
+		// hidden objects (for instance, place a lightbulb at a light's position)
+		//**********************************************************************
+		bool m_ShowProxyObjects;
 	};
 }

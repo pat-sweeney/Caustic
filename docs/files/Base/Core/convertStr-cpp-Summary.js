@@ -1,1 +1,0 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Base/Core/convertStr.cpp","convertStr.cpp");NDSummary.OnSummaryLoaded("File:Base/Core/convertStr.cpp",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[80,0,0,"Caustic","Caustic"],[81,0,2,"Functions","Caustic.Functions"],[82,0,1,"str2wstr","Caustic.str2wstr"],[83,0,1,"wstr2str","Caustic.wstr2str"]]);

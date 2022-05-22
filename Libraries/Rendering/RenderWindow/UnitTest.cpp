@@ -7,8 +7,8 @@
 #include <atlbase.h>
 #include <Windows.h>
 #include <d3d11.h>
-#include "Rendering\RenderGraph\RenderGraphFactory.h"
 #include "UnitTest.h"
+#include <string>
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
@@ -19,6 +19,8 @@ import Rendering.Caustic.IRenderCtx;
 import Rendering.Caustic.ICausticFactory;
 import Rendering.RenderWindow.RenderWindow;
 import Rendering.RenderWindow.IRenderWindow;
+import Rendering.RenderGraph.RenderGraphFactory;
+import Rendering.RenderGraph.IRenderGraphFactory;
 
 using namespace Caustic;
 namespace CausticTestSuite

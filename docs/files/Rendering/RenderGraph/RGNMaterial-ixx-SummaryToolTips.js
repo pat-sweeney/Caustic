@@ -1,0 +1,1 @@
+﻿NDSummary.OnToolTipsLoaded("File:Rendering/RenderGraph/RGNMaterial.ixx",{1292:"<div class=\"NDToolTip TClass LC\"><div class=\"NDClassPrototype\" id=\"NDClassPrototype1292\"><div class=\"CPEntry TClass Current\"><div class=\"CPName\">CRenderGraphNode_Material</div></div></div><div class=\"TTSummary\">Implements IRenderGraphNode_Material</div></div>"});

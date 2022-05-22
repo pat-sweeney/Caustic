@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Rendering/SceneGraph/ISceneCylinderElem.ixx","ISceneCylinderElem.ixx");NDSummary.OnSummaryLoaded("File:Rendering/SceneGraph/ISceneCylinderElem.ixx",[["C/C++","C"]],[["Interfaces","Interface"]],[[1555,0,0,"ISceneCylinderElem","ISceneCylinderElem"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/SceneGraph/ISceneCylinderElem.ixx","ISceneCylinderElem.ixx");NDSummary.OnSummaryLoaded("File:Rendering/SceneGraph/ISceneCylinderElem.ixx",[["C/C++","C"]],[["Interfaces","Interface"]],[[1549,0,0,"ISceneCylinderElem","ISceneCylinderElem"]]);

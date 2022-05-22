@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/RenderGraph/RGNPhongMaterial.ixx","RGNPhongMaterial.ixx");NDSummary.OnSummaryLoaded("File:Rendering/RenderGraph/RGNPhongMaterial.ixx",[["C/C++","C"]],[["Classes","Class"]],[[1280,0,0,"CRenderGraphNode_PhongMaterial","CRenderGraphNode_PhongMaterial"]]);

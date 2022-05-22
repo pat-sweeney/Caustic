@@ -1,1 +1,1 @@
-﻿NDSearch.OnPrefixDataLoaded("tov",["Function"],[["ToVector",,[["ILightCollection",,,,0,"File:Rendering/RenderGraph/ILightCollection.h:ILightCollection.ToVector","CClass:ILightCollection:ToVector"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("tov",["Function"],[["ToVector",,[["ILightCollection",,,,0,"File:Rendering/RenderGraph/ILightCollection.ixx:ILightCollection.ToVector","CClass:ILightCollection:ToVector"]]]]);

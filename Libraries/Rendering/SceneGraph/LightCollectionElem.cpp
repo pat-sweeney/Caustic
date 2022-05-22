@@ -19,6 +19,8 @@ import Rendering.Caustic.IRenderCtx;
 import Rendering.Caustic.ILight;
 import Rendering.SceneGraph.SceneFactory;
 import Rendering.SceneGraph.ISceneLightCollectionElem;
+import Rendering.Caustic.IShaderMgr;
+import Rendering.SceneGraph.SceneCubeElem;
 
 namespace Caustic
 {
@@ -58,6 +60,18 @@ namespace Caustic
         std::vector<CRefObj<ILight>> lights = pSceneCtx->m_lights;
         for (int i = 0; i < (int)m_lights.size(); i++)
             pSceneCtx->m_lights.push_back(m_lights[i]);
+        if (pSceneCtx->m_ShowProxyObjects)
+        {
+            CRefObj<IShader> spOldShader = pSceneCtx->m_spCurrentShader;
+            pSceneCtx->m_spCurrentShader = pRenderer->GetShaderMgr()->FindShader(L"default");
+            for (int i = 0; i < (int)m_lights.size(); i++)
+            {
+                auto lightPos = m_lights[i]->GetPosition();
+                CSceneCubeElem cube(lightPos, 1.0f, 1.0f, 1.0f);
+                cube.Render(pRenderer, pRenderCtx, pSceneCtx);
+            }
+            pSceneCtx->m_spCurrentShader = spOldShader;
+        }
         if (pRenderCtx->GetCurrentPass() == Caustic::c_PassShadow)
         {
             int totalLights = 0;

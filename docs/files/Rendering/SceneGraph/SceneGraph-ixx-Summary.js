@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Rendering/SceneGraph/SceneGraph.ixx","SceneGraph.ixx");NDSummary.OnSummaryLoaded("File:Rendering/SceneGraph/SceneGraph.ixx",[["C/C++","C"]],[["Classes","Class"]],[[1425,0,0,"CSceneGraph","CSceneGraph"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/SceneGraph/SceneGraph.ixx","SceneGraph.ixx");NDSummary.OnSummaryLoaded("File:Rendering/SceneGraph/SceneGraph.ixx",[["C/C++","C"]],[["Classes","Class"]],[[1432,0,0,"CSceneGraph","CSceneGraph"]]);

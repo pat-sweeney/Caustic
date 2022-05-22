@@ -227,6 +227,7 @@
           "Image": "1.0.0",
           "Math": "1.0.0",
           "Mesh": "1.0.0",
+          "RenderGraph": "1.0.0",
           "RendererMarshaller": "1.0.0",
           "SceneGraph": "1.0.0"
         },
@@ -356,11 +357,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "G:\\GitHub\\Caustic\\Apps\\WorldBuilder\\WorldBuilder.csproj",
+      "projectUniqueName": "D:\\github\\Caustic\\Apps\\WorldBuilder\\WorldBuilder.csproj",
       "projectName": "WorldBuilder",
-      "projectPath": "G:\\GitHub\\Caustic\\Apps\\WorldBuilder\\WorldBuilder.csproj",
+      "projectPath": "D:\\github\\Caustic\\Apps\\WorldBuilder\\WorldBuilder.csproj",
       "packagesPath": "C:\\Users\\patricsw\\.nuget\\packages\\",
-      "outputPath": "G:\\GitHub\\Caustic\\Apps\\WorldBuilder\\obj\\",
+      "outputPath": "D:\\github\\Caustic\\Apps\\WorldBuilder\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -381,8 +382,8 @@
         "net5.0-windows7.0": {
           "targetAlias": "net5.0-windows",
           "projectReferences": {
-            "G:\\GitHub\\Caustic\\Libraries\\Interop\\Renderer\\Renderer.vcxproj": {
-              "projectPath": "G:\\GitHub\\Caustic\\Libraries\\Interop\\Renderer\\Renderer.vcxproj"
+            "D:\\github\\Caustic\\Libraries\\Interop\\Renderer\\Renderer.vcxproj": {
+              "projectPath": "D:\\github\\Caustic\\Libraries\\Interop\\Renderer\\Renderer.vcxproj"
             }
           }
         }

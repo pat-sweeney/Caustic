@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Rendering/SceneGraph/ISceneCubeElem.ixx","ISceneCubeElem.ixx");NDSummary.OnSummaryLoaded("File:Rendering/SceneGraph/ISceneCubeElem.ixx",[["C/C++","C"]],[["Interfaces","Interface"]],[[1604,0,0,"ISceneCubeElem","ISceneCubeElem"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/SceneGraph/ISceneCubeElem.ixx","ISceneCubeElem.ixx");NDSummary.OnSummaryLoaded("File:Rendering/SceneGraph/ISceneCubeElem.ixx",[["C/C++","C"]],[["Interfaces","Interface"]],[[1573,0,0,"ISceneCubeElem","ISceneCubeElem"]]);

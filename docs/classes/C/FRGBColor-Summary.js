@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:FRGBColor","FRGBColor");NDSummary.OnSummaryLoaded("CClass:FRGBColor",[["C/C++","C"]],[["Classes","Class"]],[[510,0,0,"FRGBColor"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:FRGBColor","FRGBColor");NDSummary.OnSummaryLoaded("CClass:FRGBColor",[["C/C++","C"]],[["Classes","Class"]],[[505,0,0,"FRGBColor"]]);

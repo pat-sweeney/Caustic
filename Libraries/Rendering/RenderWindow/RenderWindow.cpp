@@ -8,7 +8,7 @@ module;
 #include <Windows.h>
 #include <d3d11.h>
 #include <DirectXMath.h>
-#include "Rendering\RenderGraph\RenderGraph.h"
+#include <string>
 
 module Rendering.RenderWindow.RenderWindow;
 import Base.Core.Core;
@@ -17,6 +17,7 @@ import Rendering.Caustic.ICamera;
 import Rendering.RendererMarshaller.IRendererMarshaller;
 import Rendering.SceneGraph.SceneGraph;
 import Rendering.SceneGraph.SceneElem;
+import Rendering.RenderGraph.RenderGraph;
 
 namespace Caustic
 {
