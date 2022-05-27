@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:Cameras/AzureKinect/IWebCamera.ixx","IWebCamera.ixx");NDSummary.OnSummaryLoaded("File:Cameras/AzureKinect/IWebCamera.ixx",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"]],[[1624,0,1,"Functions","Functions"],[1625,0,0,"CreateWebCamera","CreateWebCamera"]]);

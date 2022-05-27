@@ -37,8 +37,8 @@ export namespace Caustic
     // k4a_capture_t m_capture - capture context
     // bool m_cameraStarted - Has the camera been started?
     //
-    // Header:
-    // {Link:#include "Cameras/AzureKinect/AzureKinect.h"{Cameras/AzureKinect/AzureKinect.h}}
+    // Module:
+    // {Link:import Cameras.AzureKinect.AzureKinect;{Cameras/AzureKinect/IAzureKinect.ixx}}
     //**********************************************************************
     class CAzureKinectDevice : public IAzureKinect, public CRefCount
     {

@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CAzureKinectDevice","CAzureKinectDevice");NDSummary.OnSummaryLoaded("CClass:CAzureKinectDevice",[["C/C++","C"]],[["Classes","Class"]],[[252,0,0,"CAzureKinectDevice"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CAzureKinectDevice","CAzureKinectDevice");NDSummary.OnSummaryLoaded("CClass:CAzureKinectDevice",[["C/C++","C"]],[["Classes","Class"]],[[1626,0,0,"CAzureKinectDevice"]]);

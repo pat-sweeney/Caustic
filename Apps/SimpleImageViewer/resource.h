@@ -15,6 +15,7 @@
 #define ID_FILE_LOADIMAGE               32771
 #define ID_FILE_                        32772
 #define ID_FILE_LIVECAMERA              32773
+#define ID_FILE_LIVEWEBCAMERA           32789
 #define ID_VIEW_SHOWDEPTH               32774
 #define ID_FILTER_GAUSSIANBLUR          32775
 #define ID_FILTER_MEDIANFILTER          32776
@@ -38,7 +39,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        129
-#define _APS_NEXT_COMMAND_VALUE         32789
+#define _APS_NEXT_COMMAND_VALUE         32790
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           110
 #endif

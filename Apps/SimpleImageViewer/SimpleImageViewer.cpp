@@ -13,6 +13,7 @@ import Base.Core.IRefCount;
 import Imaging.Image.IImage;
 import Imaging.Image.AllImageFilters;
 import Cameras.AzureKinect.IAzureKinect;
+import Cameras.WebCamera.IWebCamera;
 
 #define MAX_LOADSTRING 100
 
@@ -33,6 +34,7 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 using namespace Caustic;  
 CRefObj<IAzureKinect> spAzure;
+CRefObj<IWebCamera> spWebCamera;
 CRefObj<IImage> spSourceImage;
 CRefObj<IImage> spFilteredSourceImage;
 CRefObj<IImageFilter> spFilter;
@@ -105,7 +107,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 DispatchMessage(&msg);
             }
         }
-        if (spAzure != nullptr)
+        if (spWebCamera != nullptr)
+        {
+            CRefObj<IImage> spColorImage;
+            if (spWebCamera->NextFrame(&spColorImage.p) && spColorImage != nullptr)
+            {
+                SetDisplayImage(spColorImage);
+                DrawImage(GetDC(hWnd), imgbitmap, imgwidth, imgheight);
+            }
+        }
+        else if (spAzure != nullptr)
         {
             CRefObj<IImage> spColorImage;
             CRefObj<IImage> spDepthImage;
@@ -283,6 +294,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 break;
             case IDM_EXIT:
                 DestroyWindow(hWnd);
+                break;
+            case ID_FILE_LIVEWEBCAMERA:
+                {
+                    auto x = IWebCamera::GetAvailableDevices();
+                    int i = 0;
+                    for (; i < (int)x.size(); i++)
+                        if (x[i].name.contains(L"LifeCam"))
+                            break;
+                    spWebCamera = CreateWebCamera(x[i].symlink.c_str());
+                }
                 break;
             case ID_FILE_LIVECAMERA:
                 spAzure = Caustic::AzureKinect::CreateAzureKinect(0, Caustic::AzureKinect::Color1080p, Caustic::AzureKinect::Depth512x512, Caustic::AzureKinect::FPS30);
