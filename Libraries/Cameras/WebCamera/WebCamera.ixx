@@ -27,63 +27,39 @@ import Imaging.Image.IImagePool;
 
 export namespace Caustic
 {
-    class CMFHandler : public IMFSourceReaderCallback
-    {
-        ULONG m_cRef;
-    public:
-        CMFHandler() :
-            m_cRef(0)
-        {
-        }
-
-        HRESULT QueryInterface(REFIID riid, LPVOID* ppvObj)
-        {
-            if (!ppvObj)
-                return E_INVALIDARG;
-            *ppvObj = NULL;
-            if (riid == __uuidof(IUnknown) || riid == __uuidof(IMFSourceReaderCallback))
-            {
-                *ppvObj = (LPVOID)this;
-                AddRef();
-                return S_OK;
-            }
-            return E_NOINTERFACE;
-        }
-
-        ULONG AddRef()
-        {
-            InterlockedIncrement(&m_cRef);
-            return m_cRef;
-        }
-
-        ULONG Release()
-        {
-            ULONG ulRefCount = InterlockedDecrement(&m_cRef);
-            if (0 == m_cRef)
-            {
-                delete this;
-            }
-            return ulRefCount;
-        }
-
-        HRESULT OnReadSample(HRESULT hrStatus, DWORD dwStreamIndex, DWORD dwStreamFlags, LONGLONG llTimestamp, IMFSample* pSample)
-        {
-            return S_OK;
-        }
-    };
-
+    //**********************************************************************
+    // Class: CWebCamera
+    // Defines the implementation for a WebCamera.
+    //
+    // Members:
+    // CComPtr<IMFSourceReader> m_spReader - Media Foundation's source reader
+    // CRefObj<IImagePool> m_spColorImagePool - image pool
+    // UINT32 m_width - width of output image
+    // UINT32 m_height - height of output image
+    // LONG m_stride - stride of output image
+    //
+    // Module:
+    // {Link:import Cameras.WebCamera.WebCamera;{Cameras/WebCamera/WebCamera.ixx}}
+    //**********************************************************************
     class CWebCamera : public CRefCount, public IWebCamera
     {
-        HDEVNOTIFY m_hDeviceNotification;
-        void Setup();
-        void Shutdown();
-
         CComPtr<IMFSourceReader> m_spReader;
         CRefObj<IImagePool> m_spColorImagePool;
         UINT32 m_width, m_height;
         LONG m_stride;
     public:
+        //**********************************************************************
+        // Constructor: CWebCamera
+        // Default ctor for CWebCamera
+        //
+        // Parameters:
+        // deviceName - symbolic link name for the requested device
+        //
+        // Module:
+        // {Link:import Cameras.WebCamera.WebCamera;{Cameras/WebCamera/WebCamera.ixx}}
+        //**********************************************************************
         CWebCamera(std::wstring deviceName);
+        
         ~CWebCamera() {}
 
         //**********************************************************************

@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:Cameras/WebCamera/IWebCamera.ixx","IWebCamera.ixx");NDSummary.OnSummaryLoaded("File:Cameras/WebCamera/IWebCamera.ixx",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[1623,0,0,"Caustic","Caustic"],[1624,0,2,"Functions","Caustic.Functions"],[1625,0,1,"CreateWebCamera","Caustic.CreateWebCamera"]]);

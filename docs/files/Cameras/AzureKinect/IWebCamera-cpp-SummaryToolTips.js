@@ -1,1 +1,0 @@
-﻿NDSummary.OnToolTipsLoaded("File:Cameras/AzureKinect/IWebCamera.cpp",{1623:"<div class=\"NDToolTip TFunction LC\"><div id=\"NDPrototype1623\" class=\"NDPrototype\"><div class=\"PSection PPlainSection\">CRefObj&lt;IWebCamera&gt; CreateWebCamera()</div></div><div class=\"TTSummary\">CreateWebCamera instantiates an instance of an Web camera</div></div>"});

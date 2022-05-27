@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2022
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -16,6 +16,7 @@ import Base.Core.IRefCount;
 import Imaging.Image.IImage;
 import Cameras.CameraBase.ICamera;
 
+// Namespace: Caustic
 export namespace Caustic
 {
     struct CameraInfo
