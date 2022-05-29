@@ -20,6 +20,7 @@ module;
 #include <string>
 #include <combaseapi.h>
 #include <camerauicontrol.h>
+#pragma comment(lib, "wmcodecdspuuid.lib")
 
 module Cameras.WebCamera.WebCamera;
 import Base.Core.Error;
@@ -33,7 +34,7 @@ import Cameras.WebCamera.IWebCamera;
 
 namespace Caustic
 {
-    CWebCamera::CWebCamera(std::wstring deviceName)
+    CWebCamera::CWebCamera(std::wstring deviceName, int w /* = -1*/, int h /* = -1*/)
     {
         CComPtr<IMFAttributes> spAttr;
         CT(MFCreateAttributes(&spAttr, 2));
@@ -43,22 +44,58 @@ namespace Caustic
         CT(MFCreateDeviceSource(spAttr, &spDevice));
 
         spAttr = nullptr;
-        CT(MFCreateAttributes(&spAttr, 1));
-        CT(spAttr->SetUINT32(MF_SOURCE_READER_ENABLE_VIDEO_PROCESSING, TRUE));
+        CT(MFCreateAttributes(&spAttr, 2));
+        CT(spAttr->SetUINT32(MF_SOURCE_READER_ENABLE_ADVANCED_VIDEO_PROCESSING, TRUE));
+        CT(spAttr->SetUINT32(MF_READWRITE_DISABLE_CONVERTERS, FALSE));
         CT(MFCreateSourceReaderFromMediaSource(spDevice, spAttr, &m_spReader));
 
         CComPtr<IMFMediaType> spMediaType;
-        CT(MFCreateMediaType(&spMediaType));
-        CT(spMediaType->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Video));
-        CT(spMediaType->SetGUID(MF_MT_SUBTYPE, MFVideoFormat_RGB32));
 
+        // Find the correct resolution
+        int mediaIndex = 0;
+        int maxWidth = 0;
+        int maxHeight = 0;
+        CComPtr<IMFMediaType> spMaxMediaType;
+        HRESULT hr;
+        while (true)
+        {
+            GUID majorType, subType;
+            spMediaType = nullptr;
+            hr = m_spReader->GetNativeMediaType((DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, mediaIndex, &spMediaType);
+            if (FAILED(hr))
+                break;
+            CT(spMediaType->GetGUID(MF_MT_MAJOR_TYPE, &majorType));
+            CT(spMediaType->GetGUID(MF_MT_SUBTYPE, &subType));
+            if (majorType == MFMediaType_Video)
+            {
+                UINT curWidth, curHeight;
+                CT(MFGetAttributeSize(spMediaType, MF_MT_FRAME_SIZE, &curWidth, &curHeight));
+                if (w == -1 && (int)curWidth > maxWidth)
+                {
+                    maxWidth = curWidth;
+                    maxHeight = curHeight;
+                    spMaxMediaType = spMediaType;
+                }
+                else if (curWidth == w && curHeight == h)
+                    break;
+            }
+            mediaIndex++;
+        }
+        if (w == -1)
+        {
+            spMediaType = spMaxMediaType;
+        }
+        else
+            CT(hr);
+        
+        CT(spMediaType->SetGUID(MF_MT_SUBTYPE, MFVideoFormat_RGB32));
         CT(m_spReader->SetCurrentMediaType((DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, NULL, spMediaType));
         CT(m_spReader->SetStreamSelection((DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, TRUE));
         CComPtr<IMFMediaType> spCurMediaType;
         CT(m_spReader->GetCurrentMediaType(static_cast<DWORD>(MF_SOURCE_READER_FIRST_VIDEO_STREAM), &spCurMediaType));
         CT(MFGetAttributeSize(spCurMediaType, MF_MT_FRAME_SIZE, &m_width, &m_height));
 
-        HRESULT hr = spCurMediaType->GetUINT32(MF_MT_DEFAULT_STRIDE, (UINT32*)&m_stride);
+        hr = spCurMediaType->GetUINT32(MF_MT_DEFAULT_STRIDE, (UINT32*)&m_stride);
         if (FAILED(hr))
         {
             // Attribute not set. Try to calculate the default stride.

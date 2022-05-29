@@ -19,6 +19,7 @@ module;
 #include <assert.h>
 #include <atlbase.h>
 #include <vector>
+#include <Wmcodecdsp.h>
 
 module Cameras.WebCamera.IWebCamera;
 import Base.Core.Core;
@@ -38,6 +39,8 @@ namespace Caustic
         {
             CT(CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE));
             CT(MFStartup(MF_VERSION));
+            CT(MFTRegisterLocalByCLSID(CLSID_CColorConvertDMO, MFT_CATEGORY_VIDEO_PROCESSOR,
+                L"", MFT_ENUM_FLAG_SYNCMFT, 0, NULL, 0, NULL));
             initialized = true;
         }
     }
@@ -74,6 +77,48 @@ namespace Caustic
                 caminfo.symlink = std::wstring(buffer);
                 UINT32 blobSize;
                 CT(ppDevices[i]->GetBlob(MF_DEVSOURCE_ATTRIBUTE_MEDIA_TYPE, (UINT8*)&caminfo.info, sizeof(caminfo.info), &blobSize));
+
+
+                // Enumerate the available formats
+                CComPtr<IMFMediaSource> spSource;
+                HRESULT hr = ppDevices[i]->ActivateObject(IID_PPV_ARGS(&spSource));
+                if (SUCCEEDED(hr))
+                {
+                    CComPtr<IMFPresentationDescriptor> spPD;
+                    CT(spSource->CreatePresentationDescriptor(&spPD));
+
+                    // Find the video stream index
+                    DWORD streamCount;
+                    CT(spPD->GetStreamDescriptorCount(&streamCount));
+                    for (DWORD streamIndex = 0; streamIndex < streamCount; streamIndex++)
+                    {
+                        BOOL fSelected;
+                        CComPtr<IMFStreamDescriptor> spSD;
+                        CT(spPD->GetStreamDescriptorByIndex(streamIndex, &fSelected, &spSD));
+
+                        CComPtr<IMFMediaTypeHandler> spHandler;
+                        CT(spSD->GetMediaTypeHandler(&spHandler));
+
+                        GUID mediaType;
+                        CT(spHandler->GetMajorType(&mediaType));
+                        if (mediaType != MFMediaType_Video)
+                            continue;
+
+                        DWORD cTypes = 0;
+                        CT(spHandler->GetMediaTypeCount(&cTypes));
+                        for (DWORD i = 0; i < cTypes; i++)
+                        {
+                            CComPtr<IMFMediaType> spType;
+                            CT(spHandler->GetMediaTypeByIndex(i, &spType));
+                            UINT32 w, h;
+                            MFGetAttributeSize(spType, MF_MT_FRAME_SIZE, &w, &h);
+                            Point2 wxh((int)w, (int)h);
+                            caminfo.resolutions.push_back(wxh);
+                        }
+                        break;
+                    }
+                }
+
                 cameras.push_back(caminfo);
             }
             ppDevices[i]->Release();
@@ -86,10 +131,16 @@ namespace Caustic
     //**********************************************************************
     // Function: CreateWebCamera
     // CreateWebCamera instantiates an instance of an Web camera
+    // 
+    // Parameters:
+    // deviceName - symbolic link name for the camera as returned by
+    // <IWebCamera::GetAvailableDevices>
+    // w - width in pixels of camera resolution
+    // h - height in pixels of camera resolution
     //**********************************************************************
-    CRefObj<IWebCamera> CreateWebCamera(std::wstring deviceName)
+    CRefObj<IWebCamera> CreateWebCamera(std::wstring deviceName, int w /* = -1*/, int h /* = -1*/)
     {
-        std::unique_ptr<CWebCamera> pCamera(new CWebCamera(deviceName));
+        std::unique_ptr<CWebCamera> pCamera(new CWebCamera(deviceName, w, h));
         return CRefObj<IWebCamera>(pCamera.release());
     }
 }

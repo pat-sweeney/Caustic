@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("CClass:IWebCamera","IWebCamera");NDSummary.OnSummaryLoaded("CClass:IWebCamera",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Interfaces","Interface"]],[[1624,0,2,"IWebCamera"],[1630,0,1,"Functions","Functions"],[1625,0,0,"GetAvailableDevices","GetAvailableDevices"],[1633,0,0,"CreateWebCamera","CreateWebCamera"]]);

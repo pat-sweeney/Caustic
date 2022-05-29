@@ -54,11 +54,13 @@ export namespace Caustic
         //
         // Parameters:
         // deviceName - symbolic link name for the requested device
+        // w - width in pixels of camera resolution. If unspecified (w==-1) the maximum resolution is picked
+        // h - height in pixels of camera resolution. If unspecified (w==-1) the maximum resolution is picked
         //
         // Module:
         // {Link:import Cameras.WebCamera.WebCamera;{Cameras/WebCamera/WebCamera.ixx}}
         //**********************************************************************
-        CWebCamera(std::wstring deviceName);
+        CWebCamera(std::wstring deviceName, int w = -1, int h = -1);
         
         ~CWebCamera() {}
 
