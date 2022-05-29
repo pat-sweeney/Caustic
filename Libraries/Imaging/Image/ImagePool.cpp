@@ -30,7 +30,7 @@ namespace Caustic
                     m_wpPool->m_available.push_back(this);
                 }
             }
-            return 0; // Lied and say our ref count went to 0
+            return 0; // Lie and say our ref count went to 0
         }
         return refcnt;
     }

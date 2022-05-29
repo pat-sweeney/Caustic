@@ -68,7 +68,7 @@ void SetDisplayImage(IImage *pImage, ImageFilterParams *pParams = nullptr)
     if (imgbitmap != nullptr)
         DeleteObject(imgbitmap);
     imgbitmap = CreateBitmap(imgwidth, imgheight, 1, 32, pDisplayImage->GetData());
-    InvalidateRect(hWnd, nullptr, true);
+    InvalidateRect(hWnd, nullptr, false);
 }
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
