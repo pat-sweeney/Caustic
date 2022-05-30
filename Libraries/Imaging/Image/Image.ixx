@@ -75,6 +75,14 @@ export namespace Caustic
             uint32 numbytes = stride * m_height;
             m_pData = new BYTE[numbytes];
             m_ownData = true;
+            switch (bpp)
+            {
+            case 1: m_imageType = EImageType::BW_1bpp; break;
+            case 8: m_imageType = EImageType::Gray_8bpp; break;
+            case 16: m_imageType = EImageType::Gray_16bpp; break;
+            case 24: m_imageType = EImageType::RGB_24bpp; break;
+            case 32: m_imageType = EImageType::RGBA_32bpp; break;
+            }
         }
 
         virtual ~CImage()
@@ -98,6 +106,7 @@ export namespace Caustic
         virtual uint32 GetHeight() override { return m_height; }
         virtual uint32 GetSubX() override { return m_subx; }
         virtual uint32 GetSubY() override { return m_suby; }
+        virtual CRefObj<IImageBase> GetParent() { return CRefObj((IImageBase*)m_spParent); }
         virtual uint32 GetBPP() override { return m_bytesPerPixel * 8; }
         virtual uint32 GetStride() override { return m_width * GetBytesPerPixel(); }
         virtual uint32 GetBytesPerPixel() override { return m_bytesPerPixel; }
@@ -155,6 +164,7 @@ export namespace Caustic
         virtual uint32 GetHeight() override { return m_height; }
         virtual uint32 GetSubX() override { return 0; }
         virtual uint32 GetSubY() override { return 0; }
+        virtual CRefObj<IImageBase> GetParent() override { return nullptr; }
         virtual uint32 GetBPP() override { return 24; }
         virtual bool GetRGBOrder() override { return m_spImage->GetRGBOrder(); }
         virtual void SetRGBOrder(bool isRGB) override { /* do nothing */ }

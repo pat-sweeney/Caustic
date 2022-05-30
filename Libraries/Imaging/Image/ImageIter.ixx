@@ -279,6 +279,11 @@ export namespace Caustic
 		
 		CImageIter1(IImage* pImage, int32 x, int32 y)
 		{
+			Setup(pImage, x, y);
+		}
+
+		void Setup(IImage* pImage, int32 x, int32 y)
+		{
 			mask = 1 << (7 - ((pImage->GetSubX() + x) & 7));
 			m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * pImage->GetStride() + (pImage->GetSubX() + x) / 8];
 			m_bpl = pImage->GetStride();
@@ -347,6 +352,11 @@ export namespace Caustic
 
 		CImageIter8(IImage* pImage, uint32 x, uint32 y)
 		{
+			Setup(pImage, x, y);
+		}
+
+		void Setup(IImage* pImage, uint32 x, uint32 y)
+		{
 			assert(pImage->GetBPP() == 8);
 			m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * pImage->GetStride() + (pImage->GetSubX() + x)];
 			m_bpl = pImage->GetStride();
@@ -393,6 +403,11 @@ export namespace Caustic
 
 		CImageIter16(IImage* pImage, uint32 x, uint32 y)
 		{
+			Setup(pImage, x, y);
+		}
+
+		void Setup(IImage* pImage, uint32 x, uint32 y)
+		{
 			assert(pImage->GetBPP() == 16);
 			m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * pImage->GetStride() + (pImage->GetSubX() + x) * 2];
 			m_bpl = pImage->GetStride();
@@ -438,6 +453,11 @@ export namespace Caustic
 		}
 
 		CImageIter24(IImage* pImage, uint32 x, uint32 y)
+		{
+			Setup(pImage, x, y);
+		}
+
+		void Setup(IImage* pImage, uint32 x, uint32 y)
 		{
 			assert(pImage->GetBPP() == 24);
 			m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * pImage->GetStride() + (pImage->GetSubX() + x) * 3];
@@ -490,6 +510,11 @@ export namespace Caustic
 
 		CImageIter32(IImage* pImage, uint32 x, uint32 y)
 		{
+			Setup(pImage, x, y);
+		}
+
+		void Setup(IImage* pImage, uint32 x, uint32 y)
+		{
 			assert(pImage->GetBPP() == 32);
 			m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * pImage->GetStride() + (pImage->GetSubX() + x) * 4];
 			m_bpl = pImage->GetStride();
@@ -541,6 +566,11 @@ export namespace Caustic
 		}
 
 		CImageIter128(IImage* pImage, uint32 x, uint32 y)
+		{
+			Setup(pImage, x, y);
+		}
+
+		void Setup(IImage* pImage, uint32 x, uint32 y)
 		{
 			assert(pImage->GetBPP() == 128);
 			m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * pImage->GetStride() + (pImage->GetSubX() + x) * 4];

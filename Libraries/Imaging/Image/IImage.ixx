@@ -94,6 +94,13 @@ export namespace Caustic
 		virtual uint32 GetSubY() = 0;
 
 		//**********************************************************************
+		// Method: GetParent
+		// Returns the parent image. This is only not nullptr if the image
+		// is a subimage of another image.
+		//**********************************************************************
+		virtual CRefObj<IImageBase> GetParent() = 0;
+
+		//**********************************************************************
 		// Method: GetBPP
 		// Returns the image's bites per pixel
 		//**********************************************************************

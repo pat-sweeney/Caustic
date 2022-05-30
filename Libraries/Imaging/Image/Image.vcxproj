@@ -106,6 +106,8 @@
     <ClCompile Include="MosaicFilter.ixx" />
     <ClCompile Include="MotionBlurFilter.ixx" />
     <ClCompile Include="Quantize.ixx" />
+    <ClCompile Include="Scale.cpp" />
+    <ClCompile Include="Scale.ixx" />
     <ClCompile Include="Sharpen.ixx" />
     <ClCompile Include="Sobel.ixx" />
     <ClCompile Include="SuperPixel.cpp" />

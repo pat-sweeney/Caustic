@@ -56,6 +56,7 @@ export namespace Caustic
         virtual uint32 GetHeight() override { return m_spImage->GetHeight(); }
         virtual uint32 GetSubX() override { return m_spImage->GetSubX(); }
         virtual uint32 GetSubY() override { return m_spImage->GetSubY(); }
+        virtual CRefObj<IImageBase> GetParent() override { return m_spImage->GetParent(); }
         virtual uint32 GetBPP() override { return m_spImage->GetBPP(); }
         virtual uint32 GetStride() override { return m_spImage->GetStride(); }
         virtual uint32 GetBytesPerPixel() override { return m_spImage->GetBytesPerPixel(); }

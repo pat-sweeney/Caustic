@@ -453,10 +453,10 @@ export namespace Caustic
             CImageIterGeneric dstCol = dstRow;
             for (int x = 0; x < w; x++)
             {
-                dstRow.SetRed(srcRow.GetRed());
-                dstRow.SetGreen(srcRow.GetGreen());
-                dstRow.SetBlue(srcRow.GetBlue());
-                dstRow.SetAlpha(srcRow.GetAlpha());
+                dstCol.SetRed(srcCol.GetRed());
+                dstCol.SetGreen(srcCol.GetGreen());
+                dstCol.SetBlue(srcCol.GetBlue());
+                dstCol.SetAlpha(srcCol.GetAlpha());
                 srcCol.Step(CImageIter::EStepDirection::Right);
                 dstCol.Step(CImageIter::EStepDirection::Right);
             }
@@ -480,7 +480,37 @@ export namespace Caustic
                 destFormat = std::any_cast<EImageType>(it->second);
         }
 
-        CRefObj<IImage> spImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), 32);
+        int bpp = 24;
+        switch (destFormat)
+        {
+        case EImageType::BW_1bpp:
+            bpp = 1;
+            break;
+        case EImageType::Gray_8bpp:
+            bpp = 8;
+            break;
+        case EImageType::Gray_16bpp:
+            bpp = 16;
+            break;
+        case EImageType::RGB_24bpp:
+            bpp = 24;
+            break;
+        case EImageType::RGBA_32bpp:
+        case EImageType::RGBX_32bpp:
+        case EImageType::Float1_32bpp:
+            bpp = 32;
+            break;
+        case EImageType::Float2_64bpp:
+            bpp = 64;
+            break;
+        case EImageType::Float3_96bpp:
+            bpp = 96;
+            break;
+        case EImageType::Float4_128bpp:
+            bpp = 128;
+            break;
+        }
+        CRefObj<IImage> spImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), bpp);
 
         struct DispatchTable
         {
