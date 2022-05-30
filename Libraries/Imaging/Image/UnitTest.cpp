@@ -8,11 +8,14 @@
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Base.Core.Error;
+import Base.Math.Matrix.Matrix3x2;
 import Base.Math.Vector;
 import Geometry.GeomDS.Path2;
 import Imaging.Image.IImage;
-import Imaging.Image.ImageFilter.Scale;
 import Imaging.Image.ImageFilter;
+import Imaging.Image.ImageFilter.Scale;
+import Imaging.Image.ImageFilter.Transform;
+import Imaging.Image.ImageFilter.Rotate;
 import Imaging.Image.ImageFilter.Convert;
 #include "UnitTest.h"
 #include <stdlib.h>
@@ -84,6 +87,85 @@ namespace CausticTestSuite
         return true;
     }
 
+    static bool Test5()
+    {
+        CRefObj<IImage> pImage = LoadImageFile(L"c:\\temp\\imageIn.png");
+
+        ImageFilterParams params2;
+        params2.params["DestFormat"] = std::any(EImageType::RGB_24bpp);
+        CConvertFilter cf;
+        CRefObj<IImage> pConvertedImage = cf.Apply(pImage, &params2);
+
+        {
+            ImageFilterParams params;
+            params.params["Degrees"] = std::any((float)90.0f);
+            CRotateFilter* filter = new CRotateFilter();
+            CRefObj<IImage> pOutImage = filter->Apply(pConvertedImage, &params);
+            StoreImage(L"c:\\temp\\Rotated90.png", pOutImage);
+        }
+
+        {
+            ImageFilterParams params;
+            params.params["Degrees"] = std::any((float)180.0f);
+            CRotateFilter* filter = new CRotateFilter();
+            CRefObj<IImage> pOutImage = filter->Apply(pConvertedImage, &params);
+            StoreImage(L"c:\\temp\\Rotated180.png", pOutImage);
+        }
+
+        {
+            ImageFilterParams params;
+            params.params["Degrees"] = std::any((float)270.0f);
+            CRotateFilter* filter = new CRotateFilter();
+            CRefObj<IImage> pOutImage = filter->Apply(pConvertedImage, &params);
+            StoreImage(L"c:\\temp\\Rotated270.png", pOutImage);
+        }
+
+        {
+            ImageFilterParams params;
+            params.params["Degrees"] = std::any((float)45.0f);
+            CRotateFilter* filter = new CRotateFilter();
+            CRefObj<IImage> pOutImage = filter->Apply(pConvertedImage, &params);
+            StoreImage(L"c:\\temp\\Rotated45.png", pOutImage);
+        }
+        return true;
+    }
+
+    static bool Test6()
+    {
+        CRefObj<IImage> pImage = LoadImageFile(L"c:\\temp\\imageIn.png");
+
+        ImageFilterParams params2;
+        params2.params["DestFormat"] = std::any(EImageType::RGB_24bpp);
+        CConvertFilter cf;
+        CRefObj<IImage> pConvertedImage = cf.Apply(pImage, &params2);
+
+        ImageFilterParams params;
+        Matrix3x2 tm(1.0f, 0.2f, 0.3f, 2.0f, 0.0f, 0.0f);
+        params.params["Matrix"] = std::any((Matrix3x2)tm);
+        CTransformFilter* filter = new CTransformFilter();
+        CRefObj<IImage> pOutImage = filter->Apply(pConvertedImage, &params);
+        StoreImage(L"c:\\temp\\xform24.png", pOutImage);
+        return true;
+    }
+
+    static bool Test7()
+    {
+        CRefObj<IImage> pImage = LoadImageFile(L"c:\\temp\\imageIn.png");
+
+        ImageFilterParams params2;
+        params2.params["DestFormat"] = std::any(EImageType::RGBA_32bpp);
+        CConvertFilter cf;
+        CRefObj<IImage> pConvertedImage = cf.Apply(pImage, &params2);
+
+        ImageFilterParams params;
+        Matrix3x2 tm(1.0f, 0.2f, 0.3f, 2.0f, 0.0f, 0.0f);
+        params.params["Matrix"] = std::any((Matrix3x2)tm);
+        CTransformFilter* filter = new CTransformFilter();
+        CRefObj<IImage> pOutImage = filter->Apply(pConvertedImage, &params);
+        StoreImage(L"c:\\temp\\xform32.png", pOutImage);
+        return true;
+    }
+
     bool ImageTests::RunUnitTests()
     {
         typedef bool(*UnitTestFunc)();
@@ -93,6 +175,9 @@ namespace CausticTestSuite
             { Test2, true },
             { Test3, true },
             { Test4, true },
+            { Test5, true },
+            { Test6, true },
+            { Test7, true },
         };
         bool result = true;
         m_totalTests = _countof(tests);

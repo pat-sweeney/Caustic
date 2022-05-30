@@ -105,5 +105,17 @@
     <ClCompile Include="Scale.cpp">
       <Filter>Source Files\Filters</Filter>
     </ClCompile>
+    <ClCompile Include="Rotate.ixx">
+      <Filter>Source Files\Filters</Filter>
+    </ClCompile>
+    <ClCompile Include="Rotate.cpp">
+      <Filter>Source Files\Filters</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.ixx">
+      <Filter>Source Files\Filters</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Source Files\Filters</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

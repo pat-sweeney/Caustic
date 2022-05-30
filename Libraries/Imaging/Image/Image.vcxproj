@@ -106,11 +106,15 @@
     <ClCompile Include="MosaicFilter.ixx" />
     <ClCompile Include="MotionBlurFilter.ixx" />
     <ClCompile Include="Quantize.ixx" />
+    <ClCompile Include="Rotate.cpp" />
+    <ClCompile Include="Rotate.ixx" />
     <ClCompile Include="Scale.cpp" />
     <ClCompile Include="Scale.ixx" />
     <ClCompile Include="Sharpen.ixx" />
     <ClCompile Include="Sobel.ixx" />
     <ClCompile Include="SuperPixel.cpp" />
+    <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="Transform.ixx" />
     <ClCompile Include="UnitTest.cpp" />
     <ClCompile Include="UnsharpMask.ixx" />
   </ItemGroup>

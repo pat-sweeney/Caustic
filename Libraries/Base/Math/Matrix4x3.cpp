@@ -63,7 +63,7 @@ namespace Caustic
         return r;
     }
 
-    bool Matrix4x3::Inverse(Matrix4x3 &tm)
+    bool Matrix4x3::Inverse(Matrix4x3 &result)
     {
         float det;
 
@@ -73,7 +73,6 @@ namespace Caustic
         if (det == 0.0)
             return false;
         det = 1 / det;
-        Matrix4x3 result;
         result.v[0][0] = (v[1][1] * v[2][2] - v[1][2] * v[2][1]) * det;
         result.v[0][1] = -(v[0][1] * v[2][2] - v[0][2] * v[2][1]) * det;
         result.v[0][2] = (v[0][1] * v[1][2] - v[0][2] * v[1][1]) * det;

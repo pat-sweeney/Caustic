@@ -183,7 +183,7 @@ export namespace Caustic
 
 	//**********************************************************************
 	// Method: Apply
-	// Defines an image filter for performing gaussian blurring.
+	// Defines an image filter for performing image sharpening.
 	//
 	// Parameters:
 	// pImage - image to perform filtering on.

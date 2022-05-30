@@ -102,5 +102,11 @@
     <ClCompile Include="Quaternion.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Matrix3x2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix3x2.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

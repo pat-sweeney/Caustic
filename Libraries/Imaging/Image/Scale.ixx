@@ -33,11 +33,14 @@ export namespace Caustic
     };
 
     //**********************************************************************
-    // Class: CScale
+    // Class: CScaleFilter
     // Defines an image filter that resizes an image
     //
     // Image Filter Parameters:
-    // None
+    // "ScaleX" : <float> - Scaling factor in X direction
+    // "ScaleY" : <float> - Scaling factor in Y direction
+    // "ScaleUpMode" : <EScaleUpMode> - Sampling mode to use when scaling up
+    // "ScaleDownMode" : <EScaleDownMode> - Sampling mode to use when scaling down
     //**********************************************************************
     class CScaleFilter : public IImageFilter, public CRefCount
     {

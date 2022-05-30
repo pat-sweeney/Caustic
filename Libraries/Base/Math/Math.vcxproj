@@ -94,6 +94,8 @@
     <ClCompile Include="Helper.ixx" />
     <ClCompile Include="IBBox.ixx" />
     <ClCompile Include="Matrix.ixx" />
+    <ClCompile Include="Matrix3x2.cpp" />
+    <ClCompile Include="Matrix3x2.ixx" />
     <ClCompile Include="Matrix3x3.cpp" />
     <ClCompile Include="Matrix3x3.ixx" />
     <ClCompile Include="Matrix4x3.cpp" />

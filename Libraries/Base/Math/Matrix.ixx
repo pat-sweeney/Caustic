@@ -10,6 +10,7 @@ module;
 export module Base.Math.Matrix;
 import Base.Core.Core;
 import Base.Math.Vector;
+export import Base.Math.Matrix.Matrix3x2;
 export import Base.Math.Matrix.Matrix3x3;
 export import Base.Math.Matrix.Matrix4x3;
 export import Base.Math.Matrix.Matrix4x4;
