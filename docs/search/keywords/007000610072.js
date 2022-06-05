@@ -1,1 +1,1 @@
-﻿NDSearch.OnPrefixDataLoaded("par",["Struct"],[["ParseTableEntry",,[[,,,,0,"File:Parsers/Lex/ILex.ixx:ParseTableEntry","CClass:ParseTableEntry"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("par",["Function","Struct"],[["ParseAscii",,[[,,,,0,"File:Geometry/MeshImport/Obj.cpp:ParseAscii"]]],["ParseTableEntry",,[[,,,,1,"File:Parsers/Lex/ILex.ixx:ParseTableEntry","CClass:ParseTableEntry"]]]]);
