@@ -73,8 +73,11 @@ export namespace Caustic
         virtual void ToRenderMaterials(IMesh* pMesh, IShader* pShader, IRenderMesh* pRenderMesh, IMaterialAttrib* pDefaultMaterial) = 0;
 
         //**********************************************************************
-        // Method: RunOnRenderer
-        // Runs the specified function on the render thread.
+        // Method: IsRenderThread
+        // Returns whether the current thread is the render thread
+        // 
+        // Returns:
+        // true if we are on the render thread; false otherwise
         //**********************************************************************
         virtual bool IsRenderThread() = 0;
 
