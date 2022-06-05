@@ -30,6 +30,9 @@ export namespace Caustic
         // Parameters:
         // pFilename - name of file to load
         // pDefaultMaterialValues - list of default material values
+        //
+        // Returns:
+        // IMesh object
         //**********************************************************************
         CRefObj<IMesh> LoadObj(const wchar_t* pFilename, std::map<std::wstring, std::any>* pDefaultMaterialValues = nullptr);
     }

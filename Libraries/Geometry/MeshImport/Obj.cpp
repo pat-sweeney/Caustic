@@ -469,6 +469,15 @@ namespace Caustic
         }
     }
 
+    //**********************************************************************
+    // Method: ParseAscii
+    // Loads an ASCII encoded OBJ file
+    // 
+    // Parameters:
+    // pFilename - Path to the OBJ file. This is only used for resolving paths to textures
+    // pData - the actual contents of the OBJ file
+    // pDefaultMaterialValues - map of default material parameters
+    //**********************************************************************
     void CObjParser::ParseAscii(const wchar_t *pFilename, const char *pData, std::map<std::wstring, std::any> *pDefaultMaterialValues /* = nullptr */)
     {
         wchar_t wfn[MAX_PATH];
@@ -566,6 +575,7 @@ namespace Caustic
         //
         // Parameters:
         // pFilename - path to .obj file
+        // pDefaultMaterialValues - list of default material values
         //
         // Returns:
         // IMesh object
