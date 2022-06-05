@@ -10,12 +10,14 @@
 #include <Windows.h>
 #include <commdlg.h>
 #include <string>
+#include <map>
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Geometry.Mesh.IMeshConstructor;
 import Geometry.MeshImport;
 import Geometry.Mesh.Mesh;
+import Imaging.Color;
 import Rendering.Caustic.ISpotLight;
 import Rendering.Caustic.ISampler;
 import Rendering.Caustic.ICausticFactory;
@@ -249,7 +251,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                         const wchar_t *pShaderName = L"Textured";
                         if (StrCmpW(ext, L".obj") == 0)
                         {
-                            spMesh = Caustic::MeshImport::LoadObj(fn);
+                       //     std::map<std::wstring, std::any> defaultMaterials = { { L"ambientColor", std::any(FRGBAColor(1.0f, 0.0f, 0.0f, 1.0f)) } };
+                            spMesh = Caustic::MeshImport::LoadObj(fn, nullptr);
                             pShaderName = L"ObjShader";
                         }
                         else if (StrCmpW(ext, L".ply") == 0)

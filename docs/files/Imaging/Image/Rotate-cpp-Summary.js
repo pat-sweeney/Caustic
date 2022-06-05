@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:Imaging/Image/Rotate.cpp","Rotate.cpp");NDSummary.OnSummaryLoaded("File:Imaging/Image/Rotate.cpp",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"]],[[1646,0,1,"Functions","Functions"],[1647,0,0,"Apply","Apply"]]);

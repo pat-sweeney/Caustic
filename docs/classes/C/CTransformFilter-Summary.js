@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("CClass:CTransformFilter","CTransformFilter");NDSummary.OnSummaryLoaded("CClass:CTransformFilter",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[1632,0,0,"CTransformFilter"],[1641,0,2,"Functions","Functions"],[1642,0,1,"CreateTransformFilter","CreateTransformFilter"]]);

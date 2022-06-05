@@ -57,6 +57,6 @@ float4 PS(VSOutput p) : SV_Target
         float spec = pow(specdp, specularExp.x);
         color.xyz += specularColor.xyz * spec * lightColor[i].xyz;
     }
-//    color.xyz += ambientColor.xyz;
+    color.xyz += ambientColor.xyz;
     return float4(color.xyz, t);
 }

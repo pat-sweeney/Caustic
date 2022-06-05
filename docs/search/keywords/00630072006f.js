@@ -1,1 +1,1 @@
-﻿NDSearch.OnPrefixDataLoaded("cro",["Function"],[["Cross",,[["Vector2",,,,0,"File:Base/Math/Vector.ixx:Vector2.Cross","CClass:Vector2:Cross"],["Vector3",,,,0,"File:Base/Math/Vector.ixx:Vector3.Cross","CClass:Vector3:Cross"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("cro",["Function","Class"],[["Cross",,[["Vector2",,,,0,"File:Base/Math/Vector.ixx:Vector2.Cross","CClass:Vector2:Cross"],["Vector3",,,,0,"File:Base/Math/Vector.ixx:Vector3.Cross","CClass:Vector3:Cross"]]],["CRotateFilter",,[[,,,,1,"File:Imaging/Image/Rotate.ixx:CRotateFilter","CClass:CRotateFilter"]]]]);

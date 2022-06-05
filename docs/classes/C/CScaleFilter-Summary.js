@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("CClass:CScaleFilter","CScaleFilter");NDSummary.OnSummaryLoaded("CClass:CScaleFilter",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[1629,0,0,"CScaleFilter"],[1638,0,2,"Functions","Functions"],[1639,0,1,"CreateScale","CreateScale"]]);

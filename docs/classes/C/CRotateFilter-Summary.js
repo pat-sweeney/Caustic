@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("CClass:CRotateFilter","CRotateFilter");NDSummary.OnSummaryLoaded("CClass:CRotateFilter",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[579,0,0,"CRotateFilter"],[1644,0,2,"Functions","Functions"],[1645,0,1,"CreateRotateFilter","CreateRotateFilter"]]);

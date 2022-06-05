@@ -15,6 +15,7 @@ module;
 #include <map>
 #include <d3d11.h>
 #include <memory>
+#include <any>
 
 module Geometry.MeshImport.Obj;
 import Base.Core.Core;
@@ -23,6 +24,7 @@ import Base.Core.ConvertStr;
 import Base.Math.Vector;
 import Geometry.Mesh.MaterialAttrib;
 import Geometry.MeshImport;
+import Imaging.Color;
 
 namespace Caustic
 {
@@ -48,11 +50,12 @@ namespace Caustic
         void ReadLine(const char *&pData, std::string &line, bool returnEmptyLines);
         void ParseVector3(const char *p, std::vector<Vector3> &data);
         void ParseFace(const char *p);
-        void ParseMaterial(const char *pData);
+        void ParseMaterial(const char *pData, std::map<std::wstring, std::any>* pDefaultMaterialValues);
+        void SetupDefaultMaterialValues(IMaterialAttrib* pMaterial, std::map<std::wstring, std::any>* pDefaultMaterialValues);
     public:
         CObjParser();
 
-        void ParseAscii(const wchar_t *pFilename, const char *pData);
+        void ParseAscii(const wchar_t *pFilename, const char *pData, std::map<std::wstring, std::any>* pDefaultMaterialValues = nullptr);
     };
 
     CObjParser::CObjParser() :
@@ -167,7 +170,87 @@ namespace Caustic
         }
     }
 
-    void CObjParser::ParseMaterial(const char *pData)
+    //**********************************************************************
+    // Method: SetupDefaultMaterialValues
+    // Assigns the default material values to the material. If a default material
+    // is specified in 'pDefaultMaterialValues' then that value is used, otherwise
+    // the default value will be used.
+    // 
+    // Parameters:
+    // pMaterial - material object to set default values on
+    // pDefaultMaterialValues - list of default material values
+    //**********************************************************************
+    void CObjParser::SetupDefaultMaterialValues(IMaterialAttrib* pMaterial, std::map<std::wstring, std::any>* pDefaultMaterialValues)
+    {
+        // Setup initial values
+        auto spBlackImage = Caustic::CreateImage(1024, 1024, 32);
+        ZeroMemory(spBlackImage->GetData(), spBlackImage->GetHeight() * spBlackImage->GetStride());
+        FRGBAColor white(1.0f, 1.0f, 1.0f, 1.0f);
+        FRGBAColor black(0.0f, 0.0f, 0.0f, 1.0f);
+
+        auto SetDefaultTexture = [&](const wchar_t *propName) {
+            CRefObj<IImage> spImage;
+            std::map<std::wstring, std::any>::iterator it;
+            if (pDefaultMaterialValues != nullptr &&
+                (it = pDefaultMaterialValues->find(propName)) != pDefaultMaterialValues->end())
+                spImage = std::any_cast<CRefObj<IImage>>(it->second);
+            else
+                spImage = spBlackImage;
+            pMaterial->SetTexture(propName, spImage, EShaderAccess::PixelShader);
+        };
+        auto SetDefaultColor = [&](const wchar_t* propName, const wchar_t* propAvailName, FRGBAColor defaultColor) {
+            pMaterial->SetScalar(propAvailName, 0.0f);
+            FRGBAColor value;
+            std::map<std::wstring, std::any>::iterator it;
+            if (pDefaultMaterialValues != nullptr &&
+                (it = pDefaultMaterialValues->find(propName)) != pDefaultMaterialValues->end())
+            {
+                value = std::any_cast<FRGBAColor>(it->second);
+                pMaterial->SetScalar(propAvailName, 1.0f);
+            }
+            else
+                value = defaultColor;
+            pMaterial->SetColor(propName, value);
+        };
+        auto SetDefaultScalar = [&](const wchar_t* propName, const wchar_t* propAvailName) {
+            pMaterial->SetScalar(propAvailName, 0.0f);
+            float value;
+            std::map<std::wstring, std::any>::iterator it;
+            if (pDefaultMaterialValues != nullptr &&
+                (it = pDefaultMaterialValues->find(propName)) != pDefaultMaterialValues->end())
+            {
+                value = std::any_cast<float>(it->second);
+                pMaterial->SetScalar(propAvailName, 1.0f);
+            }
+            else
+                value = 0.0f;
+            pMaterial->SetScalar(propName, value);
+        };
+        SetDefaultTexture(L"ambientTexture");
+        SetDefaultTexture(L"diffuseTexture");
+        SetDefaultTexture(L"specularTexture");
+        SetDefaultTexture(L"specularExpTexture");
+        SetDefaultTexture(L"transparencyTexture");
+        SetDefaultTexture(L"reflectionTexture");
+        SetDefaultTexture(L"emissiveTexture");
+        SetDefaultTexture(L"bumpTexture");
+        SetDefaultColor(L"ambientColor", L"ambientAvail", FRGBAColor(0.1f, 0.1f, 0.1f, 1.0f));
+        SetDefaultColor(L"diffuseColor", L"diffuseAvail", white);
+        SetDefaultColor(L"specularColor", L"specularAvail", white);
+        SetDefaultColor(L"specularExp", L"specularExpAvail", white);
+        SetDefaultColor(L"transparency", L"transparencyAvail", white);
+        SetDefaultColor(L"reflectionColor", L"reflectionAvail", white);
+        SetDefaultColor(L"emissiveColor", L"emissiveAvail", black);
+        SetDefaultScalar(L"bumpFactor", L"bumpAvail");
+        std::map<std::wstring, std::any>::iterator it;
+        if (pDefaultMaterialValues != nullptr &&
+            (it = pDefaultMaterialValues->find(L"transparent")) != pDefaultMaterialValues->end())
+            pMaterial->SetIsTransparent(std::any_cast<bool>(it->second));
+        else
+            pMaterial->SetIsTransparent(true);
+    }
+
+    void CObjParser::ParseMaterial(const char *pData, std::map<std::wstring, std::any> *pDefaultMaterialValues)
     {
         CRefObj<IMaterialAttrib> spMaterial;
         uint32 materialID = 0;
@@ -185,34 +268,7 @@ namespace Caustic
                 spMaterial->SetMaterialID(materialID);
                 materialID++;
                 m_matmap.insert(std::make_pair(matname, spMaterial));
-
-                // Setup initial values
-                auto spBlackImage = Caustic::CreateImage(1024, 1024, 32);
-                ZeroMemory(spBlackImage->GetData(), spBlackImage->GetHeight() * spBlackImage->GetStride());
-                spMaterial->SetTexture(L"ambientTexture", spBlackImage, EShaderAccess::PixelShader);
-                spMaterial->SetTexture(L"diffuseTexture", spBlackImage, EShaderAccess::PixelShader);
-                spMaterial->SetTexture(L"specularTexture", spBlackImage, EShaderAccess::PixelShader);
-                spMaterial->SetTexture(L"specularExpTexture", spBlackImage, EShaderAccess::PixelShader);
-                spMaterial->SetTexture(L"transparencyTexture", spBlackImage, EShaderAccess::PixelShader);
-                spMaterial->SetTexture(L"reflectionTexture", spBlackImage, EShaderAccess::PixelShader);
-                spMaterial->SetTexture(L"emissiveTexture", spBlackImage, EShaderAccess::PixelShader);
-                spMaterial->SetTexture(L"bumpTexture", spBlackImage, EShaderAccess::PixelShader);
-                spMaterial->SetScalar(L"ambientAvail", 0.0f);
-                spMaterial->SetScalar(L"diffuseAvail", 0.0f);
-                spMaterial->SetScalar(L"specularAvail", 0.0f);
-                spMaterial->SetScalar(L"specularExpAvail", 0.0f);
-                spMaterial->SetScalar(L"transparencyAvail", 0.0f);
-                spMaterial->SetScalar(L"reflectionAvail", 0.0f);
-                spMaterial->SetScalar(L"emissiveAvail", 0.0f);
-                spMaterial->SetScalar(L"bumpAvail", 0.0f);
-                FRGBAColor white(1.0f, 1.0f, 1.0f, 1.0f);
-                spMaterial->SetColor(L"ambientColor", white);
-                spMaterial->SetColor(L"diffuseColor", white);
-                spMaterial->SetColor(L"specularColor", white);
-                spMaterial->SetColor(L"specularExp", white);
-                spMaterial->SetColor(L"transparency", white);
-                spMaterial->SetScalar(L"bumpFactor", 1.0f);
-                spMaterial->SetIsTransparent(true);
+                SetupDefaultMaterialValues(spMaterial, pDefaultMaterialValues);
             }
             else
             {
@@ -413,7 +469,7 @@ namespace Caustic
         }
     }
 
-    void CObjParser::ParseAscii(const wchar_t *pFilename, const char *pData)
+    void CObjParser::ParseAscii(const wchar_t *pFilename, const char *pData, std::map<std::wstring, std::any> *pDefaultMaterialValues /* = nullptr */)
     {
         wchar_t wfn[MAX_PATH];
         wcscpy_s(wfn, pFilename);
@@ -453,7 +509,7 @@ namespace Caustic
                     CT(HRESULT_FROM_WIN32(GetLastError()));
                 CloseHandle(h);
                 spBuffer.get()[dwSize] = '\0';
-                ParseMaterial((const char*)spBuffer.get());
+                ParseMaterial((const char*)spBuffer.get(), pDefaultMaterialValues);
                 std::vector<CRefObj<IMaterialAttrib>> materials;
                 for (auto m : m_matmap)
                 {
@@ -514,7 +570,7 @@ namespace Caustic
         // Returns:
         // IMesh object
         //**********************************************************************
-        CRefObj<IMesh> LoadObj(const wchar_t *pFilename)
+        CRefObj<IMesh> LoadObj(const wchar_t *pFilename, std::map<std::wstring, std::any>* pDefaultMaterialValues /* = nullptr */)
         {
             HANDLE h = CreateFile(pFilename, FILE_GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr);
             if (h == INVALID_HANDLE_VALUE)
@@ -528,7 +584,7 @@ namespace Caustic
             spBuffer.get()[dwSize] = '\0';
             CObjParser parser;
             parser.m_spMesh = Caustic::CreateEmptyMesh();
-            parser.ParseAscii(pFilename, (const char*)spBuffer.get());
+            parser.ParseAscii(pFilename, (const char*)spBuffer.get(), pDefaultMaterialValues);
             if (!parser.m_normalsSpecified)
                 parser.m_spMesh->ComputeNormals();
             return parser.m_spMesh;

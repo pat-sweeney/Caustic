@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:Imaging/Image/Scale.ixx","Scale.ixx");NDSummary.OnSummaryLoaded("File:Imaging/Image/Scale.ixx",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[1629,0,0,"CScaleFilter","CScaleFilter"],[1638,0,2,"Functions","CScaleFilter.Functions"],[1639,0,1,"CreateScale","CScaleFilter.CreateScale"]]);

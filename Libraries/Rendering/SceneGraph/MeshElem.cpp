@@ -107,7 +107,12 @@ namespace Caustic
                 return;
         if (GetFlags() & ESceneElemFlags::RenderableDirty)
         {
-            m_spRenderMesh = pRenderer->ToRenderMesh(m_spMesh, (m_spShader) ? m_spShader : pSceneCtx->m_spCurrentShader);
+            IShader* pShader = m_spShader;
+            if (pShader == nullptr)
+                pShader = pSceneCtx->m_spCurrentShader;
+            if (pShader == nullptr)
+                pShader = pRenderer->GetShaderMgr()->FindShader(L"Default");
+            m_spRenderMesh = pRenderer->ToRenderMesh(m_spMesh, pShader);
             SetFlags(GetFlags() & ~ESceneElemFlags::RenderableDirty);
         }
         if (GetFlags() & ESceneElemFlags::MaterialDirty)
