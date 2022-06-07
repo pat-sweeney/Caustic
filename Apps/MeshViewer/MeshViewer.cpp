@@ -58,6 +58,7 @@ public:
     CRITICAL_SECTION m_cs;
     std::vector<ImGuiEvent> m_events;
     bool m_ImGuiInitialized;
+    ImFont* m_pFont;
 
     CApp() : m_ImGuiInitialized(false)
     {
@@ -77,16 +78,201 @@ void InitializeCaustic(HWND hwnd)
         [](IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass) {
             if (app.m_ImGuiInitialized && pass == c_PassOpaque)
             {
+                auto io = ImGui::GetIO();
                 EnterCriticalSection(&app.m_cs);
                 for (size_t i = 0; i < app.m_events.size(); i++)
-                    ImGui_ImplWin32_WndProcHandler(app.m_events[i].hWnd, app.m_events[i].msg, app.m_events[i].wParam, app.m_events[i].lParam);
+                {
+                    if (io.WantCaptureMouse)
+                        ImGui_ImplWin32_WndProcHandler(app.m_events[i].hWnd, app.m_events[i].msg, app.m_events[i].wParam, app.m_events[i].lParam);
+                }
                 app.m_events.resize(0);
                 LeaveCriticalSection(&app.m_cs);
 
                 ImGui_ImplDX11_NewFrame();
                 ImGui_ImplWin32_NewFrame();
                 ImGui::NewFrame();
+
+                ImGui::PushFont(app.m_pFont);
+                if (ImGui::BeginMainMenuBar())
+                {
+                    if (ImGui::BeginMenu("File"))
+                    {
+                        if (ImGui::MenuItem("Load Mesh..."))
+                        {
+                            wchar_t fn[MAX_PATH + 1] = { 0 };
+                            OPENFILENAME ofn;
+                            ZeroMemory(&ofn, sizeof(ofn));
+                            ofn.lStructSize = sizeof(OPENFILENAME);
+                            ofn.hwndOwner = app.m_hwnd;
+                            ofn.hInstance = app.m_hInst;
+                            ofn.lpstrFilter = L"OBJ Files\0*.obj\0PLY Files\0*.ply\0All Files\0*.*\0\0\0";
+                            ofn.lpstrFile = fn;
+                            ofn.nMaxFile = MAX_PATH;
+                            ofn.lpstrTitle = L"Open Mesh";
+                            ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST;
+                            ofn.lpstrDefExt = L"obj";
+                            if (GetOpenFileName(&ofn))
+                            {
+                                wchar_t* ext = StrRChrW(fn, nullptr, L'.');
+                                CRefObj<ISceneMeshElem> spMeshElem = app.m_spSceneFactory->CreateMeshElem();
+                                CRefObj<IMesh> spMesh = nullptr;
+                                const wchar_t* pShaderName = L"Textured";
+                                if (StrCmpW(ext, L".obj") == 0)
+                                {
+                                    //     std::map<std::wstring, std::any> defaultMaterials = { { L"ambientColor", std::any(FRGBAColor(1.0f, 0.0f, 0.0f, 1.0f)) } };
+                                    spMesh = Caustic::MeshImport::LoadObj(fn, nullptr);
+                                    pShaderName = L"ObjShader";
+                                }
+                                else if (StrCmpW(ext, L".ply") == 0)
+                                {
+                                    spMesh = Caustic::MeshImport::LoadPLY(fn);
+                                    pShaderName = L"Textured";
+                                }
+                                spMeshElem->SetMesh(spMesh);
+                                CRefObj<ISceneGraph> spSceneGraph = app.m_spRenderWindow->GetSceneGraph();
+                                CRefObj<IShader> spShader = app.m_spRenderWindow->GetRenderer()->GetShaderMgr()->FindShader(pShaderName);
+                                CRefObj<ISceneMaterialElem> spMaterialElem = app.m_spSceneFactory->CreateMaterialElem();
+                                CRefObj<IMaterialAttrib> spMaterial = app.m_spCausticFactory->CreateMaterialAttrib();
+                                FRGBColor ambient(0.2f, 0.2f, 0.2f);
+                                FRGBColor diffuse(0.4f, 0.4f, 0.4f);
+                                spMaterial->SetColor(L"ambientColor", ambient);
+                                spMaterial->SetColor(L"diffuseColor", diffuse);
+                                spMaterialElem->SetMaterial(spMaterial);
+                                spMaterialElem->SetShader(spShader);
+
+                                auto spLightCollectionElem = app.m_spSceneFactory->CreateLightCollectionElem();
+
+                                Vector3 lightPos(1000.0f, 1000.0f, 0.0f);
+                                FRGBColor lightColor(1.0f, 1.0f, 1.0f);
+                                CRefObj<ILight> spLight(app.m_spCausticFactory->CreatePointLight(lightPos, lightColor, 1.0f));
+                                spLightCollectionElem->AddLight(spLight);
+
+                                Vector3 lightDir(-1.0f, -1.0f, -1.0f);
+                                spLight = app.m_spCausticFactory->CreateDirectionalLight(lightPos, lightDir, lightColor, 1.0f);
+                                spLight->SetCastsShadows(true);
+                                spLightCollectionElem->AddLight(spLight);
+                                spMaterialElem->AddChild(spMeshElem);
+                                spLightCollectionElem->AddChild(spMaterialElem);
+                                spSceneGraph->AddChild(spLightCollectionElem);
+
+                                // Add plane to scene
+                                spMeshElem = app.m_spSceneFactory->CreateMeshElem();
+                                spMeshElem->SetMesh(CreateGrid(20));
+                                spMeshElem->SetName(L"GridMesh");
+                                spShader = app.m_spRenderWindow->GetRenderer()->GetShaderMgr()->FindShader(L"TexturedWithShadow");
+                                spMaterialElem = app.m_spSceneFactory->CreateMaterialElem();
+                                spMaterial = app.m_spCausticFactory->CreateMaterialAttrib();
+                                ambient = FRGBColor(0.2f, 0.2f, 0.2f);
+                                diffuse = FRGBColor(0.4f, 0.4f, 0.4f);
+                                spMaterial->SetColor(L"ambientColor", ambient);
+                                spMaterial->SetColor(L"diffuseColor", diffuse);
+                                spMaterialElem->SetMaterial(spMaterial);
+                                spMaterialElem->SetShader(spShader);
+                                spMaterialElem->AddChild(spMeshElem);
+                                Matrix4x4 mat = Matrix4x4::RotationMatrix(
+                                    Caustic::DegreesToRadians(90.0f), 0.0f, 0.0f) *
+                                    Matrix4x4::ScalingMatrix(250.0f, 250.0f, 250.0f) *
+                                    Matrix4x4::TranslationMatrix(0.0f, -10.0f, 0.0f);
+                                spMaterialElem->SetTransform(mat);
+                                spSceneGraph->AddChild(spMaterialElem);
+
+                                CRefObj<ISceneOverlay2DElem> spOverlay;
+                                spOverlay = app.m_spSceneFactory->CreateOverlay2DElem();
+                                auto spTexture = app.m_spCausticFactory->LoadTexture(L"c:\\users\\patricsw\\Pictures\\Capture.PNG", app.m_spRenderWindow->GetRenderer());
+                                BBox2 bb;
+                                bb.minPt = Vector2(0.0f, 0.0f);
+                                bb.maxPt = Vector2(0.1f, 0.1f);
+                                spOverlay->SetRect(bb);
+                                spOverlay->SetTexture(spTexture);
+                                spSceneGraph->AddChild(spOverlay);
+
+                                spOverlay = app.m_spSceneFactory->CreateOverlay2DElem();
+                                bb.minPt = Vector2(0.1f, 0.0f);
+                                bb.maxPt = Vector2(0.2f, 0.1f);
+                                spOverlay->SetRect(bb);
+                                spOverlay->SetTexture(app.m_spRenderWindow->GetRenderer()->GetShadowmapTexture(c_HiResShadowMap));
+                                spSceneGraph->AddChild(spOverlay);
+                            }
+                        }
+                        ImGui::Separator();
+                        if (ImGui::MenuItem("Exit"))
+                            DestroyWindow(app.m_hwnd);
+                        ImGui::EndMenu();
+                    }
+                    if (ImGui::BeginMenu("Create"))
+                    {
+                        if (ImGui::MenuItem("PDF Sphere"))
+                        {
+                            CRefObj<IMeshConstructor> spMeshConstructor = IMeshConstructor::Create();
+                            auto spherePDF = [](Vector3& v)->float
+                            {
+                                static Vector3 center(0.5f, 0.5f, 0.5f);
+                                Vector3 q = v - center;
+                                return static_cast<float>(max(fabs(q.x), max(fabs(q.y), fabs(q.z)))) - 0.5f;
+                                //return (v - center).Length() - 0.5f;
+                            };
+                            CRefObj<ISceneMeshElem> spMeshElem = app.m_spSceneFactory->CreateMeshElem();
+                            CRefObj<IMesh> spMesh = spMeshConstructor->MeshFromDensityFunction(16, spherePDF);
+                            spMeshElem->SetMesh(spMesh);
+                            CRefObj<ISceneGraph> spSceneGraph = app.m_spRenderWindow->GetSceneGraph();
+                            CRefObj<IRenderer> spRenderer = app.m_spRenderWindow->GetRenderer();
+                            CRefObj<IShader> spShader = app.m_spRenderer->GetShaderMgr()->FindShader(L"Default");
+                            CRefObj<ISceneMaterialElem> spMaterialElem = app.m_spSceneFactory->CreateMaterialElem();
+                            CRefObj<IMaterialAttrib> spMaterial = app.m_spCausticFactory->CreateMaterialAttrib();
+                            FRGBColor ambient(0.2f, 0.2f, 0.2f);
+                            FRGBColor diffuse(0.4f, 0.4f, 0.4f);
+                            spMaterial->SetColor(L"ambientColor", ambient);
+                            spMaterial->SetColor(L"diffuseColor", diffuse);
+                            spMaterial->SetFillMode(D3D11_FILL_MODE::D3D11_FILL_WIREFRAME);
+                            spMaterial->SetCullMode(D3D11_CULL_NONE);
+                            spMaterialElem->SetMaterial(spMaterial);
+                            spMaterialElem->SetShader(spShader);
+                            Matrix4x4 xm = Matrix4x4::TranslationMatrix(1.0f, 0.0f, 0.0f);
+                            spMaterialElem->SetTransform(xm);
+                            spMaterialElem->AddChild(spMeshElem);
+
+                            auto spMC = app.m_spSceneFactory->CreateMarchingCubesElem(spRenderer, 16, spherePDF, false);
+
+                            auto spLightCollectionElem = app.m_spSceneFactory->CreateLightCollectionElem();
+                            spMaterialElem->AddChild(spMC);
+
+                            Vector3 lightPos(1000.0f, 1000.0f, 0.0f);
+                            FRGBColor lightColor(1.0f, 1.0f, 1.0f);
+                            CRefObj<ILight> spLight(app.m_spCausticFactory->CreatePointLight(lightPos, lightColor, 1.0f));
+                            spLightCollectionElem->AddLight(spLight);
+                            spLightCollectionElem->AddChild(spMaterialElem);
+
+                            spSceneGraph->AddChild(spLightCollectionElem);
+                        }
+                        ImGui::EndMenu();
+                    }
+                    static bool isAboutOpen = false;
+                    if (ImGui::BeginMenu("Help"))
+                    {
+                        if (ImGui::MenuItem("About"))
+                        {
+                            isAboutOpen = true;
+                        }
+                        ImGui::EndMenu();
+                    }
+                    ImGui::EndMainMenuBar();
+
+                    if (isAboutOpen)
+                    {
+                        ImGui::Begin("About", &isAboutOpen);
+                        ImGui::Text("MeshViewer, Version 1.0");
+                        ImGui::Text("Copyright (c) 2022");
+                        ImGui::End();
+                    }
+                }
+                ImGui::PopFont();
+
+                ImGui::SetNextWindowPos(ImVec2(0, 50));
+                ImGui::GetStyle().WindowRounding = 0.0f;
+                bool isOpen = true;
+                ImGui::Begin("FrameRate", &isOpen, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDecoration);
                 ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+                ImGui::End();
             }
         },
         [](IRenderer*) {
@@ -107,7 +293,6 @@ WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -165,7 +350,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_MESHVIEWER));
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_MESHVIEWER);
+    wcex.lpszMenuName   = nullptr;
     wcex.lpszClassName  = szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
@@ -201,6 +386,15 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
            auto ctx = ImGui::CreateContext();
            ImGui_ImplWin32_Init(app.m_hwnd);
            ImGui_ImplDX11_Init(pRenderer->GetDevice(), pRenderer->GetContext());
+           
+#pragma warning(push)
+#pragma warning(disable: 4996)
+           const char *pCausticPixel = std::getenv("CausticRoot");
+#pragma warning(pop)
+           if (pCausticPixel == nullptr)
+               pCausticPixel = "d:\\github\\Caustic";
+           std::string fontPath = std::string(pCausticPixel) + "\\" + "External\\imgui\\misc\\fonts\\DroidSans.ttf";
+           app.m_pFont = ImGui::GetIO().Fonts->AddFontFromFileTTF(fontPath.c_str(), 24);
            app.m_ImGuiInitialized = true;
            }, true);
 
@@ -232,165 +426,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     LeaveCriticalSection(&app.m_cs);
     switch (message)
     {
-    case WM_COMMAND:
-        {
-            int wmId = LOWORD(wParam);
-            // Parse the menu selections:
-            switch (wmId)
-            {
-            case IDM_ABOUT:
-                DialogBox(app.m_hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-                break;
-            case ID_PDF_SPHERE:
-            {
-                CRefObj<IMeshConstructor> spMeshConstructor = IMeshConstructor::Create();
-                auto spherePDF = [](Vector3& v)->float
-                {
-                    static Vector3 center(0.5f, 0.5f, 0.5f);
-                    Vector3 q = v - center;
-                    return static_cast<float>(max(fabs(q.x), max(fabs(q.y), fabs(q.z)))) - 0.5f;
-                    //return (v - center).Length() - 0.5f;
-                };
-                CRefObj<ISceneMeshElem> spMeshElem = app.m_spSceneFactory->CreateMeshElem();
-                CRefObj<IMesh> spMesh = spMeshConstructor->MeshFromDensityFunction(16, spherePDF);
-                spMeshElem->SetMesh(spMesh);
-                CRefObj<ISceneGraph> spSceneGraph = app.m_spRenderWindow->GetSceneGraph();
-                CRefObj<IRenderer> spRenderer = app.m_spRenderWindow->GetRenderer();
-                CRefObj<IShader> spShader = app.m_spRenderer->GetShaderMgr()->FindShader(L"Default");
-                CRefObj<ISceneMaterialElem> spMaterialElem = app.m_spSceneFactory->CreateMaterialElem();
-                CRefObj<IMaterialAttrib> spMaterial = app.m_spCausticFactory->CreateMaterialAttrib();
-                FRGBColor ambient(0.2f, 0.2f, 0.2f);
-                FRGBColor diffuse(0.4f, 0.4f, 0.4f);
-                spMaterial->SetColor(L"ambientColor", ambient);
-                spMaterial->SetColor(L"diffuseColor", diffuse);
-                spMaterial->SetFillMode(D3D11_FILL_MODE::D3D11_FILL_WIREFRAME);
-                spMaterial->SetCullMode(D3D11_CULL_NONE);
-                spMaterialElem->SetMaterial(spMaterial);
-                spMaterialElem->SetShader(spShader);
-                Matrix4x4 xm = Matrix4x4::TranslationMatrix(1.0f, 0.0f, 0.0f);
-                spMaterialElem->SetTransform(xm);
-                spMaterialElem->AddChild(spMeshElem);
-
-                auto spMC = app.m_spSceneFactory->CreateMarchingCubesElem(spRenderer, 16, spherePDF, false);
-
-                auto spLightCollectionElem = app.m_spSceneFactory->CreateLightCollectionElem();
-                spMaterialElem->AddChild(spMC);
-
-                Vector3 lightPos(1000.0f, 1000.0f, 0.0f);
-                FRGBColor lightColor(1.0f, 1.0f, 1.0f);
-                CRefObj<ILight> spLight(app.m_spCausticFactory->CreatePointLight(lightPos, lightColor, 1.0f));
-                spLightCollectionElem->AddLight(spLight);
-                spLightCollectionElem->AddChild(spMaterialElem);
-
-                spSceneGraph->AddChild(spLightCollectionElem);
-            }
-                break;
-            case IDM_LOADMESH:
-                {
-                    wchar_t fn[MAX_PATH + 1] = { 0 };
-                    OPENFILENAME ofn;
-                    ZeroMemory(&ofn, sizeof(ofn));
-                    ofn.lStructSize = sizeof(OPENFILENAME);
-                    ofn.hwndOwner = hWnd;
-                    ofn.hInstance = app.m_hInst;
-                    ofn.lpstrFilter = L"OBJ Files\0*.obj\0PLY Files\0*.ply\0All Files\0*.*\0\0\0";
-                    ofn.lpstrFile = fn;
-                    ofn.nMaxFile = MAX_PATH;
-                    ofn.lpstrTitle = L"Open Mesh";
-                    ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST;
-                    ofn.lpstrDefExt = L"obj";
-                    if (GetOpenFileName(&ofn))
-                    {
-                        wchar_t *ext = StrRChrW(fn, nullptr, L'.');
-                        CRefObj<ISceneMeshElem> spMeshElem = app.m_spSceneFactory->CreateMeshElem();
-                        CRefObj<IMesh> spMesh = nullptr;
-                        const wchar_t *pShaderName = L"Textured";
-                        if (StrCmpW(ext, L".obj") == 0)
-                        {
-                       //     std::map<std::wstring, std::any> defaultMaterials = { { L"ambientColor", std::any(FRGBAColor(1.0f, 0.0f, 0.0f, 1.0f)) } };
-                            spMesh = Caustic::MeshImport::LoadObj(fn, nullptr);
-                            pShaderName = L"ObjShader";
-                        }
-                        else if (StrCmpW(ext, L".ply") == 0)
-                        {
-                            spMesh = Caustic::MeshImport::LoadPLY(fn);
-                            pShaderName = L"Textured";
-                        }
-                        spMeshElem->SetMesh(spMesh);
-                        CRefObj<ISceneGraph> spSceneGraph = app.m_spRenderWindow->GetSceneGraph();
-                        CRefObj<IShader> spShader = app.m_spRenderWindow->GetRenderer()->GetShaderMgr()->FindShader(pShaderName);
-                        CRefObj<ISceneMaterialElem> spMaterialElem = app.m_spSceneFactory->CreateMaterialElem();
-                        CRefObj<IMaterialAttrib> spMaterial = app.m_spCausticFactory->CreateMaterialAttrib();
-                        FRGBColor ambient(0.2f, 0.2f, 0.2f);
-                        FRGBColor diffuse(0.4f, 0.4f, 0.4f);
-                        spMaterial->SetColor(L"ambientColor", ambient);
-                        spMaterial->SetColor(L"diffuseColor", diffuse);
-                        spMaterialElem->SetMaterial(spMaterial);
-                        spMaterialElem->SetShader(spShader);
-
-                        auto spLightCollectionElem = app.m_spSceneFactory->CreateLightCollectionElem();
-                        
-                        Vector3 lightPos(1000.0f, 1000.0f, 0.0f);
-                        FRGBColor lightColor(1.0f, 1.0f, 1.0f);
-                        CRefObj<ILight> spLight(app.m_spCausticFactory->CreatePointLight(lightPos, lightColor, 1.0f));
-                        spLightCollectionElem->AddLight(spLight);
-
-                        Vector3 lightDir(-1.0f, -1.0f, -1.0f);
-                        spLight = app.m_spCausticFactory->CreateDirectionalLight(lightPos, lightDir, lightColor, 1.0f);
-                        spLight->SetCastsShadows(true);
-                        spLightCollectionElem->AddLight(spLight);
-                        spMaterialElem->AddChild(spMeshElem);
-                        spLightCollectionElem->AddChild(spMaterialElem);
-                        spSceneGraph->AddChild(spLightCollectionElem);
-
-                        // Add plane to scene
-                        spMeshElem = app.m_spSceneFactory->CreateMeshElem();
-                        spMeshElem->SetMesh(CreateGrid(20));
-                        spMeshElem->SetName(L"GridMesh");
-                        spShader = app.m_spRenderWindow->GetRenderer()->GetShaderMgr()->FindShader(L"TexturedWithShadow");
-                        spMaterialElem = app.m_spSceneFactory->CreateMaterialElem();
-                        spMaterial = app.m_spCausticFactory->CreateMaterialAttrib();
-                        ambient = FRGBColor(0.2f, 0.2f, 0.2f);
-                        diffuse = FRGBColor(0.4f, 0.4f, 0.4f);
-                        spMaterial->SetColor(L"ambientColor", ambient);
-                        spMaterial->SetColor(L"diffuseColor", diffuse);
-                        spMaterialElem->SetMaterial(spMaterial);
-                        spMaterialElem->SetShader(spShader);
-                        spMaterialElem->AddChild(spMeshElem);
-                        Matrix4x4 mat = Matrix4x4::RotationMatrix(
-                            Caustic::DegreesToRadians(90.0f), 0.0f, 0.0f) * 
-                            Matrix4x4::ScalingMatrix(250.0f, 250.0f, 250.0f) * 
-                            Matrix4x4::TranslationMatrix(0.0f, -10.0f, 0.0f);
-                        spMaterialElem->SetTransform(mat);
-                        spSceneGraph->AddChild(spMaterialElem);
-
-                        CRefObj<ISceneOverlay2DElem> spOverlay;
-                        spOverlay = app.m_spSceneFactory->CreateOverlay2DElem();
-                        auto spTexture = app.m_spCausticFactory->LoadTexture(L"c:\\users\\patricsw\\Pictures\\Capture.PNG", app.m_spRenderWindow->GetRenderer());
-                        BBox2 bb;
-                        bb.minPt = Vector2(0.0f, 0.0f);
-                        bb.maxPt = Vector2(0.1f, 0.1f);
-                        spOverlay->SetRect(bb);
-                        spOverlay->SetTexture(spTexture);
-                        spSceneGraph->AddChild(spOverlay);
-
-                        spOverlay = app.m_spSceneFactory->CreateOverlay2DElem();
-                        bb.minPt = Vector2(0.1f, 0.0f);
-                        bb.maxPt = Vector2(0.2f, 0.1f);
-                        spOverlay->SetRect(bb);
-                        spOverlay->SetTexture(app.m_spRenderWindow->GetRenderer()->GetShadowmapTexture(c_HiResShadowMap));
-                        spSceneGraph->AddChild(spOverlay);
-                    }
-                }
-                break;
-            case IDM_EXIT:
-                DestroyWindow(hWnd);
-                break;
-            default:
-                return DefWindowProc(hWnd, message, wParam, lParam);
-            }
-        }
-        break;
     case WM_PAINT:
         {
             PAINTSTRUCT ps;
@@ -421,24 +456,4 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
     return 0;
-}
-
-// Message handler for about box.
-INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    UNREFERENCED_PARAMETER(lParam);
-    switch (message)
-    {
-    case WM_INITDIALOG:
-        return (INT_PTR)TRUE;
-
-    case WM_COMMAND:
-        if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
-        {
-            EndDialog(hDlg, LOWORD(wParam));
-            return (INT_PTR)TRUE;
-        }
-        break;
-    }
-    return (INT_PTR)FALSE;
 }

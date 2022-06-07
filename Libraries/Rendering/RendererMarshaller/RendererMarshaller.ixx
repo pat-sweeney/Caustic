@@ -77,6 +77,7 @@ export namespace Caustic
         CRenderQueue m_renderQueue;
         bool m_exit;
         HANDLE m_thread;
+        DWORD m_renderThreadID;
         std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)> m_renderCallback;
         std::function<void(IRenderer* pRenderer)> m_prePresentCallback;
 
@@ -108,6 +109,7 @@ export namespace Caustic
         //**********************************************************************
         // IRenderer methods
         //**********************************************************************
+        virtual DWORD GetRenderThreadID() override { return m_renderThreadID; }
         virtual CRefObj<IRenderMesh> ToRenderMesh(IMesh* pMesh, IShader* pShader) override;
         virtual void ToRenderMaterials(IMesh* pMesh, IShader* pShader, IRenderMesh* pRenderMesh, IMaterialAttrib* pDefaultMaterial) override;
         virtual bool IsRenderThread() override { return false; }

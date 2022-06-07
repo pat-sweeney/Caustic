@@ -51,6 +51,15 @@ export namespace Caustic
     struct IRenderer : public IRefCount
     {
         //**********************************************************************
+        // Method: GetRenderThreadID
+        // Returns the thread ID of the render thread
+        // 
+        // Returns:
+        // Thread ID of the render thread
+        //**********************************************************************
+        virtual DWORD GetRenderThreadID() = 0;
+        
+        //**********************************************************************
         // Method: ToRenderMesh
         // Converts a mesh to a render mesh
         // 

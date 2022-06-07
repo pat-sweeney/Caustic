@@ -45,28 +45,22 @@ namespace Caustic
 
     CRefObj<IRenderMesh> CRendererMarshaller::ToRenderMesh(IMesh* pMesh, IShader* pShader)
     {
-        HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
         CRefObj<IRenderMesh> spRenderMesh;
-        m_renderQueue.AddLambda(
-            [this, evt, pMesh, pShader, &spRenderMesh]()
+        RunOnRenderer(
+            [this, pMesh, pShader, &spRenderMesh](IRenderer *pRenderer)
             {
-                spRenderMesh = m_spRenderer->ToRenderMesh(pMesh, pShader);
-                SetEvent(evt);
-            }
-        );
-        WaitForSingleObject(evt, INFINITE);
-        CloseHandle(evt);
+                spRenderMesh = pRenderer->ToRenderMesh(pMesh, pShader);
+            }, true);
         return spRenderMesh;
     }
 
     void CRendererMarshaller::ToRenderMaterials(IMesh* pMesh, IShader* pShader, IRenderMesh* pRenderMesh, IMaterialAttrib* pDefaultMaterial)
     {
-        m_renderQueue.AddLambda(
-            [this, pMesh, pShader, pRenderMesh, pDefaultMaterial]()
+        RunOnRenderer(
+            [this, pMesh, pShader, pRenderMesh, pDefaultMaterial](IRenderer *pRenderer)
             {
-                m_spRenderer->ToRenderMaterials(pMesh, pShader, pRenderMesh, pDefaultMaterial);
-            }
-        );
+                pRenderer->ToRenderMaterials(pMesh, pShader, pRenderMesh, pDefaultMaterial);
+            }, false);
     }
 
     //**********************************************************************
@@ -75,17 +69,12 @@ namespace Caustic
     //**********************************************************************
     bool CRendererMarshaller::EnableDepthTest(bool enable)
     {
-        HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
         bool enableDepth;
-        m_renderQueue.AddLambda(
-            [this, evt, enable, &enableDepth]()
+        RunOnRenderer(
+            [this, enable, &enableDepth](IRenderer *pRenderer)
             {
-                enableDepth = m_spRenderer->EnableDepthTest(enable);
-                SetEvent(evt);
-            }
-        );
-        WaitForSingleObject(evt, INFINITE);
-        CloseHandle(evt);
+                enableDepth = pRenderer->EnableDepthTest(enable);
+            }, true);
         return enableDepth;
     }
 
@@ -95,12 +84,11 @@ namespace Caustic
     //**********************************************************************
     void CRendererMarshaller::Freeze()
     {
-        m_renderQueue.AddLambda(
-            [this]()
+        RunOnRenderer(
+            [this](IRenderer *pRenderer)
             {
-                m_spRenderer->Freeze();
-            }
-        );
+                pRenderer->Freeze();
+            }, false);
     }
     //**********************************************************************
     // Method: Unfreeze
@@ -108,12 +96,11 @@ namespace Caustic
     //**********************************************************************
     void CRendererMarshaller::Unfreeze()
     {
-        m_renderQueue.AddLambda(
-            [this]()
+        RunOnRenderer(
+            [this](IRenderer *pRenderer)
             {
-                m_spRenderer->Unfreeze();
-            }
-        );
+                pRenderer->Unfreeze();
+            }, false);
     }
 
     //**********************************************************************
@@ -164,12 +151,11 @@ namespace Caustic
     {
         Vector3 lp = lightPos;
         Vector3 ld = lightDir;
-        m_renderQueue.AddLambda(
-            [this, whichShadowmap, lightMapIndex, &lp, &ld]()
+        RunOnRenderer(
+            [this, whichShadowmap, lightMapIndex, &lp, &ld](IRenderer *pRenderer)
             {
-                m_spRenderer->PushShadowmapRT(whichShadowmap, lightMapIndex, lp, ld);
-            }
-        );
+                pRenderer->PushShadowmapRT(whichShadowmap, lightMapIndex, lp, ld);
+            }, false);
     }
 
     //**********************************************************************
@@ -178,12 +164,11 @@ namespace Caustic
     //**********************************************************************
     void CRendererMarshaller::PopShadowmapRT()
     {
-        m_renderQueue.AddLambda(
-            [this]()
+        RunOnRenderer(
+            [this](IRenderer *pRenderer)
             {
-                m_spRenderer->PopShadowmapRT();
-            }
-        );
+                pRenderer->PopShadowmapRT();
+            }, false);
     }
 
     //**********************************************************************
@@ -193,12 +178,11 @@ namespace Caustic
     void CRendererMarshaller::SelectShadowmap(int whichShadowmap, int lightMapIndex, std::vector<CRefObj<ILight>>& lights, IShader* pShader)
     {
         std::vector<CRefObj<ILight>> copyLights = lights;
-        m_renderQueue.AddLambda(
-            [this, whichShadowmap, lightMapIndex, &copyLights, pShader]()
+        RunOnRenderer(
+            [this, whichShadowmap, lightMapIndex, &copyLights, pShader](IRenderer *pRenderer)
             {
-                m_spRenderer->SelectShadowmap(whichShadowmap, lightMapIndex, copyLights, pShader);
-            }
-        );
+                pRenderer->SelectShadowmap(whichShadowmap, lightMapIndex, copyLights, pShader);
+            }, false);
     }
 
     //**********************************************************************
@@ -207,22 +191,22 @@ namespace Caustic
     //**********************************************************************
     CRefObj<ITexture> CRendererMarshaller::GetShadowmapTexture(int whichShadowmap)
     {
-        HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
         CRefObj<ITexture> spTexture;
-        m_renderQueue.AddLambda(
-            [this, evt, whichShadowmap, &spTexture]()
+        RunOnRenderer(
+            [this, whichShadowmap, &spTexture](IRenderer *pRenderer)
             {
-                spTexture = m_spRenderer->GetShadowmapTexture(whichShadowmap);
-                SetEvent(evt);
-            }
-        );
-        WaitForSingleObject(evt, INFINITE);
-        CloseHandle(evt);
+                spTexture = pRenderer->GetShadowmapTexture(whichShadowmap);
+            }, true);
         return spTexture;
     }
 
     void CRendererMarshaller::RunOnRenderer(std::function<void(IRenderer*)> callback, bool wait /* = false */)
     {
+        if (GetRenderThreadID() == GetCurrentThreadId())
+        {
+            callback(m_spRenderer);
+            return;
+        }
         HANDLE evt;
         if (wait)
             evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
@@ -338,6 +322,7 @@ namespace Caustic
     //**********************************************************************
     void CRendererMarshaller::MainLoop()
     {
+        m_renderThreadID = GetCurrentThreadId();
         while (!m_exit)
         {
             EnterCriticalSection(&m_renderQueue.m_cs);
@@ -680,12 +665,11 @@ namespace Caustic
     //**********************************************************************
     void CRendererMarshaller::CopyFrameBackBuffer(IImage* pImage)
     {
-        m_renderQueue.AddLambda(
-            [this, pImage]()
+        RunOnRenderer(
+            [this, pImage](IRenderer *pRenderer)
             {
-                m_spRenderer->CopyFrameBackBuffer(pImage);
-            }
-        );
+                pRenderer->CopyFrameBackBuffer(pImage);
+            }, false);
     }
 
     //**********************************************************************
@@ -695,13 +679,12 @@ namespace Caustic
     void CRendererMarshaller::SetCamera(ICamera* pCamera)
     {
         pCamera->AddRef();
-        m_renderQueue.AddLambda(
-            [this, pCamera]()
+        RunOnRenderer(
+            [this, pCamera](IRenderer *pRenderer)
             {
-                m_spRenderer->SetCamera(pCamera);
+                pRenderer->SetCamera(pCamera);
                 pCamera->Release();
-            }
-        );
+            }, false);
     }
 
     //**********************************************************************
@@ -711,13 +694,12 @@ namespace Caustic
     void CRendererMarshaller::SetFinalRenderTarget(ID3D11Texture2D* pTexture)
     {
         pTexture->AddRef();
-        m_renderQueue.AddLambda(
-            [this, pTexture]()
+        RunOnRenderer(
+            [this, pTexture](IRenderer *pRenderer)
             {
-                m_spRenderer->SetFinalRenderTarget(pTexture);
+                pRenderer->SetFinalRenderTarget(pTexture);
                 pTexture->Release();
-            }
-        );
+            }, false);
     }
 
     CRefObj<IRendererMarshaller> CreateRendererMarshallerInternal()
@@ -732,12 +714,11 @@ namespace Caustic
     void CRendererMarshaller::SetFinalRenderTargetUsingSharedTexture(IUnknown* pTexture)
     {
         pTexture->AddRef();
-        m_renderQueue.AddLambda(
-            [this, pTexture]()
+        RunOnRenderer(
+            [this, pTexture](IRenderer *pRenderer)
             {
-                m_spRenderer->SetFinalRenderTargetUsingSharedTexture(pTexture);
+                pRenderer->SetFinalRenderTargetUsingSharedTexture(pTexture);
                 pTexture->Release();
-            }
-        );
+            }, false);
     }
 }

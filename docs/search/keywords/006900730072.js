@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("isr",["Function"],[["IsRenderThread",,[["IRenderer",,,,0,"File:Rendering/Caustic/IRenderer.ixx:IRenderer.IsRenderThread","CClass:IRenderer:IsRenderThread"]]]]);

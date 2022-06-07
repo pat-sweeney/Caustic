@@ -238,20 +238,16 @@ export namespace Caustic
         CComPtr<ID3D11RasterizerState> m_spRasterizerState;
         bool m_depthTestEnabled;
 
-#ifdef DIAGNOSTICS
         void CheckThread()
         {
+#ifdef DIAGNOSTICS
             if (m_renderThreadId != GetCurrentThreadId())
             {
                 OutputDebugString(L"ERROR! Renderer called from non-renderer thread! Clients should be calling the marshalled version of the renderer\n");
                 CT(E_UNEXPECTED);
             }
-        }
-#else
-        void CheckThread()
-        {
-        }
 #endif
+        }
         void LoadShaderBlob(const std::wstring &filename, ID3DBlob **ppBlob);
         CRefObj<IShaderInfo> LoadShaderInfo(const std::wstring &filename);
         void RenderScene(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback);
@@ -271,6 +267,7 @@ export namespace Caustic
         //**********************************************************************
         // IRenderer
         //**********************************************************************
+        virtual DWORD GetRenderThreadID() override { return m_renderThreadId; }
         virtual CRefObj<IRenderMesh> ToRenderMesh(IMesh* pMesh, IShader* pShader) override;
         virtual void ToRenderMaterials(IMesh* pMesh, IShader* pShader, IRenderMesh* pRenderMesh, IMaterialAttrib* pDefaultMaterial) override;
         virtual bool IsRenderThread() override { return true; }
