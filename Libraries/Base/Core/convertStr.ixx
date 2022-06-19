@@ -31,15 +31,57 @@ export namespace Caustic
     // Header:
     // {Link:import Base.Core.ConvertStr;{Base.Core.ConvertStr}
     //**********************************************************************
-    std::wstring str2wstr(const std::string& str)
+    std::wstring str2wstr(const char* str)
     {
-        int numWideChars = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, nullptr, 0);
+        int numWideChars = MultiByteToWideChar(CP_UTF8, 0, str, -1, nullptr, 0);
         if (numWideChars == 0)
             CT(E_FAIL);
         std::unique_ptr<wchar_t> pConvertedStr(new wchar_t[numWideChars]);
-        if (MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, pConvertedStr.get(), numWideChars) == 0)
+        if (MultiByteToWideChar(CP_UTF8, 0, str, -1, pConvertedStr.get(), numWideChars) == 0)
             CT(E_FAIL);
         return std::wstring(pConvertedStr.get());
+    }
+
+    //**********************************************************************
+    // Function: str2wstr
+    // Converts a UTF8 string into a UTF16 string
+    //
+    // Parameters:
+    // str - String to convert
+    //
+    // Returns:
+    // Returns the converted string
+    //
+    // Header:
+    // {Link:import Base.Core.ConvertStr;{Base.Core.ConvertStr}
+    //**********************************************************************
+    std::wstring str2wstr(const std::string& str)
+    {
+        return str2wstr(str.c_str());
+    }
+
+    //**********************************************************************
+    // Function: wstr2str
+    // Converts a UTF16 string into a UTF8 string
+    //
+    // Parameters:
+    // str - String to convert
+    //
+    // Returns:
+    // Returns the converted string
+    //
+    // Header:
+    // {Link:import Base.Core.ConvertStr;{Base.Core.ConvertStr}
+    //**********************************************************************
+    std::string wstr2str(const wchar_t* wstr)
+    {
+        int numMultibyteChars = WideCharToMultiByte(CP_UTF8, 0, wstr, -1, nullptr, 0, nullptr, nullptr);
+        if (numMultibyteChars == 0)
+            CT(E_FAIL);
+        std::unique_ptr<char> pConvertedStr(new char[numMultibyteChars]);
+        if (WideCharToMultiByte(CP_UTF8, 0, wstr, -1, pConvertedStr.get(), numMultibyteChars, nullptr, nullptr) == 0)
+            CT(E_FAIL);
+        return std::string(pConvertedStr.get());
     }
 
     //**********************************************************************
@@ -57,12 +99,6 @@ export namespace Caustic
     //**********************************************************************
     std::string wstr2str(const std::wstring& wstr)
     {
-        int numMultibyteChars = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);
-        if (numMultibyteChars == 0)
-            CT(E_FAIL);
-        std::unique_ptr<char> pConvertedStr(new char[numMultibyteChars]);
-        if (WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, pConvertedStr.get(), numMultibyteChars, nullptr, nullptr) == 0)
-            CT(E_FAIL);
-        return std::string(pConvertedStr.get());
+        return wstr2str(wstr.c_str());
     }
 }
