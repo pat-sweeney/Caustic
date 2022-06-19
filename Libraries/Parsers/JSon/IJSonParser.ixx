@@ -7,6 +7,8 @@ module;
 #include <string>
 #include <memory>
 #include <any>
+#include <vector>
+#include <map>
 
 export module Parsers.JSon.IJSonParser;
 import Base.Core.Core;
@@ -21,6 +23,7 @@ export namespace Caustic
 		Object, // GetValue() returns std::any<map<std::string, CRefObj<IJSonObj>>>
 		Array,  // GetValue() returns std::any<vector<CRefObj<IJSonObj>>>
 		Number, // GetValue() returns std::any<float>
+		Integer,// GetValue() returns std::any<int>. Technically not part of JSON but useful
 		String, // GetValue() returns std::any<std::string>
 		Bool,   // GetValue() returns std::any<bool>
 		Null    // GetValue() returns nullptr
@@ -35,6 +38,16 @@ export namespace Caustic
 	//**********************************************************************
 	struct IJSonObj : public IRefCount
 	{
+		//**********************************************************************
+		// Method: AddElement
+		// Adds a child element to this element (assumes it is either a map or
+		// array object)
+		// 
+		// Parameters:
+		// pValue - value to add
+		//**********************************************************************
+		virtual void AddElement(IJSonObj* pValue) = 0;
+
 		//**********************************************************************
 		// Method: GetName
 		// Returns the name of the object
@@ -110,6 +123,97 @@ export namespace Caustic
 		// Number of characters written
 		//**********************************************************************
 		virtual uint32 WriteDOM(CRefObj<IJSonObj>& dom, char* pBuffer, uint32 bufLen) = 0;
+
+		//**********************************************************************
+		// Method: CreateJSon
+		// Creates a JSON number object
+		//
+		// Parameters:
+		// pPropertyName - name of property
+		// value - float value for new IJSonObject object
+		//
+		// Returns:
+		// Returns the newly created IJSonObj
+		//**********************************************************************
+		virtual CRefObj<IJSonObj> CreateJSon(const char* pPropertyName, float value) = 0;
+
+		//**********************************************************************
+		// Method: CreateJSon
+		// Creates a JSON integer object
+		//
+		// Parameters:
+		// pPropertyName - name of property
+		// value - integer value for new IJSonObject object
+		//
+		// Returns:
+		// Returns the newly created IJSonObj
+		//**********************************************************************
+		virtual CRefObj<IJSonObj> CreateJSon(const char* pPropertyName, int value) = 0;
+
+		//**********************************************************************
+		// Method: CreateJSon
+		// Creates a JSON string object
+		//
+		// Parameters:
+		// pPropertyName - name of property
+		// value - string value for new IJSonObject object
+		//
+		// Returns:
+		// Returns the newly created IJSonObj
+		//**********************************************************************
+		virtual CRefObj<IJSonObj> CreateJSon(const char *pPropertyName, std::string value) = 0;
+
+		//**********************************************************************
+		// Method: CreateJSon
+		// Creates a JSON boolean object
+		//
+		// Parameters:
+		// pPropertyName - name of property
+		// value - boolean value for new IJSonObject object
+		//
+		// Returns:
+		// Returns the newly created IJSonObj
+		//**********************************************************************
+		virtual CRefObj<IJSonObj> CreateJSon(const char *pPropertyName, bool value) = 0;
+
+		//**********************************************************************
+		// Method: CreateJSon
+		// Creates a JSON null object
+		//
+		// Parameters:
+		// pPropertyName - name of property
+		// value - this value is ignored
+		//
+		// Returns:
+		// Returns the newly created IJSonObj
+		//**********************************************************************
+		virtual CRefObj<IJSonObj> CreateJSon(const char *pPropertyName, void* value) = 0;
+
+		//**********************************************************************
+		// Method: CreateJSonArray
+		// Creates a JSON array object
+		//
+		// Parameters:
+		// pPropertyName - name of property
+		// pValue0 - vararg list of objects to add to the array
+		//
+		// Returns:
+		// Returns the newly created IJSonObj
+		//**********************************************************************
+		virtual CRefObj<IJSonObj> CreateJSonArray(const char* pPropertyName, IJSonObj* pValue0, ...) = 0;
+
+		//**********************************************************************
+		// Method: CreateJSon
+		// Creates a JSON object
+		//
+		// Parameters:
+		// pPropertyName - name of property
+		// pValue0 - vararg list of objects to add to the object's map
+		//
+		// Returns:
+		// Returns the newly created IJSonObj
+		//**********************************************************************
+		virtual CRefObj<IJSonObj> CreateJSonMap(const char* pPropertyName, IJSonObj* value0, ...) = 0;
 	};
 	
 	CRefObj<IJSonParser> CreateJSonParser();

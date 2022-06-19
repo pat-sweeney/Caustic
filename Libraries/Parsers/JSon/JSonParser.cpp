@@ -118,16 +118,16 @@ namespace Caustic
 		case c_LexToken_LeftBrace: // Parse object
 			{
 				pObj->m_type = CJSonType::Object;
-				std::map<std::string, CRefObj<IJSonObj>> data;
-				ParseObject(pLex, data);
+				std::map<std::string, CRefObj<IJSonObj>> *data = new std::map<std::string, CRefObj<IJSonObj>>();
+				ParseObject(pLex, *data);
 				pObj->m_value = std::any(data);
 			}
 			break;
 		case c_LexToken_LeftBracket: // Parse array
 			{
 				pObj->m_type = CJSonType::Array;
-				std::vector<CRefObj<IJSonObj>> data;
-				ParseArray(pLex, data);
+				std::vector<CRefObj<IJSonObj>> *data = new std::vector<CRefObj<IJSonObj>>();
+				ParseArray(pLex, *data);
 				pObj->m_value = std::any(data);
 			}
 			break;
@@ -136,8 +136,8 @@ namespace Caustic
 			pObj->m_value = std::any(token.m_fval);
 			break;
 		case c_LexToken_Integer:
-			pObj->m_type = CJSonType::Number;
-			pObj->m_value = std::any(float(token.m_ival));
+			pObj->m_type = CJSonType::Integer;
+			pObj->m_value = std::any(token.m_ival);
 			break;
 		case c_LexToken_True:
 			pObj->m_type = CJSonType::Bool;
@@ -168,8 +168,19 @@ namespace Caustic
 		return ParseValue(spLex, "");
 	}
 
-	void CJSonParser::ConditionalWrite(char **ppBuffer, uint32 *pTotalSize, const char *format, ...)
+	void CJSonParser::ConditionalWrite(bool indent, char **ppBuffer, uint32 *pTotalSize, const char *format, ...)
 	{
+		if (indent)
+		{
+			if (ppBuffer && m_indentLevel > 0)
+			{
+				for (int i = 0; i < m_indentLevel; i++)
+					(*ppBuffer)[i] = ' ';
+				(*ppBuffer) += m_indentLevel;
+			}
+			*pTotalSize += m_indentLevel;
+		}
+		
 		char buffer[1024];
 		va_list args;
 		va_start(args, format);
@@ -180,7 +191,7 @@ namespace Caustic
 			memcpy(*ppBuffer, buffer, count);
 			(*ppBuffer) += count;
 		}
-		pTotalSize += count;
+		*pTotalSize += count;
 	}
 	
 	void CJSonParser::WriteValue(CRefObj<IJSonObj> obj, char** ppBuffer, uint32 *pTotalSize)
@@ -189,32 +200,55 @@ namespace Caustic
 		{
 		case CJSonType::Array:
 			{
-				std::vector<CRefObj<IJSonObj>> vec = std::any_cast<std::vector<CRefObj<IJSonObj>>>(obj->GetValue());
-				for (size_t i = 0; i < vec.size(); i++)
-					WriteValue(vec[i], ppBuffer, pTotalSize);
+				std::vector<CRefObj<IJSonObj>> *vec = std::any_cast<std::vector<CRefObj<IJSonObj>>*>(obj->GetValue());
+				ConditionalWrite(false, ppBuffer, pTotalSize, "[\n");
+				m_indentLevel += 4;
+				bool writeComma = false;
+				for (size_t i = 0; i < vec->size(); i++)
+				{
+					if (writeComma)
+						ConditionalWrite(false, ppBuffer, pTotalSize, ",\n");
+					WriteValue((*vec)[i], ppBuffer, pTotalSize);
+					writeComma = true;
+				}
+				ConditionalWrite(false, ppBuffer, pTotalSize, "\n");
+				m_indentLevel += 4;
+				ConditionalWrite(true, ppBuffer, pTotalSize, "]");
 			}
 			break;
 		case CJSonType::Bool:
-			ConditionalWrite(ppBuffer, pTotalSize, "%s\n", (std::any_cast<bool>(obj->GetValue())) ? "true" : "false");
+			ConditionalWrite(false, ppBuffer, pTotalSize, "%s", (std::any_cast<bool>(obj->GetValue())) ? "true" : "false");
 			break;
 		case CJSonType::Null:
-			ConditionalWrite(ppBuffer, pTotalSize, "null\n");
+			ConditionalWrite(false, ppBuffer, pTotalSize, "null");
 			break;
 		case CJSonType::Number:
-			ConditionalWrite(ppBuffer, pTotalSize, "%f\n", std::any_cast<float>(obj->GetValue()));
+			ConditionalWrite(false, ppBuffer, pTotalSize, "%f", std::any_cast<float>(obj->GetValue()));
+			break;
+		case CJSonType::Integer:
+			ConditionalWrite(false, ppBuffer, pTotalSize, "%d", std::any_cast<int>(obj->GetValue()));
 			break;
 		case CJSonType::Object:
 			{
-				std::map<std::string, CRefObj<IJSonObj>> vec = std::any_cast<std::map<std::string, CRefObj<IJSonObj>>>(obj->GetValue());
-				for (auto it : vec)
+				std::map<std::string, CRefObj<IJSonObj>> *vec = std::any_cast<std::map<std::string, CRefObj<IJSonObj>>*>(obj->GetValue());
+				ConditionalWrite(false, ppBuffer, pTotalSize, "{\n");
+				m_indentLevel += 4;
+				bool writeComma = false;
+				for (auto it : *vec)
 				{
-					ConditionalWrite(ppBuffer, pTotalSize, "%s : ", it.first.c_str());
+					if (writeComma)
+						ConditionalWrite(false, ppBuffer, pTotalSize, ",\n");
+					ConditionalWrite(true, ppBuffer, pTotalSize, "%s : ", it.first.c_str());
 					WriteValue(it.second, ppBuffer, pTotalSize);
+					writeComma = true;
 				}
+				ConditionalWrite(false, ppBuffer, pTotalSize, "\n");
+				m_indentLevel -= 4;
+				ConditionalWrite(true, ppBuffer, pTotalSize, "}");
 			}
 			break;
 		case CJSonType::String:
-			ConditionalWrite(ppBuffer, pTotalSize, "%s\n", std::any_cast<std::string>(obj->GetValue()));
+			ConditionalWrite(false, ppBuffer, pTotalSize, "\"%s\"", std::any_cast<std::string>(obj->GetValue()));
 			break;
 		}
 	}
@@ -223,8 +257,104 @@ namespace Caustic
 	{
 		uint32 totalSize = 0;
 		if (dom->GetName().length() > 0)
-			ConditionalWrite((pBuffer) ? &pBuffer : nullptr, &totalSize, "%s : ", dom->GetName().c_str());
+			ConditionalWrite(true, (pBuffer) ? &pBuffer : nullptr, &totalSize, "%s : ", dom->GetName().c_str());
 		WriteValue(dom, (pBuffer) ? &pBuffer : nullptr, &totalSize);
 		return totalSize;
+	}
+
+	static std::string BuildRandomName()
+	{
+		std::string x;
+		for (int i = 0; i < 10; i++)
+		{
+			int index = rand() % 52;
+			if (index < 26)
+				x += 'a' + index;
+			else
+				x += 'A' + index;
+		}
+		return x;
+	}
+	
+	CRefObj<IJSonObj> CJSonParser::CreateJSon(const char* pPropertyName, float value)
+	{
+		CJSonObj* pObj = new CJSonObj();
+		pObj->m_type = CJSonType::Number;
+		pObj->m_value = std::any(value);
+		pObj->m_propertyName = (pPropertyName) ? pPropertyName : BuildRandomName();
+		return CRefObj<IJSonObj>(pObj);
+	}
+
+	CRefObj<IJSonObj> CJSonParser::CreateJSon(const char* pPropertyName, int value)
+	{
+		CJSonObj* pObj = new CJSonObj();
+		pObj->m_type = CJSonType::Integer;
+		pObj->m_value = std::any(value);
+		pObj->m_propertyName = (pPropertyName) ? pPropertyName : BuildRandomName();
+		return CRefObj<IJSonObj>(pObj);
+	}
+
+	CRefObj<IJSonObj> CJSonParser::CreateJSon(const char* pPropertyName, std::string value)
+	{
+		CJSonObj* pObj = new CJSonObj();
+		pObj->m_type = CJSonType::String;
+		pObj->m_value = std::any(value);
+		pObj->m_propertyName = (pPropertyName) ? pPropertyName : BuildRandomName();
+		return CRefObj<IJSonObj>(pObj);
+	}
+	
+	CRefObj<IJSonObj> CJSonParser::CreateJSon(const char* pPropertyName, bool value)
+	{
+		CJSonObj* pObj = new CJSonObj();
+		pObj->m_type = CJSonType::Bool;
+		pObj->m_value = std::any(value);
+		pObj->m_propertyName = (pPropertyName) ? pPropertyName : BuildRandomName();
+		return CRefObj<IJSonObj>(pObj);
+	}
+	
+	CRefObj<IJSonObj> CJSonParser::CreateJSon(const char* pPropertyName, void* value)
+	{
+		CJSonObj* pObj = new CJSonObj();
+		pObj->m_type = CJSonType::Null;
+		pObj->m_value = std::any(value);
+		pObj->m_propertyName = (pPropertyName) ? pPropertyName : BuildRandomName();
+		return CRefObj<IJSonObj>(pObj);
+	}
+	
+	CRefObj<IJSonObj> CJSonParser::CreateJSonArray(const char* pPropertyName, IJSonObj* pValue0, ...)
+	{
+		CJSonObj* pObj = new CJSonObj();
+		pObj->m_type = CJSonType::Array;
+		std::vector<CRefObj<IJSonObj>> *data = new std::vector<CRefObj<IJSonObj>>();
+		auto pNextObj = pValue0;
+		va_list vl;
+		va_start(vl, pValue0);
+		while (pNextObj != nullptr)
+		{
+			data->push_back(CRefObj<IJSonObj>(pNextObj));
+			pNextObj = va_arg(vl, IJSonObj*);
+		}
+		va_end(vl);
+		pObj->m_value = std::any(data);
+		return CRefObj<IJSonObj>(pObj);
+	}
+
+	CRefObj<IJSonObj> CJSonParser::CreateJSonMap(const char* pPropertyName, IJSonObj* pValue0, ...)
+	{
+		CJSonObj* pObj = new CJSonObj();
+		pObj->m_type = CJSonType::Object;
+		pObj->m_propertyName = std::string(pPropertyName);
+		std::map<std::string, CRefObj<IJSonObj>> *data = new std::map<std::string, CRefObj<IJSonObj>>();
+		auto pNextObj = pValue0;
+		va_list vl;
+		va_start(vl, pValue0);
+		while (pNextObj != nullptr)
+		{
+			data->insert(std::make_pair<const char*, CRefObj<IJSonObj>>(pNextObj->GetName().c_str(), CRefObj<IJSonObj>(pNextObj)));
+			pNextObj = va_arg(vl, IJSonObj*);
+		}
+		va_end(vl);
+		pObj->m_value = std::any(data);
+		return CRefObj<IJSonObj>(pObj);
 	}
 }

@@ -36,6 +36,13 @@ namespace Caustic
         case Caustic::CJSonType::Null:
             ImGui::Text("Null");
             break;
+        case Caustic::CJSonType::Integer:
+            {
+                char buf[256];
+                sprintf_s(buf, "%d", std::any_cast<int>(pObj->GetValue()));
+                ImGui::Text(buf);
+            }
+            break;
         case Caustic::CJSonType::Number:
             {
                 char buf[256];
