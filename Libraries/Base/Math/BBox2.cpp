@@ -17,13 +17,21 @@ namespace Caustic
     {
     }
 
-    BBox2::BBox2(Vector2 &topLeft, Vector2 &bottomRight)
-    {
-        minPt = topLeft;
-        maxPt = bottomRight;
-    }
+	BBox2::BBox2(Vector2& topLeft, Vector2& bottomRight)
+	{
+		minPt = topLeft;
+		maxPt = bottomRight;
+	}
 
-    bool BBox2::Empty()
+	BBox2::BBox2(float x0, float y0, float x1, float y1)
+	{
+		minPt.x = x0;
+		minPt.y = y0;
+		maxPt.x = x1;
+		maxPt.y = y1;
+	}
+
+	bool BBox2::Empty()
     {
         if (minPt.x == FLT_MAX && minPt.y == FLT_MAX &&
             maxPt.x == -FLT_MAX && maxPt.y == -FLT_MAX)

@@ -42,7 +42,19 @@ export namespace Caustic
         // topLeft - top left corner for bbox
         // bottomRight - bottom right corner for bbox
         //**********************************************************************
-        BBox2(Vector2 &topLeft, Vector2 &bottomRight);
+        BBox2(Vector2& topLeft, Vector2& bottomRight);
+
+        //**********************************************************************
+        // Constructor: BBox2
+        // Constructor
+        //
+        // Parameters:
+        // topLeftX - top left X corner for bbox
+        // topLeftY - top left Y corner for bbox
+        // bottomRightX - bottom right X corner for bbox
+        // bottomRightY - bottom right Y corner for bbox
+        //**********************************************************************
+        BBox2(float x0, float y0, float x1, float y1);
 
         //**********************************************************************
         // Method: Empty
