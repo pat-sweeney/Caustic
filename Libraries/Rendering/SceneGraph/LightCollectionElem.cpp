@@ -24,6 +24,50 @@ import Rendering.SceneGraph.SceneCubeElem;
 
 namespace Caustic
 {
+    CRefObj<IJSonObj> CSceneLightCollectionElem::AsJson(const char* pPropertyName, IJSonParser* pParser)
+    {
+        auto spObj = pParser->CreateJSonMap((pPropertyName) ? pPropertyName : "Lights", nullptr);
+        auto spBase = CSceneGroupElem::AsJson(pPropertyName, pParser);
+        spObj->AddElement(spBase);
+        for (int index = 0; index < (int)m_lights.size(); index++)
+        {
+            auto spLight = m_lights[index];
+            auto spJsonLight = pParser->CreateJSonMap(("Light" + std::to_string(index)).c_str(), nullptr);
+            switch (spLight->GetType())
+            {
+            case ELightType::AreaLight: spJsonLight->AddElement(pParser->CreateJSon("Type", "Area")); break;
+            case ELightType::DirectionalLight: spJsonLight->AddElement(pParser->CreateJSon("Type", "Directional")); break;
+            case ELightType::PointLight: spJsonLight->AddElement(pParser->CreateJSon("Type", "Point")); break;
+            case ELightType::SpotLight: spJsonLight->AddElement(pParser->CreateJSon("Type", "Spot")); break;
+            }
+            spJsonLight->AddElement(pParser->CreateJSon("Intensity", spLight->GetIntensity()));
+            spJsonLight->AddElement(pParser->CreateJSon("CastsShadows", spLight->GetCastsShadows()));
+            auto pos = spLight->GetPosition();
+            spJsonLight->AddElement(
+                pParser->CreateJSonMap("Position",
+                    pParser->CreateJSon("x", pos.x),
+                    pParser->CreateJSon("y", pos.y),
+                    pParser->CreateJSon("z", pos.z),
+                    nullptr));
+            auto dir = spLight->GetDirection();
+            spJsonLight->AddElement(
+                pParser->CreateJSonMap("Direction",
+                    pParser->CreateJSon("x", dir.x),
+                    pParser->CreateJSon("y", dir.y),
+                    pParser->CreateJSon("z", dir.z),
+                    nullptr));
+            auto clr = spLight->GetColor();
+            spJsonLight->AddElement(
+                pParser->CreateJSonMap("Color",
+                    pParser->CreateJSon("x", clr.r),
+                    pParser->CreateJSon("y", clr.g),
+                    pParser->CreateJSon("z", clr.b),
+                    nullptr));
+            spObj->AddElement(spJsonLight);
+        }
+        return spObj;
+    }
+
     uint32 CSceneLightCollectionElem::NumberLights()
     {
         return (uint32)m_lights.size();

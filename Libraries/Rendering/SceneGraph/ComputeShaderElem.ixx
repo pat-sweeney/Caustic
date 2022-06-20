@@ -25,6 +25,7 @@ import Rendering.Caustic.IRenderCtx;
 import Rendering.SceneGraph.SceneGraph;
 import Rendering.SceneGraph.SceneElem;
 import Rendering.SceneGraph.ISceneComputeShaderElem;
+import Parsers.JSon.IJSonParser;
 
 export namespace Caustic
 {
@@ -64,6 +65,7 @@ export namespace Caustic
         //**********************************************************************
         // ISceneElem
         //**********************************************************************
+        virtual CRefObj<IJSonObj> AsJson(const char* pPropertyName, IJSonParser* pParser) override;
         virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** pMaterial) override { return false; }
         virtual ESceneElemType GetType() override { return ESceneElemType::ComputeShaderElem; }
         virtual std::wstring GetName() override { return CSceneElem::GetName(); }

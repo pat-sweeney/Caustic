@@ -19,6 +19,7 @@ module;
 module Imaging.Image.GPUPipeline;
 import Base.Core.Core;
 import Base.Core.Error;
+import Base.Math.BBox;
 import Imaging.Image.IGPUPipeline;
 import Cameras.CameraBase.ICamera;
 import Rendering.Caustic.Sampler;
@@ -170,7 +171,8 @@ namespace Caustic
         if (pRenderer == nullptr)
         {
             std::wstring shaderFolder(L"");
-            pRenderer = Caustic::CCausticFactory::Instance()->CreateRenderer(nullptr, shaderFolder);
+            BBox2 viewport(0.0f, 0.0f, 1.0f, 1.0f);
+            pRenderer = Caustic::CCausticFactory::Instance()->CreateRenderer(nullptr, viewport, shaderFolder);
         }
         m_spRenderer = pRenderer;
 

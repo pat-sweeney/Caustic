@@ -103,6 +103,32 @@
           "bin/placeholder/ImPlot.dll": {}
         }
       },
+      "JSon/1.0.0": {
+        "type": "project",
+        "dependencies": {
+          "Core": "1.0.0",
+          "ImGui": "1.0.0",
+          "Lex": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/JSon.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/JSon.dll": {}
+        }
+      },
+      "Lex/1.0.0": {
+        "type": "project",
+        "dependencies": {
+          "Core": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Lex.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Lex.dll": {}
+        }
+      },
       "Math/1.0.0": {
         "type": "project",
         "dependencies": {
@@ -246,6 +272,7 @@
           "Core": "1.0.0",
           "GeomDS": "1.0.0",
           "Image": "1.0.0",
+          "JSon": "1.0.0",
           "Math": "1.0.0",
           "Mesh": "1.0.0"
         },
@@ -298,6 +325,16 @@
       "type": "project",
       "path": "../../Libraries/Rendering/ImPlot/ImPlot.vcxproj",
       "msbuildProject": "../../Libraries/Rendering/ImPlot/ImPlot.vcxproj"
+    },
+    "JSon/1.0.0": {
+      "type": "project",
+      "path": "../../Libraries/Parsers/JSon/JSon.vcxproj",
+      "msbuildProject": "../../Libraries/Parsers/JSon/JSon.vcxproj"
+    },
+    "Lex/1.0.0": {
+      "type": "project",
+      "path": "../../Libraries/Parsers/Lex/Lex.vcxproj",
+      "msbuildProject": "../../Libraries/Parsers/Lex/Lex.vcxproj"
     },
     "Math/1.0.0": {
       "type": "project",

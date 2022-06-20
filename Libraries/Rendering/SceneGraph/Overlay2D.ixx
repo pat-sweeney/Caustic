@@ -15,6 +15,7 @@ import Rendering.Caustic.ISampler;
 import Rendering.SceneGraph.SceneGraph;
 import Rendering.SceneGraph.SceneElem;
 import Rendering.SceneGraph.ISceneOverlay2DElem;
+import Parsers.JSon.IJSonParser;
 
 export namespace Caustic
 {
@@ -55,6 +56,36 @@ export namespace Caustic
 		//**********************************************************************
 		// ISceneElem
 		//**********************************************************************
+		virtual CRefObj<IJSonObj> AsJson(const char* pPropertyName, IJSonParser* pParser) override
+		{
+//			CRefObj<IJSonObj> spShaderObj;
+//			if (m_spShader)
+//				spShaderObj = m_spShader->AsJson("Shader", pParser);
+//			else
+//				spShaderObj = pParser->CreateJSon("Shader", "<none>");
+//			
+//			CRefObj<IJSonObj> spSamplerObj;
+//			if (m_spSampler)
+//				spSamplerObj = m_spSampler->AsJson("Sampler", pParser);
+//			else
+//				spSamplerObj = pParser->CreateJSon("Sampler", "<none>");
+
+			return pParser->CreateJSonMap((pPropertyName) ? pPropertyName : "Overlay2D",
+				pParser->CreateJSon("Type", "Overlay2D"),
+				//spShaderObj,
+				//spSamplerObj,
+				pParser->CreateJSonMap("Bounds",
+					pParser->CreateJSonMap("MinPt",
+						pParser->CreateJSon("x", m_bounds.minPt.x),
+						pParser->CreateJSon("y", m_bounds.minPt.y),
+						nullptr),
+					pParser->CreateJSonMap("MaxPt",
+						pParser->CreateJSon("x", m_bounds.maxPt.x),
+						pParser->CreateJSon("y", m_bounds.maxPt.y),
+						nullptr),
+					nullptr),
+				nullptr);
+		}
 		virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** pMaterial) override { return false; }
 		virtual ESceneElemType GetType() override { return ESceneElemType::Overlay2D; }
 		virtual std::wstring GetName() override { return CSceneElem::GetName(); }

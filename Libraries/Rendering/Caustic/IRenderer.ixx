@@ -15,6 +15,7 @@ import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
+import Base.Math.BBox;
 import Geometry.Mesh.IMesh;
 import Geometry.Mesh.IMaterialAttrib;
 import Rendering.Caustic.RendererFlags;
@@ -50,6 +51,18 @@ export namespace Caustic
     //**********************************************************************
     struct IRenderer : public IRefCount
     {
+        //**********************************************************************
+        // Method: SetViewport
+        // Specifies the viewport for the final render target
+        // 
+        // Parameters:
+        // x0 - top left X coordinate from 0..1 indicating which portion of the output window is used
+        // y0 - top left Y coordinate from 0..1 indicating which portion of the output window is used
+        // x1 - bottom right X coordinate from 0..1 indicating which portion of the output window is used
+        // y1 - bottom right Y coordinate from 0..1 indicating which portion of the output window is used
+        //**********************************************************************
+        virtual void SetViewport(float x0, float y0, float x1, float y1) = 0;
+        
         //**********************************************************************
         // Method: GetRenderThreadID
         // Returns the thread ID of the render thread
@@ -256,12 +269,23 @@ export namespace Caustic
         //
         // Parameters:
         // hwnd - window to bind renderer to
+        // viewport - viewport onto window for final render
         // shaderFolder - path to shader folder
         // createDebugDevice - True if application wants the debug D3D device. False otherwise.
         // startFrozen - start renderer in a frozen state.
         // desktopIndex - index indicating which desktop duplication service will use
         //**********************************************************************
-        virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice, bool startFrozen = false, int desktopIndex = 0) = 0;
+        virtual void Setup(HWND hwnd, BBox2 &viewport, std::wstring &shaderFolder, bool createDebugDevice, bool startFrozen = false, int desktopIndex = 0) = 0;
+
+        //**********************************************************************
+        // Method: DeviceWindowResized
+        // Called when device window has been resized
+        //
+        // Parameters:
+        // width - width of output device in pixels
+        // height - height of output device in pixels
+        //**********************************************************************
+        virtual void DeviceWindowResized(uint32 width, uint32 height) = 0;
 
         //**********************************************************************
         // Method: DrawMesh
@@ -441,9 +465,9 @@ export namespace Caustic
     // Module:
     // {Link:import Rendering.Caustic.IRenderer;{Rendering/Caustic/IRenderer.ixx}}
     //**********************************************************************
-    CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring& shaderFolder, bool startFrozen = false, int desktopIndex = 0)
+    CRefObj<IRenderer> CreateRenderer(HWND hwnd, BBox2 &viewport, std::wstring& shaderFolder, bool startFrozen = false, int desktopIndex = 0)
     {
-        extern CRefObj<IRenderer> CreateRendererInternal(HWND hwnd, std::wstring & shaderFolder, bool startFrozen = false, int desktopIndex = 0);
-        return CreateRendererInternal(hwnd, shaderFolder, startFrozen, desktopIndex);
+        extern CRefObj<IRenderer> CreateRendererInternal(HWND hwnd, BBox2 &viewport, std::wstring & shaderFolder, bool startFrozen = false, int desktopIndex = 0);
+        return CreateRendererInternal(hwnd, viewport, shaderFolder, startFrozen, desktopIndex);
     }
 }

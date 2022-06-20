@@ -18,6 +18,7 @@ import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
+import Base.Math.BBox;
 import Imaging.Image.IImage;
 import Rendering.Caustic.Renderer;
 import Rendering.Caustic.ShaderInfo;
@@ -77,9 +78,9 @@ namespace Caustic
     // Method: CreateRenderer
     // See <ICausticFactory::CreateRenderer>
     //**********************************************************************
-    CRefObj<IRenderer> CCausticFactory::CreateRenderer(HWND hwnd, std::wstring &shaderFolder, bool startFrozen /* = false */, int desktopIndex /* = 0 */)
+    CRefObj<IRenderer> CCausticFactory::CreateRenderer(HWND hwnd, BBox2 &viewport, std::wstring &shaderFolder, bool startFrozen /* = false */, int desktopIndex /* = 0 */)
 	{
-		return Caustic::CreateRenderer(hwnd, shaderFolder, startFrozen, desktopIndex);
+		return Caustic::CreateRenderer(hwnd, viewport, shaderFolder, startFrozen, desktopIndex);
 	}
 	
     //**********************************************************************

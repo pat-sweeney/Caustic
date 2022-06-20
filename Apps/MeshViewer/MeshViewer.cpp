@@ -11,6 +11,7 @@
 #include <commdlg.h>
 #include <string>
 #include <map>
+#include <any>
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
@@ -18,10 +19,12 @@
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
+import Base.Core.ConvertStr;
 import Geometry.Mesh.IMeshConstructor;
 import Geometry.MeshImport;
 import Geometry.Mesh.Mesh;
 import Imaging.Color;
+import Parsers.JSon.JSonParser;
 import Rendering.Caustic.ISpotLight;
 import Rendering.Caustic.ISampler;
 import Rendering.Caustic.ICausticFactory;
@@ -59,6 +62,7 @@ public:
     std::vector<ImGuiEvent> m_events;
     bool m_ImGuiInitialized;
     ImFont* m_pFont;
+    CRefObj<IJSonObj> m_spSceneAsJson;
 
     CApp() : m_ImGuiInitialized(false)
     {
@@ -69,12 +73,50 @@ public:
 };
 CApp app;
 
+static void WalkScene(IJSonObj* pObj)
+{
+    if (pObj == nullptr)
+        return;
+    if (pObj->GetType() == CJSonType::Object)
+    {
+        if (ImGui::TreeNode(pObj->GetName().c_str()))
+        {
+            std::map<std::string, CRefObj<IJSonObj>>* pMap = std::any_cast<std::map<std::string, CRefObj<IJSonObj>>*>(pObj->GetValue());
+            for (auto it : *pMap)
+                WalkScene(it.second);
+            ImGui::TreePop();
+        }
+    }
+    else if (pObj->GetType() == CJSonType::Array)
+    {
+        if (ImGui::TreeNode(pObj->GetName().c_str()))
+        {
+            std::vector<CRefObj<IJSonObj>>* pMap = std::any_cast<std::vector<CRefObj<IJSonObj>>*>(pObj->GetValue());
+            for (auto it : *pMap)
+                WalkScene(it);
+            ImGui::TreePop();
+        }
+    }
+    else if (pObj->GetType() == CJSonType::Bool)
+    {
+        bool f;
+        ImGui::Checkbox(pObj->GetName().c_str(), &f);
+    }
+    else
+        ImGui::Text(pObj->GetName().c_str());
+}
+
 void InitializeCaustic(HWND hwnd)
 {
     app.m_spSceneFactory = Caustic::CreateSceneFactory();
     app.m_spCausticFactory = Caustic::CreateCausticFactory();
     std::wstring shaderFolder(SHADERPATH);
-    app.m_spRenderWindow = CreateRenderWindow(hwnd, shaderFolder, 
+    BBox2 viewport(0.0f, 0.0f, 1.0f, 1.0f);
+    RECT rect2;
+    GetClientRect(app.m_hwnd, &rect2);
+    viewport.minPt.x = 400.0f / float(rect2.right - rect2.left);
+    viewport.minPt.y = 32.0f / float(rect2.bottom - rect2.top);
+    app.m_spRenderWindow = CreateRenderWindow(hwnd, viewport, shaderFolder,
         [](IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass) {
             if (app.m_ImGuiInitialized && pass == c_PassOpaque)
             {
@@ -92,6 +134,7 @@ void InitializeCaustic(HWND hwnd)
                 ImGui_ImplWin32_NewFrame();
                 ImGui::NewFrame();
 
+                ImVec2 menuSize;
                 ImGui::PushFont(app.m_pFont);
                 if (ImGui::BeginMainMenuBar())
                 {
@@ -192,6 +235,9 @@ void InitializeCaustic(HWND hwnd)
                                 spOverlay->SetRect(bb);
                                 spOverlay->SetTexture(app.m_spRenderWindow->GetRenderer()->GetShadowmapTexture(c_HiResShadowMap));
                                 spSceneGraph->AddChild(spOverlay);
+
+                                CRefObj<IJSonParser> spJsonParser = CreateJSonParser();
+                                app.m_spSceneAsJson = spSceneGraph->AsJson("SceneGraph", spJsonParser);
                             }
                         }
                         ImGui::Separator();
@@ -255,6 +301,7 @@ void InitializeCaustic(HWND hwnd)
                         }
                         ImGui::EndMenu();
                     }
+                    menuSize = ImGui::GetWindowSize();
                     ImGui::EndMainMenuBar();
 
                     if (isAboutOpen)
@@ -267,11 +314,21 @@ void InitializeCaustic(HWND hwnd)
                 }
                 ImGui::PopFont();
 
-                ImGui::SetNextWindowPos(ImVec2(0, 50));
+                auto spSceneGraph = app.m_spRenderWindow->GetSceneGraph();
+                ImGui::SetNextWindowPos(ImVec2(0, menuSize.y));
+                RECT rect;
+                GetClientRect(app.m_hwnd, &rect);
+                ImGui::SetNextWindowSize(ImVec2(400, float(rect.bottom - rect.top) - menuSize.y));
+                ImGui::Begin("Scene");
+                WalkScene(app.m_spSceneAsJson);
+                ImGui::End();
+                
+                ImGui::SetNextWindowPos(ImVec2(menuSize.x - 400, menuSize.y));
                 ImGui::GetStyle().WindowRounding = 0.0f;
                 bool isOpen = true;
                 ImGui::Begin("FrameRate", &isOpen, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDecoration);
                 ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
                 ImGui::End();
             }
         },
@@ -451,6 +508,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     case WM_KEYDOWN:
         app.m_spRenderWindow->MapKey((uint32)wParam, (uint32)lParam);
+        break;
+    case WM_SIZE:
+        {
+            RECT rect2;
+            GetClientRect(app.m_hwnd, &rect2);
+            BBox2 viewport(0.0f, 0.0f, 1.0f, 1.0f);
+            viewport.minPt.x = 400.0f / float(rect2.right - rect2.left);
+            viewport.minPt.y = 32.0f / float(rect2.bottom - rect2.top);
+            int w = LOWORD(lParam);
+            int h = HIWORD(lParam);
+            app.m_spRenderer->RunOnRenderer([w, h, viewport](IRenderer* pRenderer) {
+                pRenderer->DeviceWindowResized((uint32)w, (uint32)h);
+                pRenderer->SetViewport(viewport.minPt.x, viewport.minPt.y, viewport.maxPt.x, viewport.maxPt.y);
+                });
+        }
         break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);

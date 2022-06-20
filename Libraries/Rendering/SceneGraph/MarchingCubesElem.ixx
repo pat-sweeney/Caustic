@@ -70,6 +70,25 @@ export namespace Caustic
         //**********************************************************************
         // ISceneElem
         //**********************************************************************
+        virtual CRefObj<IJSonObj> AsJson(const char* pPropertyName, IJSonParser* pParser) override
+        {
+            auto spObj = pParser->CreateJSonMap((pPropertyName) ? pPropertyName : "MarchingCubes", nullptr);
+            auto spBase = CSceneElem::AsJson("Base", pParser);
+            spObj->AddElement(spBase);
+//            spObj->AddElement(m_spMCCountVertsShader->AsJson("CountVertsShader", pParser));
+//            spObj->AddElement(m_spMCAllocVertsShader->AsJson("AllocVertsShader", pParser));
+//            spObj->AddElement(m_spMCEmitVertsShader->AsJson("EmitVertsShader", pParser));
+//            spObj->AddElement(m_spMCShader->AsJson("Shader", pParser));
+            spObj->AddElement(pParser->CreateJSon("Subdivisions", (int)m_subdivisions));
+            spObj->AddElement(pParser->CreateJSon("xRoundedSubdivisions", (int)m_xRoundedSubdivisions));
+            spObj->AddElement(pParser->CreateJSon("yRoundedSubdivisions", (int)m_yRoundedSubdivisions));
+            spObj->AddElement(pParser->CreateJSon("zRoundedSubdivisions", (int)m_zRoundedSubdivisions));
+            spObj->AddElement(pParser->CreateJSon("numGroupsX", (int)m_numGroupsX));
+            spObj->AddElement(pParser->CreateJSon("numGroupsY", (int)m_numGroupsY));
+            spObj->AddElement(pParser->CreateJSon("numGroupsZ", (int)m_numGroupsZ));
+            return spObj;
+        }
+
         virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** pMaterial) override { return false; }
         virtual ESceneElemType GetType() override { return ESceneElemType::ComputeShaderElem; }
         virtual std::wstring GetName() override { return CSceneElem::GetName(); }

@@ -17,6 +17,7 @@ import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Base.Math.Vector;
+import Base.Math.BBox;
 import Imaging.Color;
 import Imaging.Image.IImage;
 import Geometry.Mesh.Mesh;
@@ -51,6 +52,7 @@ export namespace Caustic
 		//
 		// Parameters:
 		// hwnd - HWND to attach D3D renderer to
+		// viewport - viewport for final render output (0..1)
 		// shaderFolder - folder in which to search for shaders
 		// startFrozen - should renderer start in frozen state
 		// desktopIndex - index indicating which desktop should duplication service use
@@ -66,7 +68,7 @@ export namespace Caustic
 		// Module:
 		// {Link:import Rendering/Caustic/ICausticFactory;{Rendering/Caustic/ICausticFactory.ixx}}
 		//**********************************************************************
-		virtual CRefObj<IRenderer> CreateRenderer(HWND hwnd, std::wstring &shaderFolder, bool startFrozen = false, int desktopIndex = 0) = 0;
+		virtual CRefObj<IRenderer> CreateRenderer(HWND hwnd, BBox2 &viewport, std::wstring &shaderFolder, bool startFrozen = false, int desktopIndex = 0) = 0;
 
 		//**********************************************************************
 		// Method: CreatePointCloud

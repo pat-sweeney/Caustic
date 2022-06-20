@@ -49,7 +49,7 @@ export namespace Caustic
         std::function<void(Caustic::IRenderer*, Caustic::IRenderCtx*, int)> m_callback;
         std::function<void(Caustic::IRenderer*)> m_prePresentCallback;
     public:
-        CRenderWindow(HWND hwnd, std::wstring &shaderFolder,
+        CRenderWindow(HWND hwnd, BBox2 &viewport, std::wstring &shaderFolder,
             std::function<void(Caustic::IRenderer*, Caustic::IRenderCtx*, int)> callback,
             std::function<void(Caustic::IRenderer*)> prePresentCallback,
             bool useRenderGraph = false, bool startFrozen = false, int desktopIndex = 0);
@@ -64,6 +64,7 @@ export namespace Caustic
         //**********************************************************************
         // IRenderWindow
         //**********************************************************************
+        virtual void SetViewport(float x0, float y0, float x1, float y1) override;
         virtual void SetSnapPositions(const Vector3& home, const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis) override;
         virtual CRefObj<ISceneGraph> GetSceneGraph() override { return m_spSceneGraph; }
         virtual void MouseDown(int x, int y, uint32 button, uint32 flags) override;

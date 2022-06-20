@@ -62,6 +62,19 @@ export namespace Caustic
 		//**********************************************************************
 		// ISceneElem
 		//**********************************************************************
+		virtual CRefObj<IJSonObj> AsJson(const char* pPropertyName, IJSonParser* pParser) override
+		{
+			auto spGroup = pParser->CreateJSonMap((pPropertyName) ? pPropertyName : "Group", nullptr);
+			auto spBase = CSceneElem::AsJson(nullptr, pParser);
+			spGroup->AddElement(spBase);
+			for (size_t i = 0; i < m_Children.size(); i++)
+			{
+				auto spChild = m_Children[i]->AsJson(nullptr, pParser);
+				spGroup->AddElement(spChild);
+			}
+			return spGroup;
+		}
+
 		virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** ppMaterial) override
 		{
 			bool found = false;

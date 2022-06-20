@@ -30,6 +30,18 @@ export namespace Caustic
 	struct IRenderWindow : public IRefCount
     {
 		//**********************************************************************
+		// Method: SetViewport
+		// Specifies the viewport for the final render target
+		// 
+		// Parameters:
+		// x0 - top left X coordinate from 0..1 indicating which portion of the output window is used
+		// y0 - top left Y coordinate from 0..1 indicating which portion of the output window is used
+		// x1 - bottom right X coordinate from 0..1 indicating which portion of the output window is used
+		// y1 - bottom right Y coordinate from 0..1 indicating which portion of the output window is used
+		//**********************************************************************
+		virtual void SetViewport(float x0, float y0, float x1, float y1) = 0;
+		
+		//**********************************************************************
 		// Method: SetSnapPositions
 		// Sets the world positions for snapping the camera to when certain keys are pressed
 		//
@@ -115,10 +127,11 @@ export namespace Caustic
 	//
 	// Parameters:
 	// hwnd - window to bind IRenderWindow to
+	// viewport - viewport for final render target
     // shaderFolder - Path to folder containing shaders
 	// ppRenderWindow - returns the created render window
 	//**********************************************************************
-	CRefObj<IRenderWindow> CreateRenderWindow(HWND hwnd, std::wstring &shaderFolder, 
+	CRefObj<IRenderWindow> CreateRenderWindow(HWND hwnd, BBox2 &viewport, std::wstring &shaderFolder, 
 		std::function<void(IRenderer*, IRenderCtx*, int)> callback,
 		std::function<void(IRenderer*)> prePresentCallback,
 		bool startFrozen = false, int desktopIndex = 0);

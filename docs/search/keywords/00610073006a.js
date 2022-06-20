@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("asj",["Function"],[["AsJson",,[["ISceneElem",,,,0,"File:Rendering/SceneGraph/ISceneElem.ixx:ISceneElem.AsJson","CClass:ISceneElem:AsJson"]]]]);

@@ -75,6 +75,14 @@ export namespace Caustic
         //**********************************************************************
         // ISceneElem
         //**********************************************************************
+        virtual CRefObj<IJSonObj> AsJson(const char* pPropertyName, IJSonParser* pParser) override
+        {
+            auto spObj = pParser->CreateJSonMap((pPropertyName) ? pPropertyName : "Cube", nullptr);
+            auto spBase = CSceneElem::AsJson(nullptr, pParser);
+            spObj->AddElement(spBase);
+            return spObj;
+        }
+
         virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** pMaterial) override { return false; }
         virtual ESceneElemType GetType() override { return ESceneElemType::LineElem; }
         virtual std::wstring GetName() override { return CSceneElem::GetName(); }

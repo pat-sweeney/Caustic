@@ -14,6 +14,7 @@ import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Base.Math.Vector;
+import Base.Math.BBox;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IRenderCtx;
 import Rendering.Caustic.ICausticFactory;
@@ -30,7 +31,8 @@ namespace CausticTestSuite
         auto spRenderGraphFactory = Caustic::CreateRenderGraphFactory();
         auto spCausticFactory = Caustic::CreateCausticFactory();
         std::wstring shaderFolder; // Intentionally left empty
-        auto spRenderWindow = CreateRenderWindow(GetDesktopWindow(), shaderFolder,
+        BBox2 viewport(0.0f, 0.0f, 1.0f, 1.0f);
+        auto spRenderWindow = CreateRenderWindow(GetDesktopWindow(), viewport, shaderFolder,
             [](IRenderer*, IRenderCtx*, int) {}, [](IRenderer*) {});
         return true;
     }
@@ -72,7 +74,8 @@ namespace CausticTestSuite
         auto spRenderGraphFactory = Caustic::CreateRenderGraphFactory();
         auto spCausticFactory = Caustic::CreateCausticFactory();
         std::wstring shaderFolder; // Intentionally left empty
-        auto spRenderWindow = CreateRenderWindow(hwnd, shaderFolder, [](IRenderer*, IRenderCtx*, int) {});
+        BBox2 viewport(0.0f, 0.0f, 1.0f, 1.0f);
+        auto spRenderWindow = CreateRenderWindow(hwnd, viewport, shaderFolder, [](IRenderer*, IRenderCtx*, int) {});
         auto spRenderer = spRenderWindow->GetRenderer();
         auto spRenderGraph = spRenderWindow->GetRenderGraph();
         auto spMeshNode = CreateRenderGraphFactory()->CreateMeshNode(Caustic::CreateCube());

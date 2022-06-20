@@ -19,6 +19,7 @@ import Rendering.Caustic.IRenderCtx;
 import Rendering.Caustic.RendererFlags;
 import Geometry.Mesh.IMaterialAttrib;
 import Rendering.SceneGraph.SceneCtx;
+import Parsers.JSon.IJSonParser;
 
 export namespace Caustic
 {
@@ -79,6 +80,19 @@ export namespace Caustic
 	//**********************************************************************
 	struct ISceneElem : public ISerialize
 	{
+		//**********************************************************************
+		// Method: AsJson
+		// Creates a JSON representation for the object
+		//
+		// Parameters:
+		// pPropertyName - name of property
+		// pParser - JSON parser object
+		//
+		// Returns:
+		// JSON object representing the scene element
+		//**********************************************************************
+		virtual CRefObj<IJSonObj> AsJson(const char *pPropertyName, IJSonParser *pParser) = 0;
+
 		//**********************************************************************
 		// Method: RayIntersect
 		// Traces a single path through the scene

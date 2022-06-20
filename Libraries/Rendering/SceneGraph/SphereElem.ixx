@@ -15,6 +15,7 @@ import Base.Core.IRefCount;
 import Base.Math.Vector;
 import Geometry.Mesh.MeshFuncs;
 import Geometry.Mesh.IMesh;
+import Parsers.JSon.IJSonParser;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IRenderCtx;
 import Rendering.SceneGraph.SceneGraph;
@@ -70,6 +71,25 @@ export namespace Caustic
         //**********************************************************************
         // ISceneElem
         //**********************************************************************
+        virtual CRefObj<IJSonObj> AsJson(const char *pPropertyName, IJSonParser* pParser) override
+        {
+            return pParser->CreateJSonMap(pPropertyName,
+                pParser->CreateJSon(    "Type", "SphereElem"),
+                m_spXformElem->AsJson(  "Xform", pParser),
+                pParser->CreateJSon(    "Mesh", (void*)&m_spMesh.p),
+                m_spMeshElem->AsJson(   "MeshElem", pParser),
+                pParser->CreateJSonMap( "Center",
+                            pParser->CreateJSon("Type", "Vector3"),
+                            pParser->CreateJSon("Addr", (void*)&m_center),
+                            pParser->CreateJSon("x", m_center.x),
+                            pParser->CreateJSon("y", m_center.y),
+                            pParser->CreateJSon("z", m_center.z)),
+                pParser->CreateJSonMap( "Radius",
+                            pParser->CreateJSon("Type", "Float"),
+                            pParser->CreateJSon("Addr", (void*)&m_radius),
+                            pParser->CreateJSon("Value", m_radius)));
+        }
+
         virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** pMaterial) override { return false; }
         virtual ESceneElemType GetType() override { return ESceneElemType::LineElem; }
         virtual std::wstring GetName() override { return CSceneElem::GetName(); }

@@ -23,6 +23,7 @@ import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Base.Core.CritSec;
+import Base.Math.BBox;
 import Rendering.Caustic.Texture;
 //import Rendering.Caustic.ITexture;
 import Rendering.Caustic.Renderable;
@@ -48,6 +49,7 @@ namespace Caustic
     {
         m_freezeEvent = CreateEvent(nullptr, true, false, nullptr);
         m_freeze = 0;
+        m_finalViewport = BBox2(0.0f, 0.0f, 1.0f, 1.0f);
     }
 
     //**********************************************************************
@@ -92,6 +94,16 @@ namespace Caustic
             // For now assume now back material
         }
     }
+
+    //**********************************************************************
+    // Method: DeviceWindowResized
+    // Set <IRenderer::DeviceWindowResized>.
+    //**********************************************************************
+    void CRenderer::DeviceWindowResized(uint32 width, uint32 height)
+    {
+        CGraphicsBase::DeviceWindowResizedInternal(width, height);
+    }
+
     //**********************************************************************
     // Method: InitializeD3D
     // Initializes the server side renderer. Clients should call this method indirectly (via <IRenderer::Setup>)
@@ -99,10 +111,11 @@ namespace Caustic
     //
     // Parameters:
     // hwnd - HWND to use for drawing
+    // viewport - viewport to render final viewport into
     //**********************************************************************
-    void CRenderer::InitializeD3D(HWND hwnd)
+    void CRenderer::InitializeD3D(HWND hwnd, BBox2 &viewport)
     {
-        CGraphicsBase::InitializeD3D(hwnd);
+        CGraphicsBase::InitializeD3D(hwnd, viewport);
 
 #ifdef SUPPORT_OBJECT_IDS
         // Create texture for rendering object IDs
@@ -136,12 +149,12 @@ namespace Caustic
     // Method: Setup
     // See <IRenderer::Setup>.
     //**********************************************************************
-    void CRenderer::Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice, bool startFrozen /* = false */, int desktopIndex /* = 0 */)
+    void CRenderer::Setup(HWND hwnd, BBox2 &viewport, std::wstring &shaderFolder, bool createDebugDevice, bool startFrozen /* = false */, int desktopIndex /* = 0 */)
     {
         if (startFrozen)
             Freeze();
         m_renderThreadId = GetCurrentThreadId();
-        CGraphicsBase::Setup(hwnd, createDebugDevice, desktopIndex);
+        CGraphicsBase::Setup(hwnd, viewport, createDebugDevice, desktopIndex);
 
         if (shaderFolder.empty())
             shaderFolder = std::wstring(DEFAULT_SHADER_PATH);
@@ -832,6 +845,18 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Method: SetViewport
+    // See <IRenderer>
+    //**********************************************************************
+    void CRenderer::SetViewport(float x0, float y0, float x1, float y1)
+    {
+        m_finalViewport.minPt.x = x0;
+        m_finalViewport.minPt.y = y0;
+        m_finalViewport.maxPt.x = x1;
+        m_finalViewport.maxPt.y = y1;
+    }
+
+    //**********************************************************************
     // Method: SetFinalRenderTarget
     // See <IRenderer>
     //**********************************************************************
@@ -852,10 +877,10 @@ namespace Caustic
         if (desc.Width != width || desc.Height != height)
         {
             ZeroMemory(&m_viewport, sizeof(m_viewport));
-            m_viewport.TopLeftX = 0;
-            m_viewport.TopLeftY = 0;
-            m_viewport.Width = (float)(desc.Width);
-            m_viewport.Height = (float)(desc.Height);
+            m_viewport.TopLeftX = m_finalViewport.minPt.x * (float)(desc.Width);
+            m_viewport.TopLeftY = m_finalViewport.minPt.y * (float)(desc.Height);
+            m_viewport.Width =  (m_finalViewport.maxPt.x - m_finalViewport.minPt.x) * (float)(desc.Width);
+            m_viewport.Height = (m_finalViewport.maxPt.y - m_finalViewport.minPt.y) * (float)(desc.Height);
             m_viewport.MinDepth = 0.0f;
             m_viewport.MaxDepth = 1.0f;
             m_spContext->RSSetViewports(1, &m_viewport);
@@ -948,6 +973,7 @@ namespace Caustic
     //
     // Parameters:
     // hwnd - window to attach renderer to
+    // viewport - viewport for final render target
     // shaderFolder - path to directory containing shaders
     // startFrozen - should renderer be started in a frozen state?
     // desktopIndex - index indicating which desktop should be used with duplication service
@@ -956,10 +982,10 @@ namespace Caustic
     // Returns:
     // Returns the created renderer
     //**********************************************************************
-    CRefObj<IRenderer> CreateRendererInternal(HWND hwnd, std::wstring &shaderFolder, bool startFrozen /* = false */, int desktopIndex /* = 0 */)
+    CRefObj<IRenderer> CreateRendererInternal(HWND hwnd, BBox2 &viewport, std::wstring &shaderFolder, bool startFrozen /* = false */, int desktopIndex /* = 0 */)
     {
         std::unique_ptr<CRenderer> spRenderer(new CRenderer());
-        spRenderer->Setup(hwnd, shaderFolder, true, startFrozen, desktopIndex);
+        spRenderer->Setup(hwnd, viewport, shaderFolder, true, startFrozen, desktopIndex);
 
         CRefObj<ICamera> spCamera = CCausticFactory::Instance()->CreateCamera(true);
         spRenderer->SetCamera(spCamera);
@@ -975,15 +1001,28 @@ namespace Caustic
         m_spCamera = pCamera;
     }
 
+    void CGraphicsBase::DeviceWindowResizedInternal(uint32 width, uint32 height)
+    {
+        m_spBackBuffer = nullptr;
+        m_spRTView = nullptr;
+        CT(m_spSwapChain->ResizeBuffers(0, (UINT)width, (UINT)height, DXGI_FORMAT_UNKNOWN, 0));
+        CT(m_spSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&m_spBackBuffer)));
+        m_spBackBuffer->GetDesc(&m_BBDesc);
+        CT(m_spDevice->CreateRenderTargetView(m_spBackBuffer, nullptr, &m_spRTView));
+        AdjustViewport();
+    }
+
     //**********************************************************************
     // Method: InitializeD3D
     // Called at the start of the application to initialize the server side of our renderer.
     //
     // Parameters:
     // hwnd - HWND to use for drawing
+    // viewport - viewport to render final viewport into
     //**********************************************************************
-    void CGraphicsBase::InitializeD3D(HWND hwnd)
+    void CGraphicsBase::InitializeD3D(HWND hwnd, BBox2 &viewport)
     {
+        m_hwnd = hwnd;
         std::unique_ptr<CRenderCtx> spCtx(new CRenderCtx());
         m_spRenderCtx = spCtx.release();
 
@@ -1036,12 +1075,20 @@ namespace Caustic
         CD3D11_DEPTH_STENCIL_VIEW_DESC stencilDesc(D3D11_DSV_DIMENSION_TEXTURE2D, DXGI_FORMAT_D24_UNORM_S8_UINT);
         CT(m_spDevice->CreateDepthStencilView(m_spDepthStencilBuffer, &stencilDesc, &m_spStencilView));
 
-        ::GetClientRect(hwnd, &m_viewRect);
+        m_finalViewport = viewport;
+        AdjustViewport();
+    }
+
+    void CGraphicsBase::AdjustViewport()
+    {
+        ::GetClientRect(m_hwnd, &m_viewRect);
         ZeroMemory(&m_viewport, sizeof(m_viewport));
-        m_viewport.TopLeftX = 0;
-        m_viewport.TopLeftY = 0;
-        m_viewport.Width = (float)(m_viewRect.right - m_viewRect.left);
-        m_viewport.Height = (float)(m_viewRect.bottom - m_viewRect.top);
+        int w = m_viewRect.right - m_viewRect.left;
+        int h = m_viewRect.bottom - m_viewRect.top;
+        m_viewport.TopLeftX = m_finalViewport.minPt.x * (float)w;
+        m_viewport.TopLeftY = m_finalViewport.minPt.y * (float)h;
+        m_viewport.Width = (m_finalViewport.maxPt.x - m_finalViewport.minPt.x) * (float)w;
+        m_viewport.Height = (m_finalViewport.maxPt.y - m_finalViewport.minPt.y) * (float)h;
         m_viewport.MinDepth = 0.0f;
         m_viewport.MaxDepth = 1.0f;
         m_spContext->RSSetViewports(1, &m_viewport);
@@ -1056,7 +1103,7 @@ namespace Caustic
     // Method: Setup
     // See <IRenderer::Setup>
     //**********************************************************************
-    void CGraphicsBase::Setup(HWND hwnd, bool createDebugDevice, int desktopIndex)
+    void CGraphicsBase::Setup(HWND hwnd, BBox2 &viewport, bool createDebugDevice, int desktopIndex)
     {
         if (hwnd == nullptr)
         {
@@ -1125,7 +1172,7 @@ namespace Caustic
             }
         }
 
-        InitializeD3D(hwnd);
+        InitializeD3D(hwnd, viewport);
 
         // Create a default camera
         m_spCamera = CCausticFactory::Instance()->CreateCamera(false);

@@ -20,6 +20,7 @@ import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Base.Core.Event;
 import Base.Core.CritSec;
+import Base.Math.BBox;
 import Geometry.Mesh.Mesh;
 import Rendering.Caustic.Shader;
 import Rendering.Caustic.IShaderInfo;
@@ -148,6 +149,8 @@ export namespace Caustic
     class CGraphicsBase : public CRefCount
     {
     protected:
+        HWND m_hwnd;
+        BBox2 m_finalViewport;
         CComPtr<ID3D11Device> m_spDevice;                   // D3D Device
         CComPtr<ID3D11DeviceContext> m_spContext;           // D3D Device context
         CComPtr<IDXGISwapChain> m_spSwapChain;              // D3D Swap chain
@@ -173,8 +176,10 @@ export namespace Caustic
 
         friend CRefObj<IRenderer> CreateGraphics(HWND hwnd);
 
-        virtual void InitializeD3D(HWND hwnd);
-        void Setup(HWND hwnd, bool createDebugDevice, int desktopIndex);
+        void AdjustViewport();
+        void DeviceWindowResizedInternal(uint32 width, uint32 height);
+        virtual void InitializeD3D(HWND hwnd, BBox2 &viewport);
+        void Setup(HWND hwnd, BBox2 &viewport, bool createDebugDevice, int desktopIndex);
         void SetCamera(ICamera* pCamera);
         CComPtr<ID3D11Device> GetDevice() { return m_spDevice; }
         CComPtr<IDXGIOutputDuplication> GetDuplication() { return m_spDuplication; }
@@ -256,7 +261,7 @@ export namespace Caustic
     public:
         explicit CRenderer();
         virtual ~CRenderer();
-        virtual void InitializeD3D(HWND hwnd) override;
+        virtual void InitializeD3D(HWND hwnd, BBox2 &viewport) override;
         
         //**********************************************************************
         // IRefCount
@@ -267,6 +272,8 @@ export namespace Caustic
         //**********************************************************************
         // IRenderer
         //**********************************************************************
+        virtual void DeviceWindowResized(uint32 width, uint32 height) override;
+        virtual void SetViewport(float x0, float y0, float x1, float y1) override;
         virtual DWORD GetRenderThreadID() override { return m_renderThreadId; }
         virtual CRefObj<IRenderMesh> ToRenderMesh(IMesh* pMesh, IShader* pShader) override;
         virtual void ToRenderMaterials(IMesh* pMesh, IShader* pShader, IRenderMesh* pRenderMesh, IMaterialAttrib* pDefaultMaterial) override;
@@ -311,7 +318,7 @@ export namespace Caustic
         virtual void SetCamera(ICamera* pCamera) override { CheckThread(); CGraphicsBase::SetCamera(pCamera); }
         virtual CRefObj<IShaderMgr> GetShaderMgr() override { CheckThread(); return CGraphicsBase::GetShaderMgr(); }
         virtual void AddRenderable(IRenderable* pRenderable) override;
-        virtual void Setup(HWND hwnd, std::wstring &shaderFolder, bool createDebugDevice, bool startFrozen = false, int desktopIndex = 0) override;
+        virtual void Setup(HWND hwnd, BBox2 &viewport, std::wstring &shaderFolder, bool createDebugDevice, bool startFrozen = false, int desktopIndex = 0) override;
         virtual void DrawMesh(IRenderSubMesh *pMesh, IMaterialAttrib *pMaterial, ITexture *pTexture, IShader *pShader, DirectX::XMMATRIX &mat) override;
         virtual void AddPointLight(IPointLight *pLight) override;
         virtual CRefObj<IRenderCtx> GetRenderCtx() override;

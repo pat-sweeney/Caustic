@@ -16,6 +16,7 @@ import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
+import Base.Math.BBox;
 import Geometry.Mesh.Mesh;
 import Rendering.Caustic.IRenderCtx;
 import Rendering.Caustic.CausticFactory;
@@ -118,15 +119,28 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Method: DeviceWindowResized
+    // See <IRenderer::DeviceWindowResized>
+    //**********************************************************************
+    void CRendererMarshaller::DeviceWindowResized(uint32 width, uint32 height)
+    {
+        RunOnRenderer(
+            [this, width, height](IRenderer* pRenderer)
+            {
+                pRenderer->DeviceWindowResized(width, height);
+            }, false);
+    }
+
+    //**********************************************************************
     // Method: Initialize
     // See <IRenderer::Initialize>
     //**********************************************************************
-    void CRendererMarshaller::Initialize(HWND hwnd, std::wstring& shaderFolder,
+    void CRendererMarshaller::Initialize(HWND hwnd, BBox2 &viewport, std::wstring& shaderFolder,
         std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)> renderCallback,
         std::function<void(IRenderer* pRenderer)> prePresentCallback,
         bool startFrozen /* = false */, int desktopIndex /* = 0 */)
     {
-        m_spRenderer = CCausticFactory::Instance()->CreateRenderer(hwnd, shaderFolder, startFrozen, desktopIndex);
+        m_spRenderer = CCausticFactory::Instance()->CreateRenderer(hwnd, viewport, shaderFolder, startFrozen, desktopIndex);
         InitializeCriticalSection(&m_renderQueue.m_cs);
         m_thread = CreateThread(nullptr, 0, RenderThreadProc, this, 0, nullptr);
         m_renderCallback = renderCallback;
@@ -462,13 +476,14 @@ namespace Caustic
     // Method: Setup
     // See <IRenderer::Setup>
     //**********************************************************************
-    void CRendererMarshaller::Setup(HWND hwnd, std::wstring& shaderFolder, bool createDebugDevice, bool startFrozen /* = false */, int desktopIndex /* = 0 */)
+    void CRendererMarshaller::Setup(HWND hwnd, BBox2 &viewport, std::wstring& shaderFolder, bool createDebugDevice, bool startFrozen /* = false */, int desktopIndex /* = 0 */)
     {
         m_renderQueue.AddLambda(
-            [this, hwnd, shaderFolder, createDebugDevice, startFrozen, desktopIndex]()
+            [this, hwnd, viewport, shaderFolder, createDebugDevice, startFrozen, desktopIndex]()
             {
                 std::wstring sh = shaderFolder;
-                m_spRenderer->Setup(hwnd, sh, createDebugDevice, startFrozen, desktopIndex);
+                BBox2 vp = viewport;
+                m_spRenderer->Setup(hwnd, vp, sh, createDebugDevice, startFrozen, desktopIndex);
             }
         );
     }
@@ -705,6 +720,19 @@ namespace Caustic
     CRefObj<IRendererMarshaller> CreateRendererMarshallerInternal()
     {
         return CRefObj<IRendererMarshaller>(new CRendererMarshaller());
+    }
+
+    //**********************************************************************
+    // Method: SetViewport
+    // See <IRenderer::SetViewport>
+    //**********************************************************************
+    void CRendererMarshaller::SetViewport(float x0, float y0, float x1, float y1)
+    {
+        RunOnRenderer(
+            [this, x0, y0, x1, y1](IRenderer* pRenderer)
+            {
+                pRenderer->SetViewport(x0, y0, x1, y1);
+            }, false);
     }
 
     //**********************************************************************

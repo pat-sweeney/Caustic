@@ -19,6 +19,7 @@ import Base.Math.Ray;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.RendererFlags;
 import Rendering.SceneGraph.ISceneElem;
+import Parsers.JSon.IJSonParser;
 
 export namespace Caustic
 {
@@ -47,6 +48,27 @@ export namespace Caustic
         //**********************************************************************
         // ISceneElem base implementation
         //**********************************************************************
+        CRefObj<IJSonObj> AsJson(const char* pPropertyName, IJSonParser* pParser)
+        {
+            return pParser->CreateJSonMap((pPropertyName) ? pPropertyName : "Base",
+                pParser->CreateJSon("Type", "BaseSceneElem"),
+                pParser->CreateJSon("Name", m_Name.c_str()),
+                pParser->CreateJSon("Flags", (int)m_Flags),
+                pParser->CreateJSonMap("BBox",
+                    pParser->CreateJSonMap("MinPt",
+                        pParser->CreateJSon("x", m_BBox.minPt.x),
+                        pParser->CreateJSon("y", m_BBox.minPt.y),
+                        pParser->CreateJSon("z", m_BBox.minPt.z),
+                        nullptr),
+                    pParser->CreateJSonMap("MaxPt",
+                        pParser->CreateJSon("x", m_BBox.maxPt.x),
+                        pParser->CreateJSon("y", m_BBox.maxPt.y),
+                        pParser->CreateJSon("z", m_BBox.maxPt.z),
+                        nullptr),
+                    nullptr),
+                pParser->CreateJSon("Passes", (int)m_passes),
+                nullptr);
+        }
         ESceneElemType GetType() { return ESceneElemType::Unknown; }
         std::wstring GetName() { return m_Name; }
         void SetName(const wchar_t* name) { m_Name = name; }

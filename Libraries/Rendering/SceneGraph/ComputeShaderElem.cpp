@@ -21,9 +21,23 @@ import Rendering.Caustic.Shader;
 import Rendering.Caustic.IShader;
 import Rendering.SceneGraph.SceneElem;
 import Rendering.SceneGraph.ISceneComputeShaderElem;
+import Parsers.JSon.IJSonParser;
 
 namespace Caustic
 {
+    CRefObj<IJSonObj> CSceneComputeShaderElem::AsJson(const char* pPropertyName, IJSonParser* pParser)
+    {
+        auto spObj = pParser->CreateJSonMap((pPropertyName) ? pPropertyName : "ComputerShader", nullptr);
+        auto spBase = CSceneElem::AsJson(nullptr, pParser);
+        //auto spShader = m_spComputeShader->AsJson("Shader", pParser);
+        spObj->AddElement(spBase);
+        //spObj->AddElement(spShader);
+        spObj->AddElement(pParser->CreateJSon("xThread", (int)m_xThreads));
+        spObj->AddElement(pParser->CreateJSon("yThread", (int)m_yThreads));
+        spObj->AddElement(pParser->CreateJSon("zThread", (int)m_zThreads));
+        return spObj;
+    }
+
     void CSceneComputeShaderElem::SetInputThreads(uint32 width, uint32 height, uint32 depth /* = 1 */)
     {
         uint32 xThreads, yThreads, zThreads;

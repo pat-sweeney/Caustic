@@ -13,6 +13,7 @@ import Base.Core.IRefCount;
 import Base.Core.ISerialize;
 import Base.Math.Vector;
 import Base.Math.Ray;
+import Base.Core.ConvertStr;
 import Rendering.Caustic.IShader;
 import Rendering.SceneGraph.SceneGroupElem;
 import Geometry.Mesh.IMaterialAttrib;
@@ -50,6 +51,89 @@ export namespace Caustic
 		//**********************************************************************
 		// ISceneElem
 		//**********************************************************************
+		virtual CRefObj<IJSonObj> AsJson(const char* pPropertyName, IJSonParser* pParser) override
+		{
+			auto spObj = pParser->CreateJSonMap((pPropertyName) ? pPropertyName : "Material", nullptr);
+			auto spBase = CSceneGroupElem::AsJson(pPropertyName, pParser);
+			spObj->AddElement(spBase);
+
+
+			if (m_spMaterial)
+			{
+				const char* cullMode = "";
+				switch (m_spMaterial->GetCullMode())
+				{
+				case D3D11_CULL_MODE::D3D11_CULL_BACK: cullMode = "Back"; break;
+				case D3D11_CULL_MODE::D3D11_CULL_FRONT: cullMode = "Front"; break;
+				case D3D11_CULL_MODE::D3D11_CULL_NONE: cullMode = "None"; break;
+				}
+				const char* fillMode = "";
+				switch (m_spMaterial->GetFillMode())
+				{
+				case D3D11_FILL_MODE::D3D11_FILL_SOLID: fillMode = "Solid"; break;
+				case D3D11_FILL_MODE::D3D11_FILL_WIREFRAME: fillMode = "Wireframe"; break;
+				}
+				auto spMat = pParser->CreateJSonMap("Material",
+					pParser->CreateJSon("Name", m_spMaterial->GetName().c_str()),
+					pParser->CreateJSon("CullMode", cullMode),
+					pParser->CreateJSon("FillMode", fillMode),
+					pParser->CreateJSon("Transparent", m_spMaterial->GetIsTransparent()),
+					pParser->CreateJSon("ShadowReceiver", m_spMaterial->GetIsShadowReceiver()),
+					pParser->CreateJSon("MaterialID", (int)m_spMaterial->GetMaterialID()),
+					nullptr);
+				auto colorObj = pParser->CreateJSonMap("Colors", nullptr);
+				IJSonObj* pColorObj = colorObj;
+				m_spMaterial->EnumerateColors([pColorObj, pParser](const wchar_t* pName, FRGBAColor& v) {
+					auto name = Caustic::wstr2str(pName);
+					pColorObj->AddElement(pParser->CreateJSonMap(name.c_str(),
+						pParser->CreateJSon("r", v.r),
+						pParser->CreateJSon("g", v.g),
+						pParser->CreateJSon("b", v.b),
+						nullptr));
+					});
+				spMat->AddElement(colorObj);
+
+				auto scalarObj = pParser->CreateJSonMap("Scalars", nullptr);
+				IJSonObj* pScalarObj = scalarObj;
+				m_spMaterial->EnumerateScalars([pScalarObj, pParser](const wchar_t* pName, float v) {
+					auto name = Caustic::wstr2str(pName);
+					pScalarObj->AddElement(pParser->CreateJSon(name.c_str(), v));
+					});
+				spMat->AddElement(scalarObj);
+
+				auto texObj = pParser->CreateJSonMap("Textures", nullptr);
+				IJSonObj* pTexObj = texObj;
+				m_spMaterial->EnumerateTextures([pTexObj, pParser](const wchar_t* pName, IImage* pTexture, EShaderAccess access) {
+					auto name = Caustic::wstr2str(pName);
+					const char* accessStr = "";
+					switch (access)
+					{
+					case EShaderAccess::PixelShader: accessStr = "PixelShader"; break;
+					case EShaderAccess::VertexShader: accessStr = "VertexShader"; break;
+					case EShaderAccess::Both: accessStr = "PixelShader | VertexShader"; break;
+					}
+					pTexObj->AddElement(
+						pParser->CreateJSonMap("Texture",
+							pParser->CreateJSon("Name", name.c_str()),
+							pParser->CreateJSon("Access", accessStr),
+							pParser->CreateJSon("Width", (int)pTexture->GetWidth()),
+							pParser->CreateJSon("Height", (int)pTexture->GetHeight()),
+							pParser->CreateJSon("BytesPerPixel", (int)pTexture->GetBytesPerPixel()),
+							pParser->CreateJSon("RGBOrder", pTexture->GetRGBOrder()),
+							pParser->CreateJSon("ImageType", (int)pTexture->GetImageType()),
+							pParser->CreateJSon("SubX", (int)pTexture->GetSubX()),
+							pParser->CreateJSon("SubY", (int)pTexture->GetSubY()),
+							pParser->CreateJSon("Stride", (int)pTexture->GetStride()),
+							nullptr));
+					});
+				spMat->AddElement(texObj);
+				spObj->AddElement(spMat);
+			}
+//			if (m_spShader)
+//				spObj->AddElement(m_spShader->AsJSon("Shader", pParser));
+			return spObj;
+		}
+
 		virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** pMaterial) override { return false; }
 		virtual ESceneElemType GetType() { return ESceneElemType::Material; }
 		virtual std::wstring GetName() override { return CSceneElem::GetName(); }

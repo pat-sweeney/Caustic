@@ -12,6 +12,7 @@ module;
 
 module Rendering.RenderWindow.RenderWindow;
 import Base.Core.Core;
+import Base.Math.BBox;
 import Rendering.Caustic.CausticFactory;
 import Rendering.Caustic.ICamera;
 import Rendering.RendererMarshaller.IRendererMarshaller;
@@ -21,7 +22,7 @@ import Rendering.RenderGraph.RenderGraph;
 
 namespace Caustic
 {
-    CRenderWindow::CRenderWindow(HWND hwnd, std::wstring &shaderFolder,
+    CRenderWindow::CRenderWindow(HWND hwnd, BBox2 &viewport, std::wstring &shaderFolder,
         std::function<void(Caustic::IRenderer*, Caustic::IRenderCtx*, int)> callback,
         std::function<void(Caustic::IRenderer*)> prePresentCallback,
         bool useRenderGraph /* = false */, bool startFrozen /* = false */, int desktopIndex /* = 0 */)
@@ -44,7 +45,7 @@ namespace Caustic
             m_spSceneFactory = Caustic::CreateSceneFactory();
             m_spSceneGraph = m_spSceneFactory->CreateSceneGraph();
         }
-        m_spMarshaller->Initialize(hwnd, shaderFolder,
+        m_spMarshaller->Initialize(hwnd, viewport, shaderFolder,
             [this](IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass) {
                 if (m_callback)
                     m_callback(pRenderer, pRenderCtx, pass);
@@ -75,6 +76,11 @@ namespace Caustic
     CRenderWindow::~CRenderWindow()
     {
         m_spMarshaller->Shutdown();
+    }
+
+    void CRenderWindow::SetViewport(float x0, float y0, float x1, float y1)
+    {
+        m_spMarshaller->GetRenderer()->SetViewport(x0, y0, x1, y1);
     }
 
     void CRenderWindow::MouseDown(int x, int y, uint32 button, uint32 flags)

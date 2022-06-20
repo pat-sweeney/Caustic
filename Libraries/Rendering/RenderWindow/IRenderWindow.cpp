@@ -10,15 +10,16 @@ module;
 module Rendering.RenderWindow.IRenderWindow;
 import Base.Core.Core;
 import Base.Core.IRefCount;
+import Base.Math.BBox;
 import Rendering.RenderWindow.RenderWindow;
 
 namespace Caustic
 {
-    CRefObj<IRenderWindow> CreateRenderWindow(HWND hwnd, std::wstring& shaderFolder,
+    CRefObj<IRenderWindow> CreateRenderWindow(HWND hwnd, BBox2 &viewport, std::wstring& shaderFolder,
         std::function<void(IRenderer*, IRenderCtx*, int)> callback,
         std::function<void(IRenderer*)> prePresentCallback,
         bool startFrozen /* = false */, int desktopIndex /* = 0 */)
     {
-        return CRefObj<IRenderWindow>(new CRenderWindow(hwnd, shaderFolder, callback, prePresentCallback, false, startFrozen, desktopIndex));
+        return CRefObj<IRenderWindow>(new CRenderWindow(hwnd, viewport, shaderFolder, callback, prePresentCallback, false, startFrozen, desktopIndex));
     }
 }
