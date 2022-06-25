@@ -103,7 +103,8 @@ namespace Caustic
 #endif
         std::vector<CRefObj<ILight>> lights = pSceneCtx->m_lights;
         for (int i = 0; i < (int)m_lights.size(); i++)
-            pSceneCtx->m_lights.push_back(m_lights[i]);
+            if (m_lights[i]->GetOnOff())
+                pSceneCtx->m_lights.push_back(m_lights[i]);
         if (pSceneCtx->m_ShowProxyObjects)
         {
             CRefObj<IShader> spOldShader = pSceneCtx->m_spCurrentShader;

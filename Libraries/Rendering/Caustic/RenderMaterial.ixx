@@ -15,6 +15,7 @@ import Base.Core.IRefCount;
 import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.ITexture;
 import Rendering.Caustic.ISampler;
+import Rendering.Caustic.IShader;
 import Geometry.Mesh.IMaterialAttrib;
 
 export namespace Caustic
@@ -53,6 +54,10 @@ export namespace Caustic
     public:
         friend class CRenderer;
         friend CRefObj<IRenderMaterial> CreateRenderMaterial(IRenderer* pRenderer, IMaterialAttrib *pMaterialAttrib, IShader *pShader);
+
+        CRenderMaterial()
+        {
+        }
 
         //**********************************************************************
         // IRefCount

@@ -40,16 +40,19 @@ export namespace Caustic
         virtual ELightType GetType() = 0;
 
         //**********************************************************************
-        // Method: TurnOn
-        // Turns on the light
+        // Method: GetOnOff
+        // Returns whether the light is currently on
         //**********************************************************************
-        virtual void TurnOn() = 0;
+        virtual bool GetOnOff() = 0;
 
         //**********************************************************************
-        // Method: TurnOff
-        // Turns off the light
+        // Method: SetOnOff
+        // Returns a light on or off
+        // 
+        // Parameters:
+        // f - if true, turn light on. Otherwise turn it off
         //**********************************************************************
-        virtual void TurnOff() = 0;
+        virtual void SetOnOff(bool f) = 0;
 
         //**********************************************************************
         // Method: SetIntensity

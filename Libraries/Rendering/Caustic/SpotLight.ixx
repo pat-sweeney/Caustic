@@ -55,8 +55,8 @@ export namespace Caustic
         // ILight
         //**********************************************************************
         virtual ELightType GetType() override { return ELightType::SpotLight; }
-        virtual void TurnOn() override { m_enabled = true; }
-        virtual void TurnOff() override { m_enabled = false; }
+        virtual bool GetOnOff() override { return m_enabled; }
+        virtual void SetOnOff(bool f) override { m_enabled = f; }
         virtual void SetIntensity(float intensity) override { m_intensity = intensity; }
         virtual float GetIntensity() override { return m_intensity; }
         virtual void SetCastsShadows(bool casts) override { m_casts = casts; }
