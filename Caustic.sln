@@ -129,6 +129,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RendererMarshaller", "Libra
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WebCamera", "Libraries\Cameras\WebCamera\WebCamera.vcxproj", "{613C7807-EA12-4600-848E-3D3D5D0FDEBF}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuiControls", "Libraries\Rendering\GuiControls\GuiControls.vcxproj", "{6901EACB-E9E3-4621-8BE3-60B0991A24F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -445,6 +447,14 @@ Global
 		{613C7807-EA12-4600-848E-3D3D5D0FDEBF}.Release|x64.Build.0 = Release|x64
 		{613C7807-EA12-4600-848E-3D3D5D0FDEBF}.Release|x86.ActiveCfg = Release|Win32
 		{613C7807-EA12-4600-848E-3D3D5D0FDEBF}.Release|x86.Build.0 = Release|Win32
+		{6901EACB-E9E3-4621-8BE3-60B0991A24F9}.Debug|x64.ActiveCfg = Debug|x64
+		{6901EACB-E9E3-4621-8BE3-60B0991A24F9}.Debug|x64.Build.0 = Debug|x64
+		{6901EACB-E9E3-4621-8BE3-60B0991A24F9}.Debug|x86.ActiveCfg = Debug|Win32
+		{6901EACB-E9E3-4621-8BE3-60B0991A24F9}.Debug|x86.Build.0 = Debug|Win32
+		{6901EACB-E9E3-4621-8BE3-60B0991A24F9}.Release|x64.ActiveCfg = Release|x64
+		{6901EACB-E9E3-4621-8BE3-60B0991A24F9}.Release|x64.Build.0 = Release|x64
+		{6901EACB-E9E3-4621-8BE3-60B0991A24F9}.Release|x86.ActiveCfg = Release|Win32
+		{6901EACB-E9E3-4621-8BE3-60B0991A24F9}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -498,6 +508,7 @@ Global
 		{B70DEC5C-65CB-4E68-893A-D592FD8BA0B1} = {5F9C3BDE-23AE-4EF5-B3ED-78635E4F217C}
 		{39CBEA68-484F-4320-BB2F-6F59C0FE5B25} = {B74B63E0-E87A-4063-8622-DE713CAF38A7}
 		{613C7807-EA12-4600-848E-3D3D5D0FDEBF} = {D3EDC083-19DE-435B-93D9-CF91A6CBEF6C}
+		{6901EACB-E9E3-4621-8BE3-60B0991A24F9} = {B74B63E0-E87A-4063-8622-DE713CAF38A7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {60363C0E-C20A-4E6B-AE61-6E0BD7D6B964}

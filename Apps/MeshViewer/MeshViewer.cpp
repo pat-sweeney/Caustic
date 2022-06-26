@@ -32,6 +32,7 @@ import Rendering.Caustic.IShader;
 import Rendering.Caustic.IShaderMgr;
 import Rendering.Caustic.RendererFlags;
 import Rendering.Caustic.IRenderer;
+import Rendering.GuiControls.Common;
 import Rendering.RenderWindow.IRenderWindow;
 import Rendering.SceneGraph.ISceneFactory;
 
@@ -106,6 +107,55 @@ static void WalkScene(IJSonObj* pObj)
         ImGui::Text(pObj->GetName().c_str());
 }
 
+void BuildGroupUI(ISceneGroupElem* pGroup);
+
+//**********************************************************************
+// Function: BuildLightCollectionUI
+// Build the UI for displaying a light collection in the scene graph pane
+// 
+// Parameters:
+// pCollection - list of light elements
+//**********************************************************************
+void BuildLightCollectionUI(ISceneLightCollectionElem *pCollection)
+{
+    std::wstring name = pCollection->GetName();
+    if (ImGui::TreeNode((name.length() == 0) ? "LightCollection" : Caustic::wstr2str(name).c_str()))
+    {
+        uint32 numLights = pCollection->NumberLights();
+        for (uint32 i = 0; i < numLights; i++)
+        {
+            std::string lightName = std::string("Light-") + std::to_string(i);
+            if (ImGui::TreeNode(lightName.c_str()))
+            {
+                CRefObj<ILight> spLight = pCollection->GetLight(i);
+                bool f = spLight->GetOnOff();
+                if (ImGui::Checkbox("Enable", &f))
+                {
+                    spLight->SetOnOff(f);
+                }
+                ImGui_Color("Color:", i,
+                    [spLight]()->FRGBColor { return spLight.p->GetColor(); },
+                    [spLight](FRGBColor v) { spLight.p->SetColor(v); });
+
+                ImGui_Vector("Position:",
+                    [spLight]()->Vector3 { return spLight.p->GetPosition(); },
+                    [spLight](Vector3 v) { spLight.p->SetPosition(v); });
+
+                if (spLight->GetType() == ELightType::DirectionalLight)
+                {
+                    ImGui_Vector("Direction:",
+                        [spLight]()->Vector3 { return spLight.p->GetDirection(); },
+                        [spLight](Vector3 v) { spLight.p->SetDirection(v); });
+                }
+
+                ImGui::TreePop();
+            }
+        }
+        BuildGroupUI(static_cast<ISceneGroupElem*>(pCollection));
+        ImGui::TreePop();
+    }
+
+}
 void BuildGroupUI(ISceneGroupElem* pGroup)
 {
     uint32 numChildren = pGroup->NumberChildren();
@@ -166,34 +216,7 @@ void BuildGroupUI(ISceneGroupElem* pGroup)
             ImGui::Text((name.length() == 0) ? "Renderable" : Caustic::wstr2str(name).c_str());
             break;
         case ESceneElemType::LightCollection:
-            if (ImGui::TreeNode((name.length() == 0) ? "LightCollection" : Caustic::wstr2str(name).c_str()))
-            {
-                ISceneLightCollectionElem *pCollection = static_cast<ISceneLightCollectionElem*>(spChild.p);
-                uint32 numLights = pCollection->NumberLights();
-                for (uint32 i = 0; i < numLights; i++)
-                {
-                    std::string lightName = std::string("Light-") + std::to_string(i);
-                    if (ImGui::TreeNode(lightName.c_str()))
-                    {
-                        CRefObj<ILight> spLight = pCollection->GetLight(i);
-                        bool f = spLight->GetOnOff();
-                        if (ImGui::Checkbox("Enable", &f))
-                        {
-                            spLight->SetOnOff(f);
-                        }
-                        FRGBColor clr = spLight->GetColor();
-                        static float color[4] = { clr.r, clr.g, clr.b, 1.0f };
-                        if (ImGui::ColorEdit4("Color", color))
-                        {
-                            FRGBColor q(color[0], color[1], color[2]);
-                            spLight->SetColor(q);
-                        }
-                        ImGui::TreePop();
-                    }
-                }
-                BuildGroupUI(static_cast<ISceneGroupElem*>(spChild.p));
-                ImGui::TreePop();
-            }
+            BuildLightCollectionUI(static_cast<ISceneLightCollectionElem*>(spChild.p));
             break;
         case ESceneElemType::Material:
         {
@@ -260,13 +283,10 @@ void BuildGroupUI(ISceneGroupElem* pGroup)
                 ImGui::Text((std::string("MaterialID: ") + std::to_string(materialID)).c_str());
                 spMaterial->EnumerateColors([&](const wchar_t* pName, FRGBAColor& v) {
                     std::wstring s(pName);
-                    static float color[4] = { v.r, v.g, v.b, 1.0f };
-                    if (ImGui::ColorEdit4(Caustic::wstr2str(s).c_str(), color))
-                    {
-                        FRGBAColor q(color[0], color[1], color[2], color[3]);
-                        spMaterial->SetColor(pName, q);
-                    }
-                    });
+                    ImGui_Color(Caustic::wstr2str(s).c_str(), spMaterial->GetMaterialID(),
+                        [spMaterial, pName]()->FRGBColor { return spMaterial.p->GetColor(pName); },
+                        [spMaterial, pName](FRGBColor v) { spMaterial.p->SetColor(pName, v); });
+                        });
                 spMaterial->EnumerateScalars([](const wchar_t* pName, float v) {
                     std::wstring s(pName);
                     float q;
@@ -698,16 +718,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         PostQuitMessage(0);
         break;
     case WM_LBUTTONDOWN:
-        app.m_spRenderWindow->MouseDown((int)LOWORD(lParam), (int)HIWORD(lParam), c_LeftButton, (uint32)wParam);
+        if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow))
+            app.m_spRenderWindow->MouseDown((int)LOWORD(lParam), (int)HIWORD(lParam), c_LeftButton, (uint32)wParam);
         break;
     case WM_LBUTTONUP:
-        app.m_spRenderWindow->MouseUp((int)LOWORD(lParam), (int)HIWORD(lParam), c_LeftButton, (uint32)wParam);
+        if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow))
+            app.m_spRenderWindow->MouseUp((int)LOWORD(lParam), (int)HIWORD(lParam), c_LeftButton, (uint32)wParam);
         break;
     case WM_MOUSEMOVE:
-        app.m_spRenderWindow->MouseMove((int)LOWORD(lParam), (int)HIWORD(lParam), (uint32)wParam);
+        if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow))
+            app.m_spRenderWindow->MouseMove((int)LOWORD(lParam), (int)HIWORD(lParam), (uint32)wParam);
         break;
     case WM_MOUSEWHEEL:
-        app.m_spRenderWindow->MouseWheel((int)wParam);
+        if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow))
+            app.m_spRenderWindow->MouseWheel((int)wParam);
         break;
     case WM_KEYDOWN:
         app.m_spRenderWindow->MapKey((uint32)wParam, (uint32)lParam);

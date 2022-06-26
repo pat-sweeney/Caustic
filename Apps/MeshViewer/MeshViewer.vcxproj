@@ -148,6 +148,9 @@
     <ProjectReference Include="..\..\Libraries\Rendering\Caustic\Caustic.vcxproj">
       <Project>{60a04400-10f9-4c6d-b34c-d5c7ebafa262}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Rendering\GuiControls\GuiControls.vcxproj">
+      <Project>{6901eacb-e9e3-4621-8be3-60b0991a24f9}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Rendering\ImGui\ImGui.vcxproj">
       <Project>{fd63d447-4b42-4f14-be8d-392fa277ee0e}</Project>
     </ProjectReference>
