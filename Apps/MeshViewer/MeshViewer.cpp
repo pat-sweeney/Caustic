@@ -137,15 +137,21 @@ void BuildLightCollectionUI(ISceneLightCollectionElem *pCollection)
                     [spLight]()->FRGBColor { return spLight.p->GetColor(); },
                     [spLight](FRGBColor v) { spLight.p->SetColor(v); });
 
+                ImGui::Text("Intensity:");
+                ImGui::SameLine();
+                float intensity = spLight->GetIntensity();
+                if (ImGui::SliderFloat(std::string("##").c_str(), &intensity, 0.0f, 1.0f))
+                    spLight->SetIntensity(intensity);
+
                 ImGui_Vector("Position:",
                     [spLight]()->Vector3 { return spLight.p->GetPosition(); },
-                    [spLight](Vector3 v) { spLight.p->SetPosition(v); });
+                    [spLight](Vector3 v) { spLight.p->SetPosition(v); }, 0.0f, 10000.0f);
 
                 if (spLight->GetType() == ELightType::DirectionalLight)
                 {
                     ImGui_Vector("Direction:",
                         [spLight]()->Vector3 { return spLight.p->GetDirection(); },
-                        [spLight](Vector3 v) { spLight.p->SetDirection(v); });
+                        [spLight](Vector3 v) { spLight.p->SetDirection(v); }, -1.0f, +1.0f);
                 }
 
                 ImGui::TreePop();

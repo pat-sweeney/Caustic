@@ -21,23 +21,31 @@ import Imaging.Color;
 
 export namespace Caustic
 {
-	void ImGui_Vector(const char* pLabel, std::function<Vector3()>getFunc, std::function<void(Vector3 v)>setFunc)
+	void ImGui_Vector(const char* pLabel, std::function<Vector3()>getFunc, std::function<void(Vector3 v)>setFunc,
+		float minValue, float maxValue)
 	{
 		Vector3 v = getFunc();
 		ImGui::Text(pLabel);
 		std::string strLabel(pLabel);
-		ImGui::SliderFloat((std::string("X:##")+strLabel).c_str(), &v.x, 0.0f, 100000.0f);
-		ImGui::SliderFloat((std::string("Y:##")+strLabel).c_str(), &v.y, 0.0f, 100000.0f);
-		ImGui::SliderFloat((std::string("Z:##")+strLabel).c_str(), &v.z, 0.0f, 100000.0f);
+		ImGui::Text("X:");
+		ImGui::SameLine();
+		ImGui::SliderFloat((std::string("##X")+strLabel).c_str(), &v.x, minValue, maxValue);
+		ImGui::Text("Y:");
+		ImGui::SameLine();
+		ImGui::SliderFloat((std::string("##Y")+strLabel).c_str(), &v.y, minValue, maxValue);
+		ImGui::Text("Z:");
+		ImGui::SameLine();
+		ImGui::SliderFloat((std::string("##Z")+strLabel).c_str(), &v.z, minValue, maxValue);
 		setFunc(v);
 	}
 
 	void ImGui_Color(const char* pLabel, uint32 index, std::function<FRGBColor()>getFunc, std::function<void(FRGBColor v)>setFunc)
 	{
 		FRGBColor clr = getFunc();
-		std::string strLabel(pLabel);
+		ImGui::Text(pLabel);
+		ImGui::SameLine();
 		float color[4] = { clr.r, clr.g, clr.b, 1.0f };
-		if (ImGui::ColorEdit4((strLabel+"##"+std::to_string(index)).c_str(), color))
+		if (ImGui::ColorEdit4(("##"+std::to_string(index)).c_str(), color))
 		{
 			FRGBColor q(color[0], color[1], color[2]);
 			setFunc(q);

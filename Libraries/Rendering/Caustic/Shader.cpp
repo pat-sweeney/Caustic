@@ -837,6 +837,9 @@ namespace Caustic
             Caustic::Vector3 pos = lights[i]->GetPosition();
             Float4 lightPos(pos.x, pos.y, pos.z, 1.0f);
             SetParam(L"lightPosWS", i, std::any(lightPos), m_psParams);
+            float intensity = lights[i]->GetIntensity();
+            Float4 lightIntensity(intensity, intensity, intensity, 1.0f);
+            SetParam(L"intensity", i, std::any(lightIntensity), m_psParams);
         }
         SetPSParam(L"numLights", std::any((Int)numLights));
     }
