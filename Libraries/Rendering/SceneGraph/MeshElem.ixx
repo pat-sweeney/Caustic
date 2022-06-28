@@ -89,6 +89,7 @@ export namespace Caustic
         // ISceneMeshElem
         //**********************************************************************
         virtual void SetMesh(IMesh *pMesh) override;
+        virtual CRefObj<IMesh> GetMesh() override;
         virtual void SetShader(IShader* pShader) override { m_spShader = pShader; }
     };
 };

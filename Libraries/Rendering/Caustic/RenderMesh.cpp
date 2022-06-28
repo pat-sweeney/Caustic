@@ -84,7 +84,26 @@ namespace Caustic
             else if ((currentPass == c_PassTransparent) && spMaterialAttrib->GetIsTransparent())
                 RenderSubMesh(pRenderer, spShader, spRenderMaterial, lights, pWorld);
             else if ((currentPass != c_PassTransparent) && !spMaterialAttrib->GetIsTransparent())
+            {
+                CComPtr<ID3D11RasterizerState> spRasterizerState;
+                CComPtr<ID3D11RasterizerState> spOldRasterizerState;
+                D3D11_RASTERIZER_DESC desc;
+                desc.FrontCounterClockwise = false;
+                desc.AntialiasedLineEnable = false;
+                desc.DepthBias = 0;
+                desc.DepthBiasClamp = 0.0f;
+                desc.DepthClipEnable = true;
+                desc.CullMode = spMaterialAttrib->GetCullMode();
+                desc.FillMode = spMaterialAttrib->GetFillMode();
+                desc.MultisampleEnable = true;
+                desc.SlopeScaledDepthBias = 0.0f;
+                desc.ScissorEnable = false;
+                CT(pDevice->CreateRasterizerState(&desc, &spRasterizerState));
+                pContext->RSGetState(&spOldRasterizerState);
+                pContext->RSSetState(spRasterizerState);
                 RenderSubMesh(pRenderer, spShader, spRenderMaterial, lights, pWorld);
+                pContext->RSSetState(spOldRasterizerState);
+            }
             if (pBackMaterialOverride || m_spBackMaterial)
             {
                 auto spRenderMaterial = (pBackMaterialOverride) ? pBackMaterialOverride : m_spBackMaterial.p;
@@ -97,12 +116,12 @@ namespace Caustic
                     CComPtr<ID3D11RasterizerState> spOldRasterizerState;
                     D3D11_RASTERIZER_DESC desc;
                     desc.FrontCounterClockwise = false;
-                    desc.CullMode = D3D11_CULL_BACK;
                     desc.AntialiasedLineEnable = false;
                     desc.DepthBias = 0;
                     desc.DepthBiasClamp = 0.0f;
                     desc.DepthClipEnable = true;
-                    desc.FillMode = D3D11_FILL_MODE::D3D11_FILL_SOLID;
+                    desc.CullMode = spMaterialAttrib->GetCullMode();
+                    desc.FillMode = spMaterialAttrib->GetFillMode();
                     desc.MultisampleEnable = true;
                     desc.SlopeScaledDepthBias = 0.0f;
                     desc.ScissorEnable = false;

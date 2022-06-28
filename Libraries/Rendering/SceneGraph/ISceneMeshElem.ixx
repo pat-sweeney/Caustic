@@ -27,6 +27,12 @@ export namespace Caustic
 		virtual void SetMesh(IMesh* pMesh) = 0;
 
 		//**********************************************************************
+		// Method: GetMesh
+		// Returns the underlying mesh object
+		//**********************************************************************
+		virtual CRefObj<IMesh> GetMesh() = 0;
+
+		//**********************************************************************
 		// Method: SetShader
 		// Assigns shader used for rendering this mesh
 		//**********************************************************************

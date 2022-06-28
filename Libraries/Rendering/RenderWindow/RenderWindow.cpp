@@ -55,6 +55,7 @@ namespace Caustic
                 {
                     SceneCtx sceneCtx;
                     sceneCtx.m_CurrentPass = pass;
+                    sceneCtx.m_ShowProxyObjects = m_spSceneGraph->GetShowProxyObjects();
                     m_spSceneGraph->Render(pRenderer, pRenderCtx, &sceneCtx);
                 }
             },

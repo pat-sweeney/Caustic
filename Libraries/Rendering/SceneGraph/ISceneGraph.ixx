@@ -28,6 +28,25 @@ export namespace Caustic
 	struct ISceneGraph : public ISceneGroupElem
 	{
 		//**********************************************************************
+		// Method: GetShowProxyObjects
+		// Returns whether proxy objects (for things such as lights) are rendered
+		// in the scene.
+		//
+		// Returns:
+		// True if proxy objects are displayed. False otherwise.
+		//**********************************************************************
+		virtual bool GetShowProxyObjects() = 0;
+
+		//**********************************************************************
+		// Method: SetShowProxyObjects
+		// Enables or disables rendering of proxy objects
+		//
+		// Parameters:
+		// show - if true proxy objects are displayed. if false they aren't rendered.
+		//**********************************************************************
+		virtual void SetShowProxyObjects(bool show) = 0;
+
+		//**********************************************************************
 		// Method: PathTrace
 		// Computes view of the scene using path tracing
 		//

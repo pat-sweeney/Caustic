@@ -36,11 +36,13 @@ export namespace Caustic
         CRefObj<IRenderer> m_spRenderer;
         std::vector<CRefObj<ISceneElem>> m_Selected;
         uint32 m_Flags;
+        bool m_showProxyObjects;
 
         void PathTraceInternal(PathTraceCtx* pCtx, int depth, Ray3& ray, FRGBColor* pRadiance);
     public:
         CSceneGraph(ISceneGroupElem *pGroup) :
-            m_locked(false)
+            m_locked(false),
+            m_showProxyObjects(false)
         {
             InitializeCriticalSection(&m_cs);
 			m_spRoot = pGroup;
@@ -102,6 +104,8 @@ export namespace Caustic
         //**********************************************************************
         // ISceneGraph
         //**********************************************************************
+        virtual bool GetShowProxyObjects() override { return m_showProxyObjects; }
+        virtual void SetShowProxyObjects(bool show) override { m_showProxyObjects = show; }
         virtual void PathTrace(IRenderer *pRenderer, PathTraceCtx* pCtx, IImage* pDest) override;
         virtual void Merge(ISceneGraph *pGraph) override;
         virtual void Lock() override;

@@ -160,6 +160,11 @@ namespace Caustic
         SetFlags(GetFlags() | ESceneElemFlags::BBoxDirty | ESceneElemFlags::RenderableDirty | ESceneElemFlags::MaterialDirty);
     }
 
+    CRefObj<IMesh> CSceneMeshElem::GetMesh()
+    {
+        return m_spMesh;
+    }
+
     void CSceneMeshElem::Store(IStream *pStream)
     {
         m_spMesh->Store(pStream);

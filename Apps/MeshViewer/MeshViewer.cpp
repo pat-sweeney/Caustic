@@ -64,6 +64,7 @@ public:
     bool m_ImGuiInitialized;
     ImFont* m_pFont;
     CRefObj<IJSonObj> m_spSceneAsJson;
+    ImVec2 m_winSize;
 
     CApp() : m_ImGuiInitialized(false)
     {
@@ -73,6 +74,19 @@ public:
     void InitializeCaustic(HWND hwnd);
 };
 CApp app;
+
+void ForceWindowResize(int w, int h)
+{
+    RECT rect2;
+    GetClientRect(app.m_hwnd, &rect2);
+    BBox2 viewport(0.0f, 0.0f, 1.0f, 1.0f);
+    viewport.minPt.x = app.m_winSize.x / float(rect2.right - rect2.left);
+    viewport.minPt.y = 32.0f / float(rect2.bottom - rect2.top);
+    app.m_spRenderer->RunOnRenderer([w, h, viewport](IRenderer* pRenderer) {
+        pRenderer->DeviceWindowResized((uint32)w, (uint32)h);
+        pRenderer->SetViewport(viewport.minPt.x, viewport.minPt.y, viewport.maxPt.x, viewport.maxPt.y);
+        });
+}
 
 static void WalkScene(IJSonObj* pObj)
 {
@@ -133,6 +147,11 @@ void BuildLightCollectionUI(ISceneLightCollectionElem *pCollection)
                 {
                     spLight->SetOnOff(f);
                 }
+                f = spLight->GetCastsShadows();
+                if (ImGui::Checkbox("Casts Shadows", &f))
+                {
+                    spLight->SetCastsShadows(f);
+                }
                 ImGui_Color("Color:", i,
                     [spLight]()->FRGBColor { return spLight.p->GetColor(); },
                     [spLight](FRGBColor v) { spLight.p->SetColor(v); });
@@ -160,8 +179,104 @@ void BuildLightCollectionUI(ISceneLightCollectionElem *pCollection)
         BuildGroupUI(static_cast<ISceneGroupElem*>(pCollection));
         ImGui::TreePop();
     }
-
 }
+
+void BuildMatrialAttribUI(IMaterialAttrib *pMaterial, ISceneMaterialElem* pSceneMaterial)
+{
+    std::string matname = pMaterial->GetName();
+    if (ImGui::TreeNode((matname.length() == 0) ? "Material" : matname.c_str()))
+    {
+        D3D11_CULL_MODE cullMode = pMaterial->GetCullMode();
+        const char* cullModes[] = { "Front", "Back", "None" };
+        static const char* currentCullItem;
+        switch (cullMode)
+        {
+        case D3D11_CULL_MODE::D3D11_CULL_FRONT: currentCullItem = cullModes[0]; break;
+        case D3D11_CULL_MODE::D3D11_CULL_BACK: currentCullItem = cullModes[1]; break;
+        case D3D11_CULL_MODE::D3D11_CULL_NONE: currentCullItem = cullModes[2]; break;
+        }
+        ImGui::Text("CullMode:");
+        ImGui::SameLine();
+        if (ImGui::BeginCombo("##CullMode", currentCullItem))
+        {
+            for (int n = 0; n < IM_ARRAYSIZE(cullModes); n++)
+            {
+                bool is_selected = (currentCullItem == cullModes[n]);
+                if (ImGui::Selectable(cullModes[n], is_selected))
+                    currentCullItem = cullModes[n];
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
+
+        D3D11_FILL_MODE fillMode = pMaterial->GetFillMode();
+        const char* fillModes[] = { "Wireframe", "Solid" };
+        static const char* currentFillItem;
+        switch (fillMode)
+        {
+        case D3D11_FILL_MODE::D3D11_FILL_WIREFRAME: currentFillItem = fillModes[0]; break;
+        case D3D11_FILL_MODE::D3D11_FILL_SOLID: currentFillItem = fillModes[1]; break;
+        }
+        ImGui::Text("FillMode:");
+        ImGui::SameLine();
+        if (ImGui::BeginCombo("##FillMode", currentFillItem))
+        {
+            for (int n = 0; n < IM_ARRAYSIZE(fillModes); n++)
+            {
+                bool is_selected = (currentFillItem == fillModes[n]);
+                if (ImGui::Selectable(fillModes[n], is_selected))
+                {
+                    currentFillItem = fillModes[n];
+                    if (n == 0)
+                        pMaterial->SetFillMode(D3D11_FILL_MODE::D3D11_FILL_WIREFRAME);
+                    else
+                        pMaterial->SetFillMode(D3D11_FILL_MODE::D3D11_FILL_SOLID);
+                }
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
+        bool isTransparent = pMaterial->GetIsTransparent();
+        if (ImGui::Checkbox("Transparent", &isTransparent))
+            pMaterial->SetIsTransparent(isTransparent);
+        bool isShadowReceiver = pMaterial->GetIsShadowReceiver();
+        if (ImGui::Checkbox("ShadowReceiver", &isShadowReceiver))
+            pMaterial->SetIsShadowReceiver(isShadowReceiver);
+        uint32 materialID = pMaterial->GetMaterialID();
+        ImGui::Text((std::string("MaterialID: ") + std::to_string(materialID)).c_str());
+        pMaterial->EnumerateColors([&](const wchar_t* pName, FRGBAColor& v) {
+            std::wstring s(pName);
+            ImGui_Color(Caustic::wstr2str(s).c_str(), pMaterial->GetMaterialID(),
+                [pMaterial, pName]()->FRGBColor { return pMaterial->GetColor(pName); },
+                [pMaterial, pName](FRGBColor v) { pMaterial->SetColor(pName, v); });
+            });
+        pMaterial->EnumerateScalars([pMaterial](const wchar_t* pName, float v) {
+            std::wstring s(pName);
+            float q;
+            if (ImGui::SliderFloat(Caustic::wstr2str(s).c_str(), &q, 0.0f, 1.0f))
+                pMaterial->SetScalar(pName, q);
+            });
+//        pMaterial->EnumerateTextures([](const wchar_t* pName, IImage* pTexture, EShaderAccess access) {
+//            CRefObj<IRenderer> spRenderer = app.m_spRenderWindow->GetRenderer();
+//            CRefObj<ITexture> spTexture = app.m_spCausticFactory->CreateTexture(spRenderer, pTexture, D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE,
+//                D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
+//            ImGui::Image((void*)spTexture->GetD3DTextureRV(), ImVec2(128, 128));
+//            });
+        if (pSceneMaterial != nullptr)
+            BuildGroupUI(static_cast<ISceneGroupElem*>(pSceneMaterial));
+        ImGui::TreePop();
+    }
+}
+
+void BuildMaterialUI(ISceneMaterialElem *pSceneMaterial)
+{
+    CRefObj<IMaterialAttrib> spMaterial;
+    pSceneMaterial->GetMaterial(&spMaterial);
+    BuildMatrialAttribUI(spMaterial.p, pSceneMaterial);
+}
+
 void BuildGroupUI(ISceneGroupElem* pGroup)
 {
     uint32 numChildren = pGroup->NumberChildren();
@@ -205,6 +320,15 @@ void BuildGroupUI(ISceneGroupElem* pGroup)
                 ImGui::Checkbox("MaterialDirty", &materialDirty);
                 finalFlags |= (materialDirty) ? ESceneElemFlags::MaterialDirty : 0;
                 spChild->SetFlags(finalFlags);
+
+                auto spMesh = static_cast<ISceneMeshElem*>(spChild.p)->GetMesh();
+                uint32 numMats = spMesh->GetNumberMaterials();
+                for (uint32 i = 0; i < numMats; i++)
+                {
+                    CRefObj<IMaterialAttrib> spMat = spMesh->GetMaterial(i);
+                    BuildMatrialAttribUI(spMat, nullptr);
+                }
+
                 ImGui::TreePop();
             }
             break;
@@ -225,88 +349,9 @@ void BuildGroupUI(ISceneGroupElem* pGroup)
             BuildLightCollectionUI(static_cast<ISceneLightCollectionElem*>(spChild.p));
             break;
         case ESceneElemType::Material:
-        {
-            CRefObj<IMaterialAttrib> spMaterial;
-            static_cast<ISceneMaterialElem*>(spChild.p)->GetMaterial(&spMaterial);
-            std::string matname = spMaterial->GetName();
-            if (ImGui::TreeNode((matname.length() == 0) ? "Material" : matname.c_str()))
             {
-                //CRefObj<IMaterialAttrib> spMaterial;
-                //static_cast<ISceneMaterialElem*>(spChild.p)->GetMaterial(&spMaterial);
-                D3D11_CULL_MODE cullMode = spMaterial->GetCullMode();
-                const char* cullModes[] = { "Front", "Back", "None" };
-                static const char* currentCullItem;
-                switch (cullMode)
-                {
-                case D3D11_CULL_MODE::D3D11_CULL_FRONT: currentCullItem = cullModes[0]; break;
-                case D3D11_CULL_MODE::D3D11_CULL_BACK: currentCullItem = cullModes[1]; break;
-                case D3D11_CULL_MODE::D3D11_CULL_NONE: currentCullItem = cullModes[2]; break;
-                }
-                if (ImGui::BeginCombo("CullMode", currentCullItem))
-                {
-                    for (int n = 0; n < IM_ARRAYSIZE(cullModes); n++)
-                    {
-                        bool is_selected = (currentCullItem == cullModes[n]);
-                        if (ImGui::Selectable(cullModes[n], is_selected))
-                            currentCullItem = cullModes[n];
-                        if (is_selected)
-                            ImGui::SetItemDefaultFocus();
-                    }
-                    ImGui::EndCombo();
-                }
-
-                D3D11_FILL_MODE fillMode = spMaterial->GetFillMode();
-                const char* fillModes[] = { "Wireframe", "Solid" };
-                static const char* currentFillItem;
-                switch (fillMode)
-                {
-                case D3D11_FILL_MODE::D3D11_FILL_WIREFRAME: currentFillItem = fillModes[0]; break;
-                case D3D11_FILL_MODE::D3D11_FILL_SOLID: currentFillItem = fillModes[1]; break;
-                }
-                if (ImGui::BeginCombo("FillMode", currentFillItem))
-                {
-                    for (int n = 0; n < IM_ARRAYSIZE(fillModes); n++)
-                    {
-                        bool is_selected = (currentFillItem == fillModes[n]);
-                        if (ImGui::Selectable(fillModes[n], is_selected))
-                        {
-                            currentFillItem = fillModes[n];
-                            if (n == 0)
-                                spMaterial->SetFillMode(D3D11_FILL_MODE::D3D11_FILL_WIREFRAME);
-                            else
-                                spMaterial->SetFillMode(D3D11_FILL_MODE::D3D11_FILL_SOLID);
-                        }
-                        if (is_selected)
-                            ImGui::SetItemDefaultFocus();
-                    }
-                    ImGui::EndCombo();
-                }
-                bool isTransparent = spMaterial->GetIsTransparent();
-                ImGui::Checkbox("Transparent", &isTransparent);
-                bool isShadowReceiver = spMaterial->GetIsShadowReceiver();
-                ImGui::Checkbox("ShadowReceiver", &isShadowReceiver);
-                uint32 materialID = spMaterial->GetMaterialID();
-                ImGui::Text((std::string("MaterialID: ") + std::to_string(materialID)).c_str());
-                spMaterial->EnumerateColors([&](const wchar_t* pName, FRGBAColor& v) {
-                    std::wstring s(pName);
-                    ImGui_Color(Caustic::wstr2str(s).c_str(), spMaterial->GetMaterialID(),
-                        [spMaterial, pName]()->FRGBColor { return spMaterial.p->GetColor(pName); },
-                        [spMaterial, pName](FRGBColor v) { spMaterial.p->SetColor(pName, v); });
-                        });
-                spMaterial->EnumerateScalars([](const wchar_t* pName, float v) {
-                    std::wstring s(pName);
-                    float q;
-                    ImGui::SliderFloat(Caustic::wstr2str(s).c_str(), &q, 0.0f, 1.0f);
-                    });
-                //                float value = spMaterial->GetScalar("");
-//                virtual CRefObj<IImage> GetTexture(const wchar_t* pName) override;
-//                virtual void (std::function<void(const wchar_t* pName, float s)> func) override;
-//                virtual void EnumerateTextures(std::function<void(const wchar_t* pName, IImage* pTexture, EShaderAccess access)> func) override;
-//
-                BuildGroupUI(static_cast<ISceneGroupElem*>(spChild.p));
-                ImGui::TreePop();
+                BuildMaterialUI(static_cast<ISceneMaterialElem*>(spChild.p));
             }
-        }
             break;
         case ESceneElemType::ComputeShaderElem:
             ImGui::Text((name.length() == 0) ? "ComputeShader" : Caustic::wstr2str(name).c_str());
@@ -332,6 +377,11 @@ void BuildGroupUI(ISceneGroupElem* pGroup)
 
 void BuildSceneUI(ISceneGraph *pSceneGraph)
 {
+    ImGui::Text("Show Proxies:");
+    ImGui::SameLine();
+    bool f = pSceneGraph->GetShowProxyObjects();
+    if (ImGui::Checkbox("##ShowProxies", &f))
+        pSceneGraph->SetShowProxyObjects(f);
     BuildGroupUI(pSceneGraph);
 }
 
@@ -343,7 +393,7 @@ void InitializeCaustic(HWND hwnd)
     BBox2 viewport(0.0f, 0.0f, 1.0f, 1.0f);
     RECT rect2;
     GetClientRect(app.m_hwnd, &rect2);
-    viewport.minPt.x = 400.0f / float(rect2.right - rect2.left);
+    viewport.minPt.x = app.m_winSize.x / float(rect2.right - rect2.left);
     viewport.minPt.y = 32.0f / float(rect2.bottom - rect2.top);
     app.m_spRenderWindow = CreateRenderWindow(hwnd, viewport, shaderFolder,
         [](IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass) {
@@ -547,12 +597,21 @@ void InitializeCaustic(HWND hwnd)
                 ImGui::SetNextWindowPos(ImVec2(0, menuSize.y));
                 RECT rect;
                 GetClientRect(app.m_hwnd, &rect);
-                ImGui::SetNextWindowSize(ImVec2(400, float(rect.bottom - rect.top) - menuSize.y));
+                if (app.m_winSize.x < 400)
+                    app.m_winSize.x = 400;
+                ImGui::SetNextWindowSize(ImVec2(app.m_winSize.x, float(rect.bottom - rect.top) - menuSize.y));
                 ImGui::Begin("Scene");
                 BuildSceneUI(spSceneGraph);//                WalkScene(app.m_spSceneAsJson);
+                auto winSize = ImGui::GetWindowSize();
+                if (winSize.x < 400)
+                    winSize.x = 400;
+                bool changed = (winSize.x != app.m_winSize.x) ? true : false;
+                app.m_winSize = winSize;
+                if (changed)
+                    ForceWindowResize((int)rect.right - rect.left, rect.bottom - rect.top - (int)menuSize.y);
                 ImGui::End();
                 
-                ImGui::SetNextWindowPos(ImVec2(menuSize.x - 400, menuSize.y));
+                ImGui::SetNextWindowPos(ImVec2(menuSize.x - app.m_winSize.x, menuSize.y));
                 ImGui::GetStyle().WindowRounding = 0.0f;
                 bool isOpen = true;
                 ImGui::Begin("FrameRate", &isOpen, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDecoration);
@@ -744,17 +803,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     case WM_SIZE:
         {
-            RECT rect2;
-            GetClientRect(app.m_hwnd, &rect2);
-            BBox2 viewport(0.0f, 0.0f, 1.0f, 1.0f);
-            viewport.minPt.x = 400.0f / float(rect2.right - rect2.left);
-            viewport.minPt.y = 32.0f / float(rect2.bottom - rect2.top);
             int w = LOWORD(lParam);
             int h = HIWORD(lParam);
-            app.m_spRenderer->RunOnRenderer([w, h, viewport](IRenderer* pRenderer) {
-                pRenderer->DeviceWindowResized((uint32)w, (uint32)h);
-                pRenderer->SetViewport(viewport.minPt.x, viewport.minPt.y, viewport.maxPt.x, viewport.maxPt.y);
-                });
+            ForceWindowResize(w, h);
         }
         break;
     default:

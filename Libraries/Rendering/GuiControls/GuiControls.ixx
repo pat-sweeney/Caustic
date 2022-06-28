@@ -15,9 +15,11 @@ export module Rendering.GuiControls.Common;
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
+import Base.Core.ConvertStr;
 import Base.Math.BBox;
 import Base.Math.Vector;
 import Imaging.Color;
+import Geometry.Mesh.IMaterialAttrib;
 
 export namespace Caustic
 {
@@ -45,7 +47,7 @@ export namespace Caustic
 		ImGui::Text(pLabel);
 		ImGui::SameLine();
 		float color[4] = { clr.r, clr.g, clr.b, 1.0f };
-		if (ImGui::ColorEdit4(("##"+std::to_string(index)).c_str(), color))
+		if (ImGui::ColorEdit4(("##" + std::string(pLabel) + std::to_string(index)).c_str(), color))
 		{
 			FRGBColor q(color[0], color[1], color[2]);
 			setFunc(q);
