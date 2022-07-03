@@ -87,7 +87,6 @@ void ForceWindowResize(int w, int h)
         pRenderer->SetViewport(viewport.minPt.x, viewport.minPt.y, viewport.maxPt.x, viewport.maxPt.y);
         });
 }
-
 static void WalkScene(IJSonObj* pObj)
 {
     if (pObj == nullptr)
@@ -181,10 +180,34 @@ void BuildLightCollectionUI(ISceneLightCollectionElem *pCollection)
     }
 }
 
+static void HelpMarker(const char* desc)
+{
+    ImGui::TextDisabled("(?)");
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::BeginTooltip();
+        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+        ImGui::TextUnformatted(desc);
+        ImGui::PopTextWrapPos();
+        ImGui::EndTooltip();
+    }
+    ImGui::SameLine();
+}
+
 void BuildMatrialAttribUI(IMaterialAttrib *pMaterial, ISceneMaterialElem* pSceneMaterial)
 {
+    ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow |
+        ImGuiTreeNodeFlags_OpenOnDoubleClick |
+        ImGuiTreeNodeFlags_SpanAvailWidth;
+    uint32 origFlags = (pSceneMaterial != nullptr) ? pSceneMaterial->GetFlags() : 0;
+    if (origFlags & ESceneElemFlags::Selected)
+        flags |= ImGuiTreeNodeFlags_Selected;
     std::string matname = pMaterial->GetName();
-    if (ImGui::TreeNode((matname.length() == 0) ? "Material" : matname.c_str()))
+    HelpMarker("Material specifies how to render a mesh");
+    bool nodeOpen = ImGui::TreeNodeEx(pMaterial, flags,
+        (matname.length() == 0) ? "Material" : matname.c_str());
+    bool nodeClicked = ImGui::IsItemClicked();
+    if (nodeOpen)
     {
         D3D11_CULL_MODE cullMode = pMaterial->GetCullMode();
         const char* cullModes[] = { "Front", "Back", "None" };
@@ -267,6 +290,18 @@ void BuildMatrialAttribUI(IMaterialAttrib *pMaterial, ISceneMaterialElem* pScene
         if (pSceneMaterial != nullptr)
             BuildGroupUI(static_cast<ISceneGroupElem*>(pSceneMaterial));
         ImGui::TreePop();
+    }
+    if (nodeClicked && pSceneMaterial != nullptr)
+    {
+        if (ImGui::GetIO().KeyCtrl)
+        {
+            if (origFlags & ESceneElemFlags::Selected)
+                pSceneMaterial->SetFlags(origFlags & ~ESceneElemFlags::Selected);
+            else
+                pSceneMaterial->SetFlags(origFlags | ESceneElemFlags::Selected);
+        }
+        else
+            pSceneMaterial->SetFlags(origFlags | ESceneElemFlags::Selected);
     }
 }
 

@@ -147,7 +147,10 @@ export namespace Caustic
 			CSceneElem::SetPostRenderCallback(postrenderCallback);
 		}
 		virtual void Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx) override;
-        virtual void GetBBox(BBox3 *pBBox) override {}
+		virtual void GetBBox(BBox3* pBBox) override
+		{
+			return CSceneGroupElem::GetBBox(pBBox);
+		}
         virtual uint32 GetFlags() override { return m_Flags; }
         virtual void SetFlags(uint32 flags) override { m_Flags = flags; }
 		virtual void SetInPass(uint32 pass) override { CSceneElem::SetInPass(pass); }

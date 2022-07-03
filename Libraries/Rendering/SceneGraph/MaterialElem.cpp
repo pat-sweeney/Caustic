@@ -22,6 +22,8 @@ namespace Caustic
 {
     void CSceneMaterialElem::Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx)
     {
+        if (GetFlags() & ESceneElemFlags::Selected)
+            DrawSelected(pRenderer, (ISceneMaterialElem*)this, pSceneCtx);
         if (!(m_passes & pRenderCtx->GetCurrentPass()))
             return;
         if (m_prerenderCallback)
