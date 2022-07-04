@@ -34,7 +34,7 @@ export namespace Caustic
         CRITICAL_SECTION m_cs;
         CRefObj<ISceneGroupElem> m_spRoot;
         CRefObj<IRenderer> m_spRenderer;
-        std::vector<CRefObj<ISceneElem>> m_Selected;
+        std::vector<CRefObj<ISceneElem>> m_Selected; // List of elements in our scene graph that are currently selected
         uint32 m_Flags;
         bool m_showProxyObjects;
 
@@ -110,6 +110,8 @@ export namespace Caustic
         virtual void Merge(ISceneGraph *pGraph) override;
         virtual void Lock() override;
         virtual void Unlock() override;
-//        virtual void SelectObject(Ray3 &ray, ISceneElem **ppElem);
+        virtual void ClearSelected() override;
+        virtual void SelectObject(ISceneElem* pElem) override;
+        virtual void DeselectObject(ISceneElem* pElem) override;
     };
 }

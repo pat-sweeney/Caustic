@@ -28,6 +28,30 @@ export namespace Caustic
 	struct ISceneGraph : public ISceneGroupElem
 	{
 		//**********************************************************************
+		// Method: ClearSelected
+		// Deselects all the currently selected objects.
+		//**********************************************************************
+		virtual void ClearSelected() = 0;
+
+		//**********************************************************************
+		// Method: SelectObject
+		// Selects the specified scene element.
+		//
+		// Parameters:
+		// pSceneElem - scene element to select
+		//**********************************************************************
+		virtual void SelectObject(ISceneElem* pSceneElem) = 0;
+
+		//**********************************************************************
+		// Method: DeselectObject
+		// Deselects the specified scene element.
+		//
+		// Parameters:
+		// pSceneElem - scene element to select
+		//**********************************************************************
+		virtual void DeselectObject(ISceneElem* pSceneElem) = 0;
+
+		//**********************************************************************
 		// Method: GetShowProxyObjects
 		// Returns whether proxy objects (for things such as lights) are rendered
 		// in the scene.

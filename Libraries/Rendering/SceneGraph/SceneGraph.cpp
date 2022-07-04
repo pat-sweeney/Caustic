@@ -8,6 +8,7 @@ module;
 #include <math.h>
 #include <cstdlib>
 #include <Windows.h>
+#include <vector>
 
 module Rendering.SceneGraph.SceneGraph;
 import Base.Core.Core;
@@ -129,14 +130,36 @@ namespace Caustic
         pGraph->m_spRoot = nullptr;
     }
 
-    void CSceneGraph::AddChild(ISceneElem *pElem)
+    void CSceneGraph::ClearSelected()
     {
         for (auto pElem : m_Selected)
             pElem->SetFlags(pElem->GetFlags() & ~ESceneElemFlags::Selected);
         m_Selected.clear();
-        m_spRoot->AddChild(pElem);
-//        m_Selected.push_back(pElem);
+    }
+
+    void CSceneGraph::SelectObject(ISceneElem* pElem)
+    {
         pElem->SetFlags(pElem->GetFlags() | ESceneElemFlags::Selected);
+        CRefObj<ISceneElem> obj(pElem);
+        m_Selected.push_back(obj);
+    }
+
+    void CSceneGraph::DeselectObject(ISceneElem* pElem)
+    {
+        pElem->SetFlags(pElem->GetFlags() & ~ESceneElemFlags::Selected);
+        for (size_t i = 0; i < m_Selected.size(); i++)
+        {
+            if (m_Selected[i] == pElem)
+            {
+                m_Selected.erase(m_Selected.begin() + i);
+                break;
+            }
+        }
+    }
+
+    void CSceneGraph::AddChild(ISceneElem *pElem)
+    {
+        m_spRoot->AddChild(pElem);
         SetFlags(GetFlags() | ESceneElemFlags::BBoxDirty);
     }
 

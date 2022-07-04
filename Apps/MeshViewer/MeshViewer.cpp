@@ -120,16 +120,17 @@ static void WalkScene(IJSonObj* pObj)
         ImGui::Text(pObj->GetName().c_str());
 }
 
-void BuildGroupUI(ISceneGroupElem* pGroup);
+void BuildGroupUI(ISceneGraph* pSceneGraph, ISceneGroupElem* pGroup);
 
 //**********************************************************************
 // Function: BuildLightCollectionUI
 // Build the UI for displaying a light collection in the scene graph pane
 // 
 // Parameters:
+// pSceneGraph - scene graph
 // pCollection - list of light elements
 //**********************************************************************
-void BuildLightCollectionUI(ISceneLightCollectionElem *pCollection)
+void BuildLightCollectionUI(ISceneGraph* pSceneGraph, ISceneLightCollectionElem *pCollection)
 {
     std::wstring name = pCollection->GetName();
     if (ImGui::TreeNode((name.length() == 0) ? "LightCollection" : Caustic::wstr2str(name).c_str()))
@@ -175,7 +176,7 @@ void BuildLightCollectionUI(ISceneLightCollectionElem *pCollection)
                 ImGui::TreePop();
             }
         }
-        BuildGroupUI(static_cast<ISceneGroupElem*>(pCollection));
+        BuildGroupUI(pSceneGraph, static_cast<ISceneGroupElem*>(pCollection));
         ImGui::TreePop();
     }
 }
@@ -194,7 +195,7 @@ static void HelpMarker(const char* desc)
     ImGui::SameLine();
 }
 
-void BuildMatrialAttribUI(IMaterialAttrib *pMaterial, ISceneMaterialElem* pSceneMaterial)
+void BuildMatrialAttribUI(ISceneGraph* pSceneGraph, IMaterialAttrib *pMaterial, ISceneMaterialElem* pSceneMaterial)
 {
     ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow |
         ImGuiTreeNodeFlags_OpenOnDoubleClick |
@@ -288,7 +289,7 @@ void BuildMatrialAttribUI(IMaterialAttrib *pMaterial, ISceneMaterialElem* pScene
 //            ImGui::Image((void*)spTexture->GetD3DTextureRV(), ImVec2(128, 128));
 //            });
         if (pSceneMaterial != nullptr)
-            BuildGroupUI(static_cast<ISceneGroupElem*>(pSceneMaterial));
+            BuildGroupUI(pSceneGraph, static_cast<ISceneGroupElem*>(pSceneMaterial));
         ImGui::TreePop();
     }
     if (nodeClicked && pSceneMaterial != nullptr)
@@ -296,23 +297,26 @@ void BuildMatrialAttribUI(IMaterialAttrib *pMaterial, ISceneMaterialElem* pScene
         if (ImGui::GetIO().KeyCtrl)
         {
             if (origFlags & ESceneElemFlags::Selected)
-                pSceneMaterial->SetFlags(origFlags & ~ESceneElemFlags::Selected);
+                pSceneGraph->DeselectObject(pSceneMaterial);
             else
-                pSceneMaterial->SetFlags(origFlags | ESceneElemFlags::Selected);
+                pSceneGraph->SelectObject(pSceneMaterial);
         }
         else
-            pSceneMaterial->SetFlags(origFlags | ESceneElemFlags::Selected);
+        {
+            pSceneGraph->ClearSelected();
+            pSceneGraph->SelectObject(pSceneMaterial);
+        }
     }
 }
 
-void BuildMaterialUI(ISceneMaterialElem *pSceneMaterial)
+void BuildMaterialUI(ISceneGraph* pSceneGraph, ISceneMaterialElem *pSceneMaterial)
 {
     CRefObj<IMaterialAttrib> spMaterial;
     pSceneMaterial->GetMaterial(&spMaterial);
-    BuildMatrialAttribUI(spMaterial.p, pSceneMaterial);
+    BuildMatrialAttribUI(pSceneGraph, spMaterial.p, pSceneMaterial);
 }
 
-void BuildGroupUI(ISceneGroupElem* pGroup)
+void BuildGroupUI(ISceneGraph* pSceneGraph, ISceneGroupElem* pGroup)
 {
     uint32 numChildren = pGroup->NumberChildren();
     for (uint32 i = 0; i < numChildren; i++)
@@ -327,7 +331,7 @@ void BuildGroupUI(ISceneGroupElem* pGroup)
         case ESceneElemType::SceneGraph:
             if (ImGui::TreeNode((name.length() == 0) ? "SceneGraph" : Caustic::wstr2str(name).c_str()))
             {
-                BuildGroupUI(static_cast<ISceneGroupElem*>(spChild.p));
+                BuildGroupUI(pSceneGraph, static_cast<ISceneGroupElem*>(spChild.p));
                 ImGui::TreePop();
             }
             break;
@@ -361,7 +365,7 @@ void BuildGroupUI(ISceneGroupElem* pGroup)
                 for (uint32 i = 0; i < numMats; i++)
                 {
                     CRefObj<IMaterialAttrib> spMat = spMesh->GetMaterial(i);
-                    BuildMatrialAttribUI(spMat, nullptr);
+                    BuildMatrialAttribUI(pSceneGraph, spMat, nullptr);
                 }
 
                 ImGui::TreePop();
@@ -373,7 +377,7 @@ void BuildGroupUI(ISceneGroupElem* pGroup)
         case ESceneElemType::Group:
             if (ImGui::TreeNode((name.length() == 0) ? "Group" : Caustic::wstr2str(name).c_str()))
             {
-                BuildGroupUI(static_cast<ISceneGroupElem*>(spChild.p));
+                BuildGroupUI(pSceneGraph, static_cast<ISceneGroupElem*>(spChild.p));
                 ImGui::TreePop();
             }
             break;
@@ -381,11 +385,11 @@ void BuildGroupUI(ISceneGroupElem* pGroup)
             ImGui::Text((name.length() == 0) ? "Renderable" : Caustic::wstr2str(name).c_str());
             break;
         case ESceneElemType::LightCollection:
-            BuildLightCollectionUI(static_cast<ISceneLightCollectionElem*>(spChild.p));
+            BuildLightCollectionUI(pSceneGraph, static_cast<ISceneLightCollectionElem*>(spChild.p));
             break;
         case ESceneElemType::Material:
             {
-                BuildMaterialUI(static_cast<ISceneMaterialElem*>(spChild.p));
+                BuildMaterialUI(pSceneGraph, static_cast<ISceneMaterialElem*>(spChild.p));
             }
             break;
         case ESceneElemType::ComputeShaderElem:
@@ -417,7 +421,7 @@ void BuildSceneUI(ISceneGraph *pSceneGraph)
     bool f = pSceneGraph->GetShowProxyObjects();
     if (ImGui::Checkbox("##ShowProxies", &f))
         pSceneGraph->SetShowProxyObjects(f);
-    BuildGroupUI(pSceneGraph);
+    BuildGroupUI(pSceneGraph, pSceneGraph);
 }
 
 void InitializeCaustic(HWND hwnd)
