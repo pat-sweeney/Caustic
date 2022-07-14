@@ -14,6 +14,7 @@ import Base.Core.IRefCount;
 import Rendering.Caustic.ISampler;
 import Rendering.SceneGraph.SceneGraph;
 import Rendering.SceneGraph.SceneElem;
+import Rendering.Caustic.RendererFlags;
 import Rendering.SceneGraph.ISceneOverlay2DElem;
 import Parsers.JSon.IJSonParser;
 
@@ -39,8 +40,13 @@ export namespace Caustic
 
 		void CreateQuad(IRenderer* pRenderer);
 	public:
-		CSceneOverlay2DElem(IShader* pShader) : m_initialized(false) { m_spShader = pShader; }
-
+		CSceneOverlay2DElem(IShader* pShader) :
+			m_initialized(false)
+		{
+			m_spShader = pShader;
+			m_passes = c_PassOpaque;
+		}
+		
 		//**********************************************************************
 		// ISerialize
 		//**********************************************************************

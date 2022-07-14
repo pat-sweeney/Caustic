@@ -179,11 +179,9 @@ export namespace Caustic
             m_spShader = pShader;
         }
 
-		virtual void GetMaterial(IMaterialAttrib **ppMaterial) override
+		virtual CRefObj<IMaterialAttrib> GetMaterial() override
 		{
-			*ppMaterial = m_spMaterial;
-			if (m_spMaterial)
-				m_spMaterial->AddRef();
+			return m_spMaterial;
 		}
 
 		virtual void SetMaterial(IMaterialAttrib *pMaterial) override

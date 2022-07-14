@@ -41,7 +41,7 @@ export namespace Caustic
     public:
         CSceneElem() :
             m_Flags(DepthTested),
-            m_passes(c_PassOpaque)
+            m_passes(c_PassOpaque | c_PassShadow | c_PassTransparent | c_PassEnvironment)
         {
         }
 

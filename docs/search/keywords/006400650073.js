@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("des",["Function"],[["DeselectObject",,[["ISceneGraph",,,,0,"File:Rendering/SceneGraph/ISceneGraph.ixx:ISceneGraph.DeselectObject","CClass:ISceneGraph:DeselectObject"]]]]);

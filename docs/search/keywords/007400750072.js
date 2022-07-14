@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("tur",["Function"],[["TurnOff",,[["ILight",,,,0,"File:Rendering/Caustic/ILight.ixx:ILight.TurnOff","CClass:ILight:TurnOff"]]],["TurnOn",,[["ILight",,,,0,"File:Rendering/Caustic/ILight.ixx:ILight.TurnOn","CClass:ILight:TurnOn"]]]]);

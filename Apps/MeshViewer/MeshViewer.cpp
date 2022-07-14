@@ -12,6 +12,7 @@
 #include <string>
 #include <map>
 #include <any>
+#include <functional>
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
@@ -65,6 +66,7 @@ public:
     ImFont* m_pFont;
     CRefObj<IJSonObj> m_spSceneAsJson;
     ImVec2 m_winSize;
+    std::function<void()> fillInspectorFunc;
 
     CApp() : m_ImGuiInitialized(false)
     {
@@ -87,99 +89,10 @@ void ForceWindowResize(int w, int h)
         pRenderer->SetViewport(viewport.minPt.x, viewport.minPt.y, viewport.maxPt.x, viewport.maxPt.y);
         });
 }
-static void WalkScene(IJSonObj* pObj)
-{
-    if (pObj == nullptr)
-        return;
-    if (pObj->GetType() == CJSonType::Object)
-    {
-        if (ImGui::TreeNode(pObj->GetName().c_str()))
-        {
-            std::map<std::string, CRefObj<IJSonObj>>* pMap = std::any_cast<std::map<std::string, CRefObj<IJSonObj>>*>(pObj->GetValue());
-            for (auto it : *pMap)
-                WalkScene(it.second);
-            ImGui::TreePop();
-        }
-    }
-    else if (pObj->GetType() == CJSonType::Array)
-    {
-        if (ImGui::TreeNode(pObj->GetName().c_str()))
-        {
-            std::vector<CRefObj<IJSonObj>>* pMap = std::any_cast<std::vector<CRefObj<IJSonObj>>*>(pObj->GetValue());
-            for (auto it : *pMap)
-                WalkScene(it);
-            ImGui::TreePop();
-        }
-    }
-    else if (pObj->GetType() == CJSonType::Bool)
-    {
-        bool f;
-        ImGui::Checkbox(pObj->GetName().c_str(), &f);
-    }
-    else
-        ImGui::Text(pObj->GetName().c_str());
-}
 
-void BuildGroupUI(ISceneGraph* pSceneGraph, ISceneGroupElem* pGroup);
+#if false
 
-//**********************************************************************
-// Function: BuildLightCollectionUI
-// Build the UI for displaying a light collection in the scene graph pane
-// 
-// Parameters:
-// pSceneGraph - scene graph
-// pCollection - list of light elements
-//**********************************************************************
-void BuildLightCollectionUI(ISceneGraph* pSceneGraph, ISceneLightCollectionElem *pCollection)
-{
-    std::wstring name = pCollection->GetName();
-    if (ImGui::TreeNode((name.length() == 0) ? "LightCollection" : Caustic::wstr2str(name).c_str()))
-    {
-        uint32 numLights = pCollection->NumberLights();
-        for (uint32 i = 0; i < numLights; i++)
-        {
-            std::string lightName = std::string("Light-") + std::to_string(i);
-            if (ImGui::TreeNode(lightName.c_str()))
-            {
-                CRefObj<ILight> spLight = pCollection->GetLight(i);
-                bool f = spLight->GetOnOff();
-                if (ImGui::Checkbox("Enable", &f))
-                {
-                    spLight->SetOnOff(f);
-                }
-                f = spLight->GetCastsShadows();
-                if (ImGui::Checkbox("Casts Shadows", &f))
-                {
-                    spLight->SetCastsShadows(f);
-                }
-                ImGui_Color("Color:", i,
-                    [spLight]()->FRGBColor { return spLight.p->GetColor(); },
-                    [spLight](FRGBColor v) { spLight.p->SetColor(v); });
-
-                ImGui::Text("Intensity:");
-                ImGui::SameLine();
-                float intensity = spLight->GetIntensity();
-                if (ImGui::SliderFloat(std::string("##").c_str(), &intensity, 0.0f, 1.0f))
-                    spLight->SetIntensity(intensity);
-
-                ImGui_Vector("Position:",
-                    [spLight]()->Vector3 { return spLight.p->GetPosition(); },
-                    [spLight](Vector3 v) { spLight.p->SetPosition(v); }, 0.0f, 10000.0f);
-
-                if (spLight->GetType() == ELightType::DirectionalLight)
-                {
-                    ImGui_Vector("Direction:",
-                        [spLight]()->Vector3 { return spLight.p->GetDirection(); },
-                        [spLight](Vector3 v) { spLight.p->SetDirection(v); }, -1.0f, +1.0f);
-                }
-
-                ImGui::TreePop();
-            }
-        }
-        BuildGroupUI(pSceneGraph, static_cast<ISceneGroupElem*>(pCollection));
-        ImGui::TreePop();
-    }
-}
+#endif
 
 static void HelpMarker(const char* desc)
 {
@@ -195,233 +108,372 @@ static void HelpMarker(const char* desc)
     ImGui::SameLine();
 }
 
-void BuildMatrialAttribUI(ISceneGraph* pSceneGraph, IMaterialAttrib *pMaterial, ISceneMaterialElem* pSceneMaterial)
+//**********************************************************************
+// Function: FillInspector_Elem
+// Populates the inspector window with the base attributes for an ISceneElem
+// 
+// Parameters:
+// pElem - element to use to populate inspector
+//**********************************************************************
+void FillInspector_Elem(ISceneElem* pElem)
 {
-    ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow |
-        ImGuiTreeNodeFlags_OpenOnDoubleClick |
-        ImGuiTreeNodeFlags_SpanAvailWidth;
-    uint32 origFlags = (pSceneMaterial != nullptr) ? pSceneMaterial->GetFlags() : 0;
-    if (origFlags & ESceneElemFlags::Selected)
-        flags |= ImGuiTreeNodeFlags_Selected;
-    std::string matname = pMaterial->GetName();
-    HelpMarker("Material specifies how to render a mesh");
-    bool nodeOpen = ImGui::TreeNodeEx(pMaterial, flags,
-        (matname.length() == 0) ? "Material" : matname.c_str());
-    bool nodeClicked = ImGui::IsItemClicked();
-    if (nodeOpen)
-    {
-        D3D11_CULL_MODE cullMode = pMaterial->GetCullMode();
-        const char* cullModes[] = { "Front", "Back", "None" };
-        static const char* currentCullItem;
-        switch (cullMode)
-        {
-        case D3D11_CULL_MODE::D3D11_CULL_FRONT: currentCullItem = cullModes[0]; break;
-        case D3D11_CULL_MODE::D3D11_CULL_BACK: currentCullItem = cullModes[1]; break;
-        case D3D11_CULL_MODE::D3D11_CULL_NONE: currentCullItem = cullModes[2]; break;
-        }
-        ImGui::Text("CullMode:");
-        ImGui::SameLine();
-        if (ImGui::BeginCombo("##CullMode", currentCullItem))
-        {
-            for (int n = 0; n < IM_ARRAYSIZE(cullModes); n++)
-            {
-                bool is_selected = (currentCullItem == cullModes[n]);
-                if (ImGui::Selectable(cullModes[n], is_selected))
-                    currentCullItem = cullModes[n];
-                if (is_selected)
-                    ImGui::SetItemDefaultFocus();
-            }
-            ImGui::EndCombo();
-        }
+    uint32 flags = pElem->GetFlags();
+    bool isHidden = (flags & ESceneElemFlags::Hidden) ? true : false;
+    bool isSelected = (flags & ESceneElemFlags::Selected) ? true : false;
+    bool depthTested = (flags & ESceneElemFlags::DepthTested) ? true : false;
+    bool bboxDirty = (flags & ESceneElemFlags::BBoxDirty) ? true : false;
+    bool renderableDirty = (flags & ESceneElemFlags::RenderableDirty) ? true : false;
+    bool materialDirty = (flags & ESceneElemFlags::MaterialDirty) ? true : false;
+    uint32 finalFlags = 0;
+    ImGui::Checkbox("Hidden", &isHidden);
+    finalFlags |= (isHidden) ? ESceneElemFlags::Hidden : 0;
+    ImGui::Checkbox("Selected", &isSelected);
+    finalFlags |= (isSelected) ? ESceneElemFlags::Selected : 0;
+    ImGui::Checkbox("DepthTested", &depthTested);
+    finalFlags |= (depthTested) ? ESceneElemFlags::DepthTested : 0;
+    ImGui::Checkbox("BBoxDirty", &bboxDirty);
+    finalFlags |= (bboxDirty) ? ESceneElemFlags::BBoxDirty : 0;
+    ImGui::Checkbox("RenderableDirty", &renderableDirty);
+    finalFlags |= (renderableDirty) ? ESceneElemFlags::RenderableDirty : 0;
+    ImGui::Checkbox("MaterialDirty", &materialDirty);
+    finalFlags |= (materialDirty) ? ESceneElemFlags::MaterialDirty : 0;
+    pElem->SetFlags(finalFlags);
+}
 
-        D3D11_FILL_MODE fillMode = pMaterial->GetFillMode();
-        const char* fillModes[] = { "Wireframe", "Solid" };
-        static const char* currentFillItem;
-        switch (fillMode)
-        {
-        case D3D11_FILL_MODE::D3D11_FILL_WIREFRAME: currentFillItem = fillModes[0]; break;
-        case D3D11_FILL_MODE::D3D11_FILL_SOLID: currentFillItem = fillModes[1]; break;
-        }
-        ImGui::Text("FillMode:");
-        ImGui::SameLine();
-        if (ImGui::BeginCombo("##FillMode", currentFillItem))
-        {
-            for (int n = 0; n < IM_ARRAYSIZE(fillModes); n++)
-            {
-                bool is_selected = (currentFillItem == fillModes[n]);
-                if (ImGui::Selectable(fillModes[n], is_selected))
-                {
-                    currentFillItem = fillModes[n];
-                    if (n == 0)
-                        pMaterial->SetFillMode(D3D11_FILL_MODE::D3D11_FILL_WIREFRAME);
-                    else
-                        pMaterial->SetFillMode(D3D11_FILL_MODE::D3D11_FILL_SOLID);
-                }
-                if (is_selected)
-                    ImGui::SetItemDefaultFocus();
-            }
-            ImGui::EndCombo();
-        }
-        bool isTransparent = pMaterial->GetIsTransparent();
-        if (ImGui::Checkbox("Transparent", &isTransparent))
-            pMaterial->SetIsTransparent(isTransparent);
-        bool isShadowReceiver = pMaterial->GetIsShadowReceiver();
-        if (ImGui::Checkbox("ShadowReceiver", &isShadowReceiver))
-            pMaterial->SetIsShadowReceiver(isShadowReceiver);
-        uint32 materialID = pMaterial->GetMaterialID();
-        ImGui::Text((std::string("MaterialID: ") + std::to_string(materialID)).c_str());
-        pMaterial->EnumerateColors([&](const wchar_t* pName, FRGBAColor& v) {
-            std::wstring s(pName);
-            ImGui_Color(Caustic::wstr2str(s).c_str(), pMaterial->GetMaterialID(),
-                [pMaterial, pName]()->FRGBColor { return pMaterial->GetColor(pName); },
-                [pMaterial, pName](FRGBColor v) { pMaterial->SetColor(pName, v); });
-            });
-        pMaterial->EnumerateScalars([pMaterial](const wchar_t* pName, float v) {
-            std::wstring s(pName);
-            float q;
-            if (ImGui::SliderFloat(Caustic::wstr2str(s).c_str(), &q, 0.0f, 1.0f))
-                pMaterial->SetScalar(pName, q);
-            });
-//        pMaterial->EnumerateTextures([](const wchar_t* pName, IImage* pTexture, EShaderAccess access) {
-//            CRefObj<IRenderer> spRenderer = app.m_spRenderWindow->GetRenderer();
-//            CRefObj<ITexture> spTexture = app.m_spCausticFactory->CreateTexture(spRenderer, pTexture, D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE,
-//                D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
-//            ImGui::Image((void*)spTexture->GetD3DTextureRV(), ImVec2(128, 128));
-//            });
-        if (pSceneMaterial != nullptr)
-            BuildGroupUI(pSceneGraph, static_cast<ISceneGroupElem*>(pSceneMaterial));
-        ImGui::TreePop();
-    }
-    if (nodeClicked && pSceneMaterial != nullptr)
+void FillInspector_LightCollection(ISceneLightCollectionElem *pLightCollection)
+{
+    FillInspector_Elem(pLightCollection);
+}
+
+void FillInspector_Light(ILight* pLight, int lightIndex)
+{
+    bool f = pLight->GetOnOff();
+    if (ImGui::Checkbox("Enable", &f))
     {
-        if (ImGui::GetIO().KeyCtrl)
-        {
-            if (origFlags & ESceneElemFlags::Selected)
-                pSceneGraph->DeselectObject(pSceneMaterial);
-            else
-                pSceneGraph->SelectObject(pSceneMaterial);
-        }
-        else
-        {
-            pSceneGraph->ClearSelected();
-            pSceneGraph->SelectObject(pSceneMaterial);
-        }
+        pLight->SetOnOff(f);
+    }
+    f = pLight->GetCastsShadows();
+    if (ImGui::Checkbox("Casts Shadows", &f))
+    {
+        pLight->SetCastsShadows(f);
+    }
+    ImGui_Color("Color:", lightIndex,
+        [pLight]()->FRGBColor { return pLight->GetColor(); },
+        [pLight](FRGBColor v) { pLight->SetColor(v); });
+
+    ImGui::Text("Intensity:");
+    ImGui::SameLine();
+    float intensity = pLight->GetIntensity();
+    if (ImGui::SliderFloat(std::string("##").c_str(), &intensity, 0.0f, 1.0f))
+        pLight->SetIntensity(intensity);
+
+    ImGui_Vector("Position:",
+        [pLight]()->Vector3 { return pLight->GetPosition(); },
+        [pLight](Vector3 v) { pLight->SetPosition(v); }, 0.0f, 10000.0f);
+
+    if (pLight->GetType() == ELightType::DirectionalLight)
+    {
+        ImGui_Vector("Direction:",
+            [pLight]()->Vector3 { return pLight->GetDirection(); },
+            [pLight](Vector3 v) { pLight->SetDirection(v); }, -1.0f, +1.0f);
     }
 }
 
-void BuildMaterialUI(ISceneGraph* pSceneGraph, ISceneMaterialElem *pSceneMaterial)
+void FillInspector_ComputeShader(ISceneComputeShaderElem* pComputeShader)
 {
-    CRefObj<IMaterialAttrib> spMaterial;
-    pSceneMaterial->GetMaterial(&spMaterial);
-    BuildMatrialAttribUI(pSceneGraph, spMaterial.p, pSceneMaterial);
+    FillInspector_Elem(pComputeShader);
 }
 
-void BuildGroupUI(ISceneGraph* pSceneGraph, ISceneGroupElem* pGroup)
+void FillInspector_Overlay2D(ISceneOverlay2DElem* pOverlay)
 {
-    uint32 numChildren = pGroup->NumberChildren();
-    for (uint32 i = 0; i < numChildren; i++)
+    FillInspector_Elem(pOverlay);
+}
+
+void FillInspector_Line(ISceneLineElem* pLine)
+{
+    FillInspector_Elem(pLine);
+}
+
+void FillInspector_CustomRender(ISceneCustomRenderElem* pCustomRender)
+{
+    FillInspector_Elem(pCustomRender);
+}
+
+void FillInspector_Cube(ISceneCubeElem* pCube)
+{
+    FillInspector_Elem(pCube);
+}
+
+void FillInspector_Cylinder(ISceneCylinderElem* pCylinder)
+{
+    FillInspector_Elem(pCylinder);
+}
+
+void FillInspector_Sphere(ISceneSphereElem* pSphere)
+{
+    FillInspector_Elem(pSphere);
+}
+
+void FillInspector_Mesh(ISceneMeshElem *pMesh)
+{
+    FillInspector_Elem(pMesh);
+}
+
+void FillInspector_Group(ISceneGroupElem *pGroup)
+{
+    FillInspector_Elem(pGroup);
+}
+
+//**********************************************************************
+// Function: FillInspector_Material
+// Populates the inspector window with the attributes from a material
+// 
+// Parameters:
+// pMaterialElem - Material element that holds pMaterial. Maybe nullptr.
+// pMaterail - the material attributes
+//**********************************************************************
+void FillInspector_Material(ISceneMaterialElem *pMaterialElem, IMaterialAttrib* pMaterial)
+{
+    if (pMaterialElem != nullptr)
+        FillInspector_Elem(pMaterialElem);
+
+    D3D11_CULL_MODE cullMode = pMaterial->GetCullMode();
+    const char* cullModes[] = { "Front", "Back", "None" };
+    static const char* currentCullItem;
+    switch (cullMode)
     {
-        CRefObj<ISceneElem> spChild = pGroup->GetChild(i);
-        std::wstring name = spChild->GetName();
-        switch (spChild->GetType())
-        {
-        case ESceneElemType::Unknown:
-            ImGui::Text((name.length() == 0) ? "Unknown" : Caustic::wstr2str(name).c_str());
-            break;
-        case ESceneElemType::SceneGraph:
-            if (ImGui::TreeNode((name.length() == 0) ? "SceneGraph" : Caustic::wstr2str(name).c_str()))
-            {
-                BuildGroupUI(pSceneGraph, static_cast<ISceneGroupElem*>(spChild.p));
-                ImGui::TreePop();
-            }
-            break;
-        case ESceneElemType::Mesh:
-            if (ImGui::TreeNode((name.length() == 0) ? "Mesh" : Caustic::wstr2str(name).c_str()))
-            {
-                uint32 flags = spChild->GetFlags();
-                bool isHidden = (flags & ESceneElemFlags::Hidden) ? true : false;
-                bool isSelected = (flags & ESceneElemFlags::Selected) ? true : false;
-                bool depthTested = (flags & ESceneElemFlags::DepthTested) ? true : false;
-                bool bboxDirty = (flags & ESceneElemFlags::BBoxDirty) ? true : false;
-                bool renderableDirty = (flags & ESceneElemFlags::RenderableDirty) ? true : false;
-                bool materialDirty = (flags & ESceneElemFlags::MaterialDirty) ? true : false;
-                uint32 finalFlags = 0;
-                ImGui::Checkbox("Hidden", &isHidden);
-                finalFlags |= (isHidden) ? ESceneElemFlags::Hidden : 0;
-                ImGui::Checkbox("Selected", &isSelected);
-                finalFlags |= (isSelected) ? ESceneElemFlags::Selected : 0;
-                ImGui::Checkbox("DepthTested", &depthTested);
-                finalFlags |= (depthTested) ? ESceneElemFlags::DepthTested : 0;
-                ImGui::Checkbox("BBoxDirty", &bboxDirty);
-                finalFlags |= (bboxDirty) ? ESceneElemFlags::BBoxDirty : 0;
-                ImGui::Checkbox("RenderableDirty", &renderableDirty);
-                finalFlags |= (renderableDirty) ? ESceneElemFlags::RenderableDirty : 0;
-                ImGui::Checkbox("MaterialDirty", &materialDirty);
-                finalFlags |= (materialDirty) ? ESceneElemFlags::MaterialDirty : 0;
-                spChild->SetFlags(finalFlags);
-
-                auto spMesh = static_cast<ISceneMeshElem*>(spChild.p)->GetMesh();
-                uint32 numMats = spMesh->GetNumberMaterials();
-                for (uint32 i = 0; i < numMats; i++)
-                {
-                    CRefObj<IMaterialAttrib> spMat = spMesh->GetMaterial(i);
-                    BuildMatrialAttribUI(pSceneGraph, spMat, nullptr);
-                }
-
-                ImGui::TreePop();
-            }
-            break;
-        case ESceneElemType::CustomRenderElem:
-            ImGui::Text((name.length() == 0) ? "CustomRender" : Caustic::wstr2str(name).c_str());
-            break;
-        case ESceneElemType::Group:
-            if (ImGui::TreeNode((name.length() == 0) ? "Group" : Caustic::wstr2str(name).c_str()))
-            {
-                BuildGroupUI(pSceneGraph, static_cast<ISceneGroupElem*>(spChild.p));
-                ImGui::TreePop();
-            }
-            break;
-        case ESceneElemType::Renderable:
-            ImGui::Text((name.length() == 0) ? "Renderable" : Caustic::wstr2str(name).c_str());
-            break;
-        case ESceneElemType::LightCollection:
-            BuildLightCollectionUI(pSceneGraph, static_cast<ISceneLightCollectionElem*>(spChild.p));
-            break;
-        case ESceneElemType::Material:
-            {
-                BuildMaterialUI(pSceneGraph, static_cast<ISceneMaterialElem*>(spChild.p));
-            }
-            break;
-        case ESceneElemType::ComputeShaderElem:
-            ImGui::Text((name.length() == 0) ? "ComputeShader" : Caustic::wstr2str(name).c_str());
-            break;
-        case ESceneElemType::Overlay2D:
-            ImGui::Text((name.length() == 0) ? "Overlay2D" : Caustic::wstr2str(name).c_str());
-            break;
-        case ESceneElemType::LineElem:
-            ImGui::Text((name.length() == 0) ? "Line" : Caustic::wstr2str(name).c_str());
-            break;
-        case ESceneElemType::CubeElem:
-            ImGui::Text((name.length() == 0) ? "Cube" : Caustic::wstr2str(name).c_str());
-            break;
-        case ESceneElemType::CylinderElem:
-            ImGui::Text((name.length() == 0) ? "Cylinder" : Caustic::wstr2str(name).c_str());
-            break;
-        case ESceneElemType::SphereElem:
-            ImGui::Text((name.length() == 0) ? "Sphere" : Caustic::wstr2str(name).c_str());
-            break;
-        }
+    case D3D11_CULL_MODE::D3D11_CULL_FRONT: currentCullItem = cullModes[0]; break;
+    case D3D11_CULL_MODE::D3D11_CULL_BACK: currentCullItem = cullModes[1]; break;
+    case D3D11_CULL_MODE::D3D11_CULL_NONE: currentCullItem = cullModes[2]; break;
     }
+    ImGui::Text("CullMode:");
+    ImGui::SameLine();
+    if (ImGui::BeginCombo("##CullMode", currentCullItem))
+    {
+        for (int n = 0; n < IM_ARRAYSIZE(cullModes); n++)
+        {
+            bool is_selected = (currentCullItem == cullModes[n]);
+            if (ImGui::Selectable(cullModes[n], is_selected))
+                currentCullItem = cullModes[n];
+            if (is_selected)
+                ImGui::SetItemDefaultFocus();
+        }
+        ImGui::EndCombo();
+    }
+
+    D3D11_FILL_MODE fillMode = pMaterial->GetFillMode();
+    const char* fillModes[] = { "Wireframe", "Solid" };
+    static const char* currentFillItem;
+    switch (fillMode)
+    {
+    case D3D11_FILL_MODE::D3D11_FILL_WIREFRAME: currentFillItem = fillModes[0]; break;
+    case D3D11_FILL_MODE::D3D11_FILL_SOLID: currentFillItem = fillModes[1]; break;
+    }
+    ImGui::Text("FillMode:");
+    ImGui::SameLine();
+    if (ImGui::BeginCombo("##FillMode", currentFillItem))
+    {
+        for (int n = 0; n < IM_ARRAYSIZE(fillModes); n++)
+        {
+            bool is_selected = (currentFillItem == fillModes[n]);
+            if (ImGui::Selectable(fillModes[n], is_selected))
+            {
+                currentFillItem = fillModes[n];
+                if (n == 0)
+                    pMaterial->SetFillMode(D3D11_FILL_MODE::D3D11_FILL_WIREFRAME);
+                else
+                    pMaterial->SetFillMode(D3D11_FILL_MODE::D3D11_FILL_SOLID);
+            }
+            if (is_selected)
+                ImGui::SetItemDefaultFocus();
+        }
+        ImGui::EndCombo();
+    }
+
+    bool isTransparent = pMaterial->GetIsTransparent();
+    if (ImGui::Checkbox("Transparent", &isTransparent))
+        pMaterial->SetIsTransparent(isTransparent);
+    bool isShadowReceiver = pMaterial->GetIsShadowReceiver();
+    if (ImGui::Checkbox("ShadowReceiver", &isShadowReceiver))
+        pMaterial->SetIsShadowReceiver(isShadowReceiver);
+    uint32 materialID = pMaterial->GetMaterialID();
+    ImGui::Text((std::string("MaterialID: ") + std::to_string(materialID)).c_str());
+    pMaterial->EnumerateColors([&](const wchar_t* pName, FRGBAColor& v) {
+        std::wstring s(pName);
+        ImGui_Color(Caustic::wstr2str(s).c_str(), pMaterial->GetMaterialID(),
+            [pMaterial, pName]()->FRGBColor { return pMaterial->GetColor(pName); },
+            [pMaterial, pName](FRGBColor v) { pMaterial->SetColor(pName, v); });
+        });
+    pMaterial->EnumerateScalars([pMaterial](const wchar_t* pName, float v) {
+        std::wstring s(pName);
+        float q;
+        if (ImGui::SliderFloat(Caustic::wstr2str(s).c_str(), &q, 0.0f, 1.0f))
+            pMaterial->SetScalar(pName, q);
+        });
+    //        pMaterial->EnumerateTextures([](const wchar_t* pName, IImage* pTexture, EShaderAccess access) {
+    //            CRefObj<IRenderer> spRenderer = app.m_spRenderWindow->GetRenderer();
+    //            CRefObj<ITexture> spTexture = app.m_spCausticFactory->CreateTexture(spRenderer, pTexture, D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE,
+    //                D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
+    //            ImGui::Image((void*)spTexture->GetD3DTextureRV(), ImVec2(128, 128));
+    //            });
 }
 
-void BuildSceneUI(ISceneGraph *pSceneGraph)
+void FillInspector_SceneGraph(ISceneGraph* pSceneGraph)
 {
     ImGui::Text("Show Proxies:");
     ImGui::SameLine();
     bool f = pSceneGraph->GetShowProxyObjects();
     if (ImGui::Checkbox("##ShowProxies", &f))
         pSceneGraph->SetShowProxyObjects(f);
-    BuildGroupUI(pSceneGraph, pSceneGraph);
+}
+
+//**********************************************************************
+// Function: BuildCollapsableNode
+// Builds a node in our scene graph window.
+// 
+// Parameters:
+// pSceneGraph - our parent scene graph
+// pElem - element we are adding to the tree
+// isLeaf - is this element a leaf node?
+// pDefaultName - default name to use if pElem->GetName() is empty
+// buildChildren - lambda used to enumerate and build child elements
+// onSelect - lambda called when node is selected. This callback is used
+// to populate the inspector window with the attributes of the selected node.
+//**********************************************************************
+void BuildCollapsableNode(ISceneGraph* pSceneGraph, ISceneElem *pElem, bool isLeaf, 
+    const char *pDefaultName, std::function<void()> buildChildren, std::function<void()> onSelect)
+{
+    ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow |
+        ImGuiTreeNodeFlags_OpenOnDoubleClick |
+        ImGuiTreeNodeFlags_SpanAvailWidth;
+    if (isLeaf)
+        flags |= ImGuiTreeNodeFlags_Leaf;
+    uint32 origFlags = (pElem != nullptr) ? pElem->GetFlags() : 0;
+    if (origFlags & ESceneElemFlags::Selected)
+        flags |= ImGuiTreeNodeFlags_Selected;
+    std::wstring elemName;
+    if (pElem != nullptr)
+        elemName = pElem->GetName();
+    bool nodeOpen = ImGui::TreeNodeEx(pElem, flags, (elemName.length() == 0) ? pDefaultName : Caustic::wstr2str(elemName).c_str());
+    bool nodeClicked = ImGui::IsItemClicked();
+    if (nodeOpen)
+    {
+        if (buildChildren != nullptr)
+            buildChildren();
+        ImGui::TreePop();
+    }
+    if (nodeClicked)
+    {
+        if (pElem != nullptr)
+        {
+            pSceneGraph->ClearSelected();
+            pSceneGraph->SelectObject(pElem);
+        }
+        app.fillInspectorFunc = onSelect;
+    }
+}
+
+//**********************************************************************
+// Function: BuildGroupUI
+// Populates our scene graph window with a node for a group along with
+// all the children of that group.
+// 
+// Parameters:
+// pSceneGraph - our parent scene graph
+// pGroup - group element to add
+// pDefaultName - default name
+// onSelect - lambda called when node is selected. This callback is used
+// to populate the inspector window with the attributes of the selected node.
+//**********************************************************************
+void BuildGroupUI(ISceneGraph* pSceneGraph, ISceneGroupElem* pGroup, const char * pDefaultName,
+    std::function<void()> onSelect)
+{
+    BuildCollapsableNode(pSceneGraph, pGroup, false, pDefaultName,
+        [pSceneGraph, pGroup]() {
+            uint32 numChildren = pGroup->NumberChildren();
+            for (uint32 i = 0; i < numChildren; i++)
+            {
+                CRefObj<ISceneElem> spChild = pGroup->GetChild(i);
+                std::wstring name = spChild->GetName();
+                switch (spChild->GetType())
+                {
+                case ESceneElemType::Unknown:
+                    BuildCollapsableNode(pSceneGraph, spChild, true, "Unknown", nullptr, [spChild]() { FillInspector_Elem(static_cast<ISceneElem*>(spChild.p)); });
+                    break;
+                case ESceneElemType::SceneGraph:
+                    BuildGroupUI(pSceneGraph, (ISceneGroupElem*)spChild.p, "SceneGraph", [spChild]() { FillInspector_SceneGraph(static_cast<ISceneGraph*>(spChild.p)); });
+                    break;
+                case ESceneElemType::Mesh:
+                    BuildCollapsableNode(pSceneGraph, spChild, false, "Mesh", [pSceneGraph, spChild]() {
+                        auto spMesh = static_cast<ISceneMeshElem*>(spChild.p)->GetMesh();
+                        uint32 numMats = spMesh->GetNumberMaterials();
+                        for (uint32 i = 0; i < numMats; i++)
+                        {
+                            CRefObj<IMaterialAttrib> spMat = spMesh->GetMaterial(i);
+                            std::string matName = spMat->GetName();
+                            BuildCollapsableNode(pSceneGraph, nullptr, true,
+                                (matName.length() == 0) ? "Material" : matName.c_str(),
+                                [pSceneGraph, spMat]() {
+                                    BuildCollapsableNode(pSceneGraph, nullptr, false, "Material",
+                                        nullptr,
+                                        [spMat]() { FillInspector_Material(nullptr, spMat.p); });
+                                }, [spMat]() { FillInspector_Material(nullptr, spMat.p); });
+                        }
+                        }, [spChild]() { FillInspector_Mesh((ISceneMeshElem*)spChild.p); });
+                    break;
+                case ESceneElemType::CustomRenderElem:
+                    BuildCollapsableNode(pSceneGraph, spChild, true, "CustomRender", nullptr, [spChild]() { FillInspector_CustomRender((ISceneCustomRenderElem*)spChild.p); });
+                    break;
+                case ESceneElemType::Group:
+                    BuildGroupUI(pSceneGraph, (ISceneGroupElem*)spChild.p, "Group", [spChild]() {FillInspector_Group((ISceneGroupElem*)spChild.p); });
+                    break;
+                case ESceneElemType::Renderable: // Type not implemented!
+                    break;
+                case ESceneElemType::LightCollection:
+                    BuildCollapsableNode(pSceneGraph, spChild, true, "LightCollection",
+                        [pSceneGraph, spChild]()
+                        {
+                            ISceneLightCollectionElem* pCollection = (ISceneLightCollectionElem*)spChild.p;
+                            uint32 numLights = pCollection->NumberLights();
+                            for (uint32 i = 0; i < numLights; i++)
+                            {
+                                CRefObj<ILight> spLight = pCollection->GetLight(i);
+                                std::string lightName = std::string("Light-") + std::to_string(i);
+                                BuildCollapsableNode(pSceneGraph, nullptr, true, lightName.c_str(),
+                                    nullptr, [spLight, i]() { FillInspector_Light(spLight.p, i); });
+                            }
+                            BuildGroupUI(pSceneGraph, static_cast<ISceneGroupElem*>(pCollection), "Children", nullptr);
+                        },
+                        [spChild]() { FillInspector_LightCollection((ISceneLightCollectionElem*)spChild.p); });
+                    break;
+                case ESceneElemType::Material:
+                    {
+                        ISceneMaterialElem* pMaterialElem = static_cast<ISceneMaterialElem*>(spChild.p);
+                        auto spMaterialAttrib = pMaterialElem->GetMaterial();
+                        BuildGroupUI(pSceneGraph, (ISceneGroupElem*)pMaterialElem, "Material", [pMaterialElem, spMaterialAttrib]() { FillInspector_Material(pMaterialElem, spMaterialAttrib.p); });
+                    }
+                    break;
+                case ESceneElemType::ComputeShaderElem:
+                    BuildCollapsableNode(pSceneGraph, spChild, true, "ComputeShader", nullptr, [spChild]() { FillInspector_ComputeShader((ISceneComputeShaderElem*)spChild.p); });
+                    break;
+                case ESceneElemType::Overlay2D:
+                    BuildCollapsableNode(pSceneGraph, spChild, true, "Overlay2D", nullptr, [spChild]() { FillInspector_Overlay2D((ISceneOverlay2DElem*)spChild.p); });
+                    break;
+                case ESceneElemType::LineElem:
+                    BuildCollapsableNode(pSceneGraph, spChild, true, "Line", nullptr, [spChild]() { FillInspector_Line((ISceneLineElem*)spChild.p); });
+                    break;
+                case ESceneElemType::CubeElem:
+                    BuildCollapsableNode(pSceneGraph, spChild, true, "Cube", nullptr, [spChild]() { FillInspector_Cube((ISceneCubeElem*)spChild.p); });
+                    break;
+                case ESceneElemType::CylinderElem:
+                    BuildCollapsableNode(pSceneGraph, spChild, true, "Cylinder", nullptr, [spChild]() { FillInspector_Cylinder((ISceneCylinderElem*)spChild.p); });
+                    break;
+                case ESceneElemType::SphereElem:
+                    BuildCollapsableNode(pSceneGraph, spChild, true, "Sphere", nullptr, [spChild]() { FillInspector_Sphere((ISceneSphereElem*)spChild.p); });
+                    break;
+                }
+            }
+        }, onSelect);
 }
 
 void InitializeCaustic(HWND hwnd)
@@ -640,7 +692,7 @@ void InitializeCaustic(HWND hwnd)
                     app.m_winSize.x = 400;
                 ImGui::SetNextWindowSize(ImVec2(app.m_winSize.x, float(rect.bottom - rect.top) - menuSize.y));
                 ImGui::Begin("Scene");
-                BuildSceneUI(spSceneGraph);//                WalkScene(app.m_spSceneAsJson);
+                BuildGroupUI(spSceneGraph, spSceneGraph, "SceneGraphRoot", [spSceneGraph]() { FillInspector_SceneGraph(spSceneGraph.p); });
                 auto winSize = ImGui::GetWindowSize();
                 if (winSize.x < 400)
                     winSize.x = 400;
@@ -649,8 +701,15 @@ void InitializeCaustic(HWND hwnd)
                 if (changed)
                     ForceWindowResize((int)rect.right - rect.left, rect.bottom - rect.top - (int)menuSize.y);
                 ImGui::End();
-                
-                ImGui::SetNextWindowPos(ImVec2(menuSize.x - app.m_winSize.x, menuSize.y));
+
+                ImGui::SetNextWindowPos(ImVec2(rect.right - 400.0f, menuSize.y));
+                ImGui::SetNextWindowSize(ImVec2(400, float(rect.bottom - rect.top) - menuSize.y));
+                ImGui::Begin("Inspector");
+                if (app.fillInspectorFunc)
+                    app.fillInspectorFunc();
+                ImGui::End();
+
+                ImGui::SetNextWindowPos(ImVec2(app.m_winSize.x, menuSize.y));
                 ImGui::GetStyle().WindowRounding = 0.0f;
                 bool isOpen = true;
                 ImGui::Begin("FrameRate", &isOpen, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDecoration);

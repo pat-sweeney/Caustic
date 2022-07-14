@@ -30,7 +30,7 @@ export namespace Caustic
 		// Method: GetMaterial
 		// Returns the material associated with this element
 		//**********************************************************************
-		virtual void GetMaterial(IMaterialAttrib** ppMaterial) = 0;
+		virtual CRefObj<IMaterialAttrib> GetMaterial() = 0;
 
 		//**********************************************************************
 		// Method: SetMaterial
