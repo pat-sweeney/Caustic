@@ -64,7 +64,6 @@ public:
     std::vector<ImGuiEvent> m_events;
     bool m_ImGuiInitialized;
     ImFont* m_pFont;
-    CRefObj<IJSonObj> m_spSceneAsJson;
     ImVec2 m_winSize;
     int nodeCounter;
     int selectedNode;
@@ -606,9 +605,6 @@ void InitializeCaustic(HWND hwnd)
                                 spOverlay->SetRect(bb);
                                 spOverlay->SetTexture(app.m_spRenderWindow->GetRenderer()->GetShadowmapTexture(c_HiResShadowMap));
                                 spSceneGraph->AddChild(spOverlay);
-
-                                CRefObj<IJSonParser> spJsonParser = CreateJSonParser();
-                                app.m_spSceneAsJson = spSceneGraph->AsJson("SceneGraph", spJsonParser);
                             }
                         }
                         ImGui::Separator();
