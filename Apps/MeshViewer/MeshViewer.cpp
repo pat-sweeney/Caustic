@@ -66,7 +66,10 @@ public:
     ImFont* m_pFont;
     CRefObj<IJSonObj> m_spSceneAsJson;
     ImVec2 m_winSize;
+    int nodeCounter;
+    int selectedNode;
     std::function<void()> fillInspectorFunc;
+    std::string fillInspectorTitle;
 
     CApp() : m_ImGuiInitialized(false)
     {
@@ -343,13 +346,13 @@ void FillInspector_SceneGraph(ISceneGraph* pSceneGraph)
 void BuildCollapsableNode(ISceneGraph* pSceneGraph, ISceneElem *pElem, bool isLeaf, 
     const char *pDefaultName, std::function<void()> buildChildren, std::function<void()> onSelect)
 {
+    auto nodeCounter = app.nodeCounter++;
     ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow |
         ImGuiTreeNodeFlags_OpenOnDoubleClick |
         ImGuiTreeNodeFlags_SpanAvailWidth;
     if (isLeaf)
         flags |= ImGuiTreeNodeFlags_Leaf;
-    uint32 origFlags = (pElem != nullptr) ? pElem->GetFlags() : 0;
-    if (origFlags & ESceneElemFlags::Selected)
+    if (nodeCounter == app.selectedNode)
         flags |= ImGuiTreeNodeFlags_Selected;
     std::wstring elemName;
     if (pElem != nullptr)
@@ -370,6 +373,8 @@ void BuildCollapsableNode(ISceneGraph* pSceneGraph, ISceneElem *pElem, bool isLe
             pSceneGraph->SelectObject(pElem);
         }
         app.fillInspectorFunc = onSelect;
+        app.fillInspectorTitle = std::string(pDefaultName);
+        app.selectedNode = nodeCounter;
     }
 }
 
@@ -412,14 +417,10 @@ void BuildGroupUI(ISceneGraph* pSceneGraph, ISceneGroupElem* pGroup, const char 
                             CRefObj<IMaterialAttrib> spMat = spMesh->GetMaterial(i);
                             std::string matName = spMat->GetName();
                             BuildCollapsableNode(pSceneGraph, nullptr, true,
-                                (matName.length() == 0) ? "Material" : matName.c_str(),
-                                [pSceneGraph, spMat]() {
-                                    BuildCollapsableNode(pSceneGraph, nullptr, false, "Material",
-                                        nullptr,
-                                        [spMat]() { FillInspector_Material(nullptr, spMat.p); });
-                                }, [spMat]() { FillInspector_Material(nullptr, spMat.p); });
+                                (matName.length() == 0) ? "Material" : matName.c_str(), nullptr,
+                                [spMat]() { FillInspector_Material(nullptr, spMat.p); });
                         }
-                        }, [spChild]() { FillInspector_Mesh((ISceneMeshElem*)spChild.p); });
+                    }, [spChild]() { FillInspector_Mesh((ISceneMeshElem*)spChild.p); });
                     break;
                 case ESceneElemType::CustomRenderElem:
                     BuildCollapsableNode(pSceneGraph, spChild, true, "CustomRender", nullptr, [spChild]() { FillInspector_CustomRender((ISceneCustomRenderElem*)spChild.p); });
@@ -692,6 +693,7 @@ void InitializeCaustic(HWND hwnd)
                     app.m_winSize.x = 400;
                 ImGui::SetNextWindowSize(ImVec2(app.m_winSize.x, float(rect.bottom - rect.top) - menuSize.y));
                 ImGui::Begin("Scene");
+                app.nodeCounter = 0;
                 BuildGroupUI(spSceneGraph, spSceneGraph, "SceneGraphRoot", [spSceneGraph]() { FillInspector_SceneGraph(spSceneGraph.p); });
                 auto winSize = ImGui::GetWindowSize();
                 if (winSize.x < 400)
@@ -704,7 +706,10 @@ void InitializeCaustic(HWND hwnd)
 
                 ImGui::SetNextWindowPos(ImVec2(rect.right - 400.0f, menuSize.y));
                 ImGui::SetNextWindowSize(ImVec2(400, float(rect.bottom - rect.top) - menuSize.y));
-                ImGui::Begin("Inspector");
+                std::string inspectorTitle = "Inspector##Inspector";
+                if (app.fillInspectorTitle.length() > 0)
+                    inspectorTitle = std::string("Inspector (") + app.fillInspectorTitle + std::string(")##Inspector");
+                ImGui::Begin(inspectorTitle.c_str());
                 if (app.fillInspectorFunc)
                     app.fillInspectorFunc();
                 ImGui::End();
