@@ -476,6 +476,22 @@ void BuildGroupUI(ISceneGraph* pSceneGraph, ISceneGroupElem* pGroup, const char 
         }, onSelect);
 }
 
+bool Splitter(bool split_vertically, float thickness, float* size1, float* size2, float min_size1, float min_size2, float splitter_long_axis_size = -1.0f)
+{
+    using namespace ImGui;
+    ImGuiContext& g = *GImGui;
+    ImGuiWindow* window = g.CurrentWindow;
+    ImGuiID id = window->GetID("##Splitter");
+    ImRect bb;
+    ImVec2 v = (split_vertically ? ImVec2(*size1, 0.0f) : ImVec2(0.0f, *size1));
+    bb.Min.x = window->DC.CursorPos.x + v.x;
+    bb.Min.y = window->DC.CursorPos.y + v.y;
+    ImVec2 v2 = CalcItemSize(split_vertically ? ImVec2(thickness, splitter_long_axis_size) : ImVec2(splitter_long_axis_size, thickness), 0.0f, 0.0f);
+    bb.Max.x = bb.Min.x + v2.x;
+    bb.Max.y = bb.Min.y + v2.y;
+    return SplitterBehavior(bb, id, split_vertically ? ImGuiAxis_X : ImGuiAxis_Y, size1, size2, min_size1, min_size2, 0.0f);
+}
+
 void InitializeCaustic(HWND hwnd)
 {
     app.m_spSceneFactory = Caustic::CreateSceneFactory();
