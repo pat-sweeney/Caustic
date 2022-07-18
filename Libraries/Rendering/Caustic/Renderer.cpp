@@ -739,20 +739,37 @@ namespace Caustic
                 ZeroMemory(&blendState, sizeof(D3D11_BLEND_DESC));
                 blendState.AlphaToCoverageEnable = false;
                 blendState.IndependentBlendEnable = false;
-                blendState.RenderTarget[0].BlendEnable = true;
-                blendState.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-                blendState.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-                blendState.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-                blendState.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
-                blendState.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-                blendState.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-                blendState.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+                for (int i = 0; i < 8; i++)
+                {
+                    if (i == 0)
+                    {
+                        blendState.RenderTarget[i].BlendEnable = true;
+                        blendState.RenderTarget[i].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+                        blendState.RenderTarget[i].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+                        blendState.RenderTarget[i].BlendOp = D3D11_BLEND_OP_ADD;
+                        blendState.RenderTarget[i].SrcBlendAlpha = D3D11_BLEND_ONE;
+                        blendState.RenderTarget[i].DestBlendAlpha = D3D11_BLEND_ZERO;
+                        blendState.RenderTarget[i].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+                        blendState.RenderTarget[i].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+                    }
+                    else
+                    {
+                        blendState.RenderTarget[i].BlendEnable = false;
+                        blendState.RenderTarget[i].SrcBlend = D3D11_BLEND_ONE;
+                        blendState.RenderTarget[i].DestBlend = D3D11_BLEND_ZERO;
+                        blendState.RenderTarget[i].BlendOp = D3D11_BLEND_OP_ADD;
+                        blendState.RenderTarget[i].SrcBlendAlpha = D3D11_BLEND_ONE;
+                        blendState.RenderTarget[i].DestBlendAlpha = D3D11_BLEND_ZERO;
+                        blendState.RenderTarget[i].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+                        blendState.RenderTarget[i].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+                    }
+                }
                 m_spDevice->CreateBlendState(&blendState, &spBlendState);
                 CComPtr<ID3D11BlendState> spOldBlendState;
                 float oldBlendFactor[4];
                 UINT oldSampleMask;
                 m_spContext->OMGetBlendState(&spOldBlendState, oldBlendFactor, &oldSampleMask);
-                m_spContext->OMSetBlendState(spBlendState, 0, 0xffffffff);
+                m_spContext->OMSetBlendState(spBlendState, nullptr, 0xffffffff);
 
                 std::vector<int> order;
                 order.resize(m_singleObjs.size());
@@ -811,7 +828,9 @@ namespace Caustic
 
         FLOAT bgClr[4] = { 0.4f, 0.4f, 0.4f, 1.0f };
         m_spContext->ClearRenderTargetView(pView, bgClr);
+        m_spContext->ClearRenderTargetView(m_spFinalRTView, bgClr);
         m_spContext->ClearDepthStencilView(pStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+        m_spContext->ClearDepthStencilView(m_spStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
         CD3D11_DEPTH_STENCIL_DESC depthDesc(D3D11_DEFAULT);
         depthDesc.DepthEnable = true;

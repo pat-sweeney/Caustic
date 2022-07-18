@@ -684,7 +684,7 @@ void BuildPanels(ITexture *pFinalRT, ImFont *pFont)
         auto x = ImGui::GetCursorPos();
         ImGui::Image((void*)pFinalRT->GetD3DTextureRV(), vSize);
         ImGui::SetCursorPos(x);
-        ImGui::InvisibleButton("##HiddenEventHanlder", vSize);
+        ImGui::InvisibleButton("##HiddenEventHandler", vSize);
         ImVec2 mousePositionRelative;
         static ImVec2 lastRel;
         if (ImGui::IsItemHovered())
@@ -728,7 +728,6 @@ void BuildPanels(ITexture *pFinalRT, ImFont *pFont)
         }
         ImGui::End();
     }
-
     ImGui::End();
 }
 
