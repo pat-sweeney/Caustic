@@ -28,6 +28,8 @@ ImGui into $(CausticRoot)\External:
 ```
 cd %CausticRoot%\External
 git clone https://github.com/ocornut/imgui.git
+cd github
+git checkout docking
 ```
 
 WPFDXInterop into $(CausticRoot)\External. This library is used for integrating WPF and Caustic:

@@ -9,82 +9,95 @@ module;
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <string>
+#include "imgui.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
+#include "imgui_internal.h"
 
 module Rendering.RenderWindow.RenderWindow;
 import Base.Core.Core;
 import Base.Math.BBox;
+import Base.Math.Vector;
 import Rendering.Caustic.CausticFactory;
 import Rendering.Caustic.ICamera;
 import Rendering.RendererMarshaller.IRendererMarshaller;
 import Rendering.SceneGraph.SceneGraph;
 import Rendering.SceneGraph.SceneElem;
 import Rendering.RenderGraph.RenderGraph;
+import Rendering.Caustic.RendererFlags;
 
 namespace Caustic
 {
-    CRenderWindow::CRenderWindow(HWND hwnd, BBox2 &viewport, std::wstring &shaderFolder,
-        std::function<void(Caustic::IRenderer*, Caustic::IRenderCtx*, int)> callback,
-        std::function<void(Caustic::IRenderer*)> prePresentCallback,
-        bool useRenderGraph /* = false */, bool startFrozen /* = false */, int desktopIndex /* = 0 */)
+    CBaseRenderWindow::CBaseRenderWindow(HWND hwnd)
     {
         m_snapPosHome = { 10.0f, 10.0f, 10.0f };
         m_snapPosX = { 1000.0f, 0.0f, 0.0f };
         m_snapPosY = { 0.0f, 1000.0f, 0.0f };
         m_snapPosZ = { 0.0f, 0.0f, 1000.0f };
-        m_callback = callback;
-        m_prePresentCallback = prePresentCallback;
-        m_useRenderGraph = useRenderGraph;
         m_spMarshaller = CreateRendererMarshaller();
-        if (useRenderGraph)
-        {
-            m_spRenderGraphFactory = Caustic::CreateRenderGraphFactory();
-            m_spRenderGraph = m_spRenderGraphFactory->CreateRenderGraph();
-        }
-        else
-        {
-            m_spSceneFactory = Caustic::CreateSceneFactory();
-            m_spSceneGraph = m_spSceneFactory->CreateSceneGraph();
-        }
-        m_spMarshaller->Initialize(hwnd, viewport, shaderFolder,
-            [this](IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass) {
-                if (m_callback)
-                    m_callback(pRenderer, pRenderCtx, pass);
-                if (m_useRenderGraph)
-                    m_spRenderGraph->Render(pRenderer, pRenderCtx);
-                else
-                {
-                    SceneCtx sceneCtx;
-                    sceneCtx.m_CurrentPass = pass;
-                    sceneCtx.m_ShowProxyObjects = m_spSceneGraph->GetShowProxyObjects();
-                    m_spSceneGraph->Render(pRenderer, pRenderCtx, &sceneCtx);
-                }
-            },
-            [this](IRenderer* pRenderer) {
-                m_prePresentCallback(pRenderer);
-            }, startFrozen, desktopIndex);
+        m_spSceneFactory = Caustic::CreateSceneFactory();
+        m_spSceneGraph = m_spSceneFactory->CreateSceneGraph();
 
         Caustic::Vector3 pos(0.0f, 0.0f, 0.0f);
         Caustic::FRGBColor clr(1.0f, 1.0f, 1.0f);
         m_spPointLight = Caustic::CCausticFactory::Instance()->CreatePointLight(pos, clr, 1.0f);
 
         m_spCamera = Caustic::CCausticFactory::Instance()->CreateCamera(true);
-        CRefObj<IRenderer> spRenderer = m_spMarshaller->GetRenderer();
-        spRenderer->SetCamera(m_spCamera);
         m_spTrackball = Caustic::CCausticFactory::Instance()->CreateTrackball();
         m_hwnd = hwnd;
     }
-    
-    CRenderWindow::~CRenderWindow()
+
+    CBaseRenderWindow::~CBaseRenderWindow()
     {
-        m_spMarshaller->Shutdown();
+        if (m_spMarshaller != nullptr)
+            m_spMarshaller->Shutdown();
     }
 
-    void CRenderWindow::SetViewport(float x0, float y0, float x1, float y1)
+    void CBaseRenderWindow::SetViewport(float x0, float y0, float x1, float y1)
     {
         m_spMarshaller->GetRenderer()->SetViewport(x0, y0, x1, y1);
     }
 
+    CRenderWindow::CRenderWindow(HWND hwnd, BBox2 &viewport, std::wstring &shaderFolder,
+        std::function<void(Caustic::IRenderer*, Caustic::IRenderCtx*, int)> callback,
+        std::function<void(Caustic::IRenderer*)> prePresentCallback,
+        bool useRenderGraph /* = false */, bool startFrozen /* = false */, int desktopIndex /* = 0 */) : CBaseRenderWindow(hwnd)
+    {
+        m_callback = callback;
+        m_prePresentCallback = prePresentCallback;
+        m_spMarshaller->Initialize(hwnd, viewport, shaderFolder,
+            nullptr,
+            [this](IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass) {
+                if (m_callback)
+                    m_callback(pRenderer, pRenderCtx, pass);
+                SceneCtx sceneCtx;
+                sceneCtx.m_CurrentPass = pass;
+                sceneCtx.m_ShowProxyObjects = m_spSceneGraph->GetShowProxyObjects();
+                m_spSceneGraph->Render(pRenderer, pRenderCtx, &sceneCtx);
+            },
+            [this](IRenderer* pRenderer) {
+                m_prePresentCallback(pRenderer);
+            }, startFrozen, desktopIndex);
+
+        CRefObj<IRenderer> spRenderer = m_spMarshaller->GetRenderer();
+        spRenderer->SetCamera(m_spCamera);
+    }
+    
+    CRenderWindow::~CRenderWindow()
+    {
+    }
+
+    void CRenderWindow::SetViewport(float x0, float y0, float x1, float y1)
+    {
+        CBaseRenderWindow::SetViewport(x0, y0, x1, y1);
+    }
+
     void CRenderWindow::MouseDown(int x, int y, uint32 button, uint32 flags)
+    {
+        CBaseRenderWindow::MouseDown(x, y, button, flags);
+    }
+
+    void CBaseRenderWindow::MouseDown(int x, int y, uint32 button, uint32 flags)
     {
         if (button == c_LeftButton)
         {
@@ -112,6 +125,11 @@ namespace Caustic
     }
 
     void CRenderWindow::MouseMove(int x, int y, uint32 flags)
+    {
+        CBaseRenderWindow::MouseMove(x, y, flags);
+    }
+
+    void CBaseRenderWindow::MouseMove(int x, int y, uint32 flags)
     {
         if (m_tracking)
         {
@@ -171,6 +189,11 @@ namespace Caustic
 
     void CRenderWindow::SetSnapPositions(const Vector3& home, const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis)
     {
+        CBaseRenderWindow::SetSnapPositions(home, xAxis, yAxis, zAxis);
+    }
+
+    void CBaseRenderWindow::SetSnapPositions(const Vector3& home, const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis)
+    {
         m_snapPosHome = home;
         m_snapPosX = xAxis;
         m_snapPosY = yAxis;
@@ -178,6 +201,11 @@ namespace Caustic
     }
 
     void CRenderWindow::MouseUp(int x, int y, uint32 button, uint32 flags)
+    {
+        CBaseRenderWindow::MouseUp(x, y, button, flags);
+    }
+
+    void CBaseRenderWindow::MouseUp(int x, int y, uint32 button, uint32 flags)
     {
         if (button == c_LeftButton)
         {
@@ -189,6 +217,11 @@ namespace Caustic
 
     void CRenderWindow::MouseWheel(int factor)
     {
+        CBaseRenderWindow::MouseWheel(factor);
+    }
+
+    void CBaseRenderWindow::MouseWheel(int factor)
+    {
         Vector3 eye, look, up, n;
         //    float distance = factor / 120;
         m_spCamera->GetPosition(&eye, &look, &up, nullptr, nullptr, &n);
@@ -199,6 +232,11 @@ namespace Caustic
     }
 
     void CRenderWindow::MapKey(uint32 wParam, uint32 lParam)
+    {
+        CBaseRenderWindow::MapKey(wParam, lParam);
+    }
+
+    void CBaseRenderWindow::MapKey(uint32 wParam, uint32 lParam)
     {
         switch (wParam)
         {
@@ -321,5 +359,79 @@ namespace Caustic
         }
         break;
         }
+    }
+
+    void CImguiRenderWindow::RecordEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+    {
+        ImGuiEvent evt;
+        evt.hWnd = hWnd;
+        evt.lParam = lParam;
+        evt.wParam = wParam;
+        evt.msg = message;
+        EnterCriticalSection(&m_cs);
+        m_events.push_back(evt);
+        LeaveCriticalSection(&m_cs);
+    }
+
+    CImguiRenderWindow::CImguiRenderWindow(HWND hwnd, BBox2& viewport, std::wstring& shaderFolder,
+        std::function<void(Caustic::IRenderer*, ITexture*, ImFont*)> renderUI, bool startFrozen /*= false*/, int desktopIndex /*= 0*/)
+        : CBaseRenderWindow(hwnd)
+    {
+        m_hwnd = hwnd;
+        m_renderUI = renderUI;
+        InitializeCriticalSection(&m_cs);
+        m_spMarshaller->Initialize(hwnd, viewport, shaderFolder,
+                [this](IRenderer* pRenderer)
+                {
+                    auto ctx = ImGui::CreateContext();
+                    ImGui_ImplWin32_Init(m_hwnd);
+                    ImGui_ImplDX11_Init(pRenderer->GetDevice(), pRenderer->GetContext());
+
+    #pragma warning(push)
+    #pragma warning(disable: 4996)
+                    const char* pCausticPixel = std::getenv("CausticRoot");
+    #pragma warning(pop)
+                    if (pCausticPixel == nullptr)
+                        pCausticPixel = "d:\\github\\Caustic";
+                    std::string fontPath = std::string(pCausticPixel) + "\\" + "External\\imgui\\misc\\fonts\\DroidSans.ttf";
+                    m_pFont = ImGui::GetIO().Fonts->AddFontFromFileTTF(fontPath.c_str(), 24);
+
+                    m_spFinalRT = Caustic::CreateTexture(pRenderer, 1920, 1080, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM,
+                        (D3D11_CPU_ACCESS_FLAG)0, (D3D11_BIND_FLAG)(D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET | D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE));
+                    pRenderer->SetFinalRenderTarget(m_spFinalRT->GetD3DTexture());
+                },
+                [this](IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)
+                {
+                    SceneCtx sceneCtx;
+                    sceneCtx.m_CurrentPass = pass;
+                    sceneCtx.m_ShowProxyObjects = m_spSceneGraph->GetShowProxyObjects();
+                    m_spSceneGraph->Render(pRenderer, pRenderCtx, &sceneCtx);
+                },
+                [&](IRenderer* pRenderer)
+                {
+                    auto io = ImGui::GetIO();
+                    EnterCriticalSection(&m_cs);
+                    for (size_t i = 0; i < m_events.size(); i++)
+                    {
+                        extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+                        if (io.WantCaptureMouse)
+                            ImGui_ImplWin32_WndProcHandler(m_events[i].hWnd, m_events[i].msg, m_events[i].wParam, m_events[i].lParam);
+                    }
+                    m_events.resize(0);
+                    LeaveCriticalSection(&m_cs);
+
+                    ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+                    ImGui_ImplDX11_NewFrame();
+                    ImGui_ImplWin32_NewFrame();
+                    ImGui::NewFrame();
+
+                    if (m_renderUI)
+                        m_renderUI(pRenderer, m_spFinalRT, m_pFont);
+                    ImGui::Render();
+                    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+                }, startFrozen, desktopIndex);
+
+            CRefObj<IRenderer> spRenderer = m_spMarshaller->GetRenderer();
+            spRenderer->SetCamera(m_spCamera);
     }
 }

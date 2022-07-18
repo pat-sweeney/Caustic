@@ -6,6 +6,12 @@
 module;
 #include <d3d11.h>
 #include <functional>
+#include <windows.h>
+#include <vector>
+#include "imgui.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
+#include "imgui_internal.h"
 
 export module Rendering.RenderWindow.RenderWindow;
 import Base.Core.Core;
@@ -21,11 +27,10 @@ import Rendering.RenderGraph.IRenderGraphFactory;
 
 export namespace Caustic
 {
-    class CRenderWindow : public IRenderWindow, public CRefCount
+    class CBaseRenderWindow : public IRenderWindow, public CRefCount
     {
+    protected:
         CRefObj<IRendererMarshaller> m_spMarshaller;
-        CRefObj<IRenderGraphFactory> m_spRenderGraphFactory;
-        CRefObj<IRenderGraph> m_spRenderGraph;
         CRefObj<ISceneFactory> m_spSceneFactory;
         CRefObj<ISceneGraph> m_spSceneGraph;
         CRefObj<IPointLight> m_spPointLight;
@@ -41,11 +46,37 @@ export namespace Caustic
         DirectX::XMMATRIX m_invview;
         int m_startx, m_starty;
         int m_winwidth, m_winheight;
-        bool m_useRenderGraph;
         Vector3 m_snapPosHome;
         Vector3 m_snapPosX;
         Vector3 m_snapPosY;
         Vector3 m_snapPosZ;
+    public:
+        CBaseRenderWindow(HWND hwnd);
+        ~CBaseRenderWindow();
+
+        //**********************************************************************
+        // IRefCount
+        //**********************************************************************
+        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32 Release() override { return CRefCount::Release(); }
+
+        //**********************************************************************
+        // IRenderWindow
+        //**********************************************************************
+        virtual void RecordEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override {}
+        virtual void SetViewport(float x0, float y0, float x1, float y1) override;
+        virtual void SetSnapPositions(const Vector3& home, const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis) override;
+        virtual CRefObj<ISceneGraph> GetSceneGraph() override { return m_spSceneGraph; }
+        virtual void MouseDown(int x, int y, uint32 button, uint32 flags) override;
+        virtual void MouseMove(int x, int y, uint32 flags) override;
+        virtual void MouseUp(int x, int y, uint32 button, uint32 flags) override;
+        virtual void MouseWheel(int factor) override;
+        virtual void MapKey(uint32 wParam, uint32 lParam) override;
+        virtual CRefObj<IRenderer> GetRenderer() { return m_spMarshaller->GetRenderer(); }
+    };
+
+    class CRenderWindow : public CBaseRenderWindow
+    {
         std::function<void(Caustic::IRenderer*, Caustic::IRenderCtx*, int)> m_callback;
         std::function<void(Caustic::IRenderer*)> m_prePresentCallback;
     public:
@@ -64,6 +95,7 @@ export namespace Caustic
         //**********************************************************************
         // IRenderWindow
         //**********************************************************************
+        virtual void RecordEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override {}
         virtual void SetViewport(float x0, float y0, float x1, float y1) override;
         virtual void SetSnapPositions(const Vector3& home, const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis) override;
         virtual CRefObj<ISceneGraph> GetSceneGraph() override { return m_spSceneGraph; }
@@ -72,6 +104,59 @@ export namespace Caustic
         virtual void MouseUp(int x, int y, uint32 button, uint32 flags) override;
         virtual void MouseWheel(int factor) override;
         virtual void MapKey(uint32 wParam, uint32 lParam) override;
+        virtual CRefObj<IRenderer> GetRenderer() { return m_spMarshaller->GetRenderer(); }
+    };
+
+    struct ImGuiEvent
+    {
+        HWND hWnd;
+        UINT msg;
+        WPARAM wParam;
+        LPARAM lParam;
+    };
+
+    class CImguiRenderWindow : public CBaseRenderWindow
+    {
+    protected:
+        ImFont* m_pFont;
+        HWND m_hwnd;
+        CRITICAL_SECTION m_cs;
+        std::vector<ImGuiEvent> m_events;
+        CRefObj<ITexture> m_spFinalRT;
+        std::function<void(Caustic::IRenderer*, ITexture*, ImFont*)> m_renderUI;
+
+    public:
+        CImguiRenderWindow(HWND hwnd, BBox2& viewport, std::wstring& shaderFolder,
+            std::function<void(Caustic::IRenderer*, ITexture*, ImFont*)> renderUI,
+            bool startFrozen = false, int desktopIndex = 0);
+        ~CImguiRenderWindow() {}
+
+        //**********************************************************************
+        // IRefCount
+        //**********************************************************************
+        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32 Release() override { return CRefCount::Release(); }
+
+        //**********************************************************************
+        // IRenderWindow
+        //**********************************************************************
+        virtual void RecordEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override
+        {
+
+        }
+
+        virtual void SetViewport(float x0, float y0, float x1, float y1) override
+        {
+            CBaseRenderWindow::SetViewport(x0, y0, x1, y1);
+        }
+
+        virtual void SetSnapPositions(const Vector3& home, const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis) override
+        {
+            CBaseRenderWindow::SetSnapPositions(home, xAxis, yAxis, zAxis);
+        }
+
+        virtual CRefObj<ISceneGraph> GetSceneGraph() override { return m_spSceneGraph; }
+
         virtual CRefObj<IRenderer> GetRenderer() { return m_spMarshaller->GetRenderer(); }
     };
 }

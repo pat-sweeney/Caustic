@@ -51,6 +51,7 @@ export namespace Caustic
         // desktopIndex - index indicating which desktop to use with duplication service
         //**********************************************************************
         virtual void Initialize(HWND hwnd, BBox2 &viewport, std::wstring& shaderFolder,
+            std::function<void(IRenderer* pRenderer)> postCreate,
             std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)> renderCallback,
             std::function<void(IRenderer* pRenderer)> prePresentCallback,
             bool startFrozen = false, int desktopIndex = 0) = 0;

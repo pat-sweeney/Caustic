@@ -162,6 +162,8 @@ export namespace Caustic
         CRefObj<IRenderCtx> m_spRenderCtx;                  // D3D Render context
         CComPtr<ID3D11RenderTargetView> m_spRTView;         // Render target view
         CComPtr<ID3D11RenderTargetView> m_spFinalRTView;    // Render target view if final RT override is set
+        CComPtr<ID3D11DepthStencilView> m_spFinalStencilView; // Stencil view to use if final RT override is set
+        CComPtr<ID3D11Texture2D> m_spFinalDepthStencilBuffer; // Depth map if final RT override is set
         CComPtr<ID3D11DepthStencilView> m_spStencilView;    // Stencil view
         CComPtr<ID3D11Texture2D> m_spDepthStencilBuffer;    // Our depth map
         D3D11_TEXTURE2D_DESC m_BBDesc;                      // Description of our back buffer

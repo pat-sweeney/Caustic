@@ -779,7 +779,9 @@ namespace Caustic
             if (pass == c_PassObjID)
             {
                 // Restore default render targets
-                m_spContext->OMSetRenderTargets(1, &m_spRTView, m_spStencilView);
+                ID3D11RenderTargetView* pView = (m_spFinalRTView) ? m_spFinalRTView : m_spRTView;
+                ID3D11DepthStencilView* pStencil = (m_spFinalRTView) ? m_spFinalStencilView : m_spStencilView;
+                m_spContext->OMSetRenderTargets(1, &pView, pStencil);
                 FLOAT bgClr[4] = { 0.4f, 0.4f, 0.4f, 1.0f };
                 m_spContext->ClearRenderTargetView(m_spObjIDRTView, bgClr);
                 m_spContext->ClearDepthStencilView(m_spStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -804,11 +806,12 @@ namespace Caustic
             WaitForSingleObject(m_freezeEvent, INFINITE);
 
         ID3D11RenderTargetView *pView = (m_spFinalRTView) ? m_spFinalRTView : m_spRTView;
+        ID3D11DepthStencilView* pStencilView = (m_spFinalRTView) ? m_spFinalStencilView : m_spStencilView;
         m_spContext->OMSetRenderTargets(1, &pView, nullptr);
 
         FLOAT bgClr[4] = { 0.4f, 0.4f, 0.4f, 1.0f };
         m_spContext->ClearRenderTargetView(pView, bgClr);
-        m_spContext->ClearDepthStencilView(m_spStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+        m_spContext->ClearDepthStencilView(pStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
         CD3D11_DEPTH_STENCIL_DESC depthDesc(D3D11_DEFAULT);
         depthDesc.DepthEnable = true;
@@ -818,9 +821,12 @@ namespace Caustic
         CT(m_spDevice->CreateDepthStencilState(&depthDesc, &spDepthStencilState));
         m_spContext->OMSetDepthStencilState(spDepthStencilState, 1);
 
-        m_spContext->OMSetRenderTargets(1, &pView, m_spStencilView);
+        m_spContext->OMSetRenderTargets(1, &pView, pStencilView);
 
         RenderScene(renderCallback);
+
+        if (m_spFinalRTView != nullptr)
+            m_spContext->OMSetRenderTargets(1, &m_spRTView.p, m_spStencilView);
 
         if (prePresentCallback)
             (prePresentCallback)(this);
@@ -867,11 +873,21 @@ namespace Caustic
         {
             m_spContext->OMSetRenderTargets(0, nullptr, nullptr);
             m_spFinalRTView = nullptr;
+            m_spFinalStencilView = nullptr;
         }
-        CT(m_spDevice->CreateRenderTargetView(pTexture, nullptr, &m_spFinalRTView));
         
+        // Create depth buffer
         D3D11_TEXTURE2D_DESC desc;
         pTexture->GetDesc(&desc);
+        CD3D11_TEXTURE2D_DESC texDesc2D(DXGI_FORMAT_D24_UNORM_S8_UINT, desc.Width, desc.Height, 1, 1, D3D11_BIND_DEPTH_STENCIL);
+        CT(m_spDevice->CreateTexture2D(&texDesc2D, NULL, &m_spFinalDepthStencilBuffer));
+
+        // Create the depth buffer ressource view
+        CD3D11_DEPTH_STENCIL_VIEW_DESC stencilDesc(D3D11_DSV_DIMENSION_TEXTURE2D, DXGI_FORMAT_D24_UNORM_S8_UINT);
+        CT(m_spDevice->CreateDepthStencilView(m_spFinalDepthStencilBuffer, &stencilDesc, &m_spFinalStencilView));
+
+        CT(m_spDevice->CreateRenderTargetView(pTexture, nullptr, &m_spFinalRTView));
+        
         uint32 width = m_viewRect.right - m_viewRect.left + 1;
         uint32 height = m_viewRect.bottom - m_viewRect.top + 1;
         if (desc.Width != width || desc.Height != height)

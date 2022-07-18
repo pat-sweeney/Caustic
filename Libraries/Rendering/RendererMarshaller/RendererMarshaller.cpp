@@ -136,6 +136,7 @@ namespace Caustic
     // See <IRenderer::Initialize>
     //**********************************************************************
     void CRendererMarshaller::Initialize(HWND hwnd, BBox2 &viewport, std::wstring& shaderFolder,
+        std::function<void(IRenderer* pRenderer)> postCreate,
         std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)> renderCallback,
         std::function<void(IRenderer* pRenderer)> prePresentCallback,
         bool startFrozen /* = false */, int desktopIndex /* = 0 */)
@@ -143,6 +144,7 @@ namespace Caustic
         m_spRenderer = CCausticFactory::Instance()->CreateRenderer(hwnd, viewport, shaderFolder, startFrozen, desktopIndex);
         InitializeCriticalSection(&m_renderQueue.m_cs);
         m_thread = CreateThread(nullptr, 0, RenderThreadProc, this, 0, nullptr);
+        m_postCreate = postCreate;
         m_renderCallback = renderCallback;
         m_prePresentCallback = prePresentCallback;
     }
@@ -336,6 +338,8 @@ namespace Caustic
     //**********************************************************************
     void CRendererMarshaller::MainLoop()
     {
+        if (m_postCreate != nullptr)
+            m_postCreate(m_spRenderer);
         m_renderThreadID = GetCurrentThreadId();
         while (!m_exit)
         {

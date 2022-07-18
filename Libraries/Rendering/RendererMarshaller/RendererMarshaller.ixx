@@ -79,6 +79,7 @@ export namespace Caustic
         bool m_exit;
         HANDLE m_thread;
         DWORD m_renderThreadID;
+        std::function<void(IRenderer* pRenderer)> m_postCreate;
         std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)> m_renderCallback;
         std::function<void(IRenderer* pRenderer)> m_prePresentCallback;
 
@@ -97,6 +98,7 @@ export namespace Caustic
         //**********************************************************************
         virtual void Initialize(HWND hwnd, BBox2 &viewport,
             std::wstring& shaderFolder,
+            std::function<void(IRenderer* pRenderer)> postCreate,
             std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)> renderCallback,
             std::function<void(IRenderer* pRenderer)> prePresentCallback,
             bool startFrozen = false, int desktopIndex = 0) override;

@@ -6,6 +6,10 @@
 module;
 #include <Windows.h>
 #include <functional>
+#include "imgui.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
+#include "imgui_internal.h"
 
 export module Rendering.RenderWindow.IRenderWindow;
 import Base.Core.Core;
@@ -17,9 +21,9 @@ import Rendering.SceneGraph.ISceneGraph;
 
 export namespace Caustic
 {
-    const int c_LeftButton = 0;
-    const int c_MiddleButton = 1;
-    const int c_RightButton = 2;
+	const int c_LeftButton = 0;
+	const int c_MiddleButton = 1;
+	const int c_RightButton = 2;
 
 	//**********************************************************************
 	// Interface: IRenderWindow
@@ -28,7 +32,20 @@ export namespace Caustic
 	// a scene graph.
 	//**********************************************************************
 	struct IRenderWindow : public IRefCount
-    {
+	{
+		//**********************************************************************
+		// Method: RecordEvent
+		// Records an mouse/keyboard event for processing by the UI later. Only
+		// used for ImGui at the moment.
+		// 
+		// Parameters:
+		// hWnd - window event occured in
+		// message - integer of message ID
+		// wParam - wParam from Windows
+		// lParam - lParam from Windows
+		//**********************************************************************
+		virtual void RecordEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) = 0;
+
 		//**********************************************************************
 		// Method: SetViewport
 		// Specifies the viewport for the final render target
@@ -40,7 +57,7 @@ export namespace Caustic
 		// y1 - bottom right Y coordinate from 0..1 indicating which portion of the output window is used
 		//**********************************************************************
 		virtual void SetViewport(float x0, float y0, float x1, float y1) = 0;
-		
+
 		//**********************************************************************
 		// Method: SetSnapPositions
 		// Sets the world positions for snapping the camera to when certain keys are pressed
@@ -120,7 +137,6 @@ export namespace Caustic
 		virtual void MapKey(uint32 wParam, uint32 lParam) = 0;
 	};
 
-
 	//**********************************************************************
 	// Method: CreateRenderWindow
 	// Creates an IRenderWindow
@@ -128,11 +144,38 @@ export namespace Caustic
 	// Parameters:
 	// hwnd - window to bind IRenderWindow to
 	// viewport - viewport for final render target
-    // shaderFolder - Path to folder containing shaders
-	// ppRenderWindow - returns the created render window
+	// shaderFolder - Path to folder containing shaders
+	// callback - callback during rendering
+	// prePresentCallback - callback right before Present() is called
+	// startFrozen - should renderer start in frozen state
+	// desktopIndex - index of desktop to use
+	// 
+	// Returns:
+	// Returns the created render window
 	//**********************************************************************
-	CRefObj<IRenderWindow> CreateRenderWindow(HWND hwnd, BBox2 &viewport, std::wstring &shaderFolder, 
+	CRefObj<IRenderWindow> CreateRenderWindow(HWND hwnd, BBox2& viewport, std::wstring& shaderFolder,
 		std::function<void(IRenderer*, IRenderCtx*, int)> callback,
 		std::function<void(IRenderer*)> prePresentCallback,
 		bool startFrozen = false, int desktopIndex = 0);
-} 
+
+	//**********************************************************************
+	// Method: CreateImguiRenderWindow
+	// Creates an IRenderWindow that is using ImGui for its interface
+	// In this case the scene is rendered to a texture and then draw
+	// as an image by ImGui.
+	//
+	// Parameters:
+	// hwnd - window to bind IRenderWindow to
+	// viewport - viewport for final render target
+	// shaderFolder - Path to folder containing shaders
+	// renderUI - callback for rendering UI
+	// startFrozen - should renderer start in frozen state
+	// desktopIndex - index of desktop to use
+	// 
+	// Returns:
+	// Returns the created render window
+	//**********************************************************************
+	CRefObj<IRenderWindow> CreateImguiRenderWindow(HWND hwnd, BBox2& viewport, std::wstring& shaderFolder,
+		std::function<void(Caustic::IRenderer*, ITexture*, ImFont*)> renderUI,
+		bool startFrozen = false, int desktopIndex = 0);
+}
