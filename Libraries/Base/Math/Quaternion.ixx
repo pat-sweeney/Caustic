@@ -56,10 +56,10 @@ export namespace Caustic
 		// Constructor from vector and angle
 		//
 		// Parameters:
-		// vec - vector define axis of rotation
-		// angle - angle of rotation around axis of rotation
+		// axisOfRotation - vector define axis of rotation
+		// angle - angle of rotation around axis of rotation in radians
 		//**********************************************************************
-		Quaternion(Caustic::Vector3 *vec, float angle);
+		Quaternion(Vector3 * axisOfRotation, float angle);
 
 		//**********************************************************************
 		// Constructor: Quaternion
@@ -77,6 +77,15 @@ export namespace Caustic
 		// isvec - specifies whether x/y/z/w are axis/angle or quaternion values
 		//**********************************************************************
 		Quaternion(float _x, float _y, float _z, float _w, bool isvec = false);
+
+		//**********************************************************************
+		// Method: RotatePoint
+		// Rotates a point around a quaternion
+		//
+		// Parameters:
+		// vec - point to rotate
+		//**********************************************************************
+		Vector3 RotatePoint(Vector3 vec);
 
 		//**********************************************************************
 		// Method: operator*

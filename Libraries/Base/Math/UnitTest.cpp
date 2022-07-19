@@ -11,6 +11,7 @@
 import Base.Core.Core;
 import Base.Math.Vector;
 import Base.Math.NewtonsMethod;
+import Base.Math.Quaternion;
 
 using namespace Caustic;
 namespace CausticTestSuite
@@ -56,6 +57,28 @@ namespace CausticTestSuite
         return true;
     }
 
+    static bool QuaternionTest()
+    {
+        Vector3 axis(0.0f, 1.0f, 0.0f);
+        Quaternion q(&axis, Caustic::DegreesToRadians(45.0f));
+        Vector3 pt(1.0f, 0.0f, 0.0f);
+        pt = q.RotatePoint(pt);
+        if (!IsZero(pt.x - 0.707106709f) ||
+            !IsZero(pt.y) ||
+            !IsZero(pt.z - 0.707106829f))
+            return false;
+
+        pt = Vector3(1.0f, 0.0f, 0.0f);
+        axis = Vector3(0.0f, 1.0f, 0.0f);
+        q = Quaternion(&axis, Caustic::DegreesToRadians(90.0f));
+        pt = q.RotatePoint(pt);
+        if (!IsZero(pt.x) ||
+            !IsZero(pt.y) ||
+            !IsZero(1.0f - pt.z))
+            return false;
+        return true;
+    }
+
     bool MathTests::RunUnitTests()
     {
         typedef bool(*UnitTestFunc)();
@@ -63,7 +86,8 @@ namespace CausticTestSuite
         {
             { Test1, true },
             { Test2, true },
-            { Test3, true }
+            { Test3, true },
+            { QuaternionTest, true },
         };
         bool result = true;
         m_totalTests = _countof(tests);

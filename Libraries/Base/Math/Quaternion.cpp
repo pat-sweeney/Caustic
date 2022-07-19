@@ -110,6 +110,14 @@ namespace Caustic
         }
     }
 
+    //**********************************************************************
+    Vector3 Quaternion::RotatePoint(Vector3 vec)
+    {
+        Quaternion q(vec.x, vec.y, vec.z, 0.0f, false);
+        q = Conjugate() * q * *this;
+        return Vector3(q.x, q.y, q.z);
+    }
+
     //
     // The following function performs spherical linear interpolation
     // on two quaternions. For more information see:
@@ -156,14 +164,14 @@ namespace Caustic
         return qt;
     }
 
-    Quaternion::Quaternion(Vector3 *vec, float angle)
+    Quaternion::Quaternion(Vector3 *axisOfRotation, float angle)
     {
         float ca = (float)cos((double)angle / 2.0);
         float sa = (float)sin((double)angle / 2.0);
 
-        x = vec->x * sa;
-        y = vec->y * sa;
-        z = vec->z * sa;
+        x = axisOfRotation->x * sa;
+        y = axisOfRotation->y * sa;
+        z = axisOfRotation->z * sa;
         w = ca;
     }
 

@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("rec",["Function"],[["RecordEvent",,[["IRenderWindow",,,,0,"File:Rendering/RenderWindow/IRenderWindow.ixx:IRenderWindow.RecordEvent","CClass:IRenderWindow:RecordEvent"]]]]);
