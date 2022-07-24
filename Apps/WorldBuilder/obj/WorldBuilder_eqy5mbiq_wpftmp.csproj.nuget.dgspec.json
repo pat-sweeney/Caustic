@@ -156,43 +156,6 @@
         "native": {}
       }
     },
-    "D:\\github\\Caustic\\Libraries\\Geometry\\MeshImport\\MeshImport.vcxproj": {
-      "restore": {
-        "projectUniqueName": "D:\\github\\Caustic\\Libraries\\Geometry\\MeshImport\\MeshImport.vcxproj",
-        "projectName": "MeshImport",
-        "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\MeshImport\\MeshImport.vcxproj",
-        "frameworks": {
-          "native": {
-            "projectReferences": {
-              "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
-                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
-              },
-              "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
-                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
-              },
-              "D:\\github\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
-                "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
-              },
-              "D:\\github\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj": {
-                "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj"
-              },
-              "D:\\github\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
-                "projectPath": "D:\\github\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
-              },
-              "D:\\github\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
-                "projectPath": "D:\\github\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj"
-              },
-              "D:\\github\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj": {
-                "projectPath": "D:\\github\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj"
-              }
-            }
-          }
-        }
-      },
-      "frameworks": {
-        "native": {}
-      }
-    },
     "D:\\github\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj": {
       "restore": {
         "projectUniqueName": "D:\\github\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj",
@@ -607,9 +570,6 @@
               },
               "D:\\github\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
                 "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
-              },
-              "D:\\github\\Caustic\\Libraries\\Geometry\\MeshImport\\MeshImport.vcxproj": {
-                "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\MeshImport\\MeshImport.vcxproj"
               },
               "D:\\github\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj": {
                 "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj"

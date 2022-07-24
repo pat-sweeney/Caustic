@@ -26,6 +26,7 @@ import Rendering.SceneGraph.SceneGraph;
 import Rendering.SceneGraph.SceneElem;
 import Rendering.SceneGraph.ISceneLightCollectionElem;
 import Rendering.SceneGraph.ISceneCubeElem;
+import Rendering.SceneGraph.ISceneMaterialElem;
 
 export namespace Caustic
 {
@@ -38,6 +39,10 @@ export namespace Caustic
 		public ISceneLightCollectionElem
 	{
 		std::vector<CRefObj<ILight>> m_lights;
+		static CRefObj<ISceneMaterialElem> sm_spLightProxyMaterialElem;
+		static bool sm_proxiesCreated;
+
+		CRefObj<ISceneMaterialElem> LoadLightProxies(IRenderer* pRenderer);
 	public:
 		CSceneLightCollectionElem()
 		{

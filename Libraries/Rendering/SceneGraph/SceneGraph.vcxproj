@@ -213,6 +213,9 @@
     <ProjectReference Include="..\..\Geometry\GeomDS\GeomDS.vcxproj">
       <Project>{163426b2-af7c-4713-8e3c-1a56a9cc0abf}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Geometry\MeshImport\MeshImport.vcxproj">
+      <Project>{f51b95ed-2f23-4d3c-8176-c51ca1ce9ea2}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Geometry\Mesh\Mesh.vcxproj">
       <Project>{e7cf4287-e8ff-4d29-8883-5a05a6590af3}</Project>
     </ProjectReference>

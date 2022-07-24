@@ -110,6 +110,23 @@ void FillInspector_Elem(ISceneElem* pElem)
     ImGui::Checkbox("MaterialDirty", &materialDirty);
     finalFlags |= (materialDirty) ? ESceneElemFlags::MaterialDirty : 0;
     pElem->SetFlags(finalFlags);
+    BBox3 bbox;
+    pElem->GetBBox(&bbox);
+    ImGui::Text("BBox:");
+    ImGui::Text("  Min:");
+    ImGui::Text("      X:"); ImGui::SameLine();
+    ImGui::SliderFloat(std::string("##BBoxMinX").c_str(), &bbox.minPt.x, 0.0f, 1.0f);
+    ImGui::Text("      Y:"); ImGui::SameLine();
+    ImGui::SliderFloat(std::string("##BBoxMinY").c_str(), &bbox.minPt.y, 0.0f, 1.0f);
+    ImGui::Text("      Z:"); ImGui::SameLine();
+    ImGui::SliderFloat(std::string("##BBoxMinZ").c_str(), &bbox.minPt.z, 0.0f, 1.0f);
+    ImGui::Text("  Max:");
+    ImGui::Text("      X:"); ImGui::SameLine();
+    ImGui::SliderFloat(std::string("##BBoxMaxX").c_str(), &bbox.maxPt.x, 0.0f, 1.0f);
+    ImGui::Text("      Y:"); ImGui::SameLine();
+    ImGui::SliderFloat(std::string("##BBoxMaxY").c_str(), &bbox.maxPt.y, 0.0f, 1.0f);
+    ImGui::Text("      Z:"); ImGui::SameLine();
+    ImGui::SliderFloat(std::string("##BBoxMaxZ").c_str(), &bbox.maxPt.z, 0.0f, 1.0f);
 }
 
 void FillInspector_LightCollection(ISceneLightCollectionElem *pLightCollection)

@@ -8,16 +8,21 @@ module;
 #include <functional>
 #include <d3d11_4.h>
 #include <atlbase.h>
+#include <cstdlib>
 
 module Rendering.SceneGraph.SceneLightCollectionElem;
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
+import Base.Core.ConvertStr;
 import Base.Math.BBox;
+import Geometry.MeshImport;
+import Rendering.Caustic.ICausticFactory;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IRenderCtx;
 import Rendering.Caustic.ILight;
 import Rendering.SceneGraph.SceneFactory;
+import Rendering.SceneGraph.ISceneFactory;
 import Rendering.SceneGraph.ISceneLightCollectionElem;
 import Rendering.Caustic.IShaderMgr;
 import Rendering.SceneGraph.SceneCubeElem;
@@ -92,6 +97,41 @@ namespace Caustic
             }
     }
 
+    bool CSceneLightCollectionElem::sm_proxiesCreated = false;
+    CRefObj<ISceneMaterialElem> CSceneLightCollectionElem::sm_spLightProxyMaterialElem;
+    CRefObj<ISceneMaterialElem> CSceneLightCollectionElem::LoadLightProxies(IRenderer* pRenderer)
+    {
+        if (!sm_proxiesCreated)
+        {
+#pragma warning(push)
+#pragma warning(disable: 4996)
+            const char* pModelDir = std::getenv("AppModelDir");
+#pragma warning(pop)
+            if (pModelDir == nullptr)
+                pModelDir = "D:\\Models";
+            std::string fn = std::string(pModelDir) + "\\LightBulb.obj";
+            std::wstring wfn = Caustic::str2wstr(fn);
+            CRefObj<ISceneFactory> spSceneFactory = CSceneFactory::Instance();
+            CRefObj<ISceneMeshElem> spMeshElem = spSceneFactory->CreateMeshElem();
+            const wchar_t* pShaderName = L"ObjShader";
+            CRefObj<IMesh> spMesh = Caustic::MeshImport::LoadObj(wfn.c_str(), nullptr);
+            spMeshElem->SetMesh(spMesh);
+            CRefObj<IShader> spShader = pRenderer->GetShaderMgr()->FindShader(pShaderName);
+            sm_spLightProxyMaterialElem = spSceneFactory->CreateMaterialElem();
+            auto spCausticFactory = Caustic::CreateCausticFactory();
+            CRefObj<IMaterialAttrib> spMaterial = spCausticFactory->CreateMaterialAttrib();
+            FRGBColor ambient(0.2f, 0.2f, 0.2f);
+            FRGBColor diffuse(0.4f, 0.4f, 0.4f);
+            spMaterial->SetColor(L"ambientColor", ambient);
+            spMaterial->SetColor(L"diffuseColor", diffuse);
+            sm_spLightProxyMaterialElem->SetMaterial(spMaterial);
+            sm_spLightProxyMaterialElem->SetShader(spShader);
+            sm_spLightProxyMaterialElem->AddChild(spMeshElem);
+            sm_proxiesCreated = true;
+        }
+        return sm_spLightProxyMaterialElem;
+    }
+
     void CSceneLightCollectionElem::Render(IRenderer* pRenderer, IRenderCtx* pRenderCtx, SceneCtx* pSceneCtx)
     {
         if (!(m_passes & pRenderCtx->GetCurrentPass()))
@@ -112,8 +152,10 @@ namespace Caustic
             for (int i = 0; i < (int)m_lights.size(); i++)
             {
                 auto lightPos = m_lights[i]->GetPosition();
-                CSceneCubeElem cube(lightPos, 1.0f, 1.0f, 1.0f);
-                cube.Render(pRenderer, pRenderCtx, pSceneCtx);
+                auto spLightProxyMaterialElem = LoadLightProxies(pRenderer);
+                auto mat = Matrix4x4::TranslationMatrix(lightPos.x, lightPos.y, lightPos.z);
+                spLightProxyMaterialElem->SetTransform(mat);
+                spLightProxyMaterialElem->Render(pRenderer, pRenderCtx, pSceneCtx);
             }
             pSceneCtx->m_spCurrentShader = spOldShader;
         }

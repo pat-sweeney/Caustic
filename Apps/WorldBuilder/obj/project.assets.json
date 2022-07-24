@@ -157,6 +157,24 @@
           "bin/placeholder/Mesh.dll": {}
         }
       },
+      "MeshImport/1.0.0": {
+        "type": "project",
+        "dependencies": {
+          "Caustic": "1.0.0",
+          "Color": "1.0.0",
+          "Core": "1.0.0",
+          "GeomDS": "1.0.0",
+          "Image": "1.0.0",
+          "Math": "1.0.0",
+          "Mesh": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/MeshImport.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/MeshImport.dll": {}
+        }
+      },
       "ParseShader/1.0.0": {
         "type": "project",
         "dependencies": {
@@ -250,6 +268,7 @@
           "Color": "1.0.0",
           "Core": "1.0.0",
           "GeomDS": "1.0.0",
+          "ImGui": "1.0.0",
           "Image": "1.0.0",
           "Math": "1.0.0",
           "Mesh": "1.0.0",
@@ -274,7 +293,8 @@
           "Image": "1.0.0",
           "JSon": "1.0.0",
           "Math": "1.0.0",
-          "Mesh": "1.0.0"
+          "Mesh": "1.0.0",
+          "MeshImport": "1.0.0"
         },
         "compile": {
           "bin/placeholder/SceneGraph.dll": {}
@@ -345,6 +365,11 @@
       "type": "project",
       "path": "../../Libraries/Geometry/Mesh/Mesh.vcxproj",
       "msbuildProject": "../../Libraries/Geometry/Mesh/Mesh.vcxproj"
+    },
+    "MeshImport/1.0.0": {
+      "type": "project",
+      "path": "../../Libraries/Geometry/MeshImport/MeshImport.vcxproj",
+      "msbuildProject": "../../Libraries/Geometry/MeshImport/MeshImport.vcxproj"
     },
     "ParseShader/1.0.0": {
       "type": "project",
