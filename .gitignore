@@ -58,3 +58,5 @@ Documentation/**
 /mesh.backup.txt
 *.backup
 /External/**
+/Tools/CausticVSIXTemplate/JustRenderer/.vs/JustRenderer/v17/Browse.VC.db
+/Tools/CausticVSIXTemplate/TemplateOutput/CaustcBasicRenderer.zip
