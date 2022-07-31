@@ -65,12 +65,7 @@ namespace Caustic
 
     //**********************************************************************
     // Method: RayIntersect
-    // Computes the intersection of a ray with a mesh
-    //
-    // Parameters:
-    // pCtx - path tracing context
-    // ray - ray direction to trace
-    // pRadiance - Returns the radiance returned along 'ray'
+    // See <IMesh::RayIntersect>
     //**********************************************************************
     bool CMesh::RayIntersect(Ray3& ray, RayIntersect3* pIntersection, uint32* pMaterialID)
     {
@@ -83,13 +78,7 @@ namespace Caustic
 
     //**********************************************************************
     // Method: GetSubMesh
-    // Returns the Nth submesh
-    //
-    // Parameters:
-    // index - Index of submesh to retrieve
-    //
-    // Returns:
-    // Returns the Nth submesh
+    // See <IMesh::GetSubMesh>
     //**********************************************************************
     CRefObj<ISubMesh> CMesh::GetSubMesh(uint32 index)
     {
@@ -98,10 +87,7 @@ namespace Caustic
 
     //**********************************************************************
     // Method: AddSubMesh
-    // Adds a submesh to the mesh
-    //
-    // Parameters:
-    // pSubMesh - Adds the specified submesh to our mesh
+    // See <IMesh::AddSubMesh>
     //**********************************************************************
     void CMesh::AddSubMesh(ISubMesh *pSubMesh)
     {
@@ -110,10 +96,7 @@ namespace Caustic
 
     //**********************************************************************
     // Method: GetBBox
-    // Returns the bounding box for the mesh
-    //
-    // Parameters:
-    // pBBox - Returns the bounding box of the mesh
+    // See <IMesh::GetBBox>
     //**********************************************************************
     void CMesh::GetBBox(BBox3 *pBBox)
     {
@@ -129,7 +112,7 @@ namespace Caustic
 
     //**********************************************************************
     // Method: Normalize
-    // Rescales a mesh so that it has unit size
+    // See <IMesh::Normalize>
     //**********************************************************************
     void CMesh::Normalize()
     {
@@ -141,10 +124,7 @@ namespace Caustic
 
     //**********************************************************************
     // Method: SetMaterials
-    // Sets the mesh's material list
-    //
-    // Parameters:
-    // materials - Assigns the mesh the specified list of materials
+    // See <IMesh::SetMaterials>
     //**********************************************************************
     void CMesh::SetMaterials(std::vector<CRefObj<IMaterialAttrib>> &materials)
     {
@@ -155,10 +135,7 @@ namespace Caustic
 
     //**********************************************************************
     // Method: GetNumberMaterials
-    // Returns number of materials currently assigned to mesh
-    //
-    // Returns:
-    // Returns number of materials
+    // See <IMesh::GetNumberMaterials>
     //**********************************************************************
     uint32 CMesh::GetNumberMaterials()
     {
@@ -167,13 +144,7 @@ namespace Caustic
 
     //**********************************************************************
     // Method: GetMaterial
-    // Returns the Nth material
-    //
-    // Parameters:
-    // materialID - Index of material to retrieve
-    //
-    // Returns:
-    // Returns the Nth material
+    // See <IMesh::GetMaterial>
     //**********************************************************************
     CRefObj<IMaterialAttrib> CMesh::GetMaterial(uint32 materialID)
     {
@@ -184,7 +155,7 @@ namespace Caustic
 
     //**********************************************************************
     // Method: Load
-    // Loads a previously save Mesh
+    // Loads a previously saved Mesh
     //
     // Parameters:
     // pStream - Loads the material from the specified stream

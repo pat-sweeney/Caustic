@@ -141,13 +141,51 @@ export namespace Caustic
         friend class CSubMesh;
         friend class CMeshConstructor;
     public:
+        //**********************************************************************
+        // Method: GetNormal
+        // Returns the normal vector for a face
+        //**********************************************************************
         Vector3 GetNormal() { return m_normal; }
+
+        //**********************************************************************
+        // Method: GetCenter
+        // Returns the center point for a face
+        //**********************************************************************
         Vector3 GetCenter() { return m_center; }
+
+        //**********************************************************************
+        // Method: GetEdge
+        // Returns a pointer to once of the edges in the edge loop that makes
+        // up the face.
+        //**********************************************************************
         CHalfEdge *GetEdge() { return m_pEdge; }
+
+        //**********************************************************************
+        // Method: GetNumberVertices
+        // Returns the number of vertices in the face.
+        //**********************************************************************
         uint32 GetNumberVertices() { return (uint32)m_vertices.size(); }
+
+        //**********************************************************************
+        // Method: GetVertex
+        // Returns the Nth vertex in a face
+        // 
+        // Parameters:
+        // idx - index of vertex
+        //**********************************************************************
         CGeomVertex *GetVertex(uint32 idx) { return m_vertices[idx]; }
 
+
+        //**********************************************************************
+        // Method: ComputeFaceNormal
+        // Computes the normal for the face using Newell's method
+        //**********************************************************************
         void ComputeFaceNormal();
+
+        //**********************************************************************
+        // Method: IsDegenerate
+        // Returns true if the face is degenerate. Otherwise, returns false.
+        //**********************************************************************
         bool IsDegenerate();
     };
     
@@ -405,16 +443,102 @@ export namespace Caustic
     //**********************************************************************
     struct IMesh : public ISerialize
     {
+        //**********************************************************************
+        // Method: RayIntersect
+        // Computes the intersection of a ray with a mesh
+        //
+        // Parameters:
+        // ray - ray direction to trace
+        // pIntersection - returns the intersection point if a ray intersect occurs
+        // pMaterialID - returns the material for the part of the mesh interested
+        //**********************************************************************
         virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, uint32* pMaterialID) = 0;
         virtual uint32 NumberSubMeshes() = 0;
+
+        //**********************************************************************
+        // Method: GetSubMesh
+        // Returns the Nth submesh
+        //
+        // Parameters:
+        // index - Index of submesh to retrieve
+        //
+        // Returns:
+        // Returns the Nth submesh
+        //**********************************************************************
         virtual CRefObj<ISubMesh> GetSubMesh(uint32 index) = 0;
+
+        //**********************************************************************
+        // Method: AddSubMesh
+        // Adds a submesh to the mesh
+        //
+        // Parameters:
+        // pSubMesh - Adds the specified submesh to our mesh
+        //**********************************************************************
         virtual void AddSubMesh(ISubMesh *pSubMesh) = 0;
+
+        //**********************************************************************
+        // Method: GetBBox
+        // Returns the bounding box for the mesh
+        //
+        // Parameters:
+        // pBBox - Returns the bounding box of the mesh
+        //**********************************************************************
         virtual void GetBBox(BBox3 *pBBox) = 0;
+
+        //**********************************************************************
+        // Method: Normalize
+        // Rescales a mesh so that it has unit size
+        //**********************************************************************
         virtual void Normalize() = 0;
+
+        //**********************************************************************
+        // Method: SetMaterials
+        // Sets the mesh's material list
+        //
+        // Parameters:
+        // materials - Assigns the mesh the specified list of materials
+        //**********************************************************************
         virtual void SetMaterials(std::vector<CRefObj<IMaterialAttrib>> &materials) = 0;
+
+        //**********************************************************************
+        // Method: GetNumberMaterials
+        // Returns number of materials currently assigned to mesh
+        //
+        // Returns:
+        // Returns number of materials
+        //**********************************************************************
         virtual uint32 GetNumberMaterials() = 0;
+
+        //**********************************************************************
+        // Method: GetMaterial
+        // Returns the Nth material
+        //
+        // Parameters:
+        // materialID - Index of material to retrieve
+        //
+        // Returns:
+        // Returns the Nth material
+        //**********************************************************************
         virtual CRefObj<IMaterialAttrib> GetMaterial(uint32 materialID) = 0;
+
+        //**********************************************************************
+        // Method: ComputeNormals
+        // Computes normal vectors for each vertex on the mesh
+        //**********************************************************************
         virtual void ComputeNormals() = 0;
+
+        //**********************************************************************
+        // Method: ToMeshData
+        // Converts a CMesh object into a renderable form
+        //
+        // Parameters:
+        // pDevice - device
+        // vertexLayout - description of each vertex's layout
+        // vertexSize - size of each vertex in bytes
+        //
+        // Returns:
+        // Returns list of MeshData associated with each submesh
+        //**********************************************************************
         virtual std::vector<MeshData> ToMeshData(ID3D11Device* pDevice, std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout, uint32 vertexSize) = 0;
     };
 }
