@@ -260,6 +260,15 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Method: IsFrozen
+    // See <IRenderer::IsFrozen>
+    //**********************************************************************
+    bool CRenderer::IsFrozen()
+    {
+        return (m_freeze == 0) ? false : true;
+    }
+
+    //**********************************************************************
     // Method: RunOnRenderer
     // See <IRenderer>
     //**********************************************************************
@@ -828,7 +837,8 @@ namespace Caustic
 
         FLOAT bgClr[4] = { 0.4f, 0.4f, 0.4f, 1.0f };
         m_spContext->ClearRenderTargetView(pView, bgClr);
-        m_spContext->ClearRenderTargetView(m_spFinalRTView, bgClr);
+        if (m_spFinalRTView != nullptr)
+            m_spContext->ClearRenderTargetView(m_spFinalRTView, bgClr);
         m_spContext->ClearDepthStencilView(pStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
         m_spContext->ClearDepthStencilView(m_spStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 

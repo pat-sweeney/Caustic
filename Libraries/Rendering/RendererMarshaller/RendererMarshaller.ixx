@@ -122,6 +122,7 @@ export namespace Caustic
         virtual bool EnableDepthTest(bool enable) override;
         virtual void Freeze() override;
         virtual void Unfreeze() override;
+        virtual bool IsFrozen() override;
         virtual void AddRenderable(IRenderable* pRenderable) override;
         virtual CComPtr<ID3D11Device> GetDevice() override;
 #ifdef _DEBUG

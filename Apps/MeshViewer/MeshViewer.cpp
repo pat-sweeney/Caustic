@@ -18,6 +18,7 @@
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 #include "imgui_internal.h"
+import Caustic.Base;
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
@@ -857,6 +858,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    }
 
    // Setup our renderer
+   Caustic::SystemStartup();
    InitializeCaustic(app.m_hwnd);
 
    ShowWindow(app.m_hwnd, nCmdShow);
@@ -877,7 +879,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    if (app.m_spRenderWindow != nullptr)
+    if (app.m_spRenderWindow != nullptr && message != WM_NCDESTROY)
         app.m_spRenderWindow->RecordEvent(hWnd, message, wParam, lParam);
     switch (message)
     {
@@ -891,6 +893,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     case WM_DESTROY:
         PostQuitMessage(0);
+        break;
+    case WM_QUIT:
+        Caustic::SystemShutdown();
         break;
     case WM_SIZE:
         break;

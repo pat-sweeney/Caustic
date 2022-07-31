@@ -91,17 +91,25 @@ namespace Caustic
                 pRenderer->Freeze();
             }, false);
     }
+
     //**********************************************************************
     // Method: Unfreeze
     // See <IRenderer::Unfreeze>
     //**********************************************************************
     void CRendererMarshaller::Unfreeze()
     {
-        RunOnRenderer(
-            [this](IRenderer *pRenderer)
-            {
-                pRenderer->Unfreeze();
-            }, false);
+        // NOTE: We must run Unfreeze immediately (i.e. not from RunOnRenderer()
+        // since the renderer is frozen and won't run the command... i.e. deadlock)
+        m_spRenderer->Unfreeze();
+    }
+
+    //**********************************************************************
+    // Method: IsFrozen
+    // See <IRenderer::IsFrozen>
+    //**********************************************************************
+    bool CRendererMarshaller::IsFrozen()
+    {
+        return pRenderer->IsFrozen();
     }
 
     //**********************************************************************

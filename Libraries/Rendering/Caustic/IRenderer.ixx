@@ -169,6 +169,12 @@ export namespace Caustic
         virtual void Unfreeze() = 0;
 
         //**********************************************************************
+        // Method: IsFrozen
+        // Returns whether the renderer is currently frozen
+        //**********************************************************************
+        virtual bool IsFrozen() = 0;
+
+        //**********************************************************************
         // Method: LoadShaders
         // Loads into our shader manager all the shaders in the specified folder
         //

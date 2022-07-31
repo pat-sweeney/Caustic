@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2022
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -272,7 +272,7 @@ export namespace Caustic
     // Class: CMesh
     // Defines a mesh. A mesh object is simply a collection of submesh
     // objects (ISubMesh). To convert this mesh into a renderable form the client
-    // should call <MeshToD3D>.
+    // should call <CRenderer::ToRenderMesh>.
     //**********************************************************************
     class CMesh : public IMesh, public CRefCount
     {

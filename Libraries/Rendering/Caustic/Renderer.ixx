@@ -301,6 +301,7 @@ export namespace Caustic
         virtual CComPtr<IDXGIOutputDuplication> GetDuplication() override { CheckThread();  return m_spDuplication; }
         virtual void Freeze() override;
         virtual void Unfreeze() override;
+        virtual bool IsFrozen() override;
         virtual void RenderLoop(std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)> renderCallback,
             std::function<void(IRenderer* pRenderer)> prePresentCallback
         ) override;

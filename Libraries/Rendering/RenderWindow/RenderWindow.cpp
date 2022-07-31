@@ -85,6 +85,7 @@ namespace Caustic
     
     CRenderWindow::~CRenderWindow()
     {
+        m_spMarshaller->Shutdown();
     }
 
     void CRenderWindow::SetViewport(float x0, float y0, float x1, float y1)

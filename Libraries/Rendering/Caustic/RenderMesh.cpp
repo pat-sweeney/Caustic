@@ -54,10 +54,10 @@ namespace Caustic
             spShader = pRenderer->GetShaderMgr()->FindShader(L"ShadowMap");
         else
         {
-            spShader = m_spFrontMaterial->GetShader();
+            spShader = (m_spFrontMaterial) ? m_spFrontMaterial->GetShader() : nullptr;
             if (spShader == nullptr)
             {
-                auto spMaterialAttrib = m_spFrontMaterial->GetMaterial();
+                auto spMaterialAttrib = (m_spFrontMaterial) ? m_spFrontMaterial->GetMaterial() : nullptr;
                 CRefObj<IImage> spDiffuseTexture = (spMaterialAttrib) ? spMaterialAttrib->GetTexture(L"diffuseTexture") : nullptr;
                 spShader = pRenderer->GetShaderMgr()->FindShader((spDiffuseTexture == nullptr) ? L"Default" : L"Textured");
             }
@@ -78,7 +78,7 @@ namespace Caustic
             //**********************************************************************
             auto spRenderMaterial = (pFrontMaterialOverride) ? pFrontMaterialOverride : m_spFrontMaterial.p;
             uint32 currentPass = pRenderCtx->GetCurrentPass();
-            auto spMaterialAttrib = spRenderMaterial->GetMaterial();
+            auto spMaterialAttrib = (spRenderMaterial) ? spRenderMaterial->GetMaterial() : nullptr;
             if (spMaterialAttrib == nullptr)
                 RenderSubMesh(pRenderer, spShader, spRenderMaterial, lights, pWorld);
             else if ((currentPass == c_PassTransparent) && spMaterialAttrib->GetIsTransparent())

@@ -42,20 +42,12 @@ import Geometry.Mesh.MaterialAttrib;
 
 namespace Caustic
 {
-    static bool setupRequired = true;
-
     //**********************************************************************
     // Method: CCausticFactory
     // Defines the implementation of <ICausticFactory>
     //**********************************************************************
     CCausticFactory::CCausticFactory()
 	{
-		if (setupRequired)
-		{
-			CoInitializeEx(0, COINIT_MULTITHREADED);
-			CT(MFStartup(MF_VERSION, MFSTARTUP_FULL));
-            setupRequired = false;
-		}
 	}
 
     //**********************************************************************
@@ -64,14 +56,6 @@ namespace Caustic
     //**********************************************************************
     CCausticFactory::~CCausticFactory()
 	{
-		static bool shutdown = false;
-		if (!shutdown)
-		{
-			MFShutdown();
-			CoUninitialize();
-            setupRequired = true;
-			shutdown = true;
-		}
 	}
 
     //**********************************************************************

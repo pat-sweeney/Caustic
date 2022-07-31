@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2022
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -48,7 +48,7 @@ export namespace Caustic
     
     //**********************************************************************
     // Class: CHalfEdge
-	// Defines a single half edge on our graph
+    // Defines a single half edge on our graph
     //
     // Members:
     // m_pNext - Next half edge in edge loop
@@ -125,7 +125,7 @@ export namespace Caustic
 
     //**********************************************************************
     // Class: CFace
-	// Defines a face in our CMesh
+    // Defines a face in our CMesh
     //**********************************************************************
     class CFace
     {
@@ -191,7 +191,7 @@ export namespace Caustic
     
     //**********************************************************************
     // Enum: EVertexFlags
-	// Define flags describing what fields are available in a SVertex
+    // Define flags describing what fields are available in a SVertex
     //**********************************************************************
     enum EVertexFlags
     {
@@ -205,7 +205,7 @@ export namespace Caustic
 
     //**********************************************************************
     // Enum: ETriangulateMethod
-	// Defines the method used for converting a polygonal mesh into a trianglar mesh.
+    // Defines the method used for converting a polygonal mesh into a trianglar mesh.
     //**********************************************************************
     enum ETriangulateMethod
     {
@@ -217,7 +217,7 @@ export namespace Caustic
 
     //**********************************************************************
     // Class: EMeshFlags
-	// Defines various flags associated with an ISubMesh
+    // Defines various flags associated with an ISubMesh
     //
     // TwoSided - Mesh is considered to be two sided
     //**********************************************************************
@@ -437,7 +437,7 @@ export namespace Caustic
     //**********************************************************************
     // Interface: IMesh
     // IMesh is simply a collection of submesh objects (ISubMesh).
-	//
+    //
     // NOTE: This mesh is different from a renderable mesh. There is a function
     // MeshToD3D which will convert the mesh into a renderable mesh.
     //**********************************************************************
