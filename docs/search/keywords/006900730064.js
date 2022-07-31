@@ -1,1 +1,1 @@
-﻿NDSearch.OnPrefixDataLoaded("isd",["Function"],[["IsDegenerate",,[[,,,,0,"File:Geometry/Mesh/Mesh.cpp:IsDegenerate"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("isd",["Function"],[["IsDegenerate",,[[,,,,0,"File:Geometry/Mesh/Mesh.cpp:IsDegenerate"],["CFace",,,,0,"File:Geometry/Mesh/IMesh.ixx:CFace.IsDegenerate","CClass:CFace:IsDegenerate"]]]]);

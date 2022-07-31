@@ -14,6 +14,52 @@
  <div class="CBody"><p>Defines a face in our CMesh</p></div>
 </div>
 
+<a name="Functions"></a><a name="Topic377"></a><div class="CTopic TGroup LC">
+ <div class="CTitle">Functions</div>
+</div>
+
+<a name="GetNormal"></a><a name="Topic378"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetNormal</div>
+ <div id="NDPrototype378" class="NDPrototype"><div class="PSection PPlainSection"><a href="../../index.html#CClass:Vector3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,98);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector3</a> GetNormal()</div></div>
+ <div class="CBody"><p>Returns the normal vector for a face</p></div>
+</div>
+
+<a name="GetCenter"></a><a name="Topic379"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetCenter</div>
+ <div id="NDPrototype379" class="NDPrototype"><div class="PSection PPlainSection"><a href="../../index.html#CClass:Vector3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,98);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Vector3</a> GetCenter()</div></div>
+ <div class="CBody"><p>Returns the center point for a face</p></div>
+</div>
+
+<a name="GetEdge"></a><a name="Topic380"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetEdge</div>
+ <div id="NDPrototype380" class="NDPrototype"><div class="PSection PPlainSection"><a href="../../index.html#CClass:CHalfEdge" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,390);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CHalfEdge</a> *GetEdge()</div></div>
+ <div class="CBody"><p>Returns a pointer to once of the edges in the edge loop that makes up the face.</p></div>
+</div>
+
+<a name="GetNumberVertices"></a><a name="Topic381"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetNumberVertices</div>
+ <div id="NDPrototype381" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">uint32</span> GetNumberVertices()</div></div>
+ <div class="CBody"><p>Returns the number of vertices in the face.</p></div>
+</div>
+
+<a name="GetVertex"></a><a name="Topic382"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetVertex</div>
+ <div id="NDPrototype382" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><a href="../../index.html#CClass:CGeomVertex" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,298);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CGeomVertex</a> *GetVertex(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">idx</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>
+ <div class="CBody"><p>Returns the Nth vertex in a face</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">idx<div class="CDLParameterType"><span class="SHKeyword">uint32</span></div></td><td class="CDLDefinition"><p>index of vertex</p></td></tr></table></div>
+</div>
+
+<a name="ComputeFaceNormal"></a><a name="Topic383"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">ComputeFaceNormal</div>
+ <div id="NDPrototype383" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">void</span> ComputeFaceNormal()</div></div>
+ <div class="CBody"><p>Computes the normal for the face using Newell's method</p></div>
+</div>
+
+<a name="IsDegenerate"></a><a name="Topic384"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">IsDegenerate</div>
+ <div id="NDPrototype384" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">bool</span> IsDegenerate()</div></div>
+ <div class="CBody"><p>Returns true if the face is degenerate. Otherwise, returns false.</p></div>
+</div>
+
 <a name="Types"></a><a name="Topic400"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Types</div>
 </div>
