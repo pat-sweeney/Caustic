@@ -13,6 +13,7 @@ module;
 export module Rendering.Caustic.PointCloud;
 import Base.Core.Core;
 import Base.Core.Error;
+import Base.Core.IRefCount;
 import Base.Core.RefCount;
 import Base.Core.Event;
 import Base.Core.CritSec;

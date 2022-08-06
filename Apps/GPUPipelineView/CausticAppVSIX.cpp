@@ -20,6 +20,7 @@ import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Base.Math.Matrix;
+import Base.Math.BBox;
 import Imaging.Image.GPUPipeline;
 import Imaging.Image.IGPUPipeline;
 import Rendering.SceneImport.Collada;
@@ -392,7 +393,8 @@ void CApp::InitializeCaustic(HWND hwnd)
     app.hwnd = hwnd;
     spCausticFactory = Caustic::CreateCausticFactory();
     std::wstring shaderFolder(SHADERPATH);
-    spRenderWindow = CreateRenderWindow(hwnd, shaderFolder,
+    BBox2 viewport(0.0f, 0.0f, 1.0f, 1.0f);
+    spRenderWindow = CreateRenderWindow(hwnd, viewport, shaderFolder,
         [](IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)
         {
             if (pass != Caustic::c_PassOpaque)

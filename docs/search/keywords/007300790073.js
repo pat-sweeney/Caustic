@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("sys",["Function"],[["SystemShutdown",,[[,,,,0,"File:Rendering/Caustic/Caustic.ixx:SystemShutdown"]]],["SystemStartup",,[[,,,,0,"File:Rendering/Caustic/Caustic.ixx:SystemStartup"]]]]);

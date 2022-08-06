@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/Caustic.ixx","Caustic.ixx");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/Caustic.ixx",[["C/C++","C"]],[["Files","File"]],[[1238,0,0,"Caustic.h","Caustic.h"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/Caustic.ixx","Caustic.ixx");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/Caustic.ixx",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"]],[[1709,0,1,"Functions","Functions"],[1710,0,0,"SystemStartup","SystemStartup"],[1711,0,0,"SystemShutdown","SystemShutdown"]]);

@@ -23,6 +23,7 @@ import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IRenderable;
 import Rendering.Caustic.IPointCloud;
 import Rendering.Caustic.IShaderMgr;
+import Rendering.Caustic.ITexture;
 import Rendering.Caustic.BuildRenderMesh;
 
 //**********************************************************************

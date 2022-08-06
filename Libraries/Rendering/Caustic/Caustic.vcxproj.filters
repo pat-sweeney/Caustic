@@ -19,6 +19,9 @@
     <ClInclude Include="defs.h">
       <Filter>Source Files\Shaders</Filter>
     </ClInclude>
+    <ClInclude Include="ITextureDecl.h">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp">
