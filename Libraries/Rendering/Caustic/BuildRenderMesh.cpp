@@ -19,6 +19,7 @@ import Rendering.Caustic.CausticFactory;
 import Rendering.Caustic.IRenderMesh;
 import Rendering.Caustic.IShaderInfo;
 import Rendering.Caustic.ICausticFactory;
+import Rendering.Caustic.IShader;
 
 namespace Caustic
 {

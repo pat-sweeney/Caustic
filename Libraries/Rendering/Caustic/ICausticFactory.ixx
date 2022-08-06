@@ -29,6 +29,7 @@ import Rendering.Caustic.IPointCloud;
 import Rendering.Caustic.IDirectionalLight;
 import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.ISampler;
+import Rendering.Caustic.IShaderInfo;
 
 //**********************************************************************
 // File: ICausticFactory.ixx

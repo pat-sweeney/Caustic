@@ -109,7 +109,7 @@ namespace Caustic
     //**********************************************************************
     bool CRendererMarshaller::IsFrozen()
     {
-        return pRenderer->IsFrozen();
+        return m_spRenderer->IsFrozen();
     }
 
     //**********************************************************************
