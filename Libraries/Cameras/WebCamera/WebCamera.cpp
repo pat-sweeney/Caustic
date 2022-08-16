@@ -34,7 +34,7 @@ import Cameras.WebCamera.IWebCamera;
 
 namespace Caustic
 {
-    CWebCamera::CWebCamera(std::wstring deviceName, int w /* = -1*/, int h /* = -1*/)
+    CWebCamera::CWebCamera(std::wstring deviceName, int w /* = -1*/, int h /* = -1*/, int frameRate /* = 30*/)
     {
         CComPtr<IMFAttributes> spAttr;
         CT(MFCreateAttributes(&spAttr, 2));
@@ -70,13 +70,16 @@ namespace Caustic
             {
                 UINT curWidth, curHeight;
                 CT(MFGetAttributeSize(spMediaType, MF_MT_FRAME_SIZE, &curWidth, &curHeight));
-                if (w == -1 && (int)curWidth > maxWidth)
+                UINT frameRateNum, frameRateDen;
+                CT(MFGetAttributeSize(spMediaType, MF_MT_FRAME_RATE, &frameRateNum, &frameRateDen));
+                int curframerate = (int)((float)frameRateNum / (float)frameRateDen);
+                if (w == -1 && (int)curWidth > maxWidth && curframerate >= frameRate)
                 {
                     maxWidth = curWidth;
                     maxHeight = curHeight;
                     spMaxMediaType = spMediaType;
                 }
-                else if (curWidth == w && curHeight == h)
+                else if (curWidth == w && curHeight == h && curframerate == frameRate)
                     break;
             }
             mediaIndex++;
@@ -94,6 +97,7 @@ namespace Caustic
         CComPtr<IMFMediaType> spCurMediaType;
         CT(m_spReader->GetCurrentMediaType(static_cast<DWORD>(MF_SOURCE_READER_FIRST_VIDEO_STREAM), &spCurMediaType));
         CT(MFGetAttributeSize(spCurMediaType, MF_MT_FRAME_SIZE, &m_width, &m_height));
+        CT(MFGetAttributeSize(spCurMediaType, MF_MT_FRAME_RATE, &m_width, &m_height));
 
         hr = spCurMediaType->GetUINT32(MF_MT_DEFAULT_STRIDE, (UINT32*)&m_stride);
         if (FAILED(hr))

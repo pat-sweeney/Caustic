@@ -41,6 +41,7 @@ export namespace Caustic
         std::wstring symlink;
         MFT_REGISTER_TYPE_INFO info;
         std::vector<Point2> resolutions;
+        std::vector<Point2> framerates;
     };
 
     //**********************************************************************
@@ -70,6 +71,7 @@ export namespace Caustic
     // deviceName - name of device to create
     // w - required resolution in X
     // h - required resolution in Y
+    // frameRate - requested frame rate
     // 
     // Returns:
     // Returns the newly created camera
@@ -77,5 +79,5 @@ export namespace Caustic
     // Module:
     // {Link:import Cameras.WebCamera.IWebCamera;{Cameras/WebCamera/IWebCamera.ixx}}
     //**********************************************************************
-    CRefObj<IWebCamera> CreateWebCamera(std::wstring deviceName, int w = -1, int h = -1);
+    CRefObj<IWebCamera> CreateWebCamera(std::wstring deviceName, int w = -1, int h = -1, int frameRate = 30);
 }

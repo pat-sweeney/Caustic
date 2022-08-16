@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\github\\Caustic\\Tools\\PostProcDoc\\PostProcDoc.csproj": {}
+    "D:\\github\\CausticClean\\Caustic\\Tools\\PostProcDoc\\PostProcDoc.csproj": {}
   },
   "projects": {
-    "D:\\github\\Caustic\\Tools\\PostProcDoc\\PostProcDoc.csproj": {
+    "D:\\github\\CausticClean\\Caustic\\Tools\\PostProcDoc\\PostProcDoc.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\github\\Caustic\\Tools\\PostProcDoc\\PostProcDoc.csproj",
+        "projectUniqueName": "D:\\github\\CausticClean\\Caustic\\Tools\\PostProcDoc\\PostProcDoc.csproj",
         "projectName": "PostProcDoc",
-        "projectPath": "D:\\github\\Caustic\\Tools\\PostProcDoc\\PostProcDoc.csproj",
+        "projectPath": "D:\\github\\CausticClean\\Caustic\\Tools\\PostProcDoc\\PostProcDoc.csproj",
         "packagesPath": "C:\\Users\\patricsw\\.nuget\\packages\\",
-        "outputPath": "D:\\github\\Caustic\\Tools\\PostProcDoc\\obj\\",
+        "outputPath": "D:\\github\\CausticClean\\Caustic\\Tools\\PostProcDoc\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
