@@ -61,5 +61,10 @@ Azure Kinect SDK: https://docs.microsoft.com/en-us/azure/kinect-dk/sensor-sdk-do
 Azure Kinect Body Tracking: https://docs.microsoft.com/en-us/azure/kinect-dk/body-sdk-download  
 .Net SDK 4.7: https://dotnet.microsoft.com/download/dotnet-framework/thank-you/net47-developer-pack-offline-installer
 
+If you wish to compile WebcamToNDI you will need to have the NDI Advanced SDK installed.
+The SDK can be found at:
+https://www.ndi.tv/sdk/
+You will also need to define an environment variabled named 'UseNDI'
+
 ## Documentation
 Documentation for the library can be found at https://pat-sweeney.github.io/Caustic/

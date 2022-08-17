@@ -19,8 +19,10 @@
 #include "imgui_impl_dx11.h"
 #include "imgui_internal.h"
 #include <sstream>
+#ifdef USE_NDI
 #include <Processing.NDI.Advanced.h>
 #include <Processing.NDI.Lib.h>
+#endif
 
 import Caustic.Base;
 import Base.Core.Core;
@@ -70,8 +72,10 @@ public:
     CRefObj<IImage> m_spColorImage;
     CRefObj<ITexture> m_spTexture;
     ImVec2 imageWinSize;
+#ifdef USE_NDI
     NDIlib_send_instance_t pNDI_send;
     NDIlib_video_frame_v2_t NDI_video_frame;
+#endif
     char NDIStreamName[1024];
 
     CApp()
@@ -195,6 +199,13 @@ void BuildPanels(ITexture *pFinalRT, ImFont *pFont)
             app.cameraResPoints[app.currentCamera][app.currentResolution].y,
             app.cameraFrameRates[app.currentCamera][app.currentResolution]);
 
+#ifdef USE_NDI
+        app.NDI_video_frame;
+        app.NDI_video_frame.xres = app.cameraResPoints[app.currentCamera][app.currentResolution].x;
+        app.NDI_video_frame.yres = app.cameraResPoints[app.currentCamera][app.currentResolution].y;
+        app.NDI_video_frame.FourCC = NDIlib_FourCC_type_BGRX;
+        app.NDI_video_frame.p_data = (uint8_t*)malloc(app.NDI_video_frame.xres * app.NDI_video_frame.yres * 4);
+
         // We create the NDI sender
         NDIlib_send_create_t t;
         t.p_ndi_name = app.NDIStreamName;
@@ -204,6 +215,7 @@ void BuildPanels(ITexture *pFinalRT, ImFont *pFont)
         app.pNDI_send = NDIlib_send_create(&t);
         if (!app.pNDI_send)
             return;
+#endif
 
         app.startBroadcast = true;
     }
@@ -237,16 +249,11 @@ void InitializeCaustic(HWND hwnd)
             });
     app.m_spRenderer = app.m_spRenderWindow->GetRenderer();
 
+#ifdef USE_NDI
     // Not required, but "correct" (see the SDK documentation).
     if (!NDIlib_initialize())
         return;
-
-    // We are going to create a 1920x1080 interlaced frame at 29.97Hz.
-    app.NDI_video_frame;
-    app.NDI_video_frame.xres = 1920;
-    app.NDI_video_frame.yres = 1080;
-    app.NDI_video_frame.FourCC = NDIlib_FourCC_type_BGRX;
-    app.NDI_video_frame.p_data = (uint8_t*)malloc(app.NDI_video_frame.xres * app.NDI_video_frame.yres * 4);
+#endif
 }
 
 // Global Variables:
@@ -301,7 +308,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 app.m_spTexture = app.m_spCausticFactory->CreateTexture(app.m_spRenderer, app.m_spColorImage,
                     D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
 
-                
+#ifdef USE_NDI
                 int w = app.m_spColorImage->GetWidth();
                 int h = app.m_spColorImage->GetHeight();
                 uint8* pSrc = app.m_spColorImage->GetData();
@@ -318,6 +325,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                     pDst += app.NDI_video_frame.xres * 4;
                 }
                 NDIlib_send_send_video_v2(app.pNDI_send, &app.NDI_video_frame);
+#endif
             }
         }
     }
@@ -438,11 +446,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_QUIT:
 
         // Free the video frame
+#ifdef USE_NDI
         if (app.NDI_video_frame.p_data != nullptr)
             free(app.NDI_video_frame.p_data);
         if (app.pNDI_send != nullptr)
             NDIlib_send_destroy(app.pNDI_send);
         NDIlib_destroy();
+#endif
 
         Caustic::SystemShutdown();
         break;
