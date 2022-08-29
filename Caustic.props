@@ -2,6 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
+    <UseNDIDefine Condition="'$(UseNDI)'!=''">USE_NDI</UseNDIDefine>
     <AzureKinectSDKDir Condition="'$(AzureKinectSDKDir)'==''">C:\Program Files\Azure Kinect SDK v1.4.1</AzureKinectSDKDir>
     <AzureBodySDKDir Condition="'$(AzureBodySDKDir)'==''">c:\Program Files\Azure Kinect Body Tracking SDK</AzureBodySDKDir>
     <CausticRoot Condition="'$(CausticRoot)'==''">g:\github\Caustic</CausticRoot>

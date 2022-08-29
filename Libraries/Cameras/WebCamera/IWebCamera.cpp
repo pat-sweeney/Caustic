@@ -114,6 +114,10 @@ namespace Caustic
                             MFGetAttributeSize(spType, MF_MT_FRAME_SIZE, &w, &h);
                             Point2 wxh((int)w, (int)h);
                             caminfo.resolutions.push_back(wxh);
+                            UINT32 n,d;
+                            MFGetAttributeSize(spType, MF_MT_FRAME_RATE, &n, &d);
+                            Point2 nxd((int)n, (int)d);
+                            caminfo.framerates.push_back(nxd);
                         }
                         break;
                     }
@@ -137,10 +141,11 @@ namespace Caustic
     // <IWebCamera::GetAvailableDevices>
     // w - width in pixels of camera resolution
     // h - height in pixels of camera resolution
+    // frameRate - requested frame rate
     //**********************************************************************
-    CRefObj<IWebCamera> CreateWebCamera(std::wstring deviceName, int w /* = -1*/, int h /* = -1*/)
+    CRefObj<IWebCamera> CreateWebCamera(std::wstring deviceName, int w /* = -1*/, int h /* = -1*/, int frameRate /* = 30 */)
     {
-        std::unique_ptr<CWebCamera> pCamera(new CWebCamera(deviceName, w, h));
+        std::unique_ptr<CWebCamera> pCamera(new CWebCamera(deviceName, w, h, frameRate));
         return CRefObj<IWebCamera>(pCamera.release());
     }
 }

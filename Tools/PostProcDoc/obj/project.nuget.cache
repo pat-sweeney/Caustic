@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "6zsHD2MzcTD9ICCRsvLRCY3y/QstfiZjFUVZxxZNG6tkZjSrrOLegHhTx9AoRQ0YPPlB4VRWyNuH8QtI6Y1IDQ==",
+  "dgSpecHash": "GF/rD9mqGr6mRmhRvgdsuYjtBcy+oN70u2Gjb/dQkbgTP9vTNldKeZZnu+GTytsdi6lniZB6o93jklsnWt0DtQ==",
   "success": true,
-  "projectFilePath": "D:\\github\\Caustic\\Tools\\PostProcDoc\\PostProcDoc.csproj",
+  "projectFilePath": "D:\\github\\CausticClean\\Caustic\\Tools\\PostProcDoc\\PostProcDoc.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\patricsw\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.21\\microsoft.netcore.app.host.win-x64.3.1.21.nupkg.sha512"
   ],
