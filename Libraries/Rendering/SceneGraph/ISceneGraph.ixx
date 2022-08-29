@@ -18,6 +18,7 @@ import Rendering.Caustic.PathTrace;
 import Rendering.Caustic.IRenderer;
 import Rendering.SceneGraph.ISceneElem;
 import Rendering.SceneGraph.ISceneGroupElem;
+import Rendering.SceneGraph.ISceneCameraCollectionElem;
 
 export namespace Caustic
 {
@@ -98,6 +99,12 @@ export namespace Caustic
 		// Unlocks a scene graph allowing the renderer to use it
 		//**********************************************************************
 		virtual void Unlock() = 0;
+
+		//**********************************************************************
+		// Method: GetCameras
+		// Returns list of available cameras
+		//**********************************************************************
+		virtual CRefObj<ISceneCameraCollectionElem> GetCameras() = 0;
 	};
 
 	CRefObj<ISceneGraph> CreateSceneGraph();

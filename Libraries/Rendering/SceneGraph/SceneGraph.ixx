@@ -21,6 +21,7 @@ import Rendering.Caustic.IRenderer;
 import Rendering.SceneGraph.SceneElem;
 import Rendering.SceneGraph.ISceneElem;
 import Rendering.SceneGraph.ISceneGraph;
+import Rendering.SceneGraph.ISceneCameraCollectionElem;
 
 export namespace Caustic
 {
@@ -37,6 +38,7 @@ export namespace Caustic
         std::vector<CRefObj<ISceneElem>> m_Selected; // List of elements in our scene graph that are currently selected
         uint32 m_Flags;
         bool m_showProxyObjects;
+        CRefObj<ISceneCameraCollectionElem> m_CameraCollection;
 
         void PathTraceInternal(PathTraceCtx* pCtx, int depth, Ray3& ray, FRGBColor* pRadiance);
     public:
@@ -46,6 +48,7 @@ export namespace Caustic
         {
             InitializeCriticalSection(&m_cs);
 			m_spRoot = pGroup;
+            m_CameraCollection = CreateCameraCollectionElem();
         }
 
         //**********************************************************************
@@ -113,5 +116,9 @@ export namespace Caustic
         virtual void ClearSelected() override;
         virtual void SelectObject(ISceneElem* pElem) override;
         virtual void DeselectObject(ISceneElem* pElem) override;
+        virtual CRefObj<ISceneCameraCollectionElem> GetCameras() override
+        {
+            return m_CameraCollection;
+        }
     };
 }

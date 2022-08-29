@@ -43,6 +43,7 @@ export namespace Caustic
 		Group,
 		Renderable,
 		LightCollection,
+		CameraCollection,
 		Material,
 		ComputeShaderElem,
 		Overlay2D,

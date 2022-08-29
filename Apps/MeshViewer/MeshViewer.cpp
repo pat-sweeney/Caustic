@@ -38,6 +38,8 @@ import Rendering.Caustic.IRenderer;
 import Rendering.GuiControls.Common;
 import Rendering.RenderWindow.IRenderWindow;
 import Rendering.SceneGraph.ISceneFactory;
+import Rendering.SceneGraph.ISceneCameraCollectionElem;
+import Rendering.SceneImport.Collada;
 
 #define MAX_LOADSTRING 100
 
@@ -130,7 +132,7 @@ void FillInspector_Elem(ISceneElem* pElem)
     ImGui::SliderFloat(std::string("##BBoxMaxZ").c_str(), &bbox.maxPt.z, 0.0f, 1.0f);
 }
 
-void FillInspector_LightCollection(ISceneLightCollectionElem *pLightCollection)
+void FillInspector_LightCollection(ISceneLightCollectionElem* pLightCollection)
 {
     FillInspector_Elem(pLightCollection);
 }
@@ -167,6 +169,88 @@ void FillInspector_Light(ILight* pLight, int lightIndex)
             [pLight]()->Vector3 { return pLight->GetDirection(); },
             [pLight](Vector3 v) { pLight->SetDirection(v); }, -1.0f, +1.0f);
     }
+}
+
+void FillInspector_CameraCollection(ISceneCameraCollectionElem* pCameraCollection)
+{
+    FillInspector_Elem(pCameraCollection);
+}
+
+void FillInspector_Camera(ICamera* pCamera, int lightIndex)
+{
+    bool f = false;
+    if (ImGui::Checkbox("Active", &f))
+    {
+    }
+
+    float fov, aspectRatio, nearZ, farZ;
+    pCamera->GetParams(&fov, &aspectRatio, &nearZ, &farZ);
+
+    ImGui::Text("FOV:");
+    ImGui::SameLine();
+    if (ImGui::SliderFloat("##FOV", &fov, 0.01f, 90.0f))
+        pCamera->SetParams(fov, aspectRatio, nearZ, farZ);
+
+    ImGui::Text("Aspect Ratio:");
+    ImGui::SameLine();
+    if (ImGui::SliderFloat("##AspectRatio", &aspectRatio, 0.01f, 3.0f))
+        pCamera->SetParams(fov, aspectRatio, nearZ, farZ);
+
+    ImGui::Text("NearZ:");
+    ImGui::SameLine();
+    if (ImGui::SliderFloat("##NearZ", &nearZ, 0.01f, 3.0f))
+        pCamera->SetParams(fov, aspectRatio, nearZ, farZ);
+
+    ImGui::Text("FarZ:");
+    ImGui::SameLine();
+    if (ImGui::SliderFloat("##FarZ", &farZ, 0.01f, 3.0f))
+        pCamera->SetParams(fov, aspectRatio, nearZ, farZ);
+
+    ImGui_Vector("Position:",
+        [pCamera]()->Vector3 {
+            Vector3 eye;
+            pCamera->GetPosition(&eye, nullptr, nullptr, nullptr, nullptr, nullptr);
+            return eye;
+        },
+        [pCamera](Vector3 v) {
+            Vector3 eye, look, up;
+            pCamera->GetPosition(&eye, &look, &up, nullptr, nullptr, nullptr);
+            pCamera->SetPosition(v, look, up);
+        }, 0.0f, 10000.0f);
+
+    ImGui_Vector("Look:",
+        [pCamera]()->Vector3 {
+            Vector3 look;
+            pCamera->GetPosition(nullptr, &look, nullptr, nullptr, nullptr, nullptr);
+            return look;
+        },
+        [pCamera](Vector3 v) {
+            Vector3 eye, look, up;
+            pCamera->GetPosition(&eye, &look, &up, nullptr, nullptr, nullptr);
+            pCamera->SetPosition(eye, v, up);
+        }, 0.0f, 10000.0f);
+
+    ImGui_Vector("Up:",
+        [pCamera]()->Vector3 {
+            Vector3 up;
+            pCamera->GetPosition(nullptr, nullptr, &up, nullptr, nullptr, nullptr);
+            return up;
+        },
+        [pCamera](Vector3 v) {
+            Vector3 eye, look, up;
+            pCamera->GetPosition(&eye, &look, &up, nullptr, nullptr, nullptr);
+            pCamera->SetPosition(eye, look, v);
+        }, 0.0f, 10000.0f);
+
+    ImGui_Vector("Offset:",
+        [pCamera]()->Vector3 {
+            Vector3 offset;
+            pCamera->GetOffset(offset);
+            return offset;
+        },
+        [pCamera](Vector3 v) {
+            pCamera->SetOffset(v);
+        }, 0.0f, 10000.0f);
 }
 
 void FillInspector_ComputeShader(ISceneComputeShaderElem* pComputeShader)
@@ -472,7 +556,34 @@ ImVec2 BuildMenuBar(ImFont *pFont)
     {
         if (ImGui::BeginMenu("File"))
         {
-            if (ImGui::MenuItem("Load Mesh..."))
+            if (ImGui::MenuItem("Load Scene..."))
+            {
+                wchar_t fn[MAX_PATH + 1] = { 0 };
+                OPENFILENAME ofn;
+                ZeroMemory(&ofn, sizeof(ofn));
+                ofn.lStructSize = sizeof(OPENFILENAME);
+                ofn.hwndOwner = app.m_hwnd;
+                ofn.hInstance = app.m_hInst;
+                ofn.lpstrFilter = L"Collada Files\0*.dae\0All Files\0*.*\0\0\0";
+                ofn.lpstrFile = fn;
+                ofn.nMaxFile = MAX_PATH;
+                ofn.lpstrTitle = L"Open Scene";
+                ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST;
+                ofn.lpstrDefExt = L"dae";
+                if (GetOpenFileName(&ofn))
+                {
+                    wchar_t* ext = StrRChrW(fn, nullptr, L'.');
+                    if (StrCmpW(ext, L".dae") == 0)
+                    {
+                        CColladaImporter *importer = new CColladaImporter();
+                        CRefObj<ISceneGraph> spSceneGraph;
+                        std::string sfn = Caustic::wstr2str(std::wstring(fn));
+                        importer->Import(sfn.c_str(), &spSceneGraph);
+                        app.m_spRenderWindow->SetSceneGraph(spSceneGraph);
+                    }
+                }
+            }
+            else if (ImGui::MenuItem("Load Mesh..."))
             {
                 wchar_t fn[MAX_PATH + 1] = { 0 };
                 OPENFILENAME ofn;
@@ -682,6 +793,24 @@ void BuildPanels(ITexture *pFinalRT, ImFont *pFont)
     auto spSceneGraph = app.m_spRenderWindow->GetSceneGraph();
     ImGui::Begin("Scene");
     app.nodeCounter = 0;
+    
+    CRefObj<ISceneCameraCollectionElem> spCameraCollection = spSceneGraph->GetCameras();
+    ISceneCameraCollectionElem* pCameraCollection = spCameraCollection.p;
+    ISceneGraph* pSceneGraph = spSceneGraph.p;
+    BuildCollapsableNode(spSceneGraph, spCameraCollection, true, "CameraCollection",
+        [pSceneGraph, pCameraCollection]()
+        {
+            uint32 numCameras = pCameraCollection->NumberCameras();
+            for (uint32 i = 0; i < numCameras; i++)
+            {
+                CRefObj<ICamera> spCamera = pCameraCollection->GetCamera(i);
+                std::string cameraName = std::string("Camera-") + std::to_string(i);
+                BuildCollapsableNode(pSceneGraph, nullptr, true, cameraName.c_str(),
+                    nullptr, [spCamera, i]() { FillInspector_Camera(spCamera.p, i); });
+            }
+        },
+        [spCameraCollection]() { FillInspector_CameraCollection((ISceneCameraCollectionElem*)spCameraCollection.p); });
+    
     BuildGroupUI(spSceneGraph, spSceneGraph, "SceneGraphRoot", [spSceneGraph]() { FillInspector_SceneGraph(spSceneGraph.p); });
     ImGui::End();
 

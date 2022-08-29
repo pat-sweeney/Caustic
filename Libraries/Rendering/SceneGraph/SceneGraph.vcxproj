@@ -85,6 +85,8 @@
     <ClInclude Include="ISceneFactory.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CameraCollectionElem.cpp" />
+    <ClCompile Include="CameraCollectionElem.ixx" />
     <ClCompile Include="ComputeShaderElem.cpp" />
     <ClCompile Include="ComputeShaderElem.ixx" />
     <ClCompile Include="CubeElem.ixx" />
@@ -92,6 +94,8 @@
     <ClCompile Include="CylinderElem.ixx" />
     <ClCompile Include="GroupElem.cpp" />
     <ClCompile Include="GroupElem.ixx" />
+    <ClCompile Include="ISceneCameraCollectionElem.cpp" />
+    <ClCompile Include="ISceneCameraCollectionElem.ixx" />
     <ClCompile Include="ISceneComputeShaderElem.cpp" />
     <ClCompile Include="ISceneComputeShaderElem.ixx" />
     <ClCompile Include="ISceneCubeElem.cpp" />

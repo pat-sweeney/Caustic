@@ -67,6 +67,7 @@ export namespace Caustic
         virtual void SetViewport(float x0, float y0, float x1, float y1) override;
         virtual void SetSnapPositions(const Vector3& home, const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis) override;
         virtual CRefObj<ISceneGraph> GetSceneGraph() override { return m_spSceneGraph; }
+        virtual void SetSceneGraph(ISceneGraph* pSceneGraph) override { m_spSceneGraph = pSceneGraph; }
         virtual void MouseDown(int x, int y, uint32 button, uint32 flags) override;
         virtual void MouseMove(int x, int y, uint32 flags) override;
         virtual void MouseUp(int x, int y, uint32 button, uint32 flags) override;

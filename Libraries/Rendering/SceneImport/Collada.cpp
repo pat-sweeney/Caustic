@@ -9,13 +9,16 @@
 #include <memory>
 import Base.Core.Core;
 import Base.Core.Error;
+import Rendering.Caustic.ICamera;
+import Rendering.Caustic.ICausticFactory;
+import Rendering.Caustic.CausticFactory;
 import Rendering.SceneGraph.SceneFactory;
 import Rendering.SceneGraph.SceneGraph;
 import Rendering.SceneImport.Collada;
 
 namespace Caustic
 {
-    void CColladaImporter::ParseSubnode(IXMLDOMNode *pNode, ParseElements *_Elements)
+    void CColladaImporter::ParseSubnode(IXMLDOMNode* pNode, ParseElements* _Elements)
     {
         long numChildren;
         CComPtr<IXMLDOMNodeList> spChildren;
@@ -39,9 +42,76 @@ namespace Caustic
             }
         }
     }
-
-    void CColladaImporter::ParseCamera(IXMLDOMNode *pNode)
+    
+    void CColladaImporter::ParseSubnode(IXMLDOMNode *pNode, ParseElements *_Elements, const wchar_t *pPrepend)
     {
+        long numChildren;
+        CComPtr<IXMLDOMNodeList> spChildren;
+        CT(pNode->get_childNodes(&spChildren));
+        CT(spChildren->get_length(&numChildren));
+        bool found = false;
+        for (long i = 0; i < numChildren; i++)
+        {
+            CComPtr<IXMLDOMNode> spChild;
+            CT(spChildren->get_item(i, &spChild));
+            BSTR bstrNodeName;
+            CT(spChild->get_nodeName(&bstrNodeName));
+            std::wstring curNodeName = std::wstring(bstrNodeName);
+            if (pPrepend != nullptr)
+                curNodeName = std::wstring(pPrepend) + L"." + curNodeName;
+
+            int indx = 0;
+            while (_Elements[indx].nodeName)
+            {
+                // We allow _Elements[index].nodeName to take the form:
+                //     nodeName.subNodeName. ...
+                // This allows for parsing subnodes without having to implement
+                // individual node parsing methods.
+                if (_wcsicmp(_Elements[indx].nodeName, curNodeName.c_str()) == 0)
+                {
+                    _Elements[indx].func(spChild);
+                }
+                indx++;
+            }
+            ParseSubnode(spChild, _Elements, curNodeName.c_str());
+        }
+    }
+
+    void CColladaImporter::ParseCamera(IXMLDOMNode *pNode, std::map<std::wstring, Collada::SCamera*>* cameras)
+    {
+        Collada::SCamera* pCamera = new Collada::SCamera();
+        std::unique_ptr<Collada::SCamera> spCamera(pCamera);
+
+        CComPtr<IXMLDOMNamedNodeMap> spAttributes;
+        CT(pNode->get_attributes(&spAttributes));
+        ParseAttribute(spAttributes, L"id", pCamera->m_id);
+        ParseAttribute(spAttributes, L"name", pCamera->m_name);
+
+        CColladaImporter::ParseElements _elems[] =
+        {
+            {
+                L"optics.technique_common.perspective.znear",
+                [this, pCamera](IXMLDOMNode* pNode)
+                {
+                    CComBSTR bstr;
+                    pNode->get_text(&bstr);
+                    pCamera->m_znear = (float)_wtof(bstr);
+                }
+            },
+            {
+                L"optics.technique_common.perspective.zfar",
+                [this, pCamera](IXMLDOMNode* pNode)
+                {
+                    CComBSTR bstr;
+                    pNode->get_text(&bstr);
+                    pCamera->m_zfar = (float)_wtof(bstr);
+                }
+            },
+            { nullptr, nullptr }
+        };
+        ParseSubnode(pNode, _elems, nullptr);
+        cameras->insert(std::pair<std::wstring, Collada::SCamera*>(pCamera->m_id, pCamera));
+        spCamera.release();
     }
 
     void CColladaImporter::ParseLight(IXMLDOMNode *pNode)
@@ -488,10 +558,15 @@ while(*p)//        for (int i = 0; i < pPolylist->m_count; i++)
             switch (pNode->m_nodeType)
             {
             case Collada::c_NodeType_Camera:
+                {
+                    CRefObj<ICamera> spCamera = CCausticFactory::Instance()->CreateCamera(true);
+                    spSceneGraph->GetCameras()->AddCamera(spCamera);
+                }
                 break;
             case Collada::c_NodeType_Light:
                 {
                     CRefObj<Caustic::ISceneGroupElem> spXform = CSceneFactory::Instance()->CreateGroupElem();
+                    spXform->SetName(L"Light");
                     spXform->SetTransform(pNode->m_mat);
                     CRefObj<Caustic::ISceneLightCollectionElem> spLight = CSceneFactory::Instance()->CreateLightCollectionElem();
                     spXform->AddChild(spLight);
@@ -502,7 +577,8 @@ while(*p)//        for (int i = 0; i < pPolylist->m_count; i++)
                 {
                     CRefObj<Caustic::ISceneGroupElem> spXform = CSceneFactory::Instance()->CreateGroupElem();
                     spXform->SetTransform(pNode->m_mat);
-                    
+                    spXform->SetName((std::wstring(L"Mesh - ") + pNode->m_name).c_str());
+
                     CRefObj<Caustic::ISceneMeshElem> spMeshElem = CSceneFactory::Instance()->CreateMeshElem();
 
                     Collada::SGeometry *pGeometry = pCollada->m_geometries[pNode->m_url.substr(1)];
@@ -534,14 +610,32 @@ while(*p)//        for (int i = 0; i < pPolylist->m_count; i++)
         ParseSubnode(pNode, _Elements);
     }
     
+    void CColladaImporter::ParseLibraryCameras(IXMLDOMNode* pNode, std::map<std::wstring, Collada::SCamera*>* cameras)
+    {
+        CColladaImporter::ParseElements _elems[] =
+        {
+            { L"camera",
+                [this, cameras](IXMLDOMNode* pNode)
+                { 
+                    ParseCamera(pNode, cameras);
+                }
+            },
+            { nullptr, nullptr }
+        };
+        ParseSubnode(pNode, _elems);
+    }
+
     void CColladaImporter::ParseCollada(IXMLDOMNode *pNode, Caustic::ISceneGraph **ppSceneGraph)
     {
         Collada::SCollada *pCollada = new Collada::SCollada();
         std::unique_ptr<Collada::SCollada> spCollada(pCollada);
         CColladaImporter::ParseElements _Elements[] =
         {
-            { L"library_cameras", [this](IXMLDOMNode *pNode) {} },
-            { L"library_lights", [this](IXMLDOMNode *pNode) {} },
+            { L"library_cameras", [this, pCollada](IXMLDOMNode* pNode) { ParseLibraryCameras(pNode, &pCollada->m_cameras); } },
+            { L"library_lights", [this](IXMLDOMNode* pNode) {} },
+            { L"library_effects", [this](IXMLDOMNode* pNode) {} },
+            { L"library_images", [this](IXMLDOMNode* pNode) {} },
+            { L"library_materials", [this](IXMLDOMNode* pNode) {} },
             { L"library_geometries", [this, pCollada](IXMLDOMNode *pNode) { ParseLibraryGeometries(pNode, &pCollada->m_geometries); } },
             { L"library_visual_scenes", [this, pCollada](IXMLDOMNode *pNode) { ParseLibraryVisualScenes(pNode, &pCollada->m_visualScenes); } },
             { L"scene", [this, pCollada, ppSceneGraph](IXMLDOMNode *pNode) { ParseScene(pNode, pCollada, ppSceneGraph); } },

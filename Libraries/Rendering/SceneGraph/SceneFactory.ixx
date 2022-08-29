@@ -48,6 +48,7 @@ export namespace Caustic
 		virtual CRefObj<ISceneComputeShaderElem> CreateComputeShaderElem(IShader* pComputeShader) override;
 		virtual CRefObj<ISceneMaterialElem> CreateMaterialElem() override;
 		virtual CRefObj<ISceneLightCollectionElem> CreateLightCollectionElem() override;
+		virtual CRefObj<ISceneCameraCollectionElem> CreateCameraCollectionElem() override;
 		virtual CRefObj<ISceneGroupElem> CreateGroupElem() override;
 		virtual CRefObj<ISceneLineElem> CreateLineElem(Vector3 &p0, Vector3 &p1) override;
 		virtual CRefObj<ISceneMarchingCubesElem> CreateMarchingCubesElem(IRenderer* pRenderer, uint32 subdivisions, std::function<float(Vector3&)> sdf, bool drawIndexed) override;

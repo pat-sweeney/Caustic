@@ -48,6 +48,11 @@ namespace Caustic
 		return Caustic::CreateLightCollectionElem();
 	}
 
+	CRefObj<ISceneCameraCollectionElem> CSceneFactory::CreateCameraCollectionElem()
+	{
+		return Caustic::CreateCameraCollectionElem();
+	}
+
 	CRefObj<ISceneGroupElem> CSceneFactory::CreateGroupElem()
 	{
 		return Caustic::CreateGroupElem();

@@ -13,6 +13,7 @@ import Rendering.Caustic.IRenderer;
 import Rendering.SceneGraph.ISceneMaterialElem;
 import Rendering.SceneGraph.ISceneComputeShaderElem;
 import Rendering.SceneGraph.ISceneLightCollectionElem;
+import Rendering.SceneGraph.ISceneCameraCollectionElem;
 import Rendering.SceneGraph.ISceneGroupElem;
 import Rendering.SceneGraph.ISceneElem;
 import Rendering.SceneGraph.ISceneMarchingCubesElem;
@@ -50,6 +51,12 @@ export namespace Caustic
 		// Creates a light collection element
 		//**********************************************************************
 		virtual CRefObj<ISceneLightCollectionElem> CreateLightCollectionElem() = 0;
+
+		//**********************************************************************
+		// Method: CreateCameraCollectionElem
+		// Creates a camera collection element
+		//**********************************************************************
+		virtual CRefObj<ISceneCameraCollectionElem> CreateCameraCollectionElem() = 0;
 
 		//**********************************************************************
 		// Method: CreateGroupElem

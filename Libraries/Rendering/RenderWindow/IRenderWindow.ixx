@@ -77,6 +77,15 @@ export namespace Caustic
 		virtual CRefObj<ISceneGraph> GetSceneGraph() = 0;
 
 		//**********************************************************************
+		// Method: SetSceneGraph
+		// Sets the render window's scene graph to the specified scene graph
+		// 
+		// Parameters:
+		// pSceneGraph - scene graph to set on render window
+		//**********************************************************************
+		virtual void SetSceneGraph(ISceneGraph *pSceneGraph) = 0;
+
+		//**********************************************************************
 		// Method: GetRenderer
 		// Returns the renderer. This is the marshaling version of the renderer.
 		//**********************************************************************
