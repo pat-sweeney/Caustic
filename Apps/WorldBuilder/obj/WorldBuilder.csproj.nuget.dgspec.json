@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\github\\CausticClean\\Caustic\\Apps\\WorldBuilder\\WorldBuilder.csproj": {}
+    "D:\\github\\Caustic\\Apps\\WorldBuilder\\WorldBuilder.csproj": {}
   },
   "projects": {
-    "D:\\github\\CausticClean\\Caustic\\Apps\\WorldBuilder\\WorldBuilder.csproj": {
+    "D:\\github\\Caustic\\Apps\\WorldBuilder\\WorldBuilder.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\github\\CausticClean\\Caustic\\Apps\\WorldBuilder\\WorldBuilder.csproj",
+        "projectUniqueName": "D:\\github\\Caustic\\Apps\\WorldBuilder\\WorldBuilder.csproj",
         "projectName": "WorldBuilder",
-        "projectPath": "D:\\github\\CausticClean\\Caustic\\Apps\\WorldBuilder\\WorldBuilder.csproj",
+        "projectPath": "D:\\github\\Caustic\\Apps\\WorldBuilder\\WorldBuilder.csproj",
         "packagesPath": "C:\\Users\\patricsw\\.nuget\\packages\\",
-        "outputPath": "D:\\github\\CausticClean\\Caustic\\Apps\\WorldBuilder\\obj\\",
+        "outputPath": "D:\\github\\Caustic\\Apps\\WorldBuilder\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -32,8 +32,8 @@
           "net5.0-windows7.0": {
             "targetAlias": "net5.0-windows",
             "projectReferences": {
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Interop\\Renderer\\Renderer.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Interop\\Renderer\\Renderer.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Interop\\Renderer\\Renderer.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Interop\\Renderer\\Renderer.vcxproj"
               }
             }
           }
@@ -75,11 +75,11 @@
         }
       }
     },
-    "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+    "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
       "restore": {
-        "projectUniqueName": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj",
+        "projectUniqueName": "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj",
         "projectName": "Core",
-        "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj",
+        "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj",
         "frameworks": {
           "native": {
             "projectReferences": {}
@@ -90,16 +90,16 @@
         "native": {}
       }
     },
-    "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+    "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
       "restore": {
-        "projectUniqueName": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj",
+        "projectUniqueName": "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj",
         "projectName": "Math",
-        "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj",
+        "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj",
         "frameworks": {
           "native": {
             "projectReferences": {
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
               }
             }
           }
@@ -109,22 +109,22 @@
         "native": {}
       }
     },
-    "D:\\github\\CausticClean\\Caustic\\Libraries\\Cameras\\CameraBase\\CameraBase.vcxproj": {
+    "D:\\github\\Caustic\\Libraries\\Cameras\\CameraBase\\CameraBase.vcxproj": {
       "restore": {
-        "projectUniqueName": "D:\\github\\CausticClean\\Caustic\\Libraries\\Cameras\\CameraBase\\CameraBase.vcxproj",
+        "projectUniqueName": "D:\\github\\Caustic\\Libraries\\Cameras\\CameraBase\\CameraBase.vcxproj",
         "projectName": "CameraBase",
-        "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Cameras\\CameraBase\\CameraBase.vcxproj",
+        "projectPath": "D:\\github\\Caustic\\Libraries\\Cameras\\CameraBase\\CameraBase.vcxproj",
         "frameworks": {
           "native": {
             "projectReferences": {
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj"
               }
             }
           }
@@ -134,19 +134,19 @@
         "native": {}
       }
     },
-    "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
+    "D:\\github\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
       "restore": {
-        "projectUniqueName": "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj",
+        "projectUniqueName": "D:\\github\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj",
         "projectName": "GeomDS",
-        "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj",
+        "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj",
         "frameworks": {
           "native": {
             "projectReferences": {
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
               }
             }
           }
@@ -156,34 +156,34 @@
         "native": {}
       }
     },
-    "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\MeshImport\\MeshImport.vcxproj": {
+    "D:\\github\\Caustic\\Libraries\\Geometry\\MeshImport\\MeshImport.vcxproj": {
       "restore": {
-        "projectUniqueName": "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\MeshImport\\MeshImport.vcxproj",
+        "projectUniqueName": "D:\\github\\Caustic\\Libraries\\Geometry\\MeshImport\\MeshImport.vcxproj",
         "projectName": "MeshImport",
-        "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\MeshImport\\MeshImport.vcxproj",
+        "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\MeshImport\\MeshImport.vcxproj",
         "frameworks": {
           "native": {
             "projectReferences": {
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj"
               }
             }
           }
@@ -193,28 +193,28 @@
         "native": {}
       }
     },
-    "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj": {
+    "D:\\github\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj": {
       "restore": {
-        "projectUniqueName": "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj",
+        "projectUniqueName": "D:\\github\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj",
         "projectName": "Mesh",
-        "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj",
+        "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj",
         "frameworks": {
           "native": {
             "projectReferences": {
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj"
               }
             }
           }
@@ -224,16 +224,16 @@
         "native": {}
       }
     },
-    "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\Rast\\Rast.vcxproj": {
+    "D:\\github\\Caustic\\Libraries\\Geometry\\Rast\\Rast.vcxproj": {
       "restore": {
-        "projectUniqueName": "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\Rast\\Rast.vcxproj",
+        "projectUniqueName": "D:\\github\\Caustic\\Libraries\\Geometry\\Rast\\Rast.vcxproj",
         "projectName": "Rast",
-        "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\Rast\\Rast.vcxproj",
+        "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\Rast\\Rast.vcxproj",
         "frameworks": {
           "native": {
             "projectReferences": {
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
               }
             }
           }
@@ -243,19 +243,19 @@
         "native": {}
       }
     },
-    "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
+    "D:\\github\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
       "restore": {
-        "projectUniqueName": "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj",
+        "projectUniqueName": "D:\\github\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj",
         "projectName": "Color",
-        "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj",
+        "projectPath": "D:\\github\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj",
         "frameworks": {
           "native": {
             "projectReferences": {
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
               }
             }
           }
@@ -265,28 +265,28 @@
         "native": {}
       }
     },
-    "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
+    "D:\\github\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
       "restore": {
-        "projectUniqueName": "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj",
+        "projectUniqueName": "D:\\github\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj",
         "projectName": "Image",
-        "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj",
+        "projectPath": "D:\\github\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj",
         "frameworks": {
           "native": {
             "projectReferences": {
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\Rast\\Rast.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\Rast\\Rast.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Geometry\\Rast\\Rast.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\Rast\\Rast.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
               }
             }
           }
@@ -296,52 +296,52 @@
         "native": {}
       }
     },
-    "D:\\github\\CausticClean\\Caustic\\Libraries\\Interop\\Renderer\\Renderer.vcxproj": {
+    "D:\\github\\Caustic\\Libraries\\Interop\\Renderer\\Renderer.vcxproj": {
       "restore": {
-        "projectUniqueName": "D:\\github\\CausticClean\\Caustic\\Libraries\\Interop\\Renderer\\Renderer.vcxproj",
+        "projectUniqueName": "D:\\github\\Caustic\\Libraries\\Interop\\Renderer\\Renderer.vcxproj",
         "projectName": "Renderer",
-        "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Interop\\Renderer\\Renderer.vcxproj",
+        "projectPath": "D:\\github\\Caustic\\Libraries\\Interop\\Renderer\\Renderer.vcxproj",
         "frameworks": {
           "native": {
             "projectReferences": {
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\Rast\\Rast.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\Rast\\Rast.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Geometry\\Rast\\Rast.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\Rast\\Rast.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\ImGui\\ImGui.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\ImGui\\ImGui.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Rendering\\ImGui\\ImGui.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Rendering\\ImGui\\ImGui.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\ImPlot\\ImPlot.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\ImPlot\\ImPlot.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Rendering\\ImPlot\\ImPlot.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Rendering\\ImPlot\\ImPlot.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\RenderGraph\\RenderGraph.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\RenderGraph\\RenderGraph.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Rendering\\RenderGraph\\RenderGraph.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Rendering\\RenderGraph\\RenderGraph.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\RenderWindow\\RenderWindow.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\RenderWindow\\RenderWindow.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Rendering\\RenderWindow\\RenderWindow.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Rendering\\RenderWindow\\RenderWindow.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj"
               }
             }
           }
@@ -351,22 +351,22 @@
         "native": {}
       }
     },
-    "D:\\github\\CausticClean\\Caustic\\Libraries\\Parsers\\JSon\\JSon.vcxproj": {
+    "D:\\github\\Caustic\\Libraries\\Parsers\\JSon\\JSon.vcxproj": {
       "restore": {
-        "projectUniqueName": "D:\\github\\CausticClean\\Caustic\\Libraries\\Parsers\\JSon\\JSon.vcxproj",
+        "projectUniqueName": "D:\\github\\Caustic\\Libraries\\Parsers\\JSon\\JSon.vcxproj",
         "projectName": "JSon",
-        "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Parsers\\JSon\\JSon.vcxproj",
+        "projectPath": "D:\\github\\Caustic\\Libraries\\Parsers\\JSon\\JSon.vcxproj",
         "frameworks": {
           "native": {
             "projectReferences": {
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Parsers\\Lex\\Lex.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Parsers\\Lex\\Lex.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Parsers\\Lex\\Lex.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Parsers\\Lex\\Lex.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\ImGui\\ImGui.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\ImGui\\ImGui.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Rendering\\ImGui\\ImGui.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Rendering\\ImGui\\ImGui.vcxproj"
               }
             }
           }
@@ -376,16 +376,16 @@
         "native": {}
       }
     },
-    "D:\\github\\CausticClean\\Caustic\\Libraries\\Parsers\\Lex\\Lex.vcxproj": {
+    "D:\\github\\Caustic\\Libraries\\Parsers\\Lex\\Lex.vcxproj": {
       "restore": {
-        "projectUniqueName": "D:\\github\\CausticClean\\Caustic\\Libraries\\Parsers\\Lex\\Lex.vcxproj",
+        "projectUniqueName": "D:\\github\\Caustic\\Libraries\\Parsers\\Lex\\Lex.vcxproj",
         "projectName": "Lex",
-        "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Parsers\\Lex\\Lex.vcxproj",
+        "projectPath": "D:\\github\\Caustic\\Libraries\\Parsers\\Lex\\Lex.vcxproj",
         "frameworks": {
           "native": {
             "projectReferences": {
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
               }
             }
           }
@@ -395,34 +395,34 @@
         "native": {}
       }
     },
-    "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj": {
+    "D:\\github\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj": {
       "restore": {
-        "projectUniqueName": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj",
+        "projectUniqueName": "D:\\github\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj",
         "projectName": "Caustic",
-        "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj",
+        "projectPath": "D:\\github\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj",
         "frameworks": {
           "native": {
             "projectReferences": {
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Tools\\ParseShader\\ParseShader.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Tools\\ParseShader\\ParseShader.vcxproj"
+              "D:\\github\\Caustic\\Tools\\ParseShader\\ParseShader.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Tools\\ParseShader\\ParseShader.vcxproj"
               }
             }
           }
@@ -432,11 +432,11 @@
         "native": {}
       }
     },
-    "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\ImGui\\ImGui.vcxproj": {
+    "D:\\github\\Caustic\\Libraries\\Rendering\\ImGui\\ImGui.vcxproj": {
       "restore": {
-        "projectUniqueName": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\ImGui\\ImGui.vcxproj",
+        "projectUniqueName": "D:\\github\\Caustic\\Libraries\\Rendering\\ImGui\\ImGui.vcxproj",
         "projectName": "ImGui",
-        "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\ImGui\\ImGui.vcxproj",
+        "projectPath": "D:\\github\\Caustic\\Libraries\\Rendering\\ImGui\\ImGui.vcxproj",
         "frameworks": {
           "native": {
             "projectReferences": {}
@@ -447,11 +447,11 @@
         "native": {}
       }
     },
-    "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\ImPlot\\ImPlot.vcxproj": {
+    "D:\\github\\Caustic\\Libraries\\Rendering\\ImPlot\\ImPlot.vcxproj": {
       "restore": {
-        "projectUniqueName": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\ImPlot\\ImPlot.vcxproj",
+        "projectUniqueName": "D:\\github\\Caustic\\Libraries\\Rendering\\ImPlot\\ImPlot.vcxproj",
         "projectName": "ImPlot",
-        "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\ImPlot\\ImPlot.vcxproj",
+        "projectPath": "D:\\github\\Caustic\\Libraries\\Rendering\\ImPlot\\ImPlot.vcxproj",
         "frameworks": {
           "native": {
             "projectReferences": {}
@@ -462,34 +462,34 @@
         "native": {}
       }
     },
-    "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\RendererMarshaller\\RendererMarshaller.vcxproj": {
+    "D:\\github\\Caustic\\Libraries\\Rendering\\RendererMarshaller\\RendererMarshaller.vcxproj": {
       "restore": {
-        "projectUniqueName": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\RendererMarshaller\\RendererMarshaller.vcxproj",
+        "projectUniqueName": "D:\\github\\Caustic\\Libraries\\Rendering\\RendererMarshaller\\RendererMarshaller.vcxproj",
         "projectName": "RendererMarshaller",
-        "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\RendererMarshaller\\RendererMarshaller.vcxproj",
+        "projectPath": "D:\\github\\Caustic\\Libraries\\Rendering\\RendererMarshaller\\RendererMarshaller.vcxproj",
         "frameworks": {
           "native": {
             "projectReferences": {
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj"
               }
             }
           }
@@ -499,37 +499,37 @@
         "native": {}
       }
     },
-    "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\RenderGraph\\RenderGraph.vcxproj": {
+    "D:\\github\\Caustic\\Libraries\\Rendering\\RenderGraph\\RenderGraph.vcxproj": {
       "restore": {
-        "projectUniqueName": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\RenderGraph\\RenderGraph.vcxproj",
+        "projectUniqueName": "D:\\github\\Caustic\\Libraries\\Rendering\\RenderGraph\\RenderGraph.vcxproj",
         "projectName": "RenderGraph",
-        "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\RenderGraph\\RenderGraph.vcxproj",
+        "projectPath": "D:\\github\\Caustic\\Libraries\\Rendering\\RenderGraph\\RenderGraph.vcxproj",
         "frameworks": {
           "native": {
             "projectReferences": {
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Cameras\\CameraBase\\CameraBase.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Cameras\\CameraBase\\CameraBase.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Cameras\\CameraBase\\CameraBase.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Cameras\\CameraBase\\CameraBase.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj"
               }
             }
           }
@@ -539,49 +539,49 @@
         "native": {}
       }
     },
-    "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\RenderWindow\\RenderWindow.vcxproj": {
+    "D:\\github\\Caustic\\Libraries\\Rendering\\RenderWindow\\RenderWindow.vcxproj": {
       "restore": {
-        "projectUniqueName": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\RenderWindow\\RenderWindow.vcxproj",
+        "projectUniqueName": "D:\\github\\Caustic\\Libraries\\Rendering\\RenderWindow\\RenderWindow.vcxproj",
         "projectName": "RenderWindow",
-        "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\RenderWindow\\RenderWindow.vcxproj",
+        "projectPath": "D:\\github\\Caustic\\Libraries\\Rendering\\RenderWindow\\RenderWindow.vcxproj",
         "frameworks": {
           "native": {
             "projectReferences": {
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Cameras\\CameraBase\\CameraBase.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Cameras\\CameraBase\\CameraBase.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Cameras\\CameraBase\\CameraBase.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Cameras\\CameraBase\\CameraBase.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\ImGui\\ImGui.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\ImGui\\ImGui.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Rendering\\ImGui\\ImGui.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Rendering\\ImGui\\ImGui.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\RendererMarshaller\\RendererMarshaller.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\RendererMarshaller\\RendererMarshaller.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Rendering\\RendererMarshaller\\RendererMarshaller.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Rendering\\RendererMarshaller\\RendererMarshaller.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\RenderGraph\\RenderGraph.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\RenderGraph\\RenderGraph.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Rendering\\RenderGraph\\RenderGraph.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Rendering\\RenderGraph\\RenderGraph.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj"
               }
             }
           }
@@ -591,40 +591,40 @@
         "native": {}
       }
     },
-    "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj": {
+    "D:\\github\\Caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj": {
       "restore": {
-        "projectUniqueName": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj",
+        "projectUniqueName": "D:\\github\\Caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj",
         "projectName": "SceneGraph",
-        "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj",
+        "projectPath": "D:\\github\\Caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj",
         "frameworks": {
           "native": {
             "projectReferences": {
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Math\\Math.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\MeshImport\\MeshImport.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\MeshImport\\MeshImport.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Geometry\\MeshImport\\MeshImport.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\MeshImport\\MeshImport.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Imaging\\Image\\Image.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Parsers\\JSon\\JSon.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Parsers\\JSon\\JSon.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Parsers\\JSon\\JSon.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Parsers\\JSon\\JSon.vcxproj"
               },
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj"
               }
             }
           }
@@ -634,16 +634,16 @@
         "native": {}
       }
     },
-    "D:\\github\\CausticClean\\Caustic\\Tools\\ParseShader\\ParseShader.vcxproj": {
+    "D:\\github\\Caustic\\Tools\\ParseShader\\ParseShader.vcxproj": {
       "restore": {
-        "projectUniqueName": "D:\\github\\CausticClean\\Caustic\\Tools\\ParseShader\\ParseShader.vcxproj",
+        "projectUniqueName": "D:\\github\\Caustic\\Tools\\ParseShader\\ParseShader.vcxproj",
         "projectName": "ParseShader",
-        "projectPath": "D:\\github\\CausticClean\\Caustic\\Tools\\ParseShader\\ParseShader.vcxproj",
+        "projectPath": "D:\\github\\Caustic\\Tools\\ParseShader\\ParseShader.vcxproj",
         "frameworks": {
           "native": {
             "projectReferences": {
-              "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
-                "projectPath": "D:\\github\\CausticClean\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\github\\Caustic\\Libraries\\Base\\Core\\Core.vcxproj"
               }
             }
           }

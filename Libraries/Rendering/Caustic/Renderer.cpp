@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2022
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -25,7 +25,6 @@ import Base.Core.IRefCount;
 import Base.Core.CritSec;
 import Base.Math.BBox;
 import Rendering.Caustic.Texture;
-//import Rendering.Caustic.ITexture;
 import Rendering.Caustic.Renderable;
 import Rendering.Caustic.Sampler;
 import Rendering.Caustic.ShaderMgr;

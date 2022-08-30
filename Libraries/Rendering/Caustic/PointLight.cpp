@@ -23,6 +23,7 @@ namespace Caustic
     // pos - position in world coordinates for the light
     // color - color of the light
     // intensity - intensity of the light
+    // casts - Does this light cast a shadow?
     //
     // Returns:
     // Returns the created point light

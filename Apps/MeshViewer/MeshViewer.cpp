@@ -630,11 +630,11 @@ ImVec2 BuildMenuBar(ImFont *pFont)
 
                     Vector3 lightPos(1000.0f, 1000.0f, 0.0f);
                     FRGBColor lightColor(1.0f, 1.0f, 1.0f);
-                    CRefObj<ILight> spLight(app.m_spCausticFactory->CreatePointLight(lightPos, lightColor, 1.0f));
+                    CRefObj<ILight> spLight(app.m_spCausticFactory->CreatePointLight(lightPos, lightColor, 1.0f, true));
                     spLightCollectionElem->AddLight(spLight);
 
                     Vector3 lightDir(-1.0f, -1.0f, -1.0f);
-                    spLight = app.m_spCausticFactory->CreateDirectionalLight(lightPos, lightDir, lightColor, 1.0f);
+                    spLight = app.m_spCausticFactory->CreateDirectionalLight(lightPos, lightDir, lightColor, 1.0f, true);
                     spLight->SetCastsShadows(true);
                     spLightCollectionElem->AddLight(spLight);
                     spMaterialElem->AddChild(spMeshElem);
@@ -724,7 +724,7 @@ ImVec2 BuildMenuBar(ImFont *pFont)
 
                 Vector3 lightPos(1000.0f, 1000.0f, 0.0f);
                 FRGBColor lightColor(1.0f, 1.0f, 1.0f);
-                CRefObj<ILight> spLight(app.m_spCausticFactory->CreatePointLight(lightPos, lightColor, 1.0f));
+                CRefObj<ILight> spLight(app.m_spCausticFactory->CreatePointLight(lightPos, lightColor, 1.0f, true));
                 spLightCollectionElem->AddLight(spLight);
                 spLightCollectionElem->AddChild(spMaterialElem);
 

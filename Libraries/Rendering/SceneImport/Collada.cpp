@@ -90,6 +90,24 @@ namespace Caustic
         CColladaImporter::ParseElements _elems[] =
         {
             {
+                L"optics.technique_common.perspective.xfov",
+                [this, pCamera](IXMLDOMNode* pNode)
+                {
+                    CComBSTR bstr;
+                    pNode->get_text(&bstr);
+                    pCamera->m_fov = (float)_wtof(bstr);
+                }
+            },
+            {
+                L"optics.technique_common.perspective.aspect_ratio",
+                [this, pCamera](IXMLDOMNode* pNode)
+                {
+                    CComBSTR bstr;
+                    pNode->get_text(&bstr);
+                    pCamera->m_aspectRatio = (float)_wtof(bstr);
+                }
+            },
+            {
                 L"optics.technique_common.perspective.znear",
                 [this, pCamera](IXMLDOMNode* pNode)
                 {
@@ -114,8 +132,145 @@ namespace Caustic
         spCamera.release();
     }
 
-    void CColladaImporter::ParseLight(IXMLDOMNode *pNode)
+    void CColladaImporter::ParseLight(IXMLDOMNode *pNode, std::map<std::wstring, Collada::SLight*>* pLights)
     {
+        Collada::SLight* pLight = new Collada::SLight();
+        std::unique_ptr<Collada::SLight> spLight(pLight);
+
+        CComPtr<IXMLDOMNamedNodeMap> spAttributes;
+        CT(pNode->get_attributes(&spAttributes));
+        ParseAttribute(spAttributes, L"id", pLight->m_id);
+        ParseAttribute(spAttributes, L"name", pLight->m_name);
+
+        CColladaImporter::ParseElements _elems[] =
+        {
+            {
+                L"extra.technique.type",
+                [this, pLight](IXMLDOMNode* pNode)
+                {
+                    CComBSTR bstr;
+                    pNode->get_text(&bstr);
+                    pLight-> m_type = _wtoi(bstr);
+                }
+            },
+            {
+                L"extra.technique.energy",
+                [this, pLight](IXMLDOMNode* pNode)
+                {
+                    CComBSTR bstr;
+                    pNode->get_text(&bstr);
+                    pLight-> m_energy = (float)_wtof(bstr);
+                }
+            },
+            {
+                L"technique_common.point.color",
+                [this, pLight](IXMLDOMNode* pNode)
+                {
+                    CComBSTR bstr;
+                    pNode->get_text(&bstr);
+		            float r, g, b;
+		            swscanf_s(bstr, L"%f %f %f", &r, &g, &b);
+                    pLight->m_color = Vector3(r, g, b);
+                }
+            },
+            {
+                L"technique_common.directional.color",
+                [this, pLight](IXMLDOMNode* pNode)
+                {
+                    CComBSTR bstr;
+                    pNode->get_text(&bstr);
+		            float r, g, b;
+		            swscanf_s(bstr, L"%f %f %f", &r, &g, &b);
+                    pLight->m_color = Vector3(r, g, b);
+                }
+            },
+            {
+                L"technique_common.directional.color",
+                [this, pLight](IXMLDOMNode* pNode)
+                {
+                    CComBSTR bstr;
+                    pNode->get_text(&bstr);
+		            float r, g, b;
+		            swscanf_s(bstr, L"%f %f %f", &r, &g, &b);
+                    pLight->m_color = Vector3(r, g, b);
+                }
+            },
+            {
+                L"technique_common.spot.color",
+                [this, pLight](IXMLDOMNode* pNode)
+                {
+                    CComBSTR bstr;
+                    pNode->get_text(&bstr);
+		            float r, g, b;
+		            swscanf_s(bstr, L"%f %f %f", &r, &g, &b);
+                    pLight->m_color = Vector3(r, g, b);
+                }
+            },
+            {
+                L"technique_common.spot.falloff_angle",
+                [this, pLight](IXMLDOMNode* pNode)
+                {
+                    CComBSTR bstr;
+                    pNode->get_text(&bstr);
+		            pLight->m_angle = (float)_wtof(bstr);
+                }
+            },
+            {
+                L"extra.technique.mode",
+                [this, pLight](IXMLDOMNode* pNode)
+                {
+                    CComBSTR bstr;
+                    pNode->get_text(&bstr);
+		            pLight->m_mode = (uint32)_wtoi(bstr);
+                }
+            },
+            {
+                L"technique_common.point.constant_attenuation",
+                [this, pLight](IXMLDOMNode* pNode)
+                {
+                    CComBSTR bstr;
+                    pNode->get_text(&bstr);
+                    pLight->m_attenuationConstant = (float)_wtof(bstr);
+                }
+            },
+            {
+                L"technique_common.point.linear_attenuation",
+                [this, pLight](IXMLDOMNode* pNode)
+                {
+                    CComBSTR bstr;
+                    pNode->get_text(&bstr);
+                    pLight->m_attenuationLinear = (float)_wtof(bstr);
+                }
+            },
+            {
+                L"technique_common.point.quadratic_attenuation",
+                [this, pLight](IXMLDOMNode* pNode)
+                {
+                    CComBSTR bstr;
+                    pNode->get_text(&bstr);
+                    pLight->m_attenuationQuadratic = (float)_wtof(bstr);
+                }
+            },
+            { nullptr, nullptr }
+        };
+        ParseSubnode(pNode, _elems, nullptr);
+        pLights->insert(std::pair<std::wstring, Collada::SLight*>(pLight->m_id, pLight));
+        spLight.release();
+    }
+
+    void CColladaImporter::ParseLibraryLights(IXMLDOMNode* pNode, std::map<std::wstring, Collada::SLight*>* pLights)
+    {
+        CColladaImporter::ParseElements _elems[] =
+        {
+            { L"light",
+                [this, pLights](IXMLDOMNode* pNode)
+                {
+                    ParseLight(pNode, pLights);
+                }
+            },
+            { nullptr, nullptr }
+        };
+        ParseSubnode(pNode, _elems);
     }
 
     void CColladaImporter::ParseAttribute(IXMLDOMNamedNodeMap *pAttributes, const wchar_t *id, std::wstring &value)
@@ -318,7 +473,7 @@ namespace Caustic
         CComBSTR bstr;
         pNode->get_text(&bstr);
         wchar_t *p = bstr;
-while(*p)//        for (int i = 0; i < pPolylist->m_count; i++)
+        while(*p)//        for (int i = 0; i < pPolylist->m_count; i++)
         {
             int indx = _wtoi(p);
             pPolylist->m_indices.push_back(indx);
@@ -329,19 +484,37 @@ while(*p)//        for (int i = 0; i < pPolylist->m_count; i++)
         }
     }
 
-    void CColladaImporter::ParsePolylist(IXMLDOMNode *pNode, Collada::SMesh *pMesh)
+    void CColladaImporter::ParsePolylist(IXMLDOMNode* pNode, Collada::SMesh* pMesh)
     {
-        Collada::SPolylist *pPolylist = new Collada::SPolylist();
+        Collada::SPolylist* pPolylist = new Collada::SPolylist();
         std::unique_ptr<Collada::SPolylist> spPolylist(pPolylist);
-        
+
         CComPtr<IXMLDOMNamedNodeMap> spAttributes;
         CT(pNode->get_attributes(&spAttributes));
         ParseAttribute(spAttributes, L"count", spPolylist->m_count);
         CColladaImporter::ParseElements _elems[] =
         {
-            { L"input", [this, pPolylist](IXMLDOMNode *pNode) { ParseInput(pNode, &pPolylist->m_inputs); } },
-            { L"vcount", [this, pPolylist](IXMLDOMNode *pNode) { ParseVCount(pNode, pPolylist->m_count); } },
-            { L"p", [this, pPolylist](IXMLDOMNode *pNode) { ParseP(pNode, pPolylist); } },
+            { L"input", [this, pPolylist](IXMLDOMNode* pNode) { ParseInput(pNode, &pPolylist->m_inputs); } },
+            { L"vcount", [this, pPolylist](IXMLDOMNode* pNode) { ParseVCount(pNode, pPolylist->m_count); } },
+            { L"p", [this, pPolylist](IXMLDOMNode* pNode) { ParseP(pNode, pPolylist); } },
+            { nullptr, nullptr }
+        };
+        ParseSubnode(pNode, _elems);
+        pMesh->m_polylists.push_back(spPolylist.release());
+    }
+
+    void CColladaImporter::ParseTriangles(IXMLDOMNode* pNode, Collada::SMesh* pMesh)
+    {
+        Collada::SPolylist* pPolylist = new Collada::SPolylist();
+        std::unique_ptr<Collada::SPolylist> spPolylist(pPolylist);
+
+        CComPtr<IXMLDOMNamedNodeMap> spAttributes;
+        CT(pNode->get_attributes(&spAttributes));
+        ParseAttribute(spAttributes, L"count", spPolylist->m_count);
+        CColladaImporter::ParseElements _elems[] =
+        {
+            { L"input", [this, pPolylist](IXMLDOMNode* pNode) { ParseInput(pNode, &pPolylist->m_inputs); } },
+            { L"p", [this, pPolylist](IXMLDOMNode* pNode) { ParseP(pNode, pPolylist); } },
             { nullptr, nullptr }
         };
         ParseSubnode(pNode, _elems);
@@ -420,9 +593,22 @@ while(*p)//        for (int i = 0; i < pPolylist->m_count; i++)
         std::unique_ptr<Collada::SMesh> spMesh(pMesh);
         CColladaImporter::ParseElements _elems[] =
         {
-            { L"source", [this, pMesh](IXMLDOMNode *pNode) { ParseSource(pNode, &pMesh->m_sources); } },
-            { L"vertices", [this, pMesh](IXMLDOMNode *pNode) { ParseVertices(pNode, &pMesh->m_vertices); } },
-            { L"polylist", [this, pMesh](IXMLDOMNode *pNode) { ParsePolylist(pNode, pMesh); } },
+            { L"source", [this, pMesh](IXMLDOMNode *pNode)
+                { 
+                    ParseSource(pNode, &pMesh->m_sources); 
+                } },
+            { L"vertices", [this, pMesh](IXMLDOMNode *pNode)
+                { 
+                    ParseVertices(pNode, &pMesh->m_vertices);
+                } },
+            { L"polylist", [this, pMesh](IXMLDOMNode* pNode)
+                {
+                    ParsePolylist(pNode, pMesh);
+                } },
+            { L"triangles", [this, pMesh](IXMLDOMNode* pNode)
+                {
+                    ParseTriangles(pNode, pMesh);
+                } },
             { nullptr, nullptr }
         };
         ParseSubnode(pNode, _elems);
@@ -453,7 +639,10 @@ while(*p)//        for (int i = 0; i < pPolylist->m_count; i++)
     {
         CColladaImporter::ParseElements _elems[] = 
         {
-            { L"geometry", [this, geometries](IXMLDOMNode *pNode) { ParseGeometry(pNode, geometries); } },
+            { L"geometry", [this, geometries](IXMLDOMNode *pNode) 
+                { 
+                    ParseGeometry(pNode, geometries); 
+                } },
             { nullptr, nullptr }
         };
         ParseSubnode(pNode, _elems);
@@ -502,7 +691,11 @@ while(*p)//        for (int i = 0; i < pPolylist->m_count; i++)
             { L"matrix", [this, pColladaNode](IXMLDOMNode *pNode) { ParseMatrix(pNode, &pColladaNode->m_mat); } },
             { L"instance_camera", [this, pColladaNode](IXMLDOMNode *pNode) { pColladaNode->m_nodeType = Collada::c_NodeType_Camera; ParseInstance(pNode, &pColladaNode->m_url); } },
             { L"instance_light", [this, pColladaNode](IXMLDOMNode *pNode) { pColladaNode->m_nodeType = Collada::c_NodeType_Light; ParseInstance(pNode, &pColladaNode->m_url); } },
-            { L"instance_geometry", [this, pColladaNode](IXMLDOMNode *pNode) { pColladaNode->m_nodeType = Collada::c_NodeType_Geometry; ParseInstance(pNode, &pColladaNode->m_url); } },
+            { L"instance_geometry", [this, pColladaNode](IXMLDOMNode *pNode)
+            {
+                pColladaNode->m_nodeType = Collada::c_NodeType_Geometry; 
+                ParseInstance(pNode, &pColladaNode->m_url); 
+            } },
             { nullptr, nullptr }
         };
         ParseSubnode(pNode, _Elements);
@@ -549,6 +742,7 @@ while(*p)//        for (int i = 0; i < pPolylist->m_count; i++)
         ParseAttribute(spAttributes, L"url", url);
 
         CRefObj<ISceneGraph> spSceneGraph = Caustic::CSceneFactory::Instance()->CreateSceneGraph();
+        m_spLightCollection = CSceneFactory::Instance()->CreateLightCollectionElem();
 
         Collada::SVisualScene *pScene = pCollada->m_visualScenes[url.substr(1)];
         std::map<std::wstring, Collada::SNode*>::iterator it = pScene->m_nodes.begin();
@@ -565,12 +759,31 @@ while(*p)//        for (int i = 0; i < pPolylist->m_count; i++)
                 break;
             case Collada::c_NodeType_Light:
                 {
-                    CRefObj<Caustic::ISceneGroupElem> spXform = CSceneFactory::Instance()->CreateGroupElem();
-                    spXform->SetName(L"Light");
-                    spXform->SetTransform(pNode->m_mat);
-                    CRefObj<Caustic::ISceneLightCollectionElem> spLight = CSceneFactory::Instance()->CreateLightCollectionElem();
-                    spXform->AddChild(spLight);
-                    spSceneGraph->AddChild(spXform);
+                    Collada::SLight* pLight = pCollada->m_lights[pNode->m_url.substr(1)];
+                    Vector3 dir(0.0f, 0.0f, -1.0f);
+
+                    // Transform the position and direction
+                    Vector4 pos4 = Vector4(pLight->m_pos.x, pLight->m_pos.y, pLight->m_pos.z, 1.0f) * pNode->m_mat;
+                    Vector4 dir4 = Vector4(dir.x, dir.y, dir.z, 0.0f) * pNode->m_mat;
+                    Vector3 pos = Vector3(pos4.x, pos4.y, pos4.z);
+                    dir = Vector3(dir4.x, dir4.y, dir4.z);
+
+		            CRefObj<ILight> spLight;
+                    FRGBColor color(pLight->m_color);
+                    bool castsShadows = (pLight->m_mode & 0x80000) ? true : false;
+		            switch (pLight->m_type)
+		            {
+		            case 0:
+		                spLight = CRefObj<ILight>(CCausticFactory::Instance()->CreatePointLight(pos, color, pLight->m_energy, castsShadows).p);
+			        break;
+		            case 1:
+		                spLight = CCausticFactory::Instance()->CreateDirectionalLight(pos, dir, color, pLight->m_energy, castsShadows);
+			        break;
+		            case 2:
+		                spLight = CCausticFactory::Instance()->CreateSpotLight(pos, dir, color, pLight->m_energy, pLight->m_angle, pLight->m_angle, castsShadows);
+			        break;
+		            }
+                    m_spLightCollection->AddLight(spLight);
                 }
                 break;
             case Collada::c_NodeType_Geometry:
@@ -589,13 +802,14 @@ while(*p)//        for (int i = 0; i < pPolylist->m_count; i++)
                     spMeshElem->SetMesh(spMesh);
 
                     spXform->AddChild(spMeshElem);
-                    spSceneGraph->AddChild(spXform);
+                    m_spLightCollection->AddChild(spXform);
                 }
                 break;
             }
             it++;
         }
 
+        spSceneGraph->AddChild(m_spLightCollection);
         *ppSceneGraph = spSceneGraph;
         (*ppSceneGraph)->AddRef();
     }
@@ -632,7 +846,7 @@ while(*p)//        for (int i = 0; i < pPolylist->m_count; i++)
         CColladaImporter::ParseElements _Elements[] =
         {
             { L"library_cameras", [this, pCollada](IXMLDOMNode* pNode) { ParseLibraryCameras(pNode, &pCollada->m_cameras); } },
-            { L"library_lights", [this](IXMLDOMNode* pNode) {} },
+            { L"library_lights", [this, pCollada](IXMLDOMNode* pNode) { ParseLibraryLights(pNode, &pCollada->m_lights); } },
             { L"library_effects", [this](IXMLDOMNode* pNode) {} },
             { L"library_images", [this](IXMLDOMNode* pNode) {} },
             { L"library_materials", [this](IXMLDOMNode* pNode) {} },

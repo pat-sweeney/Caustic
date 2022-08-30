@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2019
+// Copyright Patrick Sweeney 2019-2022
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -47,26 +47,26 @@ namespace Caustic
     // Defines the implementation of <ICausticFactory>
     //**********************************************************************
     CCausticFactory::CCausticFactory()
-	{
-	}
+    {
+    }
 
     //**********************************************************************
     // Method: ~CCausticFactory
     // Implements the dtor for <CCausticFactory>
     //**********************************************************************
     CCausticFactory::~CCausticFactory()
-	{
-	}
+    {
+    }
 
     //**********************************************************************
     // Method: CreateRenderer
     // See <ICausticFactory::CreateRenderer>
     //**********************************************************************
     CRefObj<IRenderer> CCausticFactory::CreateRenderer(HWND hwnd, BBox2 &viewport, std::wstring &shaderFolder, bool startFrozen /* = false */, int desktopIndex /* = 0 */)
-	{
-		return Caustic::CreateRenderer(hwnd, viewport, shaderFolder, startFrozen, desktopIndex);
-	}
-	
+    {
+        return Caustic::CreateRenderer(hwnd, viewport, shaderFolder, startFrozen, desktopIndex);
+    }
+    
     //**********************************************************************
     // Method: CreatePointCloud
     // See <ICausticFactory::CreatePointCloud>
@@ -81,26 +81,26 @@ namespace Caustic
     // See <ICausticFactory::CreateRenderMesh>
     //**********************************************************************
     CRefObj<IRenderMesh> CCausticFactory::CreateRenderMesh()
-	{
-		return CRefObj<IRenderMesh>(new CRenderMesh());
-	}
+    {
+        return CRefObj<IRenderMesh>(new CRenderMesh());
+    }
 
     //**********************************************************************
     // Method: CreateRenderSubMesh
     // See <ICausticFactory::CreateRenderSubMesh>
     //**********************************************************************
     CRefObj<IRenderSubMesh> CCausticFactory::CreateRenderSubMesh()
-	{
-		return CRefObj<IRenderSubMesh>(new CRenderSubMesh());
-	}
+    {
+        return CRefObj<IRenderSubMesh>(new CRenderSubMesh());
+    }
 
     //**********************************************************************
     // Method: CreatePointLight
     // See <ICausticFactory::CreatePointLight>
     //**********************************************************************
-    CRefObj<IPointLight> CCausticFactory::CreatePointLight(Vector3& pos, FRGBColor& color, float intensity)
+    CRefObj<IPointLight> CCausticFactory::CreatePointLight(Vector3& pos, FRGBColor& color, float intensity, bool castShadows)
     {
-        return Caustic::CreatePointLight(pos, color, intensity);
+        return Caustic::CreatePointLight(pos, color, intensity, castShadows);
     }
 
     //**********************************************************************
@@ -109,16 +109,16 @@ namespace Caustic
     //**********************************************************************
     CRefObj<ISpotLight> CCausticFactory::CreateSpotLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity, float innerAngle, float outerAngle, bool casts)
     {
-        return CreateSpotLight(pos, dir, color, intensity, innerAngle, outerAngle, casts);
+        return Caustic::CreateSpotLight(pos, dir, color, intensity, innerAngle, outerAngle, casts);
     }
 
     //**********************************************************************
     // Method: CreateDirectionalLight
     // See <ICausticFactory::CreateDirectionalLight>
     //**********************************************************************
-    CRefObj<IDirectionalLight> CCausticFactory::CreateDirectionalLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity)
+    CRefObj<IDirectionalLight> CCausticFactory::CreateDirectionalLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity, bool castShadows)
     {
-        return Caustic::CreateDirectionalLight(pos, dir, color, intensity);
+        return Caustic::CreateDirectionalLight(pos, dir, color, intensity, castShadows);
     }
 
     //**********************************************************************
@@ -126,9 +126,9 @@ namespace Caustic
     // See <ICausticFactory::CreateTrackball>
     //**********************************************************************
     CRefObj<ITrackball> CCausticFactory::CreateTrackball()
-	{
-		return Caustic::CreateTrackball();
-	}
+    {
+        return Caustic::CreateTrackball();
+    }
 
     //**********************************************************************
     // Method: CreateMaterialAttrib
@@ -144,36 +144,36 @@ namespace Caustic
     // See <ICausticFactory::CreateRenderMaterial>
     //**********************************************************************
     CRefObj<IRenderMaterial> CCausticFactory::CreateRenderMaterial(IRenderer *pRenderer, IMaterialAttrib *pMaterialAttrib, IShader *pShader)
-	{
-		return Caustic::CreateRenderMaterial(pRenderer, pMaterialAttrib, pShader);
-	}
+    {
+        return Caustic::CreateRenderMaterial(pRenderer, pMaterialAttrib, pShader);
+    }
 
     //**********************************************************************
     // Method: CreateRenderable
     // See <ICausticFactory::CreateRenderable>
     //**********************************************************************
     CRefObj<IRenderable> CCausticFactory::CreateRenderable(IRenderSubMesh *pSubMesh, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat)
-	{
+    {
         return Caustic::CreateRenderable(pSubMesh, pFrontMaterial, pBackMaterial, mat);
-	}
+    }
     
     //**********************************************************************
     // Method: CreateSampler
     // See <ICausticFactory::CreateSampler>
     //**********************************************************************
     CRefObj<ISampler> CCausticFactory::CreateSampler(IRenderer *pRenderer, ITexture *pTexture)
-	{
-		return Caustic::CreateSampler(pRenderer, pTexture);
-	}
+    {
+        return Caustic::CreateSampler(pRenderer, pTexture);
+    }
 
     //**********************************************************************
     // Method: CreateCamera
     // See <ICausticFactory::CreateCamera>
     //**********************************************************************
     CRefObj<ICamera> CCausticFactory::CreateCamera(bool leftHanded)
-	{
-		return Caustic::CreateCamera(leftHanded);
-	}
+    {
+        return Caustic::CreateCamera(leftHanded);
+    }
 
     //**********************************************************************
     // Method: CreateTexture
@@ -216,9 +216,9 @@ namespace Caustic
     // See <ICausticFactory::LoadTexture>
     //**********************************************************************
     CRefObj<ITexture> CCausticFactory::LoadTexture(const wchar_t *pFilename, IRenderer *pRenderer)
-	{
-		return Caustic::LoadTexture(pFilename, pRenderer);
-	}
+    {
+        return Caustic::LoadTexture(pFilename, pRenderer);
+    }
 
     //**********************************************************************
     // Method: LoadVideoTexture

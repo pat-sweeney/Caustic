@@ -40,7 +40,7 @@ namespace Caustic
 
         Caustic::Vector3 pos(0.0f, 0.0f, 0.0f);
         Caustic::FRGBColor clr(1.0f, 1.0f, 1.0f);
-        m_spPointLight = Caustic::CCausticFactory::Instance()->CreatePointLight(pos, clr, 1.0f);
+        m_spPointLight = Caustic::CCausticFactory::Instance()->CreatePointLight(pos, clr, 1.0f, true);
 
         m_spCamera = Caustic::CCausticFactory::Instance()->CreateCamera(true);
         m_spTrackball = Caustic::CCausticFactory::Instance()->CreateTrackball();

@@ -18,6 +18,7 @@ import Base.Core.IRefCount;
 import Base.Math.Vector;
 import Geometry.Mesh.IMeshConstructor;
 import Rendering.SceneGraph.ISceneGraph;
+import Rendering.SceneGraph.ISceneLightCollectionElem;
 
 export namespace Caustic
 {
@@ -195,6 +196,21 @@ export namespace Caustic
             float m_fov;
         };
 
+        struct SLight
+        {
+            std::wstring m_id;
+            std::wstring m_name;
+	    int m_type;
+            Vector3 m_pos;
+            Vector3 m_color;
+	    float m_energy;
+            float m_attenuationConstant;
+            float m_attenuationLinear;
+            float m_attenuationQuadratic;
+            float m_angle;
+            uint32 m_mode;
+        };
+
         struct SGeometry
         {
             std::wstring m_id;
@@ -239,6 +255,7 @@ export namespace Caustic
         struct SCollada
         {
             std::map<std::wstring, SCamera*> m_cameras;
+            std::map<std::wstring, SLight*> m_lights;
             std::map<std::wstring, SGeometry*> m_geometries;
             std::map<std::wstring, SVisualScene*> m_visualScenes;
 
@@ -266,6 +283,7 @@ export namespace Caustic
 
     class CColladaImporter
     {
+        CRefObj<Caustic::ISceneLightCollectionElem> m_spLightCollection;
     public:
         struct ParseElements
         {
@@ -276,7 +294,7 @@ export namespace Caustic
         void ParseSubnode(IXMLDOMNode* pNode, ParseElements* _Elements, const wchar_t* pPrepend);
         void ParseSubnode(IXMLDOMNode* pNode, ParseElements* _Elements);
         void ParseCollada(IXMLDOMNode *pNode, Caustic::ISceneGraph **ppSceneGraph);
-        void ParseLight(IXMLDOMNode *pChild);
+        void ParseLight(IXMLDOMNode *pChild, std::map<std::wstring, Collada::SLight*>* pLights);
         void ParseParam(IXMLDOMNode *pNode, std::vector<Collada::SParam*> *pParams);
         void ParseTechnique(IXMLDOMNode *pChild, Collada::SSource *pSource);
         void ParseAccessor(IXMLDOMNode *pChild, std::vector<Collada::SAccessor*> *pAccessors);
@@ -285,6 +303,7 @@ export namespace Caustic
         void ParsePolylist(IXMLDOMNode *pNode, Collada::SMesh *pMesh);
         void ParseVCount(IXMLDOMNode *pNode, int count);
         void ParseP(IXMLDOMNode *pNode, Collada::SPolylist *pPolylist);
+        void ParseTriangles(IXMLDOMNode* pNode, Collada::SMesh* pMesh);
         void ParseCamera(IXMLDOMNode* pNode, std::map<std::wstring, Collada::SCamera*>* cameras);
         void ParseGeometry(IXMLDOMNode *pNode, std::map<std::wstring, Collada::SGeometry*> *geometries);
         void ParseLibraryGeometries(IXMLDOMNode *pNode, std::map<std::wstring, Collada::SGeometry*> *geometries);
@@ -296,6 +315,7 @@ export namespace Caustic
         void ParseScene(IXMLDOMNode *pNode, Collada::SCollada *pCollada, Caustic::ISceneGraph **ppSceneGraph);
         void ParseLibraryVisualScenes(IXMLDOMNode *pNode, std::map<std::wstring, Collada::SVisualScene*> *pVisualScenes);
         void ParseLibraryCameras(IXMLDOMNode* pNode, std::map<std::wstring, Collada::SCamera*>* cameras);
+        void ParseLibraryLights(IXMLDOMNode* pNode, std::map<std::wstring, Collada::SLight*>* pLights);
         void ParseVisualScene(IXMLDOMNode *pNode, std::map<std::wstring, Collada::SVisualScene*> *pVisualScenes);
         void ParseMesh(IXMLDOMNode *pNode, Collada::SGeometry *pGeom);
         void ParseSource(IXMLDOMNode *pNode, std::map<std::wstring, Collada::SSource*> *pSources);

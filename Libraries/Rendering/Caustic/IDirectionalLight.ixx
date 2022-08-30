@@ -54,6 +54,7 @@ export namespace Caustic
     // dir - direction light is pointing in world coordinates
     // color - color of light
     // intensity - intensity of light
+    // casts - Does this light cast shadows?
     //
     // Module:
     // {Link:import Rendering.Caustic.IDirectionalLight;{Rendering/Caustic/IDirectionalLight.ixx}}

@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2019
+// Copyright Patrick Sweeney 2019-2022
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -123,6 +123,7 @@ export namespace Caustic
 		// pos - position of light source in world coordinates
 		// color - color of light
 		// intensity - light's intensity
+		// castShadows - does light participate in shadow mapping?
 		//
 		// Returns:
 		// Returns the point light source
@@ -130,7 +131,7 @@ export namespace Caustic
 		// Module:
 		// {Link:import Rendering/Caustic/ICausticFactory;{Rendering/Caustic/ICausticFactory.ixx}}
 		//**********************************************************************
-		virtual CRefObj<IPointLight> CreatePointLight(Vector3& pos, FRGBColor& color, float intensity) = 0;
+		virtual CRefObj<IPointLight> CreatePointLight(Vector3& pos, FRGBColor& color, float intensity, bool castShadows) = 0;
 
 		//**********************************************************************
 		// Method: CreateSpotLight
@@ -162,6 +163,7 @@ export namespace Caustic
 		// dir - direction of light source in world coordinates
 		// color - color of light
 		// intensity - light's intensity
+		// castShadows - does light participate in shadow mapping?
 		//
 		// Returns:
 		// Returns the directional light source
@@ -169,7 +171,7 @@ export namespace Caustic
 		// Module:
 		// {Link:import Rendering/Caustic/ICausticFactory;{Rendering/Caustic/ICausticFactory.ixx}}
 		//**********************************************************************
-		virtual CRefObj<IDirectionalLight> CreateDirectionalLight(Vector3 &pos, Vector3& dir, FRGBColor& color, float intensity) = 0;
+		virtual CRefObj<IDirectionalLight> CreateDirectionalLight(Vector3 &pos, Vector3& dir, FRGBColor& color, float intensity, bool castShadows) = 0;
 
 		//**********************************************************************
 		// Method: CreateTrackball

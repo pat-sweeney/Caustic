@@ -26,7 +26,7 @@ export namespace Caustic
         {
             Vector3 lightPos(0.0f, 0.0f, 0.0f);
             FRGBColor lightColor(1.0f, 0.0f, 0.0f);
-            m_spPointLight = Caustic::CCausticFactory::Instance()->CreatePointLight(lightPos, lightColor, 1.0f);
+            m_spPointLight = Caustic::CCausticFactory::Instance()->CreatePointLight(lightPos, lightColor, 1.0f, true);
             CreatePin(this, true, "position", ERenderGraphDataType::Float3, std::any(nullptr));
             CreatePin(this, true, "color", ERenderGraphDataType::Float3, std::any(nullptr));
             CreatePin(this, false, "out", ERenderGraphDataType::Float3, std::any(nullptr));
