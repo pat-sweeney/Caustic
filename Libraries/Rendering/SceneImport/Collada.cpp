@@ -419,7 +419,6 @@ namespace Caustic
         CGeomVertex verts[3];
         for (int i = 0; i < m_count; i++)
         {
-            pMeshConstructor->FaceOpen();
             for (int k = 0; k < 3; k++)
             {
                 CGeomVertex vert;
@@ -428,42 +427,50 @@ namespace Caustic
                     int n = m_indices[index++];
                     if (inputs[j])
                     {
+                        std::wstring sourceName = inputs[j]->m_source.substr(1);
                         if (inputs[j]->m_semantic == L"VERTEX")
                         {
                             // NOTE: Here we assume the source is a <vertices/> tag
-                            vert.pos = pMesh->m_vertices[inputs[j]->m_source.substr(1)]->ReadElement(pMesh, n);
+                            vert.pos = pMesh->m_vertices[sourceName]->ReadElement(pMesh, n);
                         }
                         else if (inputs[j]->m_semantic == L"NORMAL")
                         {
                             // NOTE: Here we assume the source is a <source/> tag
-                            vert.norm = pMesh->m_sources[inputs[j]->m_source.substr(1)]->ReadElement(n);
+                            vert.norm = pMesh->m_sources[sourceName]->ReadElement(n);
+                        }
+                        else if (inputs[j]->m_semantic == L"TEXCOORD")
+                        {
+                            vert.uvs[0] = Vector2(
+                                pMesh->m_sources[sourceName]->m_data[2 * n + 0],
+                                pMesh->m_sources[sourceName]->m_data[2 * n + 1]);
                         }
                     }
                 }
-                Vector2 v(0.0f, 0.0f);
-                pMeshConstructor->VertexAdd(vert.pos, vert.norm, v);
+                verts[k] = vert;
             }
-            pMeshConstructor->FaceClose();
+            pMeshConstructor->FaceOpen();
+#define RESPECT_WINDING_ORDER
 #ifdef RESPECT_WINDING_ORDER
-            verts[i % 3] = vert;
-            if ((i + 1) % 3 == 0)
+            Vector3 n1(verts[0].pos - verts[1].pos);
+            Vector3 n2(verts[2].pos - verts[1].pos);
+            if (n1.Cross(n2).Sign() < 0)
             {
-                Vector3 n1(verts[0].pos - verts[1].pos);
-                Vector3 n2(verts[2].pos - verts[1].pos);
-                if (n1.cross(n2).Sign() < 0)
-                {
-                    spMeshConstructor->VertexAdd(verts[0].pos, verts[0].norm, Vector2(0.0f, 0.0f));
-                    spMeshConstructor->VertexAdd(verts[1].pos, verts[1].norm, Vector2(0.0f, 0.0f));
-                    spMeshConstructor->VertexAdd(verts[2].pos, verts[2].norm, Vector2(0.0f, 0.0f));
-                }
-                else
-                {
-                    spMeshConstructor->VertexAdd(verts[0].pos, verts[0].norm, Vector2(0.0f, 0.0f));
-                    spMeshConstructor->VertexAdd(verts[2].pos, verts[2].norm, Vector2(0.0f, 0.0f));
-                    spMeshConstructor->VertexAdd(verts[1].pos, verts[1].norm, Vector2(0.0f, 0.0f));
-                }
+                pMeshConstructor->VertexAdd(verts[0].pos, verts[0].norm, verts[0].uvs[0]);
+                pMeshConstructor->VertexAdd(verts[1].pos, verts[1].norm, verts[1].uvs[0]);
+                pMeshConstructor->VertexAdd(verts[2].pos, verts[2].norm, verts[2].uvs[0]);
             }
+            else
+            {
+                pMeshConstructor->VertexAdd(verts[0].pos, verts[0].norm, verts[0].uvs[0]);
+                pMeshConstructor->VertexAdd(verts[2].pos, verts[2].norm, verts[2].uvs[0]);
+                pMeshConstructor->VertexAdd(verts[1].pos, verts[1].norm, verts[1].uvs[0]);
+            }
+#else // RESPECT_WINDING_ORDER
+            spMeshConstructor->VertexAdd(verts[0].pos, verts[0].norm, vert[0].uvs[0]);
+            spMeshConstructor->VertexAdd(verts[1].pos, verts[1].norm, vert[1].uvs[0]);
+            spMeshConstructor->VertexAdd(verts[2].pos, verts[2].norm, vert[2].uvs[0]);
 #endif // RESPECT_WINDING_ORDER
+            pMeshConstructor->FaceClose();
         }
         pMeshConstructor->SubMeshClose();
     }
@@ -661,7 +668,7 @@ namespace Caustic
         for (int i = 0; i < 16; i++)
         {
             float f = (float)_wtof(p);
-            pMat->v[i / 4][i % 4] = f;
+            pMat->v[i % 4][i / 4] = f;
             while (*p && !iswspace(*p))
                 p++;
             while (*p && iswspace(*p))
