@@ -200,15 +200,31 @@ export namespace Caustic
         {
             std::wstring m_id;
             std::wstring m_name;
-	    int m_type;
+            int m_type;
             Vector3 m_pos;
             Vector3 m_color;
-	    float m_energy;
+            float m_energy;
             float m_attenuationConstant;
             float m_attenuationLinear;
             float m_attenuationQuadratic;
             float m_angle;
             uint32 m_mode;
+        };
+
+        struct SMaterial
+        {
+            std::wstring m_id;
+            std::wstring m_name;
+            std::wstring m_effectURL;
+        };
+
+        struct SEffect
+        {
+            std::wstring m_id;
+            std::wstring m_name;
+            Vector4 m_emission;
+            Vector4 m_diffuse;
+            float m_indexOfRefraction;
         };
 
         struct SGeometry
@@ -256,6 +272,8 @@ export namespace Caustic
         {
             std::map<std::wstring, SCamera*> m_cameras;
             std::map<std::wstring, SLight*> m_lights;
+            std::map<std::wstring, SMaterial*> m_materials;
+            std::map<std::wstring, SEffect*> m_effects;
             std::map<std::wstring, SGeometry*> m_geometries;
             std::map<std::wstring, SVisualScene*> m_visualScenes;
 
@@ -306,7 +324,11 @@ export namespace Caustic
         void ParseTriangles(IXMLDOMNode* pNode, Collada::SMesh* pMesh);
         void ParseCamera(IXMLDOMNode* pNode, std::map<std::wstring, Collada::SCamera*>* cameras);
         void ParseGeometry(IXMLDOMNode *pNode, std::map<std::wstring, Collada::SGeometry*> *geometries);
-        void ParseLibraryGeometries(IXMLDOMNode *pNode, std::map<std::wstring, Collada::SGeometry*> *geometries);
+        void ParseLibraryGeometries(IXMLDOMNode* pNode, std::map<std::wstring, Collada::SGeometry*>* geometries);
+        void ParseLibraryMaterials(IXMLDOMNode* pNode, std::map<std::wstring, Collada::SMaterial*>* pMaterials);
+        void ParseMaterial(IXMLDOMNode* pNode, std::map<std::wstring, Collada::SMaterial*>* pMaterials);
+        void ParseLibraryEffects(IXMLDOMNode* pNode, std::map<std::wstring, Collada::SEffect*>* pEffects);
+        void ParseEffect(IXMLDOMNode* pNode, std::map<std::wstring, Collada::SEffect*>* pEffects);
         void ParseFloatArray(IXMLDOMNode *pChild, Collada::SSource *pSource);
         void ParseMatrix(IXMLDOMNode *pNode, Matrix4x4 *pMat);
         void ParseInstance(IXMLDOMNode *pNode, std::wstring *pURL);

@@ -150,7 +150,7 @@ namespace Caustic
                 {
                     CComBSTR bstr;
                     pNode->get_text(&bstr);
-                    pLight-> m_type = _wtoi(bstr);
+                    pLight->m_type = _wtoi(bstr);
                 }
             },
             {
@@ -159,7 +159,7 @@ namespace Caustic
                 {
                     CComBSTR bstr;
                     pNode->get_text(&bstr);
-                    pLight-> m_energy = (float)_wtof(bstr);
+                    pLight->m_energy = (float)_wtof(bstr);
                 }
             },
             {
@@ -168,8 +168,8 @@ namespace Caustic
                 {
                     CComBSTR bstr;
                     pNode->get_text(&bstr);
-		            float r, g, b;
-		            swscanf_s(bstr, L"%f %f %f", &r, &g, &b);
+                    float r, g, b;
+                    swscanf_s(bstr, L"%f %f %f", &r, &g, &b);
                     pLight->m_color = Vector3(r, g, b);
                 }
             },
@@ -179,8 +179,8 @@ namespace Caustic
                 {
                     CComBSTR bstr;
                     pNode->get_text(&bstr);
-		            float r, g, b;
-		            swscanf_s(bstr, L"%f %f %f", &r, &g, &b);
+                    float r, g, b;
+                    swscanf_s(bstr, L"%f %f %f", &r, &g, &b);
                     pLight->m_color = Vector3(r, g, b);
                 }
             },
@@ -190,8 +190,8 @@ namespace Caustic
                 {
                     CComBSTR bstr;
                     pNode->get_text(&bstr);
-		            float r, g, b;
-		            swscanf_s(bstr, L"%f %f %f", &r, &g, &b);
+                    float r, g, b;
+                    swscanf_s(bstr, L"%f %f %f", &r, &g, &b);
                     pLight->m_color = Vector3(r, g, b);
                 }
             },
@@ -201,8 +201,8 @@ namespace Caustic
                 {
                     CComBSTR bstr;
                     pNode->get_text(&bstr);
-		            float r, g, b;
-		            swscanf_s(bstr, L"%f %f %f", &r, &g, &b);
+                    float r, g, b;
+                    swscanf_s(bstr, L"%f %f %f", &r, &g, &b);
                     pLight->m_color = Vector3(r, g, b);
                 }
             },
@@ -212,7 +212,7 @@ namespace Caustic
                 {
                     CComBSTR bstr;
                     pNode->get_text(&bstr);
-		            pLight->m_angle = (float)_wtof(bstr);
+                    pLight->m_angle = (float)_wtof(bstr);
                 }
             },
             {
@@ -221,7 +221,7 @@ namespace Caustic
                 {
                     CComBSTR bstr;
                     pNode->get_text(&bstr);
-		            pLight->m_mode = (uint32)_wtoi(bstr);
+                    pLight->m_mode = (uint32)_wtoi(bstr);
                 }
             },
             {
@@ -258,6 +258,49 @@ namespace Caustic
         spLight.release();
     }
 
+    void CColladaImporter::ParseMaterial(IXMLDOMNode* pNode, std::map<std::wstring, Collada::SMaterial*>* pMaterials)
+    {
+        Collada::SMaterial* pMaterial = new Collada::SMaterial();
+        std::unique_ptr<Collada::SMaterial> spMaterial(pMaterial);
+
+        CComPtr<IXMLDOMNamedNodeMap> spAttributes;
+        CT(pNode->get_attributes(&spAttributes));
+        ParseAttribute(spAttributes, L"id", pMaterial->m_id);
+        ParseAttribute(spAttributes, L"name", pMaterial->m_name);
+
+        CColladaImporter::ParseElements _elems[] =
+        {
+            {
+                L"instance_effect",
+                [this, pMaterial](IXMLDOMNode* pNode)
+                {
+                    CComPtr<IXMLDOMNamedNodeMap> spNodeAttributes;
+                    CT(pNode->get_attributes(&spNodeAttributes));
+                    ParseAttribute(spNodeAttributes, L"url", pMaterial->m_effectURL);
+                }
+            },
+            { nullptr, nullptr }
+        };
+        ParseSubnode(pNode, _elems, nullptr);
+        pMaterials->insert(std::pair<std::wstring, Collada::SMaterial*>(pMaterial->m_id, pMaterial));
+        spMaterial.release();
+    }
+
+    void CColladaImporter::ParseLibraryMaterials(IXMLDOMNode* pNode, std::map<std::wstring, Collada::SMaterial*>* pMaterials)
+    {
+        CColladaImporter::ParseElements _elems[] =
+        {
+            { L"material",
+                [this, pMaterials](IXMLDOMNode* pNode)
+                {
+                    ParseMaterial(pNode, pMaterials);
+                }
+            },
+            { nullptr, nullptr }
+        };
+        ParseSubnode(pNode, _elems);
+    }
+    
     void CColladaImporter::ParseLibraryLights(IXMLDOMNode* pNode, std::map<std::wstring, Collada::SLight*>* pLights)
     {
         CColladaImporter::ParseElements _elems[] =
@@ -449,7 +492,7 @@ namespace Caustic
                 verts[k] = vert;
             }
             pMeshConstructor->FaceOpen();
-#define RESPECT_WINDING_ORDER
+//#define RESPECT_WINDING_ORDER
 #ifdef RESPECT_WINDING_ORDER
             Vector3 n1(verts[0].pos - verts[1].pos);
             Vector3 n2(verts[2].pos - verts[1].pos);
@@ -466,9 +509,9 @@ namespace Caustic
                 pMeshConstructor->VertexAdd(verts[1].pos, verts[1].norm, verts[1].uvs[0]);
             }
 #else // RESPECT_WINDING_ORDER
-            spMeshConstructor->VertexAdd(verts[0].pos, verts[0].norm, vert[0].uvs[0]);
-            spMeshConstructor->VertexAdd(verts[1].pos, verts[1].norm, vert[1].uvs[0]);
-            spMeshConstructor->VertexAdd(verts[2].pos, verts[2].norm, vert[2].uvs[0]);
+            pMeshConstructor->VertexAdd(verts[0].pos, verts[0].norm, verts[0].uvs[0]);
+            pMeshConstructor->VertexAdd(verts[2].pos, verts[2].norm, verts[2].uvs[0]);
+            pMeshConstructor->VertexAdd(verts[1].pos, verts[1].norm, verts[1].uvs[0]);
 #endif // RESPECT_WINDING_ORDER
             pMeshConstructor->FaceClose();
         }
@@ -775,21 +818,21 @@ namespace Caustic
                     Vector3 pos = Vector3(pos4.x, pos4.y, pos4.z);
                     dir = Vector3(dir4.x, dir4.y, dir4.z);
 
-		            CRefObj<ILight> spLight;
-                    FRGBColor color(pLight->m_color);
-                    bool castsShadows = (pLight->m_mode & 0x80000) ? true : false;
-		            switch (pLight->m_type)
-		            {
-		            case 0:
-		                spLight = CRefObj<ILight>(CCausticFactory::Instance()->CreatePointLight(pos, color, pLight->m_energy, castsShadows).p);
-			        break;
-		            case 1:
-		                spLight = CCausticFactory::Instance()->CreateDirectionalLight(pos, dir, color, pLight->m_energy, castsShadows);
-			        break;
-		            case 2:
-		                spLight = CCausticFactory::Instance()->CreateSpotLight(pos, dir, color, pLight->m_energy, pLight->m_angle, pLight->m_angle, castsShadows);
-			        break;
-		            }
+                    CRefObj<ILight> spLight;
+                    FRGBColor color(pLight->m_color.x / pLight->m_energy, pLight->m_color.y / pLight->m_energy, pLight->m_color.z / pLight->m_energy);
+                    bool castsShadows = (pLight->m_mode & 0x1) ? true : false;
+                    switch (pLight->m_type)
+                    {
+                    case 0:
+                        spLight = CRefObj<ILight>(CCausticFactory::Instance()->CreatePointLight(pos, color, pLight->m_energy, castsShadows).p);
+                    break;
+                    case 1:
+                        spLight = CCausticFactory::Instance()->CreateDirectionalLight(pos, dir, color, pLight->m_energy, castsShadows);
+                    break;
+                    case 2:
+                        spLight = CCausticFactory::Instance()->CreateSpotLight(pos, dir, color, pLight->m_energy, pLight->m_angle, pLight->m_angle, castsShadows);
+                    break;
+                    }
                     m_spLightCollection->AddLight(spLight);
                 }
                 break;
@@ -837,8 +880,78 @@ namespace Caustic
         {
             { L"camera",
                 [this, cameras](IXMLDOMNode* pNode)
-                { 
+                {
                     ParseCamera(pNode, cameras);
+                }
+            },
+            { nullptr, nullptr }
+        };
+        ParseSubnode(pNode, _elems);
+    }
+
+    void CColladaImporter::ParseEffect(IXMLDOMNode* pNode, std::map<std::wstring, Collada::SEffect*>* pEffects)
+    {
+        Collada::SEffect* pEffect = new Collada::SEffect();
+        std::unique_ptr<Collada::SEffect> spEffect(pEffect);
+
+        CComPtr<IXMLDOMNamedNodeMap> spAttributes;
+        CT(pNode->get_attributes(&spAttributes));
+        ParseAttribute(spAttributes, L"id", pEffect->m_id);
+        ParseAttribute(spAttributes, L"name", pEffect->m_name);
+
+        CColladaImporter::ParseElements _elems[] =
+        {
+            {
+                L"profile_COMMON.technique.lambert.emission.color",
+                [this, pEffect](IXMLDOMNode* pNode)
+                {
+                    CComBSTR bstr;
+                    pNode->get_text(&bstr);
+                    swscanf_s(bstr, L"%f %f %f %f",
+                        &pEffect->m_emission.x,
+                        &pEffect->m_emission.y,
+                        &pEffect->m_emission.z,
+                        &pEffect->m_emission.w);
+                }
+            },
+            {
+                L"profile_COMMON.technique.lambert.diffuse.color",
+                [this, pEffect](IXMLDOMNode* pNode)
+                {
+                    CComBSTR bstr;
+                    pNode->get_text(&bstr);
+                    swscanf_s(bstr, L"%f %f %f %f",
+                        &pEffect->m_diffuse.x,
+                        &pEffect->m_diffuse.y,
+                        &pEffect->m_diffuse.z,
+                        &pEffect->m_diffuse.w);
+                }
+            },
+            {
+                L"profile_COMMON.technique.lambert.index_of_refraction.float",
+                [this, pEffect](IXMLDOMNode* pNode)
+                {
+                    CComBSTR bstr;
+                    pNode->get_text(&bstr);
+                    pEffect->m_indexOfRefraction = (float)_wtof(bstr);
+                }
+            },
+            {nullptr, nullptr}
+        };
+        ParseSubnode(pNode, _elems, nullptr);
+
+        pEffects->insert(std::pair<std::wstring, Collada::SEffect*>(pEffect->m_id, pEffect));
+        spEffect.release();
+    }
+    
+    void CColladaImporter::ParseLibraryEffects(IXMLDOMNode* pNode, std::map<std::wstring, Collada::SEffect*>* pEffects)
+    {
+        CColladaImporter::ParseElements _elems[] =
+        {
+            { L"effect",
+                [this, pEffects](IXMLDOMNode* pNode)
+                {
+                    ParseEffect(pNode, pEffects);
                 }
             },
             { nullptr, nullptr }
@@ -854,9 +967,9 @@ namespace Caustic
         {
             { L"library_cameras", [this, pCollada](IXMLDOMNode* pNode) { ParseLibraryCameras(pNode, &pCollada->m_cameras); } },
             { L"library_lights", [this, pCollada](IXMLDOMNode* pNode) { ParseLibraryLights(pNode, &pCollada->m_lights); } },
-            { L"library_effects", [this](IXMLDOMNode* pNode) {} },
+            { L"library_effects", [this, pCollada](IXMLDOMNode* pNode) { ParseLibraryEffects(pNode, &pCollada->m_effects); } },
             { L"library_images", [this](IXMLDOMNode* pNode) {} },
-            { L"library_materials", [this](IXMLDOMNode* pNode) {} },
+            { L"library_materials", [this, pCollada](IXMLDOMNode* pNode) { ParseLibraryMaterials(pNode, &pCollada->m_materials); } },
             { L"library_geometries", [this, pCollada](IXMLDOMNode *pNode) { ParseLibraryGeometries(pNode, &pCollada->m_geometries); } },
             { L"library_visual_scenes", [this, pCollada](IXMLDOMNode *pNode) { ParseLibraryVisualScenes(pNode, &pCollada->m_visualScenes); } },
             { L"scene", [this, pCollada, ppSceneGraph](IXMLDOMNode *pNode) { ParseScene(pNode, pCollada, ppSceneGraph); } },

@@ -59,7 +59,8 @@ public:
     int nodeCounter;
     int selectedNode;
     std::function<void()> fillInspectorFunc;
-    std::string fillInspectorTitle;
+    std::string objName;
+    std::string objType;
 
     CApp()
     {
@@ -68,20 +69,6 @@ public:
     void InitializeCaustic(HWND hwnd);
 };
 CApp app;
-
-static void HelpMarker(const char* desc)
-{
-    ImGui::TextDisabled("(?)");
-    if (ImGui::IsItemHovered())
-    {
-        ImGui::BeginTooltip();
-        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-        ImGui::TextUnformatted(desc);
-        ImGui::PopTextWrapPos();
-        ImGui::EndTooltip();
-    }
-    ImGui::SameLine();
-}
 
 //**********************************************************************
 // Function: FillInspector_Elem
@@ -444,7 +431,9 @@ void BuildCollapsableNode(ISceneGraph* pSceneGraph, ISceneElem *pElem, bool isLe
             pSceneGraph->SelectObject(pElem);
         }
         app.fillInspectorFunc = onSelect;
-        app.fillInspectorTitle = std::string(pDefaultName);
+        app.objType = std::string(pDefaultName);
+        if (pElem)
+            app.objName = Caustic::wstr2str(pElem->GetName());
         app.selectedNode = nodeCounter;
     }
 }
@@ -514,7 +503,7 @@ void BuildGroupUI(ISceneGraph* pSceneGraph, ISceneGroupElem* pGroup, const char 
                                 BuildCollapsableNode(pSceneGraph, nullptr, true, lightName.c_str(),
                                     nullptr, [spLight, i]() { FillInspector_Light(spLight.p, i); });
                             }
-                            BuildGroupUI(pSceneGraph, static_cast<ISceneGroupElem*>(pCollection), "Children", nullptr);
+                            BuildGroupUI(pSceneGraph, static_cast<ISceneGroupElem*>(pCollection), "Group", nullptr);
                         },
                         [spChild]() { FillInspector_LightCollection((ISceneLightCollectionElem*)spChild.p); });
                     break;
@@ -558,7 +547,7 @@ ImVec2 BuildMenuBar(ImFont *pFont)
         {
             if (ImGui::MenuItem("Load Scene..."))
             {
-                wchar_t fn[MAX_PATH + 1] = { 0 };
+                wchar_t fn[1024] = { 0 };
                 OPENFILENAME ofn;
                 ZeroMemory(&ofn, sizeof(ofn));
                 ofn.lStructSize = sizeof(OPENFILENAME);
@@ -814,9 +803,12 @@ void BuildPanels(ITexture *pFinalRT, ImFont *pFont)
     BuildGroupUI(spSceneGraph, spSceneGraph, "SceneGraphRoot", [spSceneGraph]() { FillInspector_SceneGraph(spSceneGraph.p); });
     ImGui::End();
 
-    std::string inspectorTitle = "Inspector###Inspector";
-    if (app.fillInspectorTitle.length() > 0)
-        inspectorTitle = std::string("Inspector (") + app.fillInspectorTitle + std::string(")###Inspector");
+    std::string inspectorTitle = "Inspector";
+    if (app.objName.length() > 0)
+        inspectorTitle += std::string(" - \"") + app.objName + std::string("\"");
+    if (app.objType.length() > 0)
+        inspectorTitle += std::string(" (") + app.objType + std::string(")");
+    inspectorTitle += "###Inspector";
     ImGui::Begin(inspectorTitle.c_str());
     if (app.fillInspectorFunc)
         app.fillInspectorFunc();
