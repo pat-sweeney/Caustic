@@ -77,7 +77,7 @@ namespace Caustic
         }
     }
 
-    void CColladaImporter::ParseCamera(IXMLDOMNode *pNode, std::map<std::wstring, Collada::SCamera*>* cameras)
+    void CColladaImporter::ParseCamera(IXMLDOMNode *pNode, std::map<std::wstring, std::unique_ptr<Collada::SCamera>>* cameras)
     {
         Collada::SCamera* pCamera = new Collada::SCamera();
         std::unique_ptr<Collada::SCamera> spCamera(pCamera);
@@ -128,11 +128,10 @@ namespace Caustic
             { nullptr, nullptr }
         };
         ParseSubnode(pNode, _elems, nullptr);
-        cameras->insert(std::pair<std::wstring, Collada::SCamera*>(pCamera->m_id, pCamera));
-        spCamera.release();
+        cameras->insert(std::pair<std::wstring, std::unique_ptr<Collada::SCamera>>(pCamera->m_id, std::move(spCamera)));
     }
 
-    void CColladaImporter::ParseLight(IXMLDOMNode *pNode, std::map<std::wstring, Collada::SLight*>* pLights)
+    void CColladaImporter::ParseLight(IXMLDOMNode *pNode, std::map<std::wstring, std::unique_ptr<Collada::SLight>>* pLights)
     {
         Collada::SLight* pLight = new Collada::SLight();
         std::unique_ptr<Collada::SLight> spLight(pLight);
@@ -254,11 +253,10 @@ namespace Caustic
             { nullptr, nullptr }
         };
         ParseSubnode(pNode, _elems, nullptr);
-        pLights->insert(std::pair<std::wstring, Collada::SLight*>(pLight->m_id, pLight));
-        spLight.release();
+        pLights->insert(std::pair<std::wstring, std::unique_ptr<Collada::SLight>>(pLight->m_id, std::move(spLight)));
     }
 
-    void CColladaImporter::ParseMaterial(IXMLDOMNode* pNode, std::map<std::wstring, Collada::SMaterial*>* pMaterials)
+    void CColladaImporter::ParseMaterial(IXMLDOMNode* pNode, std::map<std::wstring, std::unique_ptr<Collada::SMaterial>>* pMaterials)
     {
         Collada::SMaterial* pMaterial = new Collada::SMaterial();
         std::unique_ptr<Collada::SMaterial> spMaterial(pMaterial);
@@ -282,11 +280,10 @@ namespace Caustic
             { nullptr, nullptr }
         };
         ParseSubnode(pNode, _elems, nullptr);
-        pMaterials->insert(std::pair<std::wstring, Collada::SMaterial*>(pMaterial->m_id, pMaterial));
-        spMaterial.release();
+        pMaterials->insert(std::pair<std::wstring, std::unique_ptr<Collada::SMaterial>>(pMaterial->m_id, std::move(spMaterial)));
     }
 
-    void CColladaImporter::ParseLibraryMaterials(IXMLDOMNode* pNode, std::map<std::wstring, Collada::SMaterial*>* pMaterials)
+    void CColladaImporter::ParseLibraryMaterials(IXMLDOMNode* pNode, std::map<std::wstring, std::unique_ptr<Collada::SMaterial>>* pMaterials)
     {
         CColladaImporter::ParseElements _elems[] =
         {
@@ -301,7 +298,7 @@ namespace Caustic
         ParseSubnode(pNode, _elems);
     }
     
-    void CColladaImporter::ParseLibraryLights(IXMLDOMNode* pNode, std::map<std::wstring, Collada::SLight*>* pLights)
+    void CColladaImporter::ParseLibraryLights(IXMLDOMNode* pNode, std::map<std::wstring, std::unique_ptr<Collada::SLight>>* pLights)
     {
         CColladaImporter::ParseElements _elems[] =
         {
@@ -383,7 +380,7 @@ namespace Caustic
         }
     }
 
-    void CColladaImporter::ParseInput(IXMLDOMNode *pNode, std::vector<Collada::SInput*> *pInputs)
+    void CColladaImporter::ParseInput(IXMLDOMNode *pNode, std::vector<std::unique_ptr<Collada::SInput>> *pInputs)
     {
         std::unique_ptr<Collada::SInput> spInput(new Collada::SInput());
         CComPtr<IXMLDOMNamedNodeMap> spAttributes;
@@ -391,10 +388,10 @@ namespace Caustic
         ParseAttribute(spAttributes, L"semantic", spInput->m_semantic);
         ParseAttribute(spAttributes, L"source", spInput->m_source);
         ParseAttribute(spAttributes, L"offset", spInput->m_offset);
-        pInputs->push_back(spInput.release());
+        pInputs->push_back(std::move(spInput));
     }
     
-    void CColladaImporter::ParseVertices(IXMLDOMNode *pNode, std::map<std::wstring, Collada::SVertex*> *pVertices)
+    void CColladaImporter::ParseVertices(IXMLDOMNode *pNode, std::map<std::wstring, std::unique_ptr<Collada::SVertex>> *pVertices)
     {
         Collada::SVertex *pVertex = new Collada::SVertex();
         std::unique_ptr<Collada::SVertex> spVertex(pVertex);
@@ -407,8 +404,7 @@ namespace Caustic
             { nullptr, nullptr }
         };
         ParseSubnode(pNode, _elems);
-        pVertices->insert(std::pair<std::wstring, Collada::SVertex*>(pVertex->m_id, pVertex));
-        spVertex.release();
+        pVertices->insert(std::pair<std::wstring, std::unique_ptr<Collada::SVertex>>(pVertex->m_id, std::move(spVertex)));
     }
 
     void CColladaImporter::ParseVCount(IXMLDOMNode *pNode, int count)
@@ -430,8 +426,8 @@ namespace Caustic
     Vector3 Collada::SSource::ReadElement(int index)
     {
         // Here we assume all our accessors describe Vector3
-        _ASSERTE(m_pTechnique->m_accessors.size() == 1);
-        _ASSERTE(m_pTechnique->m_accessors[0]->m_stride == 3);
+        _ASSERTE(m_spTechnique->m_accessors.size() == 1);
+        _ASSERTE(m_spTechnique->m_accessors[0]->m_stride == 3);
         Vector3 v;
         v.x = m_data[index * 3 + 0];
         v.y = m_data[index * 3 + 1];
@@ -454,7 +450,7 @@ namespace Caustic
         {
             if (m_inputs[j]->m_offset >= inputs.size())
                 inputs.resize(m_inputs[j]->m_offset, nullptr);
-            inputs[m_inputs[j]->m_offset] = m_inputs[j];
+            inputs[m_inputs[j]->m_offset] = m_inputs[j].get();
         }
 
         pMeshConstructor->SubMeshOpen();
@@ -550,7 +546,7 @@ namespace Caustic
             { nullptr, nullptr }
         };
         ParseSubnode(pNode, _elems);
-        pMesh->m_polylists.push_back(spPolylist.release());
+        pMesh->m_polylists.push_back(std::move(spPolylist));
     }
 
     void CColladaImporter::ParseTriangles(IXMLDOMNode* pNode, Collada::SMesh* pMesh)
@@ -568,10 +564,10 @@ namespace Caustic
             { nullptr, nullptr }
         };
         ParseSubnode(pNode, _elems);
-        pMesh->m_polylists.push_back(spPolylist.release());
+        pMesh->m_polylists.push_back(std::move(spPolylist));
     }
 
-    void CColladaImporter::ParseParam(IXMLDOMNode *pNode, std::vector<Collada::SParam*> *pParams)
+    void CColladaImporter::ParseParam(IXMLDOMNode *pNode, std::vector<std::unique_ptr<Collada::SParam>> *pParams)
     {
         Collada::SParam *pParam = new Collada::SParam();
         std::unique_ptr<Collada::SParam> spParam(pParam);
@@ -581,10 +577,10 @@ namespace Caustic
         ParseAttribute(spAttributes, L"name", pParam->m_name);
         ParseAttribute(spAttributes, L"type", pParam->m_type);
 
-        pParams->push_back(spParam.release());
+        pParams->push_back(std::move(spParam));
     }
 
-    void CColladaImporter::ParseAccessor(IXMLDOMNode *pNode, std::vector<Collada::SAccessor*> *pAccessors)
+    void CColladaImporter::ParseAccessor(IXMLDOMNode *pNode, std::vector<std::unique_ptr<Collada::SAccessor>> *pAccessors)
     {
         Collada::SAccessor *pAccessor = new Collada::SAccessor();
         std::unique_ptr<Collada::SAccessor> spAccessor(pAccessor);
@@ -601,7 +597,7 @@ namespace Caustic
             { nullptr, nullptr }
         };
         ParseSubnode(pNode, _elems);
-        pAccessors->push_back(spAccessor.release());
+        pAccessors->push_back(std::move(spAccessor));
     }
 
     void CColladaImporter::ParseTechnique(IXMLDOMNode *pNode, Collada::SSource *pSource)
@@ -614,10 +610,10 @@ namespace Caustic
             { nullptr, nullptr }
         };
         ParseSubnode(pNode, _elems);
-        pSource->m_pTechnique = spTechnique.release();
+        pSource->m_spTechnique = std::move(spTechnique);
     }
 
-    void CColladaImporter::ParseSource(IXMLDOMNode *pNode, std::map<std::wstring, Collada::SSource*> *pSources)
+    void CColladaImporter::ParseSource(IXMLDOMNode *pNode, std::map<std::wstring, std::unique_ptr<Collada::SSource>> *pSources)
     {
         Collada::SSource *pSource = new Collada::SSource();
         std::unique_ptr<Collada::SSource> spSource(pSource);
@@ -633,8 +629,7 @@ namespace Caustic
             { nullptr, nullptr }
         };
         ParseSubnode(pNode, _elems);
-        pSources->insert(std::pair<std::wstring, Collada::SSource*>(spSource->m_id, spSource.get()));
-        spSource.release();
+        pSources->insert(std::pair<std::wstring, std::unique_ptr<Collada::SSource>>(spSource->m_id, std::move(spSource)));
     }
 
     void CColladaImporter::ParseMesh(IXMLDOMNode *pNode, Collada::SGeometry *pGeom)
@@ -662,10 +657,10 @@ namespace Caustic
             { nullptr, nullptr }
         };
         ParseSubnode(pNode, _elems);
-        pGeom->m_pMesh = spMesh.release();
+        pGeom->m_spMesh = std::move(spMesh);
     }
 
-    void CColladaImporter::ParseGeometry(IXMLDOMNode *pNode, std::map<std::wstring, Collada::SGeometry*> *geometries)
+    void CColladaImporter::ParseGeometry(IXMLDOMNode *pNode, std::map<std::wstring, std::unique_ptr<Collada::SGeometry>> *geometries)
     {
         Collada::SGeometry *pGeom = new Collada::SGeometry();
         std::unique_ptr<Collada::SGeometry> spGeom(pGeom);
@@ -681,11 +676,10 @@ namespace Caustic
             { nullptr, nullptr }
         };
         ParseSubnode(pNode, _elems);
-        geometries->insert(std::pair<std::wstring, Collada::SGeometry*>(pGeom->m_id, pGeom));
-        spGeom.release();
+        geometries->insert(std::pair<std::wstring, std::unique_ptr<Collada::SGeometry>>(pGeom->m_id, std::move(spGeom)));
     }
 
-    void CColladaImporter::ParseLibraryGeometries(IXMLDOMNode *pNode, std::map<std::wstring, Collada::SGeometry*> *geometries)
+    void CColladaImporter::ParseLibraryGeometries(IXMLDOMNode *pNode, std::map<std::wstring, std::unique_ptr<Collada::SGeometry>> *geometries)
     {
         CColladaImporter::ParseElements _elems[] = 
         {
@@ -726,7 +720,7 @@ namespace Caustic
         ParseAttribute(spAttributes, L"url", *pURL);
     }
 
-    void CColladaImporter::ParseNode(IXMLDOMNode *pNode, std::map<std::wstring, Collada::SNode*> *pNodes)
+    void CColladaImporter::ParseNode(IXMLDOMNode *pNode, Collada::SCollada* pCollada, std::map<std::wstring, std::unique_ptr<Collada::SNode>> *pNodes)
     {
         Collada::SNode *pColladaNode = new Collada::SNode();
         std::unique_ptr<Collada::SNode> spColladaNode(pColladaNode);
@@ -739,21 +733,65 @@ namespace Caustic
         CColladaImporter::ParseElements _Elements[] =
         {
             { L"matrix", [this, pColladaNode](IXMLDOMNode *pNode) { ParseMatrix(pNode, &pColladaNode->m_mat); } },
-            { L"instance_camera", [this, pColladaNode](IXMLDOMNode *pNode) { pColladaNode->m_nodeType = Collada::c_NodeType_Camera; ParseInstance(pNode, &pColladaNode->m_url); } },
-            { L"instance_light", [this, pColladaNode](IXMLDOMNode *pNode) { pColladaNode->m_nodeType = Collada::c_NodeType_Light; ParseInstance(pNode, &pColladaNode->m_url); } },
-            { L"instance_geometry", [this, pColladaNode](IXMLDOMNode *pNode)
+            { L"instance_camera", [this, pColladaNode](IXMLDOMNode *pNode) 
+                { 
+                    pColladaNode->m_nodeType = Collada::c_NodeType_Camera;
+                    ParseInstance(pNode, &pColladaNode->m_url);
+                }
+            },
+            { L"instance_light", [this, pColladaNode](IXMLDOMNode *pNode)
+                {
+                    pColladaNode->m_nodeType = Collada::c_NodeType_Light;
+                    ParseInstance(pNode, &pColladaNode->m_url);
+                }
+            },
+            { L"instance_geometry", [this, pCollada, pColladaNode](IXMLDOMNode *pNode)
             {
                 pColladaNode->m_nodeType = Collada::c_NodeType_Geometry; 
-                ParseInstance(pNode, &pColladaNode->m_url); 
+                ParseInstance(pNode, &pColladaNode->m_url);
+                CColladaImporter::ParseElements elems[] =
+                {
+                    { L"bind_material.technique_common.instance_material",
+                    [this, pCollada, pColladaNode](IXMLDOMNode* pNode)
+                    {
+                        CComPtr<IXMLDOMNamedNodeMap> spAttributes;
+                        CT(pNode->get_attributes(&spAttributes));
+                        pColladaNode->m_spMaterialInstance = std::unique_ptr<Collada::SMaterialInstance>(new Collada::SMaterialInstance());
+                        ParseAttribute(spAttributes, L"target", pColladaNode->m_spMaterialInstance->m_targetURL);
+                        ParseAttribute(spAttributes, L"symbol", pColladaNode->m_spMaterialInstance->m_symbol);
+                        CColladaImporter::ParseElements elems[] =
+                        {
+                            { L"bind_vertex_input",
+                                [this, pCollada, pColladaNode](IXMLDOMNode* pNode)
+                                {
+                                    std::unique_ptr<Collada::VertexBinding> spBinding(new Collada::VertexBinding());
+                                    CComPtr<IXMLDOMNamedNodeMap> spAttributes2;
+                                    CT(pNode->get_attributes(&spAttributes2));
+                                    ParseAttribute(spAttributes2, L"semantic", spBinding->m_semantic);
+                                    ParseAttribute(spAttributes2, L"input_semantic", spBinding->m_inputSemantic);
+                                    ParseAttribute(spAttributes2, L"input_set", spBinding->m_inputSet);
+                                    pColladaNode->m_spMaterialInstance->m_vertexBindings.push_back(std::move(spBinding));
+                                }
+                            },
+                            { nullptr, nullptr }
+                        };
+                        ParseSubnode(pNode, elems, nullptr);
+                    }},
+                    { L"bind_material.technique_common.bind_vertex_input",
+                    [this, pCollada, pColladaNode](IXMLDOMNode* pNode)
+                    {
+                    }},
+                    { nullptr, nullptr }
+                };
+                ParseSubnode(pNode, elems, nullptr);
             } },
             { nullptr, nullptr }
         };
         ParseSubnode(pNode, _Elements);
-        pNodes->insert(std::pair<std::wstring, Collada::SNode*>(pColladaNode->m_id, pColladaNode));
-        spColladaNode.release();
+        pNodes->insert(std::pair<std::wstring, std::unique_ptr<Collada::SNode>>(pColladaNode->m_id, std::move(spColladaNode)));
     }
 
-    void CColladaImporter::ParseVisualScene(IXMLDOMNode *pNode, std::map<std::wstring, Collada::SVisualScene*> *pVisualScenes)
+    void CColladaImporter::ParseVisualScene(IXMLDOMNode *pNode, Collada::SCollada* pCollada, std::map<std::wstring, std::unique_ptr<Collada::SVisualScene>> *pVisualScenes)
     {
         Collada::SVisualScene *pVisualScene = new Collada::SVisualScene();
         std::unique_ptr<Collada::SVisualScene> spVisualScene(pVisualScene);
@@ -765,20 +803,19 @@ namespace Caustic
 
         CColladaImporter::ParseElements _Elements[] =
         {
-            { L"node", [this, pVisualScene](IXMLDOMNode *pNode) { ParseNode(pNode, &pVisualScene->m_nodes); } },
+            { L"node", [this, pCollada, pVisualScene](IXMLDOMNode *pNode) { ParseNode(pNode, pCollada, &pVisualScene->m_nodes); } },
             { nullptr, nullptr }
         };
         ParseSubnode(pNode, _Elements);
 
-        pVisualScenes->insert(std::pair<std::wstring,Collada::SVisualScene*>(pVisualScene->m_id, pVisualScene));
-        spVisualScene.release();
+        pVisualScenes->insert(std::pair<std::wstring, std::unique_ptr<Collada::SVisualScene>>(pVisualScene->m_id, std::move(spVisualScene)));
     }
 
-    void CColladaImporter::ParseLibraryVisualScenes(IXMLDOMNode *pNode, std::map<std::wstring, Collada::SVisualScene*> *pVisualScenes)
+    void CColladaImporter::ParseLibraryVisualScenes(IXMLDOMNode *pNode, Collada::SCollada *pCollada, std::map<std::wstring, std::unique_ptr<Collada::SVisualScene>> *pVisualScenes)
     {
         CColladaImporter::ParseElements _Elements[] =
         {
-            { L"visual_scene", [this, pVisualScenes](IXMLDOMNode *pNode) { ParseVisualScene(pNode, pVisualScenes); } },
+            { L"visual_scene", [this, pCollada, pVisualScenes](IXMLDOMNode *pNode) { ParseVisualScene(pNode, pCollada, pVisualScenes); } },
             { nullptr, nullptr }
         };
         ParseSubnode(pNode, _Elements);
@@ -794,11 +831,11 @@ namespace Caustic
         CRefObj<ISceneGraph> spSceneGraph = Caustic::CSceneFactory::Instance()->CreateSceneGraph();
         m_spLightCollection = CSceneFactory::Instance()->CreateLightCollectionElem();
 
-        Collada::SVisualScene *pScene = pCollada->m_visualScenes[url.substr(1)];
-        std::map<std::wstring, Collada::SNode*>::iterator it = pScene->m_nodes.begin();
+        Collada::SVisualScene *pScene = pCollada->m_visualScenes[url.substr(1)].get();
+        std::map<std::wstring, std::unique_ptr<Collada::SNode>>::iterator it = pScene->m_nodes.begin();
         while (it != pScene->m_nodes.end())
         {
-            Collada::SNode *pNode = it->second;
+            Collada::SNode *pNode = it->second.get();
             switch (pNode->m_nodeType)
             {
             case Collada::c_NodeType_Camera:
@@ -809,7 +846,7 @@ namespace Caustic
                 break;
             case Collada::c_NodeType_Light:
                 {
-                    Collada::SLight* pLight = pCollada->m_lights[pNode->m_url.substr(1)];
+                    Collada::SLight* pLight = pCollada->m_lights[pNode->m_url.substr(1)].get();
                     Vector3 dir(0.0f, 0.0f, -1.0f);
 
                     // Transform the position and direction
@@ -838,21 +875,32 @@ namespace Caustic
                 break;
             case Collada::c_NodeType_Geometry:
                 {
-                    CRefObj<Caustic::ISceneGroupElem> spXform = CSceneFactory::Instance()->CreateGroupElem();
-                    spXform->SetTransform(pNode->m_mat);
-                    spXform->SetName((std::wstring(L"Mesh - ") + pNode->m_name).c_str());
+                    // Find material
+                    //Collada::SMaterial* pMaterial = pCollada->m_materials[pNode->m_spMaterialInstance->m_targetURL.substr(1)].get();
+                    CRefObj<Caustic::ISceneMaterialElem> spMat = CSceneFactory::Instance()->CreateMaterialElem();
+                    
+                    CRefObj<IMaterialAttrib> spMaterial = CCausticFactory::Instance()->CreateMaterialAttrib();
+                    FRGBColor ambient(0.2f, 0.2f, 0.2f);
+                    FRGBColor diffuse(0.4f, 0.4f, 0.4f);
+                    spMaterial->SetColor(L"ambientColor", ambient);
+                    spMaterial->SetColor(L"diffuseColor", diffuse);
+                    spMaterial->SetCullMode(D3D11_CULL_FRONT);
+                    spMat->SetMaterial(spMaterial);
+
+                    spMat->SetTransform(pNode->m_mat);
+                    spMat->SetName((std::wstring(L"Mesh - ") + pNode->m_name).c_str());
 
                     CRefObj<Caustic::ISceneMeshElem> spMeshElem = CSceneFactory::Instance()->CreateMeshElem();
 
-                    Collada::SGeometry *pGeometry = pCollada->m_geometries[pNode->m_url.substr(1)];
+                    Collada::SGeometry *pGeometry = pCollada->m_geometries[pNode->m_url.substr(1)].get();
                     CRefObj<IMeshConstructor> spMeshConstructor = IMeshConstructor::Create();
                     spMeshConstructor->MeshOpen();
                     pGeometry->BuildMesh(spMeshConstructor);
                     CRefObj<IMesh> spMesh = spMeshConstructor->MeshClose();
                     spMeshElem->SetMesh(spMesh);
 
-                    spXform->AddChild(spMeshElem);
-                    m_spLightCollection->AddChild(spXform);
+                    spMat->AddChild(spMeshElem);
+                    m_spLightCollection->AddChild(spMat);
                 }
                 break;
             }
@@ -874,7 +922,7 @@ namespace Caustic
         ParseSubnode(pNode, _Elements);
     }
     
-    void CColladaImporter::ParseLibraryCameras(IXMLDOMNode* pNode, std::map<std::wstring, Collada::SCamera*>* cameras)
+    void CColladaImporter::ParseLibraryCameras(IXMLDOMNode* pNode, std::map<std::wstring, std::unique_ptr<Collada::SCamera>>* cameras)
     {
         CColladaImporter::ParseElements _elems[] =
         {
@@ -889,7 +937,7 @@ namespace Caustic
         ParseSubnode(pNode, _elems);
     }
 
-    void CColladaImporter::ParseEffect(IXMLDOMNode* pNode, std::map<std::wstring, Collada::SEffect*>* pEffects)
+    void CColladaImporter::ParseEffect(IXMLDOMNode* pNode, std::map<std::wstring, std::unique_ptr<Collada::SEffect>>* pEffects)
     {
         Collada::SEffect* pEffect = new Collada::SEffect();
         std::unique_ptr<Collada::SEffect> spEffect(pEffect);
@@ -940,11 +988,10 @@ namespace Caustic
         };
         ParseSubnode(pNode, _elems, nullptr);
 
-        pEffects->insert(std::pair<std::wstring, Collada::SEffect*>(pEffect->m_id, pEffect));
-        spEffect.release();
+        pEffects->insert(std::pair<std::wstring, std::unique_ptr<Collada::SEffect>>(pEffect->m_id, std::move(spEffect)));
     }
     
-    void CColladaImporter::ParseLibraryEffects(IXMLDOMNode* pNode, std::map<std::wstring, Collada::SEffect*>* pEffects)
+    void CColladaImporter::ParseLibraryEffects(IXMLDOMNode* pNode, std::map<std::wstring, std::unique_ptr<Collada::SEffect>>* pEffects)
     {
         CColladaImporter::ParseElements _elems[] =
         {
@@ -971,7 +1018,7 @@ namespace Caustic
             { L"library_images", [this](IXMLDOMNode* pNode) {} },
             { L"library_materials", [this, pCollada](IXMLDOMNode* pNode) { ParseLibraryMaterials(pNode, &pCollada->m_materials); } },
             { L"library_geometries", [this, pCollada](IXMLDOMNode *pNode) { ParseLibraryGeometries(pNode, &pCollada->m_geometries); } },
-            { L"library_visual_scenes", [this, pCollada](IXMLDOMNode *pNode) { ParseLibraryVisualScenes(pNode, &pCollada->m_visualScenes); } },
+            { L"library_visual_scenes", [this, pCollada](IXMLDOMNode *pNode) { ParseLibraryVisualScenes(pNode, pCollada, &pCollada->m_visualScenes); } },
             { L"scene", [this, pCollada, ppSceneGraph](IXMLDOMNode *pNode) { ParseScene(pNode, pCollada, ppSceneGraph); } },
             { nullptr, nullptr }
         };
