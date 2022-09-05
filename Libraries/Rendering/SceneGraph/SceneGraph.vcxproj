@@ -111,6 +111,8 @@
     <ClCompile Include="ISceneGraph.ixx" />
     <ClCompile Include="ISceneGroupElem.cpp" />
     <ClCompile Include="ISceneGroupElem.ixx" />
+    <ClCompile Include="ISceneLevelOfDetailElem.cpp" />
+    <ClCompile Include="ISceneLevelOfDetailElem.ixx" />
     <ClCompile Include="ISceneLightCollectionElem.cpp" />
     <ClCompile Include="ISceneLightCollectionElem.ixx" />
     <ClCompile Include="ISceneLineElem.cpp" />
@@ -125,6 +127,8 @@
     <ClCompile Include="ISceneOverlay2DElem.ixx" />
     <ClCompile Include="ISceneSphereElem.cpp" />
     <ClCompile Include="ISceneSphereElem.ixx" />
+    <ClCompile Include="LevelOfDetailElem.cpp" />
+    <ClCompile Include="LevelOfDetailElem.ixx" />
     <ClCompile Include="LightCollectionElem.cpp" />
     <ClCompile Include="LightCollectionElem.ixx" />
     <ClCompile Include="LineElem.ixx" />

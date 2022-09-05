@@ -42,6 +42,7 @@ export namespace Caustic
 		CustomRenderElem,
 		Group,
 		Renderable,
+		LevelOfDetail,
 		LightCollection,
 		CameraCollection,
 		Material,

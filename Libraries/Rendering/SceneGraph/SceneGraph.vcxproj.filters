@@ -195,6 +195,18 @@
     <ClCompile Include="CameraCollectionElem.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ISceneLevelOfDetailElem.ixx">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="ISceneLevelOfDetailElem.cpp">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelOfDetailElem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelOfDetailElem.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Overlay2D.ps">

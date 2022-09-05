@@ -66,6 +66,12 @@ export namespace Caustic
         bool Empty();
 
         //**********************************************************************
+        // Method: Center
+        // Returns the center of the bounding box.
+        //**********************************************************************
+        Vector2 Center() { return Vector2((minPt.x + maxPt.x) / 2.0f, (minPt.y + maxPt.y) / 2.0f); }
+
+        //**********************************************************************
         // Method: AddPoint
         // Adds the specified point to the bounding box. If the point is outside
         // the bbox then the bbox's dimensions are expanded to include the point.
@@ -186,6 +192,12 @@ export namespace Caustic
         // Returns true if bbox is empty. False otherwise.
         //**********************************************************************
         bool Empty();
+
+        //**********************************************************************
+        // Method: Center
+        // Returns the center of the bounding box.
+        //**********************************************************************
+        Vector3 Center() { return Vector3((minPt.x + maxPt.x) / 2.0f, (minPt.y + maxPt.y) / 2.0f, (minPt.z + maxPt.z) / 2.0f); }
 
         //**********************************************************************
         // Method: AddPoint
