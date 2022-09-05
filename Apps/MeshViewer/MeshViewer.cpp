@@ -116,6 +116,7 @@ void FillInspector_Elem(ISceneElem* pElem)
 void FillInspector_LightCollection(ISceneLightCollectionElem* pLightCollection)
 {
     FillInspector_Elem(pLightCollection);
+    ImGui::Text((std::string("Number of Lights: ") + std::to_string(pLightCollection->NumberLights())).c_str());
 }
 
 void FillInspector_Light(ILight* pLight, int lightIndex)
@@ -257,11 +258,104 @@ void FillInspector_CustomRender(ISceneCustomRenderElem* pCustomRender)
 void FillInspector_Cube(ISceneCubeElem* pCube)
 {
     FillInspector_Elem(pCube);
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
+    Vector3 center;
+    float width, height, depth;
+    pCube->GetPosition(&center, &width, &height, &depth);
+    static float maxDim = 1.0f;
+    if (width > maxDim * 0.95f)
+        maxDim *= 1.02f;
+    if (width < maxDim * 0.05f)
+        maxDim *= 0.95f;
+    if (height > maxDim * 0.95f)
+        maxDim *= 1.02f;
+    if (height < maxDim * 0.05f)
+        maxDim *= 0.95f;
+    if (depth > maxDim * 0.95f)
+        maxDim *= 1.02f;
+    if (depth < maxDim * 0.05f)
+        maxDim *= 0.95f;
+    bool changed = false;
+    ImGui::Text("Width:"); ImGui::SameLine();
+    if (ImGui::SliderFloat(std::string("##Width").c_str(), &width, 0.01f, maxDim))
+        changed = true;
+    ImGui::Text("Height:"); ImGui::SameLine();
+    if (ImGui::SliderFloat(std::string("##Height").c_str(), &height, 0.01f, maxDim))
+        changed = true;
+    ImGui::Text("Depth:"); ImGui::SameLine();
+    if (ImGui::SliderFloat(std::string("##Depth").c_str(), &depth, 0.01f, maxDim))
+        changed = true;
+    ImGui::Text("Center:");
+    ImGui::Text("      X:"); ImGui::SameLine();
+    static float maxPos = 1.0f;
+    if (fabs(center.x) > maxPos * 0.95f) maxPos *= 1.02f;
+    if (fabs(center.y) > maxPos * 0.95f) maxPos *= 1.02f;
+    if (fabs(center.z) > maxPos * 0.95f) maxPos *= 1.02f;
+    if (ImGui::SliderFloat(std::string("##CenterX").c_str(), &center.x, -maxPos, maxPos))
+        changed = true;
+    ImGui::Text("      Y:"); ImGui::SameLine();
+    if (ImGui::SliderFloat(std::string("##CenterY").c_str(), &center.y, -maxPos, maxPos))
+        changed = true;
+    ImGui::Text("      Z:"); ImGui::SameLine();
+    if (ImGui::SliderFloat(std::string("##CenterZ").c_str(), &center.z, -maxPos, maxPos))
+        changed = true;
+    if (changed)
+    {
+        pCube->SetPosition(center, width, height, depth);
+    }
+    ImGui::PopStyleColor();
 }
 
 void FillInspector_Cylinder(ISceneCylinderElem* pCylinder)
 {
     FillInspector_Elem(pCylinder);
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
+    Vector3 center;
+    float height, topRadius, bottomRadius;
+    pCylinder->GetPosition(&center, &height, &topRadius, &bottomRadius);
+    static float maxRadius = 1.0f;
+    if (topRadius > maxRadius * 0.95f)
+        maxRadius *= 1.02f;
+    if (topRadius < maxRadius * 0.05f)
+        maxRadius *= 0.95f;
+    if (bottomRadius > maxRadius * 0.95f)
+        maxRadius *= 1.02f;
+    if (bottomRadius < maxRadius * 0.05f)
+        maxRadius *= 0.95f;
+    bool changed = false;
+    ImGui::Text("Top Radius:"); ImGui::SameLine();
+    if (ImGui::SliderFloat(std::string("##TopRadius").c_str(), &topRadius, 0.01f, maxRadius))
+        changed = true;
+    ImGui::Text("Bottom Radius:"); ImGui::SameLine();
+    if (ImGui::SliderFloat(std::string("##BottomRadius").c_str(), &bottomRadius, 0.01f, maxRadius))
+        changed = true;
+    static float maxHeight = 1.0f;
+    if (height > maxHeight * 0.95f)
+        maxHeight *= 1.02f;
+    if (height < maxHeight * 0.05f)
+        maxHeight *= 0.95f;
+    ImGui::Text("Height:"); ImGui::SameLine();
+    if (ImGui::SliderFloat(std::string("##Height").c_str(), &height, 0.01f, maxHeight))
+        changed = true;
+    ImGui::Text("Center:");
+    ImGui::Text("      X:"); ImGui::SameLine();
+    static float maxPos = 1.0f;
+    if (fabs(center.x) > maxPos * 0.95f) maxPos *= 1.02f;
+    if (fabs(center.y) > maxPos * 0.95f) maxPos *= 1.02f;
+    if (fabs(center.z) > maxPos * 0.95f) maxPos *= 1.02f;
+    if (ImGui::SliderFloat(std::string("##CenterX").c_str(), &center.x, -maxPos, maxPos))
+        changed = true;
+    ImGui::Text("      Y:"); ImGui::SameLine();
+    if (ImGui::SliderFloat(std::string("##CenterY").c_str(), &center.y, -maxPos, maxPos))
+        changed = true;
+    ImGui::Text("      Z:"); ImGui::SameLine();
+    if (ImGui::SliderFloat(std::string("##CenterZ").c_str(), &center.z, -maxPos, maxPos))
+        changed = true;
+    if (changed)
+    {
+        pCylinder->SetPosition(center, height, topRadius, bottomRadius);
+    }
+    ImGui::PopStyleColor();
 }
 
 void FillInspector_Sphere(ISceneSphereElem* pSphere)
@@ -277,35 +371,25 @@ void FillInspector_Sphere(ISceneSphereElem* pSphere)
         maxRadius *= 1.02f;
     if (radius < maxRadius * 0.05f)
         maxRadius *= 0.95f;
-    static float minPos = -1.0f;
-    static float maxPos = 1.0f;
-    float minv = std::min<float>(center.x, std::min<float>(center.y, center.z));
-    float maxv = std::max<float>(center.x, std::max<float>(center.y, center.z));
-    if (maxv > maxPos * 0.95f)
-        maxPos *= 1.02f;
-    if (maxv < maxPos * 0.05f)
-        maxPos *= 0.95f;
-    if (minv < minPos * 0.95f)
-        minPos *= 1.02f;
-    if (minv > minPos * 0.05f)
-        minPos *= 0.95f;
     bool changed = false;
     if (ImGui::SliderFloat(std::string("##Radius").c_str(), &radius, 0.01f, maxRadius))
         changed = true;
     ImGui::Text("Center:");
     ImGui::Text("      X:"); ImGui::SameLine();
-    if (ImGui::SliderFloat(std::string("##CenterX").c_str(), &center.x, minv, maxv))
+    static float maxPos = 1.0f;
+    if (fabs(center.x) > maxPos * 0.95f) maxPos *= 1.02f;
+    if (fabs(center.y) > maxPos * 0.95f) maxPos *= 1.02f;
+    if (fabs(center.z) > maxPos * 0.95f) maxPos *= 1.02f;
+    if (ImGui::SliderFloat(std::string("##CenterX").c_str(), &center.x, -maxPos, maxPos))
         changed = true;
     ImGui::Text("      Y:"); ImGui::SameLine();
-    if (ImGui::SliderFloat(std::string("##CenterY").c_str(), &center.y, minv, maxv))
+    if (ImGui::SliderFloat(std::string("##CenterY").c_str(), &center.y, -maxPos, maxPos))
         changed = true;
     ImGui::Text("      Z:"); ImGui::SameLine();
-    if (ImGui::SliderFloat(std::string("##CenterZ").c_str(), &center.z, minv, maxv))
+    if (ImGui::SliderFloat(std::string("##CenterZ").c_str(), &center.z, -maxPos, maxPos))
         changed = true;
     if (changed)
     {
-        if (Caustic::IsLess(radius, 0.0f))
-            radius = 0.1f;
         pSphere->SetPosition(center, radius);
     }
     ImGui::PopStyleColor();
@@ -547,7 +631,7 @@ void BuildGroupUI(ISceneGraph* pSceneGraph, ISceneGroupElem* pGroup, const char 
                                 BuildCollapsableNode(pSceneGraph, nullptr, true, lightName.c_str(),
                                     nullptr, [spLight, i]() { FillInspector_Light(spLight.p, i); });
                             }
-                            BuildGroupUI(pSceneGraph, static_cast<ISceneGroupElem*>(pCollection), "Group", nullptr);
+                            BuildGroupUI(pSceneGraph, static_cast<ISceneGroupElem*>(pCollection), "Group", [spChild]() { FillInspector_Group(static_cast<ISceneGroupElem*>(spChild.p)); });
                         },
                         [spChild]() { FillInspector_LightCollection((ISceneLightCollectionElem*)spChild.p); });
                     break;
@@ -587,7 +671,7 @@ void AddNewElement(CRefObj<ISceneElem> pElem)
     if (app.m_spSelectedNode != nullptr)
     {
         auto t = app.m_spSelectedNode->GetType();
-        if (t == ESceneElemType::Material || t == ESceneElemType::Group)
+        if (t == ESceneElemType::Material || t == ESceneElemType::Group || t == ESceneElemType::LightCollection)
         {
             ((ISceneGroupElem*)app.m_spSelectedNode.p)->AddChild(pElem);
             added = true;

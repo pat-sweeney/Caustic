@@ -87,14 +87,17 @@ export namespace Caustic
         virtual ESceneElemType GetType() override { return ESceneElemType::CubeElem; }
         virtual std::wstring GetName() override { return CSceneElem::GetName(); }
         virtual void SetName(const wchar_t* name) override { return CSceneElem::SetName(name); }
+
         virtual void SetPreRenderCallback(std::function<bool(int pass)> prerenderCallback) override
         {
             CSceneElem::SetPreRenderCallback(prerenderCallback);
         }
+
         virtual void SetPostRenderCallback(std::function<void(int pass)> postrenderCallback) override
         {
             CSceneElem::SetPostRenderCallback(postrenderCallback);
         }
+
         virtual void Render(IRenderer* pRenderer, IRenderCtx* pRenderCtx, SceneCtx* pSceneCtx) override
         {
             if (!(m_passes & pRenderCtx->GetCurrentPass()))
@@ -106,7 +109,15 @@ export namespace Caustic
             if (m_postrenderCallback)
                 m_postrenderCallback(pRenderCtx->GetCurrentPass());
         }
-        virtual void GetBBox(BBox3* pBBox) override { return; }
+
+        virtual void GetBBox(BBox3* pBBox) override
+        {
+            Vector3 v(m_width / 2.0f, m_height / 2.0f, m_depth / 2.0f);
+            pBBox->minPt = m_center - v;
+            pBBox->maxPt = m_center + v;
+            return;
+        }
+
         virtual uint32 GetFlags() override { return m_Flags; }
         virtual void SetFlags(uint32 flags) override { m_Flags = flags; }
         virtual void SetInPass(uint32 pass) override { CSceneElem::SetInPass(pass); }

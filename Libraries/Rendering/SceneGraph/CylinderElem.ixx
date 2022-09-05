@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2022
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -14,6 +14,7 @@ import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IRenderCtx;
+import Rendering.Caustic.CausticFactory;
 import Geometry.Mesh.MeshFuncs;
 import Rendering.SceneGraph.SceneGraph;
 import Rendering.SceneGraph.SceneElem;
@@ -82,14 +83,17 @@ export namespace Caustic
         virtual ESceneElemType GetType() override { return ESceneElemType::CylinderElem; }
         virtual std::wstring GetName() override { return CSceneElem::GetName(); }
         virtual void SetName(const wchar_t* name) override { return CSceneElem::SetName(name); }
+
         virtual void SetPreRenderCallback(std::function<bool(int pass)> prerenderCallback) override
         {
             CSceneElem::SetPreRenderCallback(prerenderCallback);
         }
+
         virtual void SetPostRenderCallback(std::function<void(int pass)> postrenderCallback) override
         {
             CSceneElem::SetPostRenderCallback(postrenderCallback);
         }
+
         virtual void Render(IRenderer* pRenderer, IRenderCtx* pRenderCtx, SceneCtx* pSceneCtx) override
         {
             if (!(m_passes & pRenderCtx->GetCurrentPass()))
@@ -101,7 +105,16 @@ export namespace Caustic
             if (m_postrenderCallback)
                 m_postrenderCallback(pRenderCtx->GetCurrentPass());
         }
-        virtual void GetBBox(BBox3* pBBox) override { return; }
+        
+        virtual void GetBBox(BBox3* pBBox) override
+        {
+            float r = std::max<float>(m_topRadius, m_bottomRadius) / 2.0f;
+            Vector3 v(r, m_height / 2.0f, r);
+            pBBox->minPt = m_center - v;
+            pBBox->maxPt = m_center + v;
+            return;
+        }
+        
         virtual uint32 GetFlags() override { return m_Flags; }
         virtual void SetFlags(uint32 flags) override { m_Flags = flags; }
         virtual void SetInPass(uint32 pass) override { CSceneElem::SetInPass(pass); }
@@ -119,6 +132,7 @@ export namespace Caustic
         virtual void SetPosition(Vector3& center, float height, float topRadius, float bottomRadius) override
         {
             m_center = center;
+            m_height = height;
             m_topRadius = topRadius;
             m_bottomRadius = bottomRadius;
             std::vector<Vector3> pts;
@@ -135,7 +149,17 @@ export namespace Caustic
                 dy += height / float(subdivisions);
                 radius += (topRadius - bottomRadius) / float(subdivisions);
             }
+
+            std::vector<CRefObj<IMaterialAttrib>> materials;
+            CRefObj<IMaterialAttrib> spMaterial = CCausticFactory::Instance()->CreateMaterialAttrib();
+            materials.push_back(spMaterial);
+            FRGBColor diffuseClr(0.7f, 0.7f, 0.7f);
+            spMaterial->SetColor(L"diffuseColor", diffuseClr);
+            FRGBColor ambientClr(0.1f, 0.1f, 0.1f);
+            spMaterial->SetColor(L"ambientColor", ambientClr);
+
             m_spMesh = Caustic::CreateSurfaceRevolution(pts, subdivisions, subdivisions, 360.0f);
+            m_spMesh->SetMaterials(materials);
             m_spMeshElem->SetMesh(m_spMesh);
             auto tmat = Caustic::Matrix4x4::TranslationMatrix(center.x, center.y, center.z);
             m_spXformElem->SetTransform(tmat);
