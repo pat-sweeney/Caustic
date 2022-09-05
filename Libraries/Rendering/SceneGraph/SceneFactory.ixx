@@ -47,6 +47,7 @@ export namespace Caustic
 		virtual CRefObj<ISceneGraph> CreateSceneGraph() override;
 		virtual CRefObj<ISceneComputeShaderElem> CreateComputeShaderElem(IShader* pComputeShader) override;
 		virtual CRefObj<ISceneMaterialElem> CreateMaterialElem() override;
+		virtual CRefObj<ISceneLevelOfDetailElem> CreateLevelOfDetailElem() override;
 		virtual CRefObj<ISceneLightCollectionElem> CreateLightCollectionElem() override;
 		virtual CRefObj<ISceneCameraCollectionElem> CreateCameraCollectionElem() override;
 		virtual CRefObj<ISceneGroupElem> CreateGroupElem() override;

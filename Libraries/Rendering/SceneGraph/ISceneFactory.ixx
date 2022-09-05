@@ -14,6 +14,7 @@ import Rendering.SceneGraph.ISceneMaterialElem;
 import Rendering.SceneGraph.ISceneComputeShaderElem;
 import Rendering.SceneGraph.ISceneLightCollectionElem;
 import Rendering.SceneGraph.ISceneCameraCollectionElem;
+import Rendering.SceneGraph.ISceneLevelOfDetailElem;
 import Rendering.SceneGraph.ISceneGroupElem;
 import Rendering.SceneGraph.ISceneElem;
 import Rendering.SceneGraph.ISceneMarchingCubesElem;
@@ -39,6 +40,12 @@ export namespace Caustic
 		// Creates a material element
 		//**********************************************************************
 		virtual CRefObj<ISceneMaterialElem> CreateMaterialElem() = 0;
+
+		//**********************************************************************
+		// Method: CreateLevelOfDetailElem
+		// Creates a level of detail element
+		//**********************************************************************
+		virtual CRefObj<ISceneLevelOfDetailElem> CreateLevelOfDetailElem() = 0;
 
 		//**********************************************************************
 		// Method: CreateMaterialElem

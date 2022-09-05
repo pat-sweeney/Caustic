@@ -91,7 +91,7 @@ export namespace Caustic
         }
 
         virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** pMaterial) override { return false; }
-        virtual ESceneElemType GetType() override { return ESceneElemType::LineElem; }
+        virtual ESceneElemType GetType() override { return ESceneElemType::SphereElem; }
         virtual std::wstring GetName() override { return CSceneElem::GetName(); }
         virtual void SetName(const wchar_t* name) override { return CSceneElem::SetName(name); }
         virtual void SetPreRenderCallback(std::function<bool(int pass)> prerenderCallback) override
@@ -113,7 +113,12 @@ export namespace Caustic
             if (m_postrenderCallback)
                 m_postrenderCallback(pRenderCtx->GetCurrentPass());
         }
-        virtual void GetBBox(BBox3* pBBox) override { return; }
+        virtual void GetBBox(BBox3* pBBox) override
+        {
+            pBBox->minPt = m_center - m_radius;
+            pBBox->maxPt = m_center + m_radius;
+            return;
+        }
         virtual uint32 GetFlags() override { return m_Flags; }
         virtual void SetFlags(uint32 flags) override { m_Flags = flags; }
         virtual void SetInPass(uint32 pass) override { CSceneElem::SetInPass(pass); }

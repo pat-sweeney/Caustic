@@ -14,6 +14,7 @@
 #include <any>
 #include <functional>
 #include <format>
+#include <algorithm>
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
@@ -58,6 +59,7 @@ public:
     CRefObj<ISceneFactory> m_spSceneFactory;
     int nodeCounter;
     int selectedNode;
+    CRefObj<ISceneElem> m_spSelectedNode;
     std::function<void()> fillInspectorFunc;
     std::string objName;
     std::string objType;
@@ -102,21 +104,13 @@ void FillInspector_Elem(ISceneElem* pElem)
     pElem->SetFlags(finalFlags);
     BBox3 bbox;
     pElem->GetBBox(&bbox);
-    ImGui::Text("BBox:");
-    ImGui::Text("  Min:");
-    ImGui::Text("      X:"); ImGui::SameLine();
-    ImGui::SliderFloat(std::string("##BBoxMinX").c_str(), &bbox.minPt.x, 0.0f, 1.0f);
-    ImGui::Text("      Y:"); ImGui::SameLine();
-    ImGui::SliderFloat(std::string("##BBoxMinY").c_str(), &bbox.minPt.y, 0.0f, 1.0f);
-    ImGui::Text("      Z:"); ImGui::SameLine();
-    ImGui::SliderFloat(std::string("##BBoxMinZ").c_str(), &bbox.minPt.z, 0.0f, 1.0f);
-    ImGui::Text("  Max:");
-    ImGui::Text("      X:"); ImGui::SameLine();
-    ImGui::SliderFloat(std::string("##BBoxMaxX").c_str(), &bbox.maxPt.x, 0.0f, 1.0f);
-    ImGui::Text("      Y:"); ImGui::SameLine();
-    ImGui::SliderFloat(std::string("##BBoxMaxY").c_str(), &bbox.maxPt.y, 0.0f, 1.0f);
-    ImGui::Text("      Z:"); ImGui::SameLine();
-    ImGui::SliderFloat(std::string("##BBoxMaxZ").c_str(), &bbox.maxPt.z, 0.0f, 1.0f);
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
+    ImGui::BeginGroup();
+    ImGui_BBox3("BBox:", bbox,
+        std::min<float>(bbox.minPt.x, std::min<float>(bbox.minPt.y, bbox.minPt.z)),
+        std::max<float>(bbox.maxPt.x, std::max<float>(bbox.maxPt.y, bbox.maxPt.z)));
+    ImGui::EndGroup();
+    ImGui::PopStyleColor();
 }
 
 void FillInspector_LightCollection(ISceneLightCollectionElem* pLightCollection)
@@ -273,6 +267,48 @@ void FillInspector_Cylinder(ISceneCylinderElem* pCylinder)
 void FillInspector_Sphere(ISceneSphereElem* pSphere)
 {
     FillInspector_Elem(pSphere);
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)ImVec4(1.0f,0.0f,0.0f,1.0f));
+    ImGui::Text("Radius:"); ImGui::SameLine();
+    Vector3 center;
+    float radius;
+    pSphere->GetPosition(&center, &radius);
+    static float maxRadius = 1.0f;
+    if (radius > maxRadius * 0.95f)
+        maxRadius *= 1.02f;
+    if (radius < maxRadius * 0.05f)
+        maxRadius *= 0.95f;
+    static float minPos = -1.0f;
+    static float maxPos = 1.0f;
+    float minv = std::min<float>(center.x, std::min<float>(center.y, center.z));
+    float maxv = std::max<float>(center.x, std::max<float>(center.y, center.z));
+    if (maxv > maxPos * 0.95f)
+        maxPos *= 1.02f;
+    if (maxv < maxPos * 0.05f)
+        maxPos *= 0.95f;
+    if (minv < minPos * 0.95f)
+        minPos *= 1.02f;
+    if (minv > minPos * 0.05f)
+        minPos *= 0.95f;
+    bool changed = false;
+    if (ImGui::SliderFloat(std::string("##Radius").c_str(), &radius, 0.01f, maxRadius))
+        changed = true;
+    ImGui::Text("Center:");
+    ImGui::Text("      X:"); ImGui::SameLine();
+    if (ImGui::SliderFloat(std::string("##CenterX").c_str(), &center.x, minv, maxv))
+        changed = true;
+    ImGui::Text("      Y:"); ImGui::SameLine();
+    if (ImGui::SliderFloat(std::string("##CenterY").c_str(), &center.y, minv, maxv))
+        changed = true;
+    ImGui::Text("      Z:"); ImGui::SameLine();
+    if (ImGui::SliderFloat(std::string("##CenterZ").c_str(), &center.z, minv, maxv))
+        changed = true;
+    if (changed)
+    {
+        if (Caustic::IsLess(radius, 0.0f))
+            radius = 0.1f;
+        pSphere->SetPosition(center, radius);
+    }
+    ImGui::PopStyleColor();
 }
 
 void FillInspector_Mesh(ISceneMeshElem *pMesh)
@@ -300,22 +336,29 @@ void FillInspector_Material(ISceneMaterialElem *pMaterialElem, IMaterialAttrib* 
 
     D3D11_CULL_MODE cullMode = pMaterial->GetCullMode();
     const char* cullModes[] = { "Front", "Back", "None" };
-    static const char* currentCullItem;
+    int cullIndex = 0;
     switch (cullMode)
     {
-    case D3D11_CULL_MODE::D3D11_CULL_FRONT: currentCullItem = cullModes[0]; break;
-    case D3D11_CULL_MODE::D3D11_CULL_BACK: currentCullItem = cullModes[1]; break;
-    case D3D11_CULL_MODE::D3D11_CULL_NONE: currentCullItem = cullModes[2]; break;
+    case D3D11_CULL_MODE::D3D11_CULL_FRONT: cullIndex = 0; break;
+    case D3D11_CULL_MODE::D3D11_CULL_BACK: cullIndex = 1; break;
+    case D3D11_CULL_MODE::D3D11_CULL_NONE: cullIndex = 2; break;
     }
     ImGui::Text("CullMode:");
     ImGui::SameLine();
-    if (ImGui::BeginCombo("##CullMode", currentCullItem))
+    if (ImGui::BeginCombo("##CullMode", cullModes[cullIndex]))
     {
         for (int n = 0; n < IM_ARRAYSIZE(cullModes); n++)
         {
-            bool is_selected = (currentCullItem == cullModes[n]);
+            bool is_selected = (cullIndex == n);
             if (ImGui::Selectable(cullModes[n], is_selected))
-                currentCullItem = cullModes[n];
+            {
+                switch (n)
+                {
+                case 0: pMaterial->SetCullMode(D3D11_CULL_MODE::D3D11_CULL_FRONT); break;
+                case 1: pMaterial->SetCullMode(D3D11_CULL_MODE::D3D11_CULL_BACK); break;
+                case 2: pMaterial->SetCullMode(D3D11_CULL_MODE::D3D11_CULL_NONE); break;
+                }
+            }
             if (is_selected)
                 ImGui::SetItemDefaultFocus();
         }
@@ -435,6 +478,7 @@ void BuildCollapsableNode(ISceneGraph* pSceneGraph, ISceneElem *pElem, bool isLe
         if (pElem)
             app.objName = Caustic::wstr2str(pElem->GetName());
         app.selectedNode = nodeCounter;
+        app.m_spSelectedNode = pElem;
     }
 }
 
@@ -535,6 +579,39 @@ void BuildGroupUI(ISceneGraph* pSceneGraph, ISceneGroupElem* pGroup, const char 
                 }
             }
         }, onSelect);
+}
+
+void AddNewElement(CRefObj<ISceneElem> pElem)
+{
+    bool added = false;
+    if (app.m_spSelectedNode != nullptr)
+    {
+        auto t = app.m_spSelectedNode->GetType();
+        if (t == ESceneElemType::Material || t == ESceneElemType::Group)
+        {
+            ((ISceneGroupElem*)app.m_spSelectedNode.p)->AddChild(pElem);
+            added = true;
+        }
+    }
+    if (!added)
+    {
+        CRefObj<ISceneGraph> spSceneGraph = app.m_spRenderWindow->GetSceneGraph();
+        spSceneGraph->AddChild(pElem);
+    }
+}
+
+void AddNewLight(CRefObj<ILight> pLight)
+{
+    bool added = false;
+    if (app.m_spSelectedNode != nullptr)
+    {
+        auto t = app.m_spSelectedNode->GetType();
+        if (t == ESceneElemType::LightCollection)
+        {
+            ((ISceneLightCollectionElem*)app.m_spSelectedNode.p)->AddLight(pLight);
+            added = true;
+        }
+    }
 }
 
 ImVec2 BuildMenuBar(ImFont *pFont)
@@ -676,6 +753,124 @@ ImVec2 BuildMenuBar(ImFont *pFont)
         }
         if (ImGui::BeginMenu("Create"))
         {
+            if (ImGui::BeginMenu("Primitives"))
+            {
+                if (ImGui::MenuItem("Sphere"))
+                {
+                    Vector3 center(0.0f, 0.0f, 0.0f);
+                    auto spSphere = app.m_spSceneFactory->CreateSphereElem(center, 1.0f);
+                    AddNewElement(spSphere.p);
+                }
+                if (ImGui::MenuItem("Cylinder"))
+                {
+                    Vector3 center(0.0f, 0.0f, 0.0f);
+                    auto spCylinder = app.m_spSceneFactory->CreateCylinderElem(center, 2.0f, 0.5f, 1.0f);
+                    AddNewElement(spCylinder.p);
+                }
+                if (ImGui::MenuItem("Cube"))
+                {
+                    Vector3 center(0.0f, 0.0f, 0.0f);
+                    auto spCube = app.m_spSceneFactory->CreateCubeElem(center, 1.0f, 1.0f, 1.0f);
+                    AddNewElement(spCube.p);
+                }
+                if (ImGui::MenuItem("Line"))
+                {
+                    Vector3 p0(0.0f, 0.0f, 0.0f);
+                    Vector3 p1(1.0f, 1.0f, 1.0f);
+                    auto spLine = app.m_spSceneFactory->CreateLineElem(p0, p1);
+                    AddNewElement(spLine.p);
+                }
+                /*
+                if (ImGui::MenuItem("ComputeShader"))
+                {
+                }
+                if (ImGui::MenuItem("Overlay2D"))
+                {
+                }
+                if (ImGui::MenuItem("Mesh"))
+                {
+                }
+                if (ImGui::MenuItem("Marching Cubes"))
+                {
+                }
+                if (ImGui::MenuItem("CreateSurfaceRevolution"))
+                {
+                }
+                if (ImGui::MenuItem("Tetrahedron"))
+                {
+                }
+                if (ImGui::MenuItem("Grid"))
+                {
+                }
+                if (ImGui::MenuItem("Plane"))
+                {
+                }
+                */
+                ImGui::EndMenu();
+            }
+            if (ImGui::BeginMenu("Grouping"))
+            {
+                if (ImGui::MenuItem("Material"))
+                {
+                    AddNewElement(app.m_spSceneFactory->CreateMaterialElem().p);
+                }
+                if (ImGui::MenuItem("LightCollection"))
+                {
+                    AddNewElement(app.m_spSceneFactory->CreateLightCollectionElem().p);
+                }
+                if (ImGui::MenuItem("Group"))
+                {
+                    AddNewElement(app.m_spSceneFactory->CreateGroupElem().p);
+                }
+                ImGui::EndMenu();
+            }
+            if (ImGui::BeginMenu("Lighting"))
+            {
+                bool disabled = true;
+                auto t = (app.m_spSelectedNode == nullptr) ? ESceneElemType::Unknown : app.m_spSelectedNode->GetType();
+                if (t == ESceneElemType::LightCollection)
+                    disabled = false;
+
+                if (disabled)
+                {
+                    ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
+                    ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
+                }
+                if (ImGui::MenuItem("Point Light"))
+                {
+                    Vector3 pos(0.0f, 0.0f, 0.0f);
+                    FRGBColor color(1.0f, 1.0f, 1.0f);
+                    AddNewLight(app.m_spCausticFactory->CreatePointLight(pos, color, 1.0f, true).p);
+                }
+                if (ImGui::MenuItem("Spot Light"))
+                {
+                    Vector3 pos(10.0f, 10.0f, 10.0f);
+                    Vector3 dir(0.0f, 0.0f, -1.0f);
+                    FRGBColor color(1.0f, 1.0f, 1.0f);
+                    AddNewLight(app.m_spCausticFactory->CreateSpotLight(pos, dir, color, 1.0f, 35.0f, 45.0f, true).p);
+                }
+                if (ImGui::MenuItem("Directional Light"))
+                {
+                    Vector3 pos(10.0f, 10.0f, 10.0f);
+                    Vector3 dir(0.0f, 0.0f, -1.0f);
+                    FRGBColor color(1.0f, 1.0f, 1.0f);
+                    AddNewLight(app.m_spCausticFactory->CreateDirectionalLight(pos, dir, color, 1.0f, true).p);
+                }
+                if (ImGui::MenuItem("Area Light"))
+                {
+                }
+                if (disabled)
+                {
+                    ImGui::PopItemFlag();
+                    ImGui::PopStyleVar();
+                }
+                ImGui::EndMenu();
+            }
+            if (ImGui::MenuItem("LevelOfDetail"))
+            {
+                auto spLOD = app.m_spSceneFactory->CreateLevelOfDetailElem();
+                AddNewElement(spLOD.p);
+            }
             if (ImGui::MenuItem("PDF Sphere"))
             {
                 CRefObj<IMeshConstructor> spMeshConstructor = IMeshConstructor::Create();
@@ -773,6 +968,8 @@ void BuildPanels(ITexture *pFinalRT, ImFont *pFont)
         ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
         ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
     }
+
+    ImGui::ShowDemoWindow();
 
     ImVec2 menuSize = BuildMenuBar(pFont);
     

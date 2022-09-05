@@ -237,6 +237,8 @@ export namespace Caustic
             z += rhs.z;
             return *this;
         }
+        Vector3 operator+(float v) const { return Vector3(x + v, y + v, z + v); }
+        Vector3 operator-(float v) const { return Vector3(x - v, y - v, z - v); }
         Vector3 operator*(const float s) const { return Vector3(x * s, y * s, z * s); }
         Vector3 operator/(const float s) const { return Vector3(x / s, y / s, z / s); }
         float Length() const

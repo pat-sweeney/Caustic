@@ -29,16 +29,33 @@ export namespace Caustic
 		Vector3 v = getFunc();
 		ImGui::Text(pLabel);
 		std::string strLabel(pLabel);
-		ImGui::Text("X:");
-		ImGui::SameLine();
+		ImGui::Text("  X:"); ImGui::SameLine();
 		ImGui::SliderFloat((std::string("##X")+strLabel).c_str(), &v.x, minValue, maxValue);
-		ImGui::Text("Y:");
-		ImGui::SameLine();
+		ImGui::Text("  Y:"); ImGui::SameLine();
 		ImGui::SliderFloat((std::string("##Y")+strLabel).c_str(), &v.y, minValue, maxValue);
-		ImGui::Text("Z:");
-		ImGui::SameLine();
+		ImGui::Text("  Z:"); ImGui::SameLine();
 		ImGui::SliderFloat((std::string("##Z")+strLabel).c_str(), &v.z, minValue, maxValue);
 		setFunc(v);
+	}
+
+	void ImGui_BBox3(const char *pLabel, BBox3 &bbox, float minV = 0.0f, float maxV = 1.0f)
+	{
+		std::string strLabel((pLabel == nullptr) ? "BBox:" : pLabel);
+		ImGui::Text(strLabel.c_str());
+		ImGui::Text("  Min:");
+		ImGui::Text("      X:"); ImGui::SameLine();
+		ImGui::SliderFloat((std::string("##BBoxMinX") + strLabel).c_str(), &bbox.minPt.x, minV, maxV);
+		ImGui::Text("      Y:"); ImGui::SameLine();
+		ImGui::SliderFloat((std::string("##BBoxMinY") + strLabel).c_str(), &bbox.minPt.y, minV, maxV);
+		ImGui::Text("      Z:"); ImGui::SameLine();
+		ImGui::SliderFloat((std::string("##BBoxMinZ") + strLabel).c_str(), &bbox.minPt.z, minV, maxV);
+		ImGui::Text("  Max:");
+		ImGui::Text("      X:"); ImGui::SameLine();
+		ImGui::SliderFloat((std::string("##BBoxMaxX") + strLabel).c_str(), &bbox.maxPt.x, minV, maxV);
+		ImGui::Text("      Y:"); ImGui::SameLine();
+		ImGui::SliderFloat((std::string("##BBoxMaxY") + strLabel).c_str(), &bbox.maxPt.y, minV, maxV);
+		ImGui::Text("      Z:"); ImGui::SameLine();
+		ImGui::SliderFloat((std::string("##BBoxMaxZ") + strLabel).c_str(), &bbox.maxPt.z, minV, maxV);
 	}
 
 	void ImGui_Color(const char* pLabel, uint32 index, std::function<FRGBColor()>getFunc, std::function<void(FRGBColor v)>setFunc)

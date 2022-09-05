@@ -23,6 +23,7 @@ import Rendering.SceneGraph.ISceneLineElem;
 import Rendering.SceneGraph.ISceneSphereElem;
 import Rendering.SceneGraph.ISceneCubeElem;
 import Rendering.SceneGraph.ISceneCylinderElem;
+import Rendering.SceneGraph.ISceneLevelOfDetailElem;
 
 namespace Caustic
 {
@@ -36,6 +37,11 @@ namespace Caustic
 	CRefObj<ISceneComputeShaderElem> CSceneFactory::CreateComputeShaderElem(IShader *pComputeShader)
 	{
 		return Caustic::CreateComputeShaderElem(pComputeShader);
+	}
+
+	CRefObj<ISceneLevelOfDetailElem> CSceneFactory::CreateLevelOfDetailElem()
+	{
+		return Caustic::CreateLevelOfDetailElem();
 	}
 
 	CRefObj<ISceneMaterialElem> CSceneFactory::CreateMaterialElem()
