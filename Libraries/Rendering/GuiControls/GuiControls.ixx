@@ -40,6 +40,18 @@ export namespace Caustic
 
 	void ImGui_BBox3(const char *pLabel, BBox3 &bbox, float minV = 0.0f, float maxV = 1.0f)
 	{
+		if (bbox.minPt.x == FLT_MAX)
+		{
+			ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
+			ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
+			std::string strLabel((pLabel == nullptr) ? "BBox:" : pLabel);
+			ImGui::Text(strLabel.c_str());
+			ImGui::SameLine();
+			ImGui::Text("Not set");
+			ImGui::PopItemFlag();
+			ImGui::PopStyleVar();
+			return;
+		}
 		std::string strLabel((pLabel == nullptr) ? "BBox:" : pLabel);
 		ImGui::Text(strLabel.c_str());
 		ImGui::Text("  Min:");
