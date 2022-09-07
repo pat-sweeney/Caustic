@@ -173,6 +173,11 @@ namespace Caustic
         return m_spRoot->SetTransform(mat);
     }
 
+    void CSceneGraph::GetBBox(BBox3* pBBox)
+    {
+        m_spRoot->GetBBox(pBBox);
+    }
+
     void CSceneGraph::Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx)
     {
         if (!(m_passes & pRenderCtx->GetCurrentPass()))

@@ -79,11 +79,7 @@ export namespace Caustic
             CSceneElem::SetPostRenderCallback(postrenderCallback);
         }
         virtual void Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx) override;
-        virtual void GetBBox(BBox3 *pBBox) override
-        {
-            pBBox->minPt = Vector3(0.0f, 0.0f, 0.0f);
-            pBBox->maxPt = Vector3(0.0f, 0.0f, 0.0f);
-        }
+        virtual void GetBBox(BBox3* pBBox) override;
         virtual uint32 GetFlags() { return m_Flags; }
         virtual void SetFlags(uint32 flags) { m_Flags = flags; }
         virtual void SetInPass(uint32 pass) override { CSceneElem::SetInPass(pass); }

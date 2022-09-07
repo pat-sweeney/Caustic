@@ -10,6 +10,7 @@ module;
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 #include "imgui_internal.h"
+#include <d3d11.h>
 
 export module Rendering.GuiControls.Common;
 import Base.Core.Core;
@@ -68,6 +69,74 @@ export namespace Caustic
 		ImGui::SliderFloat((std::string("##BBoxMaxY") + strLabel).c_str(), &bbox.maxPt.y, minV, maxV);
 		ImGui::Text("      Z:"); ImGui::SameLine();
 		ImGui::SliderFloat((std::string("##BBoxMaxZ") + strLabel).c_str(), &bbox.maxPt.z, minV, maxV);
+	}
+
+	bool ImGui_FillMode(D3D11_FILL_MODE &fillMode)
+	{
+		const char* fillModes[] = { "Wireframe", "Solid" };
+		bool changed = false;
+		int fillIndex = 0;
+		switch (fillMode)
+		{
+		case D3D11_FILL_MODE::D3D11_FILL_WIREFRAME: fillIndex = 0; break;
+		case D3D11_FILL_MODE::D3D11_FILL_SOLID: fillIndex = 1; break;
+		}
+		ImGui::Text("FillMode:");
+		ImGui::SameLine();
+		if (ImGui::BeginCombo("##FillMode", fillModes[fillIndex]))
+		{
+			for (int n = 0; n < IM_ARRAYSIZE(fillModes); n++)
+			{
+				bool is_selected = (fillIndex == n);
+				if (ImGui::Selectable(fillModes[n], is_selected))
+				{
+					if (n == 0)
+						fillMode = D3D11_FILL_MODE::D3D11_FILL_WIREFRAME;
+					else
+						fillMode = D3D11_FILL_MODE::D3D11_FILL_SOLID;
+					changed = true;
+				}
+				if (is_selected)
+					ImGui::SetItemDefaultFocus();
+			}
+			ImGui::EndCombo();
+		}
+		return changed;
+	}
+
+	bool ImGui_CullMode(D3D11_CULL_MODE &cullMode)
+	{
+		const char* cullModes[] = { "Front", "Back", "None" };
+		bool changed = false;
+		int cullIndex = 0;
+		switch (cullMode)
+		{
+		case D3D11_CULL_MODE::D3D11_CULL_FRONT: cullIndex = 0; break;
+		case D3D11_CULL_MODE::D3D11_CULL_BACK: cullIndex = 1; break;
+		case D3D11_CULL_MODE::D3D11_CULL_NONE: cullIndex = 2; break;
+		}
+		ImGui::Text("CullMode:");
+		ImGui::SameLine();
+		if (ImGui::BeginCombo("##CullMode", cullModes[cullIndex]))
+		{
+			for (int n = 0; n < IM_ARRAYSIZE(cullModes); n++)
+			{
+				bool is_selected = (cullIndex == n);
+				if (ImGui::Selectable(cullModes[n], is_selected))
+				{
+					switch (n)
+					{
+					case 0: cullMode = D3D11_CULL_MODE::D3D11_CULL_FRONT; changed = true;  break;
+					case 1: cullMode = D3D11_CULL_MODE::D3D11_CULL_BACK; changed = true; break;
+					case 2: cullMode = D3D11_CULL_MODE::D3D11_CULL_NONE; changed = true; break;
+					}
+				}
+				if (is_selected)
+					ImGui::SetItemDefaultFocus();
+			}
+			ImGui::EndCombo();
+		}
+		return changed;
 	}
 
 	void ImGui_Color(const char* pLabel, uint32 index, std::function<FRGBColor()>getFunc, std::function<void(FRGBColor v)>setFunc)

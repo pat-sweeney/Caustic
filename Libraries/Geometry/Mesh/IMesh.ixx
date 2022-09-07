@@ -453,6 +453,11 @@ export namespace Caustic
         // pMaterialID - returns the material for the part of the mesh interested
         //**********************************************************************
         virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, uint32* pMaterialID) = 0;
+         
+        //**********************************************************************
+        // Method: NumberSubMeshes
+        // Returns number of submeshes in the mesh
+        //**********************************************************************
         virtual uint32 NumberSubMeshes() = 0;
 
         //**********************************************************************

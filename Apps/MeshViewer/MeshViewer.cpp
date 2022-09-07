@@ -81,36 +81,38 @@ CApp app;
 //**********************************************************************
 void FillInspector_Elem(ISceneElem* pElem)
 {
-    uint32 flags = pElem->GetFlags();
-    bool isHidden = (flags & ESceneElemFlags::Hidden) ? true : false;
-    bool isSelected = (flags & ESceneElemFlags::Selected) ? true : false;
-    bool depthTested = (flags & ESceneElemFlags::DepthTested) ? true : false;
-    bool bboxDirty = (flags & ESceneElemFlags::BBoxDirty) ? true : false;
-    bool renderableDirty = (flags & ESceneElemFlags::RenderableDirty) ? true : false;
-    bool materialDirty = (flags & ESceneElemFlags::MaterialDirty) ? true : false;
-    uint32 finalFlags = 0;
-    ImGui::Checkbox("Hidden", &isHidden);
-    finalFlags |= (isHidden) ? ESceneElemFlags::Hidden : 0;
-    ImGui::Checkbox("Selected", &isSelected);
-    finalFlags |= (isSelected) ? ESceneElemFlags::Selected : 0;
-    ImGui::Checkbox("DepthTested", &depthTested);
-    finalFlags |= (depthTested) ? ESceneElemFlags::DepthTested : 0;
-    ImGui::Checkbox("BBoxDirty", &bboxDirty);
-    finalFlags |= (bboxDirty) ? ESceneElemFlags::BBoxDirty : 0;
-    ImGui::Checkbox("RenderableDirty", &renderableDirty);
-    finalFlags |= (renderableDirty) ? ESceneElemFlags::RenderableDirty : 0;
-    ImGui::Checkbox("MaterialDirty", &materialDirty);
-    finalFlags |= (materialDirty) ? ESceneElemFlags::MaterialDirty : 0;
-    pElem->SetFlags(finalFlags);
-    BBox3 bbox;
-    pElem->GetBBox(&bbox);
-    ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
-    ImGui::BeginGroup();
-    ImGui_BBox3("BBox:", bbox,
-        std::min<float>(bbox.minPt.x, std::min<float>(bbox.minPt.y, bbox.minPt.z)),
-        std::max<float>(bbox.maxPt.x, std::max<float>(bbox.maxPt.y, bbox.maxPt.z)));
-    ImGui::EndGroup();
-    ImGui::PopStyleColor();
+    if (ImGui::CollapsingHeader("Base (SceneElem)", ImGuiTreeNodeFlags_None))
+    {
+        uint32 flags = pElem->GetFlags();
+        bool isHidden = (flags & ESceneElemFlags::Hidden) ? true : false;
+        bool isSelected = (flags & ESceneElemFlags::Selected) ? true : false;
+        bool depthTested = (flags & ESceneElemFlags::DepthTested) ? true : false;
+        bool bboxDirty = (flags & ESceneElemFlags::BBoxDirty) ? true : false;
+        bool renderableDirty = (flags & ESceneElemFlags::RenderableDirty) ? true : false;
+        bool materialDirty = (flags & ESceneElemFlags::MaterialDirty) ? true : false;
+        uint32 finalFlags = 0;
+        ImGui::Checkbox("Hidden", &isHidden);
+        finalFlags |= (isHidden) ? ESceneElemFlags::Hidden : 0;
+        ImGui::Checkbox("Selected", &isSelected);
+        finalFlags |= (isSelected) ? ESceneElemFlags::Selected : 0;
+        ImGui::Checkbox("DepthTested", &depthTested);
+        finalFlags |= (depthTested) ? ESceneElemFlags::DepthTested : 0;
+        ImGui::BeginDisabled();
+        ImGui::Checkbox("BBoxDirty", &bboxDirty);
+        ImGui::Checkbox("RenderableDirty", &renderableDirty);
+        ImGui::Checkbox("MaterialDirty", &materialDirty);
+        ImGui::EndDisabled();
+        pElem->SetFlags(finalFlags);
+        BBox3 bbox;
+        pElem->GetBBox(&bbox);
+        ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
+        ImGui::BeginDisabled();
+        ImGui_BBox3("BBox:", bbox,
+            std::min<float>(bbox.minPt.x, std::min<float>(bbox.minPt.y, bbox.minPt.z)),
+            std::max<float>(bbox.maxPt.x, std::max<float>(bbox.maxPt.y, bbox.maxPt.z)));
+        ImGui::EndDisabled();
+        ImGui::PopStyleColor();
+    }
 }
 
 void FillInspector_LightCollection(ISceneLightCollectionElem* pLightCollection)
@@ -141,9 +143,17 @@ void FillInspector_Light(ILight* pLight, int lightIndex)
     if (ImGui::SliderFloat(std::string("##").c_str(), &intensity, 0.0f, 1.0f))
         pLight->SetIntensity(intensity);
 
+    BBox3 bbox;
+    app.m_spRenderWindow->GetSceneGraph()->GetBBox(&bbox);
+    float maxV = std::max<float>(
+        std::max<float>(
+            std::max<float>(fabs(bbox.maxPt.x), std::max<float>(fabs(bbox.maxPt.y), fabs(bbox.maxPt.z))),
+            std::max<float>(fabs(bbox.minPt.x), std::max<float>(fabs(bbox.minPt.y), fabs(bbox.minPt.z)))
+        ), 1.0f);
+
     ImGui_Vector("Position:",
         [pLight]()->Vector3 { return pLight->GetPosition(); },
-        [pLight](Vector3 v) { pLight->SetPosition(v); }, 0.0f, 10000.0f);
+        [pLight](Vector3 v) { pLight->SetPosition(v); }, 0.0f, maxV * 1.02f);
 
     if (pLight->GetType() == ELightType::DirectionalLight)
     {
@@ -395,9 +405,86 @@ void FillInspector_Sphere(ISceneSphereElem* pSphere)
     ImGui::PopStyleColor();
 }
 
-void FillInspector_Mesh(ISceneMeshElem *pMesh)
+void FillInspector_Mesh(ISceneMeshElem *pMeshElem)
 {
-    FillInspector_Elem(pMesh);
+    FillInspector_Elem(pMeshElem);
+    auto spMesh = pMeshElem->GetMesh();
+    uint32 numSubmeshes = spMesh->NumberSubMeshes();
+    if (ImGui::CollapsingHeader("SubMeshes:", ImGuiTreeNodeFlags_None))
+    {
+        for (uint32 i = 0; i < numSubmeshes; i++)
+        {
+            auto spSubMesh = spMesh->GetSubMesh(i);
+            std::string name = spSubMesh->GetName();
+            uint32 numFaces = spSubMesh->GetNumberFaces();
+            uint32 numVerts = spSubMesh->GetNumberVertices();
+            uint32 numEdges = spSubMesh->GetNumberEdges();
+            EVertexFlags vertexFlags = spSubMesh->GetVertexFlags();
+            EMeshFlags meshFlags = spSubMesh->GetMeshFlags();
+            uint32 materialID = spSubMesh->GetMaterialID();
+            BBox3 bbox = spSubMesh->GetBBox();
+            bool hasPosition = (vertexFlags & EVertexFlags::HasPosition) ? true : false;
+            bool hasNormal = (vertexFlags & EVertexFlags::HasNormal) ? true : false;
+            bool hasUV0 = (vertexFlags & EVertexFlags::HasUV0) ? true : false;
+            bool hasUV1 = (vertexFlags & EVertexFlags::HasUV1) ? true : false;
+            bool hasUV2 = (vertexFlags & EVertexFlags::HasUV2) ? true : false;
+            bool hasUV3 = (vertexFlags & EVertexFlags::HasUV3) ? true : false;
+
+            if (ImGui::CollapsingHeader((std::string("SubMesh ") + std::to_string(i) + std::string(": ") + name).c_str(), ImGuiTreeNodeFlags_None))
+            {
+                ImGui::Text((std::string("  Faces: ") + std::to_string(numFaces)).c_str());
+                ImGui::Text((std::string("  Vertices: ") + std::to_string(numVerts)).c_str());
+                ImGui::Text((std::string("  Edges: ") + std::to_string(numEdges)).c_str());
+                ImGui::BeginDisabled();
+                ImGui::Checkbox("Has Position", &hasPosition);
+                ImGui::Checkbox("Has Normal", &hasNormal);
+                ImGui::Checkbox("Has UV0", &hasUV0);
+                ImGui::Checkbox("Has UV1", &hasUV1);
+                ImGui::Checkbox("Has UV2", &hasUV2);
+                ImGui::Checkbox("Has UV3", &hasUV3);
+                ImGui_BBox3("BBox:", bbox,
+                    std::min<float>(bbox.minPt.x, std::min<float>(bbox.minPt.y, bbox.minPt.z)),
+                    std::max<float>(bbox.maxPt.x, std::max<float>(bbox.maxPt.y, bbox.maxPt.z)));
+                ImGui::EndDisabled();
+            }
+        }
+        if (ImGui::CollapsingHeader("Materials", ImGuiTreeNodeFlags_None))
+        {
+            uint32 numMaterials = spMesh->GetNumberMaterials();
+            for (uint32 j = 0; j < numMaterials; j++)
+            {
+                CRefObj<IMaterialAttrib> spMaterial = spMesh->GetMaterial(j);
+                if (ImGui::CollapsingHeader((std::string("Material ")+std::to_string(j)).c_str(), ImGuiTreeNodeFlags_None))
+                {
+                    CRefObj<IMaterialAttrib> spMaterial = spMesh->GetMaterial(j);
+                    std::string name = spMaterial->GetName();
+                    ImGui::Text((std::string("MaterialID: ") + std::to_string(spMaterial->GetMaterialID())).c_str());
+                    ImGui::Text((std::string("Name:") + name).c_str());
+                    D3D11_CULL_MODE cullMode = spMaterial->GetCullMode();
+                    if (ImGui_CullMode(cullMode))
+                        spMaterial->SetCullMode(cullMode);
+
+                    D3D11_FILL_MODE fillMode = spMaterial->GetFillMode();
+                    if (ImGui_FillMode(fillMode))
+                        spMaterial->SetFillMode(fillMode);
+                    bool isTransparent = spMaterial->GetIsTransparent();
+                    if (ImGui::Checkbox("Transparent", &isTransparent))
+                        spMaterial->SetIsTransparent(isTransparent);
+                    bool isShadowReceiver = spMaterial->GetIsShadowReceiver();
+                    if (ImGui::Checkbox("Transparent", &isShadowReceiver))
+                        spMaterial->SetIsShadowReceiver(isShadowReceiver);
+
+                    int index = 0;
+                    spMaterial->EnumerateColors([&index](const wchar_t* pName, FRGBAColor& v) {
+                        std::string name = Caustic::wstr2str(std::wstring(pName));
+                        ImGui_Color(name.c_str(), index++, [&v]()->FRGBColor {return FRGBColor(v.r, v.g, v.b); }, [&v](FRGBColor nv) {v = FRGBAColor(nv.r, nv.g, nv.b, 1.0f); });
+                        });
+                    //    virtual void EnumerateScalars(std::function<void(const wchar_t* pName, float s)> func) = 0;
+                    //    virtual void EnumerateTextures(std::function<void(const wchar_t* pName, IImage* pTexture, EShaderAccess access)> func) = 0;
+                }
+            }
+        }
+    }
 }
 
 void FillInspector_Group(ISceneGroupElem *pGroup)
@@ -419,63 +506,15 @@ void FillInspector_Material(ISceneMaterialElem *pMaterialElem, IMaterialAttrib* 
         FillInspector_Elem(pMaterialElem);
 
     D3D11_CULL_MODE cullMode = pMaterial->GetCullMode();
-    const char* cullModes[] = { "Front", "Back", "None" };
-    int cullIndex = 0;
-    switch (cullMode)
+    if (ImGui_CullMode(cullMode))
     {
-    case D3D11_CULL_MODE::D3D11_CULL_FRONT: cullIndex = 0; break;
-    case D3D11_CULL_MODE::D3D11_CULL_BACK: cullIndex = 1; break;
-    case D3D11_CULL_MODE::D3D11_CULL_NONE: cullIndex = 2; break;
-    }
-    ImGui::Text("CullMode:");
-    ImGui::SameLine();
-    if (ImGui::BeginCombo("##CullMode", cullModes[cullIndex]))
-    {
-        for (int n = 0; n < IM_ARRAYSIZE(cullModes); n++)
-        {
-            bool is_selected = (cullIndex == n);
-            if (ImGui::Selectable(cullModes[n], is_selected))
-            {
-                switch (n)
-                {
-                case 0: pMaterial->SetCullMode(D3D11_CULL_MODE::D3D11_CULL_FRONT); break;
-                case 1: pMaterial->SetCullMode(D3D11_CULL_MODE::D3D11_CULL_BACK); break;
-                case 2: pMaterial->SetCullMode(D3D11_CULL_MODE::D3D11_CULL_NONE); break;
-                }
-            }
-            if (is_selected)
-                ImGui::SetItemDefaultFocus();
-        }
-        ImGui::EndCombo();
+        pMaterial->SetCullMode(cullMode);
     }
 
     D3D11_FILL_MODE fillMode = pMaterial->GetFillMode();
-    const char* fillModes[] = { "Wireframe", "Solid" };
-    static const char* currentFillItem;
-    switch (fillMode)
+    if (ImGui_FillMode(fillMode))
     {
-    case D3D11_FILL_MODE::D3D11_FILL_WIREFRAME: currentFillItem = fillModes[0]; break;
-    case D3D11_FILL_MODE::D3D11_FILL_SOLID: currentFillItem = fillModes[1]; break;
-    }
-    ImGui::Text("FillMode:");
-    ImGui::SameLine();
-    if (ImGui::BeginCombo("##FillMode", currentFillItem))
-    {
-        for (int n = 0; n < IM_ARRAYSIZE(fillModes); n++)
-        {
-            bool is_selected = (currentFillItem == fillModes[n]);
-            if (ImGui::Selectable(fillModes[n], is_selected))
-            {
-                currentFillItem = fillModes[n];
-                if (n == 0)
-                    pMaterial->SetFillMode(D3D11_FILL_MODE::D3D11_FILL_WIREFRAME);
-                else
-                    pMaterial->SetFillMode(D3D11_FILL_MODE::D3D11_FILL_SOLID);
-            }
-            if (is_selected)
-                ImGui::SetItemDefaultFocus();
-        }
-        ImGui::EndCombo();
+        pMaterial->SetFillMode(fillMode);
     }
 
     bool isTransparent = pMaterial->GetIsTransparent();
@@ -508,6 +547,7 @@ void FillInspector_Material(ISceneMaterialElem *pMaterialElem, IMaterialAttrib* 
 
 void FillInspector_SceneGraph(ISceneGraph* pSceneGraph)
 {
+    FillInspector_Elem(pSceneGraph);
     ImGui::Text("Show Proxies:");
     ImGui::SameLine();
     bool f = pSceneGraph->GetShowProxyObjects();
@@ -864,6 +904,27 @@ ImVec2 BuildMenuBar(ImFont *pFont)
                     auto spLine = app.m_spSceneFactory->CreateLineElem(p0, p1);
                     AddNewElement(spLine.p);
                 }
+                if (ImGui::MenuItem("Tetrahedron"))
+                {
+                    auto spMesh = Caustic::CreateTetrahedron();
+                    auto spMeshElem = app.m_spSceneFactory->CreateMeshElem();
+                    spMeshElem->SetMesh(spMesh);
+                    AddNewElement(spMeshElem.p);
+                }
+                if (ImGui::MenuItem("Grid"))
+                {
+                    auto spMesh = Caustic::CreateGrid(10, 10);
+                    auto spMeshElem = app.m_spSceneFactory->CreateMeshElem();
+                    spMeshElem->SetMesh(spMesh);
+                    AddNewElement(spMeshElem.p);
+                }
+                if (ImGui::MenuItem("Plane"))
+                {
+                    auto spMesh = Caustic::CreateGrid(1, 1);
+                    auto spMeshElem = app.m_spSceneFactory->CreateMeshElem();
+                    spMeshElem->SetMesh(spMesh);
+                    AddNewElement(spMeshElem.p);
+                }
                 /*
                 if (ImGui::MenuItem("ComputeShader"))
                 {
@@ -878,15 +939,6 @@ ImVec2 BuildMenuBar(ImFont *pFont)
                 {
                 }
                 if (ImGui::MenuItem("CreateSurfaceRevolution"))
-                {
-                }
-                if (ImGui::MenuItem("Tetrahedron"))
-                {
-                }
-                if (ImGui::MenuItem("Grid"))
-                {
-                }
-                if (ImGui::MenuItem("Plane"))
                 {
                 }
                 */
@@ -905,6 +957,11 @@ ImVec2 BuildMenuBar(ImFont *pFont)
                 if (ImGui::MenuItem("Group"))
                 {
                     AddNewElement(app.m_spSceneFactory->CreateGroupElem().p);
+                }
+                if (ImGui::MenuItem("LevelOfDetail"))
+                {
+                    auto spLOD = app.m_spSceneFactory->CreateLevelOfDetailElem();
+                    AddNewElement(spLOD.p);
                 }
                 ImGui::EndMenu();
             }
@@ -949,11 +1006,6 @@ ImVec2 BuildMenuBar(ImFont *pFont)
                     ImGui::PopStyleVar();
                 }
                 ImGui::EndMenu();
-            }
-            if (ImGui::MenuItem("LevelOfDetail"))
-            {
-                auto spLOD = app.m_spSceneFactory->CreateLevelOfDetailElem();
-                AddNewElement(spLOD.p);
             }
             if (ImGui::MenuItem("PDF Sphere"))
             {
