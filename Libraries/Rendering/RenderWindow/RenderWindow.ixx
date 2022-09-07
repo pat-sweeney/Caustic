@@ -19,6 +19,7 @@ import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Rendering.RendererMarshaller.IRendererMarshaller;
 import Rendering.Caustic.ITrackball;
+import Rendering.Caustic.ICamera;
 import Rendering.SceneGraph.ISceneGraph;
 import Rendering.SceneGraph.ISceneFactory;
 import Rendering.RenderWindow.IRenderWindow;
@@ -63,6 +64,13 @@ export namespace Caustic
         //**********************************************************************
         // IRenderWindow
         //**********************************************************************
+        virtual CRefObj<ICamera> GetCamera() override { return m_spCamera; }
+        virtual void SetCamera(CRefObj<ICamera> spCamera) override
+        {
+            m_spCamera = spCamera;
+            CRefObj<IRenderer> spRenderer = m_spMarshaller->GetRenderer();
+            spRenderer->SetCamera(m_spCamera);
+        }
         virtual void RecordEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override {}
         virtual void SetViewport(float x0, float y0, float x1, float y1) override;
         virtual void SetSnapPositions(const Vector3& home, const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis) override;

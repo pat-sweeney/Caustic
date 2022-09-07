@@ -76,6 +76,7 @@ export namespace Caustic
         //**********************************************************************
         // ICamera
         //**********************************************************************
+        virtual void BuildMatrices() override;
         virtual void SetParams(float fov, float aspectRatio, float nearZ, float farZ) override;
         virtual void GetParams(float* fov, float* aspectRatio, float* nearZ, float* farZ) override;
         virtual void SetPosition(const Vector3 &eye, const Vector3 &look, const Vector3 &up) override;

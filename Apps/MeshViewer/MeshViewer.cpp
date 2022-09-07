@@ -57,6 +57,7 @@ public:
     CRefObj<IRenderWindow> m_spRenderWindow;
     CRefObj<ICausticFactory> m_spCausticFactory;
     CRefObj<ISceneFactory> m_spSceneFactory;
+    CRefObj<ICamera> m_spDefaultCamera;
     int nodeCounter;
     int selectedNode;
     CRefObj<ISceneElem> m_spSelectedNode;
@@ -170,9 +171,10 @@ void FillInspector_CameraCollection(ISceneCameraCollectionElem* pCameraCollectio
 
 void FillInspector_Camera(ICamera* pCamera, int lightIndex)
 {
-    bool f = false;
+    static bool f = false;
     if (ImGui::Checkbox("Active", &f))
     {
+        app.m_spRenderWindow->SetCamera((f) ? pCamera : app.m_spDefaultCamera.p);
     }
 
     float fov, aspectRatio, nearZ, farZ;
@@ -1215,6 +1217,7 @@ void InitializeCaustic(HWND hwnd)
                 BuildPanels(pFinalRT, pFont);
             });
     app.m_spRenderer = app.m_spRenderWindow->GetRenderer();
+    app.m_spDefaultCamera = app.m_spRenderWindow->GetCamera();
 }
 
 // Global Variables:

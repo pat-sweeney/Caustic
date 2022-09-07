@@ -16,6 +16,7 @@ import Base.Core.Core;
 import Base.Core.IRefCount;
 import Base.Math.Vector;
 import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.ICamera;
 import Rendering.RenderGraph.IRenderGraph;
 import Rendering.SceneGraph.ISceneGraph;
 
@@ -33,6 +34,18 @@ export namespace Caustic
 	//**********************************************************************
 	struct IRenderWindow : public IRefCount
 	{
+		//**********************************************************************
+		// Method: GetCamera
+		// Returns the camera the window is using (which ultimately is set on the renderer)
+		//**********************************************************************
+		virtual CRefObj<ICamera> GetCamera() = 0;
+
+		//**********************************************************************
+		// Method: SetCamera
+		// Sets the camera the window is using (which ultimately is set on the renderer)
+		//**********************************************************************
+		virtual void SetCamera(CRefObj<ICamera> spCamera) = 0;
+
 		//**********************************************************************
 		// Method: RecordEvent
 		// Records an mouse/keyboard event for processing by the UI later. Only

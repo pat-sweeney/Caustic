@@ -154,6 +154,21 @@ namespace Caustic
             m_Pers = DirectX::XMMatrixPerspectiveFovRH(m_FOV, m_AspectRatio, m_NearZ, m_FarZ);
     }
 
+    void CCamera::BuildMatrices()
+    {
+        DirectX::XMVECTOR vEye = DirectX::XMVectorSet(m_Eye.x + m_offset.x, m_Eye.y + m_offset.y, m_Eye.z + m_offset.z, 0.0f);
+        DirectX::XMVECTOR vLook = DirectX::XMVectorSet(m_Look.x + m_offset.x, m_Look.y + m_offset.y, m_Look.z + m_offset.z, 0.0f);
+        DirectX::XMVECTOR vUp = DirectX::XMVectorSet(m_Up.x, m_Up.y, m_Up.z, 0.0f);
+        if (m_leftHanded)
+            m_View = DirectX::XMMatrixLookAtLH(vEye, vLook, vUp);
+        else
+            m_View = DirectX::XMMatrixLookAtRH(vEye, vLook, vUp);
+        if (m_leftHanded)
+            m_Pers = DirectX::XMMatrixPerspectiveFovLH(m_FOV, m_AspectRatio, m_NearZ, m_FarZ);
+        else
+            m_Pers = DirectX::XMMatrixPerspectiveFovRH(m_FOV, m_AspectRatio, m_NearZ, m_FarZ);
+    }
+
     //**********************************************************************
     // Method: GetParams
     // See <ICamera::GetParams>

@@ -30,6 +30,12 @@ export namespace Caustic
     struct ICamera : public ISerialize
     {
         //**********************************************************************
+        // Method: BuildMatrices
+        // Reconstructs the view and projection matrices for a camera
+        //**********************************************************************
+        virtual void BuildMatrices() = 0;
+
+        //**********************************************************************
         // Method: SetParams
         // Sets the camera parameters
         //

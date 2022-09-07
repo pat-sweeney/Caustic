@@ -1042,6 +1042,7 @@ namespace Caustic
     //**********************************************************************
     void CGraphicsBase::SetCamera(ICamera* pCamera)
     {
+        pCamera->BuildMatrices();
         m_spCamera = pCamera;
     }
 
