@@ -154,7 +154,7 @@ void FillInspector_Light(ILight* pLight, int lightIndex)
 
     ImGui_Vector("Position:",
         [pLight]()->Vector3 { return pLight->GetPosition(); },
-        [pLight](Vector3 v) { pLight->SetPosition(v); }, 0.0f, maxV * 1.02f);
+        [pLight](Vector3 v) { pLight->SetPosition(v); }, 0.0f, (maxV == FLT_MAX) ? 10000.0f : 1.0f);
 
     if (pLight->GetType() == ELightType::DirectionalLight)
     {
@@ -1008,6 +1008,11 @@ ImVec2 BuildMenuBar(ImFont *pFont)
                     ImGui::PopStyleVar();
                 }
                 ImGui::EndMenu();
+            }
+            if (ImGui::MenuItem("Camera"))
+            {
+                CRefObj<ICamera> spCamera = app.m_spCausticFactory->CreateCamera(true);
+                app.m_spRenderWindow->GetSceneGraph()->GetCameras()->AddCamera(spCamera);
             }
             if (ImGui::MenuItem("PDF Sphere"))
             {

@@ -821,10 +821,10 @@ namespace Caustic
         ParseSubnode(pNode, _Elements);
     }
 
-    void CColladaImporter::ParseVisualSceneInstance(IXMLDOMNode *pNode, Collada::SCollada *pCollada, Caustic::ISceneGraph **ppSceneGraph)
+    void CColladaImporter::ParseVisualSceneInstance(IXMLDOMNode *pXMLNode, Collada::SCollada *pCollada, Caustic::ISceneGraph **ppSceneGraph)
     {
         CComPtr<IXMLDOMNamedNodeMap> spAttributes;
-        CT(pNode->get_attributes(&spAttributes));
+        CT(pXMLNode->get_attributes(&spAttributes));
         std::wstring url;
         ParseAttribute(spAttributes, L"url", url);
 
@@ -841,6 +841,22 @@ namespace Caustic
             case Collada::c_NodeType_Camera:
                 {
                     CRefObj<ICamera> spCamera = CCausticFactory::Instance()->CreateCamera(true);
+                    Collada::SCamera* pCamera = pCollada->m_cameras[pNode->m_url.substr(1)].get();
+                    Vector4 eye(0.0f, 0.0f, 1.0f, 1.0f);
+                    eye = eye * pNode->m_mat;
+                    Vector4 lookDir(0.0f, 0.0f, 1.0f, 0.0f);
+                    lookDir = lookDir * pNode->m_mat;
+                    lookDir.Normalize();
+                    Vector4 look = eye - lookDir * eye.Length();
+                    Vector4 up(0.0f, 1.0f, 0.0f, 0.0f);
+                    up = up * pNode->m_mat;
+                    up.Normalize();
+                    spCamera->SetParams(Caustic::DegreesToRadians(pCamera->m_fov), pCamera->m_aspectRatio, pCamera->m_znear, pCamera->m_zfar);
+                    Vector3 look3(look.x, look.y, look.z);
+                    Vector3 eye3(eye.x, eye.y, eye.z);
+                    Vector3 up3(up.x, up.y, up.z);
+                    spCamera->SetPosition(eye3, look3, up3);
+                    spCamera->BuildMatrices();
                     spSceneGraph->GetCameras()->AddCamera(spCamera);
                 }
                 break;
