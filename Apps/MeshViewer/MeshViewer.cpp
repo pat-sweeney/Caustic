@@ -1,5 +1,5 @@
 ﻿//**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2022
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -474,7 +474,7 @@ void FillInspector_Mesh(ISceneMeshElem *pMeshElem)
                     if (ImGui::Checkbox("Transparent", &isTransparent))
                         spMaterial->SetIsTransparent(isTransparent);
                     bool isShadowReceiver = spMaterial->GetIsShadowReceiver();
-                    if (ImGui::Checkbox("Transparent", &isShadowReceiver))
+                    if (ImGui::Checkbox("Shadow Receiver", &isShadowReceiver))
                         spMaterial->SetIsShadowReceiver(isShadowReceiver);
 
                     spMaterial->EnumerateColors([&index](const wchar_t* pName, FRGBAColor& v) {

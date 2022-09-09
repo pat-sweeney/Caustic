@@ -131,7 +131,7 @@ namespace Caustic
         //   - BackFace Culling on
         //   - Front Faces are counter clockwise
         D3D11_RASTERIZER_DESC desc;
-        desc.FrontCounterClockwise = true;
+        desc.FrontCounterClockwise = false;
         desc.CullMode = D3D11_CULL_BACK;
         desc.AntialiasedLineEnable = false;
         desc.DepthBias = 0;
