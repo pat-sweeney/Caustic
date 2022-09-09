@@ -453,6 +453,7 @@ void FillInspector_Mesh(ISceneMeshElem *pMeshElem)
         if (ImGui::CollapsingHeader("Materials", ImGuiTreeNodeFlags_None))
         {
             uint32 numMaterials = spMesh->GetNumberMaterials();
+            int index = 0;
             for (uint32 j = 0; j < numMaterials; j++)
             {
                 CRefObj<IMaterialAttrib> spMaterial = spMesh->GetMaterial(j);
@@ -476,7 +477,6 @@ void FillInspector_Mesh(ISceneMeshElem *pMeshElem)
                     if (ImGui::Checkbox("Transparent", &isShadowReceiver))
                         spMaterial->SetIsShadowReceiver(isShadowReceiver);
 
-                    int index = 0;
                     spMaterial->EnumerateColors([&index](const wchar_t* pName, FRGBAColor& v) {
                         std::string name = Caustic::wstr2str(std::wstring(pName));
                         ImGui_Color(name.c_str(), index++, [&v]()->FRGBColor {return FRGBColor(v.r, v.g, v.b); }, [&v](FRGBColor nv) {v = FRGBAColor(nv.r, nv.g, nv.b, 1.0f); });
