@@ -75,6 +75,26 @@ export namespace Caustic
         virtual float GetIntensity() = 0;
 
         //**********************************************************************
+        // Method: SetCastsLight
+        // Indicates whether this light illuminates the scene. By default all lights
+        // do, however it is possible to create a light that only is used for shadow
+        // calculations by turning this flag to false and CastsShadows to true.
+        //
+        // Parameters:
+        // casts - True if light should participates in illuminating the scene. False otherwise.
+        //**********************************************************************
+        virtual void SetCastsLight(bool casts) = 0;
+
+        //**********************************************************************
+        // Method: GetCastsLight
+        // Returns whether this light participates in illuminating the scene
+        //
+        // Return:
+        // True if light does participate in illuminating the scene. False otherwise.
+        //**********************************************************************
+        virtual bool GetCastsLight() = 0;
+
+        //**********************************************************************
         // Method: SetCastsShadows
         // Indicates whether this light participates in shadow mapping
         //

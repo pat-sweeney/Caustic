@@ -32,13 +32,14 @@ export namespace Caustic
         {
         }
 
-        CDirectionalLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity, bool casts)
+        CDirectionalLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity, bool castsShadows, bool castsLight)
         {
             m_pos = pos;
             m_dir = dir;
             m_color = color;
             m_intensity = intensity;
-            m_casts = casts;
+            m_castsShadows = castsShadows;
+            m_castsLight = castsLight;
         }
 
         //**********************************************************************
@@ -55,8 +56,10 @@ export namespace Caustic
         virtual void SetOnOff(bool f) override { m_enabled = f; }
         virtual void SetIntensity(float intensity) override { m_intensity = intensity; }
         virtual float GetIntensity() override { return m_intensity; }
-        virtual void SetCastsShadows(bool casts) override { m_casts = casts; }
-        virtual bool GetCastsShadows() override { return m_casts; }
+        virtual void SetCastsLight(bool casts) override { m_castsLight = casts; }
+        virtual bool GetCastsLight() override { return m_castsLight; }
+        virtual void SetCastsShadows(bool casts) override { m_castsShadows = casts; }
+        virtual bool GetCastsShadows() override { return m_castsShadows; }
         virtual void SetPosition(Vector3& pos) override { m_pos = pos; }
         virtual Vector3 GetPosition() override { return m_pos; }
         virtual void SetDirection(Vector3& dir) override { m_dir = dir; }

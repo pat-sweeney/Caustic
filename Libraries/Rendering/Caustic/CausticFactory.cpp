@@ -98,27 +98,27 @@ namespace Caustic
     // Method: CreatePointLight
     // See <ICausticFactory::CreatePointLight>
     //**********************************************************************
-    CRefObj<IPointLight> CCausticFactory::CreatePointLight(Vector3& pos, FRGBColor& color, float intensity, bool castShadows)
+    CRefObj<IPointLight> CCausticFactory::CreatePointLight(Vector3& pos, FRGBColor& color, float intensity, bool castShadows, bool castsLight)
     {
-        return Caustic::CreatePointLight(pos, color, intensity, castShadows);
+        return Caustic::CreatePointLight(pos, color, intensity, castShadows, castsLight);
     }
 
     //**********************************************************************
     // Method: CreateSpotLight
     // See <ICausticFactory::CreateSpotLight>
     //**********************************************************************
-    CRefObj<ISpotLight> CCausticFactory::CreateSpotLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity, float innerAngle, float outerAngle, bool casts)
+    CRefObj<ISpotLight> CCausticFactory::CreateSpotLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity, float innerAngle, float outerAngle, bool castsShadows, bool castsLight)
     {
-        return Caustic::CreateSpotLight(pos, dir, color, intensity, innerAngle, outerAngle, casts);
+        return Caustic::CreateSpotLight(pos, dir, color, intensity, innerAngle, outerAngle, castsShadows, castsLight);
     }
 
     //**********************************************************************
     // Method: CreateDirectionalLight
     // See <ICausticFactory::CreateDirectionalLight>
     //**********************************************************************
-    CRefObj<IDirectionalLight> CCausticFactory::CreateDirectionalLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity, bool castShadows)
+    CRefObj<IDirectionalLight> CCausticFactory::CreateDirectionalLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity, bool castShadows, bool castsLight)
     {
-        return Caustic::CreateDirectionalLight(pos, dir, color, intensity, castShadows);
+        return Caustic::CreateDirectionalLight(pos, dir, color, intensity, castShadows, castsLight);
     }
 
     //**********************************************************************

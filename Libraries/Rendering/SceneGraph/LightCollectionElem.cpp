@@ -142,9 +142,6 @@ namespace Caustic
         spCtx2->BeginEventInt(L"LightCollection", 0);
 #endif
         std::vector<CRefObj<ILight>> lights = pSceneCtx->m_lights;
-        for (int i = 0; i < (int)m_lights.size(); i++)
-            if (m_lights[i]->GetOnOff())
-                pSceneCtx->m_lights.push_back(m_lights[i]);
         if (pSceneCtx->m_ShowProxyObjects)
         {
             CRefObj<IShader> spOldShader = pSceneCtx->m_spCurrentShader;
@@ -161,6 +158,9 @@ namespace Caustic
         }
         if (pRenderCtx->GetCurrentPass() == Caustic::c_PassShadow)
         {
+            for (int i = 0; i < (int)m_lights.size(); i++)
+                if (m_lights[i]->GetOnOff())
+                    pSceneCtx->m_lights.push_back(m_lights[i]);
             int totalLights = 0;
             for (int i = 0; i < (int)m_lights.size(); i++)
             {
@@ -179,6 +179,9 @@ namespace Caustic
         }
         else
         {
+            for (int i = 0; i < (int)m_lights.size(); i++)
+                if (m_lights[i]->GetOnOff() && m_lights[i]->GetCastsLight())
+                    pSceneCtx->m_lights.push_back(m_lights[i]);
             CSceneGroupElem::Render(pRenderer, pRenderCtx, pSceneCtx);
         }
         pSceneCtx->m_lights = lights;

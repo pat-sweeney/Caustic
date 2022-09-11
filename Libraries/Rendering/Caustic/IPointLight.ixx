@@ -36,10 +36,11 @@ export namespace Caustic
     // pos - position of light in world coordinates
     // color - color of light
     // intensity - intensity of light
-    // casts - indicates whether this light participates in shadow mapping
+    // castsShadows - indicates whether this light participates in shadow mapping
+    // castsLight - Does this light illuminate the scene?
     //
     // Module:
     // {Link:import Rendering.Caustic.IPointLight;{Rendering/Caustic/IPointLight.ixx}}
     //**********************************************************************
-    CRefObj<IPointLight> CreatePointLight(Vector3& pos, FRGBColor& color, float intensity, bool casts = true);
+    CRefObj<IPointLight> CreatePointLight(Vector3& pos, FRGBColor& color, float intensity, bool castsShadows = true, bool castsLight = true);
 }

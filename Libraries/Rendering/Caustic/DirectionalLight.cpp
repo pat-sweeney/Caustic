@@ -25,12 +25,14 @@ namespace Caustic
     // dir - direction vector
     // clr - color of light
     // intensity - intensity of light
+    // castsShadows - does light cause shadows?
+    // castsLight - does light participate in illuminating the scene?
     //
     // Returns:
     // Returns the created directional light
     //**********************************************************************
-    CRefObj<IDirectionalLight> CreateDirectionalLight(Vector3 &pos, Vector3& dir, FRGBColor& color, float intensity, bool casts)
+    CRefObj<IDirectionalLight> CreateDirectionalLight(Vector3 &pos, Vector3& dir, FRGBColor& color, float intensity, bool castsShadows, bool castsLight)
     {
-        return CRefObj<IDirectionalLight>(new CDirectionalLight(pos, dir, color, intensity, casts));
+        return CRefObj<IDirectionalLight>(new CDirectionalLight(pos, dir, color, intensity, castsShadows, castsLight));
     }
 }

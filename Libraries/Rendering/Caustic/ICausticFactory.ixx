@@ -124,6 +124,7 @@ export namespace Caustic
 		// color - color of light
 		// intensity - light's intensity
 		// castShadows - does light participate in shadow mapping?
+		// castsLight - does light illuminate the scene?
 		//
 		// Returns:
 		// Returns the point light source
@@ -131,7 +132,7 @@ export namespace Caustic
 		// Module:
 		// {Link:import Rendering/Caustic/ICausticFactory;{Rendering/Caustic/ICausticFactory.ixx}}
 		//**********************************************************************
-		virtual CRefObj<IPointLight> CreatePointLight(Vector3& pos, FRGBColor& color, float intensity, bool castShadows) = 0;
+		virtual CRefObj<IPointLight> CreatePointLight(Vector3& pos, FRGBColor& color, float intensity, bool castShadows = true, bool castsLight = true) = 0;
 
 		//**********************************************************************
 		// Method: CreateSpotLight
@@ -144,7 +145,8 @@ export namespace Caustic
 		// intensity - light's intensity
 		// innerAngle - inner angle defining where light is full intensity
 		// outerAngle - outer angle. Light falls off from full to no intensity between inner and outer angle
-		// casts - does light participate in shadow mapping?
+		// castsShadows - does light participate in shadow mapping?
+		// castsLight - does light illuminate the scene?
 		//
 		// Returns:
 		// Returns the spotlight
@@ -152,7 +154,7 @@ export namespace Caustic
 		// Module:
 		// {Link:import Rendering/Caustic/ICausticFactory;{Rendering/Caustic/ICausticFactory.ixx}}
 		//**********************************************************************
-		virtual CRefObj<ISpotLight> CreateSpotLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity = 1000.0f, float innerAngle = 30.0f, float outerAngle = 45.0f, bool casts = true) = 0;
+		virtual CRefObj<ISpotLight> CreateSpotLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity = 1000.0f, float innerAngle = 30.0f, float outerAngle = 45.0f, bool castsShadows = true, bool castsLight = true) = 0;
 
 		//**********************************************************************
 		// Method: CreateDirectionalLight
@@ -164,6 +166,7 @@ export namespace Caustic
 		// color - color of light
 		// intensity - light's intensity
 		// castShadows - does light participate in shadow mapping?
+		// castsLight - does light illuminate the scene?
 		//
 		// Returns:
 		// Returns the directional light source
@@ -171,7 +174,7 @@ export namespace Caustic
 		// Module:
 		// {Link:import Rendering/Caustic/ICausticFactory;{Rendering/Caustic/ICausticFactory.ixx}}
 		//**********************************************************************
-		virtual CRefObj<IDirectionalLight> CreateDirectionalLight(Vector3 &pos, Vector3& dir, FRGBColor& color, float intensity, bool castShadows) = 0;
+		virtual CRefObj<IDirectionalLight> CreateDirectionalLight(Vector3 &pos, Vector3& dir, FRGBColor& color, float intensity, bool castShadows = true, bool castsLight = true) = 0;
 
 		//**********************************************************************
 		// Method: CreateTrackball

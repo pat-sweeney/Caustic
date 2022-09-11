@@ -29,14 +29,16 @@ export namespace Caustic
     {
     protected:
         bool m_enabled;
-        bool m_casts;
+        bool m_castsLight;
+        bool m_castsShadows;
         float m_intensity;
         Vector3 m_pos;
         FRGBColor m_color;
     public:
         CLightBase() :
             m_enabled(true),
-            m_casts(true),
+            m_castsLight(true),
+            m_castsShadows(true),
             m_intensity(1000.0f),
             m_pos(0.0f, 0.0f, 0.0f),
             m_color(1.0f, 1.0f, 1.0f)

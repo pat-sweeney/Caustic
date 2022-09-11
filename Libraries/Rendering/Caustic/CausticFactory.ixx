@@ -66,9 +66,9 @@ export namespace Caustic
         virtual CRefObj<IPointCloud> CreatePointCloud(IRenderer* pRenderer, uint32 width, uint32 height) override;
         virtual CRefObj<IRenderMesh> CreateRenderMesh() override;
         virtual CRefObj<IRenderSubMesh> CreateRenderSubMesh() override;
-        virtual CRefObj<IPointLight> CreatePointLight(Vector3& pos, FRGBColor& color, float intensity, bool castShadows) override;
-        virtual CRefObj<ISpotLight> CreateSpotLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity = 1000.0f, float innerAngle = 30.0f, float outerAngle = 45.0f, bool casts = true) override;
-        virtual CRefObj<IDirectionalLight> CreateDirectionalLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity, bool castShadows) override;
+        virtual CRefObj<IPointLight> CreatePointLight(Vector3& pos, FRGBColor& color, float intensity, bool castShadows = true, bool castsLight = true) override;
+        virtual CRefObj<ISpotLight> CreateSpotLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity = 1000.0f, float innerAngle = 30.0f, float outerAngle = 45.0f, bool castsShadows = true, bool castsLight = true) override;
+        virtual CRefObj<IDirectionalLight> CreateDirectionalLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity, bool castShadows = true, bool castsLight = true) override;
         virtual CRefObj<ITrackball> CreateTrackball() override;
         virtual CRefObj<IMaterialAttrib> CreateMaterialAttrib() override;
         virtual CRefObj<IRenderMaterial> CreateRenderMaterial(IRenderer *pRenderer, IMaterialAttrib *pMaterialAttrib, IShader *pShader) override;

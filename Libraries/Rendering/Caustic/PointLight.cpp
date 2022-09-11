@@ -23,13 +23,14 @@ namespace Caustic
     // pos - position in world coordinates for the light
     // color - color of the light
     // intensity - intensity of the light
-    // casts - Does this light cast a shadow?
+    // castsShadows - Does this light cast a shadow?
+    // castsLight - Does this light illuminate the scene?
     //
     // Returns:
     // Returns the created point light
     //**********************************************************************
-    CRefObj<IPointLight> CreatePointLight(Vector3 &pos, FRGBColor &color, float intensity, bool casts)
+    CRefObj<IPointLight> CreatePointLight(Vector3 &pos, FRGBColor &color, float intensity, bool castsShadows, bool castsLight)
     {
-        return CRefObj<IPointLight>(new CPointLight(pos, color, intensity, casts));
+        return CRefObj<IPointLight>(new CPointLight(pos, color, intensity, castsShadows, castsLight));
     }
 }

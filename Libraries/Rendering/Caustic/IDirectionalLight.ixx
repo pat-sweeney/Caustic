@@ -54,10 +54,11 @@ export namespace Caustic
     // dir - direction light is pointing in world coordinates
     // color - color of light
     // intensity - intensity of light
-    // casts - Does this light cast shadows?
+    // castsShadows - Does this light cast shadows?
+    // castsLight - Does this light illuminate the scene?
     //
     // Module:
     // {Link:import Rendering.Caustic.IDirectionalLight;{Rendering/Caustic/IDirectionalLight.ixx}}
     //**********************************************************************
-    CRefObj<IDirectionalLight> CreateDirectionalLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity = 1000.0f, bool casts = true);
+    CRefObj<IDirectionalLight> CreateDirectionalLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity = 1000.0f, bool castsShadows = true, bool castsLight = true);
 }

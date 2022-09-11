@@ -129,6 +129,11 @@ void FillInspector_Light(ILight* pLight, int lightIndex)
     {
         pLight->SetOnOff(f);
     }
+    f = pLight->GetCastsLight();
+    if (ImGui::Checkbox("Casts Light", &f))
+    {
+        pLight->SetCastsLight(f);
+    }
     f = pLight->GetCastsShadows();
     if (ImGui::Checkbox("Casts Shadows", &f))
     {

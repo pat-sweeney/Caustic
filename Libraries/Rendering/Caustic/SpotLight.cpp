@@ -28,13 +28,14 @@ namespace Caustic
     // innerAngle - inner angle defining where light is full intensity
     // outerAngle - outer angle. Light falls off from full to no intensity between inner and outer angle
     // dir - direction vector
-    // casts - does this light participate in shadow mapping
+    // castsShadows - does this light participate in shadow mapping?
+    // castsLight - does this light illuminate the scene?
     //
     // Returns:
     // Returns the created point light
     //**********************************************************************
-    CRefObj<ISpotLight> CreateSpotLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity, float innerAngle, float outerAngle, bool casts)
+    CRefObj<ISpotLight> CreateSpotLight(Vector3& pos, Vector3& dir, FRGBColor& color, float intensity, float innerAngle, float outerAngle, bool castsShadows, bool castsLight)
     {
-        return CRefObj<ISpotLight>(new CSpotLight(pos, dir, color, intensity, innerAngle, outerAngle, casts));
+        return CRefObj<ISpotLight>(new CSpotLight(pos, dir, color, intensity, innerAngle, outerAngle, castsShadows, castsLight));
     }
 }
