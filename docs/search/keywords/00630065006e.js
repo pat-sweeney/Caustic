@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("cen",["Function"],[["Center",,[["BBox2",,,,0,"File:Base/Math/BBox.ixx:BBox2.Center","CClass:BBox2:Center"],["BBox3",,,,0,"File:Base/Math/BBox.ixx:BBox3.Center","CClass:BBox3:Center"]]]]);

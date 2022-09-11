@@ -47,6 +47,18 @@
  <div class="CBody"><p>Returns the lights intensity (some rough notion of radiant intensity) This value falls off as intensity/D^2 (where D is distance in meters from object to light)</p><div class="CHeading">Return</div><p>Lights intensity</p></div>
 </div>
 
+<a name="SetCastsLight"></a><a name="Topic1142"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">SetCastsLight</div>
+ <div id="NDPrototype1142" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetCastsLight(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">bool</span>&nbsp;</td><td class="PName last">casts</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div class="CBody"><p>Indicates whether this light illuminates the scene. By default all lights do, however it is possible to create a light that only is used for shadow calculations by turning this flag to false and CastsShadows to true.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">casts<div class="CDLParameterType"><span class="SHKeyword">bool</span></div></td><td class="CDLDefinition"><p>True if light should participates in illuminating the scene. False otherwise.</p></td></tr></table></div>
+</div>
+
+<a name="GetCastsLight"></a><a name="Topic1732"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetCastsLight</div>
+ <div id="NDPrototype1732" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">bool</span> GetCastsLight() = <span class="SHNumber">0</span></div></div>
+ <div class="CBody"><p>Returns whether this light participates in illuminating the scene</p><div class="CHeading">Return</div><p>True if light does participate in illuminating the scene. False otherwise.</p></div>
+</div>
+
 <a name="SetCastsShadows"></a><a name="Topic1086"></a><div class="CTopic TFunction LC">
  <div class="CTitle">SetCastsShadows</div>
  <div id="NDPrototype1086" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetCastsShadows(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">bool</span>&nbsp;</td><td class="PName last">casts</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>

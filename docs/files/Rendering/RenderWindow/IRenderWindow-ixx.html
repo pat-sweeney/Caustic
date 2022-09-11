@@ -17,6 +17,18 @@
  <div class="CTitle">Functions</div>
 </div>
 
+<a name="IRenderWindow.GetCamera"></a><a name="Topic1184"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">GetCamera</div>
+ <div id="NDPrototype1184" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <a href="../../../index.html#File:Base/Core/IRefCount.ixx:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,13);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Rendering/Caustic/ICamera.ixx:ICamera" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1147);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ICamera</a>&gt; GetCamera() = <span class="SHNumber">0</span></div></div>
+ <div class="CBody"><p>Returns the camera the window is using (which ultimately is set on the renderer)</p></div>
+</div>
+
+<a name="IRenderWindow.SetCamera"></a><a name="Topic1185"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">SetCamera</div>
+ <div id="NDPrototype1185" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetCamera(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Base/Core/IRefCount.ixx:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,13);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Rendering/Caustic/ICamera.ixx:ICamera" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1147);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ICamera</a>&gt;&nbsp;</td><td class="PName last">spCamera</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div class="CBody"><p>Sets the camera the window is using (which ultimately is set on the renderer)</p></div>
+</div>
+
 <a name="IRenderWindow.RecordEvent"></a><a name="Topic116"></a><div class="CTopic TFunction LC">
  <div class="CTitle">RecordEvent</div>
  <div id="NDPrototype116" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> RecordEvent(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first">HWND&nbsp;</td><td class="PName last">hWnd,</td></tr><tr><td class="PType first">UINT&nbsp;</td><td class="PName last">message,</td></tr><tr><td class="PType first">WPARAM&nbsp;</td><td class="PName last">wParam,</td></tr><tr><td class="PType first">LPARAM&nbsp;</td><td class="PName last">lParam</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
@@ -39,6 +51,12 @@
  <div class="CTitle">GetSceneGraph</div>
  <div id="NDPrototype1424" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <a href="../../../index.html#File:Base/Core/IRefCount.ixx:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,13);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Rendering/SceneGraph/ISceneGraph.ixx:ISceneGraph" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1543);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ISceneGraph</a>&gt; GetSceneGraph() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Returns the scene graph associated with this render window</p></div>
+</div>
+
+<a name="IRenderWindow.SetSceneGraph"></a><a name="Topic1186"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">SetSceneGraph</div>
+ <div id="NDPrototype1186" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetSceneGraph(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Rendering/SceneGraph/ISceneGraph.ixx:ISceneGraph" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1543);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ISceneGraph</a>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pSceneGraph</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div class="CBody"><p>Sets the render window's scene graph to the specified scene graph</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pSceneGraph<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/SceneGraph/ISceneGraph.ixx:ISceneGraph" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1543);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ISceneGraph</a>*</div></td><td class="CDLDefinition"><p>scene graph to set on render window</p></td></tr></table></div>
 </div>
 
 <a name="IRenderWindow.GetRenderer"></a><a name="Topic1425"></a><div class="CTopic TFunction LC">

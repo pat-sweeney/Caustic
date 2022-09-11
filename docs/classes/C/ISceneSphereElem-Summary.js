@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:ISceneSphereElem","ISceneSphereElem");NDSummary.OnSummaryLoaded("CClass:ISceneSphereElem",[["C/C++","C"]],[["Interfaces","Interface"]],[[1519,0,0,"ISceneSphereElem"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:ISceneSphereElem","ISceneSphereElem");NDSummary.OnSummaryLoaded("CClass:ISceneSphereElem",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Interfaces","Interface"]],[[1519,0,2,"ISceneSphereElem"],[1738,0,1,"Functions","Functions"],[1739,0,0,"SetPosition","SetPosition"],[1740,0,0,"GetPosition","GetPosition"]]);
