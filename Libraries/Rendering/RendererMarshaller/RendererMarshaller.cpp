@@ -167,6 +167,33 @@ namespace Caustic
         WaitForSingleObject(m_thread, INFINITE);
     }
 
+
+    //**********************************************************************
+    // Method: BeginShadowmapPass
+    // See <IRenderer::BeginShadowmapPass>
+    //**********************************************************************
+    void CRendererMarshaller::BeginShadowmapPass(int whichShadowmap)
+    {
+        RunOnRenderer(
+            [this, whichShadowmap](IRenderer* pRenderer)
+            {
+                pRenderer->BeginShadowmapPass(whichShadowmap);
+            }, false);
+    }
+
+    //**********************************************************************
+    // Method: EndShadowmapPass
+    // See <IRenderer::EndShadowmapPass>
+    //**********************************************************************
+    void CRendererMarshaller::EndShadowmapPass(int whichShadowmap)
+    {
+        RunOnRenderer(
+            [this, whichShadowmap](IRenderer* pRenderer)
+            {
+                pRenderer->EndShadowmapPass(whichShadowmap);
+            }, false);
+    }
+
     //**********************************************************************
     // Method: PushShadowmapRT
     // See <IRenderer::PushShadowmapRT>

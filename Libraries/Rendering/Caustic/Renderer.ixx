@@ -173,6 +173,8 @@ export namespace Caustic
         CComPtr<ID3D11DepthStencilView> m_spShadowMapStencilView[c_MaxShadowMaps];
         int m_shadowMapWidth[c_MaxShadowMaps];
         int m_shadowMapHeight[c_MaxShadowMaps];
+        int m_shadowMapLightWidth[c_MaxShadowMaps];
+        int m_shadowMapLightHeight[c_MaxShadowMaps];
         RECT m_viewRect;
         D3D11_VIEWPORT m_viewport;
 
@@ -229,7 +231,7 @@ export namespace Caustic
     protected:
         HANDLE m_freezeEvent;
         int m_freeze;
-        std::stack<ShadowMapRenderState> m_cameras;         // Cameras from shadow mapping
+        std::stack<ShadowMapRenderState> m_shadowMapRenderState; // Render state changes due to shadow mapping
         DWORD m_renderThreadId;                             // Render thread's ID
         std::vector<CRefObj<IRenderable>> m_singleObjs;              // List of individual renderable objects (outside scene graph)
         std::vector<CRefObj<ILight>> m_lights;              // List of lights in this scene
@@ -327,6 +329,8 @@ export namespace Caustic
         virtual CRefObj<IRenderCtx> GetRenderCtx() override;
         virtual void ClearDepth() override;
         virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) override;
+        virtual void BeginShadowmapPass(int whichShadowmap) override;
+        virtual void EndShadowmapPass(int whichShadowmap) override;
         virtual void PushShadowmapRT(int whichShadowmap, int lightMapIndex, const Vector3& lightPos, const Vector3& lightDir) override;
         virtual void PopShadowmapRT() override;
         virtual void SelectShadowmap(int whichShadowMap, int lightMapIndex, std::vector<CRefObj<ILight>>& lights, IShader* pShader) override;

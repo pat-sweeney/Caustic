@@ -158,6 +158,9 @@ namespace Caustic
         }
         if (pRenderCtx->GetCurrentPass() == Caustic::c_PassShadow)
         {
+            // Clear the depth map
+            pRenderer->BeginShadowmapPass(c_HiResShadowMap);
+
             for (int i = 0; i < (int)m_lights.size(); i++)
                 if (m_lights[i]->GetOnOff())
                     pSceneCtx->m_lights.push_back(m_lights[i]);
@@ -166,9 +169,31 @@ namespace Caustic
             {
                 if (totalLights >= c_MaxLights)
                     break;
-                if (m_lights[i]->GetCastsShadows() && m_lights[i]->GetType() == ELightType::DirectionalLight)
+                if (m_lights[i]->GetCastsShadows())
                 {
-                    pRenderer->PushShadowmapRT(c_HiResShadowMap, totalLights++, m_lights[i]->GetPosition(), m_lights[i]->GetDirection());
+                    Vector3 pos;
+                    Vector3 dir;
+                    switch (m_lights[i]->GetType())
+                    {
+                    case ELightType::DirectionalLight:
+                        pos = m_lights[i]->GetPosition();
+                        dir = m_lights[i]->GetDirection();
+                        break;
+                    case ELightType::SpotLight:
+                        pos = m_lights[i]->GetPosition();
+                        dir = m_lights[i]->GetDirection();
+                        break;
+                    case ELightType::PointLight:
+                        // Point lights need to projection omnidirectional, but that would
+                        // require a cube map for our shadow map. For now, we will limit the point light
+                        // pointing towards the origin (i.e. making simplifying assumption that
+                        // point lights are placed outside the scene)
+                        pos = m_lights[i]->GetPosition();
+                        dir = pos;
+                        dir.Normalize();
+                        break;
+                    }
+                    pRenderer->PushShadowmapRT(c_HiResShadowMap, totalLights++, pos, dir);
                     bool inShadowLightGroup = pSceneCtx->m_inShadowLightGroup;
                     pSceneCtx->m_inShadowLightGroup = true;
                     CSceneGroupElem::Render(pRenderer, pRenderCtx, pSceneCtx);
@@ -176,6 +201,7 @@ namespace Caustic
                     pRenderer->PopShadowmapRT();
                 }
             }
+            pRenderer->EndShadowmapPass(c_HiResShadowMap);
         }
         else
         {

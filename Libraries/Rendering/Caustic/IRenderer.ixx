@@ -396,6 +396,24 @@ export namespace Caustic
         virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) = 0;
 
         //**********************************************************************
+        // Method: BeginShadowmapPass
+        // Setups rendering for the shadow map pass
+        //
+        // Parameters:
+        // whichShadowmap - constant indicating which shadow map to use (c_HiResShadow, ...)
+        //**********************************************************************
+        virtual void BeginShadowmapPass(int whichShadowmap) = 0;
+
+        //**********************************************************************
+        // Method: EndShadowmapPass
+        // Finishes the shadow map pass
+        //
+        // Parameters:
+        // whichShadowmap - constant indicating which shadow map to use (c_HiResShadow, ...)
+        //**********************************************************************
+        virtual void EndShadowmapPass(int whichShadowmap) = 0;
+
+        //**********************************************************************
         // Method: PushShadowmapRT
         // Setups up our shadow map as the current render target
         //

@@ -43,7 +43,7 @@ export namespace Caustic
 	const int c_PassAllPasses = (1 << c_PassLast) - 1;
 
 	// Each shadow map will support up to 16 lights in a single map.
-	// For instance, the hires map is 8096x8096. We divide this map
+	// For instance, the hires map is 8192x8192. We divide this map
 	// into 16 2048x2048 shadow maps.
 	const int c_MaxLights = 4;
 	const int c_HiResShadowMap = 0;

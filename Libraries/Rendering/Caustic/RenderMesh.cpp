@@ -48,7 +48,7 @@ namespace Caustic
     {
         ID3D11DeviceContext* pContext = pRenderer->GetContext();
         ID3D11Device* pDevice = pRenderer->GetDevice();
-        pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         CRefObj<IShader> spShader;
         if (pRenderer->GetRenderCtx()->GetCurrentPass() == c_PassShadow)
             spShader = pRenderer->GetShaderMgr()->FindShader(L"ShadowMap");

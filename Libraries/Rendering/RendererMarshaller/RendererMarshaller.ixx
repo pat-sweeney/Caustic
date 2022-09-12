@@ -155,6 +155,8 @@ export namespace Caustic
         virtual void AddPointLight(IPointLight* pLight) override;
         virtual CRefObj<IRenderCtx> GetRenderCtx() override;
         virtual void DrawLine(Vector3 p1, Vector3 p2, Vector4 clr) override;
+        virtual void BeginShadowmapPass(int whichShadowmap) override;
+        virtual void EndShadowmapPass(int whichShadowmap) override;
         virtual void PushShadowmapRT(int whichShadowmap, int lightMapIndex, const Vector3& lightPos, const Vector3& lightDir) override;
         virtual void PopShadowmapRT() override;
         virtual void SelectShadowmap(int whichShadowmap, int lightMapIndex, std::vector<CRefObj<ILight>>& lights, IShader* pShader) override;

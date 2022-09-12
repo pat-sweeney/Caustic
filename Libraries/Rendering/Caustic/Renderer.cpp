@@ -568,52 +568,58 @@ namespace Caustic
     //**********************************************************************
     void CRenderer::SetShadowmapViewport(int whichShadowMap, int lightMapIndex)
     {
-        int lx = lightMapIndex % 4;
-        int ly = lightMapIndex / 4;
+        int lx = lightMapIndex % m_shadowMapLightWidth[whichShadowMap];
+        int ly = lightMapIndex / m_shadowMapLightHeight[whichShadowMap];
         ZeroMemory(&m_viewport, sizeof(m_viewport));
-        m_viewport.TopLeftX = float(lx * m_shadowMapWidth[whichShadowMap] / 4);
-        m_viewport.TopLeftY = float(ly * m_shadowMapHeight[whichShadowMap] / 4);
-        m_viewport.Width = (float)(m_shadowMapWidth[whichShadowMap] / 4);
-        m_viewport.Height = (float)(m_shadowMapHeight[whichShadowMap] / 4);
+        m_viewport.TopLeftX = float(lx * m_shadowMapWidth[whichShadowMap] / m_shadowMapLightWidth[whichShadowMap]);
+        m_viewport.TopLeftY = float(ly * m_shadowMapHeight[whichShadowMap] / m_shadowMapLightHeight[whichShadowMap]);
+        m_viewport.Width = (float)(m_shadowMapWidth[whichShadowMap] / m_shadowMapLightWidth[whichShadowMap]);
+        m_viewport.Height = (float)(m_shadowMapHeight[whichShadowMap] / m_shadowMapLightHeight[whichShadowMap]);
         m_viewport.MinDepth = 0.0f;
         m_viewport.MaxDepth = 1.0f;
         m_spContext->RSSetViewports(1, &m_viewport);
     }
 
     //**********************************************************************
-    // The total size of our shadow map is 8192x8192. This texture is further
-    // divided into 3 sections of hires, midres, and lowres shadow maps.
-    // There are 8 hi-res maps, 
-    //      2048         1024    1024
-    // +---------------+-------+-------+
-    // |               |       |       |
-    // |               |   2   |   3   |
-    // |               |       |       |
-    // |       1       +-------+-------+
-    // |               |       |       |
-    // |               |   4   |   5   |
-    // |               |       |       |
-    // +-------+-------+-------+---+---+
-    // |       |       |   |   |   |   |
-    // |   6   |   7   +---+---+---+---+
-    // |       |       |   |   |   |   |
-    // |-------+-------+---+---+---+---+
-    // |       |       |   |   |   |   |
-    // |   8   |   9   |---+---+---+---+
-    // |       |       |   |   |   |   |
-    // +-------+-------+---+---+---+---+
+    // We create 3 different shadow maps:
+    //     high res - 8192x8192 x 16 lights
+    //     medium res - 4096x2048 x 8 lights
+    //     low res - 2048x2048 x 4 lights
+    // Each of these shadow maps are broken down into tiles for each light
+    // in the scene. The high res map is broken down into 16 submaps (one
+    // for each light in the scene), the medium res map for 8 lights, and
+    // the low res map for 4 lights.
+    //    <------------- 8192 ----------->      <------------- 4096 ----------->     <-- 2048 ------>
+    // ^ +-------+-------+-------+-------+   ^ +-------+-------+-------+-------+  ^ +-------+-------+
+    // | |       |       |       |       |   | |       |       |       |       |  | |       |       |
+    // | |   0   |   1   |   2   |   3   |     |   0   |   1   |   2   |   3   |    |   0   |   1   |
+    // | |       |       |       |       |   2 |       |       |       |       |  2 |       |       |
+    // | |-------+-------+-------+-------+   0 |-------+-------+-------+-------+  0 |-------+-------+
+    //   |       |       |       |       |   4 |       |       |       |       |  4 |       |       |
+    // 8 |   4   |   5   |   6   |   7   |   8 |   4   |   5   |   6   |   7   |  8 |   2   |   3   |
+    // 1 |       |       |       |       |   | |       |       |       |       |  | |       |       |
+    // 9 +-------+-------+-------+-------+   v +-------+-------+-------+-------+  v +-------+-------+
+    // 2 |       |       |       |       |
+    //   |   8   |   9   |  10   |  11   |
+    // | |       |       |       |       |
+    // | |-------+-------+-------+-------+
+    // | |       |       |       |       |
+    // | |  12   |  13   |  14   |  15   |
+    // | |       |       |       |       |
+    // v +-------+-------+-------+-------+
+    //**********************************************************************
     void CRenderer::SelectShadowmap(int whichShadowMap, int lightMapIndex, std::vector<CRefObj<ILight>>& lights, IShader* pShader)
     {
         if (lights.size() == 0)
             return;
         pShader->SetPSParam(L"shadowMapTexture", std::any(m_spShadowTexture[whichShadowMap]));
-        int lx = lightMapIndex % 4;
-        int ly = lightMapIndex / 4;
+        int lx = lightMapIndex % m_shadowMapLightWidth[whichShadowMap];
+        int ly = lightMapIndex / m_shadowMapLightHeight[whichShadowMap];
         Float4 bounds(
-            float(lx * m_shadowMapWidth[whichShadowMap] / 4),
-            float(ly * m_shadowMapHeight[whichShadowMap] / 4),
-            (float)(m_shadowMapWidth[whichShadowMap] / 4),
-            (float)(m_shadowMapHeight[whichShadowMap] / 4)
+            float(lx * m_shadowMapWidth[whichShadowMap] / m_shadowMapLightWidth[whichShadowMap]),
+            float(ly * m_shadowMapHeight[whichShadowMap] / m_shadowMapLightHeight[whichShadowMap]),
+            (float)(m_shadowMapWidth[whichShadowMap] / m_shadowMapLightWidth[whichShadowMap]),
+            (float)(m_shadowMapHeight[whichShadowMap] / m_shadowMapLightHeight[whichShadowMap])
             );
         pShader->SetPSParam(L"shadowMapBounds", std::any(bounds));
 
@@ -633,16 +639,34 @@ namespace Caustic
     }
 
     //**********************************************************************
+    void CRenderer::BeginShadowmapPass(int whichShadowMap)
+    {
+        // Clear shadow map
+        CComPtr<ID3D11RenderTargetView> spOldRT;
+        CComPtr<ID3D11DepthStencilView> spOldStencil;
+        m_spContext->OMGetRenderTargets(1, &spOldRT, &spOldStencil);
+        m_spContext->OMSetRenderTargets(0, nullptr, m_spShadowMapStencilView[whichShadowMap].p);
+        FLOAT bgClr[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+        m_spContext->ClearDepthStencilView(m_spShadowMapStencilView[whichShadowMap], D3D11_CLEAR_DEPTH, 1.0f, 0);
+        m_spContext->OMSetRenderTargets(1, &spOldRT.p, spOldStencil);
+    }
+
+
+    //**********************************************************************
+    void CRenderer::EndShadowmapPass(int whichShadowMap)
+    {
+    }
+
+
+    //**********************************************************************
     void CRenderer::PushShadowmapRT(int whichShadowMap, int lightMapIndex, const Vector3& lightPos, const Vector3 &lightDir)
     {
         ShadowMapRenderState rs;
         m_spContext->OMGetRenderTargets(1, &rs.m_spOldRT, &rs.m_spOldStencil);
         rs.m_spOldCamera = m_spCamera;
         rs.m_viewport = m_viewport;
-        m_cameras.push(rs);
+        m_shadowMapRenderState.push(rs);
         m_spContext->OMSetRenderTargets(0, nullptr, m_spShadowMapStencilView[whichShadowMap].p);
-        FLOAT bgClr[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-        m_spContext->ClearDepthStencilView(m_spShadowMapStencilView[whichShadowMap], D3D11_CLEAR_DEPTH, 1.0f, 0);
 
         // Reset the camera to be from the lights perspective
         CRefObj<ICamera> spCamera = CreateCamera(true);
@@ -654,11 +678,11 @@ namespace Caustic
     void CRenderer::PopShadowmapRT()
     {
         // Restore default render targets
-        ShadowMapRenderState rs = m_cameras.top();
+        ShadowMapRenderState rs = m_shadowMapRenderState.top();
         this->SetCamera(rs.m_spOldCamera);
         m_viewport = rs.m_viewport;
         m_spContext->RSSetViewports(1, &m_viewport);
-        m_cameras.pop();
+        m_shadowMapRenderState.pop();
         m_spContext->OMSetRenderTargets(1, &rs.m_spOldRT.p, rs.m_spOldStencil);
     }
     
@@ -1078,28 +1102,30 @@ namespace Caustic
         // Create texture for rendering shadow map
         for (int i = 0; i < c_MaxShadowMaps; i++)
         {
-            int shadowMapWidth = 8192;
-            int shadowMapHeight = 8192;
             switch (i)
             {
             case c_HiResShadowMap:
-                shadowMapWidth = 8192;
-                shadowMapHeight = 8192;
+                m_shadowMapWidth[i] = 8192;
+                m_shadowMapHeight[i] = 8192;
+                m_shadowMapLightWidth[i] = 4;
+                m_shadowMapLightHeight[i] = 4;
                 break;
             case c_MidResShadowMap:
-                shadowMapWidth = 4096;
-                shadowMapHeight = 4096;
+                m_shadowMapWidth[i] = 4096;
+                m_shadowMapHeight[i] = 2048;
+                m_shadowMapLightWidth[i] = 4;
+                m_shadowMapLightHeight[i] = 2;
                 break;
             case c_LowResShadowMap:
-                shadowMapWidth = 512;
-                shadowMapHeight = 512;
+                m_shadowMapWidth[i] = 2048;
+                m_shadowMapHeight[i] = 2048;
+                m_shadowMapLightWidth[i] = 2;
+                m_shadowMapLightHeight[i] = 2;
                 break;
             }
-            m_shadowMapWidth[i] = shadowMapWidth;
-            m_shadowMapHeight[i] = shadowMapHeight;
 
             // Create shadow map texture
-            CD3D11_TEXTURE2D_DESC texDesc(/*DXGI_FORMAT_R32_FLOAT*/DXGI_FORMAT_R32_TYPELESS, shadowMapWidth, shadowMapHeight,
+            CD3D11_TEXTURE2D_DESC texDesc(DXGI_FORMAT_R32_TYPELESS, m_shadowMapWidth[i], m_shadowMapHeight[i],
                 1, 1, D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE);
             CT(m_spDevice->CreateTexture2D(&texDesc, NULL, &m_spShadowTexture[i]));
 
