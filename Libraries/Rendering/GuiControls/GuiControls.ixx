@@ -24,23 +24,29 @@ import Geometry.Mesh.IMaterialAttrib;
 
 export namespace Caustic
 {
-	void ImGui_Vector(const char* pLabel, std::function<Vector3()>getFunc, std::function<void(Vector3 v)>setFunc,
+	bool ImGui_Vector(const char* pLabel, std::function<Vector3()>getFunc, std::function<void(Vector3 v)>setFunc,
 		float minValue, float maxValue)
 	{
 		Vector3 v = getFunc();
 		ImGui::Text(pLabel);
 		std::string strLabel(pLabel);
 		ImGui::Text("  X:"); ImGui::SameLine();
-		ImGui::SliderFloat((std::string("##X")+strLabel).c_str(), &v.x, minValue, maxValue);
+		bool changed = false;
+		if (ImGui::SliderFloat((std::string("##X") + strLabel).c_str(), &v.x, minValue, maxValue))
+			changed = true;
 		ImGui::Text("  Y:"); ImGui::SameLine();
-		ImGui::SliderFloat((std::string("##Y")+strLabel).c_str(), &v.y, minValue, maxValue);
+		if (ImGui::SliderFloat((std::string("##Y") + strLabel).c_str(), &v.y, minValue, maxValue))
+			changed = true;
 		ImGui::Text("  Z:"); ImGui::SameLine();
-		ImGui::SliderFloat((std::string("##Z")+strLabel).c_str(), &v.z, minValue, maxValue);
+		if (ImGui::SliderFloat((std::string("##Z") + strLabel).c_str(), &v.z, minValue, maxValue))
+			changed = true;
 		setFunc(v);
+		return changed;
 	}
 
-	void ImGui_BBox3(const char *pLabel, BBox3 &bbox, float minV = 0.0f, float maxV = 1.0f)
+	bool ImGui_BBox3(const char *pLabel, BBox3 &bbox, float minV = 0.0f, float maxV = 1.0f)
 	{
+		bool changed = false;
 		if (bbox.minPt.x == FLT_MAX)
 		{
 			ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
@@ -51,24 +57,31 @@ export namespace Caustic
 			ImGui::Text("Not set");
 			ImGui::PopItemFlag();
 			ImGui::PopStyleVar();
-			return;
+			return false;
 		}
 		std::string strLabel((pLabel == nullptr) ? "BBox:" : pLabel);
 		ImGui::Text(strLabel.c_str());
 		ImGui::Text("  Min:");
 		ImGui::Text("      X:"); ImGui::SameLine();
-		ImGui::SliderFloat((std::string("##BBoxMinX") + strLabel).c_str(), &bbox.minPt.x, minV, maxV);
+		if (ImGui::SliderFloat((std::string("##BBoxMinX") + strLabel).c_str(), &bbox.minPt.x, minV, maxV))
+			changed = true;
 		ImGui::Text("      Y:"); ImGui::SameLine();
-		ImGui::SliderFloat((std::string("##BBoxMinY") + strLabel).c_str(), &bbox.minPt.y, minV, maxV);
+		if (ImGui::SliderFloat((std::string("##BBoxMinY") + strLabel).c_str(), &bbox.minPt.y, minV, maxV))
+			changed = true;
 		ImGui::Text("      Z:"); ImGui::SameLine();
-		ImGui::SliderFloat((std::string("##BBoxMinZ") + strLabel).c_str(), &bbox.minPt.z, minV, maxV);
+		if (ImGui::SliderFloat((std::string("##BBoxMinZ") + strLabel).c_str(), &bbox.minPt.z, minV, maxV))
+			changed = true;
 		ImGui::Text("  Max:");
 		ImGui::Text("      X:"); ImGui::SameLine();
-		ImGui::SliderFloat((std::string("##BBoxMaxX") + strLabel).c_str(), &bbox.maxPt.x, minV, maxV);
+		if (ImGui::SliderFloat((std::string("##BBoxMaxX") + strLabel).c_str(), &bbox.maxPt.x, minV, maxV))
+			changed = true;
 		ImGui::Text("      Y:"); ImGui::SameLine();
-		ImGui::SliderFloat((std::string("##BBoxMaxY") + strLabel).c_str(), &bbox.maxPt.y, minV, maxV);
+		if (ImGui::SliderFloat((std::string("##BBoxMaxY") + strLabel).c_str(), &bbox.maxPt.y, minV, maxV))
+			changed = true;
 		ImGui::Text("      Z:"); ImGui::SameLine();
-		ImGui::SliderFloat((std::string("##BBoxMaxZ") + strLabel).c_str(), &bbox.maxPt.z, minV, maxV);
+		if (ImGui::SliderFloat((std::string("##BBoxMaxZ") + strLabel).c_str(), &bbox.maxPt.z, minV, maxV))
+			changed = true;
+		return changed;
 	}
 
 	bool ImGui_FillMode(D3D11_FILL_MODE &fillMode)

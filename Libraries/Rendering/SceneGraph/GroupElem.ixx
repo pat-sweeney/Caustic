@@ -123,6 +123,7 @@ export namespace Caustic
 		virtual CRefObj<ISceneElem> GetChild(uint32 index) override;
 		virtual void AddChild(ISceneElem *pElem) override;
 		virtual void InsertChild(ISceneElem *pElem, uint32 index) override;
+		virtual Matrix4x4 GetTransform() override { return m_Transform; }
 		virtual void SetTransform(Matrix4x4 &transform) override { m_Transform = transform; }
     };
 }

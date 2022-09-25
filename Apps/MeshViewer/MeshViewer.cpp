@@ -497,6 +497,26 @@ void FillInspector_Mesh(ISceneMeshElem *pMeshElem)
 void FillInspector_Group(ISceneGroupElem *pGroup)
 {
     FillInspector_Elem(pGroup);
+    Vector3 scale;
+    Vector3 shear;
+    Vector3 rotation;
+    Vector3 translation;
+    Matrix4x4 transform = pGroup->GetTransform();
+    transform.Decompose(&scale, &shear, &rotation, &translation);
+    ImGui::Text("Transform:");
+    BBox3 bb;
+    pGroup->GetBBox(&bb);
+    float w = bb.maxPt.x - bb.minPt.x;
+    float h = bb.maxPt.y - bb.minPt.y;
+    float d = bb.maxPt.z - bb.minPt.z;
+    float maxv = std::max<float>(std::max<float>(w, h), d);
+    ImGui_Vector("    Position:", [&translation]()->Vector3 { return translation; }, [&translation](Vector3 v) { translation = v; }, -maxv * 1.10f, maxv * 1.10f);
+    ImGui_Vector("    Rotation:", [&rotation]()->Vector3 { return rotation; }, [&rotation](Vector3 v) { rotation = v; }, -180.0f, 360.0f);
+    ImGui_Vector("    Scale:", [&scale]()->Vector3 { return scale; }, [&scale](Vector3 v) { scale = v; }, -maxv * 1.10f, maxv * 1.10f);
+    transform = Matrix4x4::ScalingMatrix(scale.x, scale.y, scale.z) * 
+        Matrix4x4::RotationMatrix(Caustic::DegreesToRadians(rotation.x), Caustic::DegreesToRadians(rotation.y), Caustic::DegreesToRadians(rotation.z)) *
+        Matrix4x4::TranslationMatrix(translation.x, translation.y, translation.z);
+    pGroup->SetTransform(transform);
 }
 
 //**********************************************************************

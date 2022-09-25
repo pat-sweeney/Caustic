@@ -379,8 +379,8 @@ namespace Caustic
         //
         scale->x = (float)sqrt(row[0].x * row[0].x + row[0].y * row[0].y + row[0].z * row[0].z);
         row[0].x /= scale->x;
-        row[0].y /= scale->y;
-        row[0].z /= scale->z;
+        row[0].y /= scale->x;
+        row[0].z /= scale->x;
         //
         // Compute XY shear factor and make 2nd row orthonormal to 1st
         //

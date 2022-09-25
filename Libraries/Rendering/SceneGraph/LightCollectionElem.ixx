@@ -98,6 +98,7 @@ export namespace Caustic
 		virtual CRefObj<ISceneElem> GetChild(uint32 index) override { return CSceneGroupElem::GetChild(index); }
 		virtual void AddChild(ISceneElem* pElem) override { return CSceneGroupElem::AddChild(pElem); }
 		virtual void InsertChild(ISceneElem* pElem, uint32 index) override { return CSceneGroupElem::InsertChild(pElem, index); }
+		virtual Matrix4x4 GetTransform() override { return m_Transform; }
 		virtual void SetTransform(Matrix4x4& transform) override { m_Transform = transform; }
 
 		//**********************************************************************

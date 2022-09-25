@@ -43,6 +43,12 @@ export namespace Caustic
 		virtual void InsertChild(ISceneElem* pElem, uint32 index) = 0;
 
 		//**********************************************************************
+		// Method: GetTransform
+		// Gets the transform associated with this group.
+		//**********************************************************************
+		virtual Matrix4x4 GetTransform() = 0;
+
+		//**********************************************************************
 		// Method: SetTransform
 		// Sets the transform associated with this group.
 		//**********************************************************************

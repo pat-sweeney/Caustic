@@ -168,6 +168,11 @@ namespace Caustic
         return m_spRoot->InsertChild(pElem, index);
     }
 
+    Matrix4x4 CSceneGraph::GetTransform()
+    {
+        return m_spRoot->GetTransform();
+    }
+
     void CSceneGraph::SetTransform(Matrix4x4 &mat)
     {
         return m_spRoot->SetTransform(mat);
