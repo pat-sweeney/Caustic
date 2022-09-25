@@ -11,6 +11,8 @@ module;
 #include "imgui_impl_dx11.h"
 #include "imgui_internal.h"
 #include <d3d11.h>
+#include <sstream>
+#include <cstdlib>
 
 export module Rendering.GuiControls.Common;
 import Base.Core.Core;
@@ -24,24 +26,97 @@ import Geometry.Mesh.IMaterialAttrib;
 
 export namespace Caustic
 {
+	//**********************************************************************
+	// Function: ImGui_ScalableSlider
+	// Builds a ImGui slider that can decrease/increase the minimum/maximum
+	// value allowed by the slider. This is useful for instance when we want
+	// to postion an object in a scene that currently only covers the range
+	// -1..+1. Now if we set the slider min/max to -1000/+1000 it would be
+	// nearly impossible to set a value of 1.5, but we still want to ultimately
+	// be able to set a max value of 1000. Instead, we grow the range of
+	// the allowed slider values by 5% each time the min or max value is set.
+	// 
+	// Parameters:
+	// pLabel - Label for UI. Maybe nullptr.
+	// setUniqueID - should we generate a unique label ID for this element? (i.e. "#<uniqueID>")
+	// value - reference to value to be modified
+	// minValue - minimum value we can set
+	// maxValue - maximum value we can set
+	//**********************************************************************
+	bool ImGui_ScalableSlider(const char *pLabel, int uniqueID, float &value, float &minValue, float &maxValue)
+	{
+		std::string label((pLabel) ? "" : pLabel);
+		std::stringstream ss;
+		ss << label << "#" << uniqueID;
+		bool changed = false;
+		if (ImGui::SliderFloat(ss.str().c_str(), &value, minValue, maxValue))
+		{
+			if (value == maxValue)
+			{
+				float delta = (maxValue - minValue) * 0.05f;
+				minValue += delta;
+				maxValue += delta;
+			}
+			changed = true;
+		}
+		return changed;
+	}
+
+	//**********************************************************************
+	// Function: ImGui_Vector
+	// Builds ImGui UI for modifying a Vector3 using a scalable range.
+	// 
+	// Parameters:
+	// pLabel - Label for UI
+	// getFunc - lambda that returns the current value we want to modify
+	// setFunc - lambda that is called to set the current value we are modifying
+	// minValue - minimum value we can set
+	// maxValue - maximum value we can set
+	// scalableRange - is min/max value adjusted if we select min/max?
+	//**********************************************************************
 	bool ImGui_Vector(const char* pLabel, std::function<Vector3()>getFunc, std::function<void(Vector3 v)>setFunc,
-		float minValue, float maxValue)
+		float &minValue, float &maxValue, bool scalableRange)
 	{
 		Vector3 v = getFunc();
 		ImGui::Text(pLabel);
 		std::string strLabel(pLabel);
 		ImGui::Text("  X:"); ImGui::SameLine();
 		bool changed = false;
+		bool adjustRange = false;
 		if (ImGui::SliderFloat((std::string("##X") + strLabel).c_str(), &v.x, minValue, maxValue))
+		{
+			if (v.x == maxValue || v.x == minValue)
+				adjustRange = true;
 			changed = true;
+		}
 		ImGui::Text("  Y:"); ImGui::SameLine();
 		if (ImGui::SliderFloat((std::string("##Y") + strLabel).c_str(), &v.y, minValue, maxValue))
+		{
+			if (v.x == maxValue || v.x == minValue)
+				adjustRange = true;
 			changed = true;
+		}
 		ImGui::Text("  Z:"); ImGui::SameLine();
 		if (ImGui::SliderFloat((std::string("##Z") + strLabel).c_str(), &v.z, minValue, maxValue))
+		{
+			if (v.x == maxValue || v.x == minValue)
+				adjustRange = true;
 			changed = true;
+		}
+		if (scalableRange && adjustRange)
+		{
+			float delta = (maxValue - minValue) * 0.05f;
+			minValue += delta;
+			maxValue += delta;
+		}
 		setFunc(v);
 		return changed;
+	}
+
+	bool ImGui_Vector(const char* pLabel, std::function<Vector3()>getFunc, std::function<void(Vector3 v)>setFunc,
+		float minValue, float maxValue)
+	{
+		return ImGui_Vector(pLabel, getFunc, setFunc, minValue, maxValue, false);
 	}
 
 	bool ImGui_BBox3(const char *pLabel, BBox3 &bbox, float minV = 0.0f, float maxV = 1.0f)

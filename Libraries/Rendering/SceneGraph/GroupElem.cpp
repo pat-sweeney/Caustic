@@ -57,8 +57,8 @@ namespace Caustic
                 continue;
             m_Children[i]->Render(pRenderer, pRenderCtx, pSceneCtx);
         }
-        DrawSelected(pRenderer, this, pSceneCtx);
         pSceneCtx->m_Transform = old;
+        DrawSelected(pRenderer, this, pSceneCtx);
         if (m_postrenderCallback)
             m_postrenderCallback(pRenderCtx->GetCurrentPass());
 #ifdef _DEBUG
@@ -75,8 +75,22 @@ namespace Caustic
             {
                 BBox3 bb;
                 m_Children[i]->GetBBox(&bb);
-                m_BBox.AddPoint(bb.minPt);
-                m_BBox.AddPoint(bb.maxPt);
+                Vector4 corners[8]{
+                    Vector4(bb.minPt.x, bb.minPt.y, bb.minPt.z, 1.0f),
+                    Vector4(bb.minPt.x, bb.minPt.y, bb.maxPt.z, 1.0f),
+                    Vector4(bb.minPt.x, bb.maxPt.y, bb.minPt.z, 1.0f),
+                    Vector4(bb.minPt.x, bb.maxPt.y, bb.maxPt.z, 1.0f),
+                    Vector4(bb.maxPt.x, bb.minPt.y, bb.minPt.z, 1.0f),
+                    Vector4(bb.maxPt.x, bb.minPt.y, bb.maxPt.z, 1.0f),
+                    Vector4(bb.maxPt.x, bb.maxPt.y, bb.minPt.z, 1.0f),
+                    Vector4(bb.maxPt.x, bb.maxPt.y, bb.maxPt.z, 1.0f),
+                };
+                for (int i = 0; i < 8; i++)
+                {
+                    Vector4 np = corners[i] * m_Transform;
+                    Vector3 v(np.x, np.y, np.z);
+                    m_BBox.AddPoint(v);
+                }
             }
             SetFlags(GetFlags() & ~ESceneElemFlags::BBoxDirty);
         }

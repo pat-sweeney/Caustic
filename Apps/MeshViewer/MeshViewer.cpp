@@ -510,9 +510,18 @@ void FillInspector_Group(ISceneGroupElem *pGroup)
     float h = bb.maxPt.y - bb.minPt.y;
     float d = bb.maxPt.z - bb.minPt.z;
     float maxv = std::max<float>(std::max<float>(w, h), d);
-    ImGui_Vector("    Position:", [&translation]()->Vector3 { return translation; }, [&translation](Vector3 v) { translation = v; }, -maxv * 1.10f, maxv * 1.10f);
-    ImGui_Vector("    Rotation:", [&rotation]()->Vector3 { return rotation; }, [&rotation](Vector3 v) { rotation = v; }, -180.0f, 360.0f);
-    ImGui_Vector("    Scale:", [&scale]()->Vector3 { return scale; }, [&scale](Vector3 v) { scale = v; }, -maxv * 1.10f, maxv * 1.10f);
+    ImGui_Vector("    Position:", 
+        [&translation]()->Vector3 { return translation; }, 
+        [&translation](Vector3 v) { translation = v; }, 
+        -maxv * 1.10f, maxv * 1.10f);
+    ImGui_Vector("    Rotation:",
+        [&rotation]()->Vector3 { return rotation; },
+        [&rotation](Vector3 v) { rotation = v; },
+        -180.0f, 360.0f);
+    ImGui_Vector("    Scale:",
+        [&scale]()->Vector3 { return scale; },
+        [&scale](Vector3 v) { scale = v; },
+        -maxv * 1.10f, maxv * 1.10f);
     transform = Matrix4x4::ScalingMatrix(scale.x, scale.y, scale.z) * 
         Matrix4x4::RotationMatrix(Caustic::DegreesToRadians(rotation.x), Caustic::DegreesToRadians(rotation.y), Caustic::DegreesToRadians(rotation.z)) *
         Matrix4x4::TranslationMatrix(translation.x, translation.y, translation.z);
