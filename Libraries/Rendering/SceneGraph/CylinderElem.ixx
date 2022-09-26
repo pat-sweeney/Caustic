@@ -104,11 +104,12 @@ export namespace Caustic
             m_spXformElem->Render(pRenderer, pRenderCtx, pSceneCtx);
             if (m_postrenderCallback)
                 m_postrenderCallback(pRenderCtx->GetCurrentPass());
+            CSceneElem::DrawSelected(pRenderer, this, pSceneCtx);
         }
         
         virtual void GetBBox(BBox3* pBBox) override
         {
-            float r = std::max<float>(m_topRadius, m_bottomRadius) / 2.0f;
+            float r = std::max<float>(m_topRadius, m_bottomRadius);
             Vector3 v(r, m_height / 2.0f, r);
             pBBox->minPt = m_center - v;
             pBBox->maxPt = m_center + v;
@@ -143,7 +144,7 @@ export namespace Caustic
             {
                 Vector3 v;
                 v.x = radius;
-                v.y = dy;
+                v.y = dy - height / 2.0f;
                 v.z = 0.0f;
                 pts.push_back(v);
                 dy += height / float(subdivisions);

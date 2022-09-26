@@ -207,6 +207,9 @@
     <ClCompile Include="LevelOfDetailElem.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SceneElem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Overlay2D.ps">

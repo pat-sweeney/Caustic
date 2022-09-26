@@ -100,8 +100,20 @@ export namespace Caustic
             pRenderer->DrawLine(m_p0, m_p1, vc);
             if (m_postrenderCallback)
                 m_postrenderCallback(pRenderCtx->GetCurrentPass());
+            CSceneElem::DrawSelected(pRenderer, this, pSceneCtx);
         }
-        virtual void GetBBox(BBox3* pBBox) override { return; }
+
+        virtual void GetBBox(BBox3* pBBox) override
+        {
+            pBBox->minPt.x = std::min<float>(m_p0.x, m_p1.x);
+            pBBox->minPt.y = std::min<float>(m_p0.y, m_p1.y);
+            pBBox->minPt.z = std::min<float>(m_p0.z, m_p1.z);
+            pBBox->maxPt.x = std::max<float>(m_p0.x, m_p1.x);
+            pBBox->maxPt.y = std::max<float>(m_p0.y, m_p1.y);
+            pBBox->maxPt.z = std::max<float>(m_p0.z, m_p1.z);
+            return;
+        }
+        
         virtual uint32 GetFlags() override { return m_Flags; }
         virtual void SetFlags(uint32 flags) override { m_Flags = flags; }
         virtual void SetInPass(uint32 pass) override { CSceneElem::SetInPass(pass); }

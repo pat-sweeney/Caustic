@@ -55,7 +55,7 @@ export namespace Caustic
             m_depth = depth;
             m_spXformElem = CreateGroupElem();
 
-            auto smat = Caustic::Matrix4x4::ScalingMatrix(width, height, depth);
+            auto smat = Caustic::Matrix4x4::ScalingMatrix(width / 2.0f, height / 2.0f, depth / 2.0f);
             auto tmat = Caustic::Matrix4x4::TranslationMatrix(center.x, center.y, center.z);
             auto mat = smat * tmat;
             m_spXformElem->SetTransform(mat);
@@ -108,6 +108,7 @@ export namespace Caustic
             m_spXformElem->Render(pRenderer, pRenderCtx, pSceneCtx);
             if (m_postrenderCallback)
                 m_postrenderCallback(pRenderCtx->GetCurrentPass());
+            CSceneElem::DrawSelected(pRenderer, this, pSceneCtx);
         }
 
         virtual void GetBBox(BBox3* pBBox) override

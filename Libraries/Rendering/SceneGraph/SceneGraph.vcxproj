@@ -141,6 +141,7 @@
     <ClCompile Include="Overlay2D.cpp" />
     <ClCompile Include="Overlay2D.ixx" />
     <ClCompile Include="SceneCtx.ixx" />
+    <ClCompile Include="SceneElem.cpp" />
     <ClCompile Include="SceneElem.ixx" />
     <ClCompile Include="SceneFactory.cpp" />
     <ClCompile Include="SceneFactory.ixx" />

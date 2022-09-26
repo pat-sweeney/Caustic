@@ -112,7 +112,9 @@ export namespace Caustic
             m_spXformElem->Render(pRenderer, pRenderCtx, pSceneCtx);
             if (m_postrenderCallback)
                 m_postrenderCallback(pRenderCtx->GetCurrentPass());
+            CSceneElem::DrawSelected(pRenderer, this, pSceneCtx);
         }
+        
         virtual void GetBBox(BBox3* pBBox) override
         {
             pBBox->minPt = m_center - m_radius;

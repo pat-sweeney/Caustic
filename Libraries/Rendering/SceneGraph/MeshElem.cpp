@@ -24,66 +24,6 @@ import Geometry.Mesh.MeshFuncs;
 
 namespace Caustic
 {
-    void CSceneElem::DrawSelected(IRenderer *pRenderer, ISceneElem *pElem, SceneCtx *pSceneCtx)
-    {
-        // Draw manipulator around currently selected object
-        if (pElem->GetFlags() & (uint32)ESceneElemFlags::Selected)
-        {
-            BBox3 bbox;
-            pElem->GetBBox(&bbox);
-            Vector4 minPt = bbox.minPt * pSceneCtx->m_Transform;
-            Vector4 maxPt = bbox.maxPt * pSceneCtx->m_Transform;
-            pRenderer->DrawLine(
-                Vector3(minPt.x, minPt.y, minPt.z),
-                Vector3(maxPt.x, minPt.y, minPt.z),
-                Vector4(0.0f, 0.0f, 1.0f, 1.0f));
-            pRenderer->DrawLine(
-                Vector3(minPt.x, minPt.y, maxPt.z),
-                Vector3(maxPt.x, minPt.y, maxPt.z),
-                Vector4(0.0f, 0.0f, 1.0f, 1.0f));
-            pRenderer->DrawLine(
-                Vector3(minPt.x, maxPt.y, minPt.z),
-                Vector3(maxPt.x, maxPt.y, minPt.z),
-                Vector4(0.0f, 0.0f, 1.0f, 1.0f));
-            pRenderer->DrawLine(
-                Vector3(minPt.x, maxPt.y, maxPt.z),
-                Vector3(maxPt.x, maxPt.y, maxPt.z),
-                Vector4(0.0f, 0.0f, 1.0f, 1.0f));
-            pRenderer->DrawLine(
-                Vector3(minPt.x, minPt.y, minPt.z),
-                Vector3(minPt.x, maxPt.y, minPt.z),
-                Vector4(0.0f, 0.0f, 1.0f, 1.0f));
-            pRenderer->DrawLine(
-                Vector3(minPt.x, minPt.y, maxPt.z),
-                Vector3(minPt.x, maxPt.y, maxPt.z),
-                Vector4(0.0f, 0.0f, 1.0f, 1.0f));
-            pRenderer->DrawLine(
-                Vector3(maxPt.x, minPt.y, minPt.z),
-                Vector3(maxPt.x, maxPt.y, minPt.z),
-                Vector4(0.0f, 0.0f, 1.0f, 1.0f));
-            pRenderer->DrawLine(
-                Vector3(maxPt.x, minPt.y, maxPt.z),
-                Vector3(maxPt.x, maxPt.y, maxPt.z),
-                Vector4(0.0f, 0.0f, 1.0f, 1.0f));
-            pRenderer->DrawLine(
-                Vector3(minPt.x, minPt.y, minPt.z),
-                Vector3(minPt.x, minPt.y, maxPt.z),
-                Vector4(0.0f, 0.0f, 1.0f, 1.0f));
-            pRenderer->DrawLine(
-                Vector3(minPt.x, maxPt.y, minPt.z),
-                Vector3(minPt.x, maxPt.y, maxPt.z),
-                Vector4(0.0f, 0.0f, 1.0f, 1.0f));
-            pRenderer->DrawLine(
-                Vector3(maxPt.x, minPt.y, minPt.z),
-                Vector3(maxPt.x, minPt.y, maxPt.z),
-                Vector4(0.0f, 0.0f, 1.0f, 1.0f));
-            pRenderer->DrawLine(
-                Vector3(maxPt.x, maxPt.y, minPt.z),
-                Vector3(maxPt.x, maxPt.y, maxPt.z),
-                Vector4(0.0f, 0.0f, 1.0f, 1.0f));
-        }
-    }
-
     bool CSceneMeshElem::RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** ppMaterial)
     {
         uint32 materialID;
@@ -141,6 +81,7 @@ namespace Caustic
 #endif
         if (m_postrenderCallback)
             m_postrenderCallback(pRenderCtx->GetCurrentPass());
+        CSceneElem::DrawSelected(pRenderer, this, pSceneCtx);
     }
 
     void CSceneMeshElem::GetBBox(BBox3 *pBBox)
