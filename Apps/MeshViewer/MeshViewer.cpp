@@ -506,26 +506,32 @@ void FillInspector_Group(ISceneGroupElem *pGroup)
     ImGui::Text("Transform:");
     BBox3 bb;
     pGroup->GetBBox(&bb);
-    float w = bb.maxPt.x - bb.minPt.x;
-    float h = bb.maxPt.y - bb.minPt.y;
-    float d = bb.maxPt.z - bb.minPt.z;
-    float maxv = std::max<float>(std::max<float>(w, h), d);
-    ImGui_Vector("    Position:", 
-        [&translation]()->Vector3 { return translation; }, 
-        [&translation](Vector3 v) { translation = v; }, 
-        -maxv * 1.10f, maxv * 1.10f);
-    ImGui_Vector("    Rotation:",
+    float maxv = 1.01f * std::max<float>(std::max<float>(bb.maxPt.x, bb.maxPt.y), bb.maxPt.z);
+    float minv = 1.01f * std::max<float>(std::max<float>(bb.minPt.x, bb.minPt.y), bb.minPt.z);
+    float maxscale = 1.01f * std::max<float>(std::max<float>(scale.x, scale.y), scale.z);
+    bool changed = false;
+    if (ImGui_Vector("    Position:",
+        [&translation]()->Vector3 { return translation; },
+        [&translation](Vector3 v) { translation = v; },
+        -maxv, maxv))
+        changed = true;
+    if (ImGui_Vector("    Rotation:",
         [&rotation]()->Vector3 { return rotation; },
         [&rotation](Vector3 v) { rotation = v; },
-        -180.0f, 360.0f);
-    ImGui_Vector("    Scale:",
+        -180.0f, 360.0f))
+        changed = true;
+    if (ImGui_Vector("    Scale:",
         [&scale]()->Vector3 { return scale; },
         [&scale](Vector3 v) { scale = v; },
-        -maxv * 1.10f, maxv * 1.10f);
-    transform = Matrix4x4::ScalingMatrix(scale.x, scale.y, scale.z) * 
-        Matrix4x4::RotationMatrix(Caustic::DegreesToRadians(rotation.x), Caustic::DegreesToRadians(rotation.y), Caustic::DegreesToRadians(rotation.z)) *
-        Matrix4x4::TranslationMatrix(translation.x, translation.y, translation.z);
-    pGroup->SetTransform(transform);
+        -maxscale, maxscale))
+        changed = true;
+    if (changed)
+    {
+        transform = Matrix4x4::ScalingMatrix(scale.x, scale.y, scale.z) *
+            Matrix4x4::RotationMatrix(Caustic::DegreesToRadians(rotation.x), Caustic::DegreesToRadians(rotation.y), Caustic::DegreesToRadians(rotation.z)) *
+            Matrix4x4::TranslationMatrix(translation.x, translation.y, translation.z);
+        pGroup->SetTransform(transform);
+    }
 }
 
 //**********************************************************************
@@ -539,7 +545,10 @@ void FillInspector_Group(ISceneGroupElem *pGroup)
 void FillInspector_Material(ISceneMaterialElem *pMaterialElem, IMaterialAttrib* pMaterial)
 {
     if (pMaterialElem != nullptr)
-        FillInspector_Elem(pMaterialElem);
+    {
+        if (ImGui::CollapsingHeader("Group Info (GroupElem)", ImGuiTreeNodeFlags_None))
+            FillInspector_Group(pMaterialElem);
+    }
 
     D3D11_CULL_MODE cullMode = pMaterial->GetCullMode();
     if (ImGui_CullMode(cullMode))
@@ -695,7 +704,7 @@ void BuildGroupUI(ISceneGraph* pSceneGraph, ISceneGroupElem* pGroup, const char 
                 case ESceneElemType::Renderable: // Type not implemented!
                     break;
                 case ESceneElemType::LightCollection:
-                    BuildCollapsableNode(pSceneGraph, spChild, true, "LightCollection",
+                    BuildCollapsableNode(pSceneGraph, spChild, false, "LightCollection",
                         [pSceneGraph, spChild]()
                         {
                             ISceneLightCollectionElem* pCollection = (ISceneLightCollectionElem*)spChild.p;

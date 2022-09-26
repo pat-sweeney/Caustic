@@ -50,7 +50,7 @@ namespace Caustic
             if (!m_prerenderCallback(pRenderCtx->GetCurrentPass()))
                 return;
         Matrix4x4 old = pSceneCtx->m_Transform;
-        pSceneCtx->m_Transform = pSceneCtx->m_Transform * m_Transform;
+        pSceneCtx->m_Transform = m_Transform * pSceneCtx->m_Transform;
         for (size_t i = 0; i < m_Children.size(); i++)
         {
             if (m_Children[i]->GetFlags() & ESceneElemFlags::Hidden)
@@ -71,6 +71,7 @@ namespace Caustic
     {
         if (GetFlags() & ESceneElemFlags::BBoxDirty)
         {
+            m_BBox = BBox3();
             for (size_t i = 0; i < m_Children.size(); i++)
             {
                 BBox3 bb;
