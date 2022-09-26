@@ -84,6 +84,18 @@ void FillInspector_Elem(ISceneElem* pElem)
 {
     if (ImGui::CollapsingHeader("Base (SceneElem)", ImGuiTreeNodeFlags_None))
     {
+        std::wstring wname = pElem->GetName();
+        std::string name = Caustic::wstr2str(wname);
+        ImGui::Text("Name: "); ImGui::SameLine();
+        char buf[1024];
+        strcpy_s(buf, name.c_str());
+        if (ImGui::InputText("##Name", buf, sizeof(buf)))
+        {
+            std::string n(buf);
+            std::wstring wn = Caustic::str2wstr(n);
+            pElem->SetName(wn.c_str());
+        }
+
         uint32 flags = pElem->GetFlags();
         bool isHidden = (flags & ESceneElemFlags::Hidden) ? true : false;
         bool isSelected = (flags & ESceneElemFlags::Selected) ? true : false;
