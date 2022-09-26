@@ -26,6 +26,7 @@ import Rendering.Caustic.IRenderCtx;
 import Rendering.SceneGraph.SceneFactory;
 import Rendering.SceneGraph.ISceneFactory;
 import Rendering.SceneGraph.ISceneGroupElem;
+import Rendering.Caustic.RendererFlags;
 
 namespace Caustic
 {
@@ -58,7 +59,13 @@ namespace Caustic
             m_Children[i]->Render(pRenderer, pRenderCtx, pSceneCtx);
         }
         pSceneCtx->m_Transform = old;
-        DrawSelected(pRenderer, this, pSceneCtx);
+
+        // Only draw the bounding box once (either in the Opaque pass
+        // or the Transparent pass but not in both)
+        auto pass = pRenderCtx->GetCurrentPass();
+        if ((pass == c_PassOpaque && (m_passes & c_PassOpaque)) ||
+            (pass == c_PassTransparent && (m_passes & c_PassTransparent) && !(m_passes & c_PassOpaque)))
+            DrawSelected(pRenderer, this, pSceneCtx);
         if (m_postrenderCallback)
             m_postrenderCallback(pRenderCtx->GetCurrentPass());
 #ifdef _DEBUG
