@@ -128,59 +128,6 @@ void FillInspector_Elem(ISceneElem* pElem)
     }
 }
 
-void FillInspector_LightCollection(ISceneLightCollectionElem* pLightCollection)
-{
-    FillInspector_Elem(pLightCollection);
-    ImGui::Text((std::string("Number of Lights: ") + std::to_string(pLightCollection->NumberLights())).c_str());
-}
-
-void FillInspector_Light(ILight* pLight, int lightIndex)
-{
-    bool f = pLight->GetOnOff();
-    if (ImGui::Checkbox("Enable", &f))
-    {
-        pLight->SetOnOff(f);
-    }
-    f = pLight->GetCastsLight();
-    if (ImGui::Checkbox("Casts Light", &f))
-    {
-        pLight->SetCastsLight(f);
-    }
-    f = pLight->GetCastsShadows();
-    if (ImGui::Checkbox("Casts Shadows", &f))
-    {
-        pLight->SetCastsShadows(f);
-    }
-    ImGui_Color("Color:", lightIndex,
-        [pLight]()->FRGBColor { return pLight->GetColor(); },
-        [pLight](FRGBColor v) { pLight->SetColor(v); });
-
-    ImGui::Text("Intensity:");
-    ImGui::SameLine();
-    float intensity = pLight->GetIntensity();
-    if (ImGui::SliderFloat(std::string("##").c_str(), &intensity, 0.0f, 1.0f))
-        pLight->SetIntensity(intensity);
-
-    BBox3 bbox;
-    app.m_spRenderWindow->GetSceneGraph()->GetBBox(&bbox);
-    float maxV = std::max<float>(
-        std::max<float>(
-            std::max<float>(fabs(bbox.maxPt.x), std::max<float>(fabs(bbox.maxPt.y), fabs(bbox.maxPt.z))),
-            std::max<float>(fabs(bbox.minPt.x), std::max<float>(fabs(bbox.minPt.y), fabs(bbox.minPt.z)))
-        ), 1.0f);
-
-    ImGui_Vector("Position:",
-        [pLight]()->Vector3 { return pLight->GetPosition(); },
-        [pLight](Vector3 v) { pLight->SetPosition(v); }, 0.0f, (maxV == FLT_MAX) ? 10000.0f : 1.0f);
-
-    if (pLight->GetType() == ELightType::DirectionalLight)
-    {
-        ImGui_Vector("Direction:",
-            [pLight]()->Vector3 { return pLight->GetDirection(); },
-            [pLight](Vector3 v) { pLight->SetDirection(v); }, -1.0f, +1.0f);
-    }
-}
-
 void FillInspector_CameraCollection(ISceneCameraCollectionElem* pCameraCollection)
 {
     FillInspector_Elem(pCameraCollection);
@@ -546,6 +493,59 @@ void FillInspector_Group(ISceneGroupElem *pGroup)
     }
 }
 
+void FillInspector_LightCollection(ISceneLightCollectionElem* pLightCollection)
+{
+    FillInspector_Group(static_cast<ISceneGroupElem*>(pLightCollection));
+    ImGui::Text((std::string("Number of Lights: ") + std::to_string(pLightCollection->NumberLights())).c_str());
+}
+
+void FillInspector_Light(ILight* pLight, int lightIndex)
+{
+    bool f = pLight->GetOnOff();
+    if (ImGui::Checkbox("Enable", &f))
+    {
+        pLight->SetOnOff(f);
+    }
+    f = pLight->GetCastsLight();
+    if (ImGui::Checkbox("Casts Light", &f))
+    {
+        pLight->SetCastsLight(f);
+    }
+    f = pLight->GetCastsShadows();
+    if (ImGui::Checkbox("Casts Shadows", &f))
+    {
+        pLight->SetCastsShadows(f);
+    }
+    ImGui_Color("Color:", lightIndex,
+        [pLight]()->FRGBColor { return pLight->GetColor(); },
+        [pLight](FRGBColor v) { pLight->SetColor(v); });
+
+    ImGui::Text("Intensity:");
+    ImGui::SameLine();
+    float intensity = pLight->GetIntensity();
+    if (ImGui::SliderFloat(std::string("##").c_str(), &intensity, 0.0f, 1.0f))
+        pLight->SetIntensity(intensity);
+
+    BBox3 bbox;
+    app.m_spRenderWindow->GetSceneGraph()->GetBBox(&bbox);
+    float maxV = std::max<float>(
+        std::max<float>(
+            std::max<float>(fabs(bbox.maxPt.x), std::max<float>(fabs(bbox.maxPt.y), fabs(bbox.maxPt.z))),
+            std::max<float>(fabs(bbox.minPt.x), std::max<float>(fabs(bbox.minPt.y), fabs(bbox.minPt.z)))
+            ), 1.0f);
+
+    ImGui_Vector("Position:",
+        [pLight]()->Vector3 { return pLight->GetPosition(); },
+        [pLight](Vector3 v) { pLight->SetPosition(v); }, 0.0f, (maxV == FLT_MAX) ? 10000.0f : 1.0f);
+
+    if (pLight->GetType() == ELightType::DirectionalLight)
+    {
+        ImGui_Vector("Direction:",
+            [pLight]()->Vector3 { return pLight->GetDirection(); },
+            [pLight](Vector3 v) { pLight->SetDirection(v); }, -1.0f, +1.0f);
+    }
+}
+
 //**********************************************************************
 // Function: FillInspector_Material
 // Populates the inspector window with the attributes from a material
@@ -663,6 +663,92 @@ void BuildCollapsableNode(ISceneGraph* pSceneGraph, ISceneElem *pElem, bool isLe
     }
 }
 
+void BuildGroupUI(ISceneGraph* pSceneGraph, ISceneGroupElem* pGroup, const char* pDefaultName,
+    std::function<void()> onSelect);
+
+void AddGroupNodesCallback(ISceneGraph* pSceneGraph, ISceneGroupElem* pGroup)
+{
+    uint32 numChildren = pGroup->NumberChildren();
+    for (uint32 i = 0; i < numChildren; i++)
+    {
+        CRefObj<ISceneElem> spChild = pGroup->GetChild(i);
+        std::wstring name = spChild->GetName();
+        switch (spChild->GetType())
+        {
+        case ESceneElemType::Unknown:
+            BuildCollapsableNode(pSceneGraph, spChild, true, "Unknown", nullptr, [spChild]() { FillInspector_Elem(static_cast<ISceneElem*>(spChild.p)); });
+            break;
+        case ESceneElemType::SceneGraph:
+            BuildGroupUI(pSceneGraph, (ISceneGroupElem*)spChild.p, "SceneGraph", [spChild]() { FillInspector_SceneGraph(static_cast<ISceneGraph*>(spChild.p)); });
+            break;
+        case ESceneElemType::Mesh:
+            BuildCollapsableNode(pSceneGraph, spChild, false, "Mesh", [pSceneGraph, spChild]() {
+                auto spMesh = static_cast<ISceneMeshElem*>(spChild.p)->GetMesh();
+                uint32 numMats = spMesh->GetNumberMaterials();
+                for (uint32 i = 0; i < numMats; i++)
+                {
+                    CRefObj<IMaterialAttrib> spMat = spMesh->GetMaterial(i);
+                    std::string matName = spMat->GetName();
+                    BuildCollapsableNode(pSceneGraph, nullptr, true,
+                        (matName.length() == 0) ? "Material" : matName.c_str(), nullptr,
+                        [spMat]() { FillInspector_Material(nullptr, spMat.p); });
+                }
+                }, [spChild]() { FillInspector_Mesh((ISceneMeshElem*)spChild.p); });
+            break;
+        case ESceneElemType::CustomRenderElem:
+            BuildCollapsableNode(pSceneGraph, spChild, true, "CustomRender", nullptr, [spChild]() { FillInspector_CustomRender((ISceneCustomRenderElem*)spChild.p); });
+            break;
+        case ESceneElemType::Group:
+            BuildGroupUI(pSceneGraph, (ISceneGroupElem*)spChild.p, "Group", [spChild]() {FillInspector_Group((ISceneGroupElem*)spChild.p); });
+            break;
+        case ESceneElemType::Renderable: // Type not implemented!
+            break;
+        case ESceneElemType::LightCollection:
+            BuildCollapsableNode(pSceneGraph, spChild, false, "LightCollection",
+                [pSceneGraph, spChild]()
+                {
+                    ISceneLightCollectionElem* pCollection = (ISceneLightCollectionElem*)spChild.p;
+                    uint32 numLights = pCollection->NumberLights();
+                    for (uint32 i = 0; i < numLights; i++)
+                    {
+                        CRefObj<ILight> spLight = pCollection->GetLight(i);
+                        std::string lightName = std::string("Light-") + std::to_string(i);
+                        BuildCollapsableNode(pSceneGraph, nullptr, true, lightName.c_str(),
+                            nullptr, [spLight, i]() { FillInspector_Light(spLight.p, i); });
+                    }
+                    AddGroupNodesCallback(pSceneGraph, static_cast<ISceneGroupElem*>(pCollection));
+                },
+                [spChild]() { FillInspector_LightCollection((ISceneLightCollectionElem*)spChild.p); });
+            break;
+        case ESceneElemType::Material:
+        {
+            ISceneMaterialElem* pMaterialElem = static_cast<ISceneMaterialElem*>(spChild.p);
+            auto spMaterialAttrib = pMaterialElem->GetMaterial();
+            BuildGroupUI(pSceneGraph, (ISceneGroupElem*)pMaterialElem, "Material", [pMaterialElem, spMaterialAttrib]() { FillInspector_Material(pMaterialElem, spMaterialAttrib.p); });
+        }
+        break;
+        case ESceneElemType::ComputeShaderElem:
+            BuildCollapsableNode(pSceneGraph, spChild, true, "ComputeShader", nullptr, [spChild]() { FillInspector_ComputeShader((ISceneComputeShaderElem*)spChild.p); });
+            break;
+        case ESceneElemType::Overlay2D:
+            BuildCollapsableNode(pSceneGraph, spChild, true, "Overlay2D", nullptr, [spChild]() { FillInspector_Overlay2D((ISceneOverlay2DElem*)spChild.p); });
+            break;
+        case ESceneElemType::LineElem:
+            BuildCollapsableNode(pSceneGraph, spChild, true, "Line", nullptr, [spChild]() { FillInspector_Line((ISceneLineElem*)spChild.p); });
+            break;
+        case ESceneElemType::CubeElem:
+            BuildCollapsableNode(pSceneGraph, spChild, true, "Cube", nullptr, [spChild]() { FillInspector_Cube((ISceneCubeElem*)spChild.p); });
+            break;
+        case ESceneElemType::CylinderElem:
+            BuildCollapsableNode(pSceneGraph, spChild, true, "Cylinder", nullptr, [spChild]() { FillInspector_Cylinder((ISceneCylinderElem*)spChild.p); });
+            break;
+        case ESceneElemType::SphereElem:
+            BuildCollapsableNode(pSceneGraph, spChild, true, "Sphere", nullptr, [spChild]() { FillInspector_Sphere((ISceneSphereElem*)spChild.p); });
+            break;
+        }
+    }
+}
+
 //**********************************************************************
 // Function: BuildGroupUI
 // Populates our scene graph window with a node for a group along with
@@ -679,86 +765,9 @@ void BuildGroupUI(ISceneGraph* pSceneGraph, ISceneGroupElem* pGroup, const char 
     std::function<void()> onSelect)
 {
     BuildCollapsableNode(pSceneGraph, pGroup, false, pDefaultName,
-        [pSceneGraph, pGroup]() {
-            uint32 numChildren = pGroup->NumberChildren();
-            for (uint32 i = 0; i < numChildren; i++)
-            {
-                CRefObj<ISceneElem> spChild = pGroup->GetChild(i);
-                std::wstring name = spChild->GetName();
-                switch (spChild->GetType())
-                {
-                case ESceneElemType::Unknown:
-                    BuildCollapsableNode(pSceneGraph, spChild, true, "Unknown", nullptr, [spChild]() { FillInspector_Elem(static_cast<ISceneElem*>(spChild.p)); });
-                    break;
-                case ESceneElemType::SceneGraph:
-                    BuildGroupUI(pSceneGraph, (ISceneGroupElem*)spChild.p, "SceneGraph", [spChild]() { FillInspector_SceneGraph(static_cast<ISceneGraph*>(spChild.p)); });
-                    break;
-                case ESceneElemType::Mesh:
-                    BuildCollapsableNode(pSceneGraph, spChild, false, "Mesh", [pSceneGraph, spChild]() {
-                        auto spMesh = static_cast<ISceneMeshElem*>(spChild.p)->GetMesh();
-                        uint32 numMats = spMesh->GetNumberMaterials();
-                        for (uint32 i = 0; i < numMats; i++)
-                        {
-                            CRefObj<IMaterialAttrib> spMat = spMesh->GetMaterial(i);
-                            std::string matName = spMat->GetName();
-                            BuildCollapsableNode(pSceneGraph, nullptr, true,
-                                (matName.length() == 0) ? "Material" : matName.c_str(), nullptr,
-                                [spMat]() { FillInspector_Material(nullptr, spMat.p); });
-                        }
-                    }, [spChild]() { FillInspector_Mesh((ISceneMeshElem*)spChild.p); });
-                    break;
-                case ESceneElemType::CustomRenderElem:
-                    BuildCollapsableNode(pSceneGraph, spChild, true, "CustomRender", nullptr, [spChild]() { FillInspector_CustomRender((ISceneCustomRenderElem*)spChild.p); });
-                    break;
-                case ESceneElemType::Group:
-                    BuildGroupUI(pSceneGraph, (ISceneGroupElem*)spChild.p, "Group", [spChild]() {FillInspector_Group((ISceneGroupElem*)spChild.p); });
-                    break;
-                case ESceneElemType::Renderable: // Type not implemented!
-                    break;
-                case ESceneElemType::LightCollection:
-                    BuildCollapsableNode(pSceneGraph, spChild, false, "LightCollection",
-                        [pSceneGraph, spChild]()
-                        {
-                            ISceneLightCollectionElem* pCollection = (ISceneLightCollectionElem*)spChild.p;
-                            uint32 numLights = pCollection->NumberLights();
-                            for (uint32 i = 0; i < numLights; i++)
-                            {
-                                CRefObj<ILight> spLight = pCollection->GetLight(i);
-                                std::string lightName = std::string("Light-") + std::to_string(i);
-                                BuildCollapsableNode(pSceneGraph, nullptr, true, lightName.c_str(),
-                                    nullptr, [spLight, i]() { FillInspector_Light(spLight.p, i); });
-                            }
-                            BuildGroupUI(pSceneGraph, static_cast<ISceneGroupElem*>(pCollection), "Group", [spChild]() { FillInspector_Group(static_cast<ISceneGroupElem*>(spChild.p)); });
-                        },
-                        [spChild]() { FillInspector_LightCollection((ISceneLightCollectionElem*)spChild.p); });
-                    break;
-                case ESceneElemType::Material:
-                    {
-                        ISceneMaterialElem* pMaterialElem = static_cast<ISceneMaterialElem*>(spChild.p);
-                        auto spMaterialAttrib = pMaterialElem->GetMaterial();
-                        BuildGroupUI(pSceneGraph, (ISceneGroupElem*)pMaterialElem, "Material", [pMaterialElem, spMaterialAttrib]() { FillInspector_Material(pMaterialElem, spMaterialAttrib.p); });
-                    }
-                    break;
-                case ESceneElemType::ComputeShaderElem:
-                    BuildCollapsableNode(pSceneGraph, spChild, true, "ComputeShader", nullptr, [spChild]() { FillInspector_ComputeShader((ISceneComputeShaderElem*)spChild.p); });
-                    break;
-                case ESceneElemType::Overlay2D:
-                    BuildCollapsableNode(pSceneGraph, spChild, true, "Overlay2D", nullptr, [spChild]() { FillInspector_Overlay2D((ISceneOverlay2DElem*)spChild.p); });
-                    break;
-                case ESceneElemType::LineElem:
-                    BuildCollapsableNode(pSceneGraph, spChild, true, "Line", nullptr, [spChild]() { FillInspector_Line((ISceneLineElem*)spChild.p); });
-                    break;
-                case ESceneElemType::CubeElem:
-                    BuildCollapsableNode(pSceneGraph, spChild, true, "Cube", nullptr, [spChild]() { FillInspector_Cube((ISceneCubeElem*)spChild.p); });
-                    break;
-                case ESceneElemType::CylinderElem:
-                    BuildCollapsableNode(pSceneGraph, spChild, true, "Cylinder", nullptr, [spChild]() { FillInspector_Cylinder((ISceneCylinderElem*)spChild.p); });
-                    break;
-                case ESceneElemType::SphereElem:
-                    BuildCollapsableNode(pSceneGraph, spChild, true, "Sphere", nullptr, [spChild]() { FillInspector_Sphere((ISceneSphereElem*)spChild.p); });
-                    break;
-                }
-            }
+        [pSceneGraph, pGroup]()
+        {
+            AddGroupNodesCallback(pSceneGraph, pGroup);
         }, onSelect);
 }
 
