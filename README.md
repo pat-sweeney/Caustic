@@ -28,9 +28,9 @@ You will also need to set \<CausticFXCPath> to point to where the FXC shader com
 setx CausticFXCPath "c:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x64\fxc.exe" /M
 ```
   
-You will need to set \<AzureKinectSDKDir> to point to your Azure Kinect SDK folder (e.g. "C:\Program Files\Azure Kinect SDK v1.4.0")  
+You will need to set \<AzureKinectSDKDir> to point to your Azure Kinect SDK folder (e.g. "C:\Program Files\Azure Kinect SDK v1.4.1")  
 ```
-setx AzureKinectSDKDir "C:\Program Files\Azure Kinect SDK v1.4.0" /M
+setx AzureKinectSDKDir "C:\Program Files\Azure Kinect SDK v1.4.1" /M
 ```
 
 You will need to install:
