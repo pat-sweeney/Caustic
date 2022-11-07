@@ -17,6 +17,7 @@ In order to build the solution you need to edit Caustic.props and modify the fol
 Also check the paths (such as $(AzureKinectSDKDir) and other paths pointing at c:\Program Files\... to make sure they are correct
 for your system.
  
+Next set the system environment variable CausticRoot to point to your root for Caustic:
 ```
 setx CausticRoot "c:\GitHub\Caustic" /M
 ```
