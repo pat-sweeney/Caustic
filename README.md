@@ -58,12 +58,20 @@ git clone https://github.com/microsoft/WPFDXInterop.git
 ```
 
 NaturalDocs: https://github.com/NaturalDocs/NaturalDocs
-You will need to manually load and build both the CLI and Engine projects. Build both the Debug and Release versions.
+You will need to install Natural docs:
 ```
 cd %CausticRoot%\External
 git clone https://github.com/NaturalDocs/NaturalDocs.git
 ```
-
+Before building you need to load the project files for Natural docs and build both the Debug and Release versions:
+```
+cd %CausticRoot%\External\NaturalDocs\Engine
+Engine.csproj
+# ... Build both Debug/Release versions
+cd %CausticRoot%\External\NaturalDocs\CLI
+CLI.csproj
+# ... Build both Debug/Release versions
+```
 Azure Kinect SDK: https://docs.microsoft.com/en-us/azure/kinect-dk/sensor-sdk-download  
 Azure Kinect Body Tracking: https://docs.microsoft.com/en-us/azure/kinect-dk/body-sdk-download  
 .Net SDK 4.7: https://dotnet.microsoft.com/download/dotnet-framework/thank-you/net47-developer-pack-offline-installer
