@@ -10,7 +10,13 @@ You must use Microsoft Visual Studio Version 17.0.0 to compile this.
 You can download this version of MSVS from https://docs.microsoft.com/en-us/visualstudio/releases/2022/release-history
 Version 17.2.6 (most recent version as of this writing) seems to have broken module support and no longer compiles the code.
 
-In order to build the solution you need to edit Caustic.props and modify \<CausticRoot> to point to the folder that contains the source.  
+In order to build the solution you need to edit Caustic.props and modify the following variables to point to the folder that contains the source:
+```
+ \<GithubFolder> - should point to the drive and folder where you're Github enlistment resides
+```
+Also check the paths (such as $(AzureKinectSDKDir) and other paths pointing at c:\Program Files\... to make sure they are correct
+for your system.
+ 
 ```
 setx CausticRoot "c:\GitHub\Caustic" /M
 ```
