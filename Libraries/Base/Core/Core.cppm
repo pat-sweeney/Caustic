@@ -4,7 +4,10 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
+#include <Windows.h>
 #include <string>
+#include <stringapiset.h>
+#include <memory>
 export module Base.Core.Core:Part1;
 
 // Namespace: Caustic
@@ -25,6 +28,22 @@ export namespace Caustic
 	//**********************************************************************
 	std::wstring GetCausticShaderDirectory()
 	{
+#pragma warning(push)
+#pragma warning(disable: 4996)
+		const char* pCausticShaderDirectory = std::getenv("CausticShaderDirectory");
+#pragma warning(pop)
+		if (pCausticShaderDirectory != nullptr)
+		{
+			int numWideChars = MultiByteToWideChar(CP_UTF8, 0, pCausticShaderDirectory, -1, nullptr, 0);
+			if (numWideChars > 0)
+			{
+				std::unique_ptr<wchar_t> pConvertedStr(new wchar_t[numWideChars]);
+				if (MultiByteToWideChar(CP_UTF8, 0, pCausticShaderDirectory, -1, pConvertedStr.get(), numWideChars) != 0)
+				{
+					return std::wstring(pConvertedStr.get());
+				}
+			}
+		}
 		return std::wstring(CAUSTIC_SHADER_DIRECTORY);
 	}
 }

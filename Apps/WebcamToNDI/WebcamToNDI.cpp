@@ -239,7 +239,7 @@ void BuildPanels(ITexture *pFinalRT, ImFont *pFont)
 void InitializeCaustic(HWND hwnd)
 {
     app.m_spCausticFactory = Caustic::CreateCausticFactory();
-    std::wstring shaderFolder(SHADERPATH);
+    std::wstring shaderFolder = GetCausticShaderDirectory();
     BBox2 viewport(0.0f, 0.0f, 1.0f, 1.0f);
     app.imageWinSize = ImVec2(128, 128);
     app.m_spRenderWindow = CreateImguiRenderWindow(hwnd, viewport, shaderFolder,
