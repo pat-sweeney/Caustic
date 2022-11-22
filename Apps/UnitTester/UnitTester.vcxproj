@@ -138,6 +138,9 @@
     <ProjectReference Include="..\..\Libraries\Rendering\SceneGraph\SceneGraph.vcxproj">
       <Project>{49433c2e-bf12-4b0f-8dd2-204c3339d5c5}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Rendering\SceneImport\SceneImport.vcxproj">
+      <Project>{728ca062-c6d7-4043-942b-89c843f86c04}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -13,6 +13,7 @@ import Base.Core.Core;
 #ifdef SUPPORT_SCHEME
 #include "Interpreter\Scheme\UnitTest.h"
 #endif // SUPPORT_SCHEME
+#include "Rendering\SceneImport\UnitTest.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -46,6 +47,8 @@ int main(int argc, char** argv)
                 else if (_stricmp(argv[i], "-scheme") == 0)
                     whichTests |= 0x40;
 #endif // SUPPORT_SCHEME
+                else if (_stricmp(argv[i], "-sceneimport") == 0)
+                    whichTests |= 0x80;
             }
         }
     }
@@ -65,5 +68,7 @@ int main(int argc, char** argv)
     if (whichTests & 0x40)
         (new CausticTestSuite::SchemeTests())->RunUnitTests();
 #endif // SUPPORT_SCHEME
+    if (whichTests & 0x80)
+        (new CausticTestSuite::SceneImportTests())->RunUnitTests();
     return 0;
 }

@@ -25,7 +25,7 @@ namespace Caustic
 	{
 		HANDLE f = CreateFile(fn.c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr);
 		if (f == INVALID_HANDLE_VALUE)
-			CT(GetLastError());
+			CT(HRESULT_FROM_WIN32(GetLastError()));
 		DWORD dwSize = GetFileSize(f, nullptr);
 		std::unique_ptr<char> pBuffer(new char[dwSize + 1]);
 		ZeroMemory(pBuffer.get(), dwSize + 1);
@@ -33,7 +33,7 @@ namespace Caustic
 		if (!ReadFile(f, pBuffer.get(), dwSize, &bytesRead, nullptr))
 		{
 			CloseHandle(f);
-			CT(GetLastError());
+			CT(HRESULT_FROM_WIN32(GetLastError()));
 		}
 		CloseHandle(f);
 		return ReadDOM(pBuffer.get());
@@ -43,7 +43,7 @@ namespace Caustic
 	{
 		HANDLE f = CreateFile(fn.c_str(), GENERIC_WRITE, FILE_SHARE_WRITE, nullptr, CREATE_ALWAYS, 0, nullptr);
 		if (f == INVALID_HANDLE_VALUE)
-			CT(GetLastError());
+			CT(HRESULT_FROM_WIN32(GetLastError()));
 		uint32 bufSize = WriteDOM(dom, nullptr, 0);
 		std::unique_ptr<char> pBuffer(new char[bufSize + 1]);
 		ZeroMemory(pBuffer.get(), bufSize + 1);
@@ -52,7 +52,7 @@ namespace Caustic
 		if (!WriteFile(f, pBuffer.get(), bufSize, &bytesWritten, nullptr))
 		{
 			CloseHandle(f);
-			CT(GetLastError());
+			CT(HRESULT_FROM_WIN32(GetLastError()));
 		}
 		CloseHandle(f);
 	}
@@ -72,7 +72,7 @@ namespace Caustic
 				break;
 			}
 			token = pLex->ReadToken();
-			if (token.m_id != c_LexToken_String)
+			if (token.m_id != c_LexToken_String && token.m_id != c_LexToken_Identifier)
 				CT(E_UNEXPECTED);
 			std::string valueName = token.m_sval;
 			token = pLex->ReadToken();
@@ -98,9 +98,9 @@ namespace Caustic
 			}
 			data.push_back(ParseValue(pLex, ""));
 			token = pLex->ReadToken();
-			 if (token.m_id == c_LexToken_RightBracket)
+			if (token.m_id == c_LexToken_RightBracket)
 				break;
-			 CT((token.m_id != c_LexToken_Character || token.m_cval != ',') ? E_UNEXPECTED : S_OK);
+			CT((token.m_id != c_LexToken_Character || token.m_cval != ',') ? E_UNEXPECTED : S_OK);
 		}
 	}
 
@@ -112,6 +112,7 @@ namespace Caustic
 		switch (token.m_id)
 		{
 		case c_LexToken_String:
+		case c_LexToken_Identifier:
 			pObj->m_type = CJSonType::String;
 			pObj->m_value = std::any(token.m_sval);
 			break;

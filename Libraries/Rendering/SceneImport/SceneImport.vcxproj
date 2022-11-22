@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -87,6 +87,9 @@
   <ItemGroup>
     <ClCompile Include="Collada.cpp" />
     <ClCompile Include="Collada.ixx" />
+    <ClCompile Include="Json.cpp" />
+    <ClCompile Include="Json.ixx" />
+    <ClCompile Include="UnitTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Base\Core\Core.vcxproj">
@@ -107,12 +110,18 @@
     <ProjectReference Include="..\..\Imaging\Image\Image.vcxproj">
       <Project>{f7bef797-220c-4585-a489-f06df155ea60}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Parsers\JSon\JSon.vcxproj">
+      <Project>{d7cddc34-5d74-4e16-b9a5-b0e7030d6855}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Caustic\Caustic.vcxproj">
       <Project>{60a04400-10f9-4c6d-b34c-d5c7ebafa262}</Project>
     </ProjectReference>
     <ProjectReference Include="..\SceneGraph\SceneGraph.vcxproj">
       <Project>{49433c2e-bf12-4b0f-8dd2-204c3339d5c5}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="UnitTest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

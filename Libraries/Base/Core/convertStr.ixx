@@ -19,6 +19,49 @@ import Base.Core.Error;
 export namespace Caustic
 {
     //**********************************************************************
+    // Function: ExpandEnvironmentVariables
+    // Replaces $(<name>) environment variables in a string
+    //
+    // Parameters:
+    // pFilename - string to replace environment variables
+    //
+    // Returns:
+    // Returns the expanded string
+    //
+    // Header:
+    // {Link:import Base.Core.ConvertStr;{Base.Core.ConvertStr}
+    //**********************************************************************
+    std::wstring ExpandEnvironmentVariables(const wchar_t* pFilename)
+    {
+        std::wstring expanded;
+        while (*pFilename)
+        {
+            if (*pFilename == L'$' && pFilename[1] == L'(')
+            {
+                const wchar_t* q = pFilename;
+                while (*q)
+                {
+                    if (*q == L')')
+                        break;
+                    q++;
+                }
+                std::wstring str(pFilename);
+                std::wstring varName = str.substr(2, q - &pFilename[2]);
+                wchar_t buffer[1024];
+                GetEnvironmentVariable(varName.c_str(), buffer, sizeof(buffer));
+                expanded += std::wstring(buffer);
+                pFilename = q + 1;
+            }
+            else
+            {
+                expanded += pFilename[0];
+                pFilename++;
+            }
+        }
+        return expanded;
+    }
+
+    //**********************************************************************
     // Function: str2wstr
     // Converts a UTF8 string into a UTF16 string
     //
