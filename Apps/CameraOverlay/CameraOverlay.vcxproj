@@ -12,9 +12,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
-    <ProjectGuid>{A709451A-AF31-43BE-9204-63A5B6D544A0}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>SimpleImageViewer</RootNamespace>
+    <ProjectGuid>{0939a32e-8b55-4aa0-935c-057cb64fdbfd}</ProjectGuid>
+    <RootNamespace>CameraOverlay</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -53,8 +53,6 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -73,8 +71,6 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -95,18 +91,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CameraOverlay.h" />
+    <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="SimpleImageViewer.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SimpleImageViewer.cpp" />
+    <ClCompile Include="CameraOverlay.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="SimpleImageViewer.rc" />
+    <ResourceCompile Include="CameraOverlay.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="SimpleImageViewer.ico" />
+    <Image Include="CameraOverlay.ico" />
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -128,11 +125,59 @@
     <ProjectReference Include="..\..\Libraries\Geometry\GeomDS\GeomDS.vcxproj">
       <Project>{163426b2-af7c-4713-8e3c-1a56a9cc0abf}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Geometry\MeshImport\MeshImport.vcxproj">
+      <Project>{f51b95ed-2f23-4d3c-8176-c51ca1ce9ea2}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Geometry\Mesh\Mesh.vcxproj">
+      <Project>{e7cf4287-e8ff-4d29-8883-5a05a6590af3}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Geometry\Rast\Rast.vcxproj">
+      <Project>{1310081f-25f3-48cb-bb3b-b302d973902e}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Imaging\Color\Color.vcxproj">
+      <Project>{6bd55e78-59f0-402f-9bbd-650c8fe563f3}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Imaging\GPUImage\GPUImage.vcxproj">
+      <Project>{da295723-0117-49d6-b2e1-372592bb1851}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Imaging\Image\Image.vcxproj">
       <Project>{f7bef797-220c-4585-a489-f06df155ea60}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Interop\Renderer\Renderer.vcxproj">
+      <Project>{b70dec5c-65cb-4e68-893a-d592fd8ba0b1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Parsers\JSon\JSon.vcxproj">
+      <Project>{d7cddc34-5d74-4e16-b9a5-b0e7030d6855}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Parsers\Lex\Lex.vcxproj">
+      <Project>{e96c27e0-989e-4fd1-af44-06c378e1794e}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Rendering\Caustic\Caustic.vcxproj">
       <Project>{60a04400-10f9-4c6d-b34c-d5c7ebafa262}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Rendering\GuiControls\GuiControls.vcxproj">
+      <Project>{6901eacb-e9e3-4621-8be3-60b0991a24f9}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Rendering\ImGui\ImGui.vcxproj">
+      <Project>{fd63d447-4b42-4f14-be8d-392fa277ee0e}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Rendering\ImPlot\ImPlot.vcxproj">
+      <Project>{f0b79582-eaf1-4ca2-874d-ecd591796806}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Rendering\RendererMarshaller\RendererMarshaller.vcxproj">
+      <Project>{39cbea68-484f-4320-bb2f-6f59c0fe5b25}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Rendering\RenderGraph\RenderGraph.vcxproj">
+      <Project>{c794b439-228e-4659-8895-5169bb46db55}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Rendering\RenderWindow\RenderWindow.vcxproj">
+      <Project>{d031b042-4acd-4703-8df4-ba768148262a}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Rendering\SceneGraph\SceneGraph.vcxproj">
+      <Project>{49433c2e-bf12-4b0f-8dd2-204c3339d5c5}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Rendering\SceneImport\SceneImport.vcxproj">
+      <Project>{728ca062-c6d7-4043-942b-89c843f86c04}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

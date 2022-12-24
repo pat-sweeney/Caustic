@@ -8,6 +8,7 @@
 #include <commdlg.h>
 #include <any>
 #include <string>
+import Caustic.Base;
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Imaging.Image.IImage;
@@ -189,6 +190,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    {
       return FALSE;
    }
+
+   Caustic::SystemStartup();
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
@@ -379,6 +382,14 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             return (INT_PTR)TRUE;
         }
         break;
+    case WM_DESTROY:
+        PostQuitMessage(0);
+        break;
+    case WM_QUIT:
+        Caustic::SystemShutdown();
+        break;
+    default:
+        return DefWindowProc(hWnd, message, wParam, lParam);
     }
     return (INT_PTR)FALSE;
 }
