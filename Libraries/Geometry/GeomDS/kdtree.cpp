@@ -41,9 +41,9 @@ namespace Caustic
                 _ASSERT(!"This should never happen");
                 break;
             }
-			int nCut = cutAxis + 1;
-			if (nCut > 2)
-				nCut = 0;
+            int nCut = cutAxis + 1;
+            if (nCut > 2)
+                nCut = 0;
             if (value < pNode->m_cutPoint)
                 AddPointRecursive(pNode->m_pLower, (CutAxis)nCut, vec, data);
             else
@@ -135,13 +135,13 @@ namespace Caustic
                 }
                 pNode->m_pLower = pLower;
                 pNode->m_pUpper = pUpper;
-				delete pNode->m_pPoints;
+                delete pNode->m_pPoints;
                 pNode->m_pPoints = nullptr;
                 AddPointRecursive(pNode, cutAxis, vec, data);
             }
             else
             {
-				pNode->m_pPoints->push_back(std::make_tuple(vec, data));
+                pNode->m_pPoints->push_back(std::make_tuple(vec, data));
             }
         }
     }
@@ -162,13 +162,13 @@ namespace Caustic
         float v;
         switch (cutAxis)
         {
-		case CutAxis::XAxis:
+        case CutAxis::XAxis:
             v = vec.x;
             break;
-		case CutAxis::YAxis:
+        case CutAxis::YAxis:
             v = vec.y;
             break;
-		case CutAxis::ZAxis:
+        case CutAxis::ZAxis:
             v = vec.z;
             break;
         default:
@@ -178,9 +178,9 @@ namespace Caustic
         }
         if (pNode->m_pUpper != nullptr)
         {
-			int nCut = cutAxis + 1;
-			if (nCut > 2)
-				nCut = 0;
+            int nCut = cutAxis + 1;
+            if (nCut > 2)
+                nCut = 0;
             if (v < pNode->m_cutPoint)
                 return FindPointRecursive(pNode->m_pLower, (CutAxis)cutAxis, vec, comparator, data);
             else
@@ -188,7 +188,7 @@ namespace Caustic
         }
         else
         {
-			size_t nPoints = pNode->m_pPoints->size();
+            size_t nPoints = pNode->m_pPoints->size();
             for (size_t i = 0; i < nPoints; i++)
             {
                 if (std::get<0>((*pNode->m_pPoints)[i]).IsEq(vec))
@@ -219,7 +219,7 @@ namespace Caustic
         {
             return FindPointRecursive(m_pChildren, CutAxis::XAxis, vec, comparator, data);
         }
-		return false;
+        return false;
     }
 
     //**********************************************************************

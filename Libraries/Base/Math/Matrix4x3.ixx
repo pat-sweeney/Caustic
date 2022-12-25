@@ -14,15 +14,15 @@ import Base.Math.Vector;
 // Namespace: Caustic
 export namespace Caustic
 {
-	//**********************************************************************
-	// Structure: Matrix4x3
-	//    3-dimensional affine matrix
+    //**********************************************************************
+    // Structure: Matrix4x3
+    //    3-dimensional affine matrix
     // --- Text ---
     //    0,0    0,1    0,2        a  b  c 
     //    1,0    1,1    1,2        d  e  f
     //    2,0    2,1    2,2        g  h  i
     //    3,0    3,1    3,2        tx ty tz
-	// ------------
+    // ------------
     //
     // Members:
     // float v[4][3] - Elements of the matrix
@@ -30,7 +30,7 @@ export namespace Caustic
     // Module:
     // {Link:import Base.Math.Matrix.Matrix4x3;{Base/Math/Matrix4x3.ixx}}
     //**********************************************************************
-	struct Matrix4x3
+    struct Matrix4x3
     {
         float v[4][3];
     public:

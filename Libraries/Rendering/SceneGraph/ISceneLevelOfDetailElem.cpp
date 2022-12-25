@@ -13,8 +13,8 @@ import Rendering.SceneGraph.SceneLevelOfDetailElem;
 
 namespace Caustic
 {
-	CRefObj<ISceneLevelOfDetailElem> CreateLevelOfDetailElem()
-	{
-		return CRefObj<ISceneLevelOfDetailElem>(new CSceneLevelOfDetailElem());
-	}
+    CRefObj<ISceneLevelOfDetailElem> CreateLevelOfDetailElem()
+    {
+        return CRefObj<ISceneLevelOfDetailElem>(new CSceneLevelOfDetailElem());
+    }
 }

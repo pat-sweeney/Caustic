@@ -20,8 +20,8 @@ import Parsers.Lex.ILex;
 // Namespace: Caustic
 namespace Caustic
 {
-	CRefObj<IJSonParser> CreateJSonParser()
-	{
-		return CRefObj<IJSonParser>(new CJSonParser());
-	}
+    CRefObj<IJSonParser> CreateJSonParser()
+    {
+        return CRefObj<IJSonParser>(new CJSonParser());
+    }
 }

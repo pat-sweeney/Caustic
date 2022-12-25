@@ -18,18 +18,18 @@ import Rendering.SceneGraph.SceneCtx;
 
 export namespace Caustic
 {
-	//**********************************************************************
-	// Interface: ISceneCustomRenderElem
-	// Defines a custom render element in our scene
-	//**********************************************************************
-	struct ISceneCustomRenderElem : public ISceneElem
-	{
-		//**********************************************************************
-		// Method: SetCallback
-		// Updates the callback function associated with the custom render element
-		//**********************************************************************
-		virtual void SetCallback(std::function<void(IRenderer* pRenderer, IRenderCtx* pCtx, SceneCtx* pSceneCtx)> clientCallback) = 0;
-	};
+    //**********************************************************************
+    // Interface: ISceneCustomRenderElem
+    // Defines a custom render element in our scene
+    //**********************************************************************
+    struct ISceneCustomRenderElem : public ISceneElem
+    {
+        //**********************************************************************
+        // Method: SetCallback
+        // Updates the callback function associated with the custom render element
+        //**********************************************************************
+        virtual void SetCallback(std::function<void(IRenderer* pRenderer, IRenderCtx* pCtx, SceneCtx* pSceneCtx)> clientCallback) = 0;
+    };
 
-	CRefObj<ISceneCustomRenderElem> CreateCustomRenderElem(std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, SceneCtx* pSceneCtx)> clientCallback);
+    CRefObj<ISceneCustomRenderElem> CreateCustomRenderElem(std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, SceneCtx* pSceneCtx)> clientCallback);
 }

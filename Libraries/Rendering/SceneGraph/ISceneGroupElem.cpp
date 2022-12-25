@@ -13,8 +13,8 @@ import Rendering.SceneGraph.SceneGroupElem;
 
 namespace Caustic
 {
-	CRefObj<ISceneGroupElem> CreateGroupElem()
-	{
-		return CRefObj<ISceneGroupElem>(new CSceneGroupElem());
-	}
+    CRefObj<ISceneGroupElem> CreateGroupElem()
+    {
+        return CRefObj<ISceneGroupElem>(new CSceneGroupElem());
+    }
 }

@@ -86,59 +86,59 @@ export namespace Caustic
 
         //**********************************************************************
         // Method: Determinant
-	    // Returns the determinant of the matrix
-	    //**********************************************************************
-	    float Determinant();
+        // Returns the determinant of the matrix
+        //**********************************************************************
+        float Determinant();
 
-	    //**********************************************************************
-	    // Method: Adjoint
-	    // Returns the adjoint of the matrix
-	    //**********************************************************************
-	    Matrix4x4 Adjoint();
+        //**********************************************************************
+        // Method: Adjoint
+        // Returns the adjoint of the matrix
+        //**********************************************************************
+        Matrix4x4 Adjoint();
 
-	    //**********************************************************************
-	    // Method: Transpose
-	    // Computes the inplace transpose of the matrix
-	    //**********************************************************************
-	    void Transpose();
+        //**********************************************************************
+        // Method: Transpose
+        // Computes the inplace transpose of the matrix
+        //**********************************************************************
+        void Transpose();
 
-	    //**********************************************************************
-	    // Method: Transpose
-	    // Returns the transpose of the matrix
-	    //**********************************************************************
-	    void Transpose(Matrix4x4 &tm);
+        //**********************************************************************
+        // Method: Transpose
+        // Returns the transpose of the matrix
+        //**********************************************************************
+        void Transpose(Matrix4x4 &tm);
 
-	    //**********************************************************************
-	    // Method: Inverse
-	    // Computes the inplace inverse of the matrix
-	    //**********************************************************************
-	    bool Inverse();
+        //**********************************************************************
+        // Method: Inverse
+        // Computes the inplace inverse of the matrix
+        //**********************************************************************
+        bool Inverse();
 
-	    //**********************************************************************
-	    // Method: Inverse
-	    // Returns the inverse of the matrix
-	    //**********************************************************************
-	    bool Inverse(Matrix4x4 &tm);
+        //**********************************************************************
+        // Method: Inverse
+        // Returns the inverse of the matrix
+        //**********************************************************************
+        bool Inverse(Matrix4x4 &tm);
 
-	    //**********************************************************************
-	    // Method: Decompose
-	    // Decomposes the matrix into a scale, shear, rotate and translate components
-	    //
-	    // Returns:
-	    // scale - Returns the scale factors
-	    // shear - Returns shear factors
-	    // rotate - Returns rotation as Euler angles
-	    // translate - Returns translation components
-	    //**********************************************************************
-	    void Decompose(Vector3 *scale, Vector3 *shear, Vector3 *rotate, Vector3 *translate);
+        //**********************************************************************
+        // Method: Decompose
+        // Decomposes the matrix into a scale, shear, rotate and translate components
+        //
+        // Returns:
+        // scale - Returns the scale factors
+        // shear - Returns shear factors
+        // rotate - Returns rotation as Euler angles
+        // translate - Returns translation components
+        //**********************************************************************
+        void Decompose(Vector3 *scale, Vector3 *shear, Vector3 *rotate, Vector3 *translate);
 
-	    //**********************************************************************
-	    // Method: Decompose
-	    // Decomposes the matrix into a scale, shear, rotate and translate matrices.
-	    // If undoshear is true then the shear is decomposed into a Rotate X Scale X Rotate
-	    //
-	    // Returns:
-	    // tm - returns a list of matrices.
+        //**********************************************************************
+        // Method: Decompose
+        // Decomposes the matrix into a scale, shear, rotate and translate matrices.
+        // If undoshear is true then the shear is decomposed into a Rotate X Scale X Rotate
+        //
+        // Returns:
+        // tm - returns a list of matrices.
         // if undoshear == true then
         //       tm[0] - scale matrix
         //       tm[1] - ShearXY rotate matrix
@@ -161,7 +161,7 @@ export namespace Caustic
         //       tm[4] - RotateX
         //       tm[5] - RotateY
         //       tm[6] - RotateZ
-	    //**********************************************************************
+        //**********************************************************************
         void Decompose(std::vector<Matrix4x4> &tm, bool undoshear);
 
         //**********************************************************************

@@ -13,37 +13,37 @@ export module Base.Core.Core:Part1;
 // Namespace: Caustic
 export namespace Caustic
 {
-	//**********************************************************************
-	// Function: GetCausticRootDirectory
-	// Returns the default folder for the Caustic library
-	//**********************************************************************
-	std::wstring GetCausticRootDirectory()
-	{
-		return std::wstring(CAUSTIC_ROOT_DIRECTORY);
-	}
+    //**********************************************************************
+    // Function: GetCausticRootDirectory
+    // Returns the default folder for the Caustic library
+    //**********************************************************************
+    std::wstring GetCausticRootDirectory()
+    {
+        return std::wstring(CAUSTIC_ROOT_DIRECTORY);
+    }
 
-	//**********************************************************************
-	// Function: GetCausticShaderDirectory
-	// Returns the default folder for the Caustic shaders
-	//**********************************************************************
-	std::wstring GetCausticShaderDirectory()
-	{
+    //**********************************************************************
+    // Function: GetCausticShaderDirectory
+    // Returns the default folder for the Caustic shaders
+    //**********************************************************************
+    std::wstring GetCausticShaderDirectory()
+    {
 #pragma warning(push)
 #pragma warning(disable: 4996)
-		const char* pCausticShaderDirectory = std::getenv("CausticShaderDirectory");
+        const char* pCausticShaderDirectory = std::getenv("CausticShaderDirectory");
 #pragma warning(pop)
-		if (pCausticShaderDirectory != nullptr)
-		{
-			int numWideChars = MultiByteToWideChar(CP_UTF8, 0, pCausticShaderDirectory, -1, nullptr, 0);
-			if (numWideChars > 0)
-			{
-				std::unique_ptr<wchar_t> pConvertedStr(new wchar_t[numWideChars]);
-				if (MultiByteToWideChar(CP_UTF8, 0, pCausticShaderDirectory, -1, pConvertedStr.get(), numWideChars) != 0)
-				{
-					return std::wstring(pConvertedStr.get());
-				}
-			}
-		}
-		return std::wstring(CAUSTIC_SHADER_DIRECTORY);
-	}
+        if (pCausticShaderDirectory != nullptr)
+        {
+            int numWideChars = MultiByteToWideChar(CP_UTF8, 0, pCausticShaderDirectory, -1, nullptr, 0);
+            if (numWideChars > 0)
+            {
+                std::unique_ptr<wchar_t> pConvertedStr(new wchar_t[numWideChars]);
+                if (MultiByteToWideChar(CP_UTF8, 0, pCausticShaderDirectory, -1, pConvertedStr.get(), numWideChars) != 0)
+                {
+                    return std::wstring(pConvertedStr.get());
+                }
+            }
+        }
+        return std::wstring(CAUSTIC_SHADER_DIRECTORY);
+    }
 }

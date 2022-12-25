@@ -11,28 +11,28 @@ export module Base.Core.Error;
 
 export namespace Caustic
 {
-	//**********************************************************************
-	// Class: CausticException
-	// Class for handling throwing of exceptions
-	//
-	// Module:
-	// {Link:import Base.Core.Error;{Base/Core/Error.ixx}}
-	//**********************************************************************
-	class CausticException : public std::exception
+    //**********************************************************************
+    // Class: CausticException
+    // Class for handling throwing of exceptions
+    //
+    // Module:
+    // {Link:import Base.Core.Error;{Base/Core/Error.ixx}}
+    //**********************************************************************
+    class CausticException : public std::exception
     {
         HRESULT m_hr;
         std::string m_fn;
         int m_line;
     public:
-		//**********************************************************************
-		// Constructor: CausticException
-		// Constructor
-		//
-		// hr - HRESULT to throw
-		// pFilename - Name of source file where exception was thrown from
-		// line - Line number in source file where exception was thrown from
-		//**********************************************************************
-		CausticException(HRESULT hr, const char *pFilename, int line)
+        //**********************************************************************
+        // Constructor: CausticException
+        // Constructor
+        //
+        // hr - HRESULT to throw
+        // pFilename - Name of source file where exception was thrown from
+        // line - Line number in source file where exception was thrown from
+        //**********************************************************************
+        CausticException(HRESULT hr, const char *pFilename, int line)
         {
             m_hr = hr;
             m_fn = pFilename;

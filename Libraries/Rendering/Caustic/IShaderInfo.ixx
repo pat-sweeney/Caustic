@@ -21,8 +21,8 @@ import Base.Math.Vector;
 
 export namespace Caustic
 {
-	struct IShader;
-	struct ShaderParamDef;
+    struct IShader;
+    struct ShaderParamDef;
 
     //**********************************************************************
     // Enum: EShaderType
@@ -41,17 +41,17 @@ export namespace Caustic
         TypeComputeShader = 0x20
     };
 
-	//**********************************************************************
-	// Interface: IShaderInfo
-	// Defines primary interface used for getting information about pre-compiled
-	// shaders. This isn't the shader itself. It is simply the data that we
-	// load from disk to create a shader (i.e. data from .shi file)
+    //**********************************************************************
+    // Interface: IShaderInfo
+    // Defines primary interface used for getting information about pre-compiled
+    // shaders. This isn't the shader itself. It is simply the data that we
+    // load from disk to create a shader (i.e. data from .shi file)
     //
     // Module:
     // {Link:import Rendering.Caustic.IShaderInfo;{Rendering/Caustic/IShaderInfo.ixx}}
     //**********************************************************************
-	struct IShaderInfo : public IRefCount
-	{
+    struct IShaderInfo : public IRefCount
+    {
         //**********************************************************************
         // Method: PSUsesVariable
         // Returns whether the Pixel shader uses the specified variable

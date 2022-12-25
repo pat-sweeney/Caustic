@@ -11,14 +11,14 @@ import Base.Core.Core;
 
 export namespace Caustic
 {
-	//**********************************************************************
-	// Class: BresenhamCircle
-	// Defines a class for walking around a circle using Bresenham's algorithm
+    //**********************************************************************
+    // Class: BresenhamCircle
+    // Defines a class for walking around a circle using Bresenham's algorithm
     //
     // Module:
     // {Link:import Geometry.Rast.BresenhamCircle{Geometry/Rast/BresenhamCircle.ixx}}
     //**********************************************************************
-	class BresenhamCircle
+    class BresenhamCircle
     {
         int32 x;        // current x coordinate
         int32 y;        // current y coordinate
@@ -28,22 +28,22 @@ export namespace Caustic
         int32 deltaE;
         int32 deltaSE;
     public:
-		//**********************************************************************
-		// Constructor: BresenhamCircle
-		// Default constructor
-		//**********************************************************************
-		BresenhamCircle()
+        //**********************************************************************
+        // Constructor: BresenhamCircle
+        // Default constructor
+        //**********************************************************************
+        BresenhamCircle()
         {
         }
 
-		//**********************************************************************
-		// Constructor: BresenhamCircle
-		// Constructor
-		//
-		// Parameters:
-		// radius - radius of the circle in pixels
-		//**********************************************************************
-		BresenhamCircle(int32 radius)
+        //**********************************************************************
+        // Constructor: BresenhamCircle
+        // Constructor
+        //
+        // Parameters:
+        // radius - radius of the circle in pixels
+        //**********************************************************************
+        BresenhamCircle(int32 radius)
         {
             x = 0;
             y = radius;
@@ -52,32 +52,32 @@ export namespace Caustic
             deltaSE = -2 * radius + 5;
         }
 
-		//**********************************************************************
-		// Method: GetX
-		// Returns the current pixel's X coordinate
-		//**********************************************************************
-		int32 GetX() { return x; }
+        //**********************************************************************
+        // Method: GetX
+        // Returns the current pixel's X coordinate
+        //**********************************************************************
+        int32 GetX() { return x; }
 
-		//**********************************************************************
-		// Method: GetY
-		// Returns the current pixel's Y coordinate
-		//**********************************************************************
-		int32 GetY() { return y; }
+        //**********************************************************************
+        // Method: GetY
+        // Returns the current pixel's Y coordinate
+        //**********************************************************************
+        int32 GetY() { return y; }
 
-		//**********************************************************************
-		// Method: end
-		// Returns whether the iterator has reached the end
-		//**********************************************************************
-		bool end()
+        //**********************************************************************
+        // Method: end
+        // Returns whether the iterator has reached the end
+        //**********************************************************************
+        bool end()
         {
             return (y <= x);
         }
 
-		//**********************************************************************
-		// Method: step
-		// Steps the iterator one unit along the circle
-		//**********************************************************************
-		void step()
+        //**********************************************************************
+        // Method: step
+        // Steps the iterator one unit along the circle
+        //**********************************************************************
+        void step()
         {
             if (d < 0)
             {

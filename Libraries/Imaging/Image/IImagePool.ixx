@@ -11,25 +11,25 @@ import Imaging.Image.IImage;
 // Namespace: Caustic
 export namespace Caustic
 {
-	//**********************************************************************
-	// Interface: IImagePool
-	// Interface that allocates a pool of images
-	//
-	// Module:
-	// {Link: import Imaging.Image.IImagePool{Imaging/Image/IImagePool.ixx}}
-	//**********************************************************************
-	struct IImagePool : public IRefCount
-	{
-		//**********************************************************************
-		// Method: Acquire
-		// Acquires a new image from the pool, either by allocating an image
-		// or reusing an existing image
-		//
-		// Parameters:
-		// width - width of desired image in pixels
-		// height - height of desired image in pixels
-		// bpp - bits per pixel
-		//**********************************************************************
-		virtual CRefObj<IImage> Acquire(uint32 width, uint32 height, uint32 bpp) = 0;
-	};
+    //**********************************************************************
+    // Interface: IImagePool
+    // Interface that allocates a pool of images
+    //
+    // Module:
+    // {Link: import Imaging.Image.IImagePool{Imaging/Image/IImagePool.ixx}}
+    //**********************************************************************
+    struct IImagePool : public IRefCount
+    {
+        //**********************************************************************
+        // Method: Acquire
+        // Acquires a new image from the pool, either by allocating an image
+        // or reusing an existing image
+        //
+        // Parameters:
+        // width - width of desired image in pixels
+        // height - height of desired image in pixels
+        // bpp - bits per pixel
+        //**********************************************************************
+        virtual CRefObj<IImage> Acquire(uint32 width, uint32 height, uint32 bpp) = 0;
+    };
 }

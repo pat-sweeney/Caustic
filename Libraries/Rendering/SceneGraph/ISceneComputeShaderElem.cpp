@@ -13,8 +13,8 @@ import Rendering.SceneGraph.SceneComputeShaderElem;
 
 namespace Caustic
 {
-	CRefObj<ISceneComputeShaderElem> CreateComputeShaderElem(IShader* pComputeShader)
-	{
-		return CRefObj<ISceneComputeShaderElem>(new CSceneComputeShaderElem(pComputeShader));
-	}
+    CRefObj<ISceneComputeShaderElem> CreateComputeShaderElem(IShader* pComputeShader)
+    {
+        return CRefObj<ISceneComputeShaderElem>(new CSceneComputeShaderElem(pComputeShader));
+    }
 }

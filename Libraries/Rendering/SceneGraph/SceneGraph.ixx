@@ -26,8 +26,8 @@ import Rendering.SceneGraph.ISceneCameraCollectionElem;
 export namespace Caustic
 {
     //**********************************************************************
-	// Class: CSceneGraph
-	// Defines our scene graph
+    // Class: CSceneGraph
+    // Defines our scene graph
     //**********************************************************************
     class CSceneGraph : public CSceneElem, public ISceneGraph, public CRefCount
     {
@@ -47,7 +47,7 @@ export namespace Caustic
             m_showProxyObjects(false)
         {
             InitializeCriticalSection(&m_cs);
-			m_spRoot = pGroup;
+            m_spRoot = pGroup;
             m_CameraCollection = CreateCameraCollectionElem();
         }
 

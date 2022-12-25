@@ -10,34 +10,34 @@ export namespace Caustic
 {
     //**********************************************************************
     // Struct: IRefCount
-	// Defines the basic interface used by reference counted objects
+    // Defines the basic interface used by reference counted objects
     //
     // Header:
     // {Link:#include "Base/Core/IRefCount.h"{Base/Core/IRefCount.h}}
     //**********************************************************************
     struct IRefCount
     {
-		//**********************************************************************
-		// Method: AddRef
-		// Increments the reference count
-		//**********************************************************************
-		virtual uint32 AddRef() = 0;
+        //**********************************************************************
+        // Method: AddRef
+        // Increments the reference count
+        //**********************************************************************
+        virtual uint32 AddRef() = 0;
 
-		//**********************************************************************
-		// Method: Release
-		// Decrements the reference count. If the reference count goes to zero
-		// the underlying object is destroyed.
-		//**********************************************************************
-		virtual uint32 Release() = 0;
+        //**********************************************************************
+        // Method: Release
+        // Decrements the reference count. If the reference count goes to zero
+        // the underlying object is destroyed.
+        //**********************************************************************
+        virtual uint32 Release() = 0;
     };
 
     //**********************************************************************
     // Struct: CRefObj<T>
-	// CRefObj is a smart class (similar to CComPtr) for managing
+    // CRefObj is a smart class (similar to CComPtr) for managing
     // a IRefCount-ed object's lifetime.
-	//
-	// Parameters:
-	// T - type of object to manage
+    //
+    // Parameters:
+    // T - type of object to manage
     //
     // Header:
     // {Link:#include "Base/Core/IRefCount.h"{Base/Core/IRefCount.h}}
@@ -47,20 +47,20 @@ export namespace Caustic
     {
         T *p;
     public:
-		//**********************************************************************
-		// Constructor: CRefObj
-		// Default constructor
-		//**********************************************************************
-		CRefObj()
+        //**********************************************************************
+        // Constructor: CRefObj
+        // Default constructor
+        //**********************************************************************
+        CRefObj()
         {
             p = nullptr;
         }
 
-		//**********************************************************************
-		// Constructor: CRefObj
-		// Copy constructor
-		//**********************************************************************
-		CRefObj(const CRefObj &v)
+        //**********************************************************************
+        // Constructor: CRefObj
+        // Copy constructor
+        //**********************************************************************
+        CRefObj(const CRefObj &v)
         {
             p = v.p;
             if (p)
@@ -74,28 +74,28 @@ export namespace Caustic
                 p->AddRef();
         }
 
-		//**********************************************************************
-		// Constructor: CRefObj
-		// Constructor from base type
-		//**********************************************************************
-		CRefObj(T *v)
+        //**********************************************************************
+        // Constructor: CRefObj
+        // Constructor from base type
+        //**********************************************************************
+        CRefObj(T *v)
         {
             p = v;
             if (p)
                 p->AddRef();
         }
 
-		//**********************************************************************
-		// Destructor: ~CRefObj
-		// Destructor
-		//**********************************************************************
-		~CRefObj()
+        //**********************************************************************
+        // Destructor: ~CRefObj
+        // Destructor
+        //**********************************************************************
+        ~CRefObj()
         {
             if (p)
                 p->Release();
         }
 
-		operator T*() { return p; }
+        operator T*() { return p; }
         T *operator*() { return p; }
         T **operator&() { return &p; }
         T *operator->() { return p; }

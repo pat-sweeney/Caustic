@@ -17,9 +17,9 @@ import Base.Math.Ray;
 
 export namespace Caustic
 {
-	// Define a base class for Monte Carlo sampling
-	struct CMCSampler2D
-	{
+    // Define a base class for Monte Carlo sampling
+    struct CMCSampler2D
+    {
         virtual Vector2 Next() = 0;
     };
 

@@ -14,36 +14,36 @@ import Rendering.SceneGraph.ISceneGroupElem;
 
 export namespace Caustic
 {
-	//**********************************************************************
-	// Interface: ISceneCameraCollectionElem
-	// Defines a collection of cameras available for rendering the scene
-	//**********************************************************************
-	struct ISceneCameraCollectionElem : public ISceneElem
-	{
-		//**********************************************************************
-		// Method: AddCamera
-		// Adds a camera to the collection
-		//**********************************************************************
-		virtual void AddCamera(ICamera* pLight) = 0;
+    //**********************************************************************
+    // Interface: ISceneCameraCollectionElem
+    // Defines a collection of cameras available for rendering the scene
+    //**********************************************************************
+    struct ISceneCameraCollectionElem : public ISceneElem
+    {
+        //**********************************************************************
+        // Method: AddCamera
+        // Adds a camera to the collection
+        //**********************************************************************
+        virtual void AddCamera(ICamera* pLight) = 0;
 
-		//**********************************************************************
-		// Method: RemoveCamera
-		// Removes a camera from the collection
-		//**********************************************************************
-		virtual void RemoveCamera(ICamera* pLight) = 0;
+        //**********************************************************************
+        // Method: RemoveCamera
+        // Removes a camera from the collection
+        //**********************************************************************
+        virtual void RemoveCamera(ICamera* pLight) = 0;
 
-		//**********************************************************************
-		// Method: NumberCameras
-		// Returns the number of cameras in the collection
-		//**********************************************************************
-		virtual uint32 NumberCameras() = 0;
+        //**********************************************************************
+        // Method: NumberCameras
+        // Returns the number of cameras in the collection
+        //**********************************************************************
+        virtual uint32 NumberCameras() = 0;
 
-		//**********************************************************************
-		// Method: GetCamera
-		// Returns the Nth camera from the collection
-		//**********************************************************************
-		virtual CRefObj<ICamera> GetCamera(int index) = 0;
-	};
+        //**********************************************************************
+        // Method: GetCamera
+        // Returns the Nth camera from the collection
+        //**********************************************************************
+        virtual CRefObj<ICamera> GetCamera(int index) = 0;
+    };
 
-	CRefObj<ISceneCameraCollectionElem> CreateCameraCollectionElem();
+    CRefObj<ISceneCameraCollectionElem> CreateCameraCollectionElem();
 }

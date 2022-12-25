@@ -14,7 +14,7 @@ export namespace Caustic
     using namespace Caustic;
 
     //**********************************************************************
-	// Structure: OBBox2
+    // Structure: OBBox2
     // Defines a oriented bounding box (in 2D)
     //
     // Members:
@@ -46,8 +46,8 @@ export namespace Caustic
         void Transform(Matrix2x2 *tm);
     };
 
-	//**********************************************************************
-	// Structure: OBBox3
+    //**********************************************************************
+    // Structure: OBBox3
     // Defines a oriented bounding box (in 3D)
     //
     // Members:

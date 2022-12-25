@@ -235,10 +235,10 @@ namespace Caustic
     {
         double x, y;
         Vector3 scale;
-	    Vector3 shear;
-	    Vector3 rotate;
-	    Vector3 translate;
-	    Decompose(&scale, &shear, &rotate, &translate);
+        Vector3 shear;
+        Vector3 rotate;
+        Vector3 translate;
+        Decompose(&scale, &shear, &rotate, &translate);
         int indx;
 
         tm.resize((undoshear) ? 14 : 8);

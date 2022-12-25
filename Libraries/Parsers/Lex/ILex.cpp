@@ -12,9 +12,9 @@ import Base.Core.IRefCount;
 // Namespace: Caustic
 namespace Caustic
 {
-	CRefObj<ILex> CreateLex(const char* buffer, bool returnWhitespace /* = false */)
-	{
-		return CRefObj<ILex>(new CLex(buffer, returnWhitespace));
-	}
+    CRefObj<ILex> CreateLex(const char* buffer, bool returnWhitespace /* = false */)
+    {
+        return CRefObj<ILex>(new CLex(buffer, returnWhitespace));
+    }
 }
 

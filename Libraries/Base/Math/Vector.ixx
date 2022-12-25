@@ -28,96 +28,96 @@ export namespace Caustic
     {
         float x, y;
 
-	    //**********************************************************************
-	    // Constructor: Vector2
-	    // Default contructor
-	    //**********************************************************************
-	    Vector2() : x(0.0), y(0.0) {}
+        //**********************************************************************
+        // Constructor: Vector2
+        // Default contructor
+        //**********************************************************************
+        Vector2() : x(0.0), y(0.0) {}
 
-	    //**********************************************************************
-	    // Constructor: Vector2
-	    // Contructor for a 2D vector
-	    //
-	    // Parameters:
-	    // _x - X coordinate
-	    // _y - Y coordinate
-	    //**********************************************************************
-	    Vector2(float _x, float _y) { x = _x; y = _y; }
+        //**********************************************************************
+        // Constructor: Vector2
+        // Contructor for a 2D vector
+        //
+        // Parameters:
+        // _x - X coordinate
+        // _y - Y coordinate
+        //**********************************************************************
+        Vector2(float _x, float _y) { x = _x; y = _y; }
 
-	    //**********************************************************************
-	    // Method: IsEq
-	    // Returns whether two points are equivalent (within some tolerance)
-	    //
-	    // Parameters:
-	    // p - Point to compare against
-	    //
-	    // Returns:
-	    // True if points are equivalent. False otherwise.
-	    //**********************************************************************
-	    bool IsEq(const Vector2 &p) const
-	    {
-	        if (IsZero(p.x - x) && IsZero(p.y - y))
-		        return true;
-	        return false;
-	    }
+        //**********************************************************************
+        // Method: IsEq
+        // Returns whether two points are equivalent (within some tolerance)
+        //
+        // Parameters:
+        // p - Point to compare against
+        //
+        // Returns:
+        // True if points are equivalent. False otherwise.
+        //**********************************************************************
+        bool IsEq(const Vector2 &p) const
+        {
+            if (IsZero(p.x - x) && IsZero(p.y - y))
+                return true;
+            return false;
+        }
 
-	    //**********************************************************************
-	    // Method: Length
-	    // Returns the L2 norm for the vector
-	    //
-	    // Returns:
-	    // Length of vector
-	    //**********************************************************************
-	    float Length() const { return (float)sqrtf(x * x + y * y); }
+        //**********************************************************************
+        // Method: Length
+        // Returns the L2 norm for the vector
+        //
+        // Returns:
+        // Length of vector
+        //**********************************************************************
+        float Length() const { return (float)sqrtf(x * x + y * y); }
 
-	    //**********************************************************************
-	    // Method: Normalize
-	    // Normalizes the vector
-	    //
-	    // Returns:
-	    // Normalized vector
-	    //**********************************************************************
-	    Vector2 Normalize()
-	    {
-	        float len = Length();
-	        if (!IsZero(len))
-	        {
-		        x /= len;
-		        y /= len;
-	        }
-	        return Vector2(x, y);
-	    }
+        //**********************************************************************
+        // Method: Normalize
+        // Normalizes the vector
+        //
+        // Returns:
+        // Normalized vector
+        //**********************************************************************
+        Vector2 Normalize()
+        {
+            float len = Length();
+            if (!IsZero(len))
+            {
+                x /= len;
+                y /= len;
+            }
+            return Vector2(x, y);
+        }
 
-	    //**********************************************************************
-	    // Method: Cross
-	    // Computes cross product between two vectors
-	    //
-	    // Returns:
-	    // Cross product vector
-	    //**********************************************************************
-	    float Cross(const Vector2 &v) const
-	    {
-	        return x * v.y - y * v.x;
-	    }
+        //**********************************************************************
+        // Method: Cross
+        // Computes cross product between two vectors
+        //
+        // Returns:
+        // Cross product vector
+        //**********************************************************************
+        float Cross(const Vector2 &v) const
+        {
+            return x * v.y - y * v.x;
+        }
 
-	    //**********************************************************************
-	    // Method: Dot
-	    // Computes dot product between two vectors
-	    //
-	    // Returns:
-	    // Dot product
-	    //**********************************************************************
-	    float Dot(const Vector2 &v) const
-	    {
-	        return x * v.x + y * v.y;
-	    }
+        //**********************************************************************
+        // Method: Dot
+        // Computes dot product between two vectors
+        //
+        // Returns:
+        // Dot product
+        //**********************************************************************
+        float Dot(const Vector2 &v) const
+        {
+            return x * v.x + y * v.y;
+        }
 
-	    Vector2 operator-() const { return Vector2(-x, -y); }
-	    Vector2 operator-(const Vector2 &rhs) const { return Vector2(x - rhs.x, y - rhs.y); }
-	    Vector2 operator+(const Vector2 &rhs) const { return Vector2(x + rhs.x, y + rhs.y); }
-	    Vector2 operator*(float f) const { return Vector2(x * f, y * f); }
-	    bool operator==(const Vector2 &rhs) const { return this->IsEq(rhs); }
-	    bool operator!=(const Vector2 &rhs) const { return !this->IsEq(rhs); }
+        Vector2 operator-() const { return Vector2(-x, -y); }
+        Vector2 operator-(const Vector2 &rhs) const { return Vector2(x - rhs.x, y - rhs.y); }
+        Vector2 operator+(const Vector2 &rhs) const { return Vector2(x + rhs.x, y + rhs.y); }
+        Vector2 operator*(float f) const { return Vector2(x * f, y * f); }
+        bool operator==(const Vector2 &rhs) const { return this->IsEq(rhs); }
+        bool operator!=(const Vector2 &rhs) const { return !this->IsEq(rhs); }
     };
 
     //**********************************************************************
@@ -136,27 +136,27 @@ export namespace Caustic
     {
         float x, y, z;
 
-		//**********************************************************************
-		// Constructor: Vector3
-		// Default constructor
-		//**********************************************************************
+        //**********************************************************************
+        // Constructor: Vector3
+        // Default constructor
+        //**********************************************************************
         Vector3() : x(0.0f), y(0.0f), z(0.0f) {}
 
-		//**********************************************************************
-		// Constructor: Vector3
-		// Constructor
-		//
-		// Parameters:
-		// _x - X coordinate
-		// _y - Y coordinate
-		// _z - Z coordinate
-		//**********************************************************************
+        //**********************************************************************
+        // Constructor: Vector3
+        // Constructor
+        //
+        // Parameters:
+        // _x - X coordinate
+        // _y - Y coordinate
+        // _z - Z coordinate
+        //**********************************************************************
         Vector3(const float _x, const float _y, const float _z) { x = _x; y = _y; z = _z; }
 
         //**********************************************************************
-		// Method: Sign
-		// Returns -1 or +1 depending on direction vector is pointing
-		//**********************************************************************
+        // Method: Sign
+        // Returns -1 or +1 depending on direction vector is pointing
+        //**********************************************************************
         int Sign() const
         {
             int s0 = (x < 0) ? -1 : +1;
@@ -165,16 +165,16 @@ export namespace Caustic
             return s0 * s1 * s2;
         }
 
-		//**********************************************************************
-		// Method: IsEq
-		// Returns whether two points are equivalent (within some tolerance)
+        //**********************************************************************
+        // Method: IsEq
+        // Returns whether two points are equivalent (within some tolerance)
         //
         // Parameters:
         // p - point to test against
-		//
-		// Returns:
-		// True if points are considered equivalent. False otherwise.
-		//**********************************************************************
+        //
+        // Returns:
+        // True if points are considered equivalent. False otherwise.
+        //**********************************************************************
         bool IsEq(const Vector3 &p) const
         {
             if (IsZero(p.x - x) &&
@@ -184,16 +184,16 @@ export namespace Caustic
             return false;
         }
 
-		//**********************************************************************
-		// Method: Cross
-		// Returns the cross product between two vectors
+        //**********************************************************************
+        // Method: Cross
+        // Returns the cross product between two vectors
         //
         // Parameters:
         // v - vector to compute cross product against
-		//
-		// Returns:
-		// The cross product
-		//**********************************************************************
+        //
+        // Returns:
+        // The cross product
+        //**********************************************************************
         Vector3 Cross(const Vector3 &v) const
         {
             Vector3 nv;
@@ -204,16 +204,16 @@ export namespace Caustic
             return nv;
         }
 
-		//**********************************************************************
-		// Method: Dot
-		// Returns the scalar product between two vectors
+        //**********************************************************************
+        // Method: Dot
+        // Returns the scalar product between two vectors
         //
         // Parameters:
         // v - vector to compute dot product against
-		//
-		// Returns:
-		// The scalar product
-		//**********************************************************************
+        //
+        // Returns:
+        // The scalar product
+        //**********************************************************************
         float Dot(const Vector3 &v) const
         {
             return x * v.x + y * v.y + z * v.z;

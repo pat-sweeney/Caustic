@@ -17,21 +17,21 @@ namespace Caustic
     {
     }
 
-	BBox2::BBox2(Vector2& topLeft, Vector2& bottomRight)
-	{
-		minPt = topLeft;
-		maxPt = bottomRight;
-	}
+    BBox2::BBox2(Vector2& topLeft, Vector2& bottomRight)
+    {
+        minPt = topLeft;
+        maxPt = bottomRight;
+    }
 
-	BBox2::BBox2(float x0, float y0, float x1, float y1)
-	{
-		minPt.x = x0;
-		minPt.y = y0;
-		maxPt.x = x1;
-		maxPt.y = y1;
-	}
+    BBox2::BBox2(float x0, float y0, float x1, float y1)
+    {
+        minPt.x = x0;
+        minPt.y = y0;
+        maxPt.x = x1;
+        maxPt.y = y1;
+    }
 
-	bool BBox2::Empty()
+    bool BBox2::Empty()
     {
         if (minPt.x == FLT_MAX && minPt.y == FLT_MAX &&
             maxPt.x == -FLT_MAX && maxPt.y == -FLT_MAX)
@@ -77,66 +77,66 @@ namespace Caustic
 
     bool BBox2::LineInside(const Vector2& p1, const Vector2& p2)
     {
-		//
-		// First check if either end point is within the bounding box
-		//
-		if (PointInside(p1) || PointInside(p2))
-			return true;
+        //
+        // First check if either end point is within the bounding box
+        //
+        if (PointInside(p1) || PointInside(p2))
+            return true;
 
-		//
-		// Next check if line is trivially outside (completely to the left, right, top, or bottom)
-		//
-		if ((p1.x < minPt.x && p2.x < minPt.x) ||
-			(p1.x > maxPt.x && p2.x > maxPt.x) ||
-			(p1.y < minPt.y && p2.y < minPt.y) ||
-			(p1.y > maxPt.y && p2.y > maxPt.y))
-			return false;
+        //
+        // Next check if line is trivially outside (completely to the left, right, top, or bottom)
+        //
+        if ((p1.x < minPt.x && p2.x < minPt.x) ||
+            (p1.x > maxPt.x && p2.x > maxPt.x) ||
+            (p1.y < minPt.y && p2.y < minPt.y) ||
+            (p1.y > maxPt.y && p2.y > maxPt.y))
+            return false;
 
-		//
-		// Line may be partially visible so clip against bbox.
-		// First clip against left edge of box.
-		//
-		float numer = (p1.x - minPt.x) * (p2.y - p1.y) - (p1.y - minPt.y) * (p2.x - p1.x);
-		float denom = -(maxPt.y - minPt.y) * (p2.x - p1.x);
-		if (!Caustic::IsZero(denom))
-		{
-			float t = numer / denom;
-			if (t >= 0.0F && t <= 1.0F)
-				return true;
-		}
+        //
+        // Line may be partially visible so clip against bbox.
+        // First clip against left edge of box.
+        //
+        float numer = (p1.x - minPt.x) * (p2.y - p1.y) - (p1.y - minPt.y) * (p2.x - p1.x);
+        float denom = -(maxPt.y - minPt.y) * (p2.x - p1.x);
+        if (!Caustic::IsZero(denom))
+        {
+            float t = numer / denom;
+            if (t >= 0.0F && t <= 1.0F)
+                return true;
+        }
 
-		//
-		// Clip against top edge
-		//
-		denom = (maxPt.x - minPt.x) * (p2.y - p1.y);
-		if (!Caustic::IsZero(denom))
-		{
-			float t = numer / denom;
-			if (t >= 0.0F && t <= 1.0F)
-				return true;
-		}
+        //
+        // Clip against top edge
+        //
+        denom = (maxPt.x - minPt.x) * (p2.y - p1.y);
+        if (!Caustic::IsZero(denom))
+        {
+            float t = numer / denom;
+            if (t >= 0.0F && t <= 1.0F)
+                return true;
+        }
 
-		//
-		// Clip against right edge
-		//
-		denom = -(maxPt.y - minPt.y) * (p2.x - p1.x);
-		if (!Caustic::IsZero(denom))
-		{
-			float t = numer / denom;
-			if (t >= 0.0F && t <= 1.0F)
-				return true;
-		}
+        //
+        // Clip against right edge
+        //
+        denom = -(maxPt.y - minPt.y) * (p2.x - p1.x);
+        if (!Caustic::IsZero(denom))
+        {
+            float t = numer / denom;
+            if (t >= 0.0F && t <= 1.0F)
+                return true;
+        }
 
-		//
-		// Clip against bottom edge
-		//
-		denom = (maxPt.x - minPt.x) * (p2.y - p1.y);
-		if (!Caustic::IsZero(denom))
-		{
-			float t = numer / denom;
-			if (t >= 0.0F && t <= 1.0F)
-				return true;
-		}
-		return false;
-	}
+        //
+        // Clip against bottom edge
+        //
+        denom = (maxPt.x - minPt.x) * (p2.y - p1.y);
+        if (!Caustic::IsZero(denom))
+        {
+            float t = numer / denom;
+            if (t >= 0.0F && t <= 1.0F)
+                return true;
+        }
+        return false;
+    }
 }

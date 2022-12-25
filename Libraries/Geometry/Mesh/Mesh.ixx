@@ -38,8 +38,8 @@ export namespace Caustic
         std::vector<CFace*> m_faces;
         std::vector<CHalfEdge*> m_edges;
         std::map<uint64, CHalfEdge*> m_vertToEdge;
-		CRefObj<IKDTree> m_spKDTree;
-		Caustic::BBox3 m_bbox;
+        CRefObj<IKDTree> m_spKDTree;
+        Caustic::BBox3 m_bbox;
         uint32 m_materialID;
         EVertexFlags m_vertexFlags;
         EMeshFlags m_meshFlags;

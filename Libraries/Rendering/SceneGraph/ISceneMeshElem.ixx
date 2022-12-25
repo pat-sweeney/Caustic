@@ -14,30 +14,30 @@ import Rendering.SceneGraph.ISceneElem;
 
 export namespace Caustic
 {
-	//**********************************************************************
-	// Interface: ISceneMeshElem
-	// Defines a single mesh in our scene
-	//**********************************************************************
-	struct ISceneMeshElem : public ISceneElem
-	{
-		//**********************************************************************
-		// Method: SetMesh
-		// Updates the mesh elements underlying mesh object
-		//**********************************************************************
-		virtual void SetMesh(IMesh* pMesh) = 0;
+    //**********************************************************************
+    // Interface: ISceneMeshElem
+    // Defines a single mesh in our scene
+    //**********************************************************************
+    struct ISceneMeshElem : public ISceneElem
+    {
+        //**********************************************************************
+        // Method: SetMesh
+        // Updates the mesh elements underlying mesh object
+        //**********************************************************************
+        virtual void SetMesh(IMesh* pMesh) = 0;
 
-		//**********************************************************************
-		// Method: GetMesh
-		// Returns the underlying mesh object
-		//**********************************************************************
-		virtual CRefObj<IMesh> GetMesh() = 0;
+        //**********************************************************************
+        // Method: GetMesh
+        // Returns the underlying mesh object
+        //**********************************************************************
+        virtual CRefObj<IMesh> GetMesh() = 0;
 
-		//**********************************************************************
-		// Method: SetShader
-		// Assigns shader used for rendering this mesh
-		//**********************************************************************
-		virtual void SetShader(IShader* pShader) = 0;
-	};
-	
-	CRefObj<ISceneMeshElem> CreateMeshElem();
+        //**********************************************************************
+        // Method: SetShader
+        // Assigns shader used for rendering this mesh
+        //**********************************************************************
+        virtual void SetShader(IShader* pShader) = 0;
+    };
+    
+    CRefObj<ISceneMeshElem> CreateMeshElem();
 }

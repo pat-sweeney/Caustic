@@ -12,15 +12,15 @@ import Rendering.SceneGraph.ISceneElem;
 
 export namespace Caustic
 {
-	//**********************************************************************
-	// Interface: ISceneCubeElem
-	// Defines a cube element in our scene graph.
-	//**********************************************************************
-	struct ISceneCubeElem : public ISceneElem
-	{
-		virtual void SetPosition(Vector3& center, float width, float height, float depth) = 0;
-		virtual void GetPosition(Vector3* pCenter, float* pWidth, float* pHeight, float* pDepth) = 0;
-	};
+    //**********************************************************************
+    // Interface: ISceneCubeElem
+    // Defines a cube element in our scene graph.
+    //**********************************************************************
+    struct ISceneCubeElem : public ISceneElem
+    {
+        virtual void SetPosition(Vector3& center, float width, float height, float depth) = 0;
+        virtual void GetPosition(Vector3* pCenter, float* pWidth, float* pHeight, float* pDepth) = 0;
+    };
 
-	CRefObj<ISceneCubeElem> CreateCubeElem(Vector3& center, float width, float height, float depth);
+    CRefObj<ISceneCubeElem> CreateCubeElem(Vector3& center, float width, float height, float depth);
 }

@@ -14,9 +14,9 @@ import Base.Math.Vector;
 // Namespace: Caustic
 export namespace Caustic
 {
-	//**********************************************************************
-	// Structure: Matrix2x2
-	// Defines a 2x2 matrix
+    //**********************************************************************
+    // Structure: Matrix2x2
+    // Defines a 2x2 matrix
     //
     // Members:
     // float v[2][2] - Elements of the matrix
@@ -24,7 +24,7 @@ export namespace Caustic
     // Module:
     // {Link:import Base.Math.Matrix.Matrix3x3;{Base/Math/Matrix3x3.ixx}}
     //**********************************************************************
-	struct Matrix2x2
+    struct Matrix2x2
     {
         float v[2][2];
 

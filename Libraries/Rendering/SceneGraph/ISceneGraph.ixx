@@ -22,90 +22,90 @@ import Rendering.SceneGraph.ISceneCameraCollectionElem;
 
 export namespace Caustic
 {
-	//**********************************************************************
-	// Interface: ISceneGraph
-	// Our main interface for manipulating a scene graph
-	//**********************************************************************
-	struct ISceneGraph : public ISceneGroupElem
-	{
-		//**********************************************************************
-		// Method: ClearSelected
-		// Deselects all the currently selected objects.
-		//**********************************************************************
-		virtual void ClearSelected() = 0;
+    //**********************************************************************
+    // Interface: ISceneGraph
+    // Our main interface for manipulating a scene graph
+    //**********************************************************************
+    struct ISceneGraph : public ISceneGroupElem
+    {
+        //**********************************************************************
+        // Method: ClearSelected
+        // Deselects all the currently selected objects.
+        //**********************************************************************
+        virtual void ClearSelected() = 0;
 
-		//**********************************************************************
-		// Method: SelectObject
-		// Selects the specified scene element.
-		//
-		// Parameters:
-		// pSceneElem - scene element to select
-		//**********************************************************************
-		virtual void SelectObject(ISceneElem* pSceneElem) = 0;
+        //**********************************************************************
+        // Method: SelectObject
+        // Selects the specified scene element.
+        //
+        // Parameters:
+        // pSceneElem - scene element to select
+        //**********************************************************************
+        virtual void SelectObject(ISceneElem* pSceneElem) = 0;
 
-		//**********************************************************************
-		// Method: DeselectObject
-		// Deselects the specified scene element.
-		//
-		// Parameters:
-		// pSceneElem - scene element to select
-		//**********************************************************************
-		virtual void DeselectObject(ISceneElem* pSceneElem) = 0;
+        //**********************************************************************
+        // Method: DeselectObject
+        // Deselects the specified scene element.
+        //
+        // Parameters:
+        // pSceneElem - scene element to select
+        //**********************************************************************
+        virtual void DeselectObject(ISceneElem* pSceneElem) = 0;
 
-		//**********************************************************************
-		// Method: GetShowProxyObjects
-		// Returns whether proxy objects (for things such as lights) are rendered
-		// in the scene.
-		//
-		// Returns:
-		// True if proxy objects are displayed. False otherwise.
-		//**********************************************************************
-		virtual bool GetShowProxyObjects() = 0;
+        //**********************************************************************
+        // Method: GetShowProxyObjects
+        // Returns whether proxy objects (for things such as lights) are rendered
+        // in the scene.
+        //
+        // Returns:
+        // True if proxy objects are displayed. False otherwise.
+        //**********************************************************************
+        virtual bool GetShowProxyObjects() = 0;
 
-		//**********************************************************************
-		// Method: SetShowProxyObjects
-		// Enables or disables rendering of proxy objects
-		//
-		// Parameters:
-		// show - if true proxy objects are displayed. if false they aren't rendered.
-		//**********************************************************************
-		virtual void SetShowProxyObjects(bool show) = 0;
+        //**********************************************************************
+        // Method: SetShowProxyObjects
+        // Enables or disables rendering of proxy objects
+        //
+        // Parameters:
+        // show - if true proxy objects are displayed. if false they aren't rendered.
+        //**********************************************************************
+        virtual void SetShowProxyObjects(bool show) = 0;
 
-		//**********************************************************************
-		// Method: PathTrace
-		// Computes view of the scene using path tracing
-		//
-		// Parameters:
-		// pRenderer - renderer
-		// pCtx - path context
-		// pDest - Image to render results to
-		//**********************************************************************
-		virtual void PathTrace(IRenderer* pRenderer, PathTraceCtx* pCtx, IImage* pDest) = 0;
+        //**********************************************************************
+        // Method: PathTrace
+        // Computes view of the scene using path tracing
+        //
+        // Parameters:
+        // pRenderer - renderer
+        // pCtx - path context
+        // pDest - Image to render results to
+        //**********************************************************************
+        virtual void PathTrace(IRenderer* pRenderer, PathTraceCtx* pCtx, IImage* pDest) = 0;
 
-		//**********************************************************************
-		// Method: Merge
-		// Merges a scene graph with another scene graph
-		//**********************************************************************
-		virtual void Merge(ISceneGraph* pGraph) = 0;
+        //**********************************************************************
+        // Method: Merge
+        // Merges a scene graph with another scene graph
+        //**********************************************************************
+        virtual void Merge(ISceneGraph* pGraph) = 0;
 
-		//**********************************************************************
-		// Method: Lock
-		// Locks a scene graph so it can be updated
-		//**********************************************************************
-		virtual void Lock() = 0;
+        //**********************************************************************
+        // Method: Lock
+        // Locks a scene graph so it can be updated
+        //**********************************************************************
+        virtual void Lock() = 0;
 
-		//**********************************************************************
-		// Method: Unlock
-		// Unlocks a scene graph allowing the renderer to use it
-		//**********************************************************************
-		virtual void Unlock() = 0;
+        //**********************************************************************
+        // Method: Unlock
+        // Unlocks a scene graph allowing the renderer to use it
+        //**********************************************************************
+        virtual void Unlock() = 0;
 
-		//**********************************************************************
-		// Method: GetCameras
-		// Returns list of available cameras
-		//**********************************************************************
-		virtual CRefObj<ISceneCameraCollectionElem> GetCameras() = 0;
-	};
+        //**********************************************************************
+        // Method: GetCameras
+        // Returns list of available cameras
+        //**********************************************************************
+        virtual CRefObj<ISceneCameraCollectionElem> GetCameras() = 0;
+    };
 
-	CRefObj<ISceneGraph> CreateSceneGraph();
+    CRefObj<ISceneGraph> CreateSceneGraph();
 };

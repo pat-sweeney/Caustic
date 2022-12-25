@@ -1012,10 +1012,10 @@ namespace Caustic
     // Returns information about the shader
     //**********************************************************************
     CRefObj<IShaderInfo> CShader::GetShaderInfo()
-	{
-		return m_spShaderInfo;
-	}
-	
+    {
+        return m_spShaderInfo;
+    }
+    
     //**********************************************************************
     // Method: CreateBuffer
     // Helper function that creates a buffer for the shader (Constant buffer
@@ -1050,7 +1050,7 @@ namespace Caustic
         }
     }
 
-	//**********************************************************************
+    //**********************************************************************
     // Method: CreateConstantBuffer
     // CreateConstantBuffer creates the constant buffer (pixel or vertex shader)
     //
@@ -1079,7 +1079,7 @@ namespace Caustic
     // pVSBlob - Compiled binary for the vertex shader
     // pCSBlob - Compiled binary for the compute shader
     //**********************************************************************
-	void CShader::Create(IRenderer *pRenderer, const wchar_t *pShaderName, IShaderInfo *pShaderInfo, ID3DBlob *pPSBlob, ID3DBlob* pVSBlob, ID3DBlob* pCSBlob)
+    void CShader::Create(IRenderer *pRenderer, const wchar_t *pShaderName, IShaderInfo *pShaderInfo, ID3DBlob *pPSBlob, ID3DBlob* pVSBlob, ID3DBlob* pCSBlob)
     {
         if (pShaderName)
             m_name = std::wstring(pShaderName);

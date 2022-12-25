@@ -10,11 +10,11 @@ import Base.Math.MCSampler;
 
 export namespace Caustic
 {
-	struct PathTraceCtx
-	{
-		CUniformHemisphere3D sampler;
-		int spp; // samples per pixel
-		int maxDepth; // rays per path
-		bool russianRoulette; // Use russian roulette for path termination
-	};
+    struct PathTraceCtx
+    {
+        CUniformHemisphere3D sampler;
+        int spp; // samples per pixel
+        int maxDepth; // rays per path
+        bool russianRoulette; // Use russian roulette for path termination
+    };
 }

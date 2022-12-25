@@ -12,15 +12,15 @@ import Rendering.SceneGraph.ISceneElem;
 
 export namespace Caustic
 {
-	//**********************************************************************
-	// Interface: ISceneCylinderElem
-	// Defines a cylinder element in our scene graph.
-	//**********************************************************************
-	struct ISceneCylinderElem : public ISceneElem
-	{
-		virtual void SetPosition(Vector3& center, float height, float topRadius, float bottomRadius) = 0;
-		virtual void GetPosition(Vector3* pCenter, float* pHeight, float* pTopRadius, float* pBottomRadius) = 0;
-	};
+    //**********************************************************************
+    // Interface: ISceneCylinderElem
+    // Defines a cylinder element in our scene graph.
+    //**********************************************************************
+    struct ISceneCylinderElem : public ISceneElem
+    {
+        virtual void SetPosition(Vector3& center, float height, float topRadius, float bottomRadius) = 0;
+        virtual void GetPosition(Vector3* pCenter, float* pHeight, float* pTopRadius, float* pBottomRadius) = 0;
+    };
 
-	CRefObj<ISceneCylinderElem> CreateCylinderElem(Vector3& center, float height, float topRadius, float bottomRadius);
+    CRefObj<ISceneCylinderElem> CreateCylinderElem(Vector3& center, float height, float topRadius, float bottomRadius);
 }

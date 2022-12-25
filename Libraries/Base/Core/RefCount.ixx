@@ -13,7 +13,7 @@ export namespace Caustic
 {
     //**********************************************************************
     // Class: CRefCount 
-	// Defines a base class that all our reference counted
+    // Defines a base class that all our reference counted
     // objects are derived from. When an obejcts reference count goes to 0
     // the object will be deleted.
     //

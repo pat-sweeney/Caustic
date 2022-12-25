@@ -61,8 +61,8 @@ namespace Caustic
         m_intrinsics = mat;
     }
 
-	CPointCloud::CPointCloud(IRenderer *pRenderer, uint32 width, uint32 height)
-	{
+    CPointCloud::CPointCloud(IRenderer *pRenderer, uint32 width, uint32 height)
+    {
         m_spShader = pRenderer->GetShaderMgr()->FindShader(L"PointCloud");
         m_spShader->SetVSParam(L"width", std::any(float(width)));
         m_spShader->SetVSParam(L"height", std::any(float(height)));

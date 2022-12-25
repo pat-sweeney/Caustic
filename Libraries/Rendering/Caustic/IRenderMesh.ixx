@@ -28,17 +28,17 @@ export namespace Caustic
 {
     struct IRenderer;
 
-	//**********************************************************************
-	// Interface: IRenderSubMesh
-	// Defines the D3D counterpart to an ISubMesh object (i.e. the renderable
-	// form of a mesh, that is, a mesh converted from a half-edge structure
-	// to a vertex and index buffer).
+    //**********************************************************************
+    // Interface: IRenderSubMesh
+    // Defines the D3D counterpart to an ISubMesh object (i.e. the renderable
+    // form of a mesh, that is, a mesh converted from a half-edge structure
+    // to a vertex and index buffer).
     //
     // Module:
     // {Link:import Rendering.Caustic.IRenderMesh;{Rendering/Caustic/IRenderMesh.ixx}}
     //**********************************************************************
-	struct IRenderSubMesh : public IRefCount
-	{
+    struct IRenderSubMesh : public IRefCount
+    {
         virtual void SetName(const char* pName) = 0;
         virtual std::string GetName() = 0;
 
@@ -159,17 +159,17 @@ export namespace Caustic
         // pWorld - world matrix. Maybe nullptr
         //**********************************************************************
         virtual void Render(IRenderer* pRenderer, IRenderCtx *pRenderCtx, IShader* pShader, IRenderMaterial* pMaterial, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld) = 0;
-	};
+    };
 
-	//**********************************************************************
-	// Interface: IRenderMesh
-	// IRenderMesh is simply a collection of submesh objects (IRenderSubMesh).
+    //**********************************************************************
+    // Interface: IRenderMesh
+    // IRenderMesh is simply a collection of submesh objects (IRenderSubMesh).
     //
     // Module:
     // {Link:import Rendering.Caustic.IRenderMesh;{Rendering/Caustic/IRenderMesh.ixx}}
     //**********************************************************************
-	struct IRenderMesh : public ISerialize
-	{
+    struct IRenderMesh : public ISerialize
+    {
         //**********************************************************************
         // Method: NumberSubMeshes
         // Returns:

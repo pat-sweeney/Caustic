@@ -11,8 +11,8 @@ import Rendering.SceneGraph.SceneMeshElem;
 
 namespace Caustic
 {
-	CRefObj<ISceneMeshElem> CreateMeshElem()
-	{
-		return CRefObj<ISceneMeshElem>(new CSceneMeshElem());
-	}
+    CRefObj<ISceneMeshElem> CreateMeshElem()
+    {
+        return CRefObj<ISceneMeshElem>(new CSceneMeshElem());
+    }
 }

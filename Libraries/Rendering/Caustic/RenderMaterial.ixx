@@ -37,8 +37,8 @@ export namespace Caustic
 
     //**********************************************************************
     // Class: CRenderMaterial
-	// Defines a render material (material attributes, shaders, and textures).
-	// This can be applied to a renderable object.
+    // Defines a render material (material attributes, shaders, and textures).
+    // This can be applied to a renderable object.
     //
     // Module:
     // {Link:import Rendering.Caustic.RenderMaterial;{Rendering/Caustic/RenderMaterial.ixx}}

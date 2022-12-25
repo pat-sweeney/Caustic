@@ -14,30 +14,30 @@ export namespace Caustic
     using ObjectiveFunction = std::function<float(float)>;
     using DerivativeFunction = std::function<float(float, ObjectiveFunction)>;
 
-	//**********************************************************************
-	// Function: NumericalDifferentiation
-	// Computes the 1st derivative of a function via the symmetric difference quotient.
-	//
-	// Parameters:
-	// x - value to compute derivative at
-	// objFunc - underlying function being evaluated
-	//
-	// Module:
-	// {Link:import Base.Math.NewtonsMethod;{Base/Math/NewtonsMethod.ixx}}
-	//**********************************************************************
-	float NumericalDifferentiation(float x, ObjectiveFunction objFunc);
+    //**********************************************************************
+    // Function: NumericalDifferentiation
+    // Computes the 1st derivative of a function via the symmetric difference quotient.
+    //
+    // Parameters:
+    // x - value to compute derivative at
+    // objFunc - underlying function being evaluated
+    //
+    // Module:
+    // {Link:import Base.Math.NewtonsMethod;{Base/Math/NewtonsMethod.ixx}}
+    //**********************************************************************
+    float NumericalDifferentiation(float x, ObjectiveFunction objFunc);
 
-	//**********************************************************************
-	// Function: NewtonsMethod
-	// Solves for the root of a function using Newton's method
-	//
-	// Parameters:
-	// initialGuess - initial guess
-	// objFunc - underlying function being evaluated
-	// derivativeFunc - objFunc's derivative. By default will use numerical differentation to compute.
-	//
-	// Module:
-	// {Link:import Base.Math.NewtonsMethod;{Base/Math/NewtonsMethod.ixx}}
-	//**********************************************************************
-	float NewtonsMethod(float initialGuess, ObjectiveFunction objFunc, DerivativeFunction derivativeFunc = NumericalDifferentiation);
+    //**********************************************************************
+    // Function: NewtonsMethod
+    // Solves for the root of a function using Newton's method
+    //
+    // Parameters:
+    // initialGuess - initial guess
+    // objFunc - underlying function being evaluated
+    // derivativeFunc - objFunc's derivative. By default will use numerical differentation to compute.
+    //
+    // Module:
+    // {Link:import Base.Math.NewtonsMethod;{Base/Math/NewtonsMethod.ixx}}
+    //**********************************************************************
+    float NewtonsMethod(float initialGuess, ObjectiveFunction objFunc, DerivativeFunction derivativeFunc = NumericalDifferentiation);
 }

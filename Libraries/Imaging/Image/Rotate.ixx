@@ -21,46 +21,46 @@ import Imaging.Image.ImageFilter;
 
 export namespace Caustic
 {
-	//**********************************************************************
-	// Class: CRotateFilter
-	// Image filter for rotating an image.
-	//
-	// Image Filter Parameters:
-	// "Threshold" : <int> - Threshold for determining whether a pixel is an edge
-	// "Boost"     : <int> - Amount to boost signal at edge pixels
-	//**********************************************************************
-	class CRotateFilter : public IImageFilter, public CRefCount
-	{
-		template<typename Iter>
-		CRefObj<IImage> Rotate(IImage* pImage, float degrees);
+    //**********************************************************************
+    // Class: CRotateFilter
+    // Image filter for rotating an image.
+    //
+    // Image Filter Parameters:
+    // "Threshold" : <int> - Threshold for determining whether a pixel is an edge
+    // "Boost"     : <int> - Amount to boost signal at edge pixels
+    //**********************************************************************
+    class CRotateFilter : public IImageFilter, public CRefCount
+    {
+        template<typename Iter>
+        CRefObj<IImage> Rotate(IImage* pImage, float degrees);
 
-	public:
-		CRotateFilter()
-		{
-		}
+    public:
+        CRotateFilter()
+        {
+        }
 
-		//**********************************************************************
-		// IRefCount
-		//**********************************************************************
-		virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-		virtual uint32 Release() override { return CRefCount::Release(); }
+        //**********************************************************************
+        // IRefCount
+        //**********************************************************************
+        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32 Release() override { return CRefCount::Release(); }
 
-		//**********************************************************************
-		// IImageFilter
-		//**********************************************************************
-		virtual CRefObj<IImage> Apply(IImage* pImage, ImageFilterParams* pParams) override;
-		virtual bool ApplyInPlace(IImage* pImage, ImageFilterParams* pParams) override;
-	};
+        //**********************************************************************
+        // IImageFilter
+        //**********************************************************************
+        virtual CRefObj<IImage> Apply(IImage* pImage, ImageFilterParams* pParams) override;
+        virtual bool ApplyInPlace(IImage* pImage, ImageFilterParams* pParams) override;
+    };
 
-	//**********************************************************************
-	// Function: CreateRotateFilter
-	// Creates a filter for rotating an image.
-	//
-	// Returns:
-	// Returns the filter for performing rotation.
-	//**********************************************************************
-	CRefObj<IImageFilter> CreateRotateFilter()
-	{
-		return CRefObj<IImageFilter>(new CRotateFilter());
-	}
+    //**********************************************************************
+    // Function: CreateRotateFilter
+    // Creates a filter for rotating an image.
+    //
+    // Returns:
+    // Returns the filter for performing rotation.
+    //**********************************************************************
+    CRefObj<IImageFilter> CreateRotateFilter()
+    {
+        return CRefObj<IImageFilter>(new CRotateFilter());
+    }
 }

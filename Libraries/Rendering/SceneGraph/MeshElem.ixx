@@ -22,11 +22,11 @@ import Rendering.SceneGraph.ISceneMeshElem;
 
 export namespace Caustic
 {
-	//**********************************************************************
-	// Class: CSceneMeshElem
-	// Defines a mesh element in our scene graph
-	//**********************************************************************
-	class CSceneMeshElem :
+    //**********************************************************************
+    // Class: CSceneMeshElem
+    // Defines a mesh element in our scene graph
+    //**********************************************************************
+    class CSceneMeshElem :
         public CSceneElem,
         public ISceneMeshElem,
         public CRefCount
@@ -35,11 +35,11 @@ export namespace Caustic
         CRefObj<IRenderMesh> m_spRenderMesh;
         CRefObj<IShader> m_spShader;
     public:
-		//**********************************************************************
-		// Constructor: CSceneMeshElem
-		// Default constructor
-		//**********************************************************************
-		CSceneMeshElem()
+        //**********************************************************************
+        // Constructor: CSceneMeshElem
+        // Default constructor
+        //**********************************************************************
+        CSceneMeshElem()
         {
         }
 

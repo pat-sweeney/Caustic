@@ -11,8 +11,8 @@ import Rendering.SceneGraph.SceneFactory;
 
 namespace Caustic
 {
-	CRefObj<ISceneFactory> CreateSceneFactory()
-	{
-		return CRefObj<ISceneFactory>(new CSceneFactory());
-	}
+    CRefObj<ISceneFactory> CreateSceneFactory()
+    {
+        return CRefObj<ISceneFactory>(new CSceneFactory());
+    }
 }

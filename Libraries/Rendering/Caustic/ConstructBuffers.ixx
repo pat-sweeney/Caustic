@@ -29,11 +29,11 @@ export namespace Caustic
     // pts - list of vertices
     // pMeshData - created vertex buffer is stored in this structure
     //
-	// Module:
-	// {Link:import Rendering.Caustic.ConstructBuffer;{Rendering/Caustic/ConstructBuffer.ixx}}
+    // Module:
+    // {Link:import Rendering.Caustic.ConstructBuffer;{Rendering/Caustic/ConstructBuffer.ixx}}
     //**********************************************************************
     void BuildVertexBuffer(IRenderer* pRenderer, IShaderInfo* pShaderInfo, std::vector<CGeomVertex>& pts, MeshData* pMeshData);
-	
+    
     //**********************************************************************
     // Function: BuildIndexBuffer
     // Internal function used to create an index buffer from a list of faces

@@ -12,8 +12,8 @@ import Rendering.SceneGraph.SceneCubeElem;
 
 namespace Caustic
 {
-	CRefObj<ISceneCubeElem> CreateCubeElem(Vector3& center, float width, float height, float depth)
-	{
-		return CRefObj<ISceneCubeElem>(new CSceneCubeElem(center, width, height, depth));
-	}
+    CRefObj<ISceneCubeElem> CreateCubeElem(Vector3& center, float width, float height, float depth)
+    {
+        return CRefObj<ISceneCubeElem>(new CSceneCubeElem(center, width, height, depth));
+    }
 }

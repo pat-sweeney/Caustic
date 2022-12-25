@@ -12,9 +12,9 @@ import Rendering.SceneGraph.ISceneGroupElem;
 
 namespace Caustic
 {
-	CRefObj<ISceneGraph> CreateSceneGraph()
-	{
-		CRefObj<ISceneGroupElem> spGroup = CreateGroupElem();
-		return CRefObj<ISceneGraph>(new CSceneGraph(spGroup));
-	}
+    CRefObj<ISceneGraph> CreateSceneGraph()
+    {
+        CRefObj<ISceneGroupElem> spGroup = CreateGroupElem();
+        return CRefObj<ISceneGraph>(new CSceneGraph(spGroup));
+    }
 }
