@@ -98,7 +98,7 @@ export namespace Caustic
             return v;
         };
 
-        CRefObj<IImage> spImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), 32);
+        CRefObj<IImage> spImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), EImageType::RGBA_32bpp);
 
         unsigned short maxDepthVal = 0xFFFF;
         unsigned short minDepthVal = 0;

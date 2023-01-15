@@ -54,14 +54,11 @@ export namespace Caustic
         virtual uint8* GetData() override { return m_spImage->GetData(); }
         virtual uint32 GetWidth() override { return m_spImage->GetWidth(); }
         virtual uint32 GetHeight() override { return m_spImage->GetHeight(); }
-        virtual uint32 GetSubX() override { return m_spImage->GetSubX(); }
-        virtual uint32 GetSubY() override { return m_spImage->GetSubY(); }
+        virtual int32 GetSubX() override { return m_spImage->GetSubX(); }
+        virtual int32 GetSubY() override { return m_spImage->GetSubY(); }
         virtual CRefObj<IImageBase> GetParent() override { return m_spImage->GetParent(); }
         virtual uint32 GetBPP() override { return m_spImage->GetBPP(); }
         virtual uint32 GetStride() override { return m_spImage->GetStride(); }
-        virtual uint32 GetBytesPerPixel() override { return m_spImage->GetBytesPerPixel(); }
-        virtual bool GetRGBOrder() override { return m_spImage->GetRGBOrder(); }
-        virtual void SetRGBOrder(bool isRGB) override { m_spImage->SetRGBOrder(isRGB); }
 
         //**********************************************************************
         // IImage
@@ -69,9 +66,9 @@ export namespace Caustic
         virtual void Clear() override { m_spImage->Clear(); }
         virtual CRefObj<IImage> Clone() override { return m_spImage->Clone(); }
         virtual void TakeDataOwnership() override { m_spImage->TakeDataOwnership(); }
-        virtual void SetPixel(uint32 x, uint32 y, uint8 color[4]) override { m_spImage->SetPixel(x, y, color); }
-        virtual void SetPixel(uint32 x, uint32 y, uint8 gray) override { m_spImage->SetPixel(x, y, gray); }
-        virtual void SetPixel(uint32 x, uint32 y, uint16 v) override { m_spImage->SetPixel(x, y, v); }
+        virtual void SetPixel(int32 x, int32 y, uint8 color[4]) override { m_spImage->SetPixel(x, y, color); }
+        virtual void SetPixel(int32 x, int32 y, uint8 gray) override { m_spImage->SetPixel(x, y, gray); }
+        virtual void SetPixel(int32 x, int32 y, uint16 v) override { m_spImage->SetPixel(x, y, v); }
         virtual void DrawCircle(Vector2& center, uint32 radius, uint8 color[4]) override { return m_spImage->DrawCircle(center, radius, color); }
         virtual void DrawLine(const Vector2& v0, const Vector2& v1, uint8 color[4]) override { return m_spImage->DrawLine(v0, v1, color); }
         virtual void DrawPath(IPath2* pPath) override { return m_spImage->DrawPath(pPath); }
@@ -109,7 +106,7 @@ export namespace Caustic
         {
         }
 
-        CImagePool(uint32 maxImages, uint32 w, uint32 h, uint32 bpp);
+        CImagePool(uint32 maxImages, uint32 w, uint32 h, EImageType imageType);
 
         virtual ~CImagePool()
         {
@@ -124,8 +121,8 @@ export namespace Caustic
         //**********************************************************************
         // IImagePool
         //**********************************************************************
-        virtual CRefObj<IImage> Acquire(uint32 w, uint32 h, uint32 bpp) override;
+        virtual CRefObj<IImage> Acquire() override;
     };
     
-    CRefObj<IImagePool> CreateImagePool(uint32 maxImages, uint32 width, uint32 height, uint32 bpp);
+    CRefObj<IImagePool> CreateImagePool(uint32 maxImages, uint32 width, uint32 height, EImageType imageType);
 }

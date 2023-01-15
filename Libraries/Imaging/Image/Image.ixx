@@ -37,14 +37,14 @@ export namespace Caustic
     {
         EImageType m_imageType;         // Type of data stored in the image
         CRefObj<CImage> m_spParent;     // parent image if image is a subimage
-        uint32 m_subx;                  // X offset into parent image
-        uint32 m_suby;                  // Y offset into parent image
+        int32 m_subx;                  // X offset into parent image
+        int32 m_suby;                  // Y offset into parent image
         uint8 *m_pData;                 // pointer to image data
         bool m_ownData;                 // Did this object allocate m_pData?
         uint32 m_width;                 // width of image in pixels
         uint32 m_height;                // height of image in pixels
-        uint32 m_bytesPerPixel;         // width of each pixel in bytes
-        bool m_isRGB;                   // Is pixel memory layed out in RGB or BGR order?
+        uint32 m_bitsPerPixel;          // width of each pixel in bits
+        uint32 m_stride;                // Number of bytes in a row of pixels
 
         friend class CImageIter;
         friend CRefObj<IImage> LoadImageFileImpl(const wchar_t *pFilename);
@@ -54,7 +54,8 @@ export namespace Caustic
             m_imageType(EImageType::Unknown),
             m_width(0),
             m_height(0),
-            m_bytesPerPixel(0),
+            m_bitsPerPixel(0),
+            m_stride(0),
             m_spParent(nullptr),
             m_subx(0),
             m_suby(0),
@@ -63,26 +64,41 @@ export namespace Caustic
         {
         }
         
-        CImage(int w, int h, int bpp)
+        CImage(int w, int h, EImageType imageType)
         {
             m_width = w;
             m_height = h;
-            m_bytesPerPixel = bpp / 8;
             m_spParent = nullptr;
             m_subx = 0;
             m_suby = 0;
-            uint32 stride = m_width * m_bytesPerPixel;
-            uint32 numbytes = stride * m_height;
-            m_pData = new BYTE[numbytes];
-            m_ownData = true;
-            switch (bpp)
+
+            int numBytes = 0;
+            if (imageType == EImageType::NV12_420)
             {
-            case 1: m_imageType = EImageType::BW_1bpp; break;
-            case 8: m_imageType = EImageType::Gray_8bpp; break;
-            case 16: m_imageType = EImageType::Gray_16bpp; break;
-            case 24: m_imageType = EImageType::RGB_24bpp; break;
-            case 32: m_imageType = EImageType::RGBA_32bpp; break;
+                m_bitsPerPixel = 0; // Mostly meaningless for YUV (although technically it's 12b)
+                m_stride = m_width;
+                numBytes = m_width * m_height + m_width * m_height / 2;
             }
+            else
+            {
+                switch (imageType)
+                {
+                case EImageType::BW_1bpp: m_bitsPerPixel = 1; break;
+                case EImageType::Gray_8bpp: m_bitsPerPixel = 8; break;
+                case EImageType::Gray_16bpp: m_bitsPerPixel = 16; break;
+                case EImageType::RGB_24bpp: m_bitsPerPixel = 24; break;
+                case EImageType::RGBA_32bpp: m_bitsPerPixel = 32; break;
+                case EImageType::RGBX_32bpp: m_bitsPerPixel = 32; break;
+                case EImageType::BGR_24bpp: m_bitsPerPixel = 24; break;
+                case EImageType::BGRA_32bpp: m_bitsPerPixel = 32; break;
+                case EImageType::BGRX_32bpp: m_bitsPerPixel = 32; break;
+                }
+                m_stride = (m_width * m_bitsPerPixel + 7) / 8;
+                numBytes = m_stride * m_height;
+            }
+            m_pData = new BYTE[numBytes];
+            m_ownData = true;
+            m_imageType = imageType;
         }
 
         virtual ~CImage()
@@ -104,14 +120,11 @@ export namespace Caustic
         virtual uint8 *GetData() override { return m_pData; }
         virtual uint32 GetWidth() override { return m_width; }
         virtual uint32 GetHeight() override { return m_height; }
-        virtual uint32 GetSubX() override { return m_subx; }
-        virtual uint32 GetSubY() override { return m_suby; }
+        virtual int32 GetSubX() override { return m_subx; }
+        virtual int32 GetSubY() override { return m_suby; }
         virtual CRefObj<IImageBase> GetParent() { return CRefObj((IImageBase*)m_spParent); }
-        virtual uint32 GetBPP() override { return m_bytesPerPixel * 8; }
-        virtual uint32 GetStride() override { return m_width * GetBytesPerPixel(); }
-        virtual uint32 GetBytesPerPixel() override { return m_bytesPerPixel; }
-        virtual bool GetRGBOrder() override { return m_isRGB; }
-        virtual void SetRGBOrder(bool isRGB) override { m_isRGB = isRGB; }
+        virtual uint32 GetBPP() override { return m_bitsPerPixel; }
+        virtual uint32 GetStride() override { return m_stride; }
 
         //**********************************************************************
         // IImage
@@ -119,9 +132,9 @@ export namespace Caustic
         virtual void Clear() override;
         virtual CRefObj<IImage> Clone() override;
         virtual void TakeDataOwnership() override {}
-        virtual void SetPixel(uint32 x, uint32 y, uint8 color[4]) override;
-        virtual void SetPixel(uint32 x, uint32 y, uint8 gray) override;
-        virtual void SetPixel(uint32 x, uint32 y, uint16 v) override;
+        virtual void SetPixel(int32 x, int32 y, uint8 color[4]) override;
+        virtual void SetPixel(int32 x, int32 y, uint8 gray) override;
+        virtual void SetPixel(int32 x, int32 y, uint16 v) override;
         virtual void DrawCircle(Vector2 &center, uint32 radius, uint8 color[4]) override;
         virtual void DrawLine(const Vector2 &v0, const Vector2 &v1, uint8 color[4]) override;
         virtual void DrawPath(IPath2* pPath) override;
@@ -159,15 +172,12 @@ export namespace Caustic
         virtual EImageType GetImageType() override { return EImageType::Float4_128bpp; }
         virtual BYTE *GetData() override { return (BYTE*)m_spData.get(); }
         virtual uint32 GetStride() override { return m_width * sizeof(uint32) * 3; }
-        virtual uint32 GetBytesPerPixel() override { return sizeof(uint32) * 3; }
         virtual uint32 GetWidth() override { return m_width; }
         virtual uint32 GetHeight() override { return m_height; }
-        virtual uint32 GetSubX() override { return 0; }
-        virtual uint32 GetSubY() override { return 0; }
+        virtual int32 GetSubX() override { return 0; }
+        virtual int32 GetSubY() override { return 0; }
         virtual CRefObj<IImageBase> GetParent() override { return nullptr; }
-        virtual uint32 GetBPP() override { return 24; }
-        virtual bool GetRGBOrder() override { return m_spImage->GetRGBOrder(); }
-        virtual void SetRGBOrder(bool isRGB) override { /* do nothing */ }
+        virtual uint32 GetBPP() override { return sizeof(uint32) * 3 * 8; }
 
         //**********************************************************************
         // IIntegralImage
@@ -176,7 +186,7 @@ export namespace Caustic
         virtual CRefObj<IImage> BoxBlur(int width, int height) override;
     };
 
-    CRefObj<IImage> CreateImageImpl(uint32 width, uint32 height, uint32 bpp);
+    CRefObj<IImage> CreateImageImpl(uint32 width, uint32 height, EImageType imageType);
     CRefObj<IIntegralImage> CreateIntegralImageImpl(IImage* pImage);
     CRefObj<IImage> LoadImageFileImpl(const wchar_t* pFilename);
     void StoreImageImpl(const wchar_t* pFilename, IImage* pImage);

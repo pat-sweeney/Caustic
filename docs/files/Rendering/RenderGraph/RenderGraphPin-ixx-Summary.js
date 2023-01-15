@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Rendering/RenderGraph/RenderGraphPin.ixx","RenderGraphPin.ixx");NDSummary.OnSummaryLoaded("File:Rendering/RenderGraph/RenderGraphPin.ixx",[["C/C++","C"]],[["Classes","Class"]],[[1336,0,0,"CRenderGraphPin","CRenderGraphPin"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/RenderGraph/RenderGraphPin.ixx","RenderGraphPin.ixx");NDSummary.OnSummaryLoaded("File:Rendering/RenderGraph/RenderGraphPin.ixx",[["C/C++","C"]],[["Classes","Class"]],[[1427,0,0,"CRenderGraphPin","CRenderGraphPin"]]);

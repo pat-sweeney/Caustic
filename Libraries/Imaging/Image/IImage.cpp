@@ -26,9 +26,9 @@ namespace Caustic
         StoreImageImpl(pFilename, pImage);
     }
 
-    CRefObj<IImage> CreateImage(uint32 width, uint32 height, uint32 bpp)
+    CRefObj<IImage> CreateImage(uint32 width, uint32 height, EImageType imageType)
     {
-        return CreateImageImpl(width, height, bpp);
+        return CreateImageImpl(width, height, imageType);
     }
 
     CRefObj<IIntegralImage> CreateIntegralImage(IImage* pImage)

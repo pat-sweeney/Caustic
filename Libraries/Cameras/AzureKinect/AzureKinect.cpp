@@ -218,8 +218,8 @@ namespace Caustic
                 CT(E_FAIL);
         }
         
-        m_spColorImagePool = Caustic::CreateImagePool(20, colorW, colorH, 32);
-        m_spDepthImagePool = Caustic::CreateImagePool(20, depthW, depthH, 16);
+        m_spColorImagePool = Caustic::CreateImagePool(20, colorW, colorH, EImageType::RGBA_32bpp);
+        m_spDepthImagePool = Caustic::CreateImagePool(20, depthW, depthH, EImageType::Gray_16bpp);
 
         m_cameraStarted = true;
     }
@@ -467,11 +467,10 @@ namespace Caustic
                         int w = k4a_image_get_width_pixels(colorimage);
                         int h = k4a_image_get_height_pixels(colorimage);
                         int stride = k4a_image_get_stride_bytes(colorimage);
-                        CRefObj<IImage> spImage = m_spColorImagePool->Acquire(w, h, 32);
-                        spImage->SetRGBOrder(false);
+                        CRefObj<IImage> spImage = m_spColorImagePool->Acquire();
                         uint8* pRow = spImage->GetData();
                         int imgWidth = spImage->GetWidth();
-                        int bpp = spImage->GetBytesPerPixel();
+                        int bpp = spImage->GetBPP() / 8;
                         int bps = imgWidth * bpp;
                         int imgStride = spImage->GetStride();
                         for (int y = 0; y < h; y++)
@@ -496,7 +495,7 @@ namespace Caustic
                         int w = k4a_image_get_width_pixels(depthimage);
                         int h = k4a_image_get_height_pixels(depthimage);
                         size_t s = k4a_image_get_size(depthimage);
-                        CRefObj<IImage> spImage = m_spDepthImagePool->Acquire(w, h, 16);
+                        CRefObj<IImage> spImage = m_spDepthImagePool->Acquire();
                         memcpy(spImage->GetData(), buffer, spImage->GetHeight() * spImage->GetStride());
                         *ppDepthImage = spImage.Detach();
                         captured = true;
@@ -574,7 +573,7 @@ namespace Caustic
 
     CRefObj<IImage> CAzureKinectDevice::BuildRayMap(uint32 w, uint32 h, bool forDepth /*= true*/)
     {
-        CRefObj<IImage> spImage = CreateImage(w, h, 128);
+        CRefObj<IImage> spImage = CreateImage(w, h, EImageType::Float4_128bpp);
         CImageIter128 row(spImage, 0, 0);
         int index = 0;
         for (uint32 iy = 0; iy < h; iy++)

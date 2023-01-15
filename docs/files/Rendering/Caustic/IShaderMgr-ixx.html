@@ -8,30 +8,30 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="IShaderMgr.ixx"></a><a name="Topic908"></a><div class="CTopic TFile LC first">
+<a name="IShaderMgr.ixx"></a><a name="Topic993"></a><div class="CTopic TFile LC first">
  <div class="CTitle">IShaderMgr.ixx</div>
  <div class="CBody"><p>This file defines the published interface for shader manager.&nbsp; Each shader in use by the system is registered with this manager.</p></div>
 </div>
 
-<a name="IShaderMgr"></a><a name="Topic909"></a><div class="CTopic TInterface LC">
+<a name="IShaderMgr"></a><a name="Topic994"></a><div class="CTopic TInterface LC">
  <div class="CTitle">IShaderMgr</div>
  <div class="CBody"><p>Manages shaders within the renderer</p><div class="CHeading">Module</div><p><a href='../../../index.html#File:Rendering/Caustic/IShaderMgr.ixx' target='_top'>import Rendering.Caustic.IShaderMgr;</a></p></div>
 </div>
 
-<a name="IShaderMgr.Functions"></a><a name="Topic910"></a><div class="CTopic TGroup LC">
+<a name="IShaderMgr.Functions"></a><a name="Topic995"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="IShaderMgr.FindShader"></a><a name="Topic911"></a><div class="CTopic TFunction LC">
+<a name="IShaderMgr.FindShader"></a><a name="Topic996"></a><div class="CTopic TFunction LC">
  <div class="CTitle">FindShader</div>
- <div id="NDPrototype911" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <a href="../../../index.html#File:Base/Core/IRefCount.ixx:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,13);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Rendering/Caustic/IShader.ixx:IShader" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,958);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IShader</a>&gt; FindShader(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><span class="SHKeyword">wchar_t</span>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pShaderName</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div id="NDPrototype996" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <a href="../../../index.html#File:Base/Core/IRefCount.ixx:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,13);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Rendering/Caustic/IShader.ixx:IShader" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1037);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IShader</a>&gt; FindShader(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><span class="SHKeyword">wchar_t</span>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pShaderName</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
  <div class="CBody"><p>Finds an existing shader by name</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pShaderName<div class="CDLParameterType"><span class="SHKeyword">const</span> <span class="SHKeyword">wchar_t</span>*</div></td><td class="CDLDefinition"><p>Name of shader to find.</p></td></tr></table><div class="CHeading">Returns</div><p>Returns the found shader. Nullptr if no matching shader is found.</p></div>
 </div>
 
-<a name="IShaderMgr.RegisterShader"></a><a name="Topic912"></a><div class="CTopic TFunction LC last">
+<a name="IShaderMgr.RegisterShader"></a><a name="Topic997"></a><div class="CTopic TFunction LC last">
  <div class="CTitle">RegisterShader</div>
- <div id="NDPrototype912" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> RegisterShader(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><span class="SHKeyword">wchar_t</span>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pShaderName,</td></tr><tr><td class="first"></td><td class="PType"><a href="../../../index.html#File:Rendering/Caustic/IShader.ixx:IShader" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,958);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IShader</a>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pShader</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
- <div class="CBody"><p>Registers a new shader</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pShaderName<div class="CDLParameterType"><span class="SHKeyword">const</span> <span class="SHKeyword">wchar_t</span>*</div></td><td class="CDLDefinition"><p>Name of shader</p></td></tr><tr><td class="CDLEntry">pShader<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/Caustic/IShader.ixx:IShader" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,958);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IShader</a>*</div></td><td class="CDLDefinition"><p>Shader to register</p></td></tr></table></div>
+ <div id="NDPrototype997" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> RegisterShader(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><span class="SHKeyword">wchar_t</span>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pShaderName,</td></tr><tr><td class="first"></td><td class="PType"><a href="../../../index.html#File:Rendering/Caustic/IShader.ixx:IShader" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1037);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IShader</a>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pShader</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div class="CBody"><p>Registers a new shader</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pShaderName<div class="CDLParameterType"><span class="SHKeyword">const</span> <span class="SHKeyword">wchar_t</span>*</div></td><td class="CDLDefinition"><p>Name of shader</p></td></tr><tr><td class="CDLEntry">pShader<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/Caustic/IShader.ixx:IShader" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1037);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IShader</a>*</div></td><td class="CDLDefinition"><p>Shader to register</p></td></tr></table></div>
 </div>
 
 </body></html>

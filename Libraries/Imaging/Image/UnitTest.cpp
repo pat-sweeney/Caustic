@@ -29,13 +29,13 @@ namespace CausticTestSuite
 {
     static bool Test1()
     {
-        CRefObj<IImage> spImage = CreateImage(512, 512, 8);
+        CRefObj<IImage> spImage = CreateImage(512, 512, EImageType::Gray_8bpp);
         return true;
     }
 
     static bool Test2()
     {
-        CRefObj<IImage> spImage = CreateImage(512, 512, 32);
+        CRefObj<IImage> spImage = CreateImage(512, 512, EImageType::RGBA_32bpp);
         CRefObj<IPath2> spPath = CPath2::CreatePath2();
         spPath->AppendPathElems(
             EPathElem::MoveTo, 50.0, 50.0,

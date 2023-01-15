@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:RenderCtxFlags","RenderCtxFlags");NDSummary.OnSummaryLoaded("CClass:RenderCtxFlags",[["C/C++","C"]],[["Classes","Class"]],[[1008,0,0,"RenderCtxFlags"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:RenderCtxFlags","RenderCtxFlags");NDSummary.OnSummaryLoaded("CClass:RenderCtxFlags",[["C/C++","C"]],[["Classes","Class"]],[[1109,0,0,"RenderCtxFlags"]]);

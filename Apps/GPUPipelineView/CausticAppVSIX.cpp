@@ -462,10 +462,10 @@ void CApp::InitializeCaustic(HWND hwnd)
             ImGui::Checkbox("UseFocusTracking", &app.focusTracking);
             if (ImGui::IsItemHovered())
                 ImGui::SetTooltip("Use head tracking to set focus distance");
-            ImGui::SliderFloat("FocusDistance", &app.focusDistance, 0.0f, 1.0f, "%f", 1.0f);
-            ImGui::SliderFloat("FocusWidth", &app.focusWidth, 0.0f, 3.0f, "%f", 1.0f);
-            ImGui::SliderFloat("FocusMaxWidth", &app.focusMaxWidth, 0.0f, 3.0f, "%f", 1.0f);
-            ImGui::SliderFloat("BokehRadius", &app.BokehRadius, 0.0f, 30.0f, "%f", 1.0f);
+            ImGui::SliderFloat("FocusDistance", &app.focusDistance, 0.0f, 1.0f, "%f", ImGuiSliderFlags_AlwaysClamp);
+            ImGui::SliderFloat("FocusWidth", &app.focusWidth, 0.0f, 3.0f, "%f", ImGuiSliderFlags_AlwaysClamp);
+            ImGui::SliderFloat("FocusMaxWidth", &app.focusMaxWidth, 0.0f, 3.0f, "%f", ImGuiSliderFlags_AlwaysClamp);
+            ImGui::SliderFloat("BokehRadius", &app.BokehRadius, 0.0f, 30.0f, "%f", ImGuiSliderFlags_AlwaysClamp);
             ImGui::DragInt("HoleSize", &app.holeSize, 1.0f, 0, 128);
             ImGui::DragFloat("ModelScale", &app.modelScale, 0.1f, 0.5f, 1000.0f);
             ImGui::DragFloat3("RotatePlane", (float*)&app.planeRot.x, 0.1f, -360.0f, 360.0f);
@@ -676,7 +676,7 @@ void CApp::InitializeCaustic(HWND hwnd)
              {
                  uint32 w = pRenderer->GetBackBufferWidth();
                  uint32 h = pRenderer->GetBackBufferHeight();
-                 app.pBackImage = Caustic::CreateImage(1920,1080, 32);
+                 app.pBackImage = Caustic::CreateImage(1920, 1080, EImageType::RGBA_32bpp);
              }
              DWORD res = WaitForSingleObject(app.hCanWrite[app.currentFrame], 0);
              if (res == WAIT_OBJECT_0)

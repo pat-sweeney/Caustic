@@ -32,8 +32,7 @@ namespace Caustic
             degrees += 360.0f;
         if (degrees == 90.0f)
         {
-            uint32 bytesPerPixel = pImage->GetBytesPerPixel();
-            CRefObj<IImage> spRotImage = CreateImageImpl(pImage->GetHeight(), pImage->GetWidth(), bytesPerPixel * 8);
+            CRefObj<IImage> spRotImage = CreateImageImpl(pImage->GetHeight(), pImage->GetWidth(), pImage->GetImageType());
             //
             //  A                         
             //  +-------------+          +-----------+ B
@@ -67,8 +66,7 @@ namespace Caustic
         }
         if (degrees == 180.0f)
         {
-            uint32 bytesPerPixel = pImage->GetBytesPerPixel();
-            CRefObj<IImage> spRotImage = CreateImageImpl(pImage->GetWidth(), pImage->GetHeight(), bytesPerPixel * 8);
+            CRefObj<IImage> spRotImage = CreateImageImpl(pImage->GetWidth(), pImage->GetHeight(), pImage->GetImageType());
             //
             //  A                         
             //  +-------------+        B +-------------+
@@ -100,8 +98,7 @@ namespace Caustic
         }
         else if (degrees == 270.0f)
         {
-            uint32 bytesPerPixel = pImage->GetBytesPerPixel();
-            CRefObj<IImage> spRotImage = CreateImageImpl(pImage->GetHeight(), pImage->GetWidth(), bytesPerPixel * 8);
+            CRefObj<IImage> spRotImage = CreateImageImpl(pImage->GetHeight(), pImage->GetWidth(), pImage->GetImageType());
             //
             //  A                         
             //  +-------------+          +-----------+ A

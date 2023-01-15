@@ -33,7 +33,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     // TODO: Place code here.
     int totalSamples = 512;
-    auto spImage = Caustic::CreateImage(totalSamples, 255, 32);
+    auto spImage = Caustic::CreateImage(totalSamples, 255, Caustic::EImageType::RGBA_32bpp);
     std::vector<float> offsets;
     offsets.resize(totalSamples);
     for (int i = 0; i < totalSamples; i++)

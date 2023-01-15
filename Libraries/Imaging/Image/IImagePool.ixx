@@ -24,12 +24,7 @@ export namespace Caustic
         // Method: Acquire
         // Acquires a new image from the pool, either by allocating an image
         // or reusing an existing image
-        //
-        // Parameters:
-        // width - width of desired image in pixels
-        // height - height of desired image in pixels
-        // bpp - bits per pixel
         //**********************************************************************
-        virtual CRefObj<IImage> Acquire(uint32 width, uint32 height, uint32 bpp) = 0;
+        virtual CRefObj<IImage> Acquire() = 0;
     };
 }

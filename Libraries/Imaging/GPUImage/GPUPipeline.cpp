@@ -524,8 +524,8 @@ namespace Caustic
                 case 1: format = DXGI_FORMAT::DXGI_FORMAT_R8_UNORM; break;
                 case 8: format = DXGI_FORMAT::DXGI_FORMAT_R8_UNORM; break;
                 case 16: format = DXGI_FORMAT::DXGI_FORMAT_R16_UINT; break;
-                case 24: format = (pSource->GetRGBOrder()) ? DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM : DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM; break;
-                case 32: format = (pSource->GetRGBOrder()) ? DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM : DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM; break;
+                case 24: format = (pSource->GetImageType() == EImageType::RGBA_32bpp) ? DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM : DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM; break;
+                case 32: format = (pSource->GetImageType() == EImageType::RGBA_32bpp) ? DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM : DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM; break;
                 case 128: format = DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT; break;
                 }
                 for (int i = 0; i < c_NumberBackBuffers; i++)
@@ -572,7 +572,7 @@ namespace Caustic
         CComPtr<ID3D11Device> spDevice = spRenderer->GetDevice();
         CComPtr<ID3D11DeviceContext> spCtx = spRenderer->GetContext();
         spCtx->Flush();
-        CRefObj<IImage> spImage = CreateImage(m_width, m_height, 32);
+        CRefObj<IImage> spImage = CreateImage(m_width, m_height, EImageType::RGBA_32bpp);
         D3D11_MAPPED_SUBRESOURCE mapinfo;
         CComPtr<ID3D11Texture2D> spTexture = m_spOutputStagedTexture->GetD3DTexture();
         spCtx->Map(spTexture, 0, D3D11_MAP::D3D11_MAP_READ, 0, &mapinfo);

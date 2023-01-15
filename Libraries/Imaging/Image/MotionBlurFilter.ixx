@@ -67,7 +67,7 @@ export namespace Caustic
     template <typename T>
     CRefObj<IImage> CMotionBlurFilter::MotionBlur(IImage* pImage, ImageFilterParams* pParams)
     {
-        CRefObj<IImage> spDest = CreateImage(pImage->GetWidth(), pImage->GetHeight(), pImage->GetBPP());
+        CRefObj<IImage> spDest = CreateImage(pImage->GetWidth(), pImage->GetHeight(), pImage->GetImageType());
         bool hasMask = (pParams && pParams->spMask != nullptr) ? true : false;
 
         int deltax = 10;

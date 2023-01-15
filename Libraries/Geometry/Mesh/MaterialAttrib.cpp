@@ -104,7 +104,7 @@ namespace Caustic
             return it->second.first;
         if (s_spDefaultTexture == nullptr)
         {
-            s_spDefaultTexture = Caustic::CreateImage(32, 32, 32);
+            s_spDefaultTexture = Caustic::CreateImage(32, 32, EImageType::RGBA_32bpp);
             CImageIter32 row(s_spDefaultTexture, 0, 0);
             for (int y = 0; y < (int)s_spDefaultTexture->GetHeight(); y++)
             {

@@ -65,7 +65,7 @@ export namespace Caustic
 	template <typename T>
 	CRefObj<IImage> CUnsharpMaskFilter::UnsharpMask(IImage *pImage, IImage *pMask, int strength)
 	{
-		CRefObj<IImage> spImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), pImage->GetBPP());
+		CRefObj<IImage> spImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), pImage->GetImageType());
 		RGBColor clr[3][3];
 		T riter[3];
 		T citer[3];

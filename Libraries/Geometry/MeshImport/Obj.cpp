@@ -183,7 +183,7 @@ namespace Caustic
     void CObjParser::SetupDefaultMaterialValues(IMaterialAttrib* pMaterial, std::map<std::wstring, std::any>* pDefaultMaterialValues)
     {
         // Setup initial values
-        auto spBlackImage = Caustic::CreateImage(1024, 1024, 32);
+        auto spBlackImage = Caustic::CreateImage(1024, 1024, EImageType::RGBA_32bpp);
         ZeroMemory(spBlackImage->GetData(), spBlackImage->GetHeight() * spBlackImage->GetStride());
         FRGBAColor white(1.0f, 1.0f, 1.0f, 1.0f);
         FRGBAColor black(0.0f, 0.0f, 0.0f, 1.0f);

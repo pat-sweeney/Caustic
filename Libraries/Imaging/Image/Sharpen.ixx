@@ -70,7 +70,7 @@ export namespace Caustic
         T riter[3];
         T citer[3];
 
-        CRefObj<IImage> spImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), pImage->GetBPP());
+        CRefObj<IImage> spImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), pImage->GetImageType());
         uint32 w1 = pImage->GetWidth() - 1;
         uint32 h1 = pImage->GetHeight() - 1;
         riter[0] = T(pImage, 0, 0);

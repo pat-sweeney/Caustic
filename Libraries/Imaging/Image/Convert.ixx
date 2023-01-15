@@ -88,7 +88,7 @@ export namespace Caustic
     //**********************************************************************
     CRefObj<IImage> CConvertFilter::Convert8to16(IImage* pImage)
     {
-        CRefObj<IImage> spDestImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), 16);
+        CRefObj<IImage> spDestImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), EImageType::Gray_16bpp);
         CImageIter8 srcRow(pImage, 0, 0);
         CImageIter16 dstRow(spDestImage, 0, 0);
         int w = pImage->GetWidth();
@@ -121,7 +121,7 @@ export namespace Caustic
     //**********************************************************************
     CRefObj<IImage> CConvertFilter::Convert8to24(IImage* pImage)
     {
-        CRefObj<IImage> spDestImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), 24);
+        CRefObj<IImage> spDestImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), EImageType::RGB_24bpp);
         CImageIter8 srcRow(pImage, 0, 0);
         CImageIter24 dstRow(spDestImage, 0, 0);
         int w = pImage->GetWidth();
@@ -157,7 +157,7 @@ export namespace Caustic
     //**********************************************************************
     CRefObj<IImage> CConvertFilter::Convert8to32(IImage* pImage)
     {
-        CRefObj<IImage> spDestImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), 32);
+        CRefObj<IImage> spDestImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), EImageType::RGBA_32bpp);
         CImageIter8 srcRow(pImage, 0, 0);
         CImageIter32 dstRow(spDestImage, 0, 0);
         int w = pImage->GetWidth();
@@ -194,7 +194,7 @@ export namespace Caustic
     //**********************************************************************
     CRefObj<IImage> CConvertFilter::Convert8toFloat1(IImage* pImage)
     {
-        CRefObj<IImage> spDestImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), 32);
+        CRefObj<IImage> spDestImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), EImageType::Float1_32bpp);
         CImageIter8 srcRow(pImage, 0, 0);
         CImageIterFloat1 dstRow(spDestImage, 0, 0);
         int w = pImage->GetWidth();
@@ -228,7 +228,7 @@ export namespace Caustic
     //**********************************************************************
     CRefObj<IImage> CConvertFilter::Convert24to8(IImage* pImage)
     {
-        CRefObj<IImage> spDestImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), 8);
+        CRefObj<IImage> spDestImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), EImageType::Gray_8bpp);
         CImageIter24 srcRow(pImage, 0, 0);
         CImageIter8 dstRow(spDestImage, 0, 0);
         int w = pImage->GetWidth();
@@ -266,7 +266,7 @@ export namespace Caustic
     //**********************************************************************
     CRefObj<IImage> CConvertFilter::Convert24to32(IImage* pImage)
     {
-        CRefObj<IImage> spDestImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), 32);
+        CRefObj<IImage> spDestImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), EImageType::RGBA_32bpp);
         CImageIter24 srcRow(pImage, 0, 0);
         CImageIter32 dstRow(spDestImage, 0, 0);
         int w = pImage->GetWidth();
@@ -304,7 +304,7 @@ export namespace Caustic
     {
         int w = pImage->GetWidth();
         int h = pImage->GetHeight();
-        CRefObj<IImage> spDestImage = CreateImage(w, h, 96);
+        CRefObj<IImage> spDestImage = CreateImage(w, h, EImageType::Float3_96bpp);
         CImageIter24 srcRow(pImage, 0, 0);
         CImageIterFloat3 dstRow(spDestImage, 0, 0);
         for (int y = 0; y < h; y++)
@@ -341,7 +341,7 @@ export namespace Caustic
     {
         int w = pImage->GetWidth();
         int h = pImage->GetHeight();
-        CRefObj<IImage> spDestImage = CreateImage(w, h, 96);
+        CRefObj<IImage> spDestImage = CreateImage(w, h, EImageType::Float3_96bpp);
         CImageIter24 srcRow(pImage, 0, 0);
         CImageIterFloat3 dstRow(spDestImage, 0, 0);
         for (int y = 0; y < h; y++)
@@ -378,7 +378,7 @@ export namespace Caustic
     {
         int w = pImage->GetWidth();
         int h = pImage->GetHeight();
-        CRefObj<IImage> spDestImage = CreateImage(w, h, 24);
+        CRefObj<IImage> spDestImage = CreateImage(w, h, EImageType::RGB_24bpp);
         CImageIterFloat3 srcRow(pImage, 0, 0);
         CImageIter24 dstRow(spDestImage, 0, 0);
         for (int y = 0; y < h; y++)
@@ -414,37 +414,7 @@ export namespace Caustic
     {
         int w = pImage->GetWidth();
         int h = pImage->GetHeight();
-        int bpp = 0;
-        switch (destFormat)
-        {
-        case EImageType::BW_1bpp:
-            bpp = 1;
-            break;
-        case EImageType::Gray_8bpp:
-            bpp = 8;
-            break;
-        case EImageType::Gray_16bpp:
-            bpp = 16;
-            break;
-        case EImageType::RGB_24bpp:
-            bpp = 24;
-            break;
-        case EImageType::RGBA_32bpp:
-        case EImageType::RGBX_32bpp:
-        case EImageType::Float1_32bpp:
-            bpp = 32;
-            break;
-        case EImageType::Float2_64bpp:
-            bpp = 64;
-            break;
-        case EImageType::Float3_96bpp:
-            bpp = 96;
-            break;
-        case EImageType::Float4_128bpp:
-            bpp = 128;
-            break;
-        }
-        CRefObj<IImage> spDestImage = CreateImage(w, h, bpp);
+        CRefObj<IImage> spDestImage = CreateImage(w, h, destFormat);
         CImageIterGeneric srcRow(pImage, 0, 0);
         CImageIterGeneric dstRow(spDestImage, 0, 0);
         for (int y = 0; y < h; y++)
@@ -480,37 +450,7 @@ export namespace Caustic
                 destFormat = std::any_cast<EImageType>(it->second);
         }
 
-        int bpp = 24;
-        switch (destFormat)
-        {
-        case EImageType::BW_1bpp:
-            bpp = 1;
-            break;
-        case EImageType::Gray_8bpp:
-            bpp = 8;
-            break;
-        case EImageType::Gray_16bpp:
-            bpp = 16;
-            break;
-        case EImageType::RGB_24bpp:
-            bpp = 24;
-            break;
-        case EImageType::RGBA_32bpp:
-        case EImageType::RGBX_32bpp:
-        case EImageType::Float1_32bpp:
-            bpp = 32;
-            break;
-        case EImageType::Float2_64bpp:
-            bpp = 64;
-            break;
-        case EImageType::Float3_96bpp:
-            bpp = 96;
-            break;
-        case EImageType::Float4_128bpp:
-            bpp = 128;
-            break;
-        }
-        CRefObj<IImage> spImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), bpp);
+        CRefObj<IImage> spImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), pImage->GetImageType());
 
         struct DispatchTable
         {

@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("smo",["Function"],[["SmoothStep",,[["Caustic",,,,0,"File:Base/Core/Core.ixx:Caustic.SmoothStep","CClass:Caustic:SmoothStep"]]]]);

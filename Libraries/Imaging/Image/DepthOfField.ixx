@@ -74,7 +74,7 @@ export namespace Caustic
     template <typename T>
     CRefObj<IImage> CDepthOfFieldFilter::DepthOfField(IImage* pImage, float minStrength, float maxStrength, float minDistance, IImage* pDepthImage)
     {
-        CRefObj<IImage> spImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), pImage->GetBPP());
+        CRefObj<IImage> spImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), pImage->GetImageType());
         RGBColor clr[3][3];
         T riter[3];
         T citer[3];

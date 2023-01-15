@@ -27,8 +27,12 @@ export namespace Caustic
     // RGB_24bpp - type is RGB image with 24 bits per pixel
     // RGBA_32bpp - type is RGBA image with 32 bits per pixel
     // RGBX_32bpp - type is RGBX image with 32 bits per pixel (X is ignored alpha)
+    // BGR_24bpp - type is BGR image with 24 bits per pixel
+    // BGRA_32bpp - type is BGRA image with 32 bits per pixel
+    // BGRX_32bpp - type is BGRX image with 32 bits per pixel (X is ignored alpha)
     // Float_32bpp - type is floating point image
     // Float4_128bpp - type is floating point image with 4 channels
+    // NV12_4_2_0 - YUV format using 4:2:0 sampling (see https://en.wikipedia.org/wiki/YUV YUV420)
     //
     // Module:
     // {Link:import Imaging.Image.Image{Imaging/Image/Image.ixx}}
@@ -42,10 +46,14 @@ export namespace Caustic
         RGB_24bpp,
         RGBA_32bpp,
         RGBX_32bpp,
+        BGR_24bpp,
+        BGRA_32bpp,
+        BGRX_32bpp,
         Float1_32bpp,
         Float2_64bpp,
         Float3_96bpp,
-        Float4_128bpp
+        Float4_128bpp,
+        NV12_420,
     };
 
     //**********************************************************************
@@ -85,13 +93,13 @@ export namespace Caustic
         // Method: GetSubX
         // Returns the X offset into our parent image (if this is a subimage)
         //**********************************************************************
-        virtual uint32 GetSubX() = 0;
+        virtual int32 GetSubX() = 0;
 
         //**********************************************************************
         // Method: GetSubY
         // Returns the Y offset into our parent image (if this is a subimage)
         //**********************************************************************
-        virtual uint32 GetSubY() = 0;
+        virtual int32 GetSubY() = 0;
 
         //**********************************************************************
         // Method: GetParent
@@ -102,7 +110,7 @@ export namespace Caustic
 
         //**********************************************************************
         // Method: GetBPP
-        // Returns the image's bites per pixel
+        // Returns the image's bits per pixel
         //**********************************************************************
         virtual uint32 GetBPP() = 0;
 
@@ -111,30 +119,6 @@ export namespace Caustic
         // Returns the image's stride (bytes/scanline)
         //**********************************************************************
         virtual uint32 GetStride() = 0;
-
-        //**********************************************************************
-        // Method: GetBytesPerPixel
-        // Returns the number of bytes in each pixel
-        //**********************************************************************
-        virtual uint32 GetBytesPerPixel() = 0;
-
-        //**********************************************************************
-        // Method: GetRGBOrder
-        // Returns whethers the pixel component layout in memory is Red/Green/Blue.
-        // This is the default. Otherwise, it's in Blue/Green/Red ordering.
-        //**********************************************************************
-        virtual bool GetRGBOrder() = 0;
-
-        //**********************************************************************
-        // Method: SetRGBOrder
-        // Sets whethers the pixel component layout in memory is Red/Green/Blue.
-        // This is the default. Otherwise, it's in Blue/Green/Red ordering.
-        //
-        // Parameters:
-        // isRGB - bool indicating whether memory is layed out in RGB order. Otherwise,
-        // it is in BGR order.
-        //**********************************************************************
-        virtual void SetRGBOrder(bool isRGB) = 0;
     };
 
     //**********************************************************************
@@ -181,7 +165,7 @@ export namespace Caustic
         // y - pixel's Y coordinate
         // color - color to set pixel to
         //**********************************************************************
-        virtual void SetPixel(uint32 x, uint32 y, uint8 color[4]) = 0;
+        virtual void SetPixel(int32 x, int32 y, uint8 color[4]) = 0;
 
         //**********************************************************************
         // Method: SetPixel
@@ -193,7 +177,7 @@ export namespace Caustic
         // y - pixel's Y coordinate
         // gray - color to set pixel to
         //**********************************************************************
-        virtual void SetPixel(uint32 x, uint32 y, uint8 gray) = 0;
+        virtual void SetPixel(int32 x, int32 y, uint8 gray) = 0;
 
         //**********************************************************************
         // Method: SetPixel
@@ -205,7 +189,7 @@ export namespace Caustic
         // y - pixel's Y coordinate
         // v - color to set pixel to
         //**********************************************************************
-        virtual void SetPixel(uint32 x, uint32 y, uint16 v) = 0;
+        virtual void SetPixel(int32 x, int32 y, uint16 v) = 0;
 
         //**********************************************************************
         // Method: DrawCircle
@@ -275,7 +259,7 @@ export namespace Caustic
         virtual CRefObj<IImage> BoxBlur(int width, int height) = 0;
     };
 
-    CRefObj<IImage> CreateImage(uint32 width, uint32 height, uint32 bpp);
+    CRefObj<IImage> CreateImage(uint32 width, uint32 height, EImageType imageType);
     CRefObj<IIntegralImage> CreateIntegralImage(IImage* pImage);
 
     //**********************************************************************

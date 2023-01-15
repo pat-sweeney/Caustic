@@ -86,8 +86,8 @@ namespace Caustic
         case 1: format = DXGI_FORMAT::DXGI_FORMAT_R8_UNORM; break;
         case 8: format = DXGI_FORMAT::DXGI_FORMAT_R8_UNORM; break;
         case 16: format = DXGI_FORMAT::DXGI_FORMAT_R16_UINT; break;
-        case 24: format = (pImage->GetRGBOrder()) ? DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM : DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM; break;
-        case 32: format = (pImage->GetRGBOrder()) ? DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM : DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM; break;
+        case 24: format = (pImage->GetImageType() == EImageType::RGBA_32bpp) ? DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM : DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM; break;
+        case 32: format = (pImage->GetImageType() == EImageType::RGBA_32bpp) ? DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM : DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM; break;
         case 128: format = DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT; break;
         }
         CRefObj<ITexture> spTexture = CreateTexture(pRenderer, pImage->GetWidth(), pImage->GetHeight(), format, cpuFlags, bindFlags);

@@ -205,6 +205,49 @@ export namespace Caustic
     }
 
     //**********************************************************************
+    // Function: SmoothStep
+    // Returns a normalized value (0..1) for a value 'x' that lies between
+    // 'lowerBound' and 'upperBound' using a smooth step function.
+    //
+    // Parameters:
+    // lowerBound - lower bound at which value is 0
+    // upperBound - upper bound at which value is 1
+    // x - value to smooth step
+    //
+    // Returns:
+    // A value between 0 and 1
+    //**********************************************************************
+    float SmoothStep(float lowerBound, float upperBound, float x)
+    {
+        if (x < lowerBound)
+            return 0.0f;
+        if (x > upperBound)
+            return 1.0f;
+        float normX = (x - lowerBound) / (upperBound - lowerBound);
+        return normX * normX * (3 - 2 * normX);
+    }
+
+    //**********************************************************************
+    float Gamma(float gamma, float x)
+    {
+        return powf(x, 1.0f / gamma);
+    }
+
+    //**********************************************************************
+    float Bias(float b, float x)
+    {
+        return powf(x, logf(b) / logf(0.5f));
+    }
+
+    //**********************************************************************
+    float Gain(float g, float x)
+    {
+        if (x < 0.5f)
+            return Bias(1 - g, 2.0f * x) / 2.0f;
+        return 1.0f - Bias(1.0f - g, 2.0f - 2.0f * x) / 2.0f;
+    }
+
+    //**********************************************************************
     // Function: Swap
     // Swaps value t1 with t2
     //

@@ -8,88 +8,88 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="Topic1591"></a><div class="CTopic TInterface LC first">
+<a name="Topic1710"></a><div class="CTopic TInterface LC first">
  <div class="CTitle">ISceneElem</div>
  <div class="CBody"><p>Defines our base interface common to all scene elements</p></div>
 </div>
 
-<a name="Functions"></a><a name="Topic1592"></a><div class="CTopic TGroup LC">
+<a name="Functions"></a><a name="Topic1711"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="AsJson"></a><a name="Topic1666"></a><div class="CTopic TFunction LC">
+<a name="AsJson"></a><a name="Topic1712"></a><div class="CTopic TFunction LC">
  <div class="CTitle">AsJson</div>
- <div id="NDPrototype1666" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <a href="../../index.html#CClass:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,13);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../index.html#CClass:IJSonObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,724);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IJSonObj</a>&gt; AsJson(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><span class="SHKeyword">char</span>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pPropertyName,</td></tr><tr><td class="first"></td><td class="PType"><a href="../../index.html#CClass:IJSonParser" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,729);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IJSonParser</a>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pParser</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
- <div class="CBody"><p>Creates a JSON representation for the object</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pPropertyName<div class="CDLParameterType"><span class="SHKeyword">const</span> <span class="SHKeyword">char</span>*</div></td><td class="CDLDefinition"><p>name of property</p></td></tr><tr><td class="CDLEntry">pParser<div class="CDLParameterType"><a href="../../index.html#CClass:IJSonParser" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,729);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IJSonParser</a>*</div></td><td class="CDLDefinition"><p>JSON parser object</p></td></tr></table><div class="CHeading">Returns</div><p>JSON object representing the scene element</p></div>
+ <div id="NDPrototype1712" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <a href="../../index.html#CClass:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,13);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../index.html#CClass:IJSonObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,785);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IJSonObj</a>&gt; AsJson(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><span class="SHKeyword">char</span>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pPropertyName,</td></tr><tr><td class="first"></td><td class="PType"><a href="../../index.html#CClass:IJSonParser" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,791);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IJSonParser</a>&nbsp;</td><td class="PSymbols">*</td><td class="PName last">pParser</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div class="CBody"><p>Creates a JSON representation for the object</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pPropertyName<div class="CDLParameterType"><span class="SHKeyword">const</span> <span class="SHKeyword">char</span>*</div></td><td class="CDLDefinition"><p>name of property</p></td></tr><tr><td class="CDLEntry">pParser<div class="CDLParameterType"><a href="../../index.html#CClass:IJSonParser" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,791);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IJSonParser</a>*</div></td><td class="CDLDefinition"><p>JSON parser object</p></td></tr></table><div class="CHeading">Returns</div><p>JSON object representing the scene element</p></div>
 </div>
 
-<a name="RayIntersect"></a><a name="Topic1593"></a><div class="CTopic TFunction LC">
+<a name="RayIntersect"></a><a name="Topic1713"></a><div class="CTopic TFunction LC">
  <div class="CTitle">RayIntersect</div>
- <div id="NDPrototype1593" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">bool</span> RayIntersect(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:Ray3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,138);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Ray3</a>&amp;&nbsp;</td><td class="PName last">ray,</td></tr><tr><td class="PType first"><a href="../../index.html#CClass:RayIntersect3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,137);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >RayIntersect3</a>*&nbsp;</td><td class="PName last">pIntersection,</td></tr><tr><td class="PType first"><a href="../../index.html#CClass:IMaterialAttrib" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,433);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMaterialAttrib</a>**&nbsp;</td><td class="PName last">pMaterial</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
- <div class="CBody"><p>Traces a single path through the scene</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">ray<div class="CDLParameterType"><a href="../../index.html#CClass:Ray3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,138);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Ray3</a>&amp;</div></td><td class="CDLDefinition"><p>ray to trace</p></td></tr><tr><td class="CDLEntry">pIntersection<div class="CDLParameterType"><a href="../../index.html#CClass:RayIntersect3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,137);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >RayIntersect3</a>*</div></td><td class="CDLDefinition"><p>returns ray intersection info</p></td></tr><tr><td class="CDLEntry">pMaterial<div class="CDLParameterType"><a href="../../index.html#CClass:IMaterialAttrib" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,433);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMaterialAttrib</a>**</div></td><td class="CDLDefinition"><p>returns the material at the intersection point</p></td></tr></table><div class="CHeading">Returns</div><p>True if ray intersects the scene element. False otherwise.</p></div>
+ <div id="NDPrototype1713" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">bool</span> RayIntersect(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:Ray3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,143);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Ray3</a>&amp;&nbsp;</td><td class="PName last">ray,</td></tr><tr><td class="PType first"><a href="../../index.html#CClass:RayIntersect3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,142);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >RayIntersect3</a>*&nbsp;</td><td class="PName last">pIntersection,</td></tr><tr><td class="PType first"><a href="../../index.html#CClass:IMaterialAttrib" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,499);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMaterialAttrib</a>**&nbsp;</td><td class="PName last">pMaterial</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div class="CBody"><p>Traces a single path through the scene</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">ray<div class="CDLParameterType"><a href="../../index.html#CClass:Ray3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,143);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >Ray3</a>&amp;</div></td><td class="CDLDefinition"><p>ray to trace</p></td></tr><tr><td class="CDLEntry">pIntersection<div class="CDLParameterType"><a href="../../index.html#CClass:RayIntersect3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,142);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >RayIntersect3</a>*</div></td><td class="CDLDefinition"><p>returns ray intersection info</p></td></tr><tr><td class="CDLEntry">pMaterial<div class="CDLParameterType"><a href="../../index.html#CClass:IMaterialAttrib" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,499);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IMaterialAttrib</a>**</div></td><td class="CDLDefinition"><p>returns the material at the intersection point</p></td></tr></table><div class="CHeading">Returns</div><p>True if ray intersects the scene element. False otherwise.</p></div>
 </div>
 
-<a name="GetType"></a><a name="Topic1594"></a><div class="CTopic TFunction LC">
+<a name="GetType"></a><a name="Topic1714"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetType</div>
- <div id="NDPrototype1594" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <a href="../../index.html#File:Rendering/SceneGraph/ISceneElem.ixx:ESceneElemType" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1578);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ESceneElemType</a> GetType() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype1714" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <a href="../../index.html#File:Rendering/SceneGraph/ISceneElem.ixx:ESceneElemType" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1697);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ESceneElemType</a> GetType() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Returns the type of this scene element</p></div>
 </div>
 
-<a name="GetName"></a><a name="Topic1595"></a><div class="CTopic TFunction LC">
+<a name="GetName"></a><a name="Topic1715"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetName</div>
- <div id="NDPrototype1595" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> std::wstring GetName() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype1715" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> std::wstring GetName() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Returns the name of this scene element</p><div class="CHeading">Returns</div><p>User-defined name for this element</p></div>
 </div>
 
-<a name="SetName"></a><a name="Topic1596"></a><div class="CTopic TFunction LC">
+<a name="SetName"></a><a name="Topic1716"></a><div class="CTopic TFunction LC">
  <div class="CTitle">SetName</div>
- <div id="NDPrototype1596" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetName(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><span class="SHKeyword">wchar_t</span>*&nbsp;</td><td class="PName last">name</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div id="NDPrototype1716" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetName(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PModifierQualifier first"><span class="SHKeyword">const</span>&nbsp;</td><td class="PType"><span class="SHKeyword">wchar_t</span>*&nbsp;</td><td class="PName last">name</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
  <div class="CBody"><p>Sets the name of this scene element</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">name<div class="CDLParameterType"><span class="SHKeyword">const</span> <span class="SHKeyword">wchar_t</span>*</div></td><td class="CDLDefinition"><p>user-defined name for this element</p></td></tr></table></div>
 </div>
 
-<a name="Name"></a><a name="Topic1597"></a><div class="CTopic TFunction LC">
+<a name="Name"></a><a name="Topic1717"></a><div class="CTopic TFunction LC">
  <div class="CTitle">Name</div>
  <div class="CBody"><p>Returns the name of this scene element</p></div>
 </div>
 
-<a name="Name(2)"></a><a name="Topic1598"></a><div class="CTopic TFunction LC">
+<a name="Name(2)"></a><a name="Topic1718"></a><div class="CTopic TFunction LC">
  <div class="CTitle">Name</div>
  <div class="CBody"><p>Returns the name of this scene element</p></div>
 </div>
 
-<a name="GetFlags"></a><a name="Topic1599"></a><div class="CTopic TFunction LC">
+<a name="GetFlags"></a><a name="Topic1719"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetFlags</div>
- <div id="NDPrototype1599" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetFlags() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype1719" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetFlags() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Returns the flags associated with this scene element See also: ESceneElemFlags</p></div>
 </div>
 
-<a name="SetFlags"></a><a name="Topic1600"></a><div class="CTopic TFunction LC">
+<a name="SetFlags"></a><a name="Topic1720"></a><div class="CTopic TFunction LC">
  <div class="CTitle">SetFlags</div>
- <div id="NDPrototype1600" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetFlags(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">flags</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div id="NDPrototype1720" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetFlags(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">flags</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
  <div class="CBody"><p>Sets the flags associated with this scene element</p></div>
 </div>
 
-<a name="Render"></a><a name="Topic1601"></a><div class="CTopic TFunction LC">
+<a name="Render"></a><a name="Topic1721"></a><div class="CTopic TFunction LC">
  <div class="CTitle">Render</div>
- <div id="NDPrototype1601" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> Render(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:IRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1096);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer</a>*&nbsp;</td><td class="PName last">pRenderer,</td></tr><tr><td class="PType first"><a href="../../index.html#CClass:IRenderCtx" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1009);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderCtx</a>*&nbsp;</td><td class="PName last">pRenderCtx,</td></tr><tr><td class="PType first"><a href="../../index.html#CClass:SceneCtx" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1457);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >SceneCtx</a>*&nbsp;</td><td class="PName last">pSceneCtx</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div id="NDPrototype1721" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> Render(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:IRenderer" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1179);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderer</a>*&nbsp;</td><td class="PName last">pRenderer,</td></tr><tr><td class="PType first"><a href="../../index.html#CClass:IRenderCtx" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1110);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderCtx</a>*&nbsp;</td><td class="PName last">pRenderCtx,</td></tr><tr><td class="PType first"><a href="../../index.html#CClass:SceneCtx" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1521);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >SceneCtx</a>*&nbsp;</td><td class="PName last">pSceneCtx</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
  <div class="CBody"><p>Renders the current element</p></div>
 </div>
 
-<a name="GetBBox"></a><a name="Topic1602"></a><div class="CTopic TFunction LC">
+<a name="GetBBox"></a><a name="Topic1722"></a><div class="CTopic TFunction LC">
  <div class="CTitle">GetBBox</div>
- <div id="NDPrototype1602" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> GetBBox(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:BBox3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,235);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >BBox3</a>*&nbsp;</td><td class="PName last">pBBox</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div id="NDPrototype1722" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> GetBBox(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../index.html#CClass:BBox3" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,245);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >BBox3</a>*&nbsp;</td><td class="PName last">pBBox</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
  <div class="CBody"><p>Returns the bounding box of this scene element</p></div>
 </div>
 
-<a name="SetInPass"></a><a name="Topic1603"></a><div class="CTopic TFunction LC">
+<a name="SetInPass"></a><a name="Topic1723"></a><div class="CTopic TFunction LC">
  <div class="CTitle">SetInPass</div>
- <div id="NDPrototype1603" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetInPass(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">pass</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div id="NDPrototype1723" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetInPass(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">uint32</span>&nbsp;</td><td class="PName last">pass</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
  <div class="CBody"><p>Sets which render passes this element is rendered in</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pass<div class="CDLParameterType"><span class="SHKeyword">uint32</span></div></td><td class="CDLDefinition"><p>pass to render this element in</p></td></tr></table></div>
 </div>
 
-<a name="GetInPass"></a><a name="Topic1604"></a><div class="CTopic TFunction LC last">
+<a name="GetInPass"></a><a name="Topic1724"></a><div class="CTopic TFunction LC last">
  <div class="CTitle">GetInPass</div>
- <div id="NDPrototype1604" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetInPass() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype1724" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> GetInPass() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Gets which render passes this element is rendered in</p><div class="CHeading">Returns</div><p>mask indicating which passes this element is rendered in</p></div>
 </div>
 

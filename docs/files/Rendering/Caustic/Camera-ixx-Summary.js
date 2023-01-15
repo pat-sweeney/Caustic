@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/Camera.ixx","Camera.ixx");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/Camera.ixx",[["C/C++","C"]],[["Classes","Class"],["Files","File"]],[[1239,0,1,"Camera.ixx","Camera.ixx"],[1240,0,0,"CCamera","CCamera"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/Camera.ixx","Camera.ixx");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/Camera.ixx",[["C/C++","C"]],[["Classes","Class"],["Files","File"]],[[1296,0,1,"Camera.ixx","Camera.ixx"],[1297,0,0,"CCamera","CCamera"]]);

@@ -59,7 +59,8 @@ export namespace Caustic
         };
     protected:
         uint8* m_bp;        // pointer to current byte
-        uint32 m_bpl;        // bytes per scan line
+        uint32 m_bpl;       // bytes per scan line
+        bool m_bgrOrder;    // Is type BGR or RGB?
     public:
         uint8* PixelData() { return m_bp; }
     };
@@ -79,10 +80,10 @@ export namespace Caustic
         {
         }
 
-        CImageIterFloat1(IImage* pImage, uint32 x, uint32 y)
+        CImageIterFloat1(IImage* pImage, int32 x, int32 y)
         {
             assert(pImage->GetBPP() == 32);
-            m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * pImage->GetStride() + (pImage->GetSubX() + x) * 4];
+            m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * (int)pImage->GetStride() + (pImage->GetSubX() + x) * 4];
             m_bpl = pImage->GetStride();
         }
 
@@ -126,10 +127,10 @@ export namespace Caustic
         {
         }
 
-        CImageIterFloat2(IImage* pImage, uint32 x, uint32 y)
+        CImageIterFloat2(IImage* pImage, int32 x, int32 y)
         {
             assert(pImage->GetBPP() == 64);
-            m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * pImage->GetStride() + (pImage->GetSubX() + x) * 4];
+            m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * (int)pImage->GetStride() + (pImage->GetSubX() + x) * 4];
             m_bpl = pImage->GetStride();
         }
 
@@ -175,10 +176,10 @@ export namespace Caustic
         {
         }
 
-        CImageIterFloat3(IImage* pImage, uint32 x, uint32 y)
+        CImageIterFloat3(IImage* pImage, int32 x, int32 y)
         {
             assert(pImage->GetBPP() == 32);
-            m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * pImage->GetStride() + (pImage->GetSubX() + x) * 4];
+            m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * (int)pImage->GetStride() + (pImage->GetSubX() + x) * 4];
             m_bpl = pImage->GetStride();
         }
 
@@ -225,10 +226,10 @@ export namespace Caustic
         {
         }
 
-        CImageIterFloat4(IImage* pImage, uint32 x, uint32 y)
+        CImageIterFloat4(IImage* pImage, int32 x, int32 y)
         {
             assert(pImage->GetBPP() == 32);
-            m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * pImage->GetStride() + (pImage->GetSubX() + x) * 4];
+            m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * (int)pImage->GetStride() + (pImage->GetSubX() + x) * 4];
             m_bpl = pImage->GetStride();
         }
 
@@ -285,7 +286,7 @@ export namespace Caustic
         void Setup(IImage* pImage, int32 x, int32 y)
         {
             mask = 1 << (7 - ((pImage->GetSubX() + x) & 7));
-            m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * pImage->GetStride() + (pImage->GetSubX() + x) / 8];
+            m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * (int)pImage->GetStride() + (pImage->GetSubX() + x) / 8];
             m_bpl = pImage->GetStride();
         }
 
@@ -350,15 +351,15 @@ export namespace Caustic
         {
         }
 
-        CImageIter8(IImage* pImage, uint32 x, uint32 y)
+        CImageIter8(IImage* pImage, int32 x, int32 y)
         {
             Setup(pImage, x, y);
         }
 
-        void Setup(IImage* pImage, uint32 x, uint32 y)
+        void Setup(IImage* pImage, int32 x, int32 y)
         {
             assert(pImage->GetBPP() == 8);
-            m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * pImage->GetStride() + (pImage->GetSubX() + x)];
+            m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * (int)pImage->GetStride() + (pImage->GetSubX() + x)];
             m_bpl = pImage->GetStride();
         }
 
@@ -401,15 +402,15 @@ export namespace Caustic
         {
         }
 
-        CImageIter16(IImage* pImage, uint32 x, uint32 y)
+        CImageIter16(IImage* pImage, int32 x, int32 y)
         {
             Setup(pImage, x, y);
         }
 
-        void Setup(IImage* pImage, uint32 x, uint32 y)
+        void Setup(IImage* pImage, int32 x, int32 y)
         {
             assert(pImage->GetBPP() == 16);
-            m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * pImage->GetStride() + (pImage->GetSubX() + x) * 2];
+            m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * (int)pImage->GetStride() + (pImage->GetSubX() + x) * 2];
             m_bpl = pImage->GetStride();
         }
 
@@ -452,16 +453,17 @@ export namespace Caustic
         {
         }
 
-        CImageIter24(IImage* pImage, uint32 x, uint32 y)
+        CImageIter24(IImage* pImage, int32 x, int32 y)
         {
             Setup(pImage, x, y);
         }
 
-        void Setup(IImage* pImage, uint32 x, uint32 y)
+        void Setup(IImage* pImage, int32 x, int32 y)
         {
             assert(pImage->GetBPP() == 24);
-            m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * pImage->GetStride() + (pImage->GetSubX() + x) * 3];
+            m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * (int)pImage->GetStride() + (pImage->GetSubX() + x) * 3];
             m_bpl = pImage->GetStride();
+            m_bgrOrder = (pImage->GetImageType() == EImageType::BGR_24bpp) ? true : false;
         }
 
         void Step(CImageIter::EStepDirection dir)
@@ -484,12 +486,12 @@ export namespace Caustic
             return;
         }
 
-        uint8 GetRed() { return m_bp[0]; }
+        uint8 GetRed() { return m_bp[(m_bgrOrder) ? 2 : 0]; }
         uint8 GetGreen() { return m_bp[1]; }
-        uint8 GetBlue() { return m_bp[2]; }
-        void SetRed(uint8 v) { m_bp[0] = v; }
+        uint8 GetBlue() { return m_bp[(m_bgrOrder) ? 0 : 2]; }
+        void SetRed(uint8 v) { m_bp[(m_bgrOrder) ? 2 : 0] = v; }
         void SetGreen(uint8 v) { m_bp[1] = v; }
-        void SetBlue(uint8 v) { m_bp[2] = v; }
+        void SetBlue(uint8 v) { m_bp[(m_bgrOrder) ? 0 : 2] = v; }
         void SetAlpha(uint8 /*v*/) {} // Only defined so templatization works
     };
 
@@ -508,16 +510,18 @@ export namespace Caustic
         {
         }
 
-        CImageIter32(IImage* pImage, uint32 x, uint32 y)
+        CImageIter32(IImage* pImage, int32 x, int32 y)
         {
             Setup(pImage, x, y);
         }
 
-        void Setup(IImage* pImage, uint32 x, uint32 y)
+        void Setup(IImage* pImage, int32 x, int32 y)
         {
             assert(pImage->GetBPP() == 32);
-            m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * pImage->GetStride() + (pImage->GetSubX() + x) * 4];
+            m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * (int)pImage->GetStride() + (pImage->GetSubX() + x) * 4];
             m_bpl = pImage->GetStride();
+            EImageType t = pImage->GetImageType();
+            m_bgrOrder = (t == EImageType::BGRA_32bpp || t == EImageType::BGRX_32bpp) ? true : false;
         }
 
         void Step(CImageIter::EStepDirection dir)
@@ -540,13 +544,13 @@ export namespace Caustic
             return;
         }
 
-        uint8 GetRed() { return m_bp[0]; }
+        uint8 GetRed() { return m_bp[(m_bgrOrder) ? 2 : 0]; }
         uint8 GetGreen() { return m_bp[1]; }
-        uint8 GetBlue() { return m_bp[2]; }
+        uint8 GetBlue() { return m_bp[(m_bgrOrder) ? 0 : 2]; }
         uint8 GetAlpha() { return m_bp[3]; }
-        void SetRed(uint8 v) { m_bp[0] = v; }
+        void SetRed(uint8 v) { m_bp[(m_bgrOrder) ? 2 : 0] = v; }
         void SetGreen(uint8 v) { m_bp[1] = v; }
-        void SetBlue(uint8 v) { m_bp[2] = v; }
+        void SetBlue(uint8 v) { m_bp[(m_bgrOrder) ? 0 : 2] = v; }
         void SetAlpha(uint8 v) { m_bp[3] = v; }
     };
 
@@ -565,12 +569,12 @@ export namespace Caustic
         {
         }
 
-        CImageIter128(IImage* pImage, uint32 x, uint32 y)
+        CImageIter128(IImage* pImage, int32 x, int32 y)
         {
             Setup(pImage, x, y);
         }
 
-        void Setup(IImage* pImage, uint32 x, uint32 y)
+        void Setup(IImage* pImage, int32 x, int32 y)
         {
             assert(pImage->GetBPP() == 128);
             m_bp = &pImage->GetData()[(pImage->GetSubY() + y) * pImage->GetStride() + (pImage->GetSubX() + x) * 4];
@@ -643,17 +647,20 @@ export namespace Caustic
         {
         }
 
-        CImageIterGeneric(IImage* pImage, int32 x, int32 y)
+        CImageIterGeneric(IImage* pImage, int32 x, int32 y, bool allowOutBounds = false)
         {
             m_imageType = pImage->GetImageType();
-            if (x < 0)
-                x = 0;
-            if (x >= (int32)pImage->GetWidth())
-                x = (int32)pImage->GetWidth() - 1;
-            if (y < 0)
-                y = 0;
-            if (y >= (int32)pImage->GetHeight())
-                y = (int32)pImage->GetHeight() - 1;
+            if (!allowOutBounds)
+            {
+                if (x < 0)
+                    x = 0;
+                if (x >= (int32)pImage->GetWidth())
+                    x = (int32)pImage->GetWidth() - 1;
+                if (y < 0)
+                    y = 0;
+                if (y >= (int32)pImage->GetHeight())
+                    y = (int32)pImage->GetHeight() - 1;
+            }
             m_x = x;
             m_y = y;
             m_w = pImage->GetWidth();
@@ -670,10 +677,13 @@ export namespace Caustic
                 m_iter16 = CImageIter16(pImage, x, y);
                 break;
             case EImageType::RGB_24bpp:
+            case EImageType::BGR_24bpp:
                 m_iter24 = CImageIter24(pImage, x, y);
                 break;
             case EImageType::RGBA_32bpp:
             case EImageType::RGBX_32bpp:
+            case EImageType::BGRA_32bpp:
+            case EImageType::BGRX_32bpp:
                 m_iter32 = CImageIter32(pImage, x, y);
                 break;
             case EImageType::Float1_32bpp:
@@ -693,20 +703,42 @@ export namespace Caustic
 
         void Step(CImageIter::EStepDirection dir)
         {
+            switch (dir)
+            {
+            case CImageIter::Left:
+                m_x--;
+                break;
+            case CImageIter::Right:
+                m_x++;
+                break;
+            case CImageIter::Up:
+                m_y--;
+                break;
+            case CImageIter::Down:
+                m_y++;
+                break;
+            }
             switch (m_imageType)
             {
             case EImageType::BW_1bpp: m_iter1.Step(dir); break;
             case EImageType::Gray_8bpp: m_iter8.Step(dir); break;
             case EImageType::Gray_16bpp: m_iter16.Step(dir); break;
             case EImageType::RGB_24bpp: m_iter24.Step(dir); break;
-            case EImageType::RGBA_32bpp:
-            case EImageType::RGBX_32bpp:
-                m_iter32.Step(dir); break;
+            case EImageType::RGBA_32bpp: // fall through
+            case EImageType::RGBX_32bpp: m_iter32.Step(dir); break;
+            case EImageType::BGR_24bpp: m_iter24.Step(dir); break;
+            case EImageType::BGRA_32bpp: // fall through
+            case EImageType::BGRX_32bpp: m_iter32.Step(dir); break;
             case EImageType::Float1_32bpp: m_iterFloat1.Step(dir); break;
             case EImageType::Float2_64bpp: m_iterFloat2.Step(dir); break;
             case EImageType::Float3_96bpp: m_iterFloat3.Step(dir); break;
             case EImageType::Float4_128bpp: m_iterFloat4.Step(dir); break;
             }
+        }
+
+        bool IsInBounds()
+        {
+            return (m_x >= 0 && m_x < m_w && m_y >= 0 && m_y < m_h) ? true : false;
         }
 
         bool StepWithBoundsCheck(CImageIter::EStepDirection dir)
@@ -740,10 +772,11 @@ export namespace Caustic
             case EImageType::Gray_8bpp: m_iter8.Step(dir); break;
             case EImageType::Gray_16bpp: m_iter16.Step(dir); break;
             case EImageType::RGB_24bpp: m_iter24.Step(dir); break;
-            case EImageType::RGBA_32bpp:
-            case EImageType::RGBX_32bpp:
-                m_iter32.Step(dir);
-                break;
+            case EImageType::RGBA_32bpp: // fall through
+            case EImageType::RGBX_32bpp: m_iter32.Step(dir); break;
+            case EImageType::BGR_24bpp: m_iter24.Step(dir); break;
+            case EImageType::BGRA_32bpp: // fall through
+            case EImageType::BGRX_32bpp: m_iter32.Step(dir); break;
             case EImageType::Float1_32bpp: m_iterFloat1.Step(dir); break;
             case EImageType::Float2_64bpp: m_iterFloat2.Step(dir); break;
             case EImageType::Float3_96bpp: m_iterFloat3.Step(dir); break;
@@ -760,9 +793,11 @@ export namespace Caustic
             case EImageType::Gray_8bpp: return m_iter8.GetGray();
             case EImageType::Gray_16bpp: return (m_iter16.GetGray() > 0x7fff) ? 255 : 0;
             case EImageType::RGB_24bpp: return m_iter24.GetRed();
-            case EImageType::RGBA_32bpp:
-            case EImageType::RGBX_32bpp:
-                return m_iter32.GetRed();
+            case EImageType::RGBA_32bpp: // Fall through
+            case EImageType::RGBX_32bpp: return m_iter32.GetRed();
+            case EImageType::BGR_24bpp: return m_iter24.GetRed();
+            case EImageType::BGRA_32bpp: // Fall through
+            case EImageType::BGRX_32bpp: return m_iter32.GetRed();
             case EImageType::Float1_32bpp: return uint8(255.0f * m_iterFloat1.GetValue());
             case EImageType::Float2_64bpp: return uint8(255.0f * m_iterFloat2.GetValue().x);
             case EImageType::Float3_96bpp: return uint8(255.0f * m_iterFloat3.GetValue().x);
@@ -779,9 +814,11 @@ export namespace Caustic
             case EImageType::Gray_8bpp: return m_iter8.GetGray();
             case EImageType::Gray_16bpp: return (m_iter16.GetGray() > 0x7fff) ? 255 : 0;
             case EImageType::RGB_24bpp: return m_iter24.GetGreen();
-            case EImageType::RGBA_32bpp:
-            case EImageType::RGBX_32bpp:
-                return m_iter32.GetGreen();
+            case EImageType::RGBA_32bpp: // fall through
+            case EImageType::RGBX_32bpp: return m_iter32.GetGreen();
+            case EImageType::BGR_24bpp: return m_iter24.GetGreen();
+            case EImageType::BGRA_32bpp: // fall through
+            case EImageType::BGRX_32bpp: return m_iter32.GetGreen();
             case EImageType::Float1_32bpp: return uint8(255.0f * m_iterFloat1.GetValue());
             case EImageType::Float2_64bpp: return uint8(255.0f * m_iterFloat2.GetValue().y);
             case EImageType::Float3_96bpp: return uint8(255.0f * m_iterFloat3.GetValue().y);
@@ -798,9 +835,11 @@ export namespace Caustic
             case EImageType::Gray_8bpp: return m_iter8.GetGray();
             case EImageType::Gray_16bpp: return (m_iter16.GetGray() > 0x7fff) ? 255 : 0;
             case EImageType::RGB_24bpp: return m_iter24.GetBlue();
-            case EImageType::RGBA_32bpp:
-            case EImageType::RGBX_32bpp:
-                return m_iter32.GetBlue();
+            case EImageType::RGBA_32bpp: // fall through
+            case EImageType::RGBX_32bpp: return m_iter32.GetBlue();
+            case EImageType::BGR_24bpp: return m_iter24.GetBlue();
+            case EImageType::BGRA_32bpp: // fall through
+            case EImageType::BGRX_32bpp: return m_iter32.GetBlue();
             case EImageType::Float1_32bpp: return uint8(255.0f * m_iterFloat1.GetValue());
             case EImageType::Float2_64bpp: return uint8(255);
             case EImageType::Float3_96bpp: return uint8(255.0f * m_iterFloat3.GetValue().z);
@@ -817,9 +856,11 @@ export namespace Caustic
             case EImageType::Gray_8bpp: return m_iter8.GetGray();
             case EImageType::Gray_16bpp: return (m_iter16.GetGray() > 0x7fff) ? 255 : 0;
             case EImageType::RGB_24bpp: return m_iter24.GetBlue();
-            case EImageType::RGBA_32bpp:
-            case EImageType::RGBX_32bpp:
-                return m_iter32.GetBlue();
+            case EImageType::RGBA_32bpp: // fall through
+            case EImageType::RGBX_32bpp: return m_iter32.GetBlue();
+            case EImageType::BGR_24bpp: return m_iter24.GetBlue();
+            case EImageType::BGRA_32bpp: // fall through
+            case EImageType::BGRX_32bpp: return m_iter32.GetBlue();
             case EImageType::Float1_32bpp: return uint8(255.0f * m_iterFloat1.GetValue());
             case EImageType::Float2_64bpp: return uint8(255);
             case EImageType::Float3_96bpp: return uint8(255);
@@ -836,6 +877,7 @@ export namespace Caustic
             case EImageType::Gray_8bpp: return m_iter8.GetGray();
             case EImageType::Gray_16bpp: return m_iter16.GetGray();
             case EImageType::RGB_24bpp:
+            case EImageType::BGR_24bpp:
             {
                 RGBColor rgb(m_iter24.GetRed(), m_iter24.GetGreen(), m_iter24.GetBlue());
                 YIQColor yiq(rgb);
@@ -843,6 +885,8 @@ export namespace Caustic
             }
             case EImageType::RGBA_32bpp:
             case EImageType::RGBX_32bpp:
+            case EImageType::BGRA_32bpp:
+            case EImageType::BGRX_32bpp:
             {
                 RGBColor rgb(m_iter32.GetRed(), m_iter32.GetGreen(), m_iter32.GetBlue());
                 YIQColor yiq(rgb);
@@ -880,9 +924,11 @@ export namespace Caustic
             case EImageType::Gray_8bpp: m_iter8.SetGray(r); break;
             case EImageType::Gray_16bpp: m_iter16.SetGray(uint16(r) << 8); break;
             case EImageType::RGB_24bpp: m_iter24.SetRed(r); break;
-            case EImageType::RGBA_32bpp:
-            case EImageType::RGBX_32bpp:
-                m_iter32.SetRed(r); break;
+            case EImageType::RGBA_32bpp: // fall through
+            case EImageType::RGBX_32bpp: m_iter32.SetRed(r); break;
+            case EImageType::BGR_24bpp: m_iter24.SetRed(r); break;
+            case EImageType::BGRA_32bpp: // fall through
+            case EImageType::BGRX_32bpp: m_iter32.SetRed(r); break;
             case EImageType::Float1_32bpp: m_iterFloat1.SetValue(r / 255.0f); break;
             case EImageType::Float2_64bpp: m_iterFloat2.SetValueX(r / 255.0f); break;
             case EImageType::Float3_96bpp: m_iterFloat3.SetValueX(r / 255.0f); break;
@@ -898,9 +944,11 @@ export namespace Caustic
             case EImageType::Gray_8bpp: m_iter8.SetGray(g); break;
             case EImageType::Gray_16bpp: m_iter16.SetGray(uint16(g) << 8); break;
             case EImageType::RGB_24bpp: m_iter24.SetGreen(g); break;
-            case EImageType::RGBA_32bpp:
-            case EImageType::RGBX_32bpp:
-                m_iter32.SetGreen(g); break;
+            case EImageType::RGBA_32bpp: // fall through
+            case EImageType::RGBX_32bpp: m_iter32.SetGreen(g); break;
+            case EImageType::BGR_24bpp: m_iter24.SetGreen(g); break;
+            case EImageType::BGRA_32bpp: // fall through
+            case EImageType::BGRX_32bpp: m_iter32.SetGreen(g); break;
             case EImageType::Float1_32bpp: m_iterFloat1.SetValue(g / 255.0f); break;
             case EImageType::Float2_64bpp: m_iterFloat2.SetValueY(g / 255.0f); break;
             case EImageType::Float3_96bpp: m_iterFloat3.SetValueY(g / 255.0f); break;
@@ -916,9 +964,11 @@ export namespace Caustic
             case EImageType::Gray_8bpp: m_iter8.SetGray(b); break;
             case EImageType::Gray_16bpp: m_iter16.SetGray(uint16(b) << 8); break;
             case EImageType::RGB_24bpp: m_iter24.SetBlue(b); break;
-            case EImageType::RGBA_32bpp:
-            case EImageType::RGBX_32bpp:
-                m_iter32.SetBlue(b); break;
+            case EImageType::RGBA_32bpp: // fall through
+            case EImageType::RGBX_32bpp: m_iter32.SetBlue(b); break;
+            case EImageType::BGR_24bpp: m_iter24.SetBlue(b); break;
+            case EImageType::BGRA_32bpp: // fall through
+            case EImageType::BGRX_32bpp: m_iter32.SetBlue(b); break;
             case EImageType::Float1_32bpp: m_iterFloat1.SetValue(b / 255.0f); break;
             case EImageType::Float2_64bpp: break;
             case EImageType::Float3_96bpp: m_iterFloat3.SetValueZ(b / 255.0f); break;
@@ -935,8 +985,10 @@ export namespace Caustic
             case EImageType::Gray_16bpp: m_iter16.SetGray(uint16(a) << 8); break;
             case EImageType::RGB_24bpp: break;
             case EImageType::RGBA_32bpp:
-            case EImageType::RGBX_32bpp:
-                m_iter32.SetAlpha(a); break;
+            case EImageType::RGBX_32bpp: m_iter32.SetAlpha(a); break;
+            case EImageType::BGR_24bpp: break;
+            case EImageType::BGRA_32bpp:
+            case EImageType::BGRX_32bpp: m_iter32.SetAlpha(a); break;
             case EImageType::Float1_32bpp: m_iterFloat1.SetValue(a / 255.0f); break;
             case EImageType::Float2_64bpp: break;
             case EImageType::Float3_96bpp: break;

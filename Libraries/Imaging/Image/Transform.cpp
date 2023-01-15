@@ -58,8 +58,7 @@ namespace Caustic
         //
         // Allocate destination image
         //
-        uint32 bytesPerPixel = pImage->GetBytesPerPixel();
-        CRefObj<IImage> spXformImage = CreateImageImpl(dstw, dsth, bytesPerPixel * 8);
+        CRefObj<IImage> spXformImage = CreateImageImpl(dstw, dsth, pImage->GetImageType());
         
         //
         // Transform destination image bbox back into source image space

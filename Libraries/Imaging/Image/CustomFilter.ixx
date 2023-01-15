@@ -88,7 +88,7 @@ export namespace Caustic
     //**********************************************************************
     CRefObj<IImage> CCustomFilter::Apply(IImage* pImage, ImageFilterParams* pParams)
     {
-        CRefObj<IImage> spResult = CreateImage(pImage->GetWidth(), pImage->GetHeight(), pImage->GetBPP());
+        CRefObj<IImage> spResult = CreateImage(pImage->GetWidth(), pImage->GetHeight(), pImage->GetImageType());
         if (pImage->GetBPP() != 32)
             CT(E_UNEXPECTED); // Only 32bbp images supported
         if (m_kernelWidth == 3 && m_kernelHeight == 3)

@@ -35,25 +35,39 @@ namespace Caustic
         return refcnt;
     }
 
-    CImagePool::CImagePool(uint32 maxImages, uint32 w, uint32 h, uint32 bpp)
+    CImagePool::CImagePool(uint32 maxImages, uint32 w, uint32 h, EImageType imageType)
     {
         m_maxImages = maxImages;
         m_width = w;
         m_height = h;
-        m_bpp = bpp;
+        switch (imageType)
+        {
+        case EImageType::BW_1bpp: m_bpp = 1; break;
+        case EImageType::Gray_8bpp: m_bpp = 8; break;
+        case EImageType::Gray_16bpp: m_bpp = 16; break;
+        case EImageType::RGB_24bpp: m_bpp = 24; break;
+        case EImageType::RGBA_32bpp: m_bpp = 32; break;
+        case EImageType::RGBX_32bpp: m_bpp = 32; break;
+        case EImageType::BGR_24bpp: m_bpp = 24; break;
+        case EImageType::BGRA_32bpp: m_bpp = 32; break;
+        case EImageType::BGRX_32bpp: m_bpp = 32; break;
+        case EImageType::Float1_32bpp: m_bpp = 32; break;
+        case EImageType::Float2_64bpp: m_bpp = 64; break;
+        case EImageType::Float3_96bpp: m_bpp = 96; break;
+        case EImageType::Float4_128bpp: m_bpp = 128; break;
+        default:
+            CT(E_INVALIDARG);
+        }
         for (uint32 i = 0; i < maxImages; i++)
         {
-            auto img = Caustic::CreateImage(w, h, bpp);
+            auto img = Caustic::CreateImage(w, h, imageType);
             auto poolimg = new CImagePoolImg(img, this);
             poolimg->AddRef();
             m_available.push_back(poolimg);
         }
     }
     
-    // For now we ignore w/h/bpp since we assume all images in the pool
-    // are the same size. This method has this signature to support mixed
-    // pools in the future.
-    CRefObj<IImage> CImagePool::Acquire(uint32 /*w*/, uint32 /*h*/ , uint32 /*bpp*/)
+    CRefObj<IImage> CImagePool::Acquire()
     {
         if (m_available.size() == 0)
             CT(E_NOTIMPL);
@@ -63,8 +77,8 @@ namespace Caustic
         return CRefObj<IImage>(wpImg);
     }
 
-    CRefObj<IImagePool> CreateImagePool(uint32 maxImages, uint32 width, uint32 height, uint32 bpp)
+    CRefObj<IImagePool> CreateImagePool(uint32 maxImages, uint32 width, uint32 height, EImageType imageType)
     {
-        return CRefObj<IImagePool>(new CImagePool(maxImages, width, height, bpp));
+        return CRefObj<IImagePool>(new CImagePool(maxImages, width, height, imageType));
     }
 }

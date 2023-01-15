@@ -136,14 +136,13 @@ namespace Caustic
         CT(spBuffer->Lock(&pbBuffer, &maxLen, &curLen));
 
         if (m_spColorImagePool == nullptr)
-            m_spColorImagePool = Caustic::CreateImagePool(20, width, height, 32);
+            m_spColorImagePool = Caustic::CreateImagePool(20, width, height, EImageType::BGRA_32bpp);
 
         uint32 stride = width * 4;
-        CRefObj<IImage> spImage = m_spColorImagePool->Acquire(width, height, 32);
-        spImage->SetRGBOrder(false);
+        CRefObj<IImage> spImage = m_spColorImagePool->Acquire();
         uint8* pRow = spImage->GetData();
         int imgWidth = spImage->GetWidth();
-        int bpp = spImage->GetBytesPerPixel();
+        int bpp = spImage->GetBPP() / 8;
         int bps = imgWidth * bpp;
         int imgStride = spImage->GetStride();
         for (int y = 0; y < (int)height; y++)

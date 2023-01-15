@@ -30,7 +30,7 @@ export namespace Caustic
     {
         float m_sigma;
     public:
-        CGaussianBlur() : CGaussianBlur(0.2f)
+        CGaussianBlur() : CGaussianBlur(1.2f)
         {
         }
 
@@ -115,7 +115,7 @@ export namespace Caustic
             kernelWeights[i + kw] = (int)(255.0f * weight);
         }
 
-        auto BlurPass = [&](IImage* pSrc, IImage* pDst, uint32 h, uint32 w, uint32 rowOffset, uint32 colOffset)
+        auto HorizBlurPass = [&](IImage* pSrc, IImage* pDst, uint32 w, uint32 h)
         {
             CImageIterGeneric rowSrc(pSrc, 0, 0);
             CImageIterGeneric rowDst(pDst, 0, 0);
@@ -126,17 +126,23 @@ export namespace Caustic
                 for (uint32 x = 0; x < w; x++)
                 {
                     float sum[3] = { 0.0f , 0.0f , 0.0f };
-                    CImageIterGeneric kSrc(pSrc, x - kw, y);
+                    CImageIterGeneric kSrc(pSrc, x - kw, y, true);
                     for (int i = -kw; i <= kw; i++)
                     {
-                        sum[0] += float(weights[i + kw] * float(kSrc.GetRed()) / 255.0f);
-                        sum[1] += float(weights[i + kw] * float(kSrc.GetGreen()) / 255.0f);
-                        sum[2] += float(weights[i + kw] * float(kSrc.GetBlue()) / 255.0f);
-                        kSrc.StepWithBoundsCheck(CImageIter::Right);
+                        if (kSrc.IsInBounds())
+                        {
+                            sum[0] += float(weights[i + kw] * float(kSrc.GetRed()) / 255.0f);
+                            sum[1] += float(weights[i + kw] * float(kSrc.GetGreen()) / 255.0f);
+                            sum[2] += float(weights[i + kw] * float(kSrc.GetBlue()) / 255.0f);
+                        }
+                        kSrc.Step(CImageIter::Right);
                     }
-                    colDst.SetRed((int)(255.0f * sum[0]));
-                    colDst.SetGreen((int)(255.0f * sum[1]));
-                    colDst.SetBlue((int)(255.0f * sum[2]));
+                    int r = (int)(255.0f * sum[0]);
+                    int g = (int)(255.0f * sum[1]);
+                    int b = (int)(255.0f * sum[2]);
+                    colDst.SetRed(r);
+                    colDst.SetGreen(g);
+                    colDst.SetBlue(b);
                     colDst.SetAlpha(colSrc.GetAlpha());
                     colSrc.Step(CImageIter::EStepDirection::Right);
                     colDst.Step(CImageIter::EStepDirection::Right);
@@ -145,12 +151,46 @@ export namespace Caustic
                 rowDst.Step(CImageIter::EStepDirection::Down);
             }
         };
-        uint32 bytesPerPixel = pImage->GetBytesPerPixel();
-        uint32 stride = pImage->GetStride();
-        CRefObj<IImage> spImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), pImage->GetBPP());
-        BlurPass(pImage, spImage, pImage->GetHeight(), pImage->GetWidth(), stride, bytesPerPixel);
-        CRefObj<IImage> spImage2 = CreateImage(pImage->GetWidth(), pImage->GetHeight(), pImage->GetBPP());
-        BlurPass(spImage, spImage2, pImage->GetWidth(), pImage->GetHeight(), bytesPerPixel, stride);
+        auto VertBlurPass = [&](IImage* pSrc, IImage* pDst, uint32 w, uint32 h)
+        {
+            CImageIterGeneric colSrc(pSrc, 0, 0);
+            CImageIterGeneric colDst(pDst, 0, 0);
+            for (uint32 x = 0; x < w; x++)
+            {
+                CImageIterGeneric rowSrc = colSrc;
+                CImageIterGeneric rowDst = colDst;
+                for (uint32 y = 0; y < h; y++)
+                {
+                    float sum[3] = { 0.0f , 0.0f , 0.0f };
+                    CImageIterGeneric kSrc(pSrc, x, y - kw, true);
+                    for (int i = -kw; i <= kw; i++)
+                    {
+                        if (kSrc.IsInBounds())
+                        {
+                            sum[0] += float(weights[i + kw] * float(kSrc.GetRed()) / 255.0f);
+                            sum[1] += float(weights[i + kw] * float(kSrc.GetGreen()) / 255.0f);
+                            sum[2] += float(weights[i + kw] * float(kSrc.GetBlue()) / 255.0f);
+                        }
+                        kSrc.Step(CImageIter::Down);
+                    }
+                    rowDst.SetRed((int)(255.0f * sum[0]));
+                    rowDst.SetGreen((int)(255.0f * sum[1]));
+                    rowDst.SetBlue((int)(255.0f * sum[2]));
+                    rowDst.SetAlpha(rowSrc.GetAlpha());
+                    rowSrc.Step(CImageIter::EStepDirection::Down);
+                    rowDst.Step(CImageIter::EStepDirection::Down);
+                }
+                colSrc.Step(CImageIter::EStepDirection::Right);
+                colDst.Step(CImageIter::EStepDirection::Right);
+            }
+        };
+        uint32 w = pImage->GetWidth();
+        uint32 h = pImage->GetHeight();
+        EImageType t = pImage->GetImageType();
+        CRefObj<IImage> spImage = CreateImage(w, h, t);
+        HorizBlurPass(pImage, spImage, w, h);
+        CRefObj<IImage> spImage2 = CreateImage(w, h, t);
+        VertBlurPass(spImage, spImage2, w, h);
         return spImage2;
     }
 

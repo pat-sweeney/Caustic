@@ -52,12 +52,12 @@ namespace Caustic
                     fastCopy = true;
                     break;
                 case 24:
-                    format = (pImage->GetRGBOrder()) ?
+                    format = (pImage->GetImageType() == EImageType::RGBA_32bpp) ?
                         DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM :
                         DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM;
                     break;
                 case 32:
-                    format = (pImage->GetRGBOrder()) ?
+                    format = (pImage->GetImageType() == EImageType::RGBA_32bpp) ?
                         DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM :
                         DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM;
                     fastCopy = true;
@@ -191,24 +191,26 @@ namespace Caustic
     //**********************************************************************
     CRefObj<IImage> CTexture::CopyToImage(IRenderer* pRenderer)
     {
-        int bpp = 32;
+        EImageType imageType;
         switch (m_Format)
         {
         case DXGI_FORMAT::DXGI_FORMAT_R8_UNORM:
-            bpp = 8;
+            imageType = EImageType::Gray_8bpp;
             break;
         case DXGI_FORMAT::DXGI_FORMAT_R16_UINT:
-            bpp = 16;
+            imageType = EImageType::Gray_16bpp;
             break;
         case DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM:
+            imageType = EImageType::RGBA_32bpp;
+            break;
         case DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM:
-            bpp = 32;
+            imageType = EImageType::BGRA_32bpp;
             break;
         case DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT:
-            bpp = 128;
+            imageType = EImageType::Float4_128bpp;
             break;
         }
-        CRefObj<IImage> spImage = Caustic::CreateImage(m_Width, m_Height, bpp);
+        CRefObj<IImage> spImage = Caustic::CreateImage(m_Width, m_Height, imageType);
         CopyToImage(pRenderer, spImage);
         return spImage;
     }

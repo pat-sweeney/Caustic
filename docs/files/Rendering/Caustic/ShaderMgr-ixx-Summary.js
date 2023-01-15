@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/ShaderMgr.ixx","ShaderMgr.ixx");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/ShaderMgr.ixx",[["C/C++","C"]],[["Classes","Class"]],[[772,0,0,"CShaderMgr","CShaderMgr"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/ShaderMgr.ixx","ShaderMgr.ixx");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/ShaderMgr.ixx",[["C/C++","C"]],[["Classes","Class"]],[[839,0,0,"CShaderMgr","CShaderMgr"]]);

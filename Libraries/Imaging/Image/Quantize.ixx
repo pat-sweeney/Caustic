@@ -113,7 +113,7 @@ export namespace Caustic
             pNewClusters[i].numElements = 0;
         }
 
-        CRefObj<IImage> spIndices = CreateImage(w, h, 8);
+        CRefObj<IImage> spIndices = CreateImage(w, h, EImageType::Gray_8bpp);
         for (int iter = 0; iter < maxIterations; iter++)
         {
             int pixelsReassigned = 0;
@@ -203,7 +203,7 @@ export namespace Caustic
     //**********************************************************************
     CRefObj<IImage> CQuantizeFilter::Apply(IImage* pImage, ImageFilterParams* pParams)
     {
-        CRefObj<IImage> spDestImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), pImage->GetBPP());
+        CRefObj<IImage> spDestImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), pImage->GetImageType());
         if (pImage->GetBPP() == 24)
             Quantize<CImageIter24>(pImage, spDestImage, pParams);
         else if (pImage->GetBPP() == 32)

@@ -338,10 +338,9 @@ namespace Caustic
             if (it != pParams->params.end())
                 scaleDownMode = std::any_cast<EScaleDownMode>(it->second);
         }
-        uint32 bytesPerPixel = pImage->GetBytesPerPixel();
         uint32 newWidth = (int)ceil(scaleX * pImage->GetWidth());
         uint32 newHeight = (int)ceil(scaleY * pImage->GetHeight());
-        CRefObj<IImage> spScaledImage = CreateImageImpl(newWidth, newHeight, bytesPerPixel * 8);
+        CRefObj<IImage> spScaledImage = CreateImageImpl(newWidth, newHeight, pImage->GetImageType());
 
         switch (pImage->GetBPP())
         {

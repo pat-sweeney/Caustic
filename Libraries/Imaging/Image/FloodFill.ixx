@@ -91,7 +91,7 @@ export namespace Caustic
     {
         int tolerancesq = tolerance * tolerance;
 
-        CRefObj<IImage> filled = CreateImage(pImage->GetWidth(), pImage->GetHeight(), 1);
+        CRefObj<IImage> filled = CreateImage(pImage->GetWidth(), pImage->GetHeight(), EImageType::BW_1bpp);
         memset((void*)filled->GetData(), '\0', filled->GetStride() * filled->GetHeight());
         uint8 ropacitytbl[256];
         uint8 gopacitytbl[256];
