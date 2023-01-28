@@ -21,7 +21,7 @@ export namespace Caustic
     // <Point2> p2 - Maximum point defining one coroner of the bbox
     //
     // Header:
-    // {Link:#include "Base/Math/IBBox.h"{Base/Math/IBBox.h}}
+    // {Link:import Base.Math.IBBox;{Base/Math/IBBox.ixx}}
     //**********************************************************************
     struct IBBox2
     {
