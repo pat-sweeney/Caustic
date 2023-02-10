@@ -34,6 +34,7 @@ import Geometry.MeshImport;
 import Geometry.Mesh.Mesh;
 import Imaging.Color;
 import Parsers.JSon.JSonParser;
+import Imaging.Image.IImage;
 import Rendering.Caustic.ISpotLight;
 import Rendering.Caustic.ISampler;
 import Rendering.Caustic.ICausticFactory;
@@ -67,6 +68,7 @@ public:
     std::vector< std::vector<int>> cameraFrameRates;
     bool startBroadcast;
     CRefObj<IWebCamera> m_spCamera;
+    CRefObj<IImage> m_spStaticImage;
     int currentCamera;
     int currentResolution;
     CRefObj<IImage> m_spColorImage;
@@ -77,6 +79,7 @@ public:
     NDIlib_video_frame_v2_t NDI_video_frame;
 #endif
     char NDIStreamName[1024];
+    char ImagePath[1024];
 
     CApp()
     {
@@ -143,6 +146,7 @@ void BuildPanels(ITexture *pFinalRT, ImFont *pFont)
     RECT rect;
     GetClientRect(app.m_hwnd, &rect);
 
+#pragma region BroadcastCamera
     ImGui::Begin("CameraSelect");
     ImGui::PushItemFlag(ImGuiItemFlags_Disabled, app.startBroadcast);
     ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * ((app.startBroadcast) ? 0.5f : 1.0f));
@@ -222,6 +226,42 @@ void BuildPanels(ITexture *pFinalRT, ImFont *pFont)
     ImGui::PopItemFlag();
     ImGui::PopStyleVar();
     ImGui::End();
+#pragma endregion
+    
+#pragma region BroadcastStaticImage
+    ImGui::Begin("StaticImageSelect");
+    ImGui::PushItemFlag(ImGuiItemFlags_Disabled, app.startBroadcast);
+    ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha* ((app.startBroadcast) ? 0.5f : 1.0f));
+    ImGui::Text("Image:");
+    ImGui::SameLine();
+    ImGui::InputText("##ImagePath", app.ImagePath, sizeof(app.ImagePath));
+    if (ImGui::Button("Broadcast") && !app.startBroadcast)
+    {
+        app.m_spStaticImage = Caustic::LoadImageFile(Caustic::str2wstr(app.ImagePath).c_str());
+
+#ifdef USE_NDI
+        app.NDI_video_frame;
+        app.NDI_video_frame.xres = app.m_spStaticImage->GetWidth();
+        app.NDI_video_frame.yres = app.m_spStaticImage->GetHeight();
+        app.NDI_video_frame.FourCC = NDIlib_FourCC_type_BGRX;
+        app.NDI_video_frame.p_data = (uint8_t*)malloc(app.NDI_video_frame.xres * app.NDI_video_frame.yres * 4);
+
+        // We create the NDI sender
+        NDIlib_send_create_t t;
+        t.p_ndi_name = app.NDIStreamName;
+        t.p_groups = nullptr;
+        t.clock_video = true;
+        t.clock_audio = false;
+        app.pNDI_send = NDIlib_send_create(&t);
+        if (!app.pNDI_send)
+            return;
+#endif
+        app.startBroadcast = true;
+    }
+    ImGui::PopItemFlag();
+    ImGui::PopStyleVar();
+    ImGui::End();
+#pragma endregion
 
     if (pFinalRT != nullptr)
     {
@@ -299,6 +339,59 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             }
         }
 
+        if (app.m_spStaticImage)
+        {
+            app.m_spTexture = app.m_spCausticFactory->CreateTexture(app.m_spRenderer, app.m_spStaticImage,
+                D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
+
+#ifdef USE_NDI
+            int w = app.m_spStaticImage->GetWidth();
+            int h = app.m_spStaticImage->GetHeight();
+            uint8* pSrc = app.m_spStaticImage->GetData();
+            uint8* pDst = app.NDI_video_frame.p_data;
+            uint32 stride = app.m_spStaticImage->GetStride();
+            int th = (h > app.NDI_video_frame.yres) ? app.NDI_video_frame.yres : h;
+            for (int y = 0; y < th; y++)
+            {
+                int bytesToCopy = app.NDI_video_frame.xres * 4;
+                if (bytesToCopy > (int)stride)
+                    bytesToCopy = (int)stride;
+                memcpy(pDst, pSrc, bytesToCopy);
+                pSrc += stride;
+                pDst += app.NDI_video_frame.xres * 4;
+            }
+            NDIlib_send_send_video_v2(app.pNDI_send, &app.NDI_video_frame);
+#endif
+        }
+        else if (app.m_spCamera)
+        {
+            if (app.m_spColorImage)
+                app.m_spColorImage->Release();
+            if (app.m_spCamera->NextFrame(&app.m_spColorImage.p) && app.m_spColorImage)
+            {
+                app.m_spTexture = app.m_spCausticFactory->CreateTexture(app.m_spRenderer, app.m_spColorImage,
+                    D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
+
+#ifdef USE_NDI
+                int w = app.m_spColorImage->GetWidth();
+                int h = app.m_spColorImage->GetHeight();
+                uint8* pSrc = app.m_spColorImage->GetData();
+                uint8* pDst = app.NDI_video_frame.p_data;
+                uint32 stride = app.m_spColorImage->GetStride();
+                int th = (h > app.NDI_video_frame.yres) ? app.NDI_video_frame.yres : h;
+                for (int y = 0; y < th; y++)
+                {
+                    int bytesToCopy = app.NDI_video_frame.xres * 4;
+                    if (bytesToCopy > (int)stride)
+                        bytesToCopy = (int)stride;
+                    memcpy(pDst, pSrc, bytesToCopy);
+                    pSrc += stride;
+                    pDst += app.NDI_video_frame.xres * 4;
+                }
+                NDIlib_send_send_video_v2(app.pNDI_send, &app.NDI_video_frame);
+#endif
+            }
+        }
         if (app.m_spCamera)
         {
             if (app.m_spColorImage)

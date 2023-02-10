@@ -100,7 +100,7 @@ namespace Caustic
     {
         if (GetImageType() != EImageType::RGBA_32bpp)
             CT(E_INVALIDARG);
-        if (x >= GetWidth() || y >= GetHeight())
+        if (x >= (int32)GetWidth() || y >= (int32)GetHeight())
             return;
         int bytesPerPixel = this->GetBPP() / 8;
         BYTE* pData = GetData() + y * this->GetStride() + x * bytesPerPixel;
@@ -114,7 +114,7 @@ namespace Caustic
     {
         if (GetImageType() != EImageType::Gray_8bpp)
             CT(E_INVALIDARG);
-        if (x >= GetWidth() || y >= GetHeight())
+        if (x >= (int32)GetWidth() || y >= (int32)GetHeight())
             return;
         int bytesPerPixel = this->GetBPP() / 8;
         BYTE* pData = GetData() + y * this->GetStride() + x * bytesPerPixel;
@@ -125,7 +125,7 @@ namespace Caustic
     {
         if (GetImageType() != EImageType::Gray_16bpp)
             CT(E_INVALIDARG);
-        if (x >= GetWidth() || y >= GetHeight())
+        if (x >= (int32)GetWidth() || y >= (int32)GetHeight())
             return;
         int bytesPerPixel = this->GetBPP() / 8;
         uint16* pData = (uint16*)(GetData() + y * this->GetStride() + x * bytesPerPixel);
