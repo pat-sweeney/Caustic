@@ -1224,7 +1224,7 @@ namespace Caustic
         CT(spDXGIDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&spDXGIAdapter));
 
         // Walk our list of adapters and find the correct display
-        static bool enableDuplication = true;
+        static bool enableDuplication = false;
         if (enableDuplication)
         {
             int outputIndex = 0;
@@ -1234,9 +1234,13 @@ namespace Caustic
                 if (outputIndex == desktopIndex)
                 {
                     CComPtr<IDXGIOutput1> spOutput1;
-                    CT(spOutput->QueryInterface(__uuidof(IDXGIOutput1), (void**)&spOutput1));
-                    CT(spOutput1->DuplicateOutput(m_spDevice, &m_spDuplication));
-                    break;
+                    HRESULT hr = spOutput->QueryInterface(__uuidof(IDXGIOutput1), (void**)&spOutput1);
+                    if (SUCCEEDED(hr))
+                    {
+                        hr = spOutput1->DuplicateOutput(m_spDevice, &m_spDuplication);
+                        if (SUCCEEDED(hr))
+                            break;
+                    }
                 }
                 outputIndex++;
                 spOutput = nullptr;

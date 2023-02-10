@@ -235,6 +235,9 @@ void BuildPanels(ITexture *pFinalRT, ImFont *pFont)
     ImGui::Text("Image:");
     ImGui::SameLine();
     ImGui::InputText("##ImagePath", app.ImagePath, sizeof(app.ImagePath));
+    ImGui::Text("NDI Stream Name:");
+    ImGui::SameLine();
+    ImGui::InputText("##NDIStream", app.NDIStreamName, sizeof(app.NDIStreamName));
     if (ImGui::Button("Broadcast") && !app.startBroadcast)
     {
         app.m_spStaticImage = Caustic::LoadImageFile(Caustic::str2wstr(app.ImagePath).c_str());
