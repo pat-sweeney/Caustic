@@ -23,6 +23,7 @@ import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Base.Core.CritSec;
+import Base.Core.ConvertStr;
 import Base.Math.BBox;
 import Rendering.Caustic.Texture;
 import Rendering.Caustic.Renderable;
@@ -143,7 +144,7 @@ namespace Caustic
         desc.ScissorEnable = false;
         CT(m_spDevice->CreateRasterizerState(&desc, &m_spRasterizerState));
     }
-
+    
     //**********************************************************************
     // Method: Setup
     // See <IRenderer::Setup>.
@@ -156,7 +157,10 @@ namespace Caustic
         CGraphicsBase::Setup(hwnd, viewport, createDebugDevice, desktopIndex);
 
         if (shaderFolder.empty())
-            shaderFolder = std::wstring(DEFAULT_SHADER_PATH);
+        {
+            auto wstrExePath = GetExecutablePath();
+            shaderFolder = wstrExePath + L"\\Shaders";
+        }
         m_spShaderMgr = CRefObj<IShaderMgr>(new CShaderMgr());
         LoadShaders(shaderFolder.c_str());
 
@@ -1209,12 +1213,15 @@ namespace Caustic
         CT(D3D11CreateDeviceAndSwapChain(nullptr,
             D3D_DRIVER_TYPE_HARDWARE,
             nullptr, // software module
+#ifdef _DEBUG
             D3D11_CREATE_DEVICE_DEBUG, // flags
+#else
+            0, // flags
+#endif
             nullptr, // pFeatureLevels
             0, // numFeatureLevels
             D3D11_SDK_VERSION,
             &desc, &m_spSwapChain, &m_spDevice, &m_featureLevel, &m_spContext));
-
         //**********************************************************************
         // Setup Windows Duplication service
         //**********************************************************************

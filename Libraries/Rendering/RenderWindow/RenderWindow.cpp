@@ -16,6 +16,8 @@ module;
 
 module Rendering.RenderWindow.RenderWindow;
 import Base.Core.Core;
+import Base.Core.ConvertStr;
+import Base.Core.Error;
 import Base.Math.BBox;
 import Base.Math.Vector;
 import Rendering.Caustic.CausticFactory;
@@ -388,14 +390,24 @@ namespace Caustic
                     ImGui_ImplWin32_Init(m_hwnd);
                     ImGui_ImplDX11_Init(pRenderer->GetDevice(), pRenderer->GetContext());
 
-    #pragma warning(push)
-    #pragma warning(disable: 4996)
-                    const char* pCausticPixel = std::getenv("CausticRoot");
-    #pragma warning(pop)
-                    if (pCausticPixel == nullptr)
-                        pCausticPixel = "d:\\github\\Caustic";
-                    std::string fontPath = std::string(pCausticPixel) + "\\" + "External\\imgui\\misc\\fonts\\DroidSans.ttf";
-                    m_pFont = ImGui::GetIO().Fonts->AddFontFromFileTTF(fontPath.c_str(), 24);
+                    std::wstring exePath = Caustic::GetExecutablePath();
+                    std::wstring fontPath = exePath + L"\\fonts\\DroidSans.ttf";
+                    if (!PathFileExists(fontPath.c_str()))
+                    {
+#pragma warning(push)
+#pragma warning(disable: 4996)
+                        const char* pCausticPixel = std::getenv("CausticRoot");
+#pragma warning(pop)
+                        if (pCausticPixel == nullptr)
+                            pCausticPixel = "d:\\github\\Caustic";
+                        std::string strFontPath = std::string(pCausticPixel) + "\\External\\imgui\\misc\\fonts\\DroidSans.ttf";
+                        fontPath = Caustic::str2wstr(strFontPath.c_str());
+                    }
+                    if (!PathFileExists(fontPath.c_str()))
+                    {
+                        CT(E_INVALIDARG);
+                    }
+                    m_pFont = ImGui::GetIO().Fonts->AddFontFromFileTTF(Caustic::wstr2str(fontPath.c_str()).c_str(), 24);
 
                     m_spFinalRT = Caustic::CreateTexture(pRenderer, 1920, 1080, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM,
                         (D3D11_CPU_ACCESS_FLAG)0, (D3D11_BIND_FLAG)(D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET | D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE));

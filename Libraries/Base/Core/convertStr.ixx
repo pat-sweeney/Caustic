@@ -144,4 +144,26 @@ export namespace Caustic
     {
         return wstr2str(wstr.c_str());
     }
+
+
+    //**********************************************************************
+    // Function: GetExecutablePath
+    // Returns the directory where the current executable is
+    //
+    // Parameters:
+    // str - String to convert
+    //
+    // Returns:
+    // Path where .exe resides
+    //
+    // Header:
+    // {Link:import Base.Core.ConvertStr;{Base.Core.ConvertStr}
+    //**********************************************************************
+    std::wstring GetExecutablePath()
+    {
+        TCHAR buffer[MAX_PATH] = { 0 };
+        GetModuleFileName(NULL, buffer, MAX_PATH);
+        std::wstring wstr(buffer);
+        return wstr.substr(0, wstr.find_last_of(L"\\/"));
+    }
 }

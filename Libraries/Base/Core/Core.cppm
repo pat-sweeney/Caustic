@@ -11,22 +11,33 @@ module;
 export module Base.Core.Core:Part1;
 
 // Namespace: Caustic
-export namespace Caustic
+namespace Caustic
 {
     //**********************************************************************
     // Function: GetCausticRootDirectory
     // Returns the default folder for the Caustic library
     //**********************************************************************
-    std::wstring GetCausticRootDirectory()
+    export std::wstring GetCausticRootDirectory()
     {
         return std::wstring(CAUSTIC_ROOT_DIRECTORY);
+    }
+
+    static std::wstring _defaultShaderDirectory(CAUSTIC_SHADER_DIRECTORY);
+
+    //**********************************************************************
+    // Function: SetDefaultCausticShaderDirectory
+    // Returns the default folder for the Caustic shaders
+    //**********************************************************************
+    export void SetDefaultCausticShaderDirectory(const wchar_t *pDefaultShaderDir)
+    {
+        _defaultShaderDirectory = std::wstring(pDefaultShaderDir);
     }
 
     //**********************************************************************
     // Function: GetCausticShaderDirectory
     // Returns the default folder for the Caustic shaders
     //**********************************************************************
-    std::wstring GetCausticShaderDirectory()
+    export std::wstring GetCausticShaderDirectory()
     {
 #pragma warning(push)
 #pragma warning(disable: 4996)
@@ -44,6 +55,6 @@ export namespace Caustic
                 }
             }
         }
-        return std::wstring(CAUSTIC_SHADER_DIRECTORY);
+        return _defaultShaderDirectory;
     }
 }
