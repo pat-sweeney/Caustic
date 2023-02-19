@@ -483,7 +483,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    // Setup our renderer
    Caustic::SystemStartup();
    InitializeCaustic(app.m_hwnd);
-   app.cameras = IWebCamera::GetAvailableDevices();
+   app.cameras = IWebCamera::GetAvailableVideoDevices();
 
    for (size_t i = 0; i < app.cameras.size(); i++)
    {

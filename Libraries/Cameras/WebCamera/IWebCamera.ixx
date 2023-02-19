@@ -23,7 +23,7 @@ export namespace Caustic
     //**********************************************************************
     // Structure: CameraInfo
     // Contains information about a camera available on the system.
-    // This structure is returned by <IWebCamera::GetAvailableDevices>.
+    // This structure is returned by <IWebCamera::GetAvailableVideoDevices>.
     //
     // Members:
     // name - friendly name for the device
@@ -45,6 +45,31 @@ export namespace Caustic
     };
 
     //**********************************************************************
+    // Structure: AudioInfo
+    // Contains information about audio devices available on the system.
+    // This structure is returned by <IWebCamera::GetAvailableAudioDevices>.
+    //
+    // Members:
+    // name - friendly name for the device
+    // symlink - Symbolic link name for the device. This is passed to
+    // <CreateWebCamera>.
+    // samplingRates - list of supported sampling rates
+    // bitsPerSample - number of bits per sample
+    // channels - number of audio channels
+    //
+    // Module:
+    // {Link:import Cameras.WebCamera.IWebCamera;{Cameras/WebCamera/IWebCamera.ixx}}
+    //**********************************************************************
+    struct AudioInfo
+    {
+        std::wstring name;
+        std::wstring symlink;
+        std::vector<int> samplingRates;
+        std::vector<int> bitsPerSample;
+        std::vector<int> channels;
+    };
+
+    //**********************************************************************
     // Interface: IWebCamera
     // Defines the interface to a WebCamera.
     //
@@ -54,13 +79,22 @@ export namespace Caustic
     struct IWebCamera : public ICameraDevice
     {
         //**********************************************************************
-        // Method: GetAvailableDevices
+        // Method: GetAvailableVideoDevices
         // Returns a list of cameras available on the system
         //
         // Module:
         // {Link:import Cameras.WebCamera.IWebCamera;{Cameras/WebCamera/IWebCamera.ixx}}
         //**********************************************************************
-        static std::vector<CameraInfo> GetAvailableDevices();
+        static std::vector<CameraInfo> GetAvailableVideoDevices();
+
+        //**********************************************************************
+        // Method: GetAvailableAudioDevices
+        // Returns a list of audio devices available on the system
+        //
+        // Module:
+        // {Link:import Cameras.WebCamera.IWebCamera;{Cameras/WebCamera/IWebCamera.ixx}}
+        //**********************************************************************
+        static std::vector<AudioInfo> GetAvailableAudioDevices();
     };
 
     //**********************************************************************

@@ -165,7 +165,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
    
-   auto x = IWebCamera::GetAvailableDevices();
+   auto x = IWebCamera::GetAvailableVideoDevices();
    int i = 0;
    for (; i < (int)x.size(); i++)
    {

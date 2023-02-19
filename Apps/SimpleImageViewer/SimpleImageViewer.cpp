@@ -300,7 +300,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 break;
             case ID_FILE_LIVEWEBCAMERA:
                 {
-                    auto x = IWebCamera::GetAvailableDevices();
+                    auto x = IWebCamera::GetAvailableVideoDevices();
                     int i = 0;
                     for (; i < (int)x.size(); i++)
                         if (x[i].name.contains(L"LifeCam"))

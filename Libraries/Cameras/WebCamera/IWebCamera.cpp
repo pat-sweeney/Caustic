@@ -52,7 +52,7 @@ namespace Caustic
         CoUninitialize();
     }
 
-    std::vector<CameraInfo> IWebCamera::GetAvailableDevices()
+    std::vector<CameraInfo> IWebCamera::GetAvailableVideoDevices()
     {
         CWebCamera_Setup();
         std::vector<CameraInfo> cameras;
@@ -114,7 +114,7 @@ namespace Caustic
                             MFGetAttributeSize(spType, MF_MT_FRAME_SIZE, &w, &h);
                             Point2 wxh((int)w, (int)h);
                             caminfo.resolutions.push_back(wxh);
-                            UINT32 n,d;
+                            UINT32 n, d;
                             MFGetAttributeSize(spType, MF_MT_FRAME_RATE, &n, &d);
                             Point2 nxd((int)n, (int)d);
                             caminfo.framerates.push_back(nxd);
@@ -132,13 +132,92 @@ namespace Caustic
         return cameras;
     }
 
+
+    std::vector<AudioInfo> IWebCamera::GetAvailableAudioDevices()
+    {
+        CWebCamera_Setup();
+        std::vector<AudioInfo> audioDevices;
+        CComPtr<IMFAttributes> spAttributes;
+        CT(MFCreateAttributes(&spAttributes, 1));
+        CT(spAttributes->SetGUID(MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE, MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_AUDCAP_GUID));
+        IMFActivate** ppDevices;
+        UINT32 count;
+        CT(MFEnumDeviceSources(spAttributes, &ppDevices, &count));
+        for (int i = 0; i < (int)count; i++)
+        {
+            GUID guid;
+            CT(ppDevices[i]->GetGUID(MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE, &guid));
+            if (guid == MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_AUDCAP_GUID)
+            {
+                AudioInfo audioInfo;
+                wchar_t buffer[1024];
+                UINT32 length;
+                CT(ppDevices[i]->GetString(MF_DEVSOURCE_ATTRIBUTE_FRIENDLY_NAME, buffer, 1024, &length));
+                audioInfo.name = std::wstring(buffer);
+                CT(ppDevices[i]->GetString(MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_AUDCAP_SYMBOLIC_LINK, buffer, 1024, &length));
+                audioInfo.symlink = std::wstring(buffer);
+
+                // Enumerate the available formats
+                CComPtr<IMFMediaSource> spSource;
+                hr = ppDevices[i]->ActivateObject(IID_PPV_ARGS(&spSource));
+                if (SUCCEEDED(hr))
+                {
+                    CComPtr<IMFPresentationDescriptor> spPD;
+                    CT(spSource->CreatePresentationDescriptor(&spPD));
+
+                    // Find the video stream index
+                    DWORD streamCount;
+                    CT(spPD->GetStreamDescriptorCount(&streamCount));
+                    for (DWORD streamIndex = 0; streamIndex < streamCount; streamIndex++)
+                    {
+                        BOOL fSelected;
+                        CComPtr<IMFStreamDescriptor> spSD;
+                        CT(spPD->GetStreamDescriptorByIndex(streamIndex, &fSelected, &spSD));
+
+                        CComPtr<IMFMediaTypeHandler> spHandler;
+                        CT(spSD->GetMediaTypeHandler(&spHandler));
+
+                        GUID mediaType;
+                        CT(spHandler->GetMajorType(&mediaType));
+                        if (mediaType != MFMediaType_Audio)
+                            continue;
+
+                        DWORD cTypes = 0;
+                        CT(spHandler->GetMediaTypeCount(&cTypes));
+                        for (DWORD i = 0; i < cTypes; i++)
+                        {
+                            CComPtr<IMFMediaType> spType;
+                            CT(spHandler->GetMediaTypeByIndex(i, &spType));
+                            UINT32 samplingRate;
+                            spType->GetUINT32(MF_MT_AUDIO_SAMPLES_PER_SECOND, &samplingRate);
+                            audioInfo.samplingRates.push_back(samplingRate);
+                            UINT32 bitsPerSample;
+                            spType->GetUINT32(MF_MT_AUDIO_BITS_PER_SAMPLE, &bitsPerSample);
+                            audioInfo.bitsPerSample.push_back(bitsPerSample);
+                            UINT32 numChannels;
+                            spType->GetUINT32(MF_MT_AUDIO_NUM_CHANNELS, &numChannels);
+                            audioInfo.channels.push_back(numChannels);
+                        }
+                        break;
+                    }
+                }
+
+                audioDevices.push_back(audioInfo);
+            }
+            ppDevices[i]->Release();
+        }
+        if (ppDevices != nullptr)
+            CoTaskMemFree(ppDevices);
+        return audioDevices;
+    }
+
     //**********************************************************************
     // Function: CreateWebCamera
     // CreateWebCamera instantiates an instance of an Web camera
     // 
     // Parameters:
     // deviceName - symbolic link name for the camera as returned by
-    // <IWebCamera::GetAvailableDevices>
+    // <IWebCamera::GetAvailableVideoDevices>
     // w - width in pixels of camera resolution
     // h - height in pixels of camera resolution
     // frameRate - requested frame rate
