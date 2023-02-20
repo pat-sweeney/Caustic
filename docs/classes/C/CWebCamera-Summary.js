@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CWebCamera","CWebCamera");NDSummary.OnSummaryLoaded("CClass:CWebCamera",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[290,0,0,"CWebCamera"],[291,0,2,"Functions","Functions"],[292,0,1,"CWebCamera","CWebCamera"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CWebCamera","CWebCamera");NDSummary.OnSummaryLoaded("CClass:CWebCamera",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[290,0,0,"CWebCamera"],[291,0,2,"Functions","Functions"],[256,0,1,"CWebCamera","CWebCamera"]]);

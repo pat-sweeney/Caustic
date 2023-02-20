@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("aud",["Struct"],[["AudioInfo",,[[,,,,0,"File:Cameras/WebCamera/IWebCamera.ixx:AudioInfo","CClass:AudioInfo"]]]]);

@@ -47,23 +47,33 @@ export namespace Caustic
         CRefObj<IImagePool> m_spColorImagePool;
         UINT32 m_width, m_height;
         LONG m_stride;
+
+        CComPtr<IMFMediaSource> CreateVideoDevice(std::wstring videoDeviceName, int w, int h, int frameRate);
+        CComPtr<IMFMediaSource> CreateAudioDevice(std::wstring audioDeviceName, int samplingRate, int bitsPerSample, int numChannels);
+        CComPtr<IMFMediaType> FindVideoMediaType(int w, int h, int framerate);
+        CComPtr<IMFMediaType> FindAudioMediaType(int samplingRate, int bitsPerSample, int numChannels);
     public:
         //**********************************************************************
         // Constructor: CWebCamera
         // Default ctor for CWebCamera
         //
         // Parameters:
-        // deviceName - symbolic link name for the requested device
+        // videoDeviceName - symbolic link name for the requested device
         // w - width in pixels of camera resolution. If unspecified (w==-1) the maximum resolution is picked
         // h - height in pixels of camera resolution. If unspecified (w==-1) the maximum resolution is picked
         // frameRate - requested frame rate
+        // audioDeviceName - audio endpoint name for the requested audio device
+        // samplingRate - audio sampling rate
+        // bitsPerSample - bits per audio sample
+        // numChannels - number of audio channels
         //
         // Module:
         // {Link:import Cameras.WebCamera.WebCamera;{Cameras/WebCamera/WebCamera.ixx}}
         //**********************************************************************
-        CWebCamera(std::wstring deviceName, int w = -1, int h = -1, int frameRate = 30);
-        
-        ~CWebCamera() {}
+        CWebCamera(std::wstring videoDeviceName, int w, int h, int frameRate,
+            std::wstring audioDeviceName, int samplingRate, int bitsPerSample, int numChannels);
+
+        ~CWebCamera();
 
         //**********************************************************************
         // IRefCount
@@ -74,7 +84,8 @@ export namespace Caustic
         //**********************************************************************
         // ICameraDevice
         //**********************************************************************
-        virtual bool NextFrame(IImage** ppColorImage) override;
+        virtual bool NextVideoFrame(IImage** ppColorImage) override;
+        virtual bool NextAudioFrame(IAudioFrame** ppAudioFrame) override;
         virtual uint32 GetColorWidth() override { return 0; }
         virtual uint32 GetColorHeight() override { return 0; }
 

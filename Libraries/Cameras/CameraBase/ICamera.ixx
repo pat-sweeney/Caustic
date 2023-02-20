@@ -13,11 +13,22 @@ import Base.Math.Matrix;
 export namespace Caustic
 {
     //**********************************************************************
+    // Interface: IAudioFrame
+    // Defines the interface to an audio buffer
+    //
+    // Module:
+    // {Link:import Cameras.CameraBase.ICamera;{Cameras/CameraBase/ICamera.ixx}}
+    //**********************************************************************
+    struct IAudioFrame : public IRefCount
+    {
+    };
+
+    //**********************************************************************
     // Struct: CameraIntrinsics
     // Defines intrinsics for a camera
     //
     // Header:
-    // {Link:#include "Cameras/CameraBase/ICamera.h"{Cameras/CameraBase/ICamera.h}}
+    // {Link:import Cameras.CameraBase.ICamera;{Cameras/CameraBase/ICamera.ixx}}
     //**********************************************************************
     struct CameraIntrinsics
     {
@@ -44,18 +55,26 @@ export namespace Caustic
     // Base interface shared across all camera types
     //
     // Header:
-    // {Link:#include "Cameras/CameraBase/ICamera.h"{Cameras/CameraBase/ICamera.h}}
+    // {Link:import Cameras.CameraBase.ICamera;{Cameras/CameraBase/ICamera.ixx}}
     //**********************************************************************
     struct ICameraDevice : public IRefCount
     {
         //**********************************************************************
-        // Method: NextFrame
+        // Method: NextVideoFrame
         // Retrieves the next color/depth/ir image from the camera
         // Parameters:
         // ppColorImage - returns the next color image retrieved from the camera. Maybe nullptr.
         //**********************************************************************
-        virtual bool NextFrame(IImage** ppColorImage) = 0;
+        virtual bool NextVideoFrame(IImage** ppColorImage) = 0;
         
+        //**********************************************************************
+        // Method: NextAudioFrame
+        // Retrieves the next audio frame from the audio device
+        // Parameters:
+        // ppAudioFrame - returns the next audio frame retrieved from the audio device. Maybe nullptr.
+        //**********************************************************************
+        virtual bool NextAudioFrame(IAudioFrame** ppAudioFrame) = 0;
+
         //**********************************************************************
         // Method: GetColorWidth
         // Returns the width in pixels of the color image returned by the camera
@@ -78,13 +97,16 @@ export namespace Caustic
     //**********************************************************************
     // Interface: IDepthCameraDevice
     // Interface for depth cameras
+    //
+    // Header:
+    // {Link:import Cameras.CameraBase.ICamera;{Cameras/CameraBase/ICamera.ixx}}
     //**********************************************************************
     struct IDepthCameraDevice : public ICameraDevice
     {
-        using ICameraDevice::NextFrame;
+        using ICameraDevice::NextVideoFrame;
 
         //**********************************************************************
-        // Method: NextFrame
+        // Method: NextVideoFrame
         // Retrieves the next color/depth/ir image from the camera
         //
         // Parameters:
@@ -92,7 +114,16 @@ export namespace Caustic
         // ppDepthImage - returns the next depth image retrieved from the camera. Maybe nullptr.
         // ppIRImage - returns the next infrared image retrieved from the camera. Maybe nullptr.
         //**********************************************************************
-        virtual bool NextFrame(IImage** ppColorImage, IImage** ppDepthImage, IImage** ppIRImage) = 0;
+        virtual bool NextVideoFrame(IImage** ppColorImage, IImage** ppDepthImage, IImage** ppIRImage) = 0;
+
+        //**********************************************************************
+        // Method: NextAudioFrame
+        // Retrieves the next audio frame from the audio device
+        //
+        // Parameters:
+        // ppAudioFrame - returns the next audio frame retrieved from the audio device. Maybe nullptr.
+        //**********************************************************************
+        virtual bool NextAudioFrame(IAudioFrame** ppAudioFrame) = 0;
 
         //**********************************************************************
         // Method: GetDepthWidth

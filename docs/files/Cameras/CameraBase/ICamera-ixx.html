@@ -13,25 +13,36 @@
  <div class="NDClassPrototype" id="NDClassPrototype274"><div class="CPEntry TClass Current"><div class="CPModifiers"><span class="SHKeyword">export namespace</span> </div><div class="CPName">Caustic</div></div></div>
 </div>
 
-<a name="CameraIntrinsics"></a><a name="Topic275"></a><div class="CTopic TStruct LC">
- <div class="CTitle">CameraIntrinsics</div>
- <div class="NDClassPrototype" id="NDClassPrototype275"><div class="CPEntry TStruct Current"><div class="CPModifiers"><span class="SHKeyword">struct</span></div><div class="CPName">CameraIntrinsics</div></div></div>
- <div class="CBody"><p>Defines intrinsics for a camera</p><div class="CHeading">Header</div><p><a href='../../../index.html#File:Cameras/CameraBase/ICamera.h' target='_top'>#include &quot;Cameras/CameraBase/ICamera.h&quot;</a></p></div>
+<a name="IAudioFrame"></a><a name="Topic292"></a><div class="CTopic TInterface LC">
+ <div class="CTitle">IAudioFrame</div>
+ <div class="CBody"><p>Defines the interface to an audio buffer</p><div class="CHeading">Module</div><p><a href='../../../index.html#File:Cameras/CameraBase/ICamera.ixx' target='_top'>import Cameras.CameraBase.ICamera;</a></p></div>
 </div>
 
-<a name="ICameraDevice"></a><a name="Topic276"></a><div class="CTopic TInterface LC">
+<a name="CameraIntrinsics"></a><a name="Topic304"></a><div class="CTopic TStruct LC">
+ <div class="CTitle">CameraIntrinsics</div>
+ <div class="NDClassPrototype" id="NDClassPrototype304"><div class="CPEntry TStruct Current"><div class="CPModifiers"><span class="SHKeyword">struct</span></div><div class="CPName">CameraIntrinsics</div></div></div>
+ <div class="CBody"><p>Defines intrinsics for a camera</p><div class="CHeading">Header</div><p><a href='../../../index.html#File:Cameras/CameraBase/ICamera.ixx' target='_top'>import Cameras.CameraBase.ICamera;</a></p></div>
+</div>
+
+<a name="ICameraDevice"></a><a name="Topic305"></a><div class="CTopic TInterface LC">
  <div class="CTitle">ICameraDevice</div>
- <div class="CBody"><p>Base interface shared across all camera types</p><div class="CHeading">Header</div><p><a href='../../../index.html#File:Cameras/CameraBase/ICamera.h' target='_top'>#include &quot;Cameras/CameraBase/ICamera.h&quot;</a></p></div>
+ <div class="CBody"><p>Base interface shared across all camera types</p><div class="CHeading">Header</div><p><a href='../../../index.html#File:Cameras/CameraBase/ICamera.ixx' target='_top'>import Cameras.CameraBase.ICamera;</a></p></div>
 </div>
 
 <a name="ICameraDevice.Functions"></a><a name="Topic277"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="ICameraDevice.NextFrame"></a><a name="Topic278"></a><div class="CTopic TFunction LC">
- <div class="CTitle">NextFrame</div>
- <div id="NDPrototype278" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">bool</span> NextFrame(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Imaging/Image/IImage.ixx:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,708);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>**&nbsp;</td><td class="PName last">ppColorImage</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+<a name="ICameraDevice.NextVideoFrame"></a><a name="Topic1767"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">NextVideoFrame</div>
+ <div id="NDPrototype1767" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">bool</span> NextVideoFrame(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Imaging/Image/IImage.ixx:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,708);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>**&nbsp;</td><td class="PName last">ppColorImage</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
  <div class="CBody"><p>Retrieves the next color/depth/ir image from the camera Parameters: ppColorImage - returns the next color image retrieved from the camera. Maybe nullptr.</p></div>
+</div>
+
+<a name="ICameraDevice.NextAudioFrame"></a><a name="Topic1768"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">NextAudioFrame</div>
+ <div id="NDPrototype1768" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">bool</span> NextAudioFrame(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Cameras/CameraBase/ICamera.ixx:IAudioFrame" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,292);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IAudioFrame</a>**&nbsp;</td><td class="PName last">ppAudioFrame</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div class="CBody"><p>Retrieves the next audio frame from the audio device Parameters: ppAudioFrame - returns the next audio frame retrieved from the audio device. Maybe nullptr.</p></div>
 </div>
 
 <a name="ICameraDevice.GetColorWidth"></a><a name="Topic279"></a><div class="CTopic TFunction LC">
@@ -46,19 +57,25 @@
  <div class="CBody"><p>Returns the height in pixels of the color image returned by the camera</p><div class="CHeading">Returns</div><p>Height of the color image in pixels</p></div>
 </div>
 
-<a name="IDepthCameraDevice"></a><a name="Topic281"></a><div class="CTopic TInterface LC">
+<a name="IDepthCameraDevice"></a><a name="Topic1769"></a><div class="CTopic TInterface LC">
  <div class="CTitle">IDepthCameraDevice</div>
- <div class="CBody"><p>Interface for depth cameras</p></div>
+ <div class="CBody"><p>Interface for depth cameras</p><div class="CHeading">Header</div><p><a href='../../../index.html#File:Cameras/CameraBase/ICamera.ixx' target='_top'>import Cameras.CameraBase.ICamera;</a></p></div>
 </div>
 
 <a name="IDepthCameraDevice.Functions"></a><a name="Topic282"></a><div class="CTopic TGroup LC">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="IDepthCameraDevice.NextFrame"></a><a name="Topic283"></a><div class="CTopic TFunction LC">
- <div class="CTitle">NextFrame</div>
- <div id="NDPrototype283" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">bool</span> NextFrame(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Imaging/Image/IImage.ixx:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,708);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>**&nbsp;</td><td class="PName last">ppColorImage,</td></tr><tr><td class="PType first"><a href="../../../index.html#File:Imaging/Image/IImage.ixx:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,708);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>**&nbsp;</td><td class="PName last">ppDepthImage,</td></tr><tr><td class="PType first"><a href="../../../index.html#File:Imaging/Image/IImage.ixx:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,708);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>**&nbsp;</td><td class="PName last">ppIRImage</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+<a name="IDepthCameraDevice.NextVideoFrame"></a><a name="Topic1770"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">NextVideoFrame</div>
+ <div id="NDPrototype1770" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">bool</span> NextVideoFrame(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Imaging/Image/IImage.ixx:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,708);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>**&nbsp;</td><td class="PName last">ppColorImage,</td></tr><tr><td class="PType first"><a href="../../../index.html#File:Imaging/Image/IImage.ixx:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,708);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>**&nbsp;</td><td class="PName last">ppDepthImage,</td></tr><tr><td class="PType first"><a href="../../../index.html#File:Imaging/Image/IImage.ixx:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,708);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>**&nbsp;</td><td class="PName last">ppIRImage</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
  <div class="CBody"><p>Retrieves the next color/depth/ir image from the camera</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">ppColorImage<div class="CDLParameterType"><a href="../../../index.html#File:Imaging/Image/IImage.ixx:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,708);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>**</div></td><td class="CDLDefinition"><p>returns the next color image retrieved from the camera. Maybe nullptr.</p></td></tr><tr><td class="CDLEntry">ppDepthImage<div class="CDLParameterType"><a href="../../../index.html#File:Imaging/Image/IImage.ixx:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,708);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>**</div></td><td class="CDLDefinition"><p>returns the next depth image retrieved from the camera. Maybe nullptr.</p></td></tr><tr><td class="CDLEntry">ppIRImage<div class="CDLParameterType"><a href="../../../index.html#File:Imaging/Image/IImage.ixx:IImage" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,708);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IImage</a>**</div></td><td class="CDLDefinition"><p>returns the next infrared image retrieved from the camera. Maybe nullptr.</p></td></tr></table></div>
+</div>
+
+<a name="IDepthCameraDevice.NextAudioFrame"></a><a name="Topic1771"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">NextAudioFrame</div>
+ <div id="NDPrototype1771" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">bool</span> NextAudioFrame(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Cameras/CameraBase/ICamera.ixx:IAudioFrame" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,292);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IAudioFrame</a>**&nbsp;</td><td class="PName last">ppAudioFrame</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div class="CBody"><p>Retrieves the next audio frame from the audio device</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">ppAudioFrame<div class="CDLParameterType"><a href="../../../index.html#File:Cameras/CameraBase/ICamera.ixx:IAudioFrame" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,292);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IAudioFrame</a>**</div></td><td class="CDLDefinition"><p>returns the next audio frame retrieved from the audio device. Maybe nullptr.</p></td></tr></table></div>
 </div>
 
 <a name="IDepthCameraDevice.GetDepthWidth"></a><a name="Topic284"></a><div class="CTopic TFunction LC">

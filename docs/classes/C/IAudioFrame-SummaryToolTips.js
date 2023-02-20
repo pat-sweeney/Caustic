@@ -1,0 +1,1 @@
+﻿NDSummary.OnToolTipsLoaded("CClass:IAudioFrame",{292:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines the interface to an audio buffer</div></div>"});

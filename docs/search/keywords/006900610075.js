@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("iau",["Interface"],[["IAudioFrame",,[[,,,,0,"File:Cameras/CameraBase/ICamera.ixx:IAudioFrame","CClass:IAudioFrame"]]]]);

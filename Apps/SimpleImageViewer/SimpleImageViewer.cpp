@@ -104,6 +104,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         {
             if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
             {
+                if (msg.message == WM_QUIT)
+                    break;
                 TranslateMessage(&msg);
                 DispatchMessage(&msg);
             }
@@ -111,17 +113,21 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         if (spWebCamera != nullptr)
         {
             CRefObj<IImage> spColorImage;
-            if (spWebCamera->NextFrame(&spColorImage.p) && spColorImage != nullptr)
+            if (spWebCamera->NextVideoFrame(&spColorImage.p) && spColorImage != nullptr)
             {
                 SetDisplayImage(spColorImage);
                 DrawImage(GetDC(hWnd), imgbitmap, imgwidth, imgheight);
+            }
+            CRefObj<IAudioFrame> spAudioFrame;
+            if (spWebCamera->NextAudioFrame(&spAudioFrame))
+            {
             }
         }
         else if (spAzure != nullptr)
         {
             CRefObj<IImage> spColorImage;
             CRefObj<IImage> spDepthImage;
-            spAzure->NextFrame(&spColorImage.p, &spDepthImage.p, nullptr);
+            spAzure->NextVideoFrame(&spColorImage.p, &spDepthImage.p, nullptr);
             if ((spDepthImage != nullptr && g_ShowDepth) || (spColorImage != nullptr && !g_ShowDepth))
             {
                 if (g_ShowDepth)
@@ -300,12 +306,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 break;
             case ID_FILE_LIVEWEBCAMERA:
                 {
-                    auto x = IWebCamera::GetAvailableVideoDevices();
+                    auto videoDevices = IWebCamera::GetAvailableVideoDevices();
                     int i = 0;
-                    for (; i < (int)x.size(); i++)
-                        if (x[i].name.contains(L"LifeCam"))
+                    for (; i < (int)videoDevices.size(); i++)
+                        if (videoDevices[i].name.contains(L"LifeCam"))
                             break;
-                    spWebCamera = CreateWebCamera(x[i].symlink.c_str());
+                    auto audioDevices = IWebCamera::GetAvailableAudioDevices();
+                    int j = 0;
+                    for (; j < (int)audioDevices.size(); j++)
+                        if (audioDevices[j].name.contains(L"LifeCam"))
+                            break;
+                    spWebCamera = CreateWebCamera(
+                        videoDevices[i].symlink.c_str(), -1, -1, 30,
+                        audioDevices[j].endpointID.c_str(), 
+                        audioDevices[j].samplingRates[0], audioDevices[j].bitsPerSample[0], 
+                        audioDevices[j].channels[0]);
                 }
                 break;
             case ID_FILE_LIVECAMERA:
@@ -358,6 +373,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
         break;
     case WM_DESTROY:
+        spAzure = nullptr;
+        spWebCamera = nullptr;
+        spSourceImage = nullptr;
+        spFilteredSourceImage = nullptr;
+        spFilter = nullptr;
         PostQuitMessage(0);
         break;
     default:

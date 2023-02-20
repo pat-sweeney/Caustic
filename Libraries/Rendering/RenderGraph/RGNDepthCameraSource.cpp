@@ -35,7 +35,7 @@ namespace Caustic
         CRefObj<IImage> spColorImage;
         CRefObj<IImage> spDepthImage;
         CRefObj<IImage> spIRImage;
-        if (m_spDepthCamera->NextFrame(&spColorImage, &spDepthImage, &spIRImage))
+        if (m_spDepthCamera->NextVideoFrame(&spColorImage, &spDepthImage, &spIRImage))
         {
             m_spColorImage = spColorImage;
             m_spDepthImage = spDepthImage;

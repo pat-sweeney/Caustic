@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("CClass:IAudioFrame","IAudioFrame");NDSummary.OnSummaryLoaded("CClass:IAudioFrame",[["C/C++","C"]],[["Interfaces","Interface"]],[[292,0,0,"IAudioFrame"]]);

@@ -63,7 +63,7 @@ export namespace Caustic
     struct AudioInfo
     {
         std::wstring name;
-        std::wstring symlink;
+        std::wstring endpointID;
         std::vector<int> samplingRates;
         std::vector<int> bitsPerSample;
         std::vector<int> channels;
@@ -102,10 +102,16 @@ export namespace Caustic
     // Creates a new instance of WebCamera.
     //
     // Parameters:
-    // deviceName - name of device to create
-    // w - required resolution in X
-    // h - required resolution in Y
+    // videoDeviceName - symbolic link name for the camera as returned by
+    // <IWebCamera::GetAvailableVideoDevices>
+    // w - width in pixels of camera resolution
+    // h - height in pixels of camera resolution
     // frameRate - requested frame rate
+    // audioDeviceName - endpoint name for the audio device as returned by
+    // <IWebCamera::GetAvailableVideoDevices>
+    // samplingRate - sampling rate for audio
+    // bitsPerSample - bits per sample for audio
+    // numChannels - number of audio channels
     // 
     // Returns:
     // Returns the newly created camera
@@ -113,5 +119,6 @@ export namespace Caustic
     // Module:
     // {Link:import Cameras.WebCamera.IWebCamera;{Cameras/WebCamera/IWebCamera.ixx}}
     //**********************************************************************
-    CRefObj<IWebCamera> CreateWebCamera(std::wstring deviceName, int w = -1, int h = -1, int frameRate = 30);
+    CRefObj<IWebCamera> CreateWebCamera(std::wstring deviceName, int w, int h, int frameRate,
+        std::wstring audiDeviceName, int samplingRate, int bitsPerSample, int numChannels);
 }

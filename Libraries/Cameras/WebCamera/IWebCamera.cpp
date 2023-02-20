@@ -154,12 +154,12 @@ namespace Caustic
                 UINT32 length;
                 CT(ppDevices[i]->GetString(MF_DEVSOURCE_ATTRIBUTE_FRIENDLY_NAME, buffer, 1024, &length));
                 audioInfo.name = std::wstring(buffer);
-                CT(ppDevices[i]->GetString(MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_AUDCAP_SYMBOLIC_LINK, buffer, 1024, &length));
-                audioInfo.symlink = std::wstring(buffer);
+                CT(ppDevices[i]->GetString(MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_AUDCAP_ENDPOINT_ID, buffer, 1024, &length));
+                audioInfo.endpointID = std::wstring(buffer);
 
                 // Enumerate the available formats
                 CComPtr<IMFMediaSource> spSource;
-                hr = ppDevices[i]->ActivateObject(IID_PPV_ARGS(&spSource));
+                HRESULT hr = ppDevices[i]->ActivateObject(IID_PPV_ARGS(&spSource));
                 if (SUCCEEDED(hr))
                 {
                     CComPtr<IMFPresentationDescriptor> spPD;
@@ -216,15 +216,21 @@ namespace Caustic
     // CreateWebCamera instantiates an instance of an Web camera
     // 
     // Parameters:
-    // deviceName - symbolic link name for the camera as returned by
+    // videoDeviceName - symbolic link name for the camera as returned by
     // <IWebCamera::GetAvailableVideoDevices>
     // w - width in pixels of camera resolution
     // h - height in pixels of camera resolution
     // frameRate - requested frame rate
+    // audioDeviceName - endpoint name for the audio device as returned by
+    // <IWebCamera::GetAvailableVideoDevices>
+    // samplingRate - sampling rate for audio
+    // bitsPerSample - bits per sample for audio
+    // numChannels - number of audio channels
     //**********************************************************************
-    CRefObj<IWebCamera> CreateWebCamera(std::wstring deviceName, int w /* = -1*/, int h /* = -1*/, int frameRate /* = 30 */)
+    CRefObj<IWebCamera> CreateWebCamera(std::wstring videoDeviceName, int w, int h, int frameRate,
+        std::wstring audiDeviceName, int samplingRate, int bitsPerSample, int numChannels)
     {
-        std::unique_ptr<CWebCamera> pCamera(new CWebCamera(deviceName, w, h, frameRate));
+        std::unique_ptr<CWebCamera> pCamera(new CWebCamera(videoDeviceName, w, h, frameRate, audiDeviceName, samplingRate, bitsPerSample, numChannels));
         return CRefObj<IWebCamera>(pCamera.release());
     }
 }

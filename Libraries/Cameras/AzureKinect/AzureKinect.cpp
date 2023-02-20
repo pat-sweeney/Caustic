@@ -225,12 +225,12 @@ namespace Caustic
     }
     
     //**********************************************************************
-    // Method: Nextframe
+    // Method: NextVideoframe
     // See <IDepthCameraDevice::NextFrame>
     //**********************************************************************
-    bool CAzureKinectDevice::NextFrame(IImage** ppColorImage)
+    bool CAzureKinectDevice::NextVideoFrame(IImage** ppColorImage)
     {
-        return NextFrame(ppColorImage, nullptr, nullptr);
+        return NextVideoFrame(ppColorImage, nullptr, nullptr);
     }
     
     //**********************************************************************
@@ -444,7 +444,7 @@ namespace Caustic
         return true;
     }
 
-    bool CAzureKinectDevice::NextFrame(IImage** ppColorImage, IImage** ppDepthImage, IImage** ppIRImage)
+    bool CAzureKinectDevice::NextVideoFrame(IImage** ppColorImage, IImage** ppDepthImage, IImage** ppIRImage)
     {
         if (ppColorImage)
             *ppColorImage = nullptr;
@@ -613,10 +613,10 @@ namespace Caustic
         return spImage;
     }
     
-    bool CAzureKinectDevice::NextFrame(IImage** ppColorImage, std::vector<Vector3>& pts, std::vector<Vector3>& normals, BBox3 &bbox)
+    bool CAzureKinectDevice::NextVideoFrame(IImage** ppColorImage, std::vector<Vector3>& pts, std::vector<Vector3>& normals, BBox3& bbox)
     {
         CRefObj<IImage> spDepthImage;
-        if (NextFrame(ppColorImage, &spDepthImage, nullptr))
+        if (NextVideoFrame(ppColorImage, &spDepthImage, nullptr))
         {
             pts.resize(spDepthImage->GetWidth() * spDepthImage->GetHeight());
             normals.resize(spDepthImage->GetWidth() * spDepthImage->GetHeight());
@@ -693,5 +693,10 @@ namespace Caustic
             return true;
         }
         return false;
+    }
+    
+    bool CAzureKinectDevice::NextAudioFrame(IAudioFrame** ppAudioFrame)
+    {
+        return NextAudioFrame(ppAudioFrame);
     }
 }

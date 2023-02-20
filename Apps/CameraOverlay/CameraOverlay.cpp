@@ -96,7 +96,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         if (spWebCamera != nullptr)
         {
             CRefObj<IImage> spColorImage;
-            if (spWebCamera->NextFrame(&spColorImage.p) && spColorImage != nullptr)
+            if (spWebCamera->NextVideoFrame(&spColorImage.p) && spColorImage != nullptr)
             {
                 SetDisplayImage(spColorImage);
                 DrawImage(GetDC(hWnd), imgbitmap, imgwidth, imgheight);
@@ -165,15 +165,24 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
    
-   auto x = IWebCamera::GetAvailableVideoDevices();
+   auto videoDevices = IWebCamera::GetAvailableVideoDevices();
    int i = 0;
-   for (; i < (int)x.size(); i++)
+   for (; i < (int)videoDevices.size(); i++)
    {
-       std::wstring name = x[i].name;
+       std::wstring name = videoDevices[i].name;
        if (name.contains(L"LifeCam"))
            break;
    }
-   spWebCamera = CreateWebCamera(x[i].symlink.c_str(), 1920, 1080, 30);
+   auto audioDevices = IWebCamera::GetAvailableAudioDevices();
+   int j = 0;
+   for (; j < (int)audioDevices.size(); j++)
+   {
+       std::wstring name = audioDevices[j].name;
+       if (name.contains(L"LifeCam"))
+           break;
+   }
+   spWebCamera = CreateWebCamera(videoDevices[i].symlink.c_str(), 1920, 1080, 30,
+       audioDevices[j].endpointID.c_str(), 48000, 32, 1);
 
    return TRUE;
 }

@@ -485,7 +485,7 @@ void CApp::InitializeCaustic(HWND hwnd)
              CRefObj<IImage> spDepthImage;
              if (app.spCamera)
              {
-                 if (app.spCamera->NextFrame(&spColorImage, &spDepthImage, nullptr))
+                 if (app.spCamera->NextVideoFrame(&spColorImage, &spDepthImage, nullptr))
                  {
                      if (spColorImage)
                          app.spLastColorImage = spColorImage;

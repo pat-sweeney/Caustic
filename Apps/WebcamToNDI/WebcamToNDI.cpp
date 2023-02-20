@@ -197,11 +197,13 @@ void BuildPanels(ITexture *pFinalRT, ImFont *pFont)
     ImGui::InputText("##NDIStream", app.NDIStreamName, sizeof(app.NDIStreamName));
     if (ImGui::Button("Broadcast") && !app.startBroadcast)
     {
+        std::wstring emptyString;
         app.m_spCamera = Caustic::CreateWebCamera(
-            app.cameras[app.currentCamera].symlink.c_str(),
+            app.cameras[app.currentCamera].symlink,
             app.cameraResPoints[app.currentCamera][app.currentResolution].x,
             app.cameraResPoints[app.currentCamera][app.currentResolution].y,
-            app.cameraFrameRates[app.currentCamera][app.currentResolution]);
+            app.cameraFrameRates[app.currentCamera][app.currentResolution],
+            emptyString, 0, 0, 0);
 
 #ifdef USE_NDI
         app.NDI_video_frame;
@@ -338,6 +340,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         {
             if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
             {
+                if (msg.message == WM_QUIT)
+                    break;
                 TranslateMessage(&msg);
                 DispatchMessage(&msg);
             }
@@ -371,7 +375,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         {
             if (app.m_spColorImage)
                 app.m_spColorImage->Release();
-            if (app.m_spCamera->NextFrame(&app.m_spColorImage.p) && app.m_spColorImage)
+            if (app.m_spCamera->NextVideoFrame(&app.m_spColorImage.p) && app.m_spColorImage)
             {
                 app.m_spTexture = app.m_spCausticFactory->CreateTexture(app.m_spRenderer, app.m_spColorImage,
                     D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
@@ -400,7 +404,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         {
             if (app.m_spColorImage)
                 app.m_spColorImage->Release();
-            if (app.m_spCamera->NextFrame(&app.m_spColorImage.p) && app.m_spColorImage)
+            if (app.m_spCamera->NextVideoFrame(&app.m_spColorImage.p) && app.m_spColorImage)
             {
                 app.m_spTexture = app.m_spCausticFactory->CreateTexture(app.m_spRenderer, app.m_spColorImage,
                     D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);

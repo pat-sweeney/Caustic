@@ -74,14 +74,15 @@ export namespace Caustic
         //**********************************************************************
         // ICameraDevice
         //**********************************************************************
-        virtual bool NextFrame(IImage** ppColorImage) override;
+        virtual bool NextVideoFrame(IImage** ppColorImage) override;
+        virtual bool NextAudioFrame(IAudioFrame** ppAudioFrame) override;
         virtual uint32 GetColorWidth() override;
         virtual uint32 GetColorHeight() override;
 
         //**********************************************************************
         // IDepthCameraDevice
         //**********************************************************************
-        virtual bool NextFrame(IImage** ppColorImage, IImage** ppDepthImage, IImage** ppIRImage) override;
+        virtual bool NextVideoFrame(IImage** ppColorImage, IImage** ppDepthImage, IImage** ppIRImage) override;
         virtual Matrix4x4 ColorExtrinsics() override;
         virtual Matrix3x3 ColorIntrinsics() override;
         virtual Matrix4x4 DepthExtrinsics() override;
@@ -92,7 +93,7 @@ export namespace Caustic
         //**********************************************************************
         // IAzureKinect
         //**********************************************************************
-        virtual bool NextFrame(IImage** ppColorImage, std::vector<Vector3>& pts, std::vector<Vector3>& normals, BBox3 &bbox) override;
+        virtual bool NextVideoFrame(IImage** ppColorImage, std::vector<Vector3>& pts, std::vector<Vector3>& normals, BBox3 &bbox) override;
         virtual CRefObj<IImage> BuildRayMap(uint32 w, uint32 h, bool forDepth = true) override;
         virtual CameraIntrinsics GetAzureColorIntrinsics() override;
         virtual CameraIntrinsics GetAzureDepthIntrinsics() override;
