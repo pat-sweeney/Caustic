@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("pla",["Function"],[["Play",,[["IAudioPlayback",,,,0,"File:Audio/AudioPlayback/IAudioPlayback.ixx:IAudioPlayback.Play","CClass:IAudioPlayback:Play"]]],["PlayTone",,[["IAudioPlayback",,,,0,"File:Audio/AudioPlayback/IAudioPlayback.ixx:IAudioPlayback.PlayTone","CClass:IAudioPlayback:PlayTone"]]]]);

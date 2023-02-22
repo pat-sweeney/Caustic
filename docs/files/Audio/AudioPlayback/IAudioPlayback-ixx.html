@@ -27,6 +27,24 @@
  <div class="CTitle">Functions</div>
 </div>
 
+<a name="IAudioPlayback.Play"></a><a name="Topic1776"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">Play</div>
+ <div id="NDPrototype1776" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> Play(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><a href="../../../index.html#File:Audio/AudioPlayback/IAudioPlayback.ixx:IAudioFrame" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,276);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IAudioFrame</a>*&nbsp;</td><td class="PName last">pFrame</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div class="CBody"><p>Plays an audio buffer.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pFrame<div class="CDLParameterType"><a href="../../../index.html#File:Audio/AudioPlayback/IAudioPlayback.ixx:IAudioFrame" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,276);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IAudioFrame</a>*</div></td><td class="CDLDefinition"><p>audio buffer to play</p></td></tr></table></div>
+</div>
+
+<a name="IAudioPlayback.PlayTone"></a><a name="Topic1777"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">PlayTone</div>
+ <div id="NDPrototype1777" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> PlayTone(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td class="PName last">frequency</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div class="CBody"><p>Plays a tone at the specified frequency for 1 second.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">frequency<div class="CDLParameterType"><span class="SHKeyword">int</span></div></td><td class="CDLDefinition"><p>frequency of tone to play</p></td></tr></table></div>
+</div>
+
+<a name="IAudioPlayback.SetVolume"></a><a name="Topic1778"></a><div class="CTopic TFunction LC">
+ <div class="CTitle">SetVolume</div>
+ <div id="NDPrototype1778" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">virtual</span> <span class="SHKeyword">void</span> SetVolume(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">float</span>&nbsp;</td><td class="PName last">volume</td></tr></table></td><td class="PAfterParameters">) = <span class="SHNumber">0</span></td></tr></table></div></div>
+ <div class="CBody"><p>Sets the volume level</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">volume<div class="CDLParameterType"><span class="SHKeyword">float</span></div></td><td class="CDLDefinition"><p>volume level to play sound at</p></td></tr></table></div>
+</div>
+
 <a name="IAudioPlayback.CreateAudioPlayback"></a><a name="Topic283"></a><div class="CTopic TFunction LC last">
  <div class="CTitle">CreateAudioPlayback</div>
  <div id="NDPrototype283" class="NDPrototype WideForm"><div class="PSection PParameterSection CStyle"><table><tr><td class="PBeforeParameters"><a href="../../../index.html#File:Base/Core/IRefCount.ixx:CRefObj" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,13);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >CRefObj</a>&lt;<a href="../../../index.html#File:Audio/AudioPlayback/IAudioPlayback.ixx:IAudioPlayback" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,278);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IAudioPlayback</a>&gt; CreateAudioPlayback(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td class="PName last">samplingRate,</td></tr><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td class="PName last">bitsPerSample,</td></tr><tr><td class="PType first"><span class="SHKeyword">int</span>&nbsp;</td><td class="PName last">numChannels</td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div></div>

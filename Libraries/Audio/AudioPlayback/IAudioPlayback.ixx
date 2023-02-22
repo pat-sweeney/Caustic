@@ -42,8 +42,31 @@ export namespace Caustic
     //**********************************************************************
     struct IAudioPlayback : public IRefCount
     {
+        //**********************************************************************
+        // Method: Play
+        // Plays an audio buffer.
+        //
+        // Parameters:
+        // pFrame - audio buffer to play
+        //**********************************************************************
         virtual void Play(IAudioFrame* pFrame) = 0;
+
+        //**********************************************************************
+        // Method: PlayTone
+        // Plays a tone at the specified frequency for 1 second.
+        //
+        // Parameters:
+        // frequency - frequency of tone to play
+        //**********************************************************************
         virtual void PlayTone(int frequency) = 0;
+
+        //**********************************************************************
+        // Method: SetVolume
+        // Sets the volume level
+        //
+        // Parameters:
+        // volume - volume level to play sound at
+        //**********************************************************************
         virtual void SetVolume(float volume) = 0;
     };
 
