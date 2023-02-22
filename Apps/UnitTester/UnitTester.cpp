@@ -7,6 +7,7 @@ import Base.Core.Core;
 #include "Geometry\Mesh\UnitTest.h"
 #include "Cameras\AzureKinect\UnitTest.h"
 #include "Imaging\Image\UnitTest.h"
+#include "Audio\AudioPlayback\UnitTest.h"
 #include "Base\Math\UnitTest.h"
 #include "Rendering\RenderWindow\UnitTest.h"
 #include "Parsers\Lex\UnitTest.h"
@@ -49,6 +50,8 @@ int main(int argc, char** argv)
 #endif // SUPPORT_SCHEME
                 else if (_stricmp(argv[i], "-sceneimport") == 0)
                     whichTests |= 0x80;
+                else if (_stricmp(argv[i], "-audio") == 0)
+                    whichTests |= 0x100;
             }
         }
     }
@@ -70,5 +73,7 @@ int main(int argc, char** argv)
 #endif // SUPPORT_SCHEME
     if (whichTests & 0x80)
         (new CausticTestSuite::SceneImportTests())->RunUnitTests();
+    if (whichTests & 0x100)
+        (new CausticTestSuite::AudioPlaybackTests())->RunUnitTests();
     return 0;
 }

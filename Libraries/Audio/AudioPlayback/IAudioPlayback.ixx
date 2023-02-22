@@ -1,0 +1,70 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2023
+// Licensed under the MIT license.
+// See file LICENSE for details.
+//**********************************************************************
+module;
+#include <windows.h>
+#include <xaudio2.h>
+
+export module Audio.AudioPlayback.IAudioPlayback;
+import Base.Core.Core;
+import Base.Core.Error;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+
+//**********************************************************************
+// File: IAudioPlayback.ixx
+// This file defines the published interface for audio playback.
+//**********************************************************************
+
+export namespace Caustic
+{
+    //**********************************************************************
+    // Interface: IAudioFrame
+    // Defines interface used to playback of audio
+    //
+    // Module:
+    // {Link:import Audio.AudioPlay.IAudioPlayback;{Audio/AudioPlayback/IAudioPlayback.ixx}}
+    //**********************************************************************
+    struct IAudioFrame : public IRefCount
+    {
+        virtual uint8* GetData() = 0;
+        virtual uint32 GetLength() = 0;
+    };
+
+    //**********************************************************************
+    // Interface: IAudioPlayback
+    // Defines interface used to playback of audio
+    //
+    // Module:
+    // {Link:import Audio.AudioPlayback.IAudioPlayback;{Audio/AudioPlayback/IAudioPlayback.ixx}}
+    //**********************************************************************
+    struct IAudioPlayback : public IRefCount
+    {
+        virtual void Play(IAudioFrame* pFrame) = 0;
+        virtual void PlayTone(int frequency) = 0;
+        virtual void SetVolume(float volume) = 0;
+    };
+
+    //**********************************************************************
+    // Function: CreateAudioPlayback
+    // Creates a XAudio device for playing back audio
+    //
+    // Parameters:
+    // samplingRate - sampling rate for audio
+    // bitsPerSample - bits per audio sample
+    // numChannels - number of audio channels
+    //
+    // Returns:
+    // Returns the created XAudio playback device
+    //
+    // Module:
+    // {Link:import Audio.AudioPlayback.IAudioPlayback;{Audio/AudioPlayback/IAudioPlayback.ixx}}
+    //**********************************************************************
+    CRefObj<IAudioPlayback> CreateAudioPlayback(int samplingRate, int bitsPerSample, int numChannels)
+    {
+        extern CRefObj<IAudioPlayback> CreateAudioPlaybackInternal(int samplingRate, int bitsPerSample, int numChannels);
+        return CreateAudioPlaybackInternal(samplingRate, bitsPerSample, numChannels);
+    }
+}
