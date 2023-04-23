@@ -13,6 +13,7 @@ module;
 module Rendering.Caustic.BuildRenderMesh;
 import Base.Core.Core;
 import Base.Core.Error;
+import Base.Math.Vector;
 import Geometry.Mesh.RenderTypes;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.CausticFactory;
@@ -20,6 +21,7 @@ import Rendering.Caustic.IRenderMesh;
 import Rendering.Caustic.IShaderInfo;
 import Rendering.Caustic.ICausticFactory;
 import Rendering.Caustic.IShader;
+//import Geometry.Mesh.IMaterialAttrib;
 
 namespace Caustic
 {

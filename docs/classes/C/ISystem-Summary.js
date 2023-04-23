@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("CClass:ISystem","ISystem");NDSummary.OnSummaryLoaded("CClass:ISystem",[["C/C++","C"]],[["Classes","Class"]],[[1785,0,0,"ISystem"]]);

@@ -8,6 +8,7 @@ module;
 #include <memory>
 #include <any>
 #include <map>
+#include <string>
 
 export module Imaging.Image.ImageFilter.Convert;
 import Base.Core.Core;

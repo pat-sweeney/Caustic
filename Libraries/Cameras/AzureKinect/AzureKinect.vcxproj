@@ -90,9 +90,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="UnitTest.h" />
-  </ItemGroup>
-  <ItemGroup>
+    <ClCompile Include="UnitTest.ixx" />
     <ClCompile Include="AzureKinect.cpp" />
     <ClCompile Include="AzureKinect.ixx" />
     <ClCompile Include="IAzureKinect.cpp" />

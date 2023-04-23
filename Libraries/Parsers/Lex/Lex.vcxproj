@@ -92,14 +92,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="UnitTest.h" />
+    <ClInclude Include="UnitTest.ixx" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ILex.cpp" />
     <ClCompile Include="ILex.ixx" />
     <ClCompile Include="Lex.cpp" />
     <ClCompile Include="Lex.ixx" />
-    <ClCompile Include="UnitTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Base\Core\Core.vcxproj">

@@ -1,18 +1,21 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2021
+// Copyright Patrick Sweeney 2021-2023
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+module;
 #define _USE_MATH_DEFINES
 #include <atlbase.h>
 #include <Windows.h>
 #include <d3d11.h>
-#include "UnitTest.h"
 #include <string>
+
+module Rendering.RenderWindow.UnitTests;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
+import Base.Core.UnitTests;
 import Base.Math.Vector;
 import Base.Math.BBox;
 import Rendering.Caustic.IRenderer;

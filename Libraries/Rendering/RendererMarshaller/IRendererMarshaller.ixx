@@ -6,6 +6,7 @@
 module;
 #include <Windows.h>
 #include <functional>
+#include <string>
 
 export module Rendering.RendererMarshaller.IRendererMarshaller;
 import Base.Core.Core;

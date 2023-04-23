@@ -11,7 +11,6 @@ import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Base.Core.Error;
-import Base.Core.RefCount;
 import Parsers.Lex.ILex;
 
 export namespace Caustic

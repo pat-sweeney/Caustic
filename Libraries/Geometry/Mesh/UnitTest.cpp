@@ -1,10 +1,16 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2023
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+module;
 #define _USE_MATH_DEFINES
 #include <shlwapi.h>
+#include <cmath>
+#include <stdlib.h>
+#include <stdio.h>
+
+module Geometry.Mesh.UnitTests;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
@@ -15,10 +21,6 @@ import Geometry.Mesh.IMesh;
 import Geometry.Mesh.IMaterialAttrib;
 import Geometry.Mesh.MaterialAttrib;
 import Geometry.Mesh.Mesh;
-#include <cmath>
-#include "UnitTest.h"
-#include <stdlib.h>
-#include <stdio.h>
 
 using namespace Caustic;
 namespace CausticTestSuite

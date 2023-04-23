@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("CClass:HierarchySystem","HierarchySystem");NDSummary.OnSummaryLoaded("CClass:HierarchySystem",[["C/C++","C"]],[["Classes","Class"]],[[1781,0,0,"HierarchySystem"]]);

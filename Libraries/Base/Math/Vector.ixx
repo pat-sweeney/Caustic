@@ -363,10 +363,12 @@ export namespace Caustic
             w /= len;
         }
     };
+#ifndef USING_MODULES
 #pragma warning(push)
 #pragma warning(disable : 4505)
     static Vector4 operator*(const float s, const Vector4 &v) { return Vector4(v.x * s, v.y * s, v.z * s, v.w * s); }
 #pragma warning(pop)
+#endif // USING_MODULES
 
     //**********************************************************************
     // Structure: VectorExt4

@@ -7,7 +7,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="UnitTests.h">
+    <ClInclude Include="UnitTests.ixx">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

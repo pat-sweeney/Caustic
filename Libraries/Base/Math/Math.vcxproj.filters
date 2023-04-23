@@ -7,11 +7,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="UnitTest.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="OBBox2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -106,6 +101,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Matrix3x2.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitTest.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

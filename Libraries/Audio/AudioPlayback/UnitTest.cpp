@@ -3,13 +3,16 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+module;
 #define _USE_MATH_DEFINES
 #include <cmath>
+
+module Audio.AudioPlayback.UnitTests;
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Base.Core.Error;
+import Base.Core.UnitTests;
 import Audio.AudioPlayback.IAudioPlayback;
-#include "UnitTest.h"
 
 using namespace Caustic;
 namespace CausticTestSuite

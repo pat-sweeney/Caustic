@@ -95,6 +95,7 @@
     <ClCompile Include="IJSonParser.cpp" />
     <ClCompile Include="IJSonParser.ixx" />
     <ClCompile Include="JSONGui.cpp" />
+    <ClCompile Include="JSONGui.ixx" />
     <ClCompile Include="JSonParser.cpp" />
     <ClCompile Include="JSonParser.ixx" />
   </ItemGroup>

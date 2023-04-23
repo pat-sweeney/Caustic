@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("CClass:HiearchyComponent","HiearchyComponent");NDSummary.OnSummaryLoaded("CClass:HiearchyComponent",[["C/C++","C"]],[["Classes","Class"]],[[1780,0,0,"HiearchyComponent"]]);

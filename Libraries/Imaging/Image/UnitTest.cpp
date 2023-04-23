@@ -1,10 +1,18 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2021
+// Copyright Patrick Sweeney 2021-2023
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+module;
 #define _USE_MATH_DEFINES
 #include <cmath>
+#include <stdlib.h>
+#include <stdio.h>
+#include <map>
+#include <string>
+#include <any>
+
+module Imaging.Image.UnitTests;
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Base.Core.Error;
@@ -17,12 +25,6 @@ import Imaging.Image.ImageFilter.Scale;
 import Imaging.Image.ImageFilter.Transform;
 import Imaging.Image.ImageFilter.Rotate;
 import Imaging.Image.ImageFilter.Convert;
-#include "UnitTest.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <map>
-#include <string>
-#include <any>
 
 using namespace Caustic;
 namespace CausticTestSuite

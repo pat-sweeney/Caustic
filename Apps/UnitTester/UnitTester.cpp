@@ -1,20 +1,18 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2023
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
 import Base.Core.Core;
-#include "Geometry\Mesh\UnitTest.h"
-#include "Cameras\AzureKinect\UnitTest.h"
-#include "Imaging\Image\UnitTest.h"
-#include "Audio\AudioPlayback\UnitTest.h"
-#include "Base\Math\UnitTest.h"
-#include "Rendering\RenderWindow\UnitTest.h"
-#include "Parsers\Lex\UnitTest.h"
-#ifdef SUPPORT_SCHEME
-#include "Interpreter\Scheme\UnitTest.h"
-#endif // SUPPORT_SCHEME
-#include "Rendering\SceneImport\UnitTest.h"
+import Base.Core.UnitTests;
+import Geometry.Mesh.UnitTests;
+import Cameras.AzureKinect.UnitTests;
+import Imaging.Image.UnitTests;
+import Audio.AudioPlayback.UnitTests;
+import Base.Math.UnitTests;
+import Rendering.RenderWindow.UnitTests;
+import Parsers.Lex.UnitTests;
+import Rendering.SceneImport.UnitTests;
 #include <stdlib.h>
 #include <string.h>
 

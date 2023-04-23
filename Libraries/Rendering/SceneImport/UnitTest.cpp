@@ -3,8 +3,17 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+module;
 #define _USE_MATH_DEFINES
 #include <cmath>
+#include <stdlib.h>
+#include <stdio.h>
+#include <map>
+#include <string>
+#include <any>
+#include <memory>
+
+module Rendering.SceneImport.UnitTests;
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Base.Core.Error;
@@ -19,13 +28,6 @@ import Imaging.Image.ImageFilter.Rotate;
 import Imaging.Image.ImageFilter.Convert;
 import Rendering.SceneImport.Json;
 import Base.Core.ConvertStr;
-#include "UnitTest.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <map>
-#include <string>
-#include <any>
-#include <memory>
 
 using namespace Caustic;
 namespace CausticTestSuite

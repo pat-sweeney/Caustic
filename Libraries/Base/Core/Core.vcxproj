@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -11,9 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="UnitTests.h" />
-  </ItemGroup>
-  <ItemGroup>
+    <ClCompile Include="UnitTests.ixx" />
     <ClCompile Include="BlockAllocator.ixx" />
     <ClCompile Include="convertStr.ixx" />
     <ClCompile Include="Core.cppm" />

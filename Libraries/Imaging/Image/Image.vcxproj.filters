@@ -10,11 +10,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="UnitTest.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="SuperPixel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -116,6 +111,9 @@
     </ClCompile>
     <ClCompile Include="Transform.cpp">
       <Filter>Source Files\Filters</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitTest.ixx">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

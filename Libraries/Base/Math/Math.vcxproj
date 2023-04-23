@@ -50,7 +50,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USING_MODULES;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(CausticRoot)\Libraries</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -67,7 +67,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USING_MODULES;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(CausticRoot)\Libraries</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -80,9 +80,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="UnitTest.h" />
-  </ItemGroup>
-  <ItemGroup>
+    <ClCompile Include="UnitTest.ixx" />
     <ClCompile Include="Basis.ixx" />
     <ClCompile Include="BBox.ixx" />
     <ClCompile Include="BBox2.cpp" />

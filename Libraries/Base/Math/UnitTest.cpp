@@ -3,12 +3,15 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+module;
 #include <functional>
-#include "UnitTest.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <Windows.h>
+
+module Base.Math.UnitTests;
 import Base.Core.Core;
+import Base.Core.UnitTests;
 import Base.Math.Vector;
 import Base.Math.NewtonsMethod;
 import Base.Math.Quaternion;

@@ -1,12 +1,13 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2023
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#include "UnitTest.h"
+module;
 #include <stdlib.h>
 #include <stdio.h>
 
+module Cameras.AzureKinect.UnitTests;
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;

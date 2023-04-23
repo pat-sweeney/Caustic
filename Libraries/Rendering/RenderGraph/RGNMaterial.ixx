@@ -17,6 +17,7 @@ import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.IRenderCtx;
 import Rendering.Caustic.CausticFactory;
 import Rendering.Caustic.ICausticFactory;
+import Rendering.Caustic.IRenderMaterial;
 import Rendering.RenderGraph.IRenderGraphNode;
 import Rendering.RenderGraph.RenderGraphNode;
 import Rendering.RenderGraph.IRGNMaterial;

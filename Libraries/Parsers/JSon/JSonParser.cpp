@@ -1,15 +1,9 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2021
+// Copyright Patrick Sweeney 2021-2023
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-import Base.Core.Core;
-import Base.Core.RefCount;
-import Base.Core.IRefCount;
-import Base.Core.Error;
-import Parsers.Lex.ILex;
-import Parsers.JSon.JSonParser;
-import Parsers.JSon.IJSonParser;
+module;
 #include <map>
 #include <string>
 #include <memory>
@@ -18,9 +12,58 @@ import Parsers.JSon.IJSonParser;
 #include <windows.h>
 #include <varargs.h>
 
+module Parsers.JSon.JSonParser;
+import Base.Core.Core;
+import Base.Core.RefCount;
+import Base.Core.IRefCount;
+import Base.Core.Error;
+import Parsers.Lex.ILex;
+import Parsers.JSon.IJSonParser;
+
 // Namespace: Caustic
 namespace Caustic
 {
+    CJSonObj::~CJSonObj()
+    {
+        switch (m_type)
+        {
+        case CJSonType::Array:
+        {
+            std::vector<CRefObj<IJSonObj>>* vec = std::any_cast<std::vector<CRefObj<IJSonObj>>*>(GetValue());
+            delete vec;
+        }
+        break;
+        case CJSonType::Object:
+        {
+            std::map<std::string, CRefObj<IJSonObj>>* obj = std::any_cast<std::map<std::string, CRefObj<IJSonObj>>*>(GetValue());
+            delete obj;
+        }
+        break;
+        }
+    }
+
+    //**********************************************************************
+    // IJSonObj
+    //**********************************************************************
+    void CJSonObj::AddElement(IJSonObj* pValue)
+    {
+        switch (GetType())
+        {
+        case CJSonType::Array:
+        {
+            std::vector<CRefObj<IJSonObj>>* vec = std::any_cast<std::vector<CRefObj<IJSonObj>>*>(GetValue());
+            vec->push_back(CRefObj<IJSonObj>(pValue));
+        }
+        break;
+        case CJSonType::Object:
+        {
+            std::map<std::string, CRefObj<IJSonObj>>* obj = std::any_cast<std::map<std::string, CRefObj<IJSonObj>>*>(GetValue());
+            obj->insert(std::make_pair(CRefObj<IJSonObj>(pValue)->GetName(), CRefObj<IJSonObj>(pValue)));
+        }
+        break;
+        }
+    }
+
     CRefObj<IJSonObj> CJSonParser::LoadDOM(std::wstring& fn)
     {
         HANDLE f = CreateFile(fn.c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr);

@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2021
+// Copyright Patrick Sweeney 2021-2023
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -14,9 +14,9 @@ export module Parsers.JSon.JSonParser;
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
-import Parsers.JSon.IJSonParser;
 import Parsers.Lex.Lex;
 import Parsers.Lex.ILex;
+import Parsers.JSon.IJSonParser;
 
 // Namespace: Caustic
 export namespace Caustic
@@ -34,24 +34,7 @@ export namespace Caustic
         friend class CJSonParser;
     public:
         CJSonObj() = default;
-        ~CJSonObj()
-        {
-            switch (m_type)
-            {
-            case CJSonType::Array:
-                {
-                    std::vector<CRefObj<IJSonObj>>* vec = std::any_cast<std::vector<CRefObj<IJSonObj>>*>(GetValue());
-                    delete vec;
-                }
-                break;
-            case CJSonType::Object:
-                {
-                    std::map<std::string, CRefObj<IJSonObj>>* obj = std::any_cast<std::map<std::string, CRefObj<IJSonObj>>*>(GetValue());
-                    delete obj;
-                }
-                break;
-            }
-        }
+        ~CJSonObj();
 
         //**********************************************************************
         // IRefCount
@@ -62,24 +45,7 @@ export namespace Caustic
         //**********************************************************************
         // IJSonObj
         //**********************************************************************
-        virtual void AddElement(IJSonObj* pValue) override
-        {
-            switch (GetType())
-            {
-            case CJSonType::Array:
-                {
-                    std::vector<CRefObj<IJSonObj>> *vec = std::any_cast<std::vector<CRefObj<IJSonObj>>*>(GetValue());
-                    vec->push_back(CRefObj<IJSonObj>(pValue));
-                }
-                break;
-            case CJSonType::Object:
-                {
-                    std::map<std::string, CRefObj<IJSonObj>> *obj = std::any_cast<std::map<std::string, CRefObj<IJSonObj>>*>(GetValue());
-                    obj->insert(std::make_pair(CRefObj<IJSonObj>(pValue)->GetName(), CRefObj<IJSonObj>(pValue)));
-                }
-                break;
-            }
-        }
+        virtual void AddElement(IJSonObj* pValue) override;
         virtual std::string GetName() override { return m_propertyName; }
         virtual CJSonType GetType() override { return m_type; }
         virtual std::any GetValue() override { return m_value; }

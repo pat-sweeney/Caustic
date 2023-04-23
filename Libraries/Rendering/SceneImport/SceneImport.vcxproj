@@ -90,6 +90,7 @@
     <ClCompile Include="Json.cpp" />
     <ClCompile Include="Json.ixx" />
     <ClCompile Include="UnitTest.cpp" />
+    <ClCompile Include="UnitTest.ixx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Base\Core\Core.vcxproj">
@@ -119,9 +120,6 @@
     <ProjectReference Include="..\SceneGraph\SceneGraph.vcxproj">
       <Project>{49433c2e-bf12-4b0f-8dd2-204c3339d5c5}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="UnitTest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

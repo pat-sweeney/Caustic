@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("ihi",["Class"],[["IHierarchySystem",,[[,,,,0,"File:Rendering/ECS/IHierarchy.ixx:IHierarchySystem","CClass:IHierarchySystem"]]]]);

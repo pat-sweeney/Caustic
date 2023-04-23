@@ -26,5 +26,8 @@
     <ClCompile Include="IJSonParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="JSONGui.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

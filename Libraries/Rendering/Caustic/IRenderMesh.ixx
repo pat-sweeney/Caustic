@@ -12,6 +12,7 @@ export module Rendering.Caustic.IRenderMesh;
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
+import Base.Core.ISerialize;
 import Base.Math.BBox;
 import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.IShaderInfo;

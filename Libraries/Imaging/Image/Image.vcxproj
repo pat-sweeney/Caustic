@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -80,9 +80,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="UnitTest.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="AllFilters.ixx" />
     <ClCompile Include="BoxFilter.ixx" />
     <ClCompile Include="Colorize.ixx" />
@@ -116,6 +113,7 @@
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Transform.ixx" />
     <ClCompile Include="UnitTest.cpp" />
+    <ClCompile Include="UnitTest.ixx" />
     <ClCompile Include="UnsharpMask.ixx" />
   </ItemGroup>
   <ItemGroup>

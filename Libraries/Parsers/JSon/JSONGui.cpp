@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2021
+// Copyright Patrick Sweeney 2021-2023
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -11,7 +11,8 @@ module;
 #include <vector>
 #include "..\External\imgui\imgui.h"
 
-module Parsers.JSon.IJSonParser;
+module Parsers.JSon.JSonTree;
+import Parsers.JSon.IJSonParser;
 
 namespace Caustic
 {

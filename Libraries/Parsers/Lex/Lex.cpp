@@ -3,13 +3,15 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+module;
+#include <ctype.h>
+#include <string>
+
+module Parsers.Lex.Lex;
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
-import Parsers.Lex.Lex;
 import Parsers.Lex.ILex;
-#include <ctype.h>
-#include <string>
 
 // Namespace: Caustic
 namespace Caustic

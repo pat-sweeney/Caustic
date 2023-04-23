@@ -92,9 +92,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="UnitTest.h" />
-  </ItemGroup>
-  <ItemGroup>
+    <ClCompile Include="UnitTest.ixx" />
     <ClCompile Include="IRenderWindow.cpp" />
     <ClCompile Include="IRenderWindow.ixx" />
     <ClCompile Include="RenderWindow.cpp" />

@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/ECS/ECS.ixx","ECS.ixx");NDSummary.OnSummaryLoaded("File:Rendering/ECS/ECS.ixx",[["C/C++","C"]],[["Classes","Class"]],[[1792,0,0,"Component","Component"],[1793,0,0,"Entity","Entity"],[1794,0,0,"System","System"]]);
