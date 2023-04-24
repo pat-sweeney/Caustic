@@ -1,10 +1,11 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2022
+// Copyright Patrick Sweeney 2022-2023
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
 module;
 #include <functional>
+#include <string>
 
 export module Rendering.SceneGraph.SceneLevelOfDetailElem;
 import Base.Core.Core;

@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CSceneLevelOfDetailElem","CSceneLevelOfDetailElem");NDSummary.OnSummaryLoaded("CClass:CSceneLevelOfDetailElem",[["C/C++","C"]],[["Classes","Class"]],[[1616,0,0,"CSceneLevelOfDetailElem"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CSceneLevelOfDetailElem","CSceneLevelOfDetailElem");NDSummary.OnSummaryLoaded("CClass:CSceneLevelOfDetailElem",[["C/C++","C"]],[["Classes","Class"]],[[1651,0,0,"CSceneLevelOfDetailElem"]]);

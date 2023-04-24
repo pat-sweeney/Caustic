@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Imaging/Image/Image.ixx","Image.ixx");NDSummary.OnSummaryLoaded("File:Imaging/Image/Image.ixx",[["C/C++","C"]],[["Classes","Class"]],[[677,0,0,"CImage","CImage"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:Imaging/Image/Image.ixx","Image.ixx");NDSummary.OnSummaryLoaded("File:Imaging/Image/Image.ixx",[["C/C++","C"]],[["Classes","Class"]],[[696,0,0,"CImage","CImage"]]);

@@ -92,9 +92,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="UnitTest.ixx" />
-  </ItemGroup>
-  <ItemGroup>
+    <ClCompile Include="UnitTest.ixx" />
     <ClCompile Include="ILex.cpp" />
     <ClCompile Include="ILex.ixx" />
     <ClCompile Include="Lex.cpp" />

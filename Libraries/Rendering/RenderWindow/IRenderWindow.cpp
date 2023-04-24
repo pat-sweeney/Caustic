@@ -1,11 +1,12 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2018-2021
+// Copyright Patrick Sweeney 2018-2023
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
 module;
 #include <Windows.h>
 #include <functional>
+#include <string>
 
 module Rendering.RenderWindow.IRenderWindow;
 import Base.Core.Core;

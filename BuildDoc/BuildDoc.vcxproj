@@ -58,7 +58,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PreBuildEvent>
-      <Command>"G:\GitHub\Caustic\External\NaturalDocs\CLI\bin\Release\NaturalDocs.exe" $(CausticRoot)\docs</Command>
+      <Command>"$(CausticRoot)\External\NaturalDocs\CLI\bin\Release\NaturalDocs.exe" $(CausticRoot)\docs</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>call $(CausticRoot)\DocumentOverrides\FinalizeDocs.cmd $(Platform)\$(Configuration)</Command>
@@ -72,7 +72,7 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <PreBuildEvent>
-      <Command>"G:\GitHub\Caustic\External\NaturalDocs\CLI\bin\Release\NaturalDocs.exe" $(CausticRoot)\docs</Command>
+      <Command>"$(CausticRoot)\External\NaturalDocs\CLI\bin\Release\NaturalDocs.exe" $(CausticRoot)\docs</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>call $(CausticRoot)\DocumentOverrides\FinalizeDocs.cmd $(Platform)\$(Configuration)</Command>

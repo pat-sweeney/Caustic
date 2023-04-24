@@ -126,16 +126,6 @@ namespace Caustic
         *pBBox = m_BBox;
     }
 
-    uint32 CSceneLevelOfDetailElem::NumberChildren()
-    {
-        return static_cast<uint32>(m_children.size());
-    }
-
-    CRefObj<ISceneElem> CSceneLevelOfDetailElem::GetChild(uint32 index)
-    {
-        return m_children[index].m_spChild;
-    }
-
     void CSceneLevelOfDetailElem::AddChild(ISceneElem* pElem, float minRenderDistance, float maxRenderDistance)
     {
         LODChild child;

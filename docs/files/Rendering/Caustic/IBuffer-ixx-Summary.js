@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/IBuffer.ixx","IBuffer.ixx");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/IBuffer.ixx",[["C/C++","C"]],[["Files","File"],["Interfaces","Interface"]],[[1226,0,0,"IBuffer.h","IBuffer.h"],[1227,0,1,"IBuffer","IBuffer"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/Caustic/IBuffer.ixx","IBuffer.ixx");NDSummary.OnSummaryLoaded("File:Rendering/Caustic/IBuffer.ixx",[["C/C++","C"]],[["Files","File"],["Interfaces","Interface"]],[[1261,0,0,"IBuffer.h","IBuffer.h"],[1262,0,1,"IBuffer","IBuffer"]]);

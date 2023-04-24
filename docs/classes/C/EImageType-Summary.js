@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:EImageType","EImageType");NDSummary.OnSummaryLoaded("CClass:EImageType",[["C/C++","C"]],[["Classes","Class"]],[[696,0,0,"EImageType"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:EImageType","EImageType");NDSummary.OnSummaryLoaded("CClass:EImageType",[["C/C++","C"]],[["Classes","Class"]],[[724,0,0,"EImageType"]]);

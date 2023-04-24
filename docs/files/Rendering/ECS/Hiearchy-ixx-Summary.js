@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Rendering/ECS/Hiearchy.ixx","Hiearchy.ixx");NDSummary.OnSummaryLoaded("File:Rendering/ECS/Hiearchy.ixx",[["C/C++","C"]],[["Classes","Class"]],[[1780,0,0,"HiearchyComponent","HiearchyComponent"],[1781,0,0,"HierarchySystem","HierarchySystem"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/ECS/Hiearchy.ixx","Hiearchy.ixx");NDSummary.OnSummaryLoaded("File:Rendering/ECS/Hiearchy.ixx",[["C/C++","C"]],[["Classes","Class"]],[[1385,0,0,"HiearchyComponent","HiearchyComponent"],[1386,0,0,"HierarchySystem","HierarchySystem"]]);

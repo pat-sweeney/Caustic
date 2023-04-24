@@ -1,11 +1,12 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2021
+// Copyright Patrick Sweeney 2021-2023
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
 module;
 #include <functional>
 #include <atlbase.h>
+#include <string>
 
 export module Rendering.SceneGraph.SceneOverlay2DElem;
 import Base.Core.Core;

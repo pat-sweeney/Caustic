@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:ISceneComputeShaderElem","ISceneComputeShaderElem");NDSummary.OnSummaryLoaded("CClass:ISceneComputeShaderElem",[["C/C++","C"]],[["Interfaces","Interface"]],[[1726,0,0,"ISceneComputeShaderElem"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:ISceneComputeShaderElem","ISceneComputeShaderElem");NDSummary.OnSummaryLoaded("CClass:ISceneComputeShaderElem",[["C/C++","C"]],[["Interfaces","Interface"]],[[1761,0,0,"ISceneComputeShaderElem"]]);

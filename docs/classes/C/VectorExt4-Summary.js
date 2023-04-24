@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:VectorExt4","VectorExt4");NDSummary.OnSummaryLoaded("CClass:VectorExt4",[["C/C++","C"]],[["Structs","Struct"]],[[135,0,0,"VectorExt4"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:VectorExt4","VectorExt4");NDSummary.OnSummaryLoaded("CClass:VectorExt4",[["C/C++","C"]],[["Structs","Struct"]],[[134,0,0,"VectorExt4"]]);

@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Rendering/SceneGraph/Overlay2D.ixx","Overlay2D.ixx");NDSummary.OnSummaryLoaded("File:Rendering/SceneGraph/Overlay2D.ixx",[["C/C++","C"]],[["Classes","Class"]],[[1517,0,0,"CSceneOverlay2DElem","CSceneOverlay2DElem"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/SceneGraph/Overlay2D.ixx","Overlay2D.ixx");NDSummary.OnSummaryLoaded("File:Rendering/SceneGraph/Overlay2D.ixx",[["C/C++","C"]],[["Classes","Class"]],[[1569,0,0,"CSceneOverlay2DElem","CSceneOverlay2DElem"]]);

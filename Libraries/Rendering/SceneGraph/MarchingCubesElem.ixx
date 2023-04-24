@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2023
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -7,6 +7,7 @@ module;
 #include <d3d11.h>
 #include <atlbase.h>
 #include <functional>
+#include <string>
 
 export module Rendering.SceneGraph.SceneMarchingCubesElem;
 import Base.Core.Core;

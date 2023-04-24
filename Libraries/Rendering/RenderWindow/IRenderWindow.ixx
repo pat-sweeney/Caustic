@@ -1,11 +1,12 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2018-2021
+// Copyright Patrick Sweeney 2018-2023
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
 module;
 #include <Windows.h>
 #include <functional>
+#include <string>
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"

@@ -18,7 +18,7 @@ import Parsers.Lex.ILex;
 using namespace Caustic;
 namespace CausticTestSuite
 {
-    class LexTests : public UnitTestSuite
+    export class LexTests : public UnitTestSuite
     {
     public:
         virtual bool RunUnitTests() override;
@@ -105,7 +105,7 @@ namespace CausticTestSuite
         return true;
     }
 
-    bool LexTests::RunUnitTests()
+    export bool LexTests::RunUnitTests()
     {
         typedef bool(*UnitTestFunc)();
         UnitTestEntry tests[] =

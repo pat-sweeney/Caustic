@@ -20,7 +20,6 @@ import Rendering.Caustic.RenderMaterial;
 import Rendering.Caustic.CausticFactory;
 import Rendering.Caustic.ISampler;
 import Rendering.Caustic.ITexture;
-//import Geometry.Mesh.IMaterialAttrib;
 
 namespace Caustic
 {

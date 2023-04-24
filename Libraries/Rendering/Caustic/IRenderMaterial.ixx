@@ -20,7 +20,7 @@ import Geometry.Mesh.IMaterialAttrib;
 export namespace Caustic
 {
     struct IShader;
-    struct IMaterialAttrib;
+    //struct IMaterialAttrib;
     struct ITexture;
     struct ILight;
     struct IRenderCtx;
