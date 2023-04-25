@@ -9,6 +9,7 @@ module;
 #include <cmath>
 #include <stdlib.h>
 #include <stdio.h>
+#include <vector>
 
 module Geometry.Mesh.UnitTests;
 import Base.Core.Core;

@@ -7,11 +7,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="UnitTest.ixx">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="Submesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -69,5 +64,6 @@
     <ClCompile Include="MeshFuncs.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UnitTest.ixx" />
   </ItemGroup>
 </Project>

@@ -80,6 +80,9 @@ If you wish to compile WebcamToNDI you will need to have the NDI Advanced SDK in
 The SDK can be found at:
 https://www.ndi.tv/sdk/
 You will also need to define an environment variabled named 'UseNDI'
+```
+setx UseNDI "true" /M
+```
 
 ## Documentation
 Documentation for the library can be found at https://pat-sweeney.github.io/Caustic/

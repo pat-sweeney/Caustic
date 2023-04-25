@@ -78,7 +78,7 @@ export namespace Caustic
         // Method: GetNextEdge
         // Returns the next edge in our edge loop
         //**********************************************************************
-        CHalfEdge *GetNextEdge() { return m_pNext; }
+        CHalfEdge* GetNextEdge() { return m_pNext; }
 
         //**********************************************************************
         // Method: GetPrevEdge
@@ -96,13 +96,13 @@ export namespace Caustic
         // Method: GetHeadVertex
         // Returns the vertex at the head of this edge
         //**********************************************************************
-        CGeomVertex *GetHeadVertex() { return m_pVertex; }
+        CGeomVertex* GetHeadVertex() { return m_pVertex; }
 
         //**********************************************************************
         // Method: GetTailVertex
         // Returns the vertex at the tail of this edge
         //**********************************************************************
-        CGeomVertex *GetTailVertex() { return m_pPrev->m_pVertex; }
+        CGeomVertex* GetTailVertex() { return m_pPrev->m_pVertex; }
 
         //**********************************************************************
         // Method: GetFace
