@@ -30,11 +30,6 @@ import Rendering.SceneGraph.ISceneLevelOfDetailElem;
 
 namespace Caustic
 {
-    CRefObj<ISceneLevelOfDetailElem> CreateLevelOfDetailElem()
-    {
-        return CRefObj<ISceneLevelOfDetailElem>(new CSceneLevelOfDetailElem());
-    }
-
     CRefObj<IJSonObj> CSceneLevelOfDetailElem::AsJson(const char* pPropertyName, IJSonParser* pParser)
     {
         auto spGroup = pParser->CreateJSonMap((pPropertyName) ? pPropertyName : "LOD", nullptr);

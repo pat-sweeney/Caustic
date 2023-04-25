@@ -18,7 +18,6 @@ import Base.Core.IRefCount;
 import Base.Math.Vector;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.ICamera;
-import Rendering.RenderGraph.IRenderGraph;
 import Rendering.SceneGraph.ISceneGraph;
 
 export namespace Caustic

@@ -140,9 +140,6 @@
     <ProjectReference Include="..\..\Rendering\ImPlot\ImPlot.vcxproj">
       <Project>{f0b79582-eaf1-4ca2-874d-ecd591796806}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Rendering\RenderGraph\RenderGraph.vcxproj">
-      <Project>{c794b439-228e-4659-8895-5169bb46db55}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\Rendering\RenderWindow\RenderWindow.vcxproj">
       <Project>{d031b042-4acd-4703-8df4-ba768148262a}</Project>
     </ProjectReference>

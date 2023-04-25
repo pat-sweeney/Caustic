@@ -163,9 +163,6 @@
     <ProjectReference Include="..\..\Libraries\Rendering\ImGui\ImGui.vcxproj">
       <Project>{fd63d447-4b42-4f14-be8d-392fa277ee0e}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Libraries\Rendering\RenderGraph\RenderGraph.vcxproj">
-      <Project>{c794b439-228e-4659-8895-5169bb46db55}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Rendering\RenderWindow\RenderWindow.vcxproj">
       <Project>{d031b042-4acd-4703-8df4-ba768148262a}</Project>
     </ProjectReference>

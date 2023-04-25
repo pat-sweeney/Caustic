@@ -127,6 +127,9 @@
     <ProjectReference Include="$(CausticRoot)\Libraries\Rendering\RenderWindow\RenderWindow.vcxproj">
       <Project>{d031b042-4acd-4703-8df4-ba768148262a}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Libraries\Geometry\Mesh\Mesh.vcxproj">
+      <Project>{e7cf4287-e8ff-4d29-8883-5a05a6590af3}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Libraries\Rendering\RendererMarshaller\RendererMarshaller.vcxproj">
       <Project>{39cbea68-484f-4320-bb2f-6f59c0fe5b25}</Project>
     </ProjectReference>

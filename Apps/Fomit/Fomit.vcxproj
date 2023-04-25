@@ -143,9 +143,6 @@
     <ProjectReference Include="..\..\Libraries\Rendering\Caustic\Caustic.vcxproj">
       <Project>{60a04400-10f9-4c6d-b34c-d5c7ebafa262}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Libraries\Rendering\RenderGraph\RenderGraph.vcxproj">
-      <Project>{c794b439-228e-4659-8895-5169bb46db55}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Rendering\RenderWindow\RenderWindow.vcxproj">
       <Project>{d031b042-4acd-4703-8df4-ba768148262a}</Project>
     </ProjectReference>

@@ -25,7 +25,6 @@ import Rendering.Caustic.ICamera;
 import Rendering.RendererMarshaller.IRendererMarshaller;
 import Rendering.SceneGraph.SceneGraph;
 import Rendering.SceneGraph.SceneElem;
-import Rendering.RenderGraph.RenderGraph;
 import Rendering.Caustic.RendererFlags;
 
 namespace Caustic

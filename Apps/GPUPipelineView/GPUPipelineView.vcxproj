@@ -19,7 +19,6 @@ $(CausticRoot)\x64\Debug\RenderWindow.lib;
 $(CausticRoot)\x64\Debug\SceneGraph.lib;
 $(CausticRoot)\x64\Debug\SceneImport.lib;
 $(CausticRoot)\x64\Debug\Caustic.lib;
-$(CausticRoot)\x64\Debug\RenderGraph.lib;
     </CausticLibs>
   </PropertyGroup>
   <ItemGroup Label="ProjectConfigurations">
@@ -225,9 +224,6 @@ $(CausticRoot)\x64\Debug\RenderGraph.lib;
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Rendering\RendererMarshaller\RendererMarshaller.vcxproj">
       <Project>{39cbea68-484f-4320-bb2f-6f59c0fe5b25}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Libraries\Rendering\RenderGraph\RenderGraph.vcxproj">
-      <Project>{c794b439-228e-4659-8895-5169bb46db55}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Rendering\RenderWindow\RenderWindow.vcxproj">
       <Project>{d031b042-4acd-4703-8df4-ba768148262a}</Project>

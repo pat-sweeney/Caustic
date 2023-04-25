@@ -25,7 +25,7 @@ namespace Caustic
 {
     void CRenderMaterial::SetTexture(IRenderer* pRenderer, const wchar_t* pName, ITexture* pTexture, EShaderAccess access)
     {
-        std::map<std::wstring, CRenderTexture>::iterator it = m_textures.find(pName);
+        std::map<std::wstring, CRenderTexture, StringLess>::iterator it = m_textures.find(pName);
         if (it != m_textures.end())
             m_textures.erase(it);
         CRenderTexture tex;

@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2023
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -12,6 +12,7 @@ module Geometry.Mesh.Mesh;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Math.Ray;
+import Geometry.Mesh.IMesh;
 
 //**********************************************************************
 // File: Mesh.cpp

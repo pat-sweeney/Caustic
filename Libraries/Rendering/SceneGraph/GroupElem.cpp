@@ -30,11 +30,6 @@ import Rendering.Caustic.RendererFlags;
 
 namespace Caustic
 {
-    CRefObj<ISceneGroupElem> CreateGroupElem()
-    {
-        return CRefObj<ISceneGroupElem>(new CSceneGroupElem());
-    }
-
     void CSceneGroupElem::Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx)
     {
 #ifdef _DEBUG

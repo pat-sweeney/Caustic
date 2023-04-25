@@ -23,15 +23,12 @@ import Rendering.Caustic.IRenderCtx;
 import Rendering.Caustic.ICausticFactory;
 import Rendering.RenderWindow.RenderWindow;
 import Rendering.RenderWindow.IRenderWindow;
-import Rendering.RenderGraph.RenderGraphFactory;
-import Rendering.RenderGraph.IRenderGraphFactory;
 
 using namespace Caustic;
 namespace CausticTestSuite
 {
     static bool Test1()
     {
-        auto spRenderGraphFactory = Caustic::CreateRenderGraphFactory();
         auto spCausticFactory = Caustic::CreateCausticFactory();
         std::wstring shaderFolder; // Intentionally left empty
         BBox2 viewport(0.0f, 0.0f, 1.0f, 1.0f);

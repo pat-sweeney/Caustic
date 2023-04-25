@@ -24,8 +24,6 @@ import Rendering.Caustic.ICamera;
 import Rendering.SceneGraph.ISceneGraph;
 import Rendering.SceneGraph.ISceneFactory;
 import Rendering.RenderWindow.IRenderWindow;
-import Rendering.RenderGraph.IRenderGraph;
-import Rendering.RenderGraph.IRenderGraphFactory;
 
 export namespace Caustic
 {

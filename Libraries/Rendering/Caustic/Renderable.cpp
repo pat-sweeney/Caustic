@@ -150,22 +150,4 @@ namespace Caustic
             spShader->EndRender(pRenderer);
         }
     }
-
-    //**********************************************************************
-    // Function: CreateRenderable
-    // Creates a renderable object
-    //
-    // Parameters:
-    // pSubMesh - Submesh to create renderable for
-    // pFrontMaterial - material for front faces
-    // pBackMaterial - material for back faces
-    // mat - transform to apply
-    //
-    // Returns:
-    // Returns the created renderable
-    //**********************************************************************
-    CRefObj<IRenderable> CreateRenderable(IRenderSubMesh *pSubMesh, IRenderMaterial *pFrontMaterial, IRenderMaterial *pBackMaterial, DirectX::XMMATRIX &mat)
-    {
-        return CRefObj<IRenderable>(new CRenderable(pSubMesh, pFrontMaterial, pBackMaterial, mat));
-    }
 }

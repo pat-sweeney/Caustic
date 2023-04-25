@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2023
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -19,9 +19,6 @@ import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IShader;
 import Rendering.Caustic.ICausticFactory;
 import Rendering.RenderWindow.IRenderWindow;
-import Rendering.RenderGraph.IRenderGraph;
-import Rendering.RenderGraph.IRenderGraph;
-import Rendering.RenderGraph.IRenderGraphFactory;
 
 using namespace Caustic;
 namespace Caustic {
@@ -33,8 +30,6 @@ class CApp
 public:
     CRefObj<IRenderWindow> m_spRenderWindow;
     CRefObj<Caustic::ICausticFactory> m_spCausticFactory;
-    CRefObj<IRenderGraphFactory> m_spRenderGraphFactory;
-    CRefObj<IRenderGraph> m_spRenderGraph;
     CRefObj<IAzureKinect> m_spCamera;
     CRefObj<IImage> m_spRayMap;
 

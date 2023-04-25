@@ -6,6 +6,7 @@
 module;
 #include <map>
 #include <string>
+#include <functional>
 
 export module Rendering.Caustic.RenderMaterial;
 import Base.Core.Core;
@@ -20,6 +21,14 @@ import Geometry.Mesh.IMaterialAttrib;
 
 export namespace Caustic
 {
+    struct StringLess
+    {
+        bool operator()(const std::wstring& lhs, const std::wstring& rhs) const
+        {
+            return lhs < rhs;
+        }
+    };
+
     //**********************************************************************
     // Class: CRenderTexture
     // Internal class used to store texture and sampler information.
@@ -50,7 +59,7 @@ export namespace Caustic
     protected:
         CRefObj<IMaterialAttrib> m_spMaterial;
         CRefObj<IShader> m_spShader;
-        std::map<std::wstring, CRenderTexture> m_textures;
+        std::map<std::wstring, CRenderTexture, StringLess> m_textures;
     public:
         friend class CRenderer;
         friend CRefObj<IRenderMaterial> CreateRenderMaterial(IRenderer* pRenderer, IMaterialAttrib *pMaterialAttrib, IShader *pShader);
@@ -74,7 +83,7 @@ export namespace Caustic
         virtual CRefObj<IMaterialAttrib> GetMaterial() override { return m_spMaterial; }
         virtual void SetTexture(IRenderer* pRenderer, const wchar_t *pName, ITexture* pTexture, EShaderAccess access) override;
         virtual CRefObj<ITexture> GetTexture(const wchar_t* pName) override {
-            std::map<std::wstring, CRenderTexture>::iterator it = m_textures.find(pName);
+            std::map<std::wstring, CRenderTexture, StringLess>::iterator it = m_textures.find(pName);
             return CRefObj<ITexture>(it->second.m_spTexture);
         }
         virtual void Render(IRenderer* pRenderer, std::vector<CRefObj<ILight>> &lights, IRenderCtx *pRenderCtx, IShader *pOverrideShader) override;
