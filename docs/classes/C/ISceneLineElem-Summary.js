@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:ISceneLineElem","ISceneLineElem");NDSummary.OnSummaryLoaded("CClass:ISceneLineElem",[["C/C++","C"]],[["Interfaces","Interface"]],[[1672,0,0,"ISceneLineElem"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:ISceneLineElem","ISceneLineElem");NDSummary.OnSummaryLoaded("CClass:ISceneLineElem",[["C/C++","C"]],[["Interfaces","Interface"]],[[1671,0,0,"ISceneLineElem"]]);

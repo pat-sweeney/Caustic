@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Base/Math/Matrix3x2.ixx","Matrix3x2.ixx");NDSummary.OnSummaryLoaded("File:Base/Math/Matrix3x2.ixx",[["C/C++","C"]],[["Classes","Class"],["Structs","Struct"]],[[188,0,0,"Caustic","Caustic"],[189,0,1,"Matrix3x2","Matrix3x2"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:Base/Math/Matrix3x2.ixx","Matrix3x2.ixx");NDSummary.OnSummaryLoaded("File:Base/Math/Matrix3x2.ixx",[["C/C++","C"]],[["Classes","Class"],["Structs","Struct"]],[[197,0,0,"Caustic","Caustic"],[198,0,1,"Matrix3x2","Matrix3x2"]]);

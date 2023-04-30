@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CSceneLightCollectionElem","CSceneLightCollectionElem");NDSummary.OnSummaryLoaded("CClass:CSceneLightCollectionElem",[["C/C++","C"]],[["Classes","Class"]],[[1650,0,0,"CSceneLightCollectionElem"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CSceneLightCollectionElem","CSceneLightCollectionElem");NDSummary.OnSummaryLoaded("CClass:CSceneLightCollectionElem",[["C/C++","C"]],[["Classes","Class"]],[[1639,0,0,"CSceneLightCollectionElem"]]);

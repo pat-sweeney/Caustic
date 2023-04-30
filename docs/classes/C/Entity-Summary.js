@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:Entity","Entity");NDSummary.OnSummaryLoaded("CClass:Entity",[["C/C++","C"]],[["Classes","Class"]],[[1388,0,0,"Entity"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:Entity","Entity");NDSummary.OnSummaryLoaded("CClass:Entity",[["C/C++","C"]],[["Classes","Class"]],[[1387,0,0,"Entity"]]);

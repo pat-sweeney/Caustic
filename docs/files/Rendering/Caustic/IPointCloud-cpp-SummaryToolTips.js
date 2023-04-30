@@ -1,1 +1,1 @@
-﻿NDSummary.OnToolTipsLoaded("File:Rendering/Caustic/IPointCloud.cpp",{1160:"<div class=\"NDToolTip TFile LC\"><div class=\"TTSummary\">This file defines the published implementation for point clouds.&nbsp; A PointCloud renders a depth map as a set of points.</div></div>"});
+﻿NDSummary.OnToolTipsLoaded("File:Rendering/Caustic/IPointCloud.cpp",{1140:"<div class=\"NDToolTip TFile LC\"><div class=\"TTSummary\">This file defines the published implementation for point clouds.&nbsp; A PointCloud renders a depth map as a set of points.</div></div>"});

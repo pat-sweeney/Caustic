@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Base/Math/Basis.ixx","Basis.ixx");NDSummary.OnSummaryLoaded("File:Base/Math/Basis.ixx",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"]],[[245,0,1,"Functions","Functions"],[246,0,0,"BersteinBasis","BersteinBasis"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:Base/Math/Basis.ixx","Basis.ixx");NDSummary.OnSummaryLoaded("File:Base/Math/Basis.ixx",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"]],[[242,0,1,"Functions","Functions"],[243,0,0,"BersteinBasis","BersteinBasis"]]);

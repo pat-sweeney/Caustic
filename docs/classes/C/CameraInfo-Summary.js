@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CameraInfo","CameraInfo");NDSummary.OnSummaryLoaded("CClass:CameraInfo",[["C/C++","C"]],[["Structs","Struct"]],[[311,0,0,"CameraInfo"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CameraInfo","CameraInfo");NDSummary.OnSummaryLoaded("CClass:CameraInfo",[["C/C++","C"]],[["Structs","Struct"]],[[313,0,0,"CameraInfo"]]);

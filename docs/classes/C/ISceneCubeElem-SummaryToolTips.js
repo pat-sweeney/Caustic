@@ -1,1 +1,1 @@
-﻿NDSummary.OnToolTipsLoaded("CClass:ISceneCubeElem",{1760:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines a cube element in our scene graph.</div></div>"});
+﻿NDSummary.OnToolTipsLoaded("CClass:ISceneCubeElem",{1756:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines a cube element in our scene graph.</div></div>"});

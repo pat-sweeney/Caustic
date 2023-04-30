@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Imaging/Image/Scale.cpp","Scale.cpp");NDSummary.OnSummaryLoaded("File:Imaging/Image/Scale.cpp",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"]],[[659,0,1,"Functions","Functions"],[660,0,0,"Apply","Apply"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:Imaging/Image/Scale.cpp","Scale.cpp");NDSummary.OnSummaryLoaded("File:Imaging/Image/Scale.cpp",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"]],[[661,0,1,"Functions","Functions"],[662,0,0,"Apply","Apply"]]);

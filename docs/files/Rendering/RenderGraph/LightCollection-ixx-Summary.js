@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Rendering/RenderGraph/LightCollection.ixx","LightCollection.ixx");NDSummary.OnSummaryLoaded("File:Rendering/RenderGraph/LightCollection.ixx",[["C/C++","C"]],[["Classes","Class"]],[[1477,0,0,"CLightCollection","CLightCollection"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/RenderGraph/LightCollection.ixx","LightCollection.ixx");NDSummary.OnSummaryLoaded("File:Rendering/RenderGraph/LightCollection.ixx",[["C/C++","C"]],[["Classes","Class"]],[[1481,0,0,"CLightCollection","CLightCollection"]]);

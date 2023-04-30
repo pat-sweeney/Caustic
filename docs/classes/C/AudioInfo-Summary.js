@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:AudioInfo","AudioInfo");NDSummary.OnSummaryLoaded("CClass:AudioInfo",[["C/C++","C"]],[["Structs","Struct"]],[[312,0,0,"AudioInfo"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:AudioInfo","AudioInfo");NDSummary.OnSummaryLoaded("CClass:AudioInfo",[["C/C++","C"]],[["Structs","Struct"]],[[314,0,0,"AudioInfo"]]);
