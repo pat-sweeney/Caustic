@@ -30,6 +30,7 @@ import Rendering.Caustic.IDirectionalLight;
 import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.ISampler;
 import Rendering.Caustic.IShaderInfo;
+import Rendering.Caustic.IVideoTexture;
 
 //**********************************************************************
 // File: ICausticFactory.ixx
@@ -359,7 +360,7 @@ export namespace Caustic
         // Module:
         // {Link:import Rendering/Caustic/ICausticFactory;{Rendering/Caustic/ICausticFactory.ixx}}
         //**********************************************************************
-        virtual CRefObj<ITexture> LoadVideoTexture(const wchar_t* pFilename, IRenderer* pRenderer) = 0;
+        virtual CRefObj<IVideoTexture> LoadVideoTexture(const wchar_t* pFilename, IRenderer* pRenderer) = 0;
 
         //**********************************************************************
         // Method: VideoTextureFromWebcam

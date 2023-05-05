@@ -79,7 +79,7 @@ export namespace Caustic
         virtual CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, IImage *pImage, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags) override;
         virtual CRefObj<ITexture> CheckerboardTexture(IRenderer *pRenderer) override;
         virtual CRefObj<ITexture> LoadTexture(const wchar_t *pFilename, IRenderer *pRenderer) override;
-        virtual CRefObj<ITexture> LoadVideoTexture(const wchar_t* pFilename, IRenderer* pRenderer) override;
+        virtual CRefObj<IVideoTexture> LoadVideoTexture(const wchar_t* pFilename, IRenderer* pRenderer) override;
         virtual CRefObj<ITexture> VideoTextureFromWebcam(IRenderer* pRenderer) override;
         virtual CRefObj<ITexture> CreateDesktopTexture(IRenderer* pRenderer) override;
         virtual CRefObj<IShader> CreateShader(IRenderer *pRenderer, const wchar_t *pShaderName,

@@ -224,7 +224,7 @@ namespace Caustic
     // Method: LoadVideoTexture
     // See <ICausticFactory::LoadVideoTexture>
     //**********************************************************************
-    CRefObj<ITexture> CCausticFactory::LoadVideoTexture(const wchar_t* pFilename, IRenderer* pRenderer)
+    CRefObj<IVideoTexture> CCausticFactory::LoadVideoTexture(const wchar_t* pFilename, IRenderer* pRenderer)
     {
         return Caustic::LoadVideoTexture(pFilename, pRenderer);
     }

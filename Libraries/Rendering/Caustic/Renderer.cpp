@@ -331,6 +331,21 @@ namespace Caustic
         spCtx2->BeginEventInt(L"DrawScreenQuadWithCustomShader", 0);
 #endif
         ID3D11DeviceContext* pContext = GetContext();
+        D3D11_RASTERIZER_DESC desc;
+        desc.FrontCounterClockwise = false;
+        desc.CullMode = D3D11_CULL_NONE;
+        desc.AntialiasedLineEnable = false;
+        desc.DepthBias = 0;
+        desc.DepthBiasClamp = 0.0f;
+        desc.DepthClipEnable = true;
+        desc.FillMode = D3D11_FILL_MODE::D3D11_FILL_SOLID;
+        desc.MultisampleEnable = true;
+        desc.SlopeScaledDepthBias = 0.0f;
+        desc.ScissorEnable = false;
+        CComPtr<ID3D11RasterizerState> spRasterizerState;
+        CT(m_spDevice->CreateRasterizerState(&desc, &spRasterizerState));
+        pContext->RSSetState(spRasterizerState);
+
         CComPtr<ID3D11DepthStencilState> oldState;
         UINT oldStencil;
         if (disableDepth)

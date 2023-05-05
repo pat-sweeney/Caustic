@@ -14,6 +14,7 @@ import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Base.Math.BBox;
 import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IVideoTexture;
 
 //**********************************************************************
 // File: IRendererMarshaller.ixx
@@ -24,7 +25,6 @@ import Rendering.Caustic.IRenderer;
 
 export namespace Caustic
 {
-    struct ITexture;
     struct ISceneGraph;
 
     //**********************************************************************
@@ -94,7 +94,7 @@ export namespace Caustic
         // Returns:
         // Returns the created texture
         //**********************************************************************
-        virtual CRefObj<ITexture> LoadVideoTexture(const wchar_t* pPath) = 0;
+        virtual CRefObj<IVideoTexture> LoadVideoTexture(const wchar_t* pPath) = 0;
 
         //**********************************************************************
         // Method: SaveScene

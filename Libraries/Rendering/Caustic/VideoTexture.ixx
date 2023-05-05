@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2023
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -18,6 +18,7 @@ import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Rendering.Caustic.ITexture;
+import Rendering.Caustic.IVideoTexture;
 
 export namespace Caustic
 {
@@ -65,7 +66,7 @@ export namespace Caustic
     // {Link:import Rendering.Caustic.VideoTexture;{Rendering/Caustic/VideoTexture.ixx}}
     //**********************************************************************
     class CVideoTexture :
-        public ITexture,
+        public IVideoTexture,
         public CRefCount
     {
     protected:
@@ -74,6 +75,7 @@ export namespace Caustic
         uint32 m_Height;
         CVideoFormat m_format;
         CRefObj<ITexture> m_spTexture;
+        bool m_eos;
 
         void GetVideoFormat(CVideoFormat *pFormat);
     public:
@@ -96,14 +98,20 @@ export namespace Caustic
         virtual uint32 GetWidth() override;
         virtual uint32 GetHeight() override;
         virtual DXGI_FORMAT GetFormat() { return DXGI_FORMAT_B8G8R8A8_UNORM; }
-        virtual void Update(IRenderer *pRenderer) override;
+        virtual void Update(IRenderer* pRenderer) override;
         virtual CComPtr<ID3D11Texture2D> GetD3DTexture() override { return m_spTexture->GetD3DTexture(); }
         virtual CComPtr<ID3D11ShaderResourceView> GetD3DTextureRV() { return m_spTexture->GetD3DTextureRV(); }
         virtual void GenerateMips(IRenderer* /*pRenderer*/) { _ASSERT(FALSE); return; }
         virtual void Render(IRenderer* pRenderer, int slot, bool isPixelShader) override;
         virtual void CopyFromImage(IRenderer* pRenderer, IImage* pImage, bool generateMipMap = false) override;
         virtual CRefObj<IImage> CopyToImage(IRenderer* pRenderer) override;
-        virtual void CopyToImage(IRenderer* pRenderer, IImage *pImage) override;
+        virtual void CopyToImage(IRenderer* pRenderer, IImage* pImage) override;
+
+        //**********************************************************************
+        // IVideoTexture
+        //**********************************************************************
+        virtual bool EndOfStream() override;
+        virtual void Restart() override;
     };
 
     //**********************************************************************
@@ -117,11 +125,11 @@ export namespace Caustic
     // Returns:
     // Returns the new texture
     //**********************************************************************
-    CRefObj<ITexture> LoadVideoTexture(const wchar_t* pFilename, IRenderer* pRenderer)
+    CRefObj<IVideoTexture> LoadVideoTexture(const wchar_t* pFilename, IRenderer* pRenderer)
     {
         std::unique_ptr<CVideoTexture> spTexture(new CVideoTexture(pRenderer));
         spTexture->LoadFromFile(pFilename, pRenderer);
-        return CRefObj<ITexture>(spTexture.release());
+        return CRefObj<IVideoTexture>(spTexture.release());
     }
 
     //**********************************************************************

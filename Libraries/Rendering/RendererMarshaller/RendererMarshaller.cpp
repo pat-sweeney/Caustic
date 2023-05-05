@@ -23,6 +23,7 @@ import Rendering.Caustic.CausticFactory;
 import Rendering.Caustic.ISampler;
 import Rendering.Caustic.ICamera;
 import Rendering.Caustic.ITexture;
+import Rendering.Caustic.IVideoTexture;
 import Rendering.RendererMarshaller.IRendererMarshaller;
 import Rendering.SceneGraph.ISceneGraph;
 
@@ -351,10 +352,10 @@ namespace Caustic
     // Method: LoadVideoTexture
     // See <IRenderer::LoadVideoTexture>
     //**********************************************************************
-    CRefObj<ITexture> CRendererMarshaller::LoadVideoTexture(const wchar_t* pPath)
+    CRefObj<IVideoTexture> CRendererMarshaller::LoadVideoTexture(const wchar_t* pPath)
     {
         HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-        CRefObj<ITexture> spTexture;
+        CRefObj<IVideoTexture> spTexture;
         m_renderQueue.AddLambda(
             [this, pPath, evt, &spTexture]()
             {

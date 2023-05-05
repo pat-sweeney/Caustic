@@ -20,6 +20,7 @@ import Base.Math.BBox;
 import Geometry.Mesh.IMesh;
 import Geometry.Mesh.IMaterialAttrib;
 import Rendering.Caustic.RendererFlags;
+import Rendering.Caustic.ITexture;
 
 //**********************************************************************
 // File: IRenderer.ixx
@@ -30,8 +31,6 @@ export namespace Caustic
 {
     struct ISceneGraph;
     struct IRenderSubMesh;
-    struct ITexture;
-    struct ITexture;
     struct IRenderCtx;
     struct IPointLight;
     struct IShader;

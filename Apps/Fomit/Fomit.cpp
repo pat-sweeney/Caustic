@@ -12,7 +12,6 @@ import Imaging.Image.ImageFilter;
 import Geometry.Mesh.IMeshConstructor;
 import Geometry.MeshImport;
 import Cameras.AzureKinect.IAzureKinect;
-import Rendering.Caustic.ConstructBuffer;
 import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.IRenderMesh;
 import Rendering.Caustic.IRenderer;

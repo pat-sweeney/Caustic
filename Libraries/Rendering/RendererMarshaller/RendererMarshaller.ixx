@@ -20,6 +20,7 @@ import Rendering.Caustic.ISampler;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IShaderMgr;
 import Rendering.Caustic.ITexture;
+import Rendering.Caustic.IVideoTexture;
 import Rendering.RendererMarshaller.IRendererMarshaller;
 
 //**********************************************************************
@@ -104,7 +105,7 @@ export namespace Caustic
             bool startFrozen = false, int desktopIndex = 0) override;
         virtual void Shutdown() override;
         virtual CRefObj<ITexture> LoadTexture(const wchar_t* pPath) override;
-        virtual CRefObj<ITexture> LoadVideoTexture(const wchar_t* pPath) override;
+        virtual CRefObj<IVideoTexture> LoadVideoTexture(const wchar_t* pPath) override;
         virtual void SaveScene(const wchar_t* pFilename, ISceneGraph* pSceneGraph) override;
         virtual void LoadScene(const wchar_t* pFilename, ISceneGraph* pSceneGraph) override;
         virtual CRefObj<IRenderer> GetRenderer() { return this; }
