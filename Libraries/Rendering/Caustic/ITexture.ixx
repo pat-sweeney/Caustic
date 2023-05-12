@@ -60,7 +60,7 @@ export namespace Caustic
         // Parameters:
         // pRenderer - graphics device
         //**********************************************************************
-        virtual void Update(IRenderer *pRenderer) = 0; // Called to update texture
+        virtual void Update(IRenderer* pRenderer) = 0; // Called to update texture
 
         //**********************************************************************
         // Method: GetD3DTexture
@@ -83,7 +83,7 @@ export namespace Caustic
         // Parameters:
         // pRenderer - graphics device
         //**********************************************************************
-        virtual void GenerateMips(IRenderer *pRenderer) = 0;
+        virtual void GenerateMips(IRenderer* pRenderer) = 0;
 
         //**********************************************************************
         // Method: Render
@@ -96,6 +96,16 @@ export namespace Caustic
         //**********************************************************************
         virtual void Render(IRenderer* pRenderer, int slot, bool isPixelShader) = 0;
 
+        //**********************************************************************
+        // Method: Copy
+        // Copies an ITexture into an another ITexture
+        //
+        // Parameters:
+        // pRenderer - graphics device
+        // pDst - copies to destination
+        //**********************************************************************
+        virtual void Copy(IRenderer* pRenderer, ITexture* pDst) = 0;
+        
         //**********************************************************************
         // Method: CopyFromImage
         // Copies an image into an existing ITexture

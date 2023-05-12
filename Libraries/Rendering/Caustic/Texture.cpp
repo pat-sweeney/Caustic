@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2023
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -213,6 +213,23 @@ namespace Caustic
         CRefObj<IImage> spImage = Caustic::CreateImage(m_Width, m_Height, imageType);
         CopyToImage(pRenderer, spImage);
         return spImage;
+    }
+
+    //**********************************************************************
+    // Function: Copy
+    // Copies a texture to another texture
+    //
+    // Parameters:
+    // pRenderer - Renderer
+    //**********************************************************************
+    void CTexture::Copy(IRenderer* pRenderer, ITexture* pDstTex)
+    {
+        pRenderer->RunOnRenderer(
+            [&](IRenderer* pRenderer) {
+                ID3D11Texture2D* pSrc = GetD3DTexture();
+                ID3D11Texture2D* pDst = pDstTex->GetD3DTexture();
+                pRenderer->GetContext()->CopyResource(pDst, pSrc);
+            }, true);
     }
 
     //**********************************************************************

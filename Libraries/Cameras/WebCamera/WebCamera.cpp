@@ -112,7 +112,11 @@ namespace Caustic
         {
             GUID majorType, subType;
             spMediaType = nullptr;
-            CT(m_spReader->GetNativeMediaType((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, mediaIndex, &spMediaType));
+            HRESULT hr = m_spReader->GetNativeMediaType((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, mediaIndex, &spMediaType);
+            if (FAILED(hr))
+                break;
+            if (samplingRate == 0)
+                break;
             CT(spMediaType->GetGUID(MF_MT_MAJOR_TYPE, &majorType));
             CT(spMediaType->GetGUID(MF_MT_SUBTYPE, &subType));
             if (majorType == MFMediaType_Audio)

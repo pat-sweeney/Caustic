@@ -90,7 +90,7 @@ namespace Caustic
         if (m_spDesktopCopy)
             m_spDesktopCopy->Render(pRenderer, slot, isPixelShader);
     }
-    
+
     //**********************************************************************
     void CDesktopTexture::CopyFromImage(IRenderer* pRenderer, IImage* pImage, bool generateMipMap /* = false */)
     {
@@ -111,6 +111,12 @@ namespace Caustic
     {
         if (m_spDesktopCopy)
             m_spDesktopCopy->CopyToImage(pRenderer, pImage);
+    }
+
+    void CDesktopTexture::Copy(IRenderer* pRenderer, ITexture* pTex)
+    {
+        if (m_spDesktopCopy)
+            m_spDesktopCopy->Copy(pRenderer, pTex);
     }
 
     //**********************************************************************

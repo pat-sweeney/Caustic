@@ -1211,7 +1211,7 @@ namespace Caustic
         DXGI_SWAP_CHAIN_DESC desc = { 0 };
         desc.BufferDesc.Width = 0;
         desc.BufferDesc.Height = 0;
-        desc.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+        desc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
         desc.BufferDesc.RefreshRate.Numerator = 1;
         desc.BufferDesc.RefreshRate.Denominator = 30;
         desc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;

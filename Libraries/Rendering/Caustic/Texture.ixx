@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2023
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -58,5 +58,6 @@ export namespace Caustic
         virtual void CopyFromImage(IRenderer* pRenderer, IImage* pImage, bool generateMipMap = false) override;
         virtual CRefObj<IImage> CopyToImage(IRenderer* pRenderer) override;
         virtual void CopyToImage(IRenderer* pRenderer, IImage *pImage) override;
+        virtual void Copy(IRenderer* pRenderer, ITexture* pDst) override;
     };
 };
