@@ -47,6 +47,7 @@ export namespace Caustic
         CRefObj<IImagePool> m_spColorImagePool;
         UINT32 m_width, m_height;
         LONG m_stride;
+        bool m_hasAudio;
 
         CComPtr<IMFMediaSource> CreateVideoDevice(std::wstring videoDeviceName, int w, int h, int frameRate);
         CComPtr<IMFMediaSource> CreateAudioDevice(std::wstring audioDeviceName, int samplingRate, int bitsPerSample, int numChannels);

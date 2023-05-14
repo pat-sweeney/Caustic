@@ -139,12 +139,18 @@ namespace Caustic
         std::wstring audioDeviceName, int samplingRate, int bitsPerSample, int numChannels)
     {
         CComPtr<IMFMediaSource> spVideoDevice = CreateVideoDevice(videoDeviceName, w, h, frameRate);
-        CComPtr<IMFMediaSource> spAudioDevice = CreateAudioDevice(audioDeviceName, samplingRate, bitsPerSample, numChannels);
+        CComPtr<IMFMediaSource> spAudioDevice = (audioDeviceName.empty()) ? nullptr : CreateAudioDevice(audioDeviceName, samplingRate, bitsPerSample, numChannels);
         CComPtr<IMFCollection> spCollection;
         CComPtr<IMFMediaSource> spMediaSource;
         CT(MFCreateCollection(&spCollection));
         CT(spCollection->AddElement(spVideoDevice));
-        CT(spCollection->AddElement(spAudioDevice));
+        if (spAudioDevice != nullptr)
+        {
+            CT(spCollection->AddElement(spAudioDevice));
+            m_hasAudio = true;
+        }
+        else
+            m_hasAudio = false;
         CT(MFCreateAggregateSource(spCollection, &spMediaSource));
         
         CComPtr<IMFAttributes> spAttr;
@@ -177,8 +183,11 @@ namespace Caustic
         }
 
         //CT(spVideoMediaType->SetGUID(MF_MT_SUBTYPE, MF));
-        CT(m_spReader->SetCurrentMediaType((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, NULL, spAudioMediaType));
-        CT(m_spReader->SetStreamSelection((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, TRUE));
+        if (spAudioDevice != nullptr)
+        {
+            CT(m_spReader->SetCurrentMediaType((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, NULL, spAudioMediaType));
+            CT(m_spReader->SetStreamSelection((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, TRUE));
+        }
     }
 
     CWebCamera::~CWebCamera()
@@ -231,7 +240,7 @@ namespace Caustic
 
     bool CWebCamera::NextAudioFrame(IAudioFrame** ppAudioFrame)
     {
-        if (ppAudioFrame == nullptr)
+        if (!m_hasAudio || ppAudioFrame == nullptr)
             return false;
         *ppAudioFrame = nullptr;
         DWORD stream, flags;
