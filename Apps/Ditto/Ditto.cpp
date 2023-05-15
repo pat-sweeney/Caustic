@@ -6,6 +6,11 @@
 #include "framework.h"
 #include "Ditto.h"
 #include <string>
+#include <chrono>
+#include "imgui.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
+#include "imgui_internal.h"
 
 import Caustic.Base;
 import Base.Core.Core;
@@ -22,27 +27,33 @@ import Rendering.Caustic.ITexture;
 import Rendering.Caustic.IVideoTexture;
 import Rendering.Caustic.ICausticFactory;
 import Rendering.RenderWindow.IRenderWindow;
+import Cameras.WebCamera.WebCamera;
+import Cameras.WebCamera.IWebCamera;
+import Cameras.VirtualCamera.IVirtualCamera;
+import Cameras.VirtualCamera.VirtualCamera;
 
 using namespace Caustic;
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 class CApp
 {
 public:
     CRefObj<IRenderWindow> m_spRenderWindow;
     CRefObj<Caustic::ICausticFactory> m_spCausticFactory;
-    CRefObj<IVideoTexture> video_Listen;
-    CRefObj<ITexture> video_FollowUp;
-    CRefObj<ITexture> video_FollowUpLater;
-    CRefObj<ITexture> video_FollowUpEmail;
-    CRefObj<ITexture> video_ScratchFace;
     CRefObj<ITexture> defaultTex;
     CRefObj<ISampler> m_spSampler;
     std::vector<CRefObj<IVideoTexture>> m_videos;
     std::vector<CRefObj<ISampler>> m_samplers;
-    int m_videoIndex;
+    int m_curVideoIndex;
+    int m_nextVideoIndex;
     bool m_texLoaded;
+    HWND m_hwnd;
+    std::chrono::time_point<std::chrono::system_clock> m_prevRenderTime;
 
     void InitializeCaustic(HWND hWnd);
+    void LiveWebCam();
+    void BuildUI(ITexture* pFinalRT, ImFont* pFont);
 };
 CApp app;
 
@@ -52,6 +63,129 @@ struct Vertex
     float norm[3];
 };
 
+void CApp::LiveWebCam()
+{
+    auto videoDevices = IWebCamera::GetAvailableVideoDevices();
+    int i = 0;
+    for (; i < (int)videoDevices.size(); i++)
+        if (videoDevices[i].name.contains(L"LifeCam"))
+            break;
+    auto audioDevices = IWebCamera::GetAvailableAudioDevices();
+
+    std::wstring audioDeviceName;
+    int samplingRate = 0;
+    int bitsPerSample = 0;
+    int numChannels = 0;
+
+    if (audioDevices.size() > 0)
+    {
+        int j = 0;
+        for (; j < (int)audioDevices.size(); j++)
+            if (audioDevices[j].name.contains(L"LifeCam"))
+                break;
+        audioDeviceName = audioDevices[j].endpointID;
+        samplingRate = audioDevices[j].samplingRates[0];
+        bitsPerSample = audioDevices[j].bitsPerSample[0];
+        numChannels = audioDevices[j].channels[0];
+    }
+    auto spWebCamera = CreateWebCamera(
+        videoDevices[i].symlink.c_str(), -1, -1, 30, audioDeviceName, samplingRate, bitsPerSample, numChannels);
+}
+
+ImVec2 BuildMenuBar(ImFont* pFont)
+{
+    ImVec2 menuSize;
+    ImGui::PushFont(pFont);
+    if (ImGui::BeginMenuBar())
+    {
+        static bool isAboutOpen = false;
+        if (ImGui::BeginMenu("Help"))
+        {
+            if (ImGui::MenuItem("About"))
+            {
+                isAboutOpen = true;
+            }
+            ImGui::EndMenu();
+        }
+        menuSize = ImGui::GetWindowSize();
+        ImGui::EndMenuBar();
+
+        if (isAboutOpen)
+        {
+            ImGui::Begin("About", &isAboutOpen);
+            ImGui::Text("MeshViewer, Version 1.0");
+            ImGui::Text("Copyright (c) 2022");
+            ImGui::End();
+        }
+    }
+    ImGui::PopFont();
+    return menuSize;
+}
+
+void CApp::BuildUI(ITexture* pFinalRT, ImFont* pFont)
+{
+    static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
+    ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+    const ImGuiViewport* viewport = ImGui::GetMainViewport();
+    ImGui::SetNextWindowPos(viewport->WorkPos);
+    ImGui::SetNextWindowSize(viewport->WorkSize);
+    ImGui::SetNextWindowViewport(viewport->ID);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+    window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+    window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
+    if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
+        window_flags |= ImGuiWindowFlags_NoBackground;
+
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+    ImGui::Begin("DockSpace Demo", nullptr, window_flags);
+    ImGui::PopStyleVar();
+    ImGui::PopStyleVar(2);
+
+    // Submit the DockSpace
+    ImGuiIO& io = ImGui::GetIO();
+    if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
+    {
+        ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+        ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+    }
+
+    //ImGui::ShowDemoWindow();
+
+    ImGui::Begin("Actions", nullptr);
+    if (ImGui::Button("Listening"))
+        app.m_nextVideoIndex = 0;
+    if (ImGui::Button("FollowUp"))
+        app.m_nextVideoIndex = 1;
+    if (ImGui::Button("FollowUpLater"))
+        app.m_nextVideoIndex = 2;
+    if (ImGui::Button("FollowUpEmail"))
+        app.m_nextVideoIndex = 3;
+    if (ImGui::Button("ScratchHead"))
+        app.m_nextVideoIndex = 4;
+    if (ImGui::Button("ScratchFace"))
+        app.m_nextVideoIndex = 5;
+    ImGui::End();
+
+    ImVec2 menuSize = BuildMenuBar(pFont);
+
+    RECT rect;
+    GetClientRect(app.m_hwnd, &rect);
+
+    if (pFinalRT != nullptr)
+    {
+        ImGui::Begin("FinalRender", nullptr);
+        ImVec2 vMin = ImGui::GetWindowContentRegionMin();
+        ImVec2 vMax = ImGui::GetWindowContentRegionMax();
+        ImVec2 vSize = ImVec2(vMax.x - vMin.x, vMax.y - vMin.y);
+        auto x = ImGui::GetCursorPos();
+        ImGui::Image((void*)pFinalRT->GetD3DTextureRV(), vSize);
+        ImGui::End();
+    }
+    ImGui::End();
+}
+
 void CApp::InitializeCaustic(HWND hwnd)
 {
     Caustic::SystemStartup();
@@ -60,15 +194,17 @@ void CApp::InitializeCaustic(HWND hwnd)
     // Next create our output window
     std::wstring shaderFolder(SHADERPATH);
     BBox2 viewport(0.0f, 0.0f, 1.0f, 1.0f);
-    m_spRenderWindow = CreateRenderWindow(hwnd, viewport, shaderFolder,
-        [](IRenderer* pRenderer, IRenderCtx*, int) {
+    m_spRenderWindow = CreateImguiRenderWindow(hwnd, viewport, shaderFolder,
+        [](Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx)
+        {
             if (!app.m_texLoaded)
             {
                 app.m_texLoaded = true;
                 CRefObj<IShaderMgr> spShaderMgr = pRenderer->GetShaderMgr();
 
-                app.m_videoIndex = 0;
-                CRefObj<IVideoTexture> p0 = app.m_spCausticFactory->LoadVideoTexture(L"d:\\DittoData\\Listen.mp4", pRenderer);
+                app.m_curVideoIndex = 0;
+                app.m_nextVideoIndex = 0;
+                CRefObj<IVideoTexture> p0 = app.m_spCausticFactory->LoadVideoTexture(L"d:\\DittoData\\Listening.mp4", pRenderer);
                 CRefObj<ISampler> s0 = app.m_spCausticFactory->CreateSampler(pRenderer, p0);
                 app.m_videos.push_back(p0);
                 app.m_samplers.push_back(s0);
@@ -93,23 +229,35 @@ void CApp::InitializeCaustic(HWND hwnd)
                 app.m_videos.push_back(p4);
                 app.m_samplers.push_back(s4);
 
+                CRefObj<IVideoTexture> p5 = app.m_spCausticFactory->LoadVideoTexture(L"d:\\DittoData\\ScratchFace.mp4", pRenderer);
+                CRefObj<ISampler> s5 = app.m_spCausticFactory->CreateSampler(pRenderer, p5);
+                app.m_videos.push_back(p5);
+                app.m_samplers.push_back(s5);
+
             }
-            app.m_videos[app.m_videoIndex]->Update(pRenderer);
-            if (app.m_videos[app.m_videoIndex]->EndOfStream())
+            auto curRenderTime = std::chrono::system_clock::now();
+            std::chrono::duration<double> elapsed_seconds = curRenderTime - app.m_prevRenderTime;
+            if (elapsed_seconds.count() * 1000.0f > 33.0f)
             {
-                app.m_videos[app.m_videoIndex]->Restart();
-                if (app.m_videoIndex == 0)
-                {
-                    app.m_videoIndex = (rand() % 4) + 1;
-                }
-                else
-                {
-                    app.m_videoIndex = 0;
-                }
+                app.m_videos[app.m_curVideoIndex]->Update(pRenderer);
+                app.m_prevRenderTime = std::chrono::system_clock::now();
             }
-            pRenderer->DrawScreenQuad(0.0f, 0.0f, 1.0f, 1.0f, app.m_videos[app.m_videoIndex], app.m_samplers[app.m_videoIndex]);
+            if (app.m_curVideoIndex != app.m_nextVideoIndex)
+            {
+                app.m_videos[app.m_curVideoIndex]->Restart();
+                app.m_curVideoIndex = app.m_nextVideoIndex;
+            }
+            else if (app.m_videos[app.m_curVideoIndex]->EndOfStream())
+            {
+                app.m_videos[app.m_curVideoIndex]->Restart();
+                app.m_curVideoIndex = app.m_nextVideoIndex = 0;
+            }
+            pRenderer->DrawScreenQuad(0.0f, 0.0f, 1.0f, 1.0f, app.m_videos[app.m_curVideoIndex], app.m_samplers[app.m_curVideoIndex]);
         },
-        [](IRenderer*) {}, true, 0);
+        [](Caustic::IRenderer* pRenderer, ITexture* pFinalRT, ImFont* pFont)
+        {
+            app.BuildUI(pFinalRT, pFont);
+        });
 
     // Load our shaders
     CRefObj<IRenderer> spRenderer = m_spRenderWindow->GetRenderer();
@@ -120,6 +268,8 @@ void CApp::InitializeCaustic(HWND hwnd)
 
 // Global Variables:
 HINSTANCE hInst;                                // current instance
+HBITMAP imgbitmap = nullptr;
+int imgwidth, imgheight;
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 
@@ -128,6 +278,45 @@ ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+
+
+using namespace Caustic;
+CRefObj<IWebCamera> spWebCamera;
+CRefObj<IImage> spSourceImage;
+CRefObj<IImage> spFilteredSourceImage;
+CRefObj<IImageFilter> spFilter;
+
+void DrawImage(HDC hdc, HBITMAP img, int w, int h)
+{
+    if (img != nullptr)
+    {
+        HDC hdcMem = CreateCompatibleDC(hdc);
+        HGDIOBJ oldBitmap = SelectObject(hdcMem, img);
+        RECT rect;
+        GetClientRect(app.m_hwnd, &rect);
+        SetStretchBltMode(hdc, COLORONCOLOR);
+        StretchBlt(hdc, 0, 0, rect.right - rect.left, rect.bottom - rect.top, hdcMem, 0, 0, w, h, SRCCOPY);
+        SelectObject(hdcMem, oldBitmap);
+        DeleteObject(hdcMem);
+    }
+}
+
+void SetDisplayImage(IImage* pImage, ImageFilterParams* pParams = nullptr)
+{
+    IImage* pDisplayImage = pImage;
+    if (spFilter)
+    {
+        spFilteredSourceImage = spFilter->Apply(pImage, pParams);
+        pDisplayImage = spFilteredSourceImage;
+    }
+    spSourceImage = pImage;
+    imgwidth = pDisplayImage->GetWidth();
+    imgheight = pDisplayImage->GetHeight();
+    if (imgbitmap != nullptr)
+        DeleteObject(imgbitmap);
+    imgbitmap = CreateBitmap(imgwidth, imgheight, 1, 32, pDisplayImage->GetData());
+    InvalidateRect(app.m_hwnd, nullptr, false);
+}
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -154,13 +343,33 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     MSG msg;
 
+    CRefObj<IVirtualCamera> spVirtualCam = Caustic::CreateVirtualCamera();
     // Main message loop:
-    while (GetMessage(&msg, nullptr, 0, 0))
+    while (true)
     {
-        if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
         {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
+            if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+            {
+                if (msg.message == WM_QUIT)
+                    break;
+                TranslateMessage(&msg);
+                DispatchMessage(&msg);
+            }
+        }
+        if (spWebCamera != nullptr)
+        {
+            CRefObj<IImage> spColorImage;
+            if (spWebCamera->NextVideoFrame(&spColorImage.p) && spColorImage != nullptr)
+            {
+                //SetDisplayImage(spColorImage);
+                //DrawImage(GetDC(app.m_hwnd), imgbitmap, imgwidth, imgheight);
+                spVirtualCam->SendFrame(spColorImage);
+            }
+            CRefObj<IAudioFrame> spAudioFrame;
+            if (spWebCamera->NextAudioFrame(&spAudioFrame))
+            {
+            }
         }
     }
 
@@ -209,19 +418,19 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // Store instance handle in our global variable
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+   app.m_hwnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
       CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
-   if (!hWnd)
+   if (!app.m_hwnd)
    {
       return FALSE;
    }
 
    // Setup our renderer
-   app.InitializeCaustic(hWnd);
+   app.InitializeCaustic(app.m_hwnd);
 
-   ShowWindow(hWnd, nCmdShow);
-   UpdateWindow(hWnd);
+   ShowWindow(app.m_hwnd, nCmdShow);
+   UpdateWindow(app.m_hwnd);
 
    return TRUE;
 }
@@ -238,6 +447,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    if (app.m_spRenderWindow != nullptr && message != WM_NCDESTROY)
+        app.m_spRenderWindow->RecordEvent(hWnd, message, wParam, lParam);
     switch (message)
     {
     case WM_COMMAND:
@@ -268,20 +479,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
-    case WM_LBUTTONDOWN:
-        app.m_spRenderWindow->MouseDown((int)LOWORD(lParam), (int)HIWORD(lParam), c_LeftButton, (uint32)wParam);
-        break;
-    case WM_LBUTTONUP:
-        app.m_spRenderWindow->MouseUp((int)LOWORD(lParam), (int)HIWORD(lParam), c_LeftButton, (uint32)wParam);
-        break;
-    case WM_MOUSEMOVE:
-        app.m_spRenderWindow->MouseMove((int)LOWORD(lParam), (int)HIWORD(lParam), (uint32)wParam);
-        break;
-    case WM_MOUSEWHEEL:
-        app.m_spRenderWindow->MouseWheel((int)wParam);
-        break;
-    case WM_KEYDOWN:
-        app.m_spRenderWindow->MapKey((uint32)wParam, (uint32)lParam);
+    case WM_QUIT:
+        Caustic::SystemShutdown();
         break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);

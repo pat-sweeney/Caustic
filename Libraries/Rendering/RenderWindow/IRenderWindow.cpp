@@ -17,10 +17,11 @@ import Rendering.RenderWindow.RenderWindow;
 namespace Caustic
 {
     CRefObj<IRenderWindow> CreateImguiRenderWindow(HWND hwnd, BBox2& viewport, std::wstring& shaderFolder,
+        std::function<void(Caustic::IRenderer*, Caustic::IRenderCtx*)> postSceneRender,
         std::function<void(Caustic::IRenderer*, ITexture*, ImFont*)> renderUI,
         bool startFrozen /*= false*/, int desktopIndex /*= 0*/)
     {
-        return CRefObj<IRenderWindow>(new CImguiRenderWindow(hwnd, viewport, shaderFolder, renderUI, startFrozen, desktopIndex));
+        return CRefObj<IRenderWindow>(new CImguiRenderWindow(hwnd, viewport, shaderFolder, postSceneRender, renderUI, startFrozen, desktopIndex));
     }
 
     CRefObj<IRenderWindow> CreateRenderWindow(HWND hwnd, BBox2 &viewport, std::wstring& shaderFolder,

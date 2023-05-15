@@ -376,7 +376,9 @@ namespace Caustic
     }
 
     CImguiRenderWindow::CImguiRenderWindow(HWND hwnd, BBox2& viewport, std::wstring& shaderFolder,
-        std::function<void(Caustic::IRenderer*, ITexture*, ImFont*)> renderUI, bool startFrozen /*= false*/, int desktopIndex /*= 0*/)
+        std::function<void(Caustic::IRenderer*, Caustic::IRenderCtx*)> postSceneRender,
+        std::function<void(Caustic::IRenderer*, ITexture*, ImFont*)> renderUI,
+        bool startFrozen /*= false*/, int desktopIndex /*= 0*/)
         : CBaseRenderWindow(hwnd)
     {
         m_hwnd = hwnd;
@@ -412,12 +414,14 @@ namespace Caustic
                         (D3D11_CPU_ACCESS_FLAG)0, (D3D11_BIND_FLAG)(D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET | D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE));
                     pRenderer->SetFinalRenderTarget(m_spFinalRT->GetD3DTexture());
                 },
-                [this](IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)
+                [this, postSceneRender](IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)
                 {
                     SceneCtx sceneCtx;
                     sceneCtx.m_CurrentPass = pass;
                     sceneCtx.m_ShowProxyObjects = m_spSceneGraph->GetShowProxyObjects();
                     m_spSceneGraph->Render(pRenderer, pRenderCtx, &sceneCtx);
+                    if (postSceneRender)
+                        postSceneRender(pRenderer, pRenderCtx);
                 },
                 [&](IRenderer* pRenderer)
                 {

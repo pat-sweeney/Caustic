@@ -52,7 +52,7 @@
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>SHADERPATH=LR"foo($(CausticRoot)\$(Configuration))foo";_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(CausticRoot)\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CausticRoot)\External\imgui;$(CausticRoot)\External\imgui\backends;$(CausticRoot)\Libraries;</AdditionalIncludeDirectories>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>true</EnableModules>
@@ -73,7 +73,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>SHADERPATH=LR"foo($(CausticRoot)\$(Configuration))foo";NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(CausticRoot)\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CausticRoot)\External\imgui;$(CausticRoot)\External\imgui\backends;$(CausticRoot)\Libraries;</AdditionalIncludeDirectories>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>true</EnableModules>
@@ -113,6 +113,12 @@
     <ProjectReference Include="..\..\Libraries\Cameras\CameraBase\CameraBase.vcxproj">
       <Project>{6bfeacf4-1bac-46ef-9945-eb31a8151b21}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Cameras\VirtualCam\VirtualCam.vcxproj">
+      <Project>{e750a470-efa3-4ab1-84b6-fe17a6adfa50}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Cameras\WebCamera\WebCamera.vcxproj">
+      <Project>{613c7807-ea12-4600-848e-3d3d5d0fdebf}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Geometry\GeomDS\GeomDS.vcxproj">
       <Project>{163426b2-af7c-4713-8e3c-1a56a9cc0abf}</Project>
     </ProjectReference>
@@ -133,6 +139,9 @@
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Rendering\Caustic\Caustic.vcxproj">
       <Project>{60a04400-10f9-4c6d-b34c-d5c7ebafa262}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Rendering\ImGui\ImGui.vcxproj">
+      <Project>{fd63d447-4b42-4f14-be8d-392fa277ee0e}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Rendering\RenderWindow\RenderWindow.vcxproj">
       <Project>{d031b042-4acd-4703-8df4-ba768148262a}</Project>

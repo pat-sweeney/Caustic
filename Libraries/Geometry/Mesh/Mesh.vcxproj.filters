@@ -64,6 +64,8 @@
     <ClCompile Include="MeshFuncs.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="UnitTest.ixx" />
+    <ClCompile Include="UnitTest.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

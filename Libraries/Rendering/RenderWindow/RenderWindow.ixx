@@ -135,6 +135,7 @@ export namespace Caustic
 
     public:
         CImguiRenderWindow(HWND hwnd, BBox2& viewport, std::wstring& shaderFolder,
+            std::function<void(Caustic::IRenderer*, Caustic::IRenderCtx*)> postSceneRender,
             std::function<void(Caustic::IRenderer*, ITexture*, ImFont*)> renderUI,
             bool startFrozen = false, int desktopIndex = 0);
         ~CImguiRenderWindow() {}

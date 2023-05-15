@@ -198,6 +198,7 @@ export namespace Caustic
     // Returns the created render window
     //**********************************************************************
     CRefObj<IRenderWindow> CreateImguiRenderWindow(HWND hwnd, BBox2& viewport, std::wstring& shaderFolder,
+        std::function<void(IRenderer*, IRenderCtx*)> postSceneRender,
         std::function<void(Caustic::IRenderer*, ITexture*, ImFont*)> renderUI,
         bool startFrozen = false, int desktopIndex = 0);
 }
