@@ -28,10 +28,15 @@ export namespace Caustic
     //**********************************************************************
     class CVirtualCamera : public IVirtualCamera, public CRefCount
     {
-        HANDLE m_hFrameReady;
-        HANDLE m_hFrameMutex;
-        HANDLE m_hFileMapping;
-        BYTE* m_pSharedMemory;
+        HANDLE m_hVideoDataProduced;
+        HANDLE m_hVideoDataConsumed;
+        HANDLE m_hVideoMapping;
+        BYTE* m_pVideoMemory;
+
+        HANDLE m_hAudioDataProduced;
+        HANDLE m_hAudioDataConsumed;
+        HANDLE m_hAudioMapping;
+        BYTE* m_pAudioMemory;
     public:
         CVirtualCamera();
         
@@ -44,7 +49,8 @@ export namespace Caustic
         //**********************************************************************
         // IVirtualCamera
         //**********************************************************************
-        virtual void SendFrame(IImage* pTexture) override;
+        virtual void SendVideoFrame(IImage* pTexture) override;
+        virtual void SendAudioFrame(uint8* pData, uint32 dataSize) override;
     };
 
     CRefObj<IVirtualCamera> CreateVirtualCamera()

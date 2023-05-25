@@ -146,6 +146,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ditto", "Apps\Ditto\Ditto.v
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VirtualCam", "Libraries\Cameras\VirtualCam\VirtualCam.vcxproj", "{E750A470-EFA3-4AB1-84B6-FE17A6ADFA50}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Video", "Libraries\Imaging\Video\Video.vcxproj", "{338CBC84-638B-4EEA-9AF1-4F6582945B28}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -522,6 +524,14 @@ Global
 		{E750A470-EFA3-4AB1-84B6-FE17A6ADFA50}.Release|x64.Build.0 = Release|x64
 		{E750A470-EFA3-4AB1-84B6-FE17A6ADFA50}.Release|x86.ActiveCfg = Release|x64
 		{E750A470-EFA3-4AB1-84B6-FE17A6ADFA50}.Release|x86.Build.0 = Release|x64
+		{338CBC84-638B-4EEA-9AF1-4F6582945B28}.Debug|x64.ActiveCfg = Debug|x64
+		{338CBC84-638B-4EEA-9AF1-4F6582945B28}.Debug|x64.Build.0 = Debug|x64
+		{338CBC84-638B-4EEA-9AF1-4F6582945B28}.Debug|x86.ActiveCfg = Debug|Win32
+		{338CBC84-638B-4EEA-9AF1-4F6582945B28}.Debug|x86.Build.0 = Debug|Win32
+		{338CBC84-638B-4EEA-9AF1-4F6582945B28}.Release|x64.ActiveCfg = Release|x64
+		{338CBC84-638B-4EEA-9AF1-4F6582945B28}.Release|x64.Build.0 = Release|x64
+		{338CBC84-638B-4EEA-9AF1-4F6582945B28}.Release|x86.ActiveCfg = Release|Win32
+		{338CBC84-638B-4EEA-9AF1-4F6582945B28}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -584,6 +594,7 @@ Global
 		{90C98B38-AF15-48B7-808E-D9A807CC3412} = {EDDF7B63-077B-4793-9638-22B2D7ECD628}
 		{F98E94A9-F06B-4C03-9AB2-A6DED9BF18CE} = {13E8C4A1-0338-428F-BF47-E9AA893329D5}
 		{E750A470-EFA3-4AB1-84B6-FE17A6ADFA50} = {D3EDC083-19DE-435B-93D9-CF91A6CBEF6C}
+		{338CBC84-638B-4EEA-9AF1-4F6582945B28} = {CE35B135-A8F8-47F8-AE64-789E7744950C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {60363C0E-C20A-4E6B-AE61-6E0BD7D6B964}

@@ -24,6 +24,7 @@ export namespace Caustic
     //**********************************************************************
     struct IVirtualCamera : public IRefCount
     {
-        virtual void SendFrame(IImage* pTexture) = 0;
+        virtual void SendVideoFrame(IImage* pTexture) = 0;
+        virtual void SendAudioFrame(uint8* pData, uint32 dataSize) = 0;
     };
 }

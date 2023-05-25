@@ -4,11 +4,12 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
+#include <d3d11.h>
+#include <DirectXMath.h>
 #include <memory>
 #include <any>
 #include <vector>
 #include <atlbase.h>
-#include <d3d11.h>
 
 module Rendering.Caustic.PointCloud;
 import Base.Core.Core;

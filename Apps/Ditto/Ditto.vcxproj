@@ -137,6 +137,9 @@
     <ProjectReference Include="..\..\Libraries\Imaging\Image\Image.vcxproj">
       <Project>{f7bef797-220c-4585-a489-f06df155ea60}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Imaging\Video\Video.vcxproj">
+      <Project>{338cbc84-638b-4eea-9af1-4f6582945b28}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Rendering\Caustic\Caustic.vcxproj">
       <Project>{60a04400-10f9-4c6d-b34c-d5c7ebafa262}</Project>
     </ProjectReference>

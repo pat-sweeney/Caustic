@@ -1,8 +1,4 @@
-//**********************************************************************
-// Copyright Patrick Sweeney 2023
-// Licensed under the MIT license.
-// See file LICENSE for details.
-//**********************************************************************
+//**********************************************
 #include "framework.h"
 #include "Ditto.h"
 #include <string>
@@ -31,6 +27,7 @@ import Cameras.WebCamera.WebCamera;
 import Cameras.WebCamera.IWebCamera;
 import Cameras.VirtualCamera.IVirtualCamera;
 import Cameras.VirtualCamera.VirtualCamera;
+import Imaging.Video.IVideo;
 
 using namespace Caustic;
 
@@ -43,14 +40,16 @@ public:
     CRefObj<Caustic::ICausticFactory> m_spCausticFactory;
     CRefObj<ITexture> defaultTex;
     CRefObj<ISampler> m_spSampler;
-    std::vector<CRefObj<IVideoTexture>> m_videos;
-    std::vector<CRefObj<ISampler>> m_samplers;
+    CRefObj<IImage> m_spLastFrame;
+    CRefObj<ITexture> m_spLastTex;
+    std::vector<CRefObj<IVideo>> m_videos;
     int m_curVideoIndex;
     int m_nextVideoIndex;
     bool m_texLoaded;
     HWND m_hwnd;
     std::chrono::time_point<std::chrono::system_clock> m_prevRenderTime;
-
+    CRefObj<IVirtualCamera> m_spVirtualCam;
+    CRefObj<IVideo> m_spVideo;
     void InitializeCaustic(HWND hWnd);
     void LiveWebCam();
     void BuildUI(ITexture* pFinalRT, ImFont* pFont);
@@ -194,6 +193,7 @@ void CApp::InitializeCaustic(HWND hwnd)
     // Next create our output window
     std::wstring shaderFolder(SHADERPATH);
     BBox2 viewport(0.0f, 0.0f, 1.0f, 1.0f);
+    app.m_spVirtualCam = Caustic::CreateVirtualCamera();
     m_spRenderWindow = CreateImguiRenderWindow(hwnd, viewport, shaderFolder,
         [](Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx)
         {
@@ -204,43 +204,23 @@ void CApp::InitializeCaustic(HWND hwnd)
 
                 app.m_curVideoIndex = 0;
                 app.m_nextVideoIndex = 0;
-                CRefObj<IVideoTexture> p0 = app.m_spCausticFactory->LoadVideoTexture(L"d:\\DittoData\\Listening.mp4", pRenderer);
-                CRefObj<ISampler> s0 = app.m_spCausticFactory->CreateSampler(pRenderer, p0);
+                CRefObj<IVideo> p0 = CreateVideo(L"d:\\DittoData\\Listening.mp4");
                 app.m_videos.push_back(p0);
-                app.m_samplers.push_back(s0);
 
-                CRefObj<IVideoTexture> p1 = app.m_spCausticFactory->LoadVideoTexture(L"d:\\DittoData\\FollowUp.mp4", pRenderer);
-                CRefObj<ISampler> s1 = app.m_spCausticFactory->CreateSampler(pRenderer, p1);
+                CRefObj<IVideo> p1 = CreateVideo(L"d:\\DittoData\\FollowUp.mp4");
                 app.m_videos.push_back(p1);
-                app.m_samplers.push_back(s1);
 
-                CRefObj<IVideoTexture> p2 = app.m_spCausticFactory->LoadVideoTexture(L"d:\\DittoData\\FollowUpLater.mp4", pRenderer);
-                CRefObj<ISampler> s2 = app.m_spCausticFactory->CreateSampler(pRenderer, p2);
+                CRefObj<IVideo> p2 = CreateVideo(L"d:\\DittoData\\FollowUpLater.mp4");
                 app.m_videos.push_back(p2);
-                app.m_samplers.push_back(s2);
 
-                CRefObj<IVideoTexture> p3 = app.m_spCausticFactory->LoadVideoTexture(L"d:\\DittoData\\FollowUpEmail.mp4", pRenderer);
-                CRefObj<ISampler> s3 = app.m_spCausticFactory->CreateSampler(pRenderer, p3);
+                CRefObj<IVideo> p3 = CreateVideo(L"d:\\DittoData\\FollowUpEmail.mp4");
                 app.m_videos.push_back(p3);
-                app.m_samplers.push_back(s3);
 
-                CRefObj<IVideoTexture> p4 = app.m_spCausticFactory->LoadVideoTexture(L"d:\\DittoData\\ScratchFace.mp4", pRenderer);
-                CRefObj<ISampler> s4 = app.m_spCausticFactory->CreateSampler(pRenderer, p4);
+                CRefObj<IVideo> p4 = CreateVideo(L"d:\\DittoData\\ScratchFace.mp4");
                 app.m_videos.push_back(p4);
-                app.m_samplers.push_back(s4);
 
-                CRefObj<IVideoTexture> p5 = app.m_spCausticFactory->LoadVideoTexture(L"d:\\DittoData\\ScratchFace.mp4", pRenderer);
-                CRefObj<ISampler> s5 = app.m_spCausticFactory->CreateSampler(pRenderer, p5);
+                CRefObj<IVideo> p5 = CreateVideo(L"d:\\DittoData\\ScratchFace.mp4");
                 app.m_videos.push_back(p5);
-                app.m_samplers.push_back(s5);
-
-            }
-            auto curRenderTime = std::chrono::system_clock::now();
-            std::chrono::duration<double> elapsed_seconds = curRenderTime - app.m_prevRenderTime;
-            if (elapsed_seconds.count() * 1000.0f > 33.0f)
-            {
-                app.m_videos[app.m_curVideoIndex]->Update(pRenderer);
-                app.m_prevRenderTime = std::chrono::system_clock::now();
             }
             if (app.m_curVideoIndex != app.m_nextVideoIndex)
             {
@@ -252,7 +232,28 @@ void CApp::InitializeCaustic(HWND hwnd)
                 app.m_videos[app.m_curVideoIndex]->Restart();
                 app.m_curVideoIndex = app.m_nextVideoIndex = 0;
             }
-            pRenderer->DrawScreenQuad(0.0f, 0.0f, 1.0f, 1.0f, app.m_videos[app.m_curVideoIndex], app.m_samplers[app.m_curVideoIndex]);
+            else
+            {
+                auto curRenderTime = std::chrono::system_clock::now();
+                std::chrono::duration<double> elapsed_seconds = curRenderTime - app.m_prevRenderTime;
+                if (elapsed_seconds.count() * 1000.0f > 20)
+                {
+                    app.m_prevRenderTime = std::chrono::system_clock::now();
+                    auto spVideoSample = app.m_videos[app.m_curVideoIndex]->NextVideoSample();
+                    if (spVideoSample != nullptr)
+                    {
+                        app.m_spLastFrame = spVideoSample->GetImage();
+                        app.m_spVirtualCam->SendVideoFrame(app.m_spLastFrame);
+                        app.m_spLastTex = app.m_spCausticFactory->CreateTexture(pRenderer, app.m_spLastFrame, D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
+                        app.m_spSampler = app.m_spCausticFactory->CreateSampler(pRenderer, app.m_spLastTex);
+                    }
+                }
+                auto spAudioSample = app.m_videos[app.m_curVideoIndex]->NextAudioSample();
+                if (spAudioSample != nullptr)
+                    app.m_spVirtualCam->SendAudioFrame(spAudioSample->GetData(), spAudioSample->GetDataSize());
+            }
+
+            pRenderer->DrawScreenQuad(0.0f, 0.0f, 1.0f, 1.0f, app.m_spLastTex, app.m_spSampler);
         },
         [](Caustic::IRenderer* pRenderer, ITexture* pFinalRT, ImFont* pFont)
         {
@@ -343,7 +344,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     MSG msg;
 
-    CRefObj<IVirtualCamera> spVirtualCam = Caustic::CreateVirtualCamera();
     // Main message loop:
     while (true)
     {
@@ -364,7 +364,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             {
                 //SetDisplayImage(spColorImage);
                 //DrawImage(GetDC(app.m_hwnd), imgbitmap, imgwidth, imgheight);
-                spVirtualCam->SendFrame(spColorImage);
+                //m_spVirtualCam->SendFrame(spColorImage);
             }
             CRefObj<IAudioFrame> spAudioFrame;
             if (spWebCamera->NextAudioFrame(&spAudioFrame))

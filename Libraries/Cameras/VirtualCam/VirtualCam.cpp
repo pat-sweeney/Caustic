@@ -25,42 +25,79 @@ namespace Caustic
 #define IMAGE_HEIGHT 1080
     CVirtualCamera::CVirtualCamera()
     {
-        m_hFrameReady = CreateEvent(NULL, FALSE, FALSE, L"FrameReady");
-        m_hFrameMutex = CreateMutex(NULL, FALSE, L"FrameMutex");
+        m_hVideoDataProduced = CreateEvent(NULL, FALSE, FALSE, L"VideoDataProduced");
+        m_hVideoDataConsumed = CreateEvent(NULL, FALSE, TRUE, L"VideoDataConsumed");
         ULARGE_INTEGER size;
-        size.QuadPart = IMAGE_WIDTH * IMAGE_HEIGHT * 3;
-        m_hFileMapping = CreateFileMappingW(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, size.HighPart, size.LowPart, L"FrameData");
-        m_pSharedMemory = (BYTE*)MapViewOfFile(m_hFileMapping, FILE_MAP_ALL_ACCESS, 0, 0, 0);
+        size.QuadPart = IMAGE_WIDTH * IMAGE_HEIGHT * 3 + sizeof(DWORD);
+        m_hVideoMapping = CreateFileMappingW(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, size.HighPart, size.LowPart, L"FrameData");
+        m_pVideoMemory = (BYTE*)MapViewOfFile(m_hVideoMapping, FILE_MAP_ALL_ACCESS, 0, 0, 0);
+
+        const int AUDIO_BITRATE = 48000; // samples per second
+        const int AUDIO_SAMPLELEN = 1; // length of sample in seconds
+        const int AUDIO_NUMCHANNELS = 1; // number of audio channels
+        const int AUDIO_BITSPERSAMPLE = 16; // number of bits per sample
+        const int AUDIO_BUFFERSIZE = (AUDIO_BITRATE * AUDIO_SAMPLELEN * AUDIO_NUMCHANNELS * AUDIO_BITSPERSAMPLE) / 8;
+
+        m_hAudioDataProduced = CreateEvent(NULL, FALSE, FALSE, L"AudioDataProduced");
+        m_hAudioDataConsumed = CreateEvent(NULL, FALSE, TRUE, L"AudioDataConsumed");
+        size.QuadPart = AUDIO_BUFFERSIZE + sizeof(DWORD);
+        m_hAudioMapping = CreateFileMappingW(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, size.HighPart, size.LowPart, L"AudioData");
+        m_pAudioMemory = (BYTE*)MapViewOfFile(m_hAudioMapping, FILE_MAP_ALL_ACCESS, 0, 0, 0);
     }
 
-    void CVirtualCamera::SendFrame(IImage *pImage)
+    void CVirtualCamera::SendAudioFrame(uint8* pData, uint32 dataSize)
     {
         // create or open events and shared memory:
-        if (!WaitForSingleObject(m_hFrameMutex, 1000))
+        if (WaitForSingleObject(m_hAudioDataConsumed, 1) == WAIT_OBJECT_0)
         {
-            auto pDst = m_pSharedMemory;
+            wchar_t buf[1024];
+            static int sampleCount = 0;
+            swprintf_s(buf, L"Audio-%d: Sending audio sample  size=%d\n", sampleCount++, dataSize);
+            OutputDebugString(buf);
+            DWORD* pDataLen = (DWORD*)m_pAudioMemory;
+            *pDataLen = dataSize;
+            byte* pData = (byte*)m_pAudioMemory;
+            memcpy(m_pAudioMemory + sizeof(DWORD), pData, dataSize);
+            SetEvent(m_hAudioDataProduced);
+        }
+    }
+
+    void CVirtualCamera::SendVideoFrame(IImage *pImage)
+    {
+        // create or open events and shared memory:
+        if (WaitForSingleObject(m_hVideoDataConsumed, 1) == WAIT_OBJECT_0)
+        {
+            wchar_t buf[1024];
+            static int sampleCount = 0;
+            swprintf_s(buf, L"Video-%d: Sending video sample  size=%d\n", sampleCount++, IMAGE_WIDTH * IMAGE_HEIGHT * 3);
+            OutputDebugString(buf);
+            DWORD* pDataLen = (DWORD*)m_pVideoMemory;
+            *pDataLen = IMAGE_WIDTH * IMAGE_HEIGHT * 3;
+            auto pDst = m_pVideoMemory + sizeof(DWORD);
             CImageIter32 rowSrc(pImage, 0, pImage->GetHeight() - 1);
-            for (uint32 y = 0; y < pImage->GetHeight(); y++)
+            for (uint32 y = 0; y < IMAGE_HEIGHT; y++)
             {
                 CImageIter32 colSrc = rowSrc;
-                for (uint32 x = 0; x < pImage->GetWidth(); x++)
+                for (uint32 x = 0; x < IMAGE_WIDTH; x++)
                 {
-                    *pDst++ = colSrc.GetBlue();
-                    *pDst++ = colSrc.GetGreen();
-                    *pDst++ = colSrc.GetRed();
-                    colSrc.Step(CImageIter::Right);
-                }
-                if (IMAGE_WIDTH > pImage->GetWidth())
-                    for (uint32 x2 = 0; x2 < IMAGE_WIDTH - pImage->GetWidth(); x2++)
+                    if (x < pImage->GetWidth() && y < pImage->GetHeight())
+                    {
+                        *pDst++ = colSrc.GetBlue();
+                        *pDst++ = colSrc.GetGreen();
+                        *pDst++ = colSrc.GetRed();
+                        colSrc.Step(CImageIter::Right);
+                    }
+                    else
                     {
                         *pDst++ = 0;
                         *pDst++ = 0;
                         *pDst++ = 0;
                     }
-                rowSrc.Step(CImageIter::Up);
-            }    
-            ReleaseMutex(m_hFrameMutex);
-            SetEvent(m_hFrameReady);
+                }
+                if (y < pImage->GetHeight())
+                    rowSrc.Step(CImageIter::Up);
+            }
+            SetEvent(m_hVideoDataProduced);
         }
     }
 }
