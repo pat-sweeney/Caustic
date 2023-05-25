@@ -20,7 +20,6 @@ import Imaging.Video.Video;
 
 namespace Caustic
 {
-
     //**********************************************************************
     // Function: CreateVideo
     // CreateVideo loads a video

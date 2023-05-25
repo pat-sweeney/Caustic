@@ -27,6 +27,7 @@ import Cameras.WebCamera.WebCamera;
 import Cameras.WebCamera.IWebCamera;
 import Cameras.VirtualCamera.IVirtualCamera;
 import Cameras.VirtualCamera.VirtualCamera;
+import Cameras.NDIStream.INDIStream;
 import Imaging.Video.IVideo;
 
 using namespace Caustic;
@@ -53,6 +54,7 @@ public:
     void InitializeCaustic(HWND hWnd);
     void LiveWebCam();
     void BuildUI(ITexture* pFinalRT, ImFont* pFont);
+    CRefObj<INDIStream> m_spNDIStream;
 };
 CApp app;
 
@@ -191,6 +193,7 @@ void CApp::InitializeCaustic(HWND hwnd)
     app.m_texLoaded = false;
     m_spCausticFactory = Caustic::CreateCausticFactory();
     // Next create our output window
+    app.m_spNDIStream = CreateNDIStream();
     std::wstring shaderFolder(SHADERPATH);
     BBox2 viewport(0.0f, 0.0f, 1.0f, 1.0f);
     app.m_spVirtualCam = Caustic::CreateVirtualCamera();
@@ -221,6 +224,12 @@ void CApp::InitializeCaustic(HWND hwnd)
 
                 CRefObj<IVideo> p5 = CreateVideo(L"d:\\DittoData\\ScratchFace.mp4");
                 app.m_videos.push_back(p5);
+
+                CAudioFormat audioFormat;
+                p2->GetAudioFormat(&audioFormat);
+                CVideoFormat videoFormat;
+                p2->GetVideoFormat(&videoFormat);
+                app.m_spNDIStream->Initialize("test", videoFormat.m_width, videoFormat.m_height, 30, audioFormat.m_samplesPerSec, audioFormat.m_bitsPerSample, audioFormat.m_numChannels);
             }
             if (app.m_curVideoIndex != app.m_nextVideoIndex)
             {
@@ -243,14 +252,18 @@ void CApp::InitializeCaustic(HWND hwnd)
                     if (spVideoSample != nullptr)
                     {
                         app.m_spLastFrame = spVideoSample->GetImage();
-                        app.m_spVirtualCam->SendVideoFrame(app.m_spLastFrame);
+                        //app.m_spVirtualCam->SendVideoFrame(app.m_spLastFrame);
                         app.m_spLastTex = app.m_spCausticFactory->CreateTexture(pRenderer, app.m_spLastFrame, D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
                         app.m_spSampler = app.m_spCausticFactory->CreateSampler(pRenderer, app.m_spLastTex);
+                        app.m_spNDIStream->SendImage(app.m_spLastFrame);
                     }
                 }
                 auto spAudioSample = app.m_videos[app.m_curVideoIndex]->NextAudioSample();
                 if (spAudioSample != nullptr)
-                    app.m_spVirtualCam->SendAudioFrame(spAudioSample->GetData(), spAudioSample->GetDataSize());
+                {
+                    //app.m_spVirtualCam->SendAudioFrame(spAudioSample->GetData(), spAudioSample->GetDataSize());
+                    app.m_spNDIStream->SendAudioFrame(spAudioSample->GetData(), spAudioSample->GetDataSize());
+                }
             }
 
             pRenderer->DrawScreenQuad(0.0f, 0.0f, 1.0f, 1.0f, app.m_spLastTex, app.m_spSampler);
@@ -480,6 +493,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         PostQuitMessage(0);
         break;
     case WM_QUIT:
+        app.m_spNDIStream->Shutdown();
         Caustic::SystemShutdown();
         break;
     default:

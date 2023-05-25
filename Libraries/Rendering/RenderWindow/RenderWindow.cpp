@@ -430,7 +430,7 @@ namespace Caustic
                     for (size_t i = 0; i < m_events.size(); i++)
                     {
                         extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-                        if (io.WantCaptureMouse)
+                 //       if (io.WantCaptureMouse)
                             ImGui_ImplWin32_WndProcHandler(m_events[i].hWnd, m_events[i].msg, m_events[i].wParam, m_events[i].lParam);
                     }
                     m_events.resize(0);

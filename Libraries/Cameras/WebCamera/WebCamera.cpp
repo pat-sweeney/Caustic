@@ -204,6 +204,8 @@ namespace Caustic
         CComPtr<IMFSample> spSample;
         HRESULT hr;
         hr = m_spReader->ReadSample(MF_SOURCE_READER_FIRST_VIDEO_STREAM, 0, &stream, &flags, &timestamp, &spSample);
+        if (FAILED(hr))
+            return false;
         if (flags & MF_SOURCE_READERF_STREAMTICK)
             return false;
         if (flags & MF_SOURCE_READERF_ENDOFSTREAM)

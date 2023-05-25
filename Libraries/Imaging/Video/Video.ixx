@@ -119,8 +119,6 @@ export namespace Caustic
         void AudioFormatFromMediaSource(IMFSourceReader* pSourceReader);
         void FromMediaSource(IMFSourceReader* pSourceReader);
         void UpdateAudio();
-        void GetVideoFormat(CVideoFormat* pFormat);
-        void GetAudioFormat(CAudioFormat* pFormat);
     public:
         CVideo();
         ~CVideo();
@@ -136,6 +134,8 @@ export namespace Caustic
         //**********************************************************************
         // IVideo
         //**********************************************************************
+        virtual void GetAudioFormat(CAudioFormat* pFormat) override;
+        virtual void GetVideoFormat(CVideoFormat* pFormat) override;
         virtual CRefObj<IAudioSample> NextAudioSample() override;
         virtual CRefObj<IVideoSample> NextVideoSample() override;
         virtual bool EndOfStream() override;

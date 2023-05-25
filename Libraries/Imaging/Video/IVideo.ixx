@@ -99,6 +99,18 @@ export namespace Caustic
     struct IVideo : public IRefCount
     {
         //**********************************************************************
+        // Method: GetAudioFormat
+        // Returns the format of the audio track
+        //**********************************************************************
+        virtual void GetAudioFormat(CAudioFormat* pFormat) = 0;
+
+        //**********************************************************************
+        // Method: GetVideoFormat
+        // Returns the format of the video track
+        //**********************************************************************
+        virtual void GetVideoFormat(CVideoFormat* pFormat) = 0;
+
+        //**********************************************************************
         // Method: NextAudioSample
         // Returns the next audio sample
         //**********************************************************************

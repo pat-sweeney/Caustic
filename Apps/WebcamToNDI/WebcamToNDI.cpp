@@ -1,5 +1,5 @@
 ﻿//**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2023
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -19,10 +19,6 @@
 #include "imgui_impl_dx11.h"
 #include "imgui_internal.h"
 #include <sstream>
-#ifdef USE_NDI
-#include <Processing.NDI.Advanced.h>
-#include <Processing.NDI.Lib.h>
-#endif
 
 import Caustic.Base;
 import Base.Core.Core;
@@ -46,12 +42,15 @@ import Rendering.GuiControls.Common;
 import Rendering.RenderWindow.IRenderWindow;
 import Rendering.SceneGraph.ISceneFactory;
 import Cameras.WebCamera.IWebCamera;
+import Cameras.NDIStream.INDIStream;
 
 #define MAX_LOADSTRING 100
 
 using namespace Caustic;
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+static const int c_numVideoFrames = 25;
 
 class CApp
 {
@@ -74,12 +73,9 @@ public:
     CRefObj<IImage> m_spColorImage;
     CRefObj<ITexture> m_spTexture;
     ImVec2 imageWinSize;
-#ifdef USE_NDI
-    NDIlib_send_instance_t pNDI_send;
-    NDIlib_video_frame_v2_t NDI_video_frame;
-#endif
     char NDIStreamName[1024];
     char ImagePath[1024];
+    CRefObj<INDIStream> m_spNDIStream;
 
     CApp()
     {
@@ -205,24 +201,11 @@ void BuildPanels(ITexture *pFinalRT, ImFont *pFont)
             app.cameraFrameRates[app.currentCamera][app.currentResolution],
             emptyString, 0, 0, 0);
 
-#ifdef USE_NDI
-        app.NDI_video_frame;
-        app.NDI_video_frame.xres = app.cameraResPoints[app.currentCamera][app.currentResolution].x;
-        app.NDI_video_frame.yres = app.cameraResPoints[app.currentCamera][app.currentResolution].y;
-        app.NDI_video_frame.FourCC = NDIlib_FourCC_type_BGRX;
-        app.NDI_video_frame.p_data = (uint8_t*)malloc(app.NDI_video_frame.xres * app.NDI_video_frame.yres * 4);
-
-        // We create the NDI sender
-        NDIlib_send_create_t t;
-        t.p_ndi_name = app.NDIStreamName;
-        t.p_groups = nullptr;
-        t.clock_video = true;
-        t.clock_audio = false;
-        app.pNDI_send = NDIlib_send_create(&t);
-        if (!app.pNDI_send)
-            return;
-#endif
-
+        int w = app.cameraResPoints[app.currentCamera][app.currentResolution].x;
+        int h = app.cameraResPoints[app.currentCamera][app.currentResolution].y;
+        app.m_spNDIStream = CreateNDIStream();
+        std::string streamName(app.NDIStreamName);
+        app.m_spNDIStream->Initialize(streamName, w, h, 30, 48000, 16, 2);
         app.startBroadcast = true;
     }
     ImGui::PopItemFlag();
@@ -243,24 +226,11 @@ void BuildPanels(ITexture *pFinalRT, ImFont *pFont)
     if (ImGui::Button("Broadcast") && !app.startBroadcast)
     {
         app.m_spStaticImage = Caustic::LoadImageFile(Caustic::str2wstr(app.ImagePath).c_str());
-
-#ifdef USE_NDI
-        app.NDI_video_frame;
-        app.NDI_video_frame.xres = app.m_spStaticImage->GetWidth();
-        app.NDI_video_frame.yres = app.m_spStaticImage->GetHeight();
-        app.NDI_video_frame.FourCC = NDIlib_FourCC_type_BGRX;
-        app.NDI_video_frame.p_data = (uint8_t*)malloc(app.NDI_video_frame.xres * app.NDI_video_frame.yres * 4);
-
-        // We create the NDI sender
-        NDIlib_send_create_t t;
-        t.p_ndi_name = app.NDIStreamName;
-        t.p_groups = nullptr;
-        t.clock_video = true;
-        t.clock_audio = false;
-        app.pNDI_send = NDIlib_send_create(&t);
-        if (!app.pNDI_send)
-            return;
-#endif
+        int w = app.m_spStaticImage->GetWidth();
+        int h = app.m_spStaticImage->GetHeight();
+        app.m_spNDIStream = CreateNDIStream();
+        std::string streamName(app.NDIStreamName);
+        app.m_spNDIStream->Initialize(streamName, w, h, 30, 48000, 16, 2);
         app.startBroadcast = true;
     }
     ImGui::PopItemFlag();
@@ -288,18 +258,12 @@ void InitializeCaustic(HWND hwnd)
     std::wstring shaderFolder = GetCausticShaderDirectory();
     BBox2 viewport(0.0f, 0.0f, 1.0f, 1.0f);
     app.imageWinSize = ImVec2(128, 128);
-    app.m_spRenderWindow = CreateImguiRenderWindow(hwnd, viewport, shaderFolder,
+    app.m_spRenderWindow = CreateImguiRenderWindow(hwnd, viewport, shaderFolder, [](Caustic::IRenderer*, Caustic::IRenderCtx*) {},
             [](Caustic::IRenderer* pRenderer, ITexture *pFinalRT, ImFont *pFont)
             {
                 BuildPanels(pFinalRT, pFont);
             });
     app.m_spRenderer = app.m_spRenderWindow->GetRenderer();
-
-#ifdef USE_NDI
-    // Not required, but "correct" (see the SDK documentation).
-    if (!NDIlib_initialize())
-        return;
-#endif
 }
 
 // Global Variables:
@@ -351,25 +315,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         {
             app.m_spTexture = app.m_spCausticFactory->CreateTexture(app.m_spRenderer, app.m_spStaticImage,
                 D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
-
-#ifdef USE_NDI
-            int w = app.m_spStaticImage->GetWidth();
-            int h = app.m_spStaticImage->GetHeight();
-            uint8* pSrc = app.m_spStaticImage->GetData();
-            uint8* pDst = app.NDI_video_frame.p_data;
-            uint32 stride = app.m_spStaticImage->GetStride();
-            int th = (h > app.NDI_video_frame.yres) ? app.NDI_video_frame.yres : h;
-            for (int y = 0; y < th; y++)
-            {
-                int bytesToCopy = app.NDI_video_frame.xres * 4;
-                if (bytesToCopy > (int)stride)
-                    bytesToCopy = (int)stride;
-                memcpy(pDst, pSrc, bytesToCopy);
-                pSrc += stride;
-                pDst += app.NDI_video_frame.xres * 4;
-            }
-            NDIlib_send_send_video_v2(app.pNDI_send, &app.NDI_video_frame);
-#endif
+            app.m_spNDIStream->SendImage(app.m_spStaticImage);
         }
         else if (app.m_spCamera)
         {
@@ -379,54 +325,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             {
                 app.m_spTexture = app.m_spCausticFactory->CreateTexture(app.m_spRenderer, app.m_spColorImage,
                     D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
-
-#ifdef USE_NDI
-                int w = app.m_spColorImage->GetWidth();
-                int h = app.m_spColorImage->GetHeight();
-                uint8* pSrc = app.m_spColorImage->GetData();
-                uint8* pDst = app.NDI_video_frame.p_data;
-                uint32 stride = app.m_spColorImage->GetStride();
-                int th = (h > app.NDI_video_frame.yres) ? app.NDI_video_frame.yres : h;
-                for (int y = 0; y < th; y++)
-                {
-                    int bytesToCopy = app.NDI_video_frame.xres * 4;
-                    if (bytesToCopy > (int)stride)
-                        bytesToCopy = (int)stride;
-                    memcpy(pDst, pSrc, bytesToCopy);
-                    pSrc += stride;
-                    pDst += app.NDI_video_frame.xres * 4;
-                }
-                NDIlib_send_send_video_v2(app.pNDI_send, &app.NDI_video_frame);
-#endif
-            }
-        }
-        if (app.m_spCamera)
-        {
-            if (app.m_spColorImage)
-                app.m_spColorImage->Release();
-            if (app.m_spCamera->NextVideoFrame(&app.m_spColorImage.p) && app.m_spColorImage)
-            {
-                app.m_spTexture = app.m_spCausticFactory->CreateTexture(app.m_spRenderer, app.m_spColorImage,
-                    D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
-
-#ifdef USE_NDI
-                int w = app.m_spColorImage->GetWidth();
-                int h = app.m_spColorImage->GetHeight();
-                uint8* pSrc = app.m_spColorImage->GetData();
-                uint8* pDst = app.NDI_video_frame.p_data;
-                uint32 stride = app.m_spColorImage->GetStride();
-                int th = (h > app.NDI_video_frame.yres) ? app.NDI_video_frame.yres : h;
-                for (int y = 0; y < th; y++)
-                {
-                    int bytesToCopy = app.NDI_video_frame.xres * 4;
-                    if (bytesToCopy > (int)stride)
-                        bytesToCopy = (int)stride;
-                    memcpy(pDst, pSrc, bytesToCopy);
-                    pSrc += stride;
-                    pDst += app.NDI_video_frame.xres * 4;
-                }
-                NDIlib_send_send_video_v2(app.pNDI_send, &app.NDI_video_frame);
-#endif
+                app.m_spNDIStream->SendImage(app.m_spColorImage);
             }
         }
     }
@@ -547,13 +446,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_QUIT:
 
         // Free the video frame
-#ifdef USE_NDI
-        if (app.NDI_video_frame.p_data != nullptr)
-            free(app.NDI_video_frame.p_data);
-        if (app.pNDI_send != nullptr)
-            NDIlib_send_destroy(app.pNDI_send);
-        NDIlib_destroy();
-#endif
+        app.m_spNDIStream->Shutdown();
 
         Caustic::SystemShutdown();
         break;

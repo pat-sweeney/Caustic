@@ -73,7 +73,7 @@
       <AdditionalLibraryDirectories>$(CausticDefaultExtLibDirs)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d  "$(CausticRoot)\External\NDI 5 Advanced SDK\Bin\x64\Processing.NDI.Lib.Advanced.x64.dll" "$(OutDir)"</Command>
+      <Command>xcopy /y /d  "$(CausticRoot)\External\NDI 5 Advanced SDK\Bin\x64\Processing.NDI.Lib.Advanced.x64.dll" $(OutDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -100,17 +100,17 @@
       <AdditionalLibraryDirectories>$(CausticDefaultExtLibDirs)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d  "..\..\External\NDI 5 Advanced SDK\Bin\x64\Processing.NDI.Lib.Advanced.x64.dll" "$(ProjectDir)$(OutDir)"</Command>
+      <Command>xcopy /y /d  "$(CausticRoot)\External\NDI 5 Advanced SDK\Bin\x64\Processing.NDI.Lib.Advanced.x64.dll" $(OutDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="WebcamToNDI.h"/>
-    <ClInclude Include="Resource.h"/>
-    <ClInclude Include="stdafx.h"/>
-    <ClInclude Include="targetver.h"/>
+    <ClInclude Include="WebcamToNDI.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="WebcamToNDI.cpp"/>
+    <ClCompile Include="WebcamToNDI.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -132,6 +132,9 @@
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Cameras\CameraBase\CameraBase.vcxproj">
       <Project>{6bfeacf4-1bac-46ef-9945-eb31a8151b21}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Cameras\NDIStream\NDIStream.vcxproj">
+      <Project>{ef348b1b-4cb5-43a4-9cb6-b6411c7af50b}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Cameras\WebCamera\WebCamera.vcxproj">
       <Project>{613c7807-ea12-4600-848e-3d3d5d0fdebf}</Project>
