@@ -98,5 +98,11 @@ You can follow most of the instructions on:
 https://cv-tricks.com/how-to/installation-of-opencv-4-1-0-in-windows-10-from-source/
 
 for how to setup the build using CMake. Ignore the part about python and opengl.
+<br>
+Download the face model from:<br>
+https://github.com/kurnianggoro/GSOC2017/blob/master/data/lbfmodel.yaml
+<br>
+and place in github\opencv\data
+
 ## Documentation
 Documentation for the library can be found at https://pat-sweeney.github.io/Caustic/

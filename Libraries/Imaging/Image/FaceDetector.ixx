@@ -39,10 +39,12 @@ export namespace Caustic
     class CFaceDetectorFilter : public IImageFilter, public CRefCount
     {
         cv::CascadeClassifier m_faceCascade;
+        cv::CascadeClassifier m_eyeCascade;
     public:
         CFaceDetectorFilter()
         {
             m_faceCascade.load("d:\\data\\haarcascade_frontalface_default.xml");
+            m_eyeCascade.load("d:\\data\\haarcascade_eye.xml");
         }
 
         //**********************************************************************

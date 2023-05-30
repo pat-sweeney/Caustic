@@ -12,6 +12,7 @@ module;
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
 #include "opencv2/videoio.hpp"
+#include <chrono>
 
 module Imaging.Image.ImageFilter.FaceLandmarks;
 import Base.Core.Core;
@@ -28,6 +29,7 @@ namespace Caustic
 {
     using namespace std;
     using namespace cv;
+    using namespace chrono;
 
     CRefObj<IImage> CFaceLandmarksFilter::Apply(IImage* pImage, ImageFilterParams* pParams)
     {
@@ -35,6 +37,7 @@ namespace Caustic
         ApplyInPlace(spOutImage, pParams);
         return spOutImage;
     }
+
 
     bool CFaceLandmarksFilter::ApplyInPlace(IImage* pImage, ImageFilterParams* pParams)
     {
@@ -45,10 +48,9 @@ namespace Caustic
         int grayW = 460;
         int grayH = (pImage->GetHeight() * 460) / pImage->GetWidth();
         cv::resize(src, src, cv::Size(grayW, grayH), 0, 0, cv::INTER_LINEAR_EXACT);
-        cv::Mat gray;
-        cv::cvtColor(src, gray, (pImage->GetImageType() == EImageType::BGR_24bpp) ? cv::COLOR_BGR2GRAY : cv::COLOR_BGRA2GRAY);
-        equalizeHist(gray, gray);
-        cv::InputArray graySrc(gray);
+        cv::cvtColor(src, m_gray, (pImage->GetImageType() == EImageType::BGR_24bpp) ? cv::COLOR_BGR2GRAY : cv::COLOR_BGRA2GRAY);
+        equalizeHist(m_gray, m_gray);
+        cv::InputArray graySrc(m_gray);
         m_faceCascade.detectMultiScale(graySrc, faces, 1.1, 3, 0, cv::Size(30, 30));
 
         Vector2 p0, p1;
@@ -69,7 +71,7 @@ namespace Caustic
                 pbr.x = std::min<int>(std::max<int>(pbr.x, 0), pImage->GetWidth() - 1);
                 pbr.y = std::min<int>(std::max<int>(pbr.y, 0), pImage->GetHeight() - 1);
                 char buf[1024];
-                sprintf_s(buf, "Face%d", i);
+                sprintf_s(buf, "Face%d", (int)i);
                 BBox2 bbox;
                 bbox.minPt.x = ptl.x;
                 bbox.minPt.y = ptl.y;
@@ -78,13 +80,13 @@ namespace Caustic
                 pParams->params.insert(std::make_pair(buf, std::any(bbox)));
 
                 uint8 color[4] = { 255, 0, 0, 255 };
-                p0.x = ptl.x; p0.y = ptl.y; p1.x = pbr.x; p1.y = ptl.y;
+                p0.x = (int)ptl.x; p0.y = (int)ptl.y; p1.x = (int)pbr.x; p1.y = (int)ptl.y;
                 pImage->DrawLine(p0, p1, color);
-                p0.x = pbr.x; p0.y = ptl.y; p1.x = pbr.x; p1.y = pbr.y;
+                p0.x = (int)pbr.x; p0.y = (int)ptl.y; p1.x = (int)pbr.x; p1.y = (int)pbr.y;
                 pImage->DrawLine(p0, p1, color);
-                p0.x = ptl.x; p0.y = pbr.y; p1.x = pbr.x; p1.y = pbr.y;
+                p0.x = (int)ptl.x; p0.y = (int)pbr.y; p1.x = (int)pbr.x; p1.y = (int)pbr.y;
                 pImage->DrawLine(p0, p1, color);
-                p0.x = ptl.x; p0.y = ptl.y; p1.x = ptl.x; p1.y = pbr.y;
+                p0.x = (int)ptl.x; p0.y = (int)ptl.y; p1.x = (int)ptl.x; p1.y = (int)pbr.y;
                 pImage->DrawLine(p0, p1, color);
             }
             for (unsigned long i = 0; i < faces.size(); i++)
@@ -92,17 +94,17 @@ namespace Caustic
                 for (unsigned long k = 0; k < shapes[i].size(); k++)
                 {
                     cv::Point2f pt = shapes[i][k];
-                    pt.x = (int)(pImage->GetWidth() * float(pt.x) / grayW);
-                    pt.y = (int)(pImage->GetHeight() * float(pt.y) / grayH);
-                    pt.x = std::min<int>(std::max<int>(pt.x, 0), pImage->GetWidth() - 1);
-                    pt.y = std::min<int>(std::max<int>(pt.y, 0), pImage->GetHeight() - 1);
+                    pt.x = std::floorf(pImage->GetWidth() * float(pt.x) / grayW);
+                    pt.y = std::floorf(pImage->GetHeight() * float(pt.y) / grayH);
+                    pt.x = (float)std::min<int>(std::max<int>((int)pt.x, 0), pImage->GetWidth() - 1);
+                    pt.y = (float)std::min<int>(std::max<int>((int)pt.y, 0), pImage->GetHeight() - 1);
                     char buf[1024];
                     sprintf_s(buf, "Face%dPoint%d", i, k);
                     Vector2 q;
                     q.x = pt.x;
                     q.y = pt.y;
                     pParams->params.insert(std::make_pair(buf, std::any(q)));
-
+                    
                     uint8 color[4] = { 255, 0, 0, 255 };
                     p0.x = pt.x; p0.y = pt.y;
                     pImage->DrawCircle(p0, 3, color);

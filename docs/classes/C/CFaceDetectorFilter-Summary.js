@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("CClass:CFaceDetectorFilter","CFaceDetectorFilter");NDSummary.OnSummaryLoaded("CClass:CFaceDetectorFilter",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[1433,0,0,"CFaceDetectorFilter"],[1567,0,2,"Functions","Functions"],[1836,0,1,"CreateFaceDetectorFilter","CreateFaceDetectorFilter"]]);

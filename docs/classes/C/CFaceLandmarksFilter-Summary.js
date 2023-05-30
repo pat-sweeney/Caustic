@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("CClass:CFaceLandmarksFilter","CFaceLandmarksFilter");NDSummary.OnSummaryLoaded("CClass:CFaceLandmarksFilter",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[1837,0,0,"CFaceLandmarksFilter"],[1838,0,2,"Functions","Functions"],[1839,0,1,"CreateFaceLandmarksFilter","CreateFaceLandmarksFilter"]]);

@@ -51,6 +51,7 @@ namespace Caustic
         int numFaces = faces.size();
         pParams->params.insert(std::make_pair("NumFaces", std::any(numFaces)));
         bool outputImage = (bool)std::any_cast<bool>(pParams->params["outputImage"]);
+        bool detectEyes = (bool)std::any_cast<bool>(pParams->params["detectEyes"]);
         for (int i = 0; i < (int)faces.size(); i++)
         {
             Vector2 p0, p1;
@@ -60,17 +61,17 @@ namespace Caustic
             ptl.y = (int)(pImage->GetHeight() * float(ptl.y) / grayH);
             pbr.x = (int)(pImage->GetWidth() * float(pbr.x) / grayW);
             pbr.y = (int)(pImage->GetHeight() * float(pbr.y) / grayH);
-            ptl.x = std::min<int>(std::max<int>(ptl.x, 0), pImage->GetWidth() - 1);
-            ptl.y = std::min<int>(std::max<int>(ptl.y, 0), pImage->GetHeight() - 1);
-            pbr.x = std::min<int>(std::max<int>(pbr.x, 0), pImage->GetWidth() - 1);
-            pbr.y = std::min<int>(std::max<int>(pbr.y, 0), pImage->GetHeight() - 1);
+            ptl.x = std::min<int>(std::max<int>((int)ptl.x, 0), pImage->GetWidth() - 1);
+            ptl.y = std::min<int>(std::max<int>((int)ptl.y, 0), pImage->GetHeight() - 1);
+            pbr.x = std::min<int>(std::max<int>((int)pbr.x, 0), pImage->GetWidth() - 1);
+            pbr.y = std::min<int>(std::max<int>((int)pbr.y, 0), pImage->GetHeight() - 1);
             char buf[1024];
             sprintf_s(buf, "Face%d", i);
             BBox2 bbox;
-            bbox.minPt.x = ptl.x;
-            bbox.minPt.y = ptl.y;
-            bbox.maxPt.x = pbr.x;
-            bbox.maxPt.y = pbr.y;
+            bbox.minPt.x = (int)ptl.x;
+            bbox.minPt.y = (int)ptl.y;
+            bbox.maxPt.x = (int)pbr.x;
+            bbox.maxPt.y = (int)pbr.y;
             pParams->params.insert(std::make_pair(buf, std::any(bbox)));
 
             if (outputImage)
@@ -84,6 +85,30 @@ namespace Caustic
                 pImage->DrawLine(p0, p1, color);
                 p0.x = (int)ptl.x; p0.y = (int)ptl.y; p1.x = (int)ptl.x; p1.y = (int)pbr.y;
                 pImage->DrawLine(p0, p1, color);
+            }
+
+            if (detectEyes)
+            {
+                cv::Mat eyeROI = gray(faces[i]);
+                std::vector<cv::Rect> eyes;
+                m_eyeCascade.detectMultiScale(gray, eyes);
+                for (int j = 0; j < (int)eyes.size(); j++)
+                {
+                    Vector2 pt;
+                    cv::Point2d ptl = eyes[j].tl();
+                    cv::Point2d pbr = eyes[j].br();
+                    ptl.x = (int)(pImage->GetWidth() * float(ptl.x) / grayW);
+                    ptl.y = (int)(pImage->GetHeight() * float(ptl.y) / grayH);
+                    pbr.x = (int)(pImage->GetWidth() * float(pbr.x) / grayW);
+                    pbr.y = (int)(pImage->GetHeight() * float(pbr.y) / grayH);
+                    pt.x = (ptl.x + pbr.x) / 2.0f;
+                    pt.y = (ptl.y + pbr.y) / 2.0f;
+                    if (outputImage)
+                    {
+                        uint8 color[4] = { 0, 0, 255, 255 };
+                        pImage->DrawCircle(pt, 5, color);
+                    }
+                }
             }
         }
         return true;

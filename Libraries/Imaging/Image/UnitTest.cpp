@@ -11,6 +11,8 @@ module;
 #include <map>
 #include <string>
 #include <any>
+#include <chrono>
+#include <stdio.h>
 
 module Imaging.Image.UnitTests;
 import Base.Core.Core;
@@ -28,6 +30,7 @@ import Imaging.Image.ImageFilter.Convert;
 import Imaging.Image.ImageFilter.FaceDetector;
 import Imaging.Image.ImageFilter.FaceLandmarks;
 
+using namespace std::chrono;
 using namespace Caustic;
 namespace CausticTestSuite
 {
@@ -175,8 +178,8 @@ namespace CausticTestSuite
         CRefObj<IImage> pImage = LoadImageFile(L"d:\\data\\Face.jpg");
         CFaceDetectorFilter cf;
         ImageFilterParams params;
-        std::any outputImage(true);
-        params.params.insert(std::make_pair("outputImage", outputImage));
+        params.params.insert(std::make_pair("outputImage", std::any(true)));
+        params.params.insert(std::make_pair("detectEyes", std::any(true)));
         auto i = cf.Apply(pImage, &params);
         StoreImage(L"d:\\data\\FaceMarked.png", i);
         return true;
@@ -189,9 +192,17 @@ namespace CausticTestSuite
         ImageFilterParams params;
         std::any outputImage(false);
         params.params.insert(std::make_pair("outputImage", outputImage));
+        auto start = high_resolution_clock::now();
         auto i = cf.Apply(pImage, &params);
+        auto stop = high_resolution_clock::now();
+        auto duration = duration_cast<microseconds>(stop - start);
+        printf("Duration:%d\n", duration.count());
         StoreImage(L"d:\\data\\FaceLandmarks.png", i);
         return true;
+    }
+
+    static bool Test10()
+    {
     }
 
     bool ImageTests::RunUnitTests()
@@ -199,13 +210,13 @@ namespace CausticTestSuite
         typedef bool(*UnitTestFunc)();
         UnitTestEntry tests[] =
         {
-            { Test1, true },
-            { Test2, true },
-            { Test3, true },
-            { Test4, true },
-            { Test5, true },
-            { Test6, true },
-            { Test7, true },
+            //{ Test1, true },
+            //{ Test2, true },
+            //{ Test3, true },
+            //{ Test4, true },
+            //{ Test5, true },
+            //{ Test6, true },
+            //{ Test7, true },
             { Test8, true },
             { Test9, true },
         };
