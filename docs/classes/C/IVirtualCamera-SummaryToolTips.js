@@ -1,0 +1,1 @@
+﻿NDSummary.OnToolTipsLoaded("CClass:IVirtualCamera",{1810:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines the interface for a virtual camera</div></div>"});

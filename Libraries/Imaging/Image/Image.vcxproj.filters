@@ -115,5 +115,17 @@
     <ClCompile Include="UnitTest.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FaceLandmarks.ixx">
+      <Filter>Source Files\Filters</Filter>
+    </ClCompile>
+    <ClCompile Include="FaceLandmarks.cpp">
+      <Filter>Source Files\Filters</Filter>
+    </ClCompile>
+    <ClCompile Include="FaceDetector.ixx">
+      <Filter>Source Files\Filters</Filter>
+    </ClCompile>
+    <ClCompile Include="FaceDetector.cpp">
+      <Filter>Source Files\Filters</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

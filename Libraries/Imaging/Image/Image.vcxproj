@@ -52,7 +52,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(CausticRoot)\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OpenCVInclude);$(CausticRoot)\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>true</EnableModules>
     </ClCompile>
@@ -69,7 +69,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(CausticRoot)\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OpenCVInclude);$(CausticRoot)\Libraries;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>true</EnableModules>
     </ClCompile>
@@ -87,6 +87,10 @@
     <ClCompile Include="CustomFilter.ixx" />
     <ClCompile Include="DepthOfField.ixx" />
     <ClCompile Include="EqualizeFilter.ixx" />
+    <ClCompile Include="FaceDetector.cpp" />
+    <ClCompile Include="FaceDetector.ixx" />
+    <ClCompile Include="FaceLandmarks.cpp" />
+    <ClCompile Include="FaceLandmarks.ixx" />
     <ClCompile Include="FloodFill.ixx" />
     <ClCompile Include="GaussianBlur.ixx" />
     <ClCompile Include="HarrisCorners.ixx" />

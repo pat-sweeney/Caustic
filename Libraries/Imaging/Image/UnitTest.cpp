@@ -25,6 +25,8 @@ import Imaging.Image.ImageFilter.Scale;
 import Imaging.Image.ImageFilter.Transform;
 import Imaging.Image.ImageFilter.Rotate;
 import Imaging.Image.ImageFilter.Convert;
+import Imaging.Image.ImageFilter.FaceDetector;
+import Imaging.Image.ImageFilter.FaceLandmarks;
 
 using namespace Caustic;
 namespace CausticTestSuite
@@ -168,6 +170,30 @@ namespace CausticTestSuite
         return true;
     }
 
+    static bool Test8()
+    {
+        CRefObj<IImage> pImage = LoadImageFile(L"d:\\data\\Face.jpg");
+        CFaceDetectorFilter cf;
+        ImageFilterParams params;
+        std::any outputImage(true);
+        params.params.insert(std::make_pair("outputImage", outputImage));
+        auto i = cf.Apply(pImage, &params);
+        StoreImage(L"d:\\data\\FaceMarked.png", i);
+        return true;
+    }
+
+    static bool Test9()
+    {
+        CRefObj<IImage> pImage = LoadImageFile(L"d:\\data\\Face.jpg");
+        CFaceLandmarksFilter cf;
+        ImageFilterParams params;
+        std::any outputImage(false);
+        params.params.insert(std::make_pair("outputImage", outputImage));
+        auto i = cf.Apply(pImage, &params);
+        StoreImage(L"d:\\data\\FaceLandmarks.png", i);
+        return true;
+    }
+
     bool ImageTests::RunUnitTests()
     {
         typedef bool(*UnitTestFunc)();
@@ -180,6 +206,8 @@ namespace CausticTestSuite
             { Test5, true },
             { Test6, true },
             { Test7, true },
+            { Test8, true },
+            { Test9, true },
         };
         bool result = true;
         m_totalTests = _countof(tests);

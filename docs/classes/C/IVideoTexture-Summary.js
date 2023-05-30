@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("CClass:IVideoTexture","IVideoTexture");NDSummary.OnSummaryLoaded("CClass:IVideoTexture",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Interfaces","Interface"]],[[1814,0,2,"IVideoTexture"],[1815,0,1,"Functions","Functions"],[1816,0,0,"EndOfStream","EndOfStream"],[1817,0,0,"Restart","Restart"]]);

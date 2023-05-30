@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:Cameras/VirtualCam/VirtualCam.ixx","VirtualCam.ixx");NDSummary.OnSummaryLoaded("File:Cameras/VirtualCam/VirtualCam.ixx",[["C/C++","C"]],[["Classes","Class"],["Interfaces","Interface"]],[[1795,0,0,"Caustic","Caustic"],[1796,0,1,"IVirtualCam","IVirtualCam"]]);

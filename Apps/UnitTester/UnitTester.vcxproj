@@ -72,8 +72,11 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>$(CausticDefaultExtLibs);kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(CausticDefaultExtLibDirs)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CausticDefaultExtLibDirs);$(OpenCVLibDir)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>$(OpenCVCopy)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -90,8 +93,11 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>$(CausticDefaultExtLibs);windowscodecs.lib;msxml6.lib;d3dcompiler.lib;d3d11.lib;mf.lib;mfplat.lib;mfuuid.lib;mfreadwrite.lib;k4a.lib;msxml6.lib;d3dcompiler.lib;d3d11.lib;mf.lib;mfplat.lib;mfuuid.lib;mfreadwrite.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(CausticDefaultExtLibDirs)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CausticDefaultExtLibDirs);$(OpenCVLibDir)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>$(OpenCVCopy)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />

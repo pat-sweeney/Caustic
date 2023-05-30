@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:Imaging/Video/Video.ixx","Video.ixx");NDSummary.OnSummaryLoaded("File:Imaging/Video/Video.ixx",[["C/C++","C"]],[["Classes","Class"]],[[1818,0,0,"CVideo","CVideo"]]);

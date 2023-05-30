@@ -1,0 +1,1 @@
+﻿NDSummary.OnToolTipsLoaded("File:Imaging/Video/Video.ixx",{1818:"<div class=\"NDToolTip TClass LC\"><div class=\"NDClassPrototype\" id=\"NDClassPrototype1818\"><div class=\"CPEntry TClass Current\"><div class=\"CPName\">CVideo</div></div></div><div class=\"TTSummary\">Defines class for a video</div></div>"});

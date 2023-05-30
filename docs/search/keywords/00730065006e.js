@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("sen",["Function"],[["SendAudioFrame",,[["INDIStream",,,,0,"File:Cameras/NDIStream/INDIStream.ixx:INDIStream.SendAudioFrame","CClass:INDIStream:SendAudioFrame"]]],["SendImage",,[["INDIStream",,,,0,"File:Cameras/NDIStream/INDIStream.ixx:INDIStream.SendImage","CClass:INDIStream:SendImage"]]]]);

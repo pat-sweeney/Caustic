@@ -84,5 +84,19 @@ You will also need to define an environment variabled named 'UseNDI'
 setx UseNDI "true" /M
 ```
 
+Install OpenCV
+You will need to install both OpenCV 4.7.0 and OpenCV_contrib. Both of these can be downloaded from:
+```
+git clone https://github.com/opencv/opencv.git
+git clone https://github.com/opencv/opencv_contrib.git
+```
+You will want to install these into a folder called 'opencv'. Also create an output folder called 'build'.
+Edit the OpenCV... parameters in Caustic.props to point to this folder.
+
+You can follow most of the instructions on:
+
+https://cv-tricks.com/how-to/installation-of-opencv-4-1-0-in-windows-10-from-source/
+
+for how to setup the build using CMake. Ignore the part about python and opengl.
 ## Documentation
 Documentation for the library can be found at https://pat-sweeney.github.io/Caustic/
