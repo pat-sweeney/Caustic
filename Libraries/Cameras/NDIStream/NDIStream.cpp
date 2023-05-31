@@ -102,9 +102,9 @@ namespace Caustic
     }
 
     //**********************************************************************
-    CRefObj<INDIStream> CreateNDIStreamInternal(bool f)
+    CRefObj<INDIStream> CreateNDIStreamInternal()
     {
-        std::unique_ptr<CNDIStream> pStream(new CNDIStream(f));
+        std::unique_ptr<CNDIStream> pStream(new CNDIStream());
         return CRefObj<INDIStream>(pStream.release());
     }
 }

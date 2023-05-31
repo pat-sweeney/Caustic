@@ -192,6 +192,7 @@ void CApp::BuildUI(ITexture* pFinalRT, ImFont* pFont)
 void CApp::InitializeCaustic(HWND hwnd)
 {
     m_spPhonemes = Caustic::CreatePhonemes();
+    m_spPhonemes->LoadDatabase();
     Caustic::SystemStartup();
     app.m_texLoaded = false;
     m_spCausticFactory = Caustic::CreateCausticFactory();

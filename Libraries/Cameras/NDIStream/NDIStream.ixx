@@ -41,11 +41,9 @@ export namespace Caustic
         uint32 m_bitsPerSample;
         uint32 m_numChannels;
         uint32 m_samplingRate;
-        bool x;
     public:
-        CNDIStream(bool f) :
-            m_videoFrameIndex(0),
-            x(f)
+        CNDIStream() :
+            m_videoFrameIndex(0)
         {
         }
 

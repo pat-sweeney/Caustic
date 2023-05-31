@@ -1281,6 +1281,7 @@ void InitializeCaustic(HWND hwnd)
     std::wstring shaderFolder(SHADERPATH);
     BBox2 viewport(0.0f, 0.0f, 1.0f, 1.0f);
     app.m_spRenderWindow = CreateImguiRenderWindow(hwnd, viewport, shaderFolder,
+            [](Caustic::IRenderer*, Caustic::IRenderCtx*) {},
             [](Caustic::IRenderer* pRenderer, ITexture *pFinalRT, ImFont *pFont)
             {
                 BuildPanels(pFinalRT, pFont);

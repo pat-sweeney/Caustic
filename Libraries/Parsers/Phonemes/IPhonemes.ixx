@@ -17,6 +17,7 @@ export namespace Caustic
 {
     struct IPhonemes : public IRefCount
     {
+        virtual void LoadDatabase() = 0;
         virtual void GetPhonemes(std::string word, std::vector<std::string> & vec) = 0;
     };
 

@@ -60,10 +60,12 @@ namespace Caustic
 		std::string str;
 		while (true)
 		{
-			while ((pBuf[m_bufferIndex] != '\n' || pBuf[m_bufferIndex] != '\r') && m_bufferIndex != m_bufferLen)
+			while (pBuf[m_bufferIndex] != '\n' && pBuf[m_bufferIndex] != '\r' && m_bufferIndex != m_bufferLen)
 			{
 				str += pBuf[m_bufferIndex++];
 			}
+			while ((pBuf[m_bufferIndex] == '\n' || pBuf[m_bufferIndex] == '\r') && m_bufferIndex != m_bufferLen)
+				m_bufferIndex++;
 			if (m_bufferIndex == m_bufferLen)
 			{
 				if (!ReadBuffer(f))
@@ -73,25 +75,27 @@ namespace Caustic
 			break;
 		}
 		return str;
-		return str;
 	}
 
-	void CPhonemes::LoadDictionary()
+	void CPhonemes::LoadDatabase()
 	{
-		HANDLE f = CreateFile(L"phonemes.dict", GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr);
+		HANDLE f = CreateFile(L"d:\\data\\cmudict-0.7b", GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr);
 		CT(f == INVALID_HANDLE_VALUE ? E_FAIL : S_OK);
 		char* nextToken;
 		while (true)
 		{
 			std::string s = ReadLine(f);
+			if (s[0] == ';' && s[1] == ';')
+				continue;
 			const char* pWord = strtok_s((char*)(s.c_str()), " ", &nextToken);
+			if (pWord == nullptr)
+				break;
 			const char* pPhoneme = strtok_s(nullptr, " ", &nextToken);
 			std::vector<std::string> phonemes;
-			phonemes.push_back(std::string(pPhoneme));
-			while (pPhoneme != NULL)
+			while (pPhoneme != nullptr)
 			{
 				phonemes.push_back(std::string(pPhoneme));
-				pPhoneme = strtok_s(NULL, " ", &nextToken);
+				pPhoneme = strtok_s(nullptr, " ", &nextToken);
 			}
 			m_words.insert(std::make_pair(std::string(pWord), phonemes));
 		}

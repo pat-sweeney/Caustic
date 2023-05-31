@@ -29,7 +29,6 @@ export namespace Caustic
 
         bool ReadBuffer(HANDLE f);
         std::string ReadLine(HANDLE f);
-        void LoadDictionary();
     public:
         CPhonemes() :
             m_bufferIndex(0),
@@ -47,6 +46,7 @@ export namespace Caustic
         //**********************************************************************
         // IPhonemes
         //**********************************************************************
+        virtual void LoadDatabase() override;
         virtual void GetPhonemes(std::string word, std::vector<std::string> &vec) override;
     };
 

@@ -61,7 +61,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>$(CausticDefaultExtLibs);"$(CausticRoot)\External\NDI 5 Advanced SDK\lib\x64\Processing.NDI.Lib.Advanced.x64.lib";kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(CausticDefaultExtLibDirs)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OpenCVLibDir);$(CausticDefaultExtLibDirs)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -84,7 +84,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>$(CausticDefaultExtLibs);"$(CausticRoot)\External\NDI 5 Advanced SDK\lib\x64\Processing.NDI.Lib.Advanced.x64.lib";kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(CausticDefaultExtLibDirs)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OpenCVLibDir);$(CausticDefaultExtLibDirs)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
