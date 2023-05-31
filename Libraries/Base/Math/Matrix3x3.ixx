@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2023
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -54,6 +54,34 @@ export namespace Caustic
         Matrix3x3(float v00, float v01, float v02,
             float v10, float v11, float v12,
             float v20, float v21, float v22);
+        
+        //**********************************************************************
+        // Method: Zero
+        // Zeroes out a matrix
+        //**********************************************************************
+        void Zero()
+        {
+            for (int i = 0; i < 3; i++)
+                for (int j = 0; j < 3; j++)
+                    v[i][j] = 0.0f;
+        }
+
+        //**********************************************************************
+        // Method: FromDotVectors
+        // Given two vectors, this method returns the matrix formed by v1 * v2
+        // 
+        // Parameters:
+        // v1 - first vector
+        // v2 - second vector
+        //**********************************************************************
+        static Matrix3x3 FromDotVectors(Vector3& v1, Vector3& v2)
+        {
+            Matrix3x3 mat;
+            mat.v[0][0] = v1.x * v2.x; mat.v[0][0] = v1.x * v2.y; mat.v[0][0] = v1.x * v2.z;
+            mat.v[1][1] = v1.y * v2.x; mat.v[1][1] = v1.y * v2.y; mat.v[1][1] = v1.y * v2.z;
+            mat.v[2][2] = v1.z * v2.x; mat.v[2][2] = v1.z * v2.y; mat.v[2][2] = v1.z * v2.z;
+            return mat;
+        }
         
         //**********************************************************************
         // Method: FromRodrigues
@@ -122,6 +150,13 @@ export namespace Caustic
         {
             p = p * tm;
             return p;
+        }
+
+        inline void operator+=(Matrix3x3& tm)
+        {
+            for (int i = 0; i < 3; i++)
+                for (int j = 0; j < 3; j++)
+                    v[i][j] += tm.v[i][j];
         }
 
         Matrix3x3 operator *(const Matrix3x3& m);

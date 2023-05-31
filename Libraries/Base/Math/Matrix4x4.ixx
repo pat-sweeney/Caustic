@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2023
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -165,6 +165,17 @@ export namespace Caustic
         void Decompose(std::vector<Matrix4x4> &tm, bool undoshear);
 
         //**********************************************************************
+        // Method: Zero
+        // Zeroes out a matrix
+        //**********************************************************************
+        void Zero()
+        {
+            for (int i = 0; i < 4; i++)
+                for (int j = 0; j < 4; j++)
+                    v[i][j] = 0.0f;
+        }
+
+        //**********************************************************************
         // Method: ScalingMatrix
         // Creates a scaling matrix
         //**********************************************************************
@@ -186,5 +197,75 @@ export namespace Caustic
         // Creates a translation matrix
         //**********************************************************************
         static Matrix4x4 TranslationMatrix(float tx, float ty, float tz);
+
+#if false
+        void JacobiSVD()
+        {
+        }
+
+        //**********************************************************************
+        // Method: FromCorrespondences
+        // Creates an affine matrix that transforms one set of points into anther
+        // such that the distance between the points is minimized.
+        // Based on "Least-Squares Fitting of Two 3-D Point Sets" by Arun, et al
+        // https://ieeexplore.ieee.org/document/4767965
+        // 
+        // Parameters:
+        // srcPoints - Points to transform
+        // targetPoints - target points
+        //**********************************************************************
+        void FromCorrespondences(std::vector<Vector3> srcPoints, std::vector<Vector3> targetPoints)
+        {
+            //**********************************************************************
+            // Compute the centroids of the two point clouds
+            //**********************************************************************
+            float numPoints = (float)srcPoints.size();
+            Vector3 centroidA(0.0f, 0.0f, 0.0f);
+            Vector3 centroidB(0.0f, 0.0f, 0.0f);
+            for (int index = 0; index < numPoints; index++)
+            {
+                centroidA += Vector3(srcPoints[index].x, srcPoints[index].y, srcPoints[index].z);
+                centroidB += Vector3(targetPoints[index].x, targetPoints[index].y, targetPoints[index].z);
+            }
+            centroidA /= (float)numPoints;
+            centroidB /= (float)numPoints;
+
+            //**********************************************************************
+            // Compute SVD
+            //**********************************************************************
+            Matrix3x3 mat;
+            mat.Zero();
+            for (int i = 0; i < numPoints; i++)
+            {
+                Vector3 A = Vector3(srcPoints[i].x, srcPoints[i].y, srcPoints[i].z) - centroidA;
+                Vector3 B = Vector3(targetPoints[i].x, targetPoints[i].y, targetPoints[i].z) - centroidB;
+                Matrix3x3 m = Matrix3x3::FromDotVectors(A, B);
+                mat += m;
+            }
+            Eigen::JacobiSVD<Eigen::Matrix3f> svd(mat, Eigen::ComputeFullU | Eigen::ComputeFullV);
+            Matrix3x3 result = svd.matrixV() * svd.matrixU().transpose();
+
+            //**********************************************************************
+            // Check if SVD returned a reflection matrix
+            //**********************************************************************
+            if (result.Determinant() < 0)
+            {
+                result[2][0] *= -1;
+                result[2][1] *= -1;
+                result[2][2] *= -1;
+            }
+
+            //**********************************************************************
+            // Compute the final translation
+            //**********************************************************************
+            Vector3 translation = centroidB - centroidA * result;
+
+            Matrix4x4 xform = *pXform;
+            xform[0][0] = result[0][0];     xform[0][1] = result[1][0];     xform[0][2] = result[2][0];   xform[0][3] = 0.0f;
+            xform[1][0] = result[0][1];     xform[1][1] = result[1][1];     xform[1][2] = result[2][1];   xform[1][3] = 0.0f;
+            xform[2][0] = result[0][2];     xform[2][1] = result[1][2];     xform[2][2] = result[2][2];   xform[2][3] = 0.0f;
+            xform[3][0] = translation.x;    xform[3][1] = translation.y;    xform[3][2] = translation.z;  xform[3][3] = 1.0f;
+        }
+#endif
     };
 }

@@ -117,7 +117,8 @@ export namespace Caustic
         Vector2 operator+(const Vector2 &rhs) const { return Vector2(x + rhs.x, y + rhs.y); }
         Vector2 operator*(float f) const { return Vector2(x * f, y * f); }
         bool operator==(const Vector2 &rhs) const { return this->IsEq(rhs); }
-        bool operator!=(const Vector2 &rhs) const { return !this->IsEq(rhs); }
+        bool operator!=(const Vector2& rhs) const { return !this->IsEq(rhs); }
+        void operator/=(float scale) { x /= scale;  y /= scale; }
     };
 
     //**********************************************************************
@@ -241,6 +242,7 @@ export namespace Caustic
         Vector3 operator-(float v) const { return Vector3(x - v, y - v, z - v); }
         Vector3 operator*(const float s) const { return Vector3(x * s, y * s, z * s); }
         Vector3 operator/(const float s) const { return Vector3(x / s, y / s, z / s); }
+        void operator/=(float scale) { x /= scale;  y /= scale; z /= scale; }
         float Length() const
         {
             return (float)sqrtf(x * x + y * y + z * z);

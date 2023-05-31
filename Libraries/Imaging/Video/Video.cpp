@@ -217,7 +217,18 @@ namespace Caustic
             BYTE* pSrc = reinterpret_cast<BYTE*>(pBitmapData);
             for (UINT i = 0; i < m_videoFormat.m_height; i++)
             {
-                memcpy(pDst, pSrc, pitch);
+               // memcpy(pDst, pSrc, pitch);
+                BYTE* pDstCol = pDst;
+                BYTE* pSrcCol = pSrc;
+                for (UINT i = 0; i < m_videoFormat.m_width; i++)
+                {
+                    pDstCol[0] = pSrcCol[0];
+                    pDstCol[1] = pSrcCol[1];
+                    pDstCol[2] = pSrcCol[2];
+                    pDstCol[3] = 0xff;
+                    pDstCol += 4;
+                    pSrcCol += 4;
+                }
                 pSrc += pitch;
                 pDst += spImage->GetStride();
             }

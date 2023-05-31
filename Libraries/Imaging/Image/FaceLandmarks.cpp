@@ -41,8 +41,10 @@ namespace Caustic
 
     bool CFaceLandmarksFilter::ApplyInPlace(IImage* pImage, ImageFilterParams* pParams)
     {
-        assert(pImage->GetImageType() == EImageType::BGR_24bpp || pImage->GetImageType() == EImageType::BGRA_32bpp);
+        assert(pImage->GetImageType() == EImageType::BGR_24bpp || pImage->GetImageType() == EImageType::BGRA_32bpp || pImage->GetImageType() == EImageType::BGRX_32bpp);
         cv::Mat src(pImage->GetHeight(), pImage->GetWidth(), (pImage->GetImageType() == EImageType::BGR_24bpp) ? CV_8UC3 : CV_8UC4, pImage->GetData(), pImage->GetStride());
+
+        bool outputImage = (bool)std::any_cast<bool>(pParams->params["outputImage"]);
 
         std::vector<cv::Rect> faces;
         int grayW = 460;
@@ -57,6 +59,9 @@ namespace Caustic
         std::vector<std::vector<cv::Point2f> > shapes;
         if (m_facemark->fit(src, faces, shapes))
         {
+            if (outputImage)
+                pImage->Clear();
+            pParams->params.insert(std::make_pair("NumFaces", std::any(faces.size())));
             for (size_t i = 0; i < faces.size(); i++)
             {
                 Vector2 p0, p1;
@@ -79,18 +84,24 @@ namespace Caustic
                 bbox.maxPt.y = (float)pbr.y;
                 pParams->params.insert(std::make_pair(buf, std::any(bbox)));
 
-                uint8 color[4] = { 255, 0, 0, 255 };
-                p0.x = (float)ptl.x; p0.y = (float)ptl.y; p1.x = (float)pbr.x; p1.y = (float)ptl.y;
-                pImage->DrawLine(p0, p1, color);
-                p0.x = (float)pbr.x; p0.y = (float)ptl.y; p1.x = (float)pbr.x; p1.y = (float)pbr.y;
-                pImage->DrawLine(p0, p1, color);
-                p0.x = (float)ptl.x; p0.y = (float)pbr.y; p1.x = (float)pbr.x; p1.y = (float)pbr.y;
-                pImage->DrawLine(p0, p1, color);
-                p0.x = (float)ptl.x; p0.y = (float)ptl.y; p1.x = (float)ptl.x; p1.y = (float)pbr.y;
-                pImage->DrawLine(p0, p1, color);
+                if (outputImage)
+                {
+                    uint8 color[4] = { 255, 0, 0, 255 };
+                    p0.x = (float)ptl.x; p0.y = (float)ptl.y; p1.x = (float)pbr.x; p1.y = (float)ptl.y;
+                    pImage->DrawLine(p0, p1, color);
+                    p0.x = (float)pbr.x; p0.y = (float)ptl.y; p1.x = (float)pbr.x; p1.y = (float)pbr.y;
+                    pImage->DrawLine(p0, p1, color);
+                    p0.x = (float)ptl.x; p0.y = (float)pbr.y; p1.x = (float)pbr.x; p1.y = (float)pbr.y;
+                    pImage->DrawLine(p0, p1, color);
+                    p0.x = (float)ptl.x; p0.y = (float)ptl.y; p1.x = (float)ptl.x; p1.y = (float)pbr.y;
+                    pImage->DrawLine(p0, p1, color);
+                }
             }
             for (unsigned long i = 0; i < faces.size(); i++)
             {
+                char buf[1024];
+                sprintf_s(buf, "Face%d_NumLandmarks", (int)i);
+                pParams->params.insert(std::make_pair(buf, std::any(shapes[i].size())));
                 for (unsigned long k = 0; k < shapes[i].size(); k++)
                 {
                     cv::Point2f pt = shapes[i][k];
@@ -99,15 +110,18 @@ namespace Caustic
                     pt.x = (float)std::min<int>(std::max<int>((int)pt.x, 0), pImage->GetWidth() - 1);
                     pt.y = (float)std::min<int>(std::max<int>((int)pt.y, 0), pImage->GetHeight() - 1);
                     char buf[1024];
-                    sprintf_s(buf, "Face%dPoint%d", i, k);
+                    sprintf_s(buf, "Face%d_Point%d", i, k);
                     Vector2 q;
                     q.x = pt.x;
                     q.y = pt.y;
                     pParams->params.insert(std::make_pair(buf, std::any(q)));
                     
-                    uint8 color[4] = { 255, 0, 0, 255 };
-                    p0.x = pt.x; p0.y = pt.y;
-                    pImage->DrawCircle(p0, 3, color);
+                    if (outputImage)
+                    {
+                        uint8 color[4] = { 255, 0, 0, 255 };
+                        p0.x = pt.x; p0.y = pt.y;
+                        pImage->DrawCircle(p0, 3, color);
+                    }
                 }
             }
         }
