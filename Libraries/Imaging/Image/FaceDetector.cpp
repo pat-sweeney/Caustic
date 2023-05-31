@@ -48,7 +48,7 @@ namespace Caustic
         equalizeHist(gray, gray);
         cv::InputArray graySrc(gray);
         m_faceCascade.detectMultiScale(graySrc, faces, 1.1, 3, 0, cv::Size(30, 30));
-        int numFaces = faces.size();
+        int numFaces = (int)faces.size();
         pParams->params.insert(std::make_pair("NumFaces", std::any(numFaces)));
         bool outputImage = (bool)std::any_cast<bool>(pParams->params["outputImage"]);
         bool detectEyes = (bool)std::any_cast<bool>(pParams->params["detectEyes"]);
@@ -68,22 +68,22 @@ namespace Caustic
             char buf[1024];
             sprintf_s(buf, "Face%d", i);
             BBox2 bbox;
-            bbox.minPt.x = (int)ptl.x;
-            bbox.minPt.y = (int)ptl.y;
-            bbox.maxPt.x = (int)pbr.x;
-            bbox.maxPt.y = (int)pbr.y;
+            bbox.minPt.x = (float)ptl.x;
+            bbox.minPt.y = (float)ptl.y;
+            bbox.maxPt.x = (float)pbr.x;
+            bbox.maxPt.y = (float)pbr.y;
             pParams->params.insert(std::make_pair(buf, std::any(bbox)));
 
             if (outputImage)
             {
                 uint8 color[4] = { 255, 0, 0, 255 };
-                p0.x = (int)ptl.x; p0.y = (int)ptl.y; p1.x = (int)pbr.x; p1.y = (int)ptl.y;
+                p0.x = (float)ptl.x; p0.y = (float)ptl.y; p1.x = (float)pbr.x; p1.y = (float)ptl.y;
                 pImage->DrawLine(p0, p1, color);
-                p0.x = (int)pbr.x; p0.y = (int)ptl.y; p1.x = (int)pbr.x; p1.y = (int)pbr.y;
+                p0.x = (float)pbr.x; p0.y = (float)ptl.y; p1.x = (float)pbr.x; p1.y = (float)pbr.y;
                 pImage->DrawLine(p0, p1, color);
-                p0.x = (int)ptl.x; p0.y = (int)pbr.y; p1.x = (int)pbr.x; p1.y = (int)pbr.y;
+                p0.x = (float)ptl.x; p0.y = (float)pbr.y; p1.x = (float)pbr.x; p1.y = (float)pbr.y;
                 pImage->DrawLine(p0, p1, color);
-                p0.x = (int)ptl.x; p0.y = (int)ptl.y; p1.x = (int)ptl.x; p1.y = (int)pbr.y;
+                p0.x = (float)ptl.x; p0.y = (float)ptl.y; p1.x = (float)ptl.x; p1.y = (float)pbr.y;
                 pImage->DrawLine(p0, p1, color);
             }
 
@@ -101,8 +101,8 @@ namespace Caustic
                     ptl.y = (int)(pImage->GetHeight() * float(ptl.y) / grayH);
                     pbr.x = (int)(pImage->GetWidth() * float(pbr.x) / grayW);
                     pbr.y = (int)(pImage->GetHeight() * float(pbr.y) / grayH);
-                    pt.x = (ptl.x + pbr.x) / 2.0f;
-                    pt.y = (ptl.y + pbr.y) / 2.0f;
+                    pt.x = float(ptl.x + pbr.x) / 2.0f;
+                    pt.y = float(ptl.y + pbr.y) / 2.0f;
                     if (outputImage)
                     {
                         uint8 color[4] = { 0, 0, 255, 255 };

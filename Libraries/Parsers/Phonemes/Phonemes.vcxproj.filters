@@ -15,16 +15,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="NDIStream.cpp">
+    <ClCompile Include="Phonemes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="INDIStream.cpp">
+    <ClCompile Include="IPhonemes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="INDIStream.ixx">
+    <ClCompile Include="IPhonemes.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="NDIStream.ixx">
+    <ClCompile Include="Phonemes.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

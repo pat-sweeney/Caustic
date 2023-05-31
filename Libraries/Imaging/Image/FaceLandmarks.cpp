@@ -66,27 +66,27 @@ namespace Caustic
                 ptl.y = (int)(pImage->GetHeight() * float(ptl.y) / grayH);
                 pbr.x = (int)(pImage->GetWidth() * float(pbr.x) / grayW);
                 pbr.y = (int)(pImage->GetHeight() * float(pbr.y) / grayH);
-                ptl.x = std::min<int>(std::max<int>(ptl.x, 0), pImage->GetWidth() - 1);
-                ptl.y = std::min<int>(std::max<int>(ptl.y, 0), pImage->GetHeight() - 1);
-                pbr.x = std::min<int>(std::max<int>(pbr.x, 0), pImage->GetWidth() - 1);
-                pbr.y = std::min<int>(std::max<int>(pbr.y, 0), pImage->GetHeight() - 1);
+                ptl.x = std::min<int>(std::max<int>((int)ptl.x, 0), pImage->GetWidth() - 1);
+                ptl.y = std::min<int>(std::max<int>((int)ptl.y, 0), pImage->GetHeight() - 1);
+                pbr.x = std::min<int>(std::max<int>((int)pbr.x, 0), pImage->GetWidth() - 1);
+                pbr.y = std::min<int>(std::max<int>((int)pbr.y, 0), pImage->GetHeight() - 1);
                 char buf[1024];
                 sprintf_s(buf, "Face%d", (int)i);
                 BBox2 bbox;
-                bbox.minPt.x = ptl.x;
-                bbox.minPt.y = ptl.y;
-                bbox.maxPt.x = pbr.x;
-                bbox.maxPt.y = pbr.y;
+                bbox.minPt.x = (float)ptl.x;
+                bbox.minPt.y = (float)ptl.y;
+                bbox.maxPt.x = (float)pbr.x;
+                bbox.maxPt.y = (float)pbr.y;
                 pParams->params.insert(std::make_pair(buf, std::any(bbox)));
 
                 uint8 color[4] = { 255, 0, 0, 255 };
-                p0.x = (int)ptl.x; p0.y = (int)ptl.y; p1.x = (int)pbr.x; p1.y = (int)ptl.y;
+                p0.x = (float)ptl.x; p0.y = (float)ptl.y; p1.x = (float)pbr.x; p1.y = (float)ptl.y;
                 pImage->DrawLine(p0, p1, color);
-                p0.x = (int)pbr.x; p0.y = (int)ptl.y; p1.x = (int)pbr.x; p1.y = (int)pbr.y;
+                p0.x = (float)pbr.x; p0.y = (float)ptl.y; p1.x = (float)pbr.x; p1.y = (float)pbr.y;
                 pImage->DrawLine(p0, p1, color);
-                p0.x = (int)ptl.x; p0.y = (int)pbr.y; p1.x = (int)pbr.x; p1.y = (int)pbr.y;
+                p0.x = (float)ptl.x; p0.y = (float)pbr.y; p1.x = (float)pbr.x; p1.y = (float)pbr.y;
                 pImage->DrawLine(p0, p1, color);
-                p0.x = (int)ptl.x; p0.y = (int)ptl.y; p1.x = (int)ptl.x; p1.y = (int)pbr.y;
+                p0.x = (float)ptl.x; p0.y = (float)ptl.y; p1.x = (float)ptl.x; p1.y = (float)pbr.y;
                 pImage->DrawLine(p0, p1, color);
             }
             for (unsigned long i = 0; i < faces.size(); i++)

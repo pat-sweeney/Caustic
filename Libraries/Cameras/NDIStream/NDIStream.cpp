@@ -8,6 +8,7 @@ module;
 #include <Processing.NDI.Advanced.h>
 #include <Processing.NDI.Lib.h>
 #include <Windows.h>
+#include <memory>
 
 module Cameras.NDIStream.NDIStream;
 import Base.Core.Core;
@@ -98,5 +99,12 @@ namespace Caustic
         t.timecode = 0;
         NDIlib_util_send_send_audio_interleaved_16s(m_pSendInstance, &t);
         return;
+    }
+
+    //**********************************************************************
+    CRefObj<INDIStream> CreateNDIStreamInternal(bool f)
+    {
+        std::unique_ptr<CNDIStream> pStream(new CNDIStream(f));
+        return CRefObj<INDIStream>(pStream.release());
     }
 }

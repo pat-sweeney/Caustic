@@ -150,6 +150,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Video", "Libraries\Imaging\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NDIStream", "Libraries\Cameras\NDIStream\NDIStream.vcxproj", "{EF348B1B-4CB5-43A4-9CB6-B6411C7AF50B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Phonemes", "Libraries\Parsers\Phonemes\Phonemes.vcxproj", "{87AB87B5-2D88-470D-9CBB-2FDE445D3CA6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -542,6 +544,14 @@ Global
 		{EF348B1B-4CB5-43A4-9CB6-B6411C7AF50B}.Release|x64.Build.0 = Release|x64
 		{EF348B1B-4CB5-43A4-9CB6-B6411C7AF50B}.Release|x86.ActiveCfg = Release|Win32
 		{EF348B1B-4CB5-43A4-9CB6-B6411C7AF50B}.Release|x86.Build.0 = Release|Win32
+		{87AB87B5-2D88-470D-9CBB-2FDE445D3CA6}.Debug|x64.ActiveCfg = Debug|x64
+		{87AB87B5-2D88-470D-9CBB-2FDE445D3CA6}.Debug|x64.Build.0 = Debug|x64
+		{87AB87B5-2D88-470D-9CBB-2FDE445D3CA6}.Debug|x86.ActiveCfg = Debug|Win32
+		{87AB87B5-2D88-470D-9CBB-2FDE445D3CA6}.Debug|x86.Build.0 = Debug|Win32
+		{87AB87B5-2D88-470D-9CBB-2FDE445D3CA6}.Release|x64.ActiveCfg = Release|x64
+		{87AB87B5-2D88-470D-9CBB-2FDE445D3CA6}.Release|x64.Build.0 = Release|x64
+		{87AB87B5-2D88-470D-9CBB-2FDE445D3CA6}.Release|x86.ActiveCfg = Release|Win32
+		{87AB87B5-2D88-470D-9CBB-2FDE445D3CA6}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -606,6 +616,7 @@ Global
 		{E750A470-EFA3-4AB1-84B6-FE17A6ADFA50} = {D3EDC083-19DE-435B-93D9-CF91A6CBEF6C}
 		{338CBC84-638B-4EEA-9AF1-4F6582945B28} = {CE35B135-A8F8-47F8-AE64-789E7744950C}
 		{EF348B1B-4CB5-43A4-9CB6-B6411C7AF50B} = {D3EDC083-19DE-435B-93D9-CF91A6CBEF6C}
+		{87AB87B5-2D88-470D-9CBB-2FDE445D3CA6} = {D9B1032A-6CBA-4E67-A473-5412E1A67BC8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {60363C0E-C20A-4E6B-AE61-6E0BD7D6B964}

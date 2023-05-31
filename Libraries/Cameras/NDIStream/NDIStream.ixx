@@ -41,9 +41,11 @@ export namespace Caustic
         uint32 m_bitsPerSample;
         uint32 m_numChannels;
         uint32 m_samplingRate;
+        bool x;
     public:
-        CNDIStream() :
-            m_videoFrameIndex(0)
+        CNDIStream(bool f) :
+            m_videoFrameIndex(0),
+            x(f)
         {
         }
 
@@ -65,4 +67,7 @@ export namespace Caustic
         virtual void SendImage(IImage* pImage) override;
         virtual void SendAudioFrame(uint8* pBuffer, uint32 bufferLen) override;
     };
+
+    //**********************************************************************
+    CRefObj<INDIStream> CreateNDIStreamInternal();
 }

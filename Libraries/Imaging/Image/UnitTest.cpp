@@ -196,7 +196,7 @@ namespace CausticTestSuite
         auto i = cf.Apply(pImage, &params);
         auto stop = high_resolution_clock::now();
         auto duration = duration_cast<microseconds>(stop - start);
-        printf("Duration:%d\n", duration.count());
+        printf("Duration:%d\n", (int)duration.count());
         StoreImage(L"d:\\data\\FaceLandmarks.png", i);
         return true;
     }

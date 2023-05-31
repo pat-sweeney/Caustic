@@ -21,7 +21,7 @@ namespace Caustic
     //**********************************************************************
     CRefObj<INDIStream> CreateNDIStream()
     {
-        CRefObj<INDIStream> spObj = CRefObj<INDIStream>(new CNDIStream());
-        return spObj;
+        extern CRefObj<INDIStream> CreateNDIStreamInternal(bool f);
+        return CreateNDIStreamInternal(f);
     }
 }

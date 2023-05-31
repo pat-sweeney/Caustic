@@ -29,6 +29,7 @@ import Cameras.VirtualCamera.IVirtualCamera;
 import Cameras.VirtualCamera.VirtualCamera;
 import Cameras.NDIStream.INDIStream;
 import Imaging.Video.IVideo;
+import Parsers.Phonemes.IPhonemes;
 
 using namespace Caustic;
 
@@ -43,6 +44,7 @@ public:
     CRefObj<ISampler> m_spSampler;
     CRefObj<IImage> m_spLastFrame;
     CRefObj<ITexture> m_spLastTex;
+    CRefObj<IPhonemes> m_spPhonemes;
     std::vector<CRefObj<IVideo>> m_videos;
     int m_curVideoIndex;
     int m_nextVideoIndex;
@@ -189,6 +191,7 @@ void CApp::BuildUI(ITexture* pFinalRT, ImFont* pFont)
 
 void CApp::InitializeCaustic(HWND hwnd)
 {
+    m_spPhonemes = Caustic::CreatePhonemes();
     Caustic::SystemStartup();
     app.m_texLoaded = false;
     m_spCausticFactory = Caustic::CreateCausticFactory();
