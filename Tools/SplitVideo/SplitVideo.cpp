@@ -15,6 +15,8 @@ import Caustic.Base;
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Base.Core.ConvertStr;
+import Base.Math.Matrix;
+import Base.Math.Distributions;
 import Imaging.Image.ImageFilter;
 import Imaging.Image.ImageFilter.FaceLandmarks;
 import Geometry.Mesh.IMeshConstructor;
@@ -35,6 +37,18 @@ import Parsers.Phonemes.IPhonemes;
 
 using namespace Caustic;
 
+const int c_GridX = 40;
+const int c_GridY = 40;
+
+struct PhonemeInfo
+{
+    int m_startFrame;
+    int m_endFrame;
+};
+
+typedef Vector2 _VecArray[c_GridY];
+typedef _VecArray GridUVs[c_GridX];
+
 class CApp
 {
 public:
@@ -45,8 +59,271 @@ public:
     char VideoPath[1024];
     char VideoName[1024];
     CRefObj<IPhonemes> m_spPhonemes;
+    CRefObj<IImageFilter> m_spLandmarkFilter;
+    std::wstring m_videoPath;
+    std::wstring m_videoName;
+    std::wstring m_videoFullPath;
+    CRefObj<IVideo> m_spVideo;
+    std::vector<std::string> m_phonemes;
+    std::vector<GridUVs> m_gridUVs;
+
+    void Convert();
+    void FindLandmarks(std::vector<BBox2>& faceBbox, std::vector<std::vector<Vector2>>& faceLandmarks);
+    void WriteLandmarks(BBox2& bb, std::vector<Vector2>& landmarks, int frameIndex);
+    void ComputeWarps(std::vector<BBox2>& faceBbox, std::vector<std::vector<Vector2>>& faceLandmarks,
+        std::vector<PhonemeInfo>& phonemeFrames);
+    void DeterminePhonemeInfo(std::vector<std::vector<Vector2>>& faceLandmarks, int numPhonemes, std::vector<PhonemeInfo>& phonemeInfo);
+    void ComputeGridWarp(PhonemeInfo& phonemeInfo, std::vector<std::vector<Vector2>>& faceLandmarks, int roiX, int roiY, int roiWidth, int roiHeight);
 };
 CApp app;
+
+void CApp::ComputeGridWarp(PhonemeInfo& phonemeInfo, std::vector<std::vector<Vector2>>& faceLandmarks, std::vector<std::vector<Vector2>>& landmarkDeltas, int roiX, int roiY, int roiWidth, int roiHeight)
+{
+    GaussianDistribution distribution(2.0f);
+    float gridDeltaX = (float)roiWidth / (float)c_GridX;
+    float gridDeltaY = (float)roiHeight / (float)c_GridY;
+    GridUVs gridLocations;
+    for (int gridY = 0; gridY < c_GridY; gridY++)
+    {
+        for (int gridX = 0; gridX < c_GridX; gridX++)
+        {
+            Vector2 gridPixel(roiX + (float)gridX * gridDeltaX, roiY + (float)gridY * gridDeltaY);
+
+            // Walk each of our face landmarks and see if it effects the current grid vertex. We will
+            // use a gaussian placed on the landmark to determine influence.
+            Vector2 newGridPos(gridPixel.x, gridPixel.y);
+            for (int landmarkIndex = 0; landmarkIndex < (int)faceLandmarks[phonemeInfo.m_startFrame].size(); landmarkIndex++)
+            {
+                // Determine distance from the grid location to the landmark
+                float dx = gridPixel.x - faceLandmarks[phonemeInfo.m_startFrame][landmarkIndex].x;
+                float dy = gridPixel.y - faceLandmarks[phonemeInfo.m_startFrame][landmarkIndex].y;
+                float dist = sqrtf(dx * dx + dy * dy);
+                float weight = distribution.Sample(dist);
+                newGridPos += landmarkDeltas[landmarkIndex] * weight;
+            }
+            gridLocations[gridX][gridY] = newGridPos;
+        }
+    }
+    m_gridUVs.push_back(gridLocations);
+}
+
+// Next I need to build an array per phoneme that indicates how the grid
+// deforms based on the landmark motion. 
+// 
+// Here I assume that the phonemes that make up each word are evenly
+// spaced across the sound duration. This is clearly incorrect, but
+// I don't have another solution.
+//
+// I also assume that all the landmarks will be centered around
+// points 28 and 31 (the bridge of the nose). This is used to normalize
+// across the frames.
+// I then lay a grid mesh across the image and place a gaussian distribution
+// at each landmark to determine what portions of the image should move
+// based on the delta of the landmarks across the phoneme.
+
+void CApp::ComputeWarps(std::vector<BBox2>& faceBbox, std::vector<std::vector<Vector2>>& faceLandmarks,
+    std::vector<PhonemeInfo>& phonemeInfo)
+{
+    int numFrames = (int)faceLandmarks.size();
+    int phonemeIndex = 0;
+
+    for (int frameIndex = 0; frameIndex < numFrames; frameIndex++)
+    {
+        if (frameIndex >= phonemeInfo[phonemeIndex].m_endFrame)
+        {
+            // Move to next phoneme
+            phonemeIndex++;
+        }
+
+        std::vector<Vector2> landmarkDeltas;
+        if (frameIndex == phonemeInfo[phonemeIndex].m_startFrame)
+        {
+            for (int landmarkIndex = 0; landmarkIndex < (int)faceLandmarks[frameIndex].size(); landmarkIndex++)
+            {
+                Vector2 landmarkDelta(0.0f, 0.0f);
+                landmarkDeltas.push_back(landmarkDelta);
+            }
+        }
+        else
+        {
+            // Compute a matrix to transform the current set of landmarks to
+            // such that the bridge of the nose is aligned with the first
+            // frame of this phonemene's landmarks.
+            Matrix3x2 mat = Matrix3x2::Align(
+                faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][c_FaceLandmark_NoseBridge_Bottom],
+                faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][c_FaceLandmark_NoseBridge_Top],
+                faceLandmarks[frameIndex][c_FaceLandmark_NoseBridge_Bottom],
+                faceLandmarks[frameIndex][c_FaceLandmark_NoseBridge_Top]);
+
+            // Compute the deltas of the current frame's landmarks
+            // as compared to the first frame in the current phoneme's landmarks
+            for (int landmarkIndex = 0; landmarkIndex < (int)faceLandmarks[frameIndex].size(); landmarkIndex++)
+            {
+                Vector2 alignedLandmark = faceLandmarks[frameIndex][landmarkIndex];
+                alignedLandmark = alignedLandmark * mat;
+                Vector2 landmarkDelta = alignedLandmark - faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][landmarkIndex];
+                landmarkDeltas.push_back(landmarkDelta);
+            }
+        }
+        int roiX = 0;
+        int roiY = 0;
+        int roiWidth = 100;
+        int roiHeight = 100;
+        ComputeGridWarp(phonemeInfo[phonemeIndex], faceLandmarks, landmarkDeltas, roiX, roiY, roiWidth, roiHeight);
+
+        // Build the current deltas for our warping grid
+        // Our warping grid is numGridCellsX x numGridCellsY and covers
+        // the ROI that the face landmarks were computed within. This
+        // area is a subset of the entire image. For each landmark found
+        // in the current frame we will compute the delta from the first
+        // frame's landmarks to see how much the image moved. We then warp
+        // the grid vertices by these deltas. Each grid vertex's warp
+        // is a linear combination of all the landmark deltas weighted
+        // by a gaussian centered at each original landmark position
+        // (i.e. the landmark from the first frame)
+        // 
+        //     0                                               spImage->Width
+        //      +--------------------------------------------------+
+        //      |                                                  |
+        //      |                                                  |
+        //      |             <-- numGridCellsX -->                |
+        //      |             0                  W                 |
+        //      |          ^  +---+---+---+---+--+                 |
+        //      |          |  |   |   |   | O |  |                 |
+        //      |          |  |   |   |   |/  |  |                 |
+        //      |          |  +---+---+---/---+--+                 |
+        //      |numGridCellsY|   |   |  O|   |  |                 |
+        //      |          |  |   |   |   |   |  |                 |
+        //      |          |  +---+---+---+---+--+                 |
+        //      |          |  |   |   | O---->O  |                 |
+        //      |          v  |   |   |   |   |  |                 |
+        //      |           H +---+---+---+---+--+                 |
+        //      |                                                  |
+        //      |                                                  |
+        //      +--------------------------------------------------+
+        // spImage->Height
+    }
+}
+
+void CApp::WriteLandmarks(BBox2 &bb, std::vector<Vector2> &landmarks, int frameIndex)
+{
+    wchar_t rectFN[1024];
+    swprintf_s(rectFN, L"%s\\%s_%d.txt", m_videoPath.c_str(), m_videoName.c_str(), frameIndex);
+    HANDLE f = CreateFile(rectFN, GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, 0, nullptr);
+    if (f == INVALID_HANDLE_VALUE)
+        return;
+    char buf[1024];
+    sprintf_s(buf, "FaceBBox: %f,%f..%f,%f\n", bb.minPt.x, bb.minPt.y, bb.maxPt.x, bb.maxPt.y);
+    DWORD dw;
+    WriteFile(f, buf, (DWORD)strlen(buf), &dw, nullptr);
+    for (int j = 0; j < (int)landmarks.size(); j++)
+    {
+        sprintf_s(buf, "Landmark%d: %f,%f\n", j, landmarks[j].x, landmarks[j].y);
+        WriteFile(f, buf, (DWORD)strlen(buf), &dw, nullptr);
+    }
+    CloseHandle(f);
+}
+
+void CApp::FindLandmarks(std::vector<BBox2> &faceBbox, std::vector<std::vector<Vector2>> &faceLandmarks)
+{
+    // Make the first pass across the stream to find all the face landmarks.
+    int frameIndex = 0;
+    while (!m_spVideo->EndOfStream())
+    {
+        auto spVideoSample = m_spVideo->NextVideoSample();
+        if (spVideoSample != nullptr)
+        {
+            auto spImage = spVideoSample->GetImage();
+            Caustic::ImageFilterParams params;
+            params.params.insert(std::make_pair("outputImage", std::any(true)));
+
+            auto marked = m_spLandmarkFilter->Apply(spImage, &params);
+
+            auto bb = std::any_cast<BBox2>(params.params["Face0"]);
+            faceBbox.push_back(bb);
+
+            int numLandmarks = (int)std::any_cast<size_t>(params.params["Face0_NumLandmarks"]);
+            std::vector<Vector2> landmarks;
+            for (int j = 0; j < numLandmarks; j++)
+            {
+                char buf[1024];
+                sprintf_s(buf, "Face%d_Point%d", 0, j);
+                Vector2 pt = std::any_cast<Vector2>(params.params[buf]);
+                landmarks.push_back(pt);
+            }
+            faceLandmarks.push_back(landmarks);
+
+            WriteLandmarks(faceBbox[0], landmarks, 0);
+
+            wchar_t buf[1024];
+            swprintf_s(buf, L"%s\\%s_marked_%d.png", m_videoPath.c_str(), m_videoName.c_str(), frameIndex);
+            Caustic::StoreImage(buf, marked);
+            swprintf_s(buf, L"%s\\%s_orig_%d.png", m_videoPath.c_str(), m_videoName.c_str(), frameIndex);
+            Caustic::StoreImage(buf, spImage);
+            frameIndex++;
+        }
+    }
+
+}
+
+void CApp::DeterminePhonemeInfo(std::vector<std::vector<Vector2>>& faceLandmarks, int numPhonemes, std::vector<PhonemeInfo> & phonemeInfo)
+{
+    int curPhoneme = 0;
+    int numFramesInVideo = (int)faceLandmarks.size();
+    int framesPerPhoneme = numFramesInVideo / numPhonemes;
+    int extraFrames = numFramesInVideo - framesPerPhoneme * numPhonemes;
+    int lastFrame = 0;
+    for (int i = 0; i < numPhonemes; i++)
+    {
+        PhonemeInfo info;
+        info.m_startFrame = lastFrame;
+        info.m_endFrame = lastFrame + framesPerPhoneme;
+        if (extraFrames > 0)
+        {
+            info.m_endFrame++;
+            lastFrame = info.m_endFrame;
+            extraFrames--;
+        }
+        phonemeInfo.push_back(info);
+    }
+}
+
+void CApp::Convert()
+{
+    m_spLandmarkFilter = CreateFaceLandmarksFilter();
+    m_videoPath = Caustic::str2wstr(VideoPath);
+    m_videoName = Caustic::str2wstr(VideoName);
+    m_videoFullPath = m_videoPath + L"\\" + m_videoName + L".mp4";
+    m_spVideo = CreateVideo(m_videoFullPath.c_str());
+
+    // Get list of phonemes for the current word
+    std::string word(VideoName);
+    std::transform(word.begin(), word.end(), word.begin(),
+        [](unsigned char c) { return std::toupper(c); });
+    m_spPhonemes->GetPhonemes(word.c_str(), m_phonemes);
+
+    // Make the first pass across the stream to find all the face
+    // landmarks.
+    std::vector<BBox2> faceBbox;
+    std::vector<std::vector<Vector2>> faceLandmarks;
+    FindLandmarks(faceBbox, faceLandmarks);
+
+    std::vector<PhonemeInfo> phonemeInfo;
+    DeterminePhonemeInfo(faceLandmarks, (int)m_phonemes.size(), phonemeInfo);
+
+    ComputeWarps(faceBbox, faceLandmarks, phonemeInfo);
+
+    // Generate warped images
+    //m_spVideo->Restart();
+    //while (!m_spVideo->EndOfStream())
+    //{
+    //    auto spVideoSample = m_spVideo->NextVideoSample();
+    //    if (spVideoSample != nullptr)
+    //    {
+    //        ComputeWarps(spVideoSample->GetImage());
+    //    }
+    //}
+}
 
 void CApp::InitializeCaustic(HWND hwnd)
 {
@@ -70,92 +347,7 @@ void CApp::InitializeCaustic(HWND hwnd)
             ImGui::SameLine();
             ImGui::InputText("##VideoName", app.VideoName, sizeof(app.VideoName));
             if (ImGui::Button("Convert"))
-            {
-                CRefObj<IImageFilter> spFilter = CreateFaceLandmarksFilter();
-                std::wstring videoPath = Caustic::str2wstr(app.VideoPath);
-                std::wstring videoName = Caustic::str2wstr(app.VideoName);
-                std::wstring videoFullPath = videoPath + L"\\" + videoName + L".mp4";
-                CRefObj<IVideo> p0 = CreateVideo(videoFullPath.c_str());
-                int frameIndex = 0;
-                std::vector<std::string> phonemes;
-                std::string word(app.VideoName);
-                std::transform(word.begin(), word.end(), word.begin(),
-                    [](unsigned char c) { return std::toupper(c); });
-                app.m_spPhonemes->GetPhonemes(word.c_str(), phonemes);
-
-                // Make the first pass across the stream to find all the face
-                // landmarks.
-                std::vector<BBox2> faceBbox;
-                std::vector<std::vector<Vector2>> faceLandmarks;
-                while (!p0->EndOfStream())
-                {
-                    auto spVideoSample = p0->NextVideoSample();
-                    if (spVideoSample != nullptr)
-                    {
-                        auto spImage = spVideoSample->GetImage();
-                        Caustic::ImageFilterParams params;
-                        params.params.insert(std::make_pair("outputImage", std::any(true)));
-                        auto marked = spFilter->Apply(spImage, &params);
-                        {
-                            wchar_t rectFN[1024];
-                            swprintf_s(rectFN, L"%s\\%s_%d.txt", videoPath.c_str(), videoName.c_str(), frameIndex);
-                            HANDLE f = CreateFile(rectFN, GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, 0, nullptr);
-                            auto bb = std::any_cast<BBox2>(params.params["Face0"]);
-                            faceBbox.push_back(bb);
-                            char buf[1024];
-                            sprintf_s(buf, "FaceBBox: %f,%f..%f,%f\n", bb.minPt.x, bb.minPt.y, bb.maxPt.x, bb.maxPt.y);
-                            DWORD dw;
-                            WriteFile(f, buf, strlen(buf), &dw, nullptr);
-                            int numLandmarks = std::any_cast<size_t>(params.params["Face0_NumLandmarks"]);
-                            std::vector<Vector2> landmarks;
-                            for (int j = 0; j < numLandmarks; j++)
-                            {
-                                sprintf_s(buf, "Face0_Point%d", j);
-                                Vector2 pt = std::any_cast<Vector2>(params.params[buf]);
-                                landmarks.push_back(pt);
-                                sprintf_s(buf, "Landmark%d: %f,%f\n", j, pt.x, pt.y);
-                                WriteFile(f, buf, strlen(buf), &dw, nullptr);
-                            }
-                            faceLandmarks.push_back(landmarks);
-                            CloseHandle(f);
-                        }
-                        wchar_t buf[1024];
-                        swprintf_s(buf, L"%s\\%s_marked_%d.png", videoPath.c_str(), videoName.c_str(), frameIndex);
-                        Caustic::StoreImage(buf, marked);
-                        swprintf_s(buf, L"%s\\%s_orig_%d.png", videoPath.c_str(), videoName.c_str(), frameIndex);
-                        Caustic::StoreImage(buf, spImage);
-                        frameIndex++;
-                    }
-                }
-
-                // Next I need to build an array per phoneme that indicates how the grid
-                // deforms based on the landmark motion. 
-                // 
-                // Here I assume that the phonemes that make up each word are evenly
-                // spaced across the sound duration. This is clearly incorrect, but
-                // I don't have another solution.
-                //
-                // I also assume that all the landmarks will be centered around
-                // points 28 and 31 (the bridge of the nose). This is used to normalize
-                // across the frames.
-                // I then lay a grid mesh across the image and place a gaussian distribution
-                // at each landmark to determine what portions of the image should move
-                // based on the delta of the landmarks across the phoneme.
-                int curPhoneme = 0;
-                int framesPerPhoneme = frameIndex / phonemes.size();
-                int framePhonemeIndex = 0;
-                for (int i = 0; i < frameIndex; i++)
-                {
-                    if (framePhonemeIndex == framesPerPhoneme)
-                    {
-                        curPhoneme++;
-                        framePhonemeIndex = 0;
-                    }
-                    faceLandmarks[i][c_FaceLandmark_NoseBridge_Top];
-                    faceLandmarks[i][c_FaceLandmark_NoseBridge_Bottom];
-                    // First align the bridge of the nose with the first landmark
-                }
-            }
+                app.Convert();
             ImGui::End();
         });
 

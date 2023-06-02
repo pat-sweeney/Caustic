@@ -80,6 +80,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Distribution.ixx" />
     <ClCompile Include="UnitTest.ixx" />
     <ClCompile Include="Basis.ixx" />
     <ClCompile Include="BBox.ixx" />

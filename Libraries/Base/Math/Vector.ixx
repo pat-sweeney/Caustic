@@ -119,6 +119,8 @@ export namespace Caustic
         bool operator==(const Vector2 &rhs) const { return this->IsEq(rhs); }
         bool operator!=(const Vector2& rhs) const { return !this->IsEq(rhs); }
         void operator/=(float scale) { x /= scale;  y /= scale; }
+        void operator+=(Vector2 v) { x += v.x;  y += v.y; }
+        void operator-=(Vector2 v) { x -= v.x;  y -= v.y; }
     };
 
     //**********************************************************************

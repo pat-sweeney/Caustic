@@ -106,5 +106,8 @@
     <ClCompile Include="UnitTest.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Distribution.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

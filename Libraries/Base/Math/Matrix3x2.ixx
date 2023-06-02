@@ -54,6 +54,22 @@ export namespace Caustic
 
         bool Inverse();
 
+        // Method: Align
+        // Given a vector from A=>B and another from C=>D find the transform
+        // that aligns the two vectors such that A=C and B=D
+        static Matrix3x2 Align(Vector2 p0, Vector2 p1, Vector2 q0, Vector2 q1)
+        {
+            // First compute rotation angle between the two vectors
+            Vector2 vp = (p1 - p0).Normalize();
+            Vector2 vq = (q1 - q0).Normalize();
+            float ca = vp.Dot(vq);
+            float sa = vp.Cross(vq);
+            // Next compute the final matrix as:
+            // -q0 * Rot * q0 * -(q0-p0)
+            Matrix3x2 mat = Matrix3x2(ca, -sa, sa, ca, -q0.x * ca - q0.y * sa + p0.x, q0.x * sa - q0.y * ca + p0.y);
+            return mat;
+        }
+
         Matrix3x2 operator *(const Matrix3x2& r)
         {
             Matrix3x2 m;
