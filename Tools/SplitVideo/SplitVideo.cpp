@@ -17,6 +17,7 @@ import Base.Core.IRefCount;
 import Base.Core.ConvertStr;
 import Base.Math.Matrix;
 import Base.Math.Distributions;
+import Base.Math.Vector;
 import Imaging.Image.ImageFilter;
 import Imaging.Image.ImageFilter.FaceLandmarks;
 import Geometry.Mesh.IMeshConstructor;
@@ -46,8 +47,8 @@ struct PhonemeInfo
     int m_endFrame;
 };
 
-typedef Vector2 _VecArray[c_GridY];
-typedef _VecArray GridUVs[c_GridX];
+typedef Vector2 VecArray[c_GridY];
+typedef VecArray GridUVs[c_GridX];
 
 class CApp
 {
@@ -73,11 +74,11 @@ public:
     void ComputeWarps(std::vector<BBox2>& faceBbox, std::vector<std::vector<Vector2>>& faceLandmarks,
         std::vector<PhonemeInfo>& phonemeFrames);
     void DeterminePhonemeInfo(std::vector<std::vector<Vector2>>& faceLandmarks, int numPhonemes, std::vector<PhonemeInfo>& phonemeInfo);
-    void ComputeGridWarp(PhonemeInfo& phonemeInfo, std::vector<std::vector<Vector2>>& faceLandmarks, int roiX, int roiY, int roiWidth, int roiHeight);
+    void ComputeGridWarp(PhonemeInfo& phonemeInfo, std::vector<std::vector<Vector2>>& faceLandmarks, std::vector<Vector2>& landmarkDeltas, int roiX, int roiY, int roiWidth, int roiHeight);
 };
 CApp app;
 
-void CApp::ComputeGridWarp(PhonemeInfo& phonemeInfo, std::vector<std::vector<Vector2>>& faceLandmarks, std::vector<std::vector<Vector2>>& landmarkDeltas, int roiX, int roiY, int roiWidth, int roiHeight)
+void CApp::ComputeGridWarp(PhonemeInfo& phonemeInfo, std::vector<std::vector<Vector2>>& faceLandmarks, std::vector<Vector2>& landmarkDeltas, int roiX, int roiY, int roiWidth, int roiHeight)
 {
     GaussianDistribution distribution(2.0f);
     float gridDeltaX = (float)roiWidth / (float)c_GridX;
