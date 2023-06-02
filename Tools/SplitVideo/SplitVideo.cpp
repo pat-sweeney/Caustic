@@ -10,6 +10,7 @@
 #include <string>
 #include <any>
 #include <algorithm>
+#include <memory>
 
 import Caustic.Base;
 import Base.Core.Core;
@@ -22,6 +23,7 @@ import Imaging.Image.ImageFilter;
 import Imaging.Image.ImageFilter.FaceLandmarks;
 import Geometry.Mesh.IMeshConstructor;
 import Geometry.MeshImport;
+import Geometry.Mesh.MeshFuncs;
 import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.IRenderMesh;
 import Rendering.Caustic.IRenderer;
@@ -33,13 +35,12 @@ import Rendering.Caustic.ICausticFactory;
 import Rendering.RenderWindow.IRenderWindow;
 import Imaging.Video.IVideo;
 import Parsers.Phonemes.IPhonemes;
+import Imaging.Image.GPUPipeline;
+import Imaging.Image.IGPUPipeline;
 
 #define MAX_LOADSTRING 100
 
 using namespace Caustic;
-
-const int c_GridX = 40;
-const int c_GridY = 40;
 
 struct PhonemeInfo
 {
@@ -47,8 +48,8 @@ struct PhonemeInfo
     int m_endFrame;
 };
 
-typedef Vector2 VecArray[c_GridY];
-typedef VecArray GridUVs[c_GridX];
+const int c_GridX = 40;
+const int c_GridY = 40;
 
 class CApp
 {
@@ -66,15 +67,17 @@ public:
     std::wstring m_videoFullPath;
     CRefObj<IVideo> m_spVideo;
     std::vector<std::string> m_phonemes;
-    std::vector<GridUVs> m_gridUVs;
+    std::vector<std::vector<std::vector<Vector2>>> m_gridUVs;
+    bool m_doConvert;
 
-    void Convert();
+    void Convert(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx);
     void FindLandmarks(std::vector<BBox2>& faceBbox, std::vector<std::vector<Vector2>>& faceLandmarks);
     void WriteLandmarks(BBox2& bb, std::vector<Vector2>& landmarks, int frameIndex);
-    void ComputeWarps(std::vector<BBox2>& faceBbox, std::vector<std::vector<Vector2>>& faceLandmarks,
+    void ComputeWarps(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx, std::vector<BBox2>& faceBbox, std::vector<std::vector<Vector2>>& faceLandmarks,
         std::vector<PhonemeInfo>& phonemeFrames);
     void DeterminePhonemeInfo(std::vector<std::vector<Vector2>>& faceLandmarks, int numPhonemes, std::vector<PhonemeInfo>& phonemeInfo);
     void ComputeGridWarp(PhonemeInfo& phonemeInfo, std::vector<std::vector<Vector2>>& faceLandmarks, std::vector<Vector2>& landmarkDeltas, int roiX, int roiY, int roiWidth, int roiHeight);
+    void WarpAndDumpImage(IRenderer* pRenderer, IRenderCtx* pRenderCtx, std::vector<PhonemeInfo>& phonemeInfo);
 };
 CApp app;
 
@@ -83,7 +86,12 @@ void CApp::ComputeGridWarp(PhonemeInfo& phonemeInfo, std::vector<std::vector<Vec
     GaussianDistribution distribution(2.0f);
     float gridDeltaX = (float)roiWidth / (float)c_GridX;
     float gridDeltaY = (float)roiHeight / (float)c_GridY;
-    GridUVs gridLocations;
+    std::vector<std::vector<Vector2>> gridLocations;
+    gridLocations.resize(c_GridX);
+    for (int i = 0; i < c_GridY; i++)
+        gridLocations[i].resize(c_GridY);
+    float normScale = std::max<float>((float)roiWidth, (float)roiHeight);
+    normScale = sqrtf(2.0f * normScale * normScale);
     for (int gridY = 0; gridY < c_GridY; gridY++)
     {
         for (int gridX = 0; gridX < c_GridX; gridX++)
@@ -98,7 +106,7 @@ void CApp::ComputeGridWarp(PhonemeInfo& phonemeInfo, std::vector<std::vector<Vec
                 // Determine distance from the grid location to the landmark
                 float dx = gridPixel.x - faceLandmarks[phonemeInfo.m_startFrame][landmarkIndex].x;
                 float dy = gridPixel.y - faceLandmarks[phonemeInfo.m_startFrame][landmarkIndex].y;
-                float dist = sqrtf(dx * dx + dy * dy);
+                float dist = sqrtf(dx * dx + dy * dy) / normScale;
                 float weight = distribution.Sample(dist);
                 newGridPos += landmarkDeltas[landmarkIndex] * weight;
             }
@@ -122,7 +130,8 @@ void CApp::ComputeGridWarp(PhonemeInfo& phonemeInfo, std::vector<std::vector<Vec
 // at each landmark to determine what portions of the image should move
 // based on the delta of the landmarks across the phoneme.
 
-void CApp::ComputeWarps(std::vector<BBox2>& faceBbox, std::vector<std::vector<Vector2>>& faceLandmarks,
+void CApp::ComputeWarps(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx,
+    std::vector<BBox2>& faceBbox, std::vector<std::vector<Vector2>>& faceLandmarks,
     std::vector<PhonemeInfo>& phonemeInfo)
 {
     int numFrames = (int)faceLandmarks.size();
@@ -166,43 +175,108 @@ void CApp::ComputeWarps(std::vector<BBox2>& faceBbox, std::vector<std::vector<Ve
                 landmarkDeltas.push_back(landmarkDelta);
             }
         }
-        int roiX = 0;
-        int roiY = 0;
-        int roiWidth = 100;
-        int roiHeight = 100;
+        int roiX = (int)faceBbox[frameIndex].minPt.x;
+        int roiY = (int)faceBbox[frameIndex].minPt.y;
+        int roiWidth = (int)faceBbox[frameIndex].maxPt.x - (int)faceBbox[frameIndex].minPt.x + 1;
+        int roiHeight = (int)faceBbox[frameIndex].maxPt.y - (int)faceBbox[frameIndex].minPt.y + 1;
         ComputeGridWarp(phonemeInfo[phonemeIndex], faceLandmarks, landmarkDeltas, roiX, roiY, roiWidth, roiHeight);
 
-        // Build the current deltas for our warping grid
-        // Our warping grid is numGridCellsX x numGridCellsY and covers
-        // the ROI that the face landmarks were computed within. This
-        // area is a subset of the entire image. For each landmark found
-        // in the current frame we will compute the delta from the first
-        // frame's landmarks to see how much the image moved. We then warp
-        // the grid vertices by these deltas. Each grid vertex's warp
-        // is a linear combination of all the landmark deltas weighted
-        // by a gaussian centered at each original landmark position
-        // (i.e. the landmark from the first frame)
-        // 
-        //     0                                               spImage->Width
-        //      +--------------------------------------------------+
-        //      |                                                  |
-        //      |                                                  |
-        //      |             <-- numGridCellsX -->                |
-        //      |             0                  W                 |
-        //      |          ^  +---+---+---+---+--+                 |
-        //      |          |  |   |   |   | O |  |                 |
-        //      |          |  |   |   |   |/  |  |                 |
-        //      |          |  +---+---+---/---+--+                 |
-        //      |numGridCellsY|   |   |  O|   |  |                 |
-        //      |          |  |   |   |   |   |  |                 |
-        //      |          |  +---+---+---+---+--+                 |
-        //      |          |  |   |   | O---->O  |                 |
-        //      |          v  |   |   |   |   |  |                 |
-        //      |           H +---+---+---+---+--+                 |
-        //      |                                                  |
-        //      |                                                  |
-        //      +--------------------------------------------------+
-        // spImage->Height
+        WarpAndDumpImage(pRenderer, pCtx, phonemeInfo);
+    }
+}
+
+//**********************************************************************
+class CWarpNode : public CGPUPipelineNodeBase
+{
+    CRefObj<IMesh> m_spMesh;
+    CRefObj<IRenderMesh> m_spRenderMesh;
+public:
+    CWarpNode(const wchar_t* pName, IRenderer* pRenderer, IShader* pShader, uint32 inputWidth, uint32 inputHeight, DXGI_FORMAT format = DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM) :
+        CGPUPipelineNodeBase(inputWidth, inputHeight, format)
+    {
+        SetName(pName);
+        SetShader(pShader);
+
+        m_cpuFlags = (D3D11_CPU_ACCESS_FLAG)0;
+        m_bindFlags = (D3D11_BIND_FLAG)(D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET | D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
+        m_spMesh = Caustic::CreateGrid(c_GridX, c_GridY);
+        m_spRenderMesh = pRenderer->ToRenderMesh(m_spMesh, pShader);
+        pRenderer->Freeze();
+        //pShader->SetVSParam(L"rayTexture", raymap);
+        //pShader->SetPSParam(L"rayTexture", raymap);
+        pRenderer->Unfreeze();
+    }
+
+    //**********************************************************************
+    // IRefCount
+    //**********************************************************************
+    virtual uint32 AddRef() override { return CRefCount::AddRef(); }
+    virtual uint32 Release() override { return CRefCount::Release(); }
+
+    //**********************************************************************
+    // IGPUPipelineNode
+    //**********************************************************************
+    virtual void SetName(const wchar_t* pName) override { CGPUPipelineNodeBase::SetName(pName); }
+    virtual bool IsEnabled() override { return CGPUPipelineNodeBase::IsEnabled(); }
+    virtual void Enable() override { CGPUPipelineNodeBase::Enable(); }
+    virtual void Disable() override { CGPUPipelineNodeBase::Disable(); }
+    virtual void SetShader(IShader* pShader) override { CGPUPipelineNodeBase::SetShader(pShader); }
+    virtual CRefObj<IShader> GetShader() override { return CGPUPipelineNodeBase::GetShader(); }
+    virtual CRefObj<IGPUPipelineNode> GetInput(const wchar_t* pName) override { return CGPUPipelineNodeBase::GetInput(pName); }
+    virtual void SetInput(const wchar_t* pName, const wchar_t* pSamplerName, IGPUPipelineNode* pNode) override { CGPUPipelineNodeBase::SetInput(pName, pSamplerName, pNode); }
+    virtual void SetOutputSize(uint32 width, uint32 height) override { CGPUPipelineNodeBase::SetOutputSize(width, height); }
+    virtual uint32 GetOutputWidth() override { return CGPUPipelineNodeBase::GetOutputWidth(); }
+    virtual uint32 GetOutputHeight() override { return CGPUPipelineNodeBase::GetOutputHeight(); }
+    virtual CRefObj<ITexture> GetOutputTexture(IGPUPipeline* pPipeline) override { return CGPUPipelineNodeBase::GetOutputTexture(pPipeline); }
+    virtual void Process(IGPUPipeline* pPipeline, IRenderer* pRenderer, IRenderCtx* pRenderCtx) override
+    {
+        ProcessInternal(pPipeline, pRenderer, pRenderCtx,
+            [&]() {
+                std::vector<CRefObj<ILight>> lights;
+                m_spRenderMesh->Render(pRenderer, pRenderCtx, m_spShader, nullptr, lights, nullptr);
+            });
+    }
+};
+
+void CApp::WarpAndDumpImage(IRenderer* pRenderer, IRenderCtx* pRenderCtx, std::vector<PhonemeInfo>& phonemeInfo)
+{
+    CRefObj<IGPUPipeline> spGPUPipeline = Caustic::CreateGPUPipeline(pRenderer);
+    m_spVideo->Restart();
+    int frameIndex = 0;
+    int phonemeIndex = 0;
+    while (!m_spVideo->EndOfStream())
+    {
+        auto spVideoSample = m_spVideo->NextVideoSample();
+        if (spVideoSample != nullptr)
+        {
+            if (phonemeInfo[phonemeIndex].m_startFrame == frameIndex)
+            {
+                auto spImage = spVideoSample->GetImage();
+                CRefObj<IRenderer> spRenderer = m_spRenderWindow->GetRenderer();
+
+                auto spSource = spGPUPipeline->CreateSourceNode(L"Source", spImage, spImage->GetWidth(), spImage->GetHeight(), DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM);
+                
+                auto spShader = spRenderer->GetShaderMgr()->FindShader(L"ScreenQuad");
+                std::unique_ptr<CWarpNode> spWarpNode(
+                    new CWarpNode(L"Warp", pRenderer, spShader, spImage->GetWidth(), spImage->GetHeight(), DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM));
+                spWarpNode->SetInput(L"Source", nullptr, spSource);
+                spGPUPipeline->AddCustomNode(spWarpNode.get());
+
+                CRefObj<IGPUPipelineSinkNode> spSink = spGPUPipeline->CreateSinkNode(L"Sink", spShader, spImage->GetWidth(), spImage->GetHeight(), DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM);
+                spSink->SetInput(L"Source", nullptr, spSource);
+
+                spGPUPipeline->IncrementCurrentEpoch();
+                spGPUPipeline->Process(pRenderer, pRenderCtx);
+                CRefObj<IImage> spFinalImage = spSink->GetOutput(spGPUPipeline);
+
+                wchar_t buf[1024];
+                swprintf_s(buf, L"%s\\%s_warped_%d.png", m_videoPath.c_str(), m_videoName.c_str(), frameIndex);
+                Caustic::StoreImage(buf, spFinalImage);
+
+                phonemeIndex++;
+            }
+            frameIndex++;
+        }
     }
 }
 
@@ -254,13 +328,13 @@ void CApp::FindLandmarks(std::vector<BBox2> &faceBbox, std::vector<std::vector<V
             }
             faceLandmarks.push_back(landmarks);
 
-            WriteLandmarks(faceBbox[0], landmarks, 0);
+          //  WriteLandmarks(faceBbox[0], landmarks, 0);
 
-            wchar_t buf[1024];
-            swprintf_s(buf, L"%s\\%s_marked_%d.png", m_videoPath.c_str(), m_videoName.c_str(), frameIndex);
-            Caustic::StoreImage(buf, marked);
-            swprintf_s(buf, L"%s\\%s_orig_%d.png", m_videoPath.c_str(), m_videoName.c_str(), frameIndex);
-            Caustic::StoreImage(buf, spImage);
+          //  wchar_t buf[1024];
+          //  swprintf_s(buf, L"%s\\%s_marked_%d.png", m_videoPath.c_str(), m_videoName.c_str(), frameIndex);
+          //  Caustic::StoreImage(buf, marked);
+          //  swprintf_s(buf, L"%s\\%s_orig_%d.png", m_videoPath.c_str(), m_videoName.c_str(), frameIndex);
+          //  Caustic::StoreImage(buf, spImage);
             frameIndex++;
         }
     }
@@ -289,7 +363,7 @@ void CApp::DeterminePhonemeInfo(std::vector<std::vector<Vector2>>& faceLandmarks
     }
 }
 
-void CApp::Convert()
+void CApp::Convert(Caustic::IRenderer *pRenderer, Caustic::IRenderCtx* pCtx)
 {
     m_spLandmarkFilter = CreateFaceLandmarksFilter();
     m_videoPath = Caustic::str2wstr(VideoPath);
@@ -312,7 +386,7 @@ void CApp::Convert()
     std::vector<PhonemeInfo> phonemeInfo;
     DeterminePhonemeInfo(faceLandmarks, (int)m_phonemes.size(), phonemeInfo);
 
-    ComputeWarps(faceBbox, faceLandmarks, phonemeInfo);
+    ComputeWarps(pRenderer, pCtx, faceBbox, faceLandmarks, phonemeInfo);
 
     // Generate warped images
     //m_spVideo->Restart();
@@ -334,9 +408,15 @@ void CApp::InitializeCaustic(HWND hwnd)
     m_spCausticFactory = Caustic::CreateCausticFactory();
     std::wstring shaderFolder(SHADERPATH);
     BBox2 viewport(0.0f, 0.0f, 1.0f, 1.0f);
+    app.m_doConvert = false;
     m_spRenderWindow = CreateImguiRenderWindow(hwnd, viewport, shaderFolder,
         [](Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx)
         {
+            if (app.m_doConvert)
+            {
+                app.Convert(pRenderer, pCtx);
+                app.m_doConvert = false;
+            }
         },
         [](Caustic::IRenderer* pRenderer, ITexture* pFinalRT, ImFont* pFont)
         {
@@ -348,7 +428,7 @@ void CApp::InitializeCaustic(HWND hwnd)
             ImGui::SameLine();
             ImGui::InputText("##VideoName", app.VideoName, sizeof(app.VideoName));
             if (ImGui::Button("Convert"))
-                app.Convert();
+                app.m_doConvert = true;
             ImGui::End();
         });
 

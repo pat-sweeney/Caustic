@@ -14,6 +14,10 @@ import Base.Math.Vector;
 export namespace Caustic
 {
     //*******************************************************************
+    // Class: GaussianDistribution
+    // Creates a gaussian distrbution based on the sigma passed to the ctor
+    // The domain of the distrbution is expected to run from -1..+1
+    //**********************************************************************
     struct GaussianDistribution
     {
         float m_sigma;
@@ -48,8 +52,16 @@ export namespace Caustic
             }
         }
 
+        //**********************************************************************
+        // Method: Sample
+        // Samples the distribution. The distribution domain is from -1..+1.
+        //
+        // Parameters:
+        // t - domain value on the distrbution where to sample from
+        //**********************************************************************
         float Sample(float t)
         {
+            t = (t + 1.0f) / 2.0f;
             int index = (int)(t * m_kernelWidth);
             return (float)m_weights[index];
         }

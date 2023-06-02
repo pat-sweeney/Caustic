@@ -121,6 +121,15 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Method: AddCustomNode
+    // See <IGPUPipeline::AddCustomNode>
+    //**********************************************************************
+    void CGPUPipeline::AddCustomNode(IGPUPipelineNode* pNode)
+    {
+        m_nodes.push_back(CRefObj<IGPUPipelineNode>(pNode));
+    }
+
+    //**********************************************************************
     // Method: CreateNode
     // See <IGPUPipeline::CreateNode>
     //**********************************************************************
@@ -559,7 +568,8 @@ namespace Caustic
         // First run the sink nodes shader
         CGPUPipelineNodeBase::Process(pPipeline, pRenderer, pRenderCtx);
 
-        spCtx->CopyResource(m_spOutputStagedTexture->GetD3DTexture(), m_spOutputTexture->GetD3DTexture());
+        if (m_spOutputTexture != nullptr)
+            spCtx->CopyResource(m_spOutputStagedTexture->GetD3DTexture(), m_spOutputTexture->GetD3DTexture());
     }
 
     //**********************************************************************

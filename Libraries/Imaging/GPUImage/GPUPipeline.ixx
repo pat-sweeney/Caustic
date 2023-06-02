@@ -279,6 +279,7 @@ export namespace Caustic
         virtual CRefObj<IGPUPipelineSinkNode> CreateSinkNode(const wchar_t* pName, IShader *pShader, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM) override;
         virtual CRefObj<IGPUPipelineNode> CreateNode(const wchar_t* pName, IShader *pShader, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM) override;
         virtual CRefObj<IGPUPipelineNode> CreatePredefinedNode(const wchar_t* pName, ...) override;
+        virtual void AddCustomNode(IGPUPipelineNode* pNode) override;
         virtual void IncrementCurrentEpoch() override { m_epoch++; }
         virtual uint32 GetCurrentEpoch() override { return m_epoch; }
     };

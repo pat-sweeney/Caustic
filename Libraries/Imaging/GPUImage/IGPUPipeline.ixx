@@ -246,6 +246,15 @@ export namespace Caustic
         virtual CRefObj<IGPUPipelineNode> CreatePredefinedNode(const wchar_t* pName, ...) = 0;
 
         //**********************************************************************
+        // Method: AddCustomNode
+        // Adds a custom GPU node to the end of the pipeline
+        //
+        // Parameters:
+        // pNode - node to add
+        //**********************************************************************
+        virtual void AddCustomNode(IGPUPipelineNode* pNode) = 0;
+            
+        //**********************************************************************
         // Method: IncrementCurrentEpoch
         // Increments the current Epoch. The current epoch is a value indicating
         // how many times the processing pipeline has been run. This is useful for
