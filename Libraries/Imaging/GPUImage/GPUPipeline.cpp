@@ -256,16 +256,16 @@ namespace Caustic
     //**********************************************************************
     CRefObj<IGPUPipelineNode> CGPUPipelineNodeBase::GetInput(const wchar_t* pName)
     {
-        return CRefObj<IGPUPipelineNode>(m_sourceNodes[pName].first);
+        return CRefObj<IGPUPipelineNode>(std::get<0>(m_sourceNodes[pName]));
     }
 
     //**********************************************************************
     // Method: SetInput
     // See <IGPUPipelineNode::SetInput>
     //**********************************************************************
-    void CGPUPipelineNodeBase::SetInput(const wchar_t* pName, const wchar_t* pSamplerName, IGPUPipelineNode *pNode)
+    void CGPUPipelineNodeBase::SetInput(const wchar_t* pName, const wchar_t *pTextureName, const wchar_t* pSamplerName, IGPUPipelineNode *pNode)
     {
-        m_sourceNodes[pName] = std::make_pair(pNode, std::wstring((pSamplerName) ? pSamplerName : L""));
+        m_sourceNodes[pName] = std::make_tuple(pNode, std::wstring((pTextureName) ? pTextureName : L""), std::wstring((pSamplerName) ? pSamplerName : L""));
     }
 
     //**********************************************************************
@@ -337,8 +337,8 @@ namespace Caustic
         std::vector<CRefObj<ITexture>> textures;
         for (auto spSourceNode : m_sourceNodes)
         {
-            spSourceNode.second.first->Process(pPipeline, pRenderer, pRenderCtx);
-            CRefObj<ITexture> spTexture = spSourceNode.second.first->GetOutputTexture(pPipeline);
+            std::get<0>(spSourceNode.second)->Process(pPipeline, pRenderer, pRenderCtx);
+            CRefObj<ITexture> spTexture = std::get<0>(spSourceNode.second)->GetOutputTexture(pPipeline);
             textures.push_back(spTexture);
         }
 
@@ -351,21 +351,23 @@ namespace Caustic
                 CRefObj<ITexture> spTexture = textures[i++];
                 if (spTexture)
                 {
-                    m_spShader->SetPSParam(spSourceNode.first, std::any(spTexture));
-                    m_spShader->SetVSParam(spSourceNode.first, std::any(spTexture));
-                    std::wstring wName = std::wstring(L"_") + spSourceNode.first + std::wstring(L"Width");
+                    std::wstring texName = std::get<1>(spSourceNode.second);
+                    std::wstring samplerName = std::get<2>(spSourceNode.second);
+                    m_spShader->SetPSParam(texName, std::any(spTexture));
+                    m_spShader->SetVSParam(texName, std::any(spTexture));
+                    std::wstring wName = std::wstring(L"_") + texName + std::wstring(L"Width");
                     m_spShader->SetPSParam(wName, std::any(float(spTexture->GetWidth())));
                     m_spShader->SetVSParam(wName, std::any(float(spTexture->GetWidth())));
-                    std::wstring hName = std::wstring(L"_") + spSourceNode.first + std::wstring(L"Height");
+                    std::wstring hName = std::wstring(L"_") + texName + std::wstring(L"Height");
                     m_spShader->SetPSParam(hName, std::any(float(spTexture->GetHeight())));
                     m_spShader->SetVSParam(hName, std::any(float(spTexture->GetHeight())));
-                    if (spSourceNode.second.second.length() > 0)
+                    if (samplerName.length() > 0)
                     {
                         CRefObj<ISampler> spSampler = Caustic::CCausticFactory::Instance()->CreateSampler(pRenderer, spTexture);
                         spSampler->SetAddressU(pRenderer, D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_BORDER);
                         spSampler->SetAddressV(pRenderer, D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_BORDER);
-                        m_spShader->SetVSParam(spSourceNode.second.second, std::any(CSamplerRef(spSampler)));
-                        m_spShader->SetPSParam(spSourceNode.second.second, std::any(CSamplerRef(spSampler)));
+                        m_spShader->SetVSParam(samplerName.c_str(), std::any(CSamplerRef(spSampler)));
+                        m_spShader->SetPSParam(samplerName.c_str(), std::any(CSamplerRef(spSampler)));
                     }
                 }
             }

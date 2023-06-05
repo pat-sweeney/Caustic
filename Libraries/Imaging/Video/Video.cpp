@@ -121,7 +121,7 @@ namespace Caustic
         PROPVARIANT v;
         v.vt = VT_I8;
         v.hVal.QuadPart = 0L;
-        m_spSourceReader->SetCurrentPosition(GUID_NULL, v);
+        CT(m_spSourceReader->SetCurrentPosition(GUID_NULL, v));
         m_eos = false;
     }
 

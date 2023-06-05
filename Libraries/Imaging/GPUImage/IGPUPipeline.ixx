@@ -84,11 +84,12 @@ export namespace Caustic
         //
         // Parameters:
         // pName - name of input parameter
+        // pTextureName - name of shader texture to set to the output from 'pName' node
         // pSamplerName - name of sampler
         // pNode - previous node in pipeline that provides its output as input
         // for parameter pName.
         //**********************************************************************
-        virtual void SetInput(const wchar_t* pName, const wchar_t* pSamplerName, IGPUPipelineNode*pNode) = 0;
+        virtual void SetInput(const wchar_t* pName, const wchar_t* pTextureName, const wchar_t* pSamplerName, IGPUPipelineNode* pNode) = 0;
 
         //**********************************************************************
         // Method: SetOutputSize

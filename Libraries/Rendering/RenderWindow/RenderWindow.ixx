@@ -149,10 +149,7 @@ export namespace Caustic
         //**********************************************************************
         // IRenderWindow
         //**********************************************************************
-        virtual void RecordEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override
-        {
-
-        }
+        virtual void RecordEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
 
         virtual void SetViewport(float x0, float y0, float x1, float y1) override
         {

@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("gau",["Class"],[["GaussianDistribution",,[[,,,,0,"File:Base/Math/Distribution.ixx:GaussianDistribution","CClass:GaussianDistribution"]]]]);

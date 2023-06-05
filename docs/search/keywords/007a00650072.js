@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("zer",["Function"],[["Zero",,[["Matrix3x3",,,,0,"File:Base/Math/Matrix3x3.ixx:Matrix3x3.Zero","CClass:Matrix3x3:Zero"],["Matrix4x4",,,,0,"File:Base/Math/Matrix4x4.ixx:Matrix4x4.Zero","CClass:Matrix4x4:Zero"]]]]);
