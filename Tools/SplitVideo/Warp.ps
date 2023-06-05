@@ -1,0 +1,19 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2023
+// Licensed under the MIT license.
+// See file LICENSE for details.
+// File: RawCopy.ps
+//**********************************************************************
+struct VSOutput
+{
+    float4 pos : SV_POSITION;
+    float2 uvs : TEXCOORD0;
+};
+
+Texture2D sourceTexture1 : register(t0);
+SamplerState sourceSampler1 : register(s0);
+
+float4 PS(VSOutput p) : SV_Target
+{
+    return float4(sourceTexture1.Sample(sourceSampler1, p.uvs).xyz, 1.0f);
+}

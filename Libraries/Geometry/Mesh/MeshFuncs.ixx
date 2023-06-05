@@ -44,4 +44,5 @@ export namespace Caustic
     CRefObj<IMesh> CreateTetrahedron();
     CRefObj<IMesh> CreateGrid(uint32 subdivisions);
     CRefObj<IMesh> CreateGrid(uint32 width, uint32 height);
+    CRefObj<IMesh> CreateGrid(uint32 width, uint32 height, float2 *uvs);
 };

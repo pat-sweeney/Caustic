@@ -23,10 +23,12 @@ export namespace Caustic
         float m_sigma;
         double* m_weights;
         int m_kernelWidth;
+        bool m_clampBoundaries;
 
-        GaussianDistribution(float sigma)
+        GaussianDistribution(float sigma, bool clampBoundaries = true)
         {
             m_sigma = sigma;
+            m_clampBoundaries = clampBoundaries;
             ComputeWeights();
         }
 
@@ -50,6 +52,11 @@ export namespace Caustic
                 double e = exp(-(x * x) / (2 * m_sigma * m_sigma));
                 m_weights[i + kw] = e / sqrt(2 * m_sigma * m_sigma * 3.1415926535f);
             }
+            if (m_clampBoundaries)
+            {
+                m_weights[0] = 0.0f;
+                m_weights[m_kernelWidth - 1] = 0.0f;
+            }
         }
 
         //**********************************************************************
@@ -62,7 +69,7 @@ export namespace Caustic
         float Sample(float t)
         {
             t = (t + 1.0f) / 2.0f;
-            int index = (int)(t * m_kernelWidth);
+            int index = (int)(t * (m_kernelWidth - 1));
             return (float)m_weights[index];
         }
     };

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Shader>
+	<PixelShader Filename="$(CausticRoot)\Libraries\Imaging\GPUImage\Warp.ps" Output="$(CausticRoot)\$(Configuration)\Warp_PS.cso"/>
+	<VertexShader Filename="$(CausticRoot)\Libraries\Imaging\GPUImage\Warp.vs" Output="$(CausticRoot)\$(Configuration)\Warp_VS.cso"/>
+</Shader>

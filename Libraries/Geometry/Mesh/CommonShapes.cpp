@@ -264,6 +264,46 @@ namespace Caustic
         return spMeshConstructor->MeshClose();
     }
 
+    CRefObj<IMesh> CreateGrid(uint32 width, uint32 height, float2* uvs)
+    {
+        CRefObj<IMeshConstructor> spMeshConstructor = IMeshConstructor::Create();
+
+        spMeshConstructor->MeshOpen();
+        spMeshConstructor->SubMeshOpen();
+        float dx = 2.0f / float(width);
+        float dy = 2.0f / float(height);
+        Vector3 normal(0.0f, 1.0f, 0.0f);
+        float cy = -1.0f;
+        for (uint32 y = 0; y < height; y++)
+        {
+            float cx = -1.0f;
+            for (uint32 x = 0; x < width; x++)
+            {
+                spMeshConstructor->FaceOpen();
+                Vector3 vpos;
+                Vector2 vuv;
+                int uvIndex00 = y * width + x;
+                int uvIndex10 = uvIndex00 + 1;
+                int uvIndex01 = (y + 1) * width + x;
+                int uvIndex11 = uvIndex01 + 1;
+                spMeshConstructor->VertexAdd(vpos = Vector3(cx, cy, 0.0f), normal, vuv = Vector2(uvs[uvIndex00].x, uvs[uvIndex00].y));
+                spMeshConstructor->VertexAdd(vpos = Vector3(cx + dx, cy, 0.0f), normal, vuv = Vector2(uvs[uvIndex10].x, uvs[uvIndex10].y));
+                spMeshConstructor->VertexAdd(vpos = Vector3(cx + dx, cy + dy, 0.0f), normal, vuv = Vector2(uvs[uvIndex11].x, uvs[uvIndex11].y));
+                spMeshConstructor->FaceClose();
+                spMeshConstructor->FaceOpen();
+                spMeshConstructor->VertexAdd(vpos = Vector3(cx, cy, 0.0f), normal, vuv = Vector2(uvs[uvIndex00].x, uvs[uvIndex00].y));
+                spMeshConstructor->VertexAdd(vpos = Vector3(cx + dx, cy + dy, 0.0f), normal, vuv = Vector2(uvs[uvIndex11].x, uvs[uvIndex11].y));
+                spMeshConstructor->VertexAdd(vpos = Vector3(cx, cy + dy, 0.0f), normal, vuv = Vector2(uvs[uvIndex01].x, uvs[uvIndex01].y));
+                spMeshConstructor->FaceClose();
+                cx += dx;
+            }
+            cy += dy;
+        }
+        CRefObj<ISubMesh> spSubMesh = spMeshConstructor->SubMeshClose();
+        spSubMesh->SetMeshFlags(EMeshFlags::TwoSided);
+        return spMeshConstructor->MeshClose();
+    }
+
     //**********************************************************************
     // Function: CreateGrid
     // Generates a grid mesh of size -1..+1,-1..+1 with texture coordinates
