@@ -50,8 +50,8 @@ struct PhonemeInfo
     int m_endFrame;
 };
 
-const int c_GridX = 40;
-const int c_GridY = 40;
+const int c_GridX = 150;
+const int c_GridY = 150;
 
 class CApp
 {
@@ -108,7 +108,7 @@ void CApp::ComputeGridWarp(IRenderer *pRenderer, int frameIndex, int phonemeInde
                 float dx = gridPixel.x - faceLandmarks[phonemeInfo.m_startFrame][landmarkIndex].x;
                 float dy = gridPixel.y - faceLandmarks[phonemeInfo.m_startFrame][landmarkIndex].y;
                 float dist = sqrtf(dx * dx + dy * dy);
-                const float c_LandmarkInfluence = 250.0f; // Number of pixels away influenced by a landmark
+                const float c_LandmarkInfluence = 10.0f; // Number of pixels away influenced by a landmark
                 dist = std::min<float>(dist, c_LandmarkInfluence) / c_LandmarkInfluence;
                 float weight = distribution.Sample(dist);
                 newGridPos += landmarkDeltas[landmarkIndex] * weight;
@@ -116,7 +116,7 @@ void CApp::ComputeGridWarp(IRenderer *pRenderer, int frameIndex, int phonemeInde
             // Compute where the pixel moves to
             pUVs[gridY * c_GridX + gridX].x = std::min<float>((float)imageWidth - 1.0f, std::max<float>(0.0f,
                 gridPixel.x + newGridPos.x)) / ((float)imageWidth - 1.0f);
-            pUVs[gridY * c_GridX + gridX].y = std::min<float>((float)imageHeight - 1.0f, std::max<float>(0.0f,
+            pUVs[gridY * c_GridX + gridX].y = 1.0f - std::min<float>((float)imageHeight - 1.0f, std::max<float>(0.0f,
                 gridPixel.y + newGridPos.y)) / ((float)imageHeight - 1.0f);
         }
     }
@@ -269,7 +269,7 @@ void CApp::ComputeWarps(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx
         auto spSource = spGPUPipeline->CreateSourceNode(L"Source", spImageToWarp, spImageToWarp->GetWidth(), spImageToWarp->GetHeight(),
             DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM);
 
-        auto spShader = spRenderer->GetShaderMgr()->FindShader(L"RawCopy");
+        auto spShader = spRenderer->GetShaderMgr()->FindShader(L"Warp");
         std::unique_ptr<CWarpNode> spWarpNode(
             new CWarpNode(L"Warp", pRenderer, spShader, spImageToWarp->GetWidth(), spImageToWarp->GetHeight(), DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM,
                 m_spGridUVs.get()));
@@ -284,6 +284,33 @@ void CApp::ComputeWarps(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx
         CRefObj<IImage> spFinalImage = spSink->GetOutput(spGPUPipeline);
 
 #pragma region("StoreWarpedImage")
+        for (int landmarkIndex = 0; landmarkIndex < (int)faceLandmarks[frameIndex].size(); landmarkIndex++)
+        {
+            Matrix3x2 mat;
+            if (frameIndex == phonemeInfo[phonemeIndex].m_startFrame)
+            {
+                mat = Matrix3x2(1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+            }
+            else
+            {
+                mat = Matrix3x2::Align(
+                    faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][c_FaceLandmark_NoseBridge_Bottom],
+                    faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][c_FaceLandmark_NoseBridge_Top],
+                    faceLandmarks[frameIndex][c_FaceLandmark_NoseBridge_Bottom],
+                    faceLandmarks[frameIndex][c_FaceLandmark_NoseBridge_Top]);
+
+            }
+            Vector2 phonemeLandmark = faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][landmarkIndex];
+            Caustic::uint8 color1[4] = { 255, 0, 0, 255 };
+            spFinalImage->DrawCircle(phonemeLandmark, 3, color1);
+            Vector2 alignedLandmark = faceLandmarks[frameIndex][landmarkIndex];
+            Caustic::uint8 color2[4] = { 0, 255, 0, 255 };
+            spFinalImage->DrawCircle(alignedLandmark, 4, color2);
+            alignedLandmark = alignedLandmark * mat;
+            Caustic::uint8 color3[4] = { 0, 0, 255, 255 };
+            spFinalImage->DrawCircle(alignedLandmark, 5, color3);
+        }
+
         wchar_t buf[1024];
         swprintf_s(buf, L"%s\\warped\\%s_warped_%d.png", m_videoPath.c_str(), m_videoName.c_str(), frameIndex);
         Caustic::StoreImage(buf, spFinalImage);

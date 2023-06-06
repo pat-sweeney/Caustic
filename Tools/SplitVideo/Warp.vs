@@ -2,7 +2,7 @@
 // Copyright Patrick Sweeney 2023
 // Licensed under the MIT license.
 // See file LICENSE for details.
-// File: Quad.vs
+// File: Warp.vs
 //**********************************************************************
 struct VSInput
 {
