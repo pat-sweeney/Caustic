@@ -1118,6 +1118,10 @@ namespace Caustic
         m_spBackBuffer->GetDesc(&m_BBDesc);
         CT(m_spDevice->CreateRenderTargetView(m_spBackBuffer, nullptr, &m_spRTView));
 
+#ifdef SUPPORT_GRAPHICS_CAPTURE
+        CT(DXGIGetDebugInterface1(0, __uuidof(m_spGraphicsAnalysis), reinterpret_cast<void**>(&m_spGraphicsAnalysis)));
+#endif // SUPPORT_GRAPHICS_CAPTURE
+
         // Create texture for rendering shadow map
         for (int i = 0; i < c_MaxShadowMaps; i++)
         {

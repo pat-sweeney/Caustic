@@ -128,6 +128,11 @@ export namespace Caustic
         // Ends marker
         //**********************************************************************
         virtual void EndMarker() = 0;
+
+#ifdef SUPPORT_GRAPHICS_CAPTURE
+        virtual void BeginCapture() = 0;
+        virtual void EndCapture() = 0;
+#endif // SUPPORT_GRAPHICS_CAPTURE
 #endif
 
         //**********************************************************************

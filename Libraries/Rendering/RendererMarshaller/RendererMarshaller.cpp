@@ -464,6 +464,36 @@ namespace Caustic
             }
         );
     }
+
+#ifdef SUPPORT_GRAPHICS_CAPTURE
+    //**********************************************************************
+    // Method: BeginCapture
+    // See <IRenderer::BeginCapture>
+    //**********************************************************************
+    void CRendererMarshaller::BeginCapture()
+    {
+        m_renderQueue.AddLambda(
+            [this]()
+            {
+                m_spRenderer->BeginCapture();
+            }
+        );
+    }
+
+    //**********************************************************************
+    // Method: EndCapture
+    // See <IRenderer::EndCapture>
+    //**********************************************************************
+    void CRendererMarshaller::EndCapture()
+    {
+        m_renderQueue.AddLambda(
+            [this]()
+            {
+                m_spRenderer->EndCapture();
+            }
+        );
+    }
+#endif // SUPPORT_GRAPHICS_CAPTURE
 #endif
 
     //**********************************************************************

@@ -129,6 +129,10 @@ export namespace Caustic
 #ifdef _DEBUG
         virtual void BeginMarker(const wchar_t* pLabel) override;
         virtual void EndMarker() override;
+#ifdef SUPPORT_GRAPHICS_CAPTURE
+        virtual void BeginCapture() override;
+        virtual void EndCapture() override;
+#endif // SUPPORT_GRAPHICS_CAPTURE
 #endif
         virtual CComPtr<IDXGIOutputDuplication> GetDuplication() override;
         virtual void DrawScreenQuadWithCustomShader(IShader* pShader, float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler* pSampler, bool disableDepth = false) override;

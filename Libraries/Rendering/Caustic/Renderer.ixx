@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2023
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -12,6 +12,12 @@ module;
 #include <d3d11.h>
 #include <d3d11_4.h>
 #include <string>
+#ifdef SUPPORT_GRAPHICS_CAPTURE
+#include <DXGItype.h>
+#include <dxgi1_2.h>
+#include <dxgi1_3.h>
+#include <DXProgrammableCapture.h>
+#endif // SUPPORT_GRAPHICS_CAPTURE
 
 export module Rendering.Caustic.Renderer;
 import Base.Core.Core;
@@ -151,6 +157,9 @@ export namespace Caustic
     protected:
         HWND m_hwnd;
         BBox2 m_finalViewport;
+#ifdef SUPPORT_GRAPHICS_CAPTURE
+        IDXGraphicsAnalysis* m_spGraphicsAnalysis;
+#endif
         CComPtr<ID3D11Device> m_spDevice;                   // D3D Device
         CComPtr<ID3D11DeviceContext> m_spContext;           // D3D Device context
         CComPtr<IDXGISwapChain> m_spSwapChain;              // D3D Swap chain
@@ -178,8 +187,6 @@ export namespace Caustic
         RECT m_viewRect;
         D3D11_VIEWPORT m_viewport;
 
-        friend CRefObj<IRenderer> CreateGraphics(HWND hwnd);
-
         void AdjustViewport();
         void DeviceWindowResizedInternal(uint32 width, uint32 height);
         virtual void InitializeD3D(HWND hwnd, BBox2 &viewport);
@@ -190,6 +197,10 @@ export namespace Caustic
         CComPtr<ID3D11DeviceContext> GetContext() { return m_spContext; }
         CRefObj<ICamera> GetCamera() { return m_spCamera; }
         CRefObj<IShaderMgr> GetShaderMgr() { return m_spShaderMgr; }
+#ifdef SUPPORT_GRAPHICS_CAPTURE
+        void BeginCapture() { m_spGraphicsAnalysis->BeginCapture(); }
+        void EndCapture() { m_spGraphicsAnalysis->EndCapture(); }
+#endif // SUPPORT_GRAPHICS_CAPTURE
     };
 
     //**********************************************************************
@@ -297,6 +308,19 @@ export namespace Caustic
             CT(m_spContext->QueryInterface<ID3D11DeviceContext2>(&spCtx2));
             spCtx2->EndEvent();
         }
+
+#ifdef SUPPORT_GRAPHICS_CAPTURE
+        virtual void BeginCapture() override
+        {
+            CGraphicsBase::BeginCapture();
+        }
+
+        virtual void EndCapture() override
+        {
+            CGraphicsBase::EndCapture();
+        }
+#endif // SUPPORT_GRAPHICS_CAPTURE
+
 #endif
         virtual bool EnableDepthTest(bool enable) override;
         virtual CComPtr<ID3D11Device> GetDevice() override { CheckThread();  return CGraphicsBase::GetDevice(); }

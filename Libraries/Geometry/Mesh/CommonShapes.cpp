@@ -264,6 +264,74 @@ namespace Caustic
         return spMeshConstructor->MeshClose();
     }
 
+    //**********************************************************************
+    // Function: CreateWarpedGrid
+    // Generates a grid mesh of size -1..+1,-1..+1 with texture coordinates
+    // spanning the entire mesh from 0..1. The grid points are specified by
+    // the client allowing for the grid to have a warped shape.
+    //
+    // Parameters:
+    // width - number of vertices in X direction
+    // height - number of vertices in Y direction
+    // pPositions - list of coordinates for each grid location
+    //
+    // Returns:
+    // Returns the created mesh
+    //**********************************************************************
+    CRefObj<IMesh> CreateWarpedGrid(uint32 width, uint32 height, float2 *pPositions)
+    {
+        CRefObj<IMeshConstructor> spMeshConstructor = IMeshConstructor::Create();
+
+        spMeshConstructor->MeshOpen();
+        spMeshConstructor->SubMeshOpen();
+        float dv = 1.0f / float(width);
+        float du = 1.0f / float(height);
+        Vector3 normal(0.0f, 1.0f, 0.0f);
+        float cv = 0.0f;
+        for (uint32 y = 0; y < height - 1; y++)
+        {
+            float cu = 0.0f;
+            for (uint32 x = 0; x < width - 1; x++)
+            {
+                spMeshConstructor->FaceOpen();
+                Vector3 vpos;
+                Vector2 vuv;
+                int posIndex00 = y * width + x;
+                int posIndex10 = posIndex00 + 1;
+                int posIndex01 = (y + 1) * width + x;
+                int posIndex11 = posIndex01 + 1;
+                spMeshConstructor->VertexAdd(vpos = Vector3(pPositions[posIndex00].x, pPositions[posIndex00].y, 0.0f), normal, vuv = Vector2(cu, cv));
+                spMeshConstructor->VertexAdd(vpos = Vector3(pPositions[posIndex10].x, pPositions[posIndex10].y, 0.0f), normal, vuv = Vector2(cu + du, cv));
+                spMeshConstructor->VertexAdd(vpos = Vector3(pPositions[posIndex11].x, pPositions[posIndex11].y, 0.0f), normal, vuv = Vector2(cu + du, cv + dv));
+                spMeshConstructor->FaceClose();
+                spMeshConstructor->FaceOpen();
+                spMeshConstructor->VertexAdd(vpos = Vector3(pPositions[posIndex00].x, pPositions[posIndex00].y, 0.0f), normal, vuv = Vector2(cu, cv));
+                spMeshConstructor->VertexAdd(vpos = Vector3(pPositions[posIndex11].x, pPositions[posIndex11].y, 0.0f), normal, vuv = Vector2(cu + du, cv + dv));
+                spMeshConstructor->VertexAdd(vpos = Vector3(pPositions[posIndex01].x, pPositions[posIndex01].y, 0.0f), normal, vuv = Vector2(cu, cv + dv));
+                spMeshConstructor->FaceClose();
+                cu += du;
+            }
+            cv += dv;
+        }
+        CRefObj<ISubMesh> spSubMesh = spMeshConstructor->SubMeshClose();
+        spSubMesh->SetMeshFlags(EMeshFlags::TwoSided);
+        return spMeshConstructor->MeshClose();
+    }
+
+    //**********************************************************************
+    // Function: CreateGrid
+    // Generates a grid mesh of size -1..+1,-1..+1 with texture coordinates
+    // spanning the entire mesh from 0..1. The grid UVs are specified by
+    // the client.
+    //
+    // Parameters:
+    // width - number of vertices in X direction
+    // height - number of vertices in Y direction
+    // uvs - list of UVs for each grid location
+    //
+    // Returns:
+    // Returns the created mesh
+    //**********************************************************************
     CRefObj<IMesh> CreateGrid(uint32 width, uint32 height, float2* uvs)
     {
         CRefObj<IMeshConstructor> spMeshConstructor = IMeshConstructor::Create();

@@ -12,6 +12,10 @@
 #include <algorithm>
 #include <memory>
 #include <d3d11.h>
+#include <DXGItype.h>
+#include <dxgi1_2.h>
+#include <dxgi1_3.h>
+#include <DXProgrammableCapture.h>
 
 import Caustic.Base;
 import Base.Core.Core;
@@ -50,8 +54,8 @@ struct PhonemeInfo
     int m_endFrame;
 };
 
-const int c_GridX = 150;
-const int c_GridY = 150;
+const int c_GridX = 350;
+const int c_GridY = 350;
 
 class CApp
 {
@@ -69,9 +73,9 @@ public:
     std::wstring m_videoFullPath;
     CRefObj<IVideo> m_spVideo;
     std::vector<std::string> m_phonemes;
-    std::unique_ptr<float2> m_spGridUVs;
+    std::unique_ptr<float2> m_spGridLocations;
     bool m_doConvert;
-
+    
     void Convert(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx);
     void FindLandmarks(std::vector<BBox2>& faceBbox, std::vector<std::vector<Vector2>>& faceLandmarks);
     void WriteLandmarks(BBox2& bb, std::vector<Vector2>& landmarks, int frameIndex);
@@ -91,8 +95,8 @@ void CApp::ComputeGridWarp(IRenderer *pRenderer, int frameIndex, int phonemeInde
     float gridDeltaX = (float)imageWidth / (float)c_GridX;
     float gridDeltaY = (float)imageHeight / (float)c_GridY;
 
-    float2 *pUVs = new float2[c_GridX * c_GridY];
-    m_spGridUVs.reset(pUVs);
+    float2 *pGridLocations = new float2[c_GridX * c_GridY];
+    m_spGridLocations.reset(pGridLocations);
     for (int gridY = 0; gridY < c_GridY; gridY++)
     {
         for (int gridX = 0; gridX < c_GridX; gridX++)
@@ -108,16 +112,28 @@ void CApp::ComputeGridWarp(IRenderer *pRenderer, int frameIndex, int phonemeInde
                 float dx = gridPixel.x - faceLandmarks[phonemeInfo.m_startFrame][landmarkIndex].x;
                 float dy = gridPixel.y - faceLandmarks[phonemeInfo.m_startFrame][landmarkIndex].y;
                 float dist = sqrtf(dx * dx + dy * dy);
-                const float c_LandmarkInfluence = 10.0f; // Number of pixels away influenced by a landmark
+                const float c_LandmarkInfluence = 2.0f * imageWidth / c_GridX; // Number of pixels away influenced by a landmark
                 dist = std::min<float>(dist, c_LandmarkInfluence) / c_LandmarkInfluence;
                 float weight = distribution.Sample(dist);
                 newGridPos += landmarkDeltas[landmarkIndex] * weight;
             }
             // Compute where the pixel moves to
-            pUVs[gridY * c_GridX + gridX].x = std::min<float>((float)imageWidth - 1.0f, std::max<float>(0.0f,
-                gridPixel.x + newGridPos.x)) / ((float)imageWidth - 1.0f);
-            pUVs[gridY * c_GridX + gridX].y = 1.0f - std::min<float>((float)imageHeight - 1.0f, std::max<float>(0.0f,
-                gridPixel.y + newGridPos.y)) / ((float)imageHeight - 1.0f);
+            int index = gridY * c_GridX + gridX;
+            pGridLocations[index].x =
+                std::min<float>((float)imageWidth - 1.0f,
+                    std::max<float>(0.0f,
+                        gridPixel.x + newGridPos.x)) / ((float)imageWidth - 1.0f);
+            pGridLocations[index].y = 
+                std::min<float>((float)imageHeight - 1.0f, 
+                    std::max<float>(0.0f,
+                        gridPixel.y + newGridPos.y)) / ((float)imageHeight - 1.0f);
+            pGridLocations[index].x = pGridLocations[index].x * 2.0f - 1.0f;
+            pGridLocations[index].y = (1.0f - pGridLocations[index].y) * 2.0f - 1.0f;
+            {
+                wchar_t buf[1024];
+                swprintf_s(buf, L"Grid[%d,%d]=%f,%f\n", gridX, gridY, pGridLocations[index].x, pGridLocations[index].y);
+                OutputDebugString(buf);
+            }
         }
     }
 }
@@ -142,7 +158,7 @@ class CWarpNode : public CGPUPipelineNodeBase
     CRefObj<IMesh> m_spMesh;
     CRefObj<IRenderMesh> m_spRenderMesh;
 public:
-    CWarpNode(const wchar_t* pName, IRenderer* pRenderer, IShader* pShader, uint32 inputWidth, uint32 inputHeight, DXGI_FORMAT format, float2* pUVs) :
+    CWarpNode(const wchar_t* pName, IRenderer* pRenderer, IShader* pShader, uint32 inputWidth, uint32 inputHeight, DXGI_FORMAT format, float2* pGridLocations) :
         CGPUPipelineNodeBase(inputWidth, inputHeight, format)
     {
         SetName(pName);
@@ -150,7 +166,7 @@ public:
 
         m_cpuFlags = (D3D11_CPU_ACCESS_FLAG)0;
         m_bindFlags = (D3D11_BIND_FLAG)(D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET | D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
-        m_spMesh = Caustic::CreateGrid(c_GridX, c_GridY, pUVs);
+        m_spMesh = Caustic::CreateWarpedGrid(c_GridX, c_GridY, pGridLocations);
         m_spRenderMesh = pRenderer->ToRenderMesh(m_spMesh, pShader);
     }
 
@@ -238,19 +254,24 @@ void CApp::ComputeWarps(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx
 
             // Compute the deltas of the current frame's landmarks
             // as compared to the first frame in the current phoneme's landmarks
-            Vector2 maxDelta(0.0f, 0.0f);
+            float maxDist = 0.0f;
+            int maxIndex = 0;
             for (int landmarkIndex = 0; landmarkIndex < (int)faceLandmarks[frameIndex].size(); landmarkIndex++)
             {
                 Vector2 alignedLandmark = faceLandmarks[frameIndex][landmarkIndex];
                 alignedLandmark = alignedLandmark * mat;
                 Vector2 landmarkDelta = alignedLandmark - faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][landmarkIndex];
-                maxDelta.x = std::max<float>(maxDelta.x, landmarkDelta.x);
-                maxDelta.y = std::max<float>(maxDelta.y, landmarkDelta.y);
+                float dist = sqrtf(landmarkDelta.x * landmarkDelta.x + landmarkDelta.y * landmarkDelta.y);
+                if (dist > maxDist)
+                {
+                    maxDist = dist;
+                    maxIndex = landmarkIndex;
+                }
                 landmarkDeltas.push_back(landmarkDelta);
             }
             {
                 wchar_t buf[1240];
-                swprintf_s(buf, L"Max Delta: %f,%f\n", maxDelta.x, maxDelta.y);
+                swprintf_s(buf, L"Max Landmark:%d Dist: %f\n", maxIndex, maxDist);
                 OutputDebugString(buf);
             }
         }
@@ -262,6 +283,7 @@ void CApp::ComputeWarps(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx
             roiX, roiY, roiWidth, roiHeight, spImageToWarp->GetWidth(), spImageToWarp->GetHeight());
 
 #pragma region("WarpImage")
+
         CRefObj<IGPUPipeline> spGPUPipeline = Caustic::CreateGPUPipeline(pRenderer);
 
         CRefObj<IRenderer> spRenderer = m_spRenderWindow->GetRenderer();
@@ -272,11 +294,12 @@ void CApp::ComputeWarps(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx
         auto spShader = spRenderer->GetShaderMgr()->FindShader(L"Warp");
         std::unique_ptr<CWarpNode> spWarpNode(
             new CWarpNode(L"Warp", pRenderer, spShader, spImageToWarp->GetWidth(), spImageToWarp->GetHeight(), DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM,
-                m_spGridUVs.get()));
+                m_spGridLocations.get()));
         spWarpNode->SetInput(L"Source", L"sourceTexture1", L"sourceSampler1", spSource);
         spGPUPipeline->AddCustomNode(spWarpNode.get());
 
-        CRefObj<IGPUPipelineSinkNode> spSink = spGPUPipeline->CreateSinkNode(L"Sink", spShader, spImageToWarp->GetWidth(), spImageToWarp->GetHeight(), DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM);
+        auto spShader2 = spRenderer->GetShaderMgr()->FindShader(L"RawCopy");
+        CRefObj<IGPUPipelineSinkNode> spSink = spGPUPipeline->CreateSinkNode(L"Sink", spShader2, spImageToWarp->GetWidth(), spImageToWarp->GetHeight(), DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM);
         spSink->SetInput(L"Source", L"sourceTexture1", L"sourceSampler1", spWarpNode.release());
 
         spGPUPipeline->IncrementCurrentEpoch();
@@ -309,6 +332,58 @@ void CApp::ComputeWarps(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx
             alignedLandmark = alignedLandmark * mat;
             Caustic::uint8 color3[4] = { 0, 0, 255, 255 };
             spFinalImage->DrawCircle(alignedLandmark, 5, color3);
+
+            for (int i = 0; i < c_GridY - 1; i++)
+            {
+                for (int j = 0; j < c_GridX - 1; j++)
+                {
+                    uint8 color[4] = { 255, 255, 255, 255 };
+                    int index00 = i * c_GridX + j;
+                    int index10 = index00 + 1;
+                    int index01 = (i + 1) * c_GridX + j;
+                    int index11 = index01 + 1;
+                    Vector2 v0, v1;
+                    v0 = Vector2(m_spGridLocations.get()[index00].x, m_spGridLocations.get()[index00].y);
+                    v0.x = (spFinalImage->GetWidth() - 1) * ((v0.x + 1.0f) / 2.0f);
+                    v0.y = (spFinalImage->GetHeight() - 1) * (1.0f - ((v0.y + 1.0f) / 2.0f));
+                    v1 = Vector2(m_spGridLocations.get()[index10].x, m_spGridLocations.get()[index10].y);
+                    v1.x = (spFinalImage->GetWidth() - 1) * ((v1.x + 1.0f) / 2.0f);
+                    v1.y = (spFinalImage->GetHeight() - 1) * (1.0f-((v1.y + 1.0f) / 2.0f));
+                    spFinalImage->DrawLine(v0, v1, color);
+
+                    v0 = Vector2(m_spGridLocations.get()[index10].x, m_spGridLocations.get()[index10].y);
+                    v0.x = (spFinalImage->GetWidth() - 1) * ((v0.x + 1.0f) / 2.0f);
+                    v0.y = (spFinalImage->GetHeight() - 1) * (1.0f - ((v0.y + 1.0f) / 2.0f));
+                    v1 = Vector2(m_spGridLocations.get()[index11].x, m_spGridLocations.get()[index11].y);
+                    v1.x = (spFinalImage->GetWidth() - 1) * ((v1.x + 1.0f) / 2.0f);
+                    v1.y = (spFinalImage->GetHeight() - 1) * (1.0f - ((v1.y + 1.0f) / 2.0f));
+                    spFinalImage->DrawLine(v0, v1, color);
+
+                    v0 = Vector2(m_spGridLocations.get()[index00].x, m_spGridLocations.get()[index00].y);
+                    v0.x = (spFinalImage->GetWidth() - 1) * ((v0.x + 1.0f) / 2.0f);
+                    v0.y = (spFinalImage->GetHeight() - 1) * (1.0f - ((v0.y + 1.0f) / 2.0f));
+                    v1 = Vector2(m_spGridLocations.get()[index11].x, m_spGridLocations.get()[index11].y);
+                    v1.x = (spFinalImage->GetWidth() - 1) * ((v1.x + 1.0f) / 2.0f);
+                    v1.y = (spFinalImage->GetHeight() - 1) * (1.0f - ((v1.y + 1.0f) / 2.0f));
+                    spFinalImage->DrawLine(v0, v1, color);
+
+                    v0 = Vector2(m_spGridLocations.get()[index00].x, m_spGridLocations.get()[index00].y);
+                    v0.x = (spFinalImage->GetWidth() - 1) * ((v0.x + 1.0f) / 2.0f);
+                    v0.y = (spFinalImage->GetHeight() - 1) * (1.0f - ((v0.y + 1.0f) / 2.0f));
+                    v1 = Vector2(m_spGridLocations.get()[index01].x, m_spGridLocations.get()[index01].y);
+                    v1.x = (spFinalImage->GetWidth() - 1) * ((v1.x + 1.0f) / 2.0f);
+                    v1.y = (spFinalImage->GetHeight() - 1) * (1.0f - ((v1.y + 1.0f) / 2.0f));
+                    spFinalImage->DrawLine(v0, v1, color);
+
+                    v0 = Vector2(m_spGridLocations.get()[index01].x, m_spGridLocations.get()[index01].y);
+                    v0.x = (spFinalImage->GetWidth() - 1) * ((v0.x + 1.0f) / 2.0f);
+                    v0.y = (spFinalImage->GetHeight() - 1) * (1.0f - ((v0.y + 1.0f) / 2.0f));
+                    v1 = Vector2(m_spGridLocations.get()[index11].x, m_spGridLocations.get()[index11].y);
+                    v1.x = (spFinalImage->GetWidth() - 1) * ((v1.x + 1.0f) / 2.0f);
+                    v1.y = (spFinalImage->GetHeight() - 1) * (1.0f - ((v1.y + 1.0f) / 2.0f));
+                    spFinalImage->DrawLine(v0, v1, color);
+                }
+            }
         }
 
         wchar_t buf[1024];
