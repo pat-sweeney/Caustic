@@ -31,52 +31,54 @@ export namespace Caustic
     // Face landmarks are numbered as shown below. This ordering was taken from:
     // https://www.researchgate.net/figure/The-indexes-of-the-68-coordinates-corresponding-to-the-facial-landmarks-selected_fig2_329739701
     // 
-    //          19 20 21                    24 25 26
-    //       18          22               23        27
+    //          18 19 20                    23 24 25
+    //       17          21               22        26
     // 
-    //                38 39      28         44 45
-    //             37       40           43       46
-    //                42 41      29         48 47          
-    //                           30                       
-    //                           31                     
-    //                      32        36              
-    //                        33 34 35             
+    //                37 38      27         43 44
+    //             36       39           42       45
+    //                41 40      28         47 46          
+    //                           29                       
+    //                           30                     
+    //                      31        35              
+    //                        32 33 34             
     //                                          
     //                                      
-    //                      51 52 53 
-    //                   50 62 63 64 54
-    //  1             49 61         65 55                17
-    //   2               60 68 67 66 56                 16
-    //    3                 59 58 57                  15
-    //     4                                        14
-    //       5                                   13
-    //         6                             12
-    //             7                    11
-    //                8            10
-    //                      9
+    //                      50 51 52 
+    //                   49 61 62 63 53
+    //  0             48 60         64 54                16
+    //   1               59 67 66 65 55                 15
+    //    2                 58 57 56                  14
+    //     3                                        13
+    //       4                                   12
+    //         5                             11
+    //             6                    10
+    //                7            9
+    //                      8
     //**********************************************************************
-    const int c_FaceLandmark_TipNose = 34;
-    const int c_FaceLandmark_NoseBridge_Top = 28;
-    const int c_FaceLandmark_NoseBridge_Bottom = 31;
-    const int c_FaceLandmark_OuterMouth_RightCorner = 49;
-    const int c_FaceLandmark_OuterMouth_LeftCorner = 55;
-    const int c_FaceLandmark_OuterMouth_TopMiddle = 52;
-    const int c_FaceLandmark_OuterMouth_BottomMiddle = 58;
-    const int c_FaceLandmark_InnerMouth_RightCorner = 61;
-    const int c_FaceLandmark_InnerMouth_LeftCorner = 65;
-    const int c_FaceLandmark_InnerMouth_TopMiddle = 63;
-    const int c_FaceLandmark_InnerMouth_BottomMiddle = 67;
-    const int c_FaceLandmark_RightEar = 1;
-    const int c_FaceLandmark_LeftEar = 17;
-    const int c_FaceLandmark_Chin = 9;
-    const int c_FaceLandmark_RightEyebrow_RightSide = 18;
-    const int c_FaceLandmark_RightEyebrow_LeftSide = 22;
-    const int c_FaceLandmark_LeftEyebrow_RightSide = 23;
-    const int c_FaceLandmark_LeftEyebrow_LeftSide = 27;
-    const int c_FaceLandmark_RightEye_RightSide = 37;
-    const int c_FaceLandmark_RightEye_LeftSide = 40;
-    const int c_FaceLandmark_LeftEye_RightSide = 43;
-    const int c_FaceLandmark_LeftEye_LeftSide = 46;
+    const int c_FaceLandmark_TipNose = 33;
+    const int c_FaceLandmark_NoseBridge_Top = 27;
+    const int c_FaceLandmark_NoseBridge_Bottom = 30;
+    const int c_FaceLandmark_Mouth_FirstIndex = 48;
+    const int c_FaceLandmark_Mouth_LastIndex = 67;
+    const int c_FaceLandmark_OuterMouth_RightCorner = 48;
+    const int c_FaceLandmark_OuterMouth_LeftCorner = 54;
+    const int c_FaceLandmark_OuterMouth_TopMiddle = 51;
+    const int c_FaceLandmark_OuterMouth_BottomMiddle = 57;
+    const int c_FaceLandmark_InnerMouth_RightCorner = 60;
+    const int c_FaceLandmark_InnerMouth_LeftCorner = 64;
+    const int c_FaceLandmark_InnerMouth_TopMiddle = 62;
+    const int c_FaceLandmark_InnerMouth_BottomMiddle = 66;
+    const int c_FaceLandmark_RightEar = 0;
+    const int c_FaceLandmark_LeftEar = 16;
+    const int c_FaceLandmark_Chin = 8;
+    const int c_FaceLandmark_RightEyebrow_RightSide = 17;
+    const int c_FaceLandmark_RightEyebrow_LeftSide = 21;
+    const int c_FaceLandmark_LeftEyebrow_RightSide = 22;
+    const int c_FaceLandmark_LeftEyebrow_LeftSide = 26;
+    const int c_FaceLandmark_RightEye_RightSide = 36;
+    const int c_FaceLandmark_RightEye_LeftSide = 39;
+    const int c_FaceLandmark_LeftEye_RightSide = 42;
+    const int c_FaceLandmark_LeftEye_LeftSide = 45;
 
     //**********************************************************************
     // Class: CFaceLandmarksFilter

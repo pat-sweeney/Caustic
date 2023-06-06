@@ -16,6 +16,7 @@
 #include <dxgi1_2.h>
 #include <dxgi1_3.h>
 #include <DXProgrammableCapture.h>
+#include <shlwapi.h>
 
 import Caustic.Base;
 import Base.Core.Core;
@@ -54,8 +55,8 @@ struct PhonemeInfo
     int m_endFrame;
 };
 
-const int c_GridX = 350;
-const int c_GridY = 350;
+const int c_GridX = 100;
+const int c_GridY = 100;
 
 class CApp
 {
@@ -84,6 +85,7 @@ public:
     void DeterminePhonemeInfo(std::vector<std::vector<Vector2>>& faceLandmarks, int numPhonemes, std::vector<PhonemeInfo>& phonemeInfo);
     void ComputeGridWarp(IRenderer* pRenderer, int frameIndex, int phonemeIndex, PhonemeInfo& phonemeInfo, std::vector<std::vector<Vector2>>& faceLandmarks,
         std::vector<Vector2>& landmarkDeltas, int roiX, int roiY, int roiWidth, int roiHeight, int imageWidth, int imageHeight);
+    void WritePhonemeDeltas(int phonemeIndex, std::vector<PhonemeInfo>& phonemeInfo, std::vector<std::vector<Vector2>>& phonemeLandmarkDeltas);
 };
 CApp app;
 
@@ -106,16 +108,16 @@ void CApp::ComputeGridWarp(IRenderer *pRenderer, int frameIndex, int phonemeInde
             // Walk each of our face landmarks and see if it effects the current grid vertex. We will
             // use a gaussian placed on the landmark to determine influence.
             Vector2 newGridPos(0.0f, 0.0f);
-            for (int landmarkIndex = 0; landmarkIndex < (int)faceLandmarks[phonemeInfo.m_startFrame].size(); landmarkIndex++)
+            for (int landmarkIndex = c_FaceLandmark_Mouth_FirstIndex; landmarkIndex <= c_FaceLandmark_Mouth_LastIndex; landmarkIndex++)
             {
                 // Determine distance from the grid location to the landmark
                 float dx = gridPixel.x - faceLandmarks[phonemeInfo.m_startFrame][landmarkIndex].x;
                 float dy = gridPixel.y - faceLandmarks[phonemeInfo.m_startFrame][landmarkIndex].y;
                 float dist = sqrtf(dx * dx + dy * dy);
-                const float c_LandmarkInfluence = 2.0f * imageWidth / c_GridX; // Number of pixels away influenced by a landmark
+                const float c_LandmarkInfluence = 1.5f * imageWidth / c_GridX; // Number of pixels away influenced by a landmark
                 dist = std::min<float>(dist, c_LandmarkInfluence) / c_LandmarkInfluence;
                 float weight = distribution.Sample(dist);
-                newGridPos += landmarkDeltas[landmarkIndex] * weight;
+                newGridPos += landmarkDeltas[landmarkIndex - c_FaceLandmark_Mouth_FirstIndex] * weight;
             }
             // Compute where the pixel moves to
             int index = gridY * c_GridX + gridX;
@@ -129,11 +131,6 @@ void CApp::ComputeGridWarp(IRenderer *pRenderer, int frameIndex, int phonemeInde
                         gridPixel.y + newGridPos.y)) / ((float)imageHeight - 1.0f);
             pGridLocations[index].x = pGridLocations[index].x * 2.0f - 1.0f;
             pGridLocations[index].y = (1.0f - pGridLocations[index].y) * 2.0f - 1.0f;
-            {
-                wchar_t buf[1024];
-                swprintf_s(buf, L"Grid[%d,%d]=%f,%f\n", gridX, gridY, pGridLocations[index].x, pGridLocations[index].y);
-                OutputDebugString(buf);
-            }
         }
     }
 }
@@ -201,6 +198,37 @@ public:
     }
 };
 
+bool FileExists(const wchar_t* path)
+{
+    DWORD dwAttrib = GetFileAttributes(path);
+    return (dwAttrib != INVALID_FILE_ATTRIBUTES && !(dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
+}
+
+void CApp::WritePhonemeDeltas(int phonemeIndex, std::vector<PhonemeInfo>& phonemeInfo, std::vector<std::vector<Vector2>>& phonemeLandmarkDeltas)
+{
+    // Write the landmark deltas to the database (which for now is just a file)
+    wchar_t buf[1024];
+    std::wstring phonemeName = Caustic::str2wstr(m_phonemes[phonemeIndex]);
+    swprintf_s(buf, L"%s\\Phoneme_%Ls_Deltas.bin", m_videoPath.c_str(), phonemeName.c_str());
+    if (!FileExists(buf))
+    {
+        HANDLE hLandmarkFile = CreateFile(buf, GENERIC_WRITE, FILE_SHARE_READ, nullptr, CREATE_ALWAYS, 0, nullptr);
+        if (hLandmarkFile != INVALID_HANDLE_VALUE)
+        {
+            DWORD dwBytesWritten;
+            WriteFile(hLandmarkFile, &phonemeInfo[phonemeIndex].m_startFrame, sizeof(DWORD), &dwBytesWritten, nullptr);
+            WriteFile(hLandmarkFile, &phonemeInfo[phonemeIndex].m_endFrame, sizeof(DWORD), &dwBytesWritten, nullptr);
+            for (size_t i = 0; i < (size_t)phonemeLandmarkDeltas.size(); i++)
+            {
+                DWORD dwNumBytes = (DWORD)(sizeof(Vector2) * phonemeLandmarkDeltas[i].size());
+                WriteFile(hLandmarkFile, &phonemeLandmarkDeltas[i][0], dwNumBytes, &dwBytesWritten, nullptr);
+            }
+            CloseHandle(hLandmarkFile);
+        }
+    }
+    phonemeLandmarkDeltas.clear();
+}
+
 void CApp::ComputeWarps(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx,
     std::vector<BBox2>& faceBbox, std::vector<std::vector<Vector2>>& faceLandmarks,
     std::vector<PhonemeInfo>& phonemeInfo)
@@ -208,6 +236,7 @@ void CApp::ComputeWarps(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx
     int numFrames = (int)faceLandmarks.size();
     int phonemeIndex = 0;
     m_spVideo->Restart();
+    std::vector<std::vector<Vector2>> phonemeLandmarkDeltas;
     CRefObj<IImage> spImageToWarp;
     for (int frameIndex = 0; frameIndex < numFrames; frameIndex++)
     {
@@ -218,63 +247,50 @@ void CApp::ComputeWarps(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx
         {
             spImage = spVideoSample->GetImage();
             if (frameIndex == phonemeInfo[phonemeIndex].m_endFrame)
+            {
+                WritePhonemeDeltas(phonemeIndex, phonemeInfo, phonemeLandmarkDeltas);
                 phonemeIndex++; // Move to next phoneme
+            }
 
             if (phonemeInfo[phonemeIndex].m_startFrame == frameIndex)
-            {
                 spImageToWarp = spImage;
-
-#pragma region("StoreSourceImage")
-                wchar_t buf[1024];
-                swprintf_s(buf, L"%s\\warpsource\\%s_warpsource_%d.png", m_videoPath.c_str(), m_videoName.c_str(), frameIndex);
-                Caustic::StoreImage(buf, spImageToWarp);
-#pragma endregion
-            }
         }
 
         std::vector<Vector2> landmarkDeltas;
+        landmarkDeltas.resize(c_FaceLandmark_Mouth_LastIndex - c_FaceLandmark_Mouth_FirstIndex + 1);
         if (frameIndex == phonemeInfo[phonemeIndex].m_startFrame)
         {
-            for (int landmarkIndex = 0; landmarkIndex < (int)faceLandmarks[frameIndex].size(); landmarkIndex++)
-            {
-                Vector2 landmarkDelta(0.0f, 0.0f);
-                landmarkDeltas.push_back(landmarkDelta);
-            }
+            for (int landmarkIndex = c_FaceLandmark_Mouth_FirstIndex; landmarkIndex <= c_FaceLandmark_Mouth_LastIndex; landmarkIndex++)
+                landmarkDeltas[landmarkIndex - c_FaceLandmark_Mouth_FirstIndex] = Vector2(0.0f, 0.0f);
         }
         else
         {
             // Compute a matrix to transform the current set of landmarks to
             // such that the bridge of the nose is aligned with the first
             // frame of this phonemene's landmarks.
-            Matrix3x2 mat = Matrix3x2::Align(
-                faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][c_FaceLandmark_NoseBridge_Bottom],
-                faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][c_FaceLandmark_NoseBridge_Top],
-                faceLandmarks[frameIndex][c_FaceLandmark_NoseBridge_Bottom],
-                faceLandmarks[frameIndex][c_FaceLandmark_NoseBridge_Top]);
+            Matrix3x2 mat;
+            static bool alignLandmarks = false;
+            if (alignLandmarks)
+                mat = Matrix3x2::Align(
+                    faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][c_FaceLandmark_NoseBridge_Bottom],
+                    faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][c_FaceLandmark_NoseBridge_Top],
+                    faceLandmarks[frameIndex][c_FaceLandmark_NoseBridge_Bottom],
+                    faceLandmarks[frameIndex][c_FaceLandmark_NoseBridge_Top]);
+            else
+                mat = Matrix3x2(1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
 
             // Compute the deltas of the current frame's landmarks
             // as compared to the first frame in the current phoneme's landmarks
-            float maxDist = 0.0f;
-            int maxIndex = 0;
-            for (int landmarkIndex = 0; landmarkIndex < (int)faceLandmarks[frameIndex].size(); landmarkIndex++)
+            for (int landmarkIndex = c_FaceLandmark_Mouth_FirstIndex; landmarkIndex < c_FaceLandmark_Mouth_LastIndex; landmarkIndex++)
             {
                 Vector2 alignedLandmark = faceLandmarks[frameIndex][landmarkIndex];
                 alignedLandmark = alignedLandmark * mat;
-                Vector2 landmarkDelta = alignedLandmark - faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][landmarkIndex];
-                float dist = sqrtf(landmarkDelta.x * landmarkDelta.x + landmarkDelta.y * landmarkDelta.y);
-                if (dist > maxDist)
-                {
-                    maxDist = dist;
-                    maxIndex = landmarkIndex;
-                }
-                landmarkDeltas.push_back(landmarkDelta);
-            }
-            {
-                wchar_t buf[1240];
-                swprintf_s(buf, L"Max Landmark:%d Dist: %f\n", maxIndex, maxDist);
-                OutputDebugString(buf);
+                landmarkDeltas[landmarkIndex - c_FaceLandmark_Mouth_FirstIndex] = alignedLandmark - faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][landmarkIndex];
             }
         }
+
+        phonemeLandmarkDeltas.push_back(landmarkDeltas);
+
         int roiX = (int)faceBbox[frameIndex].minPt.x;
         int roiY = (int)faceBbox[frameIndex].minPt.y;
         int roiWidth = (int)faceBbox[frameIndex].maxPt.x - (int)faceBbox[frameIndex].minPt.x + 1;
@@ -307,32 +323,41 @@ void CApp::ComputeWarps(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx
         CRefObj<IImage> spFinalImage = spSink->GetOutput(spGPUPipeline);
 
 #pragma region("StoreWarpedImage")
-        for (int landmarkIndex = 0; landmarkIndex < (int)faceLandmarks[frameIndex].size(); landmarkIndex++)
+        static bool drawLandmarks = false;
+        if (drawLandmarks)
         {
-            Matrix3x2 mat;
-            if (frameIndex == phonemeInfo[phonemeIndex].m_startFrame)
+            for (int landmarkIndex = 0; landmarkIndex < (int)faceLandmarks[frameIndex].size(); landmarkIndex++)
             {
-                mat = Matrix3x2(1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
-            }
-            else
-            {
-                mat = Matrix3x2::Align(
-                    faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][c_FaceLandmark_NoseBridge_Bottom],
-                    faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][c_FaceLandmark_NoseBridge_Top],
-                    faceLandmarks[frameIndex][c_FaceLandmark_NoseBridge_Bottom],
-                    faceLandmarks[frameIndex][c_FaceLandmark_NoseBridge_Top]);
+                Matrix3x2 mat;
+                if (frameIndex == phonemeInfo[phonemeIndex].m_startFrame)
+                {
+                    mat = Matrix3x2(1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+                }
+                else
+                {
+                    mat = Matrix3x2::Align(
+                        faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][c_FaceLandmark_NoseBridge_Bottom],
+                        faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][c_FaceLandmark_NoseBridge_Top],
+                        faceLandmarks[frameIndex][c_FaceLandmark_NoseBridge_Bottom],
+                        faceLandmarks[frameIndex][c_FaceLandmark_NoseBridge_Top]);
 
-            }
-            Vector2 phonemeLandmark = faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][landmarkIndex];
-            Caustic::uint8 color1[4] = { 255, 0, 0, 255 };
-            spFinalImage->DrawCircle(phonemeLandmark, 3, color1);
-            Vector2 alignedLandmark = faceLandmarks[frameIndex][landmarkIndex];
-            Caustic::uint8 color2[4] = { 0, 255, 0, 255 };
-            spFinalImage->DrawCircle(alignedLandmark, 4, color2);
-            alignedLandmark = alignedLandmark * mat;
-            Caustic::uint8 color3[4] = { 0, 0, 255, 255 };
-            spFinalImage->DrawCircle(alignedLandmark, 5, color3);
+                }
 
+                Vector2 phonemeLandmark = faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][landmarkIndex];
+                Caustic::uint8 color1[4] = { 255, 0, 0, 255 };
+                spFinalImage->DrawCircle(phonemeLandmark, 3, color1);
+                Vector2 alignedLandmark = faceLandmarks[frameIndex][landmarkIndex];
+                Caustic::uint8 color2[4] = { 0, 255, 0, 255 };
+                spFinalImage->DrawCircle(alignedLandmark, 4, color2);
+                alignedLandmark = alignedLandmark * mat;
+                Caustic::uint8 color3[4] = { 0, 0, 255, 255 };
+                spFinalImage->DrawCircle(alignedLandmark, 5, color3);
+            }
+        }
+
+        static bool drawGrid = false;
+        if (drawGrid)
+        {
             for (int i = 0; i < c_GridY - 1; i++)
             {
                 for (int j = 0; j < c_GridX - 1; j++)
@@ -348,7 +373,7 @@ void CApp::ComputeWarps(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx
                     v0.y = (spFinalImage->GetHeight() - 1) * (1.0f - ((v0.y + 1.0f) / 2.0f));
                     v1 = Vector2(m_spGridLocations.get()[index10].x, m_spGridLocations.get()[index10].y);
                     v1.x = (spFinalImage->GetWidth() - 1) * ((v1.x + 1.0f) / 2.0f);
-                    v1.y = (spFinalImage->GetHeight() - 1) * (1.0f-((v1.y + 1.0f) / 2.0f));
+                    v1.y = (spFinalImage->GetHeight() - 1) * (1.0f - ((v1.y + 1.0f) / 2.0f));
                     spFinalImage->DrawLine(v0, v1, color);
 
                     v0 = Vector2(m_spGridLocations.get()[index10].x, m_spGridLocations.get()[index10].y);
@@ -386,12 +411,17 @@ void CApp::ComputeWarps(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx
             }
         }
 
-        wchar_t buf[1024];
-        swprintf_s(buf, L"%s\\warped\\%s_warped_%d.png", m_videoPath.c_str(), m_videoName.c_str(), frameIndex);
-        Caustic::StoreImage(buf, spFinalImage);
+        static bool storeWarpedResults = false;
+        if (storeWarpedResults)
+        {
+            wchar_t buf[1024];
+            swprintf_s(buf, L"%s\\warped\\%s_warped_%d.png", m_videoPath.c_str(), m_videoName.c_str(), frameIndex);
+            Caustic::StoreImage(buf, spFinalImage);
+        }
 #pragma endregion
 #pragma endregion
     }
+    WritePhonemeDeltas(phonemeIndex, phonemeInfo, phonemeLandmarkDeltas);
 }
 
 void CApp::WriteLandmarks(BBox2 &bb, std::vector<Vector2> &landmarks, int frameIndex)
@@ -444,9 +474,13 @@ void CApp::FindLandmarks(std::vector<BBox2> &faceBbox, std::vector<std::vector<V
 
           //  WriteLandmarks(faceBbox[0], landmarks, 0);
 #pragma region("WriteMarkImages")
-            wchar_t buf[1024];
-            swprintf_s(buf, L"%s\\landmarks\\%s_marked_%d.png", m_videoPath.c_str(), m_videoName.c_str(), frameIndex);
-            Caustic::StoreImage(buf, marked);
+            static bool writeLandmarkImages = false;
+            if (writeLandmarkImages)
+            {
+                wchar_t buf[1024];
+                swprintf_s(buf, L"%s\\landmarks\\%s_marked_%d.png", m_videoPath.c_str(), m_videoName.c_str(), frameIndex);
+                Caustic::StoreImage(buf, marked);
+            }
 #pragma endregion
             frameIndex++;
         }
@@ -469,9 +503,9 @@ void CApp::DeterminePhonemeInfo(std::vector<std::vector<Vector2>>& faceLandmarks
         if (extraFrames > 0)
         {
             info.m_endFrame++;
-            lastFrame = info.m_endFrame;
             extraFrames--;
         }
+        lastFrame = info.m_endFrame;
         phonemeInfo.push_back(info);
     }
 }
@@ -486,6 +520,8 @@ void CApp::Convert(Caustic::IRenderer *pRenderer, Caustic::IRenderCtx* pCtx)
 
     // Get list of phonemes for the current word
     std::string word(VideoName);
+    if (word == "ExclamationPoint")
+        word = "!Exclamation-Point";
     std::transform(word.begin(), word.end(), word.begin(),
         [](unsigned char c) { return std::toupper(c); });
     m_spPhonemes->GetPhonemes(word.c_str(), m_phonemes);
