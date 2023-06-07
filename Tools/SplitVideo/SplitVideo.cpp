@@ -76,7 +76,7 @@ public:
     std::vector<std::string> m_phonemes;
     std::unique_ptr<float2> m_spGridLocations;
     bool m_doConvert;
-    
+
     void Convert(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx);
     void FindLandmarks(std::vector<BBox2>& faceBbox, std::vector<std::vector<Vector2>>& faceLandmarks);
     void WriteLandmarks(BBox2& bb, std::vector<Vector2>& landmarks, int frameIndex);
@@ -218,10 +218,14 @@ void CApp::WritePhonemeDeltas(int phonemeIndex, std::vector<PhonemeInfo>& phonem
             DWORD dwBytesWritten;
             WriteFile(hLandmarkFile, &phonemeInfo[phonemeIndex].m_startFrame, sizeof(DWORD), &dwBytesWritten, nullptr);
             WriteFile(hLandmarkFile, &phonemeInfo[phonemeIndex].m_endFrame, sizeof(DWORD), &dwBytesWritten, nullptr);
-            for (size_t i = 0; i < (size_t)phonemeLandmarkDeltas.size(); i++)
+            DWORD numDeltaFrames = (DWORD)phonemeLandmarkDeltas.size();
+            assert(numDeltaFrames == phonemeInfo[phonemeIndex].m_endFrame - phonemeInfo[phonemeIndex].m_startFrame);
+            WriteFile(hLandmarkFile, &numDeltaFrames, sizeof(DWORD), &dwBytesWritten, nullptr);
+            for (size_t i = 0; i < (size_t)numDeltaFrames; i++)
             {
-                DWORD dwNumBytes = (DWORD)(sizeof(Vector2) * phonemeLandmarkDeltas[i].size());
-                WriteFile(hLandmarkFile, &phonemeLandmarkDeltas[i][0], dwNumBytes, &dwBytesWritten, nullptr);
+                DWORD numDeltas = (DWORD)phonemeLandmarkDeltas[i].size();
+                WriteFile(hLandmarkFile, &numDeltas, sizeof(DWORD), &dwBytesWritten, nullptr);
+                WriteFile(hLandmarkFile, &phonemeLandmarkDeltas[i][0], (DWORD)sizeof(Vector2) * numDeltas, &dwBytesWritten, nullptr);
             }
             CloseHandle(hLandmarkFile);
         }
