@@ -7,13 +7,28 @@
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 #include "imgui_internal.h"
+#include <windows.h>
+#include <tchar.h>
+#include <stdio.h>
+#include <map>
+#include <any>
+#include <iostream>
+#include <sstream>
 
 import Caustic.Base;
 import Base.Core.Core;
 import Base.Core.IRefCount;
+import Base.Core.ConvertStr;
+import Base.Math.Vector;
+import Base.Math.BBox;
+import Base.Math.Matrix;
+import Base.Math.Distributions;
+import Imaging.Image.IImage;
 import Imaging.Image.ImageFilter;
+import Imaging.Image.ImageFilter.FaceLandmarks;
 import Geometry.Mesh.IMeshConstructor;
 import Geometry.MeshImport;
+import Geometry.Mesh.MeshFuncs;
 import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.IRenderMesh;
 import Rendering.Caustic.IRenderer;
@@ -30,14 +45,35 @@ import Cameras.VirtualCamera.VirtualCamera;
 import Cameras.NDIStream.INDIStream;
 import Imaging.Video.IVideo;
 import Parsers.Phonemes.IPhonemes;
+import Imaging.Image.GPUPipeline;
+import Imaging.Image.IGPUPipeline;
 
 using namespace Caustic;
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+const int c_GridX = 100;
+const int c_GridY = 100;
+
+// For a given phoneme, this structure contains the list
+// of landmark deltas that form the phoneme
+struct PhonemeLandmarkDelta
+{
+    DWORD m_startFrame;
+    DWORD m_endFrame;
+    DWORD m_numDeltaFrames; // Number of frames to animate over
+    std::vector<std::vector<Vector2>> m_frameDeltas; // list of deltas for each frame
+};
+
 class CApp
 {
 public:
+    CApp()
+    {
+        m_curFrameIndex = -1;
+        m_phonemeFrameIndex = -1;
+    }
+    ~CApp() {}
     CRefObj<IRenderWindow> m_spRenderWindow;
     CRefObj<Caustic::ICausticFactory> m_spCausticFactory;
     CRefObj<ITexture> defaultTex;
@@ -45,18 +81,39 @@ public:
     CRefObj<IImage> m_spLastFrame;
     CRefObj<ITexture> m_spLastTex;
     CRefObj<IPhonemes> m_spPhonemes;
+    CRefObj<IImageFilter> m_spLandmarkFilter;
     std::vector<CRefObj<IVideo>> m_videos;
+    std::vector<BBox2> m_faceBbox;
+    std::vector<std::vector<Vector2>> m_faceLandmarks; // List of landmark positions per video frame
     int m_curVideoIndex;
     int m_nextVideoIndex;
+    int m_curFrameIndex;
     bool m_texLoaded;
     HWND m_hwnd;
     std::chrono::time_point<std::chrono::system_clock> m_prevRenderTime;
     CRefObj<IVirtualCamera> m_spVirtualCam;
     CRefObj<IVideo> m_spVideo;
+    CRefObj<INDIStream> m_spNDIStream;
+    std::map<std::wstring, PhonemeLandmarkDelta> m_phonemeLandmarkDeltaMap;
+    std::unique_ptr<float2> m_spGridLocations;
+    std::vector<std::string> m_words;           // List of words in current sentence being played
+    int m_wordIndex;                            // Current index into m_words
+    std::vector<std::wstring> m_phonemesInCurrentWord;        // List of phonemes in the current word for the sentence being played
+    int m_phonemeIndex;                         // Index into m_phonemesInCurrentWord
+    bool m_playPhonemes;                        // Are we playing back phonemes?
+    int m_phonemeFrameIndex;                    // Index into m_curPhonemeLandmarkDeltas
+    PhonemeLandmarkDelta m_curPhonemeLandmarkDeltas;   // List of frames with list of landmark deltas for a given phoneme
+
     void InitializeCaustic(HWND hWnd);
     void LiveWebCam();
     void BuildUI(ITexture* pFinalRT, ImFont* pFont);
-    CRefObj<INDIStream> m_spNDIStream;
+    void FindLandmarks();
+    void LoadDeltas();
+    void ComputeGridWarp(IImage* pImageToWarp, int frameIndex, std::wstring& phoneme, int phonemeFrameIndex);
+    CRefObj<IImage> WarpImage(IRenderer* pRenderer, IImage* pImageToWarp, int frameIndex, std::wstring &phoneme, int phonemeFrameIndex);
+    void PlaySentence(const char* pSentence);
+    void ProcessNextFrame(IRenderer* pRenderer, IRenderCtx* pCtx);
+    void LoadVideos(IRenderer* pRenderer, IRenderCtx* pCtx);
 };
 CApp app;
 
@@ -65,6 +122,122 @@ struct Vertex
     float pos[3];
     float norm[3];
 };
+
+bool FileExists(const wchar_t* path)
+{
+    DWORD dwAttrib = GetFileAttributes(path);
+    return (dwAttrib != INVALID_FILE_ATTRIBUTES && !(dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
+}
+
+void CApp::FindLandmarks()
+{
+    if (FileExists(L"d:\\data\\idle_landmarks.bin"))
+    {
+        HANDLE f = CreateFile(L"d:\\data\\idle_landmarks.bin", GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr);
+        DWORD dw;
+        DWORD bytesRead;
+        ReadFile(f, &dw, sizeof(DWORD), &bytesRead, nullptr);
+        m_faceLandmarks.resize(dw);
+        for (int i = 0; i < (int)dw; i++)
+        {
+            DWORD dw2;
+            ReadFile(f, &dw2, sizeof(DWORD), &bytesRead, nullptr);
+            m_faceLandmarks.resize(dw2);
+            ReadFile(f, &m_faceLandmarks[i][0], sizeof(Vector2) * dw2, &bytesRead, nullptr);
+        }
+        CloseHandle(f);
+        return;
+    }
+
+    // Make the first pass across the stream to find all the face landmarks.
+    int frameIndex = 0;
+    while (!m_videos[0]->EndOfStream())
+    {
+        auto spVideoSample = m_videos[0]->NextVideoSample();
+        if (spVideoSample != nullptr)
+        {
+            auto spImage = spVideoSample->GetImage();
+            Caustic::ImageFilterParams params;
+            params.params.insert(std::make_pair("outputImage", std::any(true)));
+
+            auto marked = m_spLandmarkFilter->Apply(spImage, &params);
+
+            auto bb = std::any_cast<BBox2>(params.params["Face0"]);
+            m_faceBbox.push_back(bb);
+
+            int numLandmarks = (int)std::any_cast<size_t>(params.params["Face0_NumLandmarks"]);
+            std::vector<Vector2> landmarks;
+            for (int j = 0; j < numLandmarks; j++)
+            {
+                char buf[1024];
+                sprintf_s(buf, "Face%d_Point%d", 0, j);
+                Vector2 pt = std::any_cast<Vector2>(params.params[buf]);
+                landmarks.push_back(pt);
+            }
+            m_faceLandmarks.push_back(landmarks);
+            frameIndex++;
+        }
+    }
+    HANDLE f = CreateFile(L"d:\\data\\idle_landmarks.bin", GENERIC_WRITE, FILE_SHARE_READ, nullptr, CREATE_ALWAYS, 0, nullptr);
+    DWORD dw = (DWORD)m_faceLandmarks.size();
+    DWORD bytesWritten;
+    WriteFile(f, &dw, sizeof(DWORD), &bytesWritten, nullptr);
+    for (int i = 0; i < (int)dw; i++)
+    {
+        DWORD dw2 = (DWORD)m_faceLandmarks[i].size();
+        WriteFile(f, &dw2, sizeof(DWORD), &bytesWritten, nullptr);
+        WriteFile(f, &m_faceLandmarks[i][0], sizeof(Vector2) * dw2, &bytesWritten, nullptr);
+    }
+    CloseHandle(f);
+}
+
+void CApp::LoadDeltas()
+{
+    WIN32_FIND_DATA findData;
+    HANDLE hFind = FindFirstFile(L"d:\\data\\*.bin", &findData);
+    if (hFind == INVALID_HANDLE_VALUE)
+        return;
+    while (true)
+    {
+        std::wstring fn(std::wstring(L"d:\\data\\") + findData.cFileName);
+        HANDLE f = CreateFile(fn.c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr);
+        if (f != INVALID_HANDLE_VALUE)
+        {
+            std::wstring phonemeName = std::wstring(findData.cFileName);
+            phonemeName = phonemeName.substr(8);
+            phonemeName = phonemeName.substr(0, phonemeName.find_first_of('_'));
+            DWORD bytesRead;
+            PhonemeLandmarkDelta phonemeLandmarkDeltas;
+            ReadFile(f, &phonemeLandmarkDeltas.m_startFrame, sizeof(DWORD), &bytesRead, nullptr);
+            ReadFile(f, &phonemeLandmarkDeltas.m_endFrame, sizeof(DWORD), &bytesRead, nullptr);
+            ReadFile(f, &phonemeLandmarkDeltas.m_numDeltaFrames, sizeof(DWORD), &bytesRead, nullptr);
+            for (size_t i = 0; i < (size_t)phonemeLandmarkDeltas.m_numDeltaFrames; i++)
+            {
+                DWORD numDeltas;
+                ReadFile(f, &numDeltas, sizeof(DWORD), &bytesRead, nullptr);
+                std::vector<Vector2> deltas;
+                for (DWORD j = 0; j < numDeltas; j++)
+                {
+                    Vector2 v;
+                    ReadFile(f, &v, sizeof(Vector2), &bytesRead, nullptr);
+                    deltas.push_back(v);
+                }
+                phonemeLandmarkDeltas.m_frameDeltas.push_back(deltas);
+            }
+            m_phonemeLandmarkDeltaMap.insert(std::make_pair(phonemeName, phonemeLandmarkDeltas));
+            CloseHandle(f);
+        }
+        else
+            assert(false); // failed to open file
+
+        if (!FindNextFile(hFind, &findData))
+            break;
+        DWORD dwError = GetLastError();
+        if (dwError == ERROR_NO_MORE_FILES)
+            break;
+    }
+    FindClose(hFind);
+}
 
 void CApp::LiveWebCam()
 {
@@ -125,6 +298,35 @@ ImVec2 BuildMenuBar(ImFont* pFont)
     return menuSize;
 }
 
+std::vector<std::string> SplitSentence(std::string sentence)
+{
+    std::vector<std::string> words;
+    std::stringstream ss(sentence);
+    std::string word;
+    while (ss >> word)
+        words.push_back(word);
+    return words;
+}
+
+void CApp::PlaySentence(const char *pSentence)
+{
+    m_words = SplitSentence(pSentence);
+    m_wordIndex = 0;
+    std::vector<std::string> wordPhonemes;
+    auto word = m_words[m_wordIndex];
+    std::transform(word.begin(), word.end(), word.begin(), [](unsigned char c) { return std::toupper(c); });
+    m_spPhonemes->GetPhonemes(word, wordPhonemes);
+    for (auto w : wordPhonemes)
+    {
+        std::wstring wstr = Caustic::str2wstr(w);
+        m_phonemesInCurrentWord.push_back(wstr);
+    }
+    m_phonemeIndex = 0;
+    m_phonemeFrameIndex = 0;
+    m_curPhonemeLandmarkDeltas = m_phonemeLandmarkDeltaMap[m_phonemesInCurrentWord[m_phonemeIndex]];
+    m_playPhonemes = true;
+}
+
 void CApp::BuildUI(ITexture* pFinalRT, ImFont* pFont)
 {
     static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
@@ -157,6 +359,10 @@ void CApp::BuildUI(ITexture* pFinalRT, ImFont* pFont)
     //ImGui::ShowDemoWindow();
 
     ImGui::Begin("Actions", nullptr);
+    if (ImGui::Button("Aardvark"))
+    {
+        app.PlaySentence("Now is the time for all good men to come to the aid of their party");
+    }
     if (ImGui::Button("Listening"))
         app.m_nextVideoIndex = 0;
     if (ImGui::Button("FollowUp"))
@@ -189,88 +395,381 @@ void CApp::BuildUI(ITexture* pFinalRT, ImFont* pFont)
     ImGui::End();
 }
 
+//**********************************************************************
+class CWarpNode : public CGPUPipelineNodeBase
+{
+    CRefObj<IMesh> m_spMesh;
+    CRefObj<IRenderMesh> m_spRenderMesh;
+public:
+    CWarpNode(const wchar_t* pName, IRenderer* pRenderer, IShader* pShader, uint32 inputWidth, uint32 inputHeight, DXGI_FORMAT format, float2* pGridLocations) :
+        CGPUPipelineNodeBase(inputWidth, inputHeight, format)
+    {
+        SetName(pName);
+        SetShader(pShader);
+
+        m_cpuFlags = (D3D11_CPU_ACCESS_FLAG)0;
+        m_bindFlags = (D3D11_BIND_FLAG)(D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET | D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
+        m_spMesh = Caustic::CreateWarpedGrid(c_GridX, c_GridY, pGridLocations);
+        m_spRenderMesh = pRenderer->ToRenderMesh(m_spMesh, pShader);
+    }
+
+    //**********************************************************************
+    // IRefCount
+    //**********************************************************************
+    virtual uint32 AddRef() override { return CRefCount::AddRef(); }
+    virtual uint32 Release() override { return CRefCount::Release(); }
+
+    //**********************************************************************
+    // IGPUPipelineNode
+    //**********************************************************************
+    virtual void SetName(const wchar_t* pName) override { CGPUPipelineNodeBase::SetName(pName); }
+    virtual bool IsEnabled() override { return CGPUPipelineNodeBase::IsEnabled(); }
+    virtual void Enable() override { CGPUPipelineNodeBase::Enable(); }
+    virtual void Disable() override { CGPUPipelineNodeBase::Disable(); }
+    virtual void SetShader(IShader* pShader) override { CGPUPipelineNodeBase::SetShader(pShader); }
+    virtual CRefObj<IShader> GetShader() override { return CGPUPipelineNodeBase::GetShader(); }
+    virtual CRefObj<IGPUPipelineNode> GetInput(const wchar_t* pName) override { return CGPUPipelineNodeBase::GetInput(pName); }
+    virtual void SetInput(const wchar_t* pName, const wchar_t* pTextureName, const wchar_t* pSamplerName, IGPUPipelineNode* pNode) override { CGPUPipelineNodeBase::SetInput(pName, pTextureName, pSamplerName, pNode); }
+    virtual void SetOutputSize(uint32 width, uint32 height) override { CGPUPipelineNodeBase::SetOutputSize(width, height); }
+    virtual uint32 GetOutputWidth() override { return CGPUPipelineNodeBase::GetOutputWidth(); }
+    virtual uint32 GetOutputHeight() override { return CGPUPipelineNodeBase::GetOutputHeight(); }
+    virtual CRefObj<ITexture> GetOutputTexture(IGPUPipeline* pPipeline) override { return CGPUPipelineNodeBase::GetOutputTexture(pPipeline); }
+    virtual void Process(IGPUPipeline* pPipeline, IRenderer* pRenderer, IRenderCtx* pRenderCtx) override
+    {
+        ProcessInternal(pPipeline, pRenderer, pRenderCtx,
+            [&]() {
+                std::vector<CRefObj<ILight>> lights;
+                m_spRenderMesh->Render(pRenderer, pRenderCtx, m_spShader, nullptr, lights, nullptr);
+            });
+    }
+};
+
+//**********************************************************************
+// Method: WarpImage
+// For a given input image (from our idle loop) we will warp that frame
+// to match the Nth frame of some phoneme
+//
+// Parameters:
+// pImageToWarp - image (from our idle loop) to warp
+// frameIndex - index of this image in our entire video (used to look up
+//           the precomputed landmarks
+// phoneme - which phoneme are we warping into
+// phonemeFrameIndex - index in the list of deltas for the phoneme. i.e. a phoneme
+//           is comprised of N frames of video. This is the index into the phonemes
+//           list of deltas (read from disk Phoneme_<phoneme>_Deltas.bin)
+//**********************************************************************
+CRefObj<IImage> CApp::WarpImage(IRenderer* pRenderer, IImage *pImageToWarp, int frameIndex, std::wstring& phoneme, int phonemeFrameIndex)
+{
+    // Compute the grid with which to warp the image
+    ComputeGridWarp(pImageToWarp, m_curFrameIndex, phoneme, phonemeFrameIndex);
+
+    // Next setup our GPU pipeline to warp the image
+    CRefObj<IGPUPipeline> spGPUPipeline = Caustic::CreateGPUPipeline(pRenderer);
+
+    auto spSource = spGPUPipeline->CreateSourceNode(L"Source", pImageToWarp, pImageToWarp->GetWidth(), pImageToWarp->GetHeight(),
+        DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM);
+
+    auto spShader = pRenderer->GetShaderMgr()->FindShader(L"Warp");
+    std::unique_ptr<CWarpNode> spWarpNode(
+        new CWarpNode(L"Warp", pRenderer, spShader, pImageToWarp->GetWidth(), pImageToWarp->GetHeight(), DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM,
+            m_spGridLocations.get()));
+    spWarpNode->SetInput(L"Source", L"sourceTexture1", L"sourceSampler1", spSource);
+    spGPUPipeline->AddCustomNode(spWarpNode.get());
+
+    auto spShader2 = pRenderer->GetShaderMgr()->FindShader(L"RawCopy");
+    CRefObj<IGPUPipelineSinkNode> spSink = spGPUPipeline->CreateSinkNode(L"Sink", spShader2, pImageToWarp->GetWidth(), pImageToWarp->GetHeight(), DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM);
+    spSink->SetInput(L"Source", L"sourceTexture1", L"sourceSampler1", spWarpNode.release());
+
+    spGPUPipeline->IncrementCurrentEpoch();
+    spGPUPipeline->Process(pRenderer, pRenderer->GetRenderCtx());
+    CRefObj<IImage> spFinalImage = spSink->GetOutput(spGPUPipeline);
+
+#pragma region("StoreWarpedImage")
+////    static bool drawLandmarks = false;
+////    if (drawLandmarks)
+////    {
+////        for (int landmarkIndex = 0; landmarkIndex < (int)m_faceLandmarks[frameIndex].size(); landmarkIndex++)
+////        {
+////            Matrix3x2 mat;
+////            if (frameIndex == phonemeInfo[phonemeIndex].m_startFrame)
+////            {
+////                mat = Matrix3x2(1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+////            }
+////            else
+////            {
+////                mat = Matrix3x2::Align(
+////                    faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][c_FaceLandmark_NoseBridge_Bottom],
+////                    faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][c_FaceLandmark_NoseBridge_Top],
+////                    faceLandmarks[frameIndex][c_FaceLandmark_NoseBridge_Bottom],
+////                    faceLandmarks[frameIndex][c_FaceLandmark_NoseBridge_Top]);
+////
+////            }
+////
+////            Vector2 phonemeLandmark = faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][landmarkIndex];
+////            Caustic::uint8 color1[4] = { 255, 0, 0, 255 };
+////            spFinalImage->DrawCircle(phonemeLandmark, 3, color1);
+////            Vector2 alignedLandmark = faceLandmarks[frameIndex][landmarkIndex];
+////            Caustic::uint8 color2[4] = { 0, 255, 0, 255 };
+////            spFinalImage->DrawCircle(alignedLandmark, 4, color2);
+////            alignedLandmark = alignedLandmark * mat;
+////            Caustic::uint8 color3[4] = { 0, 0, 255, 255 };
+////            spFinalImage->DrawCircle(alignedLandmark, 5, color3);
+////        }
+////    }
+////
+////    static bool drawGrid = false;
+////    if (drawGrid)
+////    {
+////        for (int i = 0; i < c_GridY - 1; i++)
+////        {
+////            for (int j = 0; j < c_GridX - 1; j++)
+////            {
+////                uint8 color[4] = { 255, 255, 255, 255 };
+////                int index00 = i * c_GridX + j;
+////                int index10 = index00 + 1;
+////                int index01 = (i + 1) * c_GridX + j;
+////                int index11 = index01 + 1;
+////                Vector2 v0, v1;
+////                v0 = Vector2(m_spGridLocations.get()[index00].x, m_spGridLocations.get()[index00].y);
+////                v0.x = (spFinalImage->GetWidth() - 1) * ((v0.x + 1.0f) / 2.0f);
+////                v0.y = (spFinalImage->GetHeight() - 1) * (1.0f - ((v0.y + 1.0f) / 2.0f));
+////                v1 = Vector2(m_spGridLocations.get()[index10].x, m_spGridLocations.get()[index10].y);
+////                v1.x = (spFinalImage->GetWidth() - 1) * ((v1.x + 1.0f) / 2.0f);
+////                v1.y = (spFinalImage->GetHeight() - 1) * (1.0f - ((v1.y + 1.0f) / 2.0f));
+////                spFinalImage->DrawLine(v0, v1, color);
+////
+////                v0 = Vector2(m_spGridLocations.get()[index10].x, m_spGridLocations.get()[index10].y);
+////                v0.x = (spFinalImage->GetWidth() - 1) * ((v0.x + 1.0f) / 2.0f);
+////                v0.y = (spFinalImage->GetHeight() - 1) * (1.0f - ((v0.y + 1.0f) / 2.0f));
+////                v1 = Vector2(m_spGridLocations.get()[index11].x, m_spGridLocations.get()[index11].y);
+////                v1.x = (spFinalImage->GetWidth() - 1) * ((v1.x + 1.0f) / 2.0f);
+////                v1.y = (spFinalImage->GetHeight() - 1) * (1.0f - ((v1.y + 1.0f) / 2.0f));
+////                spFinalImage->DrawLine(v0, v1, color);
+////
+////                v0 = Vector2(m_spGridLocations.get()[index00].x, m_spGridLocations.get()[index00].y);
+////                v0.x = (spFinalImage->GetWidth() - 1) * ((v0.x + 1.0f) / 2.0f);
+////                v0.y = (spFinalImage->GetHeight() - 1) * (1.0f - ((v0.y + 1.0f) / 2.0f));
+////                v1 = Vector2(m_spGridLocations.get()[index11].x, m_spGridLocations.get()[index11].y);
+////                v1.x = (spFinalImage->GetWidth() - 1) * ((v1.x + 1.0f) / 2.0f);
+////                v1.y = (spFinalImage->GetHeight() - 1) * (1.0f - ((v1.y + 1.0f) / 2.0f));
+////                spFinalImage->DrawLine(v0, v1, color);
+////
+////                v0 = Vector2(m_spGridLocations.get()[index00].x, m_spGridLocations.get()[index00].y);
+////                v0.x = (spFinalImage->GetWidth() - 1) * ((v0.x + 1.0f) / 2.0f);
+////                v0.y = (spFinalImage->GetHeight() - 1) * (1.0f - ((v0.y + 1.0f) / 2.0f));
+////                v1 = Vector2(m_spGridLocations.get()[index01].x, m_spGridLocations.get()[index01].y);
+////                v1.x = (spFinalImage->GetWidth() - 1) * ((v1.x + 1.0f) / 2.0f);
+////                v1.y = (spFinalImage->GetHeight() - 1) * (1.0f - ((v1.y + 1.0f) / 2.0f));
+////                spFinalImage->DrawLine(v0, v1, color);
+////
+////                v0 = Vector2(m_spGridLocations.get()[index01].x, m_spGridLocations.get()[index01].y);
+////                v0.x = (spFinalImage->GetWidth() - 1) * ((v0.x + 1.0f) / 2.0f);
+////                v0.y = (spFinalImage->GetHeight() - 1) * (1.0f - ((v0.y + 1.0f) / 2.0f));
+////                v1 = Vector2(m_spGridLocations.get()[index11].x, m_spGridLocations.get()[index11].y);
+////                v1.x = (spFinalImage->GetWidth() - 1) * ((v1.x + 1.0f) / 2.0f);
+////                v1.y = (spFinalImage->GetHeight() - 1) * (1.0f - ((v1.y + 1.0f) / 2.0f));
+////                spFinalImage->DrawLine(v0, v1, color);
+////            }
+////        }
+////    }
+////
+////    static bool storeWarpedResults = false;
+////    if (storeWarpedResults)
+////    {
+////        wchar_t buf[1024];
+////        swprintf_s(buf, L"%s\\warped\\%s_warped_%d.png", m_videoPath.c_str(), m_videoName.c_str(), frameIndex);
+////        Caustic::StoreImage(buf, spFinalImage);
+////    }
+////
+    return spFinalImage;
+}
+
+//**********************************************************************
+// Method: ComputeGridWarp
+// This method builds the location of the grid locations to form the warped
+// image to match the specified phoneme
+//
+// Parameters:
+// pImageToWarp - source frame (from idle loop) to warp
+// frameIndex - index of 'pImageToWarp' in the entire video
+// phoneme - which phoneme are we trying to reproduce
+// phonemeFrameIndex - which frame in the phonemes list of frame deltas are we on
+//**********************************************************************
+void CApp::ComputeGridWarp(IImage *pImageToWarp, int frameIndex, std::wstring& phoneme, int phonemeFrameIndex)
+{
+    IRenderer* pRenderer = m_spRenderWindow->GetRenderer();
+    GaussianDistribution distribution(2.0f);
+    float gridDeltaX = (float)pImageToWarp->GetWidth() / (float)c_GridX;
+    float gridDeltaY = (float)pImageToWarp->GetHeight() / (float)c_GridY;
+
+    float2* pGridLocations = new float2[c_GridX * c_GridY];
+    m_spGridLocations.reset(pGridLocations);
+    for (int gridY = 0; gridY < c_GridY; gridY++)
+    {
+        for (int gridX = 0; gridX < c_GridX; gridX++)
+        {
+            Vector2 gridPixel((float)gridX * gridDeltaX, (float)gridY * gridDeltaY);
+
+            // Walk each of our face landmarks and see if it effects the current grid vertex. We will
+            // use a gaussian placed on the landmark to determine influence.
+            Vector2 newGridPos(0.0f, 0.0f);
+            for (int landmarkIndex = c_FaceLandmark_Mouth_FirstIndex; landmarkIndex <= c_FaceLandmark_Mouth_LastIndex; landmarkIndex++)
+            {
+                // Determine distance from the grid location to the landmark
+                float dx = gridPixel.x - m_faceLandmarks[m_curFrameIndex][landmarkIndex].x;
+                float dy = gridPixel.y - m_faceLandmarks[m_curFrameIndex][landmarkIndex].y;
+                float dist = sqrtf(dx * dx + dy * dy);
+                const float c_LandmarkInfluence = 1.5f * pImageToWarp->GetWidth() / c_GridX; // Number of pixels away influenced by a landmark
+                dist = std::min<float>(dist, c_LandmarkInfluence) / c_LandmarkInfluence;
+                float weight = distribution.Sample(dist);
+                PhonemeLandmarkDelta pdelta = m_phonemeLandmarkDeltaMap[phoneme];
+                newGridPos += pdelta.m_frameDeltas[phonemeFrameIndex][landmarkIndex - c_FaceLandmark_Mouth_FirstIndex] * weight;
+            }
+            // Compute where the pixel moves to
+            int index = gridY * c_GridX + gridX;
+            pGridLocations[index].x =
+                std::min<float>((float)pImageToWarp->GetWidth() - 1.0f,
+                    std::max<float>(0.0f,
+                        gridPixel.x + newGridPos.x)) / ((float)pImageToWarp->GetWidth() - 1.0f);
+            pGridLocations[index].y =
+                std::min<float>((float)pImageToWarp->GetHeight() - 1.0f,
+                    std::max<float>(0.0f,
+                        gridPixel.y + newGridPos.y)) / ((float)pImageToWarp->GetHeight() - 1.0f);
+            pGridLocations[index].x = pGridLocations[index].x * 2.0f - 1.0f;
+            pGridLocations[index].y = (1.0f - pGridLocations[index].y) * 2.0f - 1.0f;
+        }
+    }
+}
+
+void CApp::LoadVideos(IRenderer* pRenderer, IRenderCtx* pCtx)
+{
+    CRefObj<IShaderMgr> spShaderMgr = pRenderer->GetShaderMgr();
+
+    m_curVideoIndex = 0;
+    m_nextVideoIndex = 0;
+    CRefObj<IVideo> p0 = CreateVideo(L"d:\\DittoData\\Listening.mp4");
+    m_videos.push_back(p0);
+    LoadDeltas();
+    FindLandmarks();
+
+    CRefObj<IVideo> p1 = CreateVideo(L"d:\\DittoData\\FollowUp.mp4");
+    m_videos.push_back(p1);
+
+    CRefObj<IVideo> p2 = CreateVideo(L"d:\\DittoData\\FollowUpLater.mp4");
+    m_videos.push_back(p2);
+
+    CRefObj<IVideo> p3 = CreateVideo(L"d:\\DittoData\\FollowUpEmail.mp4");
+    m_videos.push_back(p3);
+
+    CRefObj<IVideo> p4 = CreateVideo(L"d:\\DittoData\\ScratchFace.mp4");
+    m_videos.push_back(p4);
+
+    CRefObj<IVideo> p5 = CreateVideo(L"d:\\DittoData\\ScratchFace.mp4");
+    m_videos.push_back(p5);
+
+    CAudioFormat audioFormat;
+    p2->GetAudioFormat(&audioFormat);
+    CVideoFormat videoFormat;
+    p2->GetVideoFormat(&videoFormat);
+    m_spNDIStream->Initialize("test", videoFormat.m_width, videoFormat.m_height, 30, audioFormat.m_samplesPerSec, audioFormat.m_bitsPerSample, audioFormat.m_numChannels);
+}
+
+void CApp::ProcessNextFrame(IRenderer* pRenderer, IRenderCtx* pCtx)
+{
+    if (!m_texLoaded)
+    {
+        m_texLoaded = true;
+        LoadVideos(pRenderer, pCtx);
+    }
+    if (m_curVideoIndex != m_nextVideoIndex)
+    {
+        m_videos[m_curVideoIndex]->Restart();
+        m_curFrameIndex = -1;
+        m_phonemeFrameIndex = -1;
+        m_playPhonemes = false;
+        m_curVideoIndex = m_nextVideoIndex;
+    }
+    else if (m_videos[m_curVideoIndex]->EndOfStream())
+    {
+        m_videos[m_curVideoIndex]->Restart();
+        m_curVideoIndex = m_nextVideoIndex = 0;
+        m_curFrameIndex = -1;
+        m_phonemeFrameIndex = -1;
+        m_playPhonemes = false;
+    }
+    else
+    {
+        auto curRenderTime = std::chrono::system_clock::now();
+        std::chrono::duration<double> elapsed_seconds = curRenderTime - m_prevRenderTime;
+        if (elapsed_seconds.count() * 1000.0f > 20)
+        {
+            m_prevRenderTime = std::chrono::system_clock::now();
+            auto spVideoSample = m_videos[m_curVideoIndex]->NextVideoSample();
+            if (spVideoSample != nullptr)
+            {
+                m_spLastFrame = spVideoSample->GetImage();
+                if (m_playPhonemes)
+                {
+                    m_spLastFrame = WarpImage(pRenderer, m_spLastFrame, m_curFrameIndex, m_phonemesInCurrentWord[m_phonemeIndex], m_phonemeFrameIndex);
+                }
+                m_curFrameIndex++;
+
+                // Check if we have reached the last frame of the current phoneme.
+                // If so, move to the next phoneme
+                m_phonemeFrameIndex++;
+                if (m_phonemeFrameIndex == m_curPhonemeLandmarkDeltas.m_frameDeltas.size())
+                {
+                    m_phonemeFrameIndex = 0;
+                    m_phonemeIndex++;
+                    if (m_phonemeIndex == m_phonemesInCurrentWord.size())
+                    {
+                        m_phonemeIndex = 0;
+                        // We have reached the last phoneme in the current word. Move to the next word
+                        m_wordIndex++;
+                        if (m_wordIndex == m_words.size())
+                        {
+                            // If we have reached the end of the sentence turn off phoneme playback
+                            m_playPhonemes = false;
+                        }
+                    }
+                    if (m_playPhonemes)
+                        m_curPhonemeLandmarkDeltas = m_phonemeLandmarkDeltaMap[m_phonemesInCurrentWord[m_phonemeIndex]];
+                }
+                //m_spVirtualCam->SendVideoFrame(m_spLastFrame);
+                m_spLastTex = m_spCausticFactory->CreateTexture(pRenderer, m_spLastFrame, D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
+                m_spSampler = m_spCausticFactory->CreateSampler(pRenderer, m_spLastTex);
+                m_spNDIStream->SendImage(m_spLastFrame);
+            }
+        }
+        auto spAudioSample = m_videos[m_curVideoIndex]->NextAudioSample();
+        if (spAudioSample != nullptr)
+        {
+            //m_spVirtualCam->SendAudioFrame(spAudioSample->GetData(), spAudioSample->GetDataSize());
+            m_spNDIStream->SendAudioFrame(spAudioSample->GetData(), spAudioSample->GetDataSize());
+        }
+    }
+
+    if (m_spLastTex != nullptr)
+        pRenderer->DrawScreenQuad(0.0f, 0.0f, 1.0f, 1.0f, m_spLastTex, m_spSampler);
+}
+
 void CApp::InitializeCaustic(HWND hwnd)
 {
     m_spPhonemes = Caustic::CreatePhonemes();
     m_spPhonemes->LoadDatabase();
     Caustic::SystemStartup();
-    app.m_texLoaded = false;
+    m_spLandmarkFilter = CreateFaceLandmarksFilter();
+    m_texLoaded = false;
     m_spCausticFactory = Caustic::CreateCausticFactory();
     // Next create our output window
-    app.m_spNDIStream = CreateNDIStream();
+    m_spNDIStream = CreateNDIStream();
     std::wstring shaderFolder(SHADERPATH);
     BBox2 viewport(0.0f, 0.0f, 1.0f, 1.0f);
-    app.m_spVirtualCam = Caustic::CreateVirtualCamera();
+    m_spVirtualCam = Caustic::CreateVirtualCamera();
     m_spRenderWindow = CreateImguiRenderWindow(hwnd, viewport, shaderFolder,
         [](Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx)
         {
-            if (!app.m_texLoaded)
-            {
-                app.m_texLoaded = true;
-                CRefObj<IShaderMgr> spShaderMgr = pRenderer->GetShaderMgr();
-
-                app.m_curVideoIndex = 0;
-                app.m_nextVideoIndex = 0;
-                CRefObj<IVideo> p0 = CreateVideo(L"d:\\DittoData\\Listening.mp4");
-                app.m_videos.push_back(p0);
-
-                CRefObj<IVideo> p1 = CreateVideo(L"d:\\DittoData\\FollowUp.mp4");
-                app.m_videos.push_back(p1);
-
-                CRefObj<IVideo> p2 = CreateVideo(L"d:\\DittoData\\FollowUpLater.mp4");
-                app.m_videos.push_back(p2);
-
-                CRefObj<IVideo> p3 = CreateVideo(L"d:\\DittoData\\FollowUpEmail.mp4");
-                app.m_videos.push_back(p3);
-
-                CRefObj<IVideo> p4 = CreateVideo(L"d:\\DittoData\\ScratchFace.mp4");
-                app.m_videos.push_back(p4);
-
-                CRefObj<IVideo> p5 = CreateVideo(L"d:\\DittoData\\ScratchFace.mp4");
-                app.m_videos.push_back(p5);
-
-                CAudioFormat audioFormat;
-                p2->GetAudioFormat(&audioFormat);
-                CVideoFormat videoFormat;
-                p2->GetVideoFormat(&videoFormat);
-                app.m_spNDIStream->Initialize("test", videoFormat.m_width, videoFormat.m_height, 30, audioFormat.m_samplesPerSec, audioFormat.m_bitsPerSample, audioFormat.m_numChannels);
-            }
-            if (app.m_curVideoIndex != app.m_nextVideoIndex)
-            {
-                app.m_videos[app.m_curVideoIndex]->Restart();
-                app.m_curVideoIndex = app.m_nextVideoIndex;
-            }
-            else if (app.m_videos[app.m_curVideoIndex]->EndOfStream())
-            {
-                app.m_videos[app.m_curVideoIndex]->Restart();
-                app.m_curVideoIndex = app.m_nextVideoIndex = 0;
-            }
-            else
-            {
-                auto curRenderTime = std::chrono::system_clock::now();
-                std::chrono::duration<double> elapsed_seconds = curRenderTime - app.m_prevRenderTime;
-                if (elapsed_seconds.count() * 1000.0f > 20)
-                {
-                    app.m_prevRenderTime = std::chrono::system_clock::now();
-                    auto spVideoSample = app.m_videos[app.m_curVideoIndex]->NextVideoSample();
-                    if (spVideoSample != nullptr)
-                    {
-                        app.m_spLastFrame = spVideoSample->GetImage();
-                        //app.m_spVirtualCam->SendVideoFrame(app.m_spLastFrame);
-                        app.m_spLastTex = app.m_spCausticFactory->CreateTexture(pRenderer, app.m_spLastFrame, D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
-                        app.m_spSampler = app.m_spCausticFactory->CreateSampler(pRenderer, app.m_spLastTex);
-                        app.m_spNDIStream->SendImage(app.m_spLastFrame);
-                    }
-                }
-                auto spAudioSample = app.m_videos[app.m_curVideoIndex]->NextAudioSample();
-                if (spAudioSample != nullptr)
-                {
-                    //app.m_spVirtualCam->SendAudioFrame(spAudioSample->GetData(), spAudioSample->GetDataSize());
-                    app.m_spNDIStream->SendAudioFrame(spAudioSample->GetData(), spAudioSample->GetDataSize());
-                }
-            }
-
-            pRenderer->DrawScreenQuad(0.0f, 0.0f, 1.0f, 1.0f, app.m_spLastTex, app.m_spSampler);
+            app.ProcessNextFrame(pRenderer, pCtx);
         },
         [](Caustic::IRenderer* pRenderer, ITexture* pFinalRT, ImFont* pFont)
         {
