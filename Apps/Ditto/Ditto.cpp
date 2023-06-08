@@ -142,7 +142,7 @@ void CApp::FindLandmarks()
         {
             DWORD dw2;
             ReadFile(f, &dw2, sizeof(DWORD), &bytesRead, nullptr);
-            m_faceLandmarks.resize(dw2);
+            m_faceLandmarks[i].resize(dw2);
             ReadFile(f, &m_faceLandmarks[i][0], sizeof(Vector2) * dw2, &bytesRead, nullptr);
         }
         CloseHandle(f);
@@ -194,7 +194,7 @@ void CApp::FindLandmarks()
 void CApp::LoadDeltas()
 {
     WIN32_FIND_DATA findData;
-    HANDLE hFind = FindFirstFile(L"d:\\data\\*.bin", &findData);
+    HANDLE hFind = FindFirstFile(L"d:\\data\\Phoneme_*.bin", &findData);
     if (hFind == INVALID_HANDLE_VALUE)
         return;
     while (true)
@@ -211,18 +211,14 @@ void CApp::LoadDeltas()
             ReadFile(f, &phonemeLandmarkDeltas.m_startFrame, sizeof(DWORD), &bytesRead, nullptr);
             ReadFile(f, &phonemeLandmarkDeltas.m_endFrame, sizeof(DWORD), &bytesRead, nullptr);
             ReadFile(f, &phonemeLandmarkDeltas.m_numDeltaFrames, sizeof(DWORD), &bytesRead, nullptr);
+            phonemeLandmarkDeltas.m_frameDeltas.resize(phonemeLandmarkDeltas.m_numDeltaFrames);
             for (size_t i = 0; i < (size_t)phonemeLandmarkDeltas.m_numDeltaFrames; i++)
             {
                 DWORD numDeltas;
                 ReadFile(f, &numDeltas, sizeof(DWORD), &bytesRead, nullptr);
-                std::vector<Vector2> deltas;
-                for (DWORD j = 0; j < numDeltas; j++)
-                {
-                    Vector2 v;
-                    ReadFile(f, &v, sizeof(Vector2), &bytesRead, nullptr);
-                    deltas.push_back(v);
-                }
-                phonemeLandmarkDeltas.m_frameDeltas.push_back(deltas);
+                phonemeLandmarkDeltas.m_frameDeltas[i].resize(numDeltas);
+                ReadFile(f, &phonemeLandmarkDeltas.m_frameDeltas[i][0], sizeof(Vector2) * numDeltas, &bytesRead, nullptr);
+                
             }
             m_phonemeLandmarkDeltaMap.insert(std::make_pair(phonemeName, phonemeLandmarkDeltas));
             CloseHandle(f);
