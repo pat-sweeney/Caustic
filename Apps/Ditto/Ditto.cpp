@@ -14,9 +14,11 @@
 #include <any>
 #include <iostream>
 #include <sstream>
+#include <d3d11.h>
 
 import Caustic.Base;
 import Base.Core.Core;
+import Base.Core.Error;
 import Base.Core.IRefCount;
 import Base.Core.ConvertStr;
 import Base.Math.Vector;
@@ -83,7 +85,8 @@ public:
     CRefObj<IPhonemes> m_spPhonemes;
     CRefObj<IImageFilter> m_spLandmarkFilter;
     std::vector<CRefObj<IVideo>> m_videos;
-    std::vector<BBox2> m_faceBbox;
+    std::vector<BBox2> m_faceBbox; // Bounding box of the entire face based on face detection (ignoring landmarks)
+    std::vector<BBox2> m_faceLandmarksInfluenceBounds; // Bounding box of face landmarks per video frame adjusted to include influence distance
     std::vector<std::vector<Vector2>> m_faceLandmarks; // List of landmark positions per video frame
     int m_curVideoIndex;
     int m_nextVideoIndex;
@@ -103,6 +106,7 @@ public:
     bool m_playPhonemes;                        // Are we playing back phonemes?
     int m_phonemeFrameIndex;                    // Index into m_curPhonemeLandmarkDeltas
     PhonemeLandmarkDelta m_curPhonemeLandmarkDeltas;   // List of frames with list of landmark deltas for a given phoneme
+    std::unique_ptr<CWarpNode> m_spWarpNode;
 
     void InitializeCaustic(HWND hWnd);
     void LiveWebCam();
@@ -138,12 +142,14 @@ void CApp::FindLandmarks()
         DWORD bytesRead;
         ReadFile(f, &dw, sizeof(DWORD), &bytesRead, nullptr);
         m_faceLandmarks.resize(dw);
+        m_faceLandmarksInfluenceBounds.resize(dw);
         for (int i = 0; i < (int)dw; i++)
         {
             DWORD dw2;
             ReadFile(f, &dw2, sizeof(DWORD), &bytesRead, nullptr);
             m_faceLandmarks[i].resize(dw2);
             ReadFile(f, &m_faceLandmarks[i][0], sizeof(Vector2) * dw2, &bytesRead, nullptr);
+            ReadFile(f, &m_faceLandmarksInfluenceBounds[i], sizeof(BBox2), &bytesRead, nullptr);
         }
         CloseHandle(f);
         return;
@@ -167,13 +173,31 @@ void CApp::FindLandmarks()
 
             int numLandmarks = (int)std::any_cast<size_t>(params.params["Face0_NumLandmarks"]);
             std::vector<Vector2> landmarks;
+            BBox2 landmarksBBoxInfluenceAdjusted;
             for (int j = 0; j < numLandmarks; j++)
             {
                 char buf[1024];
                 sprintf_s(buf, "Face%d_Point%d", 0, j);
                 Vector2 pt = std::any_cast<Vector2>(params.params[buf]);
                 landmarks.push_back(pt);
+
+                // Adjust pt by maximum influence distance.
+                // The resulting bbox is the area which mouth landmarks can effect the warping.
+                const float c_LandmarkInfluence = 1.5f * spImage->GetWidth() / c_GridX;
+                if (j >= c_FaceLandmark_Mouth_FirstIndex && j <= c_FaceLandmark_Mouth_LastIndex)
+                {
+                    pt.x += c_LandmarkInfluence / 2.0f;
+                    landmarksBBoxInfluenceAdjusted.AddPoint(pt);
+                    pt.x -= c_LandmarkInfluence;
+                    landmarksBBoxInfluenceAdjusted.AddPoint(pt);
+                    pt.x += c_LandmarkInfluence / 2.0f;
+                    pt.y += c_LandmarkInfluence / 2.0f;
+                    landmarksBBoxInfluenceAdjusted.AddPoint(pt);
+                    pt.y -= c_LandmarkInfluence;
+                    landmarksBBoxInfluenceAdjusted.AddPoint(pt);
+                }
             }
+            m_faceLandmarksInfluenceBounds.push_back(landmarksBBoxInfluenceAdjusted);
             m_faceLandmarks.push_back(landmarks);
             frameIndex++;
         }
@@ -187,6 +211,7 @@ void CApp::FindLandmarks()
         DWORD dw2 = (DWORD)m_faceLandmarks[i].size();
         WriteFile(f, &dw2, sizeof(DWORD), &bytesWritten, nullptr);
         WriteFile(f, &m_faceLandmarks[i][0], sizeof(Vector2) * dw2, &bytesWritten, nullptr);
+        WriteFile(f, &m_faceLandmarksInfluenceBounds[i], sizeof(BBox2), &bytesWritten, nullptr);
     }
     CloseHandle(f);
 }
@@ -397,7 +422,7 @@ class CWarpNode : public CGPUPipelineNodeBase
     CRefObj<IMesh> m_spMesh;
     CRefObj<IRenderMesh> m_spRenderMesh;
 public:
-    CWarpNode(const wchar_t* pName, IRenderer* pRenderer, IShader* pShader, uint32 inputWidth, uint32 inputHeight, DXGI_FORMAT format, float2* pGridLocations) :
+    CWarpNode(const wchar_t* pName, IRenderer* pRenderer, IShader* pShader, uint32 inputWidth, uint32 inputHeight, DXGI_FORMAT format) :
         CGPUPipelineNodeBase(inputWidth, inputHeight, format)
     {
         SetName(pName);
@@ -405,8 +430,18 @@ public:
 
         m_cpuFlags = (D3D11_CPU_ACCESS_FLAG)0;
         m_bindFlags = (D3D11_BIND_FLAG)(D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET | D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
-        m_spMesh = Caustic::CreateWarpedGrid(c_GridX, c_GridY, pGridLocations);
+
+        auto startTime = std::chrono::system_clock::now();
+
+        m_spMesh = Caustic::CreateGrid(c_GridX, c_GridY);
         m_spRenderMesh = pRenderer->ToRenderMesh(m_spMesh, pShader);
+
+        auto endTime = std::chrono::system_clock::now();
+        std::chrono::duration<double> elapsed_seconds = endTime - startTime;
+        wchar_t buf[1024];
+        swprintf_s(buf, L"CWarpNode time:%lf\n", elapsed_seconds.count() * 1000.0);
+        OutputDebugString(buf);
+
     }
 
     //**********************************************************************
@@ -465,12 +500,37 @@ CRefObj<IImage> CApp::WarpImage(IRenderer* pRenderer, IImage *pImageToWarp, int 
     auto spSource = spGPUPipeline->CreateSourceNode(L"Source", pImageToWarp, pImageToWarp->GetWidth(), pImageToWarp->GetHeight(),
         DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM);
 
+    auto startTime = std::chrono::system_clock::now();
+
     auto spShader = pRenderer->GetShaderMgr()->FindShader(L"Warp");
-    std::unique_ptr<CWarpNode> spWarpNode(
-        new CWarpNode(L"Warp", pRenderer, spShader, pImageToWarp->GetWidth(), pImageToWarp->GetHeight(), DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM,
-            m_spGridLocations.get()));
+    spShader->SetVSParam(L"width", std::any(float(c_GridX)));
+    spShader->SetVSParam(L"height", std::any(float(c_GridY)));
+
+    auto spGridPosTex = Caustic::CreateTexture(pRenderer, c_GridX, c_GridY, DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT);
+    D3D11_MAPPED_SUBRESOURCE ms;
+    auto ctx = pRenderer->GetContext();
+    CT(ctx->Map(spGridPosTex->GetD3DTexture(), 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
+    BYTE* pDst = reinterpret_cast<BYTE*>(ms.pData);
+    BYTE* pSrc = pImageToWarp->GetData();
+    for (int y = 0; y < c_GridY; y++)
+    {
+        memcpy(pDst, pSrc, c_GridX * sizeof(float) * 2);
+        pSrc += sizeof(float) * 2 * c_GridX;
+        pDst += ms.RowPitch;
+    }
+    ctx->Unmap(spGridPosTex->GetD3DTexture(), 0);
+    
+    spShader->SetVSParam(L"posTexture", std::any(spGridPosTex));
+    auto spDepthSampler = Caustic::CreateSampler(pRenderer, spGridPosTex);
+    spShader->SetVSParam(L"posSampler", std::any(spDepthSampler));
     spWarpNode->SetInput(L"Source", L"sourceTexture1", L"sourceSampler1", spSource);
     spGPUPipeline->AddCustomNode(spWarpNode.get());
+
+    auto endTime = std::chrono::system_clock::now();
+    std::chrono::duration<double> elapsed_seconds = endTime - startTime;
+    wchar_t buf[1024];
+    swprintf_s(buf, L"GPUPipeline time:%lf\n", elapsed_seconds.count() * 1000.0);
+    OutputDebugString(buf);
 
     auto spShader2 = pRenderer->GetShaderMgr()->FindShader(L"RawCopy");
     CRefObj<IGPUPipelineSinkNode> spSink = spGPUPipeline->CreateSinkNode(L"Sink", spShader2, pImageToWarp->GetWidth(), pImageToWarp->GetHeight(), DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM);
@@ -479,6 +539,7 @@ CRefObj<IImage> CApp::WarpImage(IRenderer* pRenderer, IImage *pImageToWarp, int 
     spGPUPipeline->IncrementCurrentEpoch();
     spGPUPipeline->Process(pRenderer, pRenderer->GetRenderCtx());
     CRefObj<IImage> spFinalImage = spSink->GetOutput(spGPUPipeline);
+
 
 #pragma region("StoreWarpedImage")
 ////    static bool drawLandmarks = false;
@@ -593,48 +654,63 @@ CRefObj<IImage> CApp::WarpImage(IRenderer* pRenderer, IImage *pImageToWarp, int 
 //**********************************************************************
 void CApp::ComputeGridWarp(IImage *pImageToWarp, int frameIndex, std::wstring& phoneme, int phonemeFrameIndex)
 {
+    auto startTime = std::chrono::system_clock::now();
+
     IRenderer* pRenderer = m_spRenderWindow->GetRenderer();
     GaussianDistribution distribution(2.0f);
-    float gridDeltaX = (float)pImageToWarp->GetWidth() / (float)c_GridX;
-    float gridDeltaY = (float)pImageToWarp->GetHeight() / (float)c_GridY;
+    int imageW = pImageToWarp->GetWidth();
+    int imageH = pImageToWarp->GetHeight();
+    float gridDeltaX = (float)imageW / (float)c_GridX;
+    float gridDeltaY = (float)imageH / (float)c_GridY;
 
-    float2* pGridLocations = new float2[c_GridX * c_GridY];
-    m_spGridLocations.reset(pGridLocations);
+    PhonemeLandmarkDelta pdelta = m_phonemeLandmarkDeltaMap[phoneme];
+    float2* pGridLocations = m_spGridLocations.get();
+    const float c_LandmarkInfluence = 1.5f * pImageToWarp->GetWidth() / c_GridX;
     for (int gridY = 0; gridY < c_GridY; gridY++)
     {
         for (int gridX = 0; gridX < c_GridX; gridX++)
         {
             Vector2 gridPixel((float)gridX * gridDeltaX, (float)gridY * gridDeltaY);
 
-            // Walk each of our face landmarks and see if it effects the current grid vertex. We will
-            // use a gaussian placed on the landmark to determine influence.
-            Vector2 newGridPos(0.0f, 0.0f);
-            for (int landmarkIndex = c_FaceLandmark_Mouth_FirstIndex; landmarkIndex <= c_FaceLandmark_Mouth_LastIndex; landmarkIndex++)
+            if (m_faceLandmarksInfluenceBounds[m_curFrameIndex].PointInside(gridPixel))
             {
-                // Determine distance from the grid location to the landmark
-                float dx = gridPixel.x - m_faceLandmarks[m_curFrameIndex][landmarkIndex].x;
-                float dy = gridPixel.y - m_faceLandmarks[m_curFrameIndex][landmarkIndex].y;
-                float dist = sqrtf(dx * dx + dy * dy);
-                const float c_LandmarkInfluence = 1.5f * pImageToWarp->GetWidth() / c_GridX; // Number of pixels away influenced by a landmark
-                dist = std::min<float>(dist, c_LandmarkInfluence) / c_LandmarkInfluence;
-                float weight = distribution.Sample(dist);
-                PhonemeLandmarkDelta pdelta = m_phonemeLandmarkDeltaMap[phoneme];
-                newGridPos += pdelta.m_frameDeltas[phonemeFrameIndex][landmarkIndex - c_FaceLandmark_Mouth_FirstIndex] * weight;
+                // Walk each of our face landmarks and see if it effects the current grid vertex. We will
+                // use a gaussian placed on the landmark to determine influence.
+                Vector2 newGridPos(0.0f, 0.0f);
+                Vector2* pFaceLandmark = &m_faceLandmarks[m_curFrameIndex][c_FaceLandmark_Mouth_FirstIndex];
+                for (int landmarkIndex = c_FaceLandmark_Mouth_FirstIndex; landmarkIndex <= c_FaceLandmark_Mouth_LastIndex; landmarkIndex++)
+                {
+                    // Determine distance from the grid location to the landmark
+                    float dx = gridPixel.x - pFaceLandmark->x;
+                    float dy = gridPixel.y - pFaceLandmark->y;
+                    float dist = sqrtf(dx * dx + dy * dy);
+                    dist = std::min<float>(dist, c_LandmarkInfluence) / c_LandmarkInfluence;
+                    float weight = distribution.Sample(dist);
+                    newGridPos += pdelta.m_frameDeltas[phonemeFrameIndex][landmarkIndex - c_FaceLandmark_Mouth_FirstIndex] * weight;
+                    pFaceLandmark++;
+                }
+                // Compute where the pixel moves to
+                int index = gridY * c_GridX + gridX;
+                pGridLocations[index].x = std::min<float>((float)imageW - 1.0f, std::max<float>(0.0f, gridPixel.x + newGridPos.x)) / ((float)imageW - 1.0f);
+                pGridLocations[index].y = std::min<float>((float)imageH - 1.0f, std::max<float>(0.0f, gridPixel.y + newGridPos.y)) / ((float)imageH - 1.0f);
+                pGridLocations[index].x = pGridLocations[index].x * 2.0f - 1.0f;
+                pGridLocations[index].y = (1.0f - pGridLocations[index].y) * 2.0f - 1.0f;
             }
-            // Compute where the pixel moves to
-            int index = gridY * c_GridX + gridX;
-            pGridLocations[index].x =
-                std::min<float>((float)pImageToWarp->GetWidth() - 1.0f,
-                    std::max<float>(0.0f,
-                        gridPixel.x + newGridPos.x)) / ((float)pImageToWarp->GetWidth() - 1.0f);
-            pGridLocations[index].y =
-                std::min<float>((float)pImageToWarp->GetHeight() - 1.0f,
-                    std::max<float>(0.0f,
-                        gridPixel.y + newGridPos.y)) / ((float)pImageToWarp->GetHeight() - 1.0f);
-            pGridLocations[index].x = pGridLocations[index].x * 2.0f - 1.0f;
-            pGridLocations[index].y = (1.0f - pGridLocations[index].y) * 2.0f - 1.0f;
+            else
+            {
+                int index = gridY * c_GridX + gridX;
+                pGridLocations[index].x = std::min<float>((float)imageW - 1.0f, std::max<float>(0.0f, gridPixel.x)) / ((float)imageW - 1.0f);
+                pGridLocations[index].y = std::min<float>((float)imageH - 1.0f, std::max<float>(0.0f, gridPixel.y)) / ((float)imageH - 1.0f);
+                pGridLocations[index].x = pGridLocations[index].x * 2.0f - 1.0f;
+                pGridLocations[index].y = (1.0f - pGridLocations[index].y) * 2.0f - 1.0f;
+            }
         }
     }
+    auto endTime = std::chrono::system_clock::now();
+    std::chrono::duration<double> elapsed_seconds = endTime - startTime;
+    wchar_t buf[1024];
+    swprintf_s(buf, L"ComputeGridWarp time:%lf\n", elapsed_seconds.count() * 1000.0);
+    OutputDebugString(buf);
 }
 
 void CApp::LoadVideos(IRenderer* pRenderer, IRenderCtx* pCtx)
@@ -704,6 +780,14 @@ void CApp::ProcessNextFrame(IRenderer* pRenderer, IRenderCtx* pCtx)
             if (spVideoSample != nullptr)
             {
                 m_spLastFrame = spVideoSample->GetImage();
+
+                if (m_spWarpNode.get() == nullptr)
+                {
+                    auto spShader = pRenderer->GetShaderMgr()->FindShader(L"Warp");
+                    m_spWarpNode.reset(new CWarpNode(L"Warp", pRenderer, spShader, m_spLastFrame->GetWidth(), m_spLastFrame->GetHeight(),
+                            DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM));
+                }
+
                 if (m_playPhonemes)
                 {
                     m_spLastFrame = WarpImage(pRenderer, m_spLastFrame, m_curFrameIndex, m_phonemesInCurrentWord[m_phonemeIndex], m_phonemeFrameIndex);
@@ -755,8 +839,10 @@ void CApp::InitializeCaustic(HWND hwnd)
     m_spPhonemes->LoadDatabase();
     Caustic::SystemStartup();
     m_spLandmarkFilter = CreateFaceLandmarksFilter();
+    m_spGridLocations.reset(new float2[c_GridX * c_GridY]);
     m_texLoaded = false;
     m_spCausticFactory = Caustic::CreateCausticFactory();
+
     // Next create our output window
     m_spNDIStream = CreateNDIStream();
     std::wstring shaderFolder(SHADERPATH);
