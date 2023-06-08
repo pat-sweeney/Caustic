@@ -4,6 +4,8 @@
 // See file LICENSE for details.
 // File: Warp.vs
 //**********************************************************************
+Texture2D<float2> posTexture : register(t0);
+SamplerState posSampler : register(s0);
 struct VSInput
 {
     float3 pos : POSITION;
@@ -16,10 +18,18 @@ struct VSOutput
     float2 uvs : TEXCOORD0;
 };
 
+cbuffer VS_CONSTANT_BUFFER : register(b0)
+{
+    float width;
+    float height;
+};
+
 VSOutput VS(VSInput p)
 {
     VSOutput v;
-    v.pos = float4(p.pos, 1.0f);
+    int3 pc = int3(p.uvs.x * width, p.uvs.y * height, 0);
+    float2 delta = posTexture.Load(pc);
+    v.pos = float4(p.pos.xy + delta, 0.0f, 1.0f);
     v.uvs = p.uvs;
     return v;
 }

@@ -67,6 +67,65 @@ struct PhonemeLandmarkDelta
     std::vector<std::vector<Vector2>> m_frameDeltas; // list of deltas for each frame
 };
 
+//**********************************************************************
+class CWarpNode : public CGPUPipelineNodeBase
+{
+    CRefObj<IMesh> m_spMesh;
+    CRefObj<IRenderMesh> m_spRenderMesh;
+public:
+    CWarpNode(const wchar_t* pName, IRenderer* pRenderer, IShader* pShader, uint32 inputWidth, uint32 inputHeight, DXGI_FORMAT format) :
+        CGPUPipelineNodeBase(inputWidth, inputHeight, format)
+    {
+        SetName(pName);
+        SetShader(pShader);
+
+        m_cpuFlags = (D3D11_CPU_ACCESS_FLAG)0;
+        m_bindFlags = (D3D11_BIND_FLAG)(D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET | D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
+
+        auto startTime = std::chrono::system_clock::now();
+
+        m_spMesh = Caustic::CreateGrid(c_GridX, c_GridY);
+        m_spRenderMesh = pRenderer->ToRenderMesh(m_spMesh, pShader);
+
+        auto endTime = std::chrono::system_clock::now();
+        std::chrono::duration<double> elapsed_seconds = endTime - startTime;
+        wchar_t buf[1024];
+        swprintf_s(buf, L"CWarpNode time:%lf\n", elapsed_seconds.count() * 1000.0);
+        OutputDebugString(buf);
+
+    }
+
+    //**********************************************************************
+    // IRefCount
+    //**********************************************************************
+    virtual uint32 AddRef() override { return CRefCount::AddRef(); }
+    virtual uint32 Release() override { return CRefCount::Release(); }
+
+    //**********************************************************************
+    // IGPUPipelineNode
+    //**********************************************************************
+    virtual void SetName(const wchar_t* pName) override { CGPUPipelineNodeBase::SetName(pName); }
+    virtual bool IsEnabled() override { return CGPUPipelineNodeBase::IsEnabled(); }
+    virtual void Enable() override { CGPUPipelineNodeBase::Enable(); }
+    virtual void Disable() override { CGPUPipelineNodeBase::Disable(); }
+    virtual void SetShader(IShader* pShader) override { CGPUPipelineNodeBase::SetShader(pShader); }
+    virtual CRefObj<IShader> GetShader() override { return CGPUPipelineNodeBase::GetShader(); }
+    virtual CRefObj<IGPUPipelineNode> GetInput(const wchar_t* pName) override { return CGPUPipelineNodeBase::GetInput(pName); }
+    virtual void SetInput(const wchar_t* pName, const wchar_t* pTextureName, const wchar_t* pSamplerName, IGPUPipelineNode* pNode) override { CGPUPipelineNodeBase::SetInput(pName, pTextureName, pSamplerName, pNode); }
+    virtual void SetOutputSize(uint32 width, uint32 height) override { CGPUPipelineNodeBase::SetOutputSize(width, height); }
+    virtual uint32 GetOutputWidth() override { return CGPUPipelineNodeBase::GetOutputWidth(); }
+    virtual uint32 GetOutputHeight() override { return CGPUPipelineNodeBase::GetOutputHeight(); }
+    virtual CRefObj<ITexture> GetOutputTexture(IGPUPipeline* pPipeline) override { return CGPUPipelineNodeBase::GetOutputTexture(pPipeline); }
+    virtual void Process(IGPUPipeline* pPipeline, IRenderer* pRenderer, IRenderCtx* pRenderCtx) override
+    {
+        ProcessInternal(pPipeline, pRenderer, pRenderCtx,
+            [&]() {
+                std::vector<CRefObj<ILight>> lights;
+                m_spRenderMesh->Render(pRenderer, pRenderCtx, m_spShader, nullptr, lights, nullptr);
+            });
+    }
+};
+
 class CApp
 {
 public:
@@ -106,7 +165,9 @@ public:
     bool m_playPhonemes;                        // Are we playing back phonemes?
     int m_phonemeFrameIndex;                    // Index into m_curPhonemeLandmarkDeltas
     PhonemeLandmarkDelta m_curPhonemeLandmarkDeltas;   // List of frames with list of landmark deltas for a given phoneme
-    std::unique_ptr<CWarpNode> m_spWarpNode;
+    CRefObj<IGPUPipelineNode> m_spWarpNode;
+    CRefObj<IShader> m_spWarpShader;
+    CRefObj<ITexture> m_spGridPosTex;
 
     void InitializeCaustic(HWND hWnd);
     void LiveWebCam();
@@ -417,65 +478,6 @@ void CApp::BuildUI(ITexture* pFinalRT, ImFont* pFont)
 }
 
 //**********************************************************************
-class CWarpNode : public CGPUPipelineNodeBase
-{
-    CRefObj<IMesh> m_spMesh;
-    CRefObj<IRenderMesh> m_spRenderMesh;
-public:
-    CWarpNode(const wchar_t* pName, IRenderer* pRenderer, IShader* pShader, uint32 inputWidth, uint32 inputHeight, DXGI_FORMAT format) :
-        CGPUPipelineNodeBase(inputWidth, inputHeight, format)
-    {
-        SetName(pName);
-        SetShader(pShader);
-
-        m_cpuFlags = (D3D11_CPU_ACCESS_FLAG)0;
-        m_bindFlags = (D3D11_BIND_FLAG)(D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET | D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
-
-        auto startTime = std::chrono::system_clock::now();
-
-        m_spMesh = Caustic::CreateGrid(c_GridX, c_GridY);
-        m_spRenderMesh = pRenderer->ToRenderMesh(m_spMesh, pShader);
-
-        auto endTime = std::chrono::system_clock::now();
-        std::chrono::duration<double> elapsed_seconds = endTime - startTime;
-        wchar_t buf[1024];
-        swprintf_s(buf, L"CWarpNode time:%lf\n", elapsed_seconds.count() * 1000.0);
-        OutputDebugString(buf);
-
-    }
-
-    //**********************************************************************
-    // IRefCount
-    //**********************************************************************
-    virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-    virtual uint32 Release() override { return CRefCount::Release(); }
-
-    //**********************************************************************
-    // IGPUPipelineNode
-    //**********************************************************************
-    virtual void SetName(const wchar_t* pName) override { CGPUPipelineNodeBase::SetName(pName); }
-    virtual bool IsEnabled() override { return CGPUPipelineNodeBase::IsEnabled(); }
-    virtual void Enable() override { CGPUPipelineNodeBase::Enable(); }
-    virtual void Disable() override { CGPUPipelineNodeBase::Disable(); }
-    virtual void SetShader(IShader* pShader) override { CGPUPipelineNodeBase::SetShader(pShader); }
-    virtual CRefObj<IShader> GetShader() override { return CGPUPipelineNodeBase::GetShader(); }
-    virtual CRefObj<IGPUPipelineNode> GetInput(const wchar_t* pName) override { return CGPUPipelineNodeBase::GetInput(pName); }
-    virtual void SetInput(const wchar_t* pName, const wchar_t* pTextureName, const wchar_t* pSamplerName, IGPUPipelineNode* pNode) override { CGPUPipelineNodeBase::SetInput(pName, pTextureName, pSamplerName, pNode); }
-    virtual void SetOutputSize(uint32 width, uint32 height) override { CGPUPipelineNodeBase::SetOutputSize(width, height); }
-    virtual uint32 GetOutputWidth() override { return CGPUPipelineNodeBase::GetOutputWidth(); }
-    virtual uint32 GetOutputHeight() override { return CGPUPipelineNodeBase::GetOutputHeight(); }
-    virtual CRefObj<ITexture> GetOutputTexture(IGPUPipeline* pPipeline) override { return CGPUPipelineNodeBase::GetOutputTexture(pPipeline); }
-    virtual void Process(IGPUPipeline* pPipeline, IRenderer* pRenderer, IRenderCtx* pRenderCtx) override
-    {
-        ProcessInternal(pPipeline, pRenderer, pRenderCtx,
-            [&]() {
-                std::vector<CRefObj<ILight>> lights;
-                m_spRenderMesh->Render(pRenderer, pRenderCtx, m_spShader, nullptr, lights, nullptr);
-            });
-    }
-};
-
-//**********************************************************************
 // Method: WarpImage
 // For a given input image (from our idle loop) we will warp that frame
 // to match the Nth frame of some phoneme
@@ -494,6 +496,7 @@ CRefObj<IImage> CApp::WarpImage(IRenderer* pRenderer, IImage *pImageToWarp, int 
     // Compute the grid with which to warp the image
     ComputeGridWarp(pImageToWarp, m_curFrameIndex, phoneme, phonemeFrameIndex);
 
+    pRenderer->BeginMarker(L"WarpGPU");
     // Next setup our GPU pipeline to warp the image
     CRefObj<IGPUPipeline> spGPUPipeline = Caustic::CreateGPUPipeline(pRenderer);
 
@@ -502,14 +505,9 @@ CRefObj<IImage> CApp::WarpImage(IRenderer* pRenderer, IImage *pImageToWarp, int 
 
     auto startTime = std::chrono::system_clock::now();
 
-    auto spShader = pRenderer->GetShaderMgr()->FindShader(L"Warp");
-    spShader->SetVSParam(L"width", std::any(float(c_GridX)));
-    spShader->SetVSParam(L"height", std::any(float(c_GridY)));
-
-    auto spGridPosTex = Caustic::CreateTexture(pRenderer, c_GridX, c_GridY, DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT);
     D3D11_MAPPED_SUBRESOURCE ms;
     auto ctx = pRenderer->GetContext();
-    CT(ctx->Map(spGridPosTex->GetD3DTexture(), 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
+    CT(ctx->Map(m_spGridPosTex->GetD3DTexture(), 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
     BYTE* pDst = reinterpret_cast<BYTE*>(ms.pData);
     BYTE* pSrc = pImageToWarp->GetData();
     for (int y = 0; y < c_GridY; y++)
@@ -518,13 +516,10 @@ CRefObj<IImage> CApp::WarpImage(IRenderer* pRenderer, IImage *pImageToWarp, int 
         pSrc += sizeof(float) * 2 * c_GridX;
         pDst += ms.RowPitch;
     }
-    ctx->Unmap(spGridPosTex->GetD3DTexture(), 0);
+    ctx->Unmap(m_spGridPosTex->GetD3DTexture(), 0);
     
-    spShader->SetVSParam(L"posTexture", std::any(spGridPosTex));
-    auto spDepthSampler = Caustic::CreateSampler(pRenderer, spGridPosTex);
-    spShader->SetVSParam(L"posSampler", std::any(spDepthSampler));
-    spWarpNode->SetInput(L"Source", L"sourceTexture1", L"sourceSampler1", spSource);
-    spGPUPipeline->AddCustomNode(spWarpNode.get());
+    m_spWarpNode->SetInput(L"Source", L"sourceTexture1", L"sourceSampler1", spSource);
+    spGPUPipeline->AddCustomNode(m_spWarpNode);
 
     auto endTime = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = endTime - startTime;
@@ -534,10 +529,11 @@ CRefObj<IImage> CApp::WarpImage(IRenderer* pRenderer, IImage *pImageToWarp, int 
 
     auto spShader2 = pRenderer->GetShaderMgr()->FindShader(L"RawCopy");
     CRefObj<IGPUPipelineSinkNode> spSink = spGPUPipeline->CreateSinkNode(L"Sink", spShader2, pImageToWarp->GetWidth(), pImageToWarp->GetHeight(), DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM);
-    spSink->SetInput(L"Source", L"sourceTexture1", L"sourceSampler1", spWarpNode.release());
+    spSink->SetInput(L"Source", L"sourceTexture1", L"sourceSampler1", m_spWarpNode);
 
     spGPUPipeline->IncrementCurrentEpoch();
     spGPUPipeline->Process(pRenderer, pRenderer->GetRenderCtx());
+    pRenderer->EndMarker();
     CRefObj<IImage> spFinalImage = spSink->GetOutput(spGPUPipeline);
 
 
@@ -691,18 +687,16 @@ void CApp::ComputeGridWarp(IImage *pImageToWarp, int frameIndex, std::wstring& p
                 }
                 // Compute where the pixel moves to
                 int index = gridY * c_GridX + gridX;
-                pGridLocations[index].x = std::min<float>((float)imageW - 1.0f, std::max<float>(0.0f, gridPixel.x + newGridPos.x)) / ((float)imageW - 1.0f);
-                pGridLocations[index].y = std::min<float>((float)imageH - 1.0f, std::max<float>(0.0f, gridPixel.y + newGridPos.y)) / ((float)imageH - 1.0f);
+                pGridLocations[index].x = std::min<float>((float)imageW - 1.0f, std::max<float>(0.0f, newGridPos.x)) / ((float)imageW - 1.0f);
+                pGridLocations[index].y = std::min<float>((float)imageH - 1.0f, std::max<float>(0.0f, newGridPos.y)) / ((float)imageH - 1.0f);
                 pGridLocations[index].x = pGridLocations[index].x * 2.0f - 1.0f;
                 pGridLocations[index].y = (1.0f - pGridLocations[index].y) * 2.0f - 1.0f;
             }
             else
             {
                 int index = gridY * c_GridX + gridX;
-                pGridLocations[index].x = std::min<float>((float)imageW - 1.0f, std::max<float>(0.0f, gridPixel.x)) / ((float)imageW - 1.0f);
-                pGridLocations[index].y = std::min<float>((float)imageH - 1.0f, std::max<float>(0.0f, gridPixel.y)) / ((float)imageH - 1.0f);
-                pGridLocations[index].x = pGridLocations[index].x * 2.0f - 1.0f;
-                pGridLocations[index].y = (1.0f - pGridLocations[index].y) * 2.0f - 1.0f;
+                pGridLocations[index].x = 0.0f;
+                pGridLocations[index].y = 0.0f;
             }
         }
     }
@@ -781,11 +775,17 @@ void CApp::ProcessNextFrame(IRenderer* pRenderer, IRenderCtx* pCtx)
             {
                 m_spLastFrame = spVideoSample->GetImage();
 
-                if (m_spWarpNode.get() == nullptr)
+                if (m_spWarpNode == nullptr)
                 {
-                    auto spShader = pRenderer->GetShaderMgr()->FindShader(L"Warp");
-                    m_spWarpNode.reset(new CWarpNode(L"Warp", pRenderer, spShader, m_spLastFrame->GetWidth(), m_spLastFrame->GetHeight(),
-                            DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM));
+                    m_spWarpShader = pRenderer->GetShaderMgr()->FindShader(L"Warp");
+                    m_spWarpShader->SetVSParam(L"width", std::any(float(c_GridX)));
+                    m_spWarpShader->SetVSParam(L"height", std::any(float(c_GridY)));
+                    m_spWarpNode = new CWarpNode(L"Warp", pRenderer, m_spWarpShader, m_spLastFrame->GetWidth(), m_spLastFrame->GetHeight(),
+                        DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM);
+                    m_spGridPosTex = Caustic::CreateTexture(pRenderer, c_GridX, c_GridY, DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT);
+                    m_spWarpShader->SetVSParam(L"posTexture", std::any(m_spGridPosTex));
+                    auto spSampler = Caustic::CreateSampler(pRenderer, m_spGridPosTex);
+                    m_spWarpShader->SetVSParam(L"posSampler", std::any(spSampler));
                 }
 
                 if (m_playPhonemes)

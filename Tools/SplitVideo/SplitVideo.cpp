@@ -28,6 +28,7 @@ import Base.Math.Distributions;
 import Base.Math.Vector;
 import Imaging.Image.ImageFilter;
 import Imaging.Image.ImageFilter.FaceLandmarks;
+import Geometry.Mesh.IMesh;
 import Geometry.Mesh.IMeshConstructor;
 import Geometry.MeshImport;
 import Geometry.Mesh.MeshFuncs;
