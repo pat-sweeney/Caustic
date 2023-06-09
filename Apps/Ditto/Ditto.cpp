@@ -25,6 +25,8 @@ import Base.Math.Vector;
 import Base.Math.BBox;
 import Base.Math.Matrix;
 import Base.Math.Distributions;
+import Audio.AudioPlayback.AudioPlayback;
+import Audio.AudioPlayback.IAudioPlayback;
 import Imaging.Image.IImage;
 import Imaging.Image.ImageFilter;
 import Imaging.Image.ImageFilter.FaceLandmarks;
@@ -134,6 +136,7 @@ public:
     CRefObj<IPhonemes> m_spPhonemes;
     CRefObj<IImageFilter> m_spLandmarkFilter;
     std::vector<CRefObj<IVideo>> m_videos;
+    CRefObj<IAudioPlayback> m_spAudioPlayback;
     std::vector<BBox2> m_faceBbox; // Bounding box of the entire face based on face detection (ignoring landmarks)
     std::vector<BBox2> m_faceLandmarksInfluenceBounds; // Bounding box of face landmarks per video frame adjusted to include influence distance
     std::vector<std::vector<Vector2>> m_faceLandmarks; // List of landmark positions per video frame
@@ -147,13 +150,14 @@ public:
     CRefObj<IVideo> m_spVideo;
     CRefObj<INDIStream> m_spNDIStream;
     std::map<std::wstring, PhonemeLandmarkDelta> m_phonemeLandmarkDeltaMap;
+    std::map<std::wstring, std::vector<uint8>> m_phonemeAudioMap;
     std::unique_ptr<float2> m_spGridLocations;
     std::vector<std::string> m_words;           // List of words in current sentence being played
     int m_wordIndex;                            // Current index into m_words
     std::vector<std::wstring> m_phonemesInCurrentWord;        // List of phonemes in the current word for the sentence being played
     int m_phonemeIndex;                         // Index into m_phonemesInCurrentWord
     bool m_playPhonemes;                        // Are we playing back phonemes?
-    int m_phonemeFrameIndex;                    // Index into m_curPhonemeLandmarkDeltas
+    int m_phonemeFrameIndex;                    // Index into m_curPhonemeLandmarkDeltas.m_frameDeltas
     PhonemeLandmarkDelta m_curPhonemeLandmarkDeltas;   // List of frames with list of landmark deltas for a given phoneme
     CRefObj<IGPUPipelineNode> m_spWarpNode;
     CRefObj<IShader> m_spWarpShader;
@@ -166,10 +170,13 @@ public:
     void LiveWebCam();
     void BuildUI(ITexture* pFinalRT, ImFont* pFont);
     void FindLandmarks();
+    void LoadPhonemeAudio();
     void LoadDeltas();
     void ComputeGridWarp(IImage* pImageToWarp, int frameIndex, std::wstring& phoneme, int phonemeFrameIndex);
     CRefObj<IImage> WarpImage(IRenderer* pRenderer, IImage* pImageToWarp, int frameIndex, std::wstring &phoneme, int phonemeFrameIndex);
     void PlaySentence(const char* pSentence);
+    void AdvanceToNextWord();
+    void PlayPhonemeAudio();
     void ProcessNextFrame(IRenderer* pRenderer, IRenderCtx* pCtx);
     void LoadVideos(IRenderer* pRenderer, IRenderCtx* pCtx);
 };
@@ -185,6 +192,42 @@ bool FileExists(const wchar_t* path)
 {
     DWORD dwAttrib = GetFileAttributes(path);
     return (dwAttrib != INVALID_FILE_ATTRIBUTES && !(dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
+}
+
+void CApp::LoadPhonemeAudio()
+{
+    WIN32_FIND_DATA findData;
+    HANDLE hFind = FindFirstFile(L"d:\\data\\Audio_Phoneme_*.bin", &findData);
+    if (hFind == INVALID_HANDLE_VALUE)
+        return;
+    while (true)
+    {
+        std::wstring fn(std::wstring(L"d:\\data\\") + findData.cFileName);
+        HANDLE f = CreateFile(fn.c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr);
+        if (f != INVALID_HANDLE_VALUE)
+        {
+            std::wstring phonemeName = std::wstring(findData.cFileName);
+            phonemeName = phonemeName.substr(phonemeName.find_last_of('_') + 1);
+            phonemeName = phonemeName.substr(0, phonemeName.find_first_of('.'));
+            DWORD bytesRead;
+            DWORD dwNumBytes;
+            ReadFile(f, &dwNumBytes, sizeof(DWORD), &bytesRead, nullptr);
+            std::vector<uint8> phonemeAudio;
+            phonemeAudio.resize(dwNumBytes);
+            ReadFile(f, &phonemeAudio[0], dwNumBytes, &bytesRead, nullptr);
+            m_phonemeAudioMap.insert(std::make_pair(phonemeName, phonemeAudio));
+            CloseHandle(f);
+        }
+        else
+            assert(false); // failed to open file
+
+        if (!FindNextFile(hFind, &findData))
+            break;
+        DWORD dwError = GetLastError();
+        if (dwError == ERROR_NO_MORE_FILES)
+            break;
+    }
+    FindClose(hFind);
 }
 
 void CApp::FindLandmarks()
@@ -382,10 +425,37 @@ std::vector<std::string> SplitSentence(std::string sentence)
     return words;
 }
 
-void CApp::PlaySentence(const char *pSentence)
+void CApp::PlayPhonemeAudio()
 {
-    m_words = SplitSentence(pSentence);
-    m_wordIndex = 0;
+    if (m_playPhonemes)
+    {
+        std::wstring modPhoneme = m_phonemesInCurrentWord[m_phonemeIndex];
+        if (!m_phonemeLandmarkDeltaMap.contains(modPhoneme) && isdigit(modPhoneme[modPhoneme.length() - 1]))
+            modPhoneme = modPhoneme.substr(0, modPhoneme.length() - 1);
+        m_curPhonemeLandmarkDeltas = m_phonemeLandmarkDeltaMap[modPhoneme];
+        if (m_phonemeIndex < m_phonemesInCurrentWord.size())
+        {
+            std::wstring phoneme = m_phonemesInCurrentWord[m_phonemeIndex];
+            uint8* pBuffer;
+            uint32 bufferLen;
+            if ( ! m_phonemeAudioMap.contains(phoneme) && isdigit(phoneme[phoneme.length() - 1]))
+                phoneme = phoneme.substr(0, phoneme.length() - 1);
+            assert(m_phonemeAudioMap.contains(phoneme));
+            pBuffer = (uint8*)&m_phonemeAudioMap[phoneme][0];
+            bufferLen = (uint32)m_phonemeAudioMap[phoneme].size();
+            m_spAudioPlayback->Play(pBuffer, bufferLen);
+        }
+    }
+}
+
+void CApp::AdvanceToNextWord()
+{
+    m_wordIndex++;
+    if (m_wordIndex == m_words.size())
+    {
+        m_playPhonemes = false;
+        return;
+    }
     std::vector<std::string> wordPhonemes;
     auto word = m_words[m_wordIndex];
     std::transform(word.begin(), word.end(), word.begin(), [](unsigned char c) { return std::toupper(c); });
@@ -397,8 +467,15 @@ void CApp::PlaySentence(const char *pSentence)
     }
     m_phonemeIndex = 0;
     m_phonemeFrameIndex = 0;
-    m_curPhonemeLandmarkDeltas = m_phonemeLandmarkDeltaMap[m_phonemesInCurrentWord[m_phonemeIndex]];
+}
+
+void CApp::PlaySentence(const char* pSentence)
+{
+    m_words = SplitSentence(pSentence);
+    m_wordIndex = -1;
     m_playPhonemes = true;
+    AdvanceToNextWord();
+    PlayPhonemeAudio();
 }
 
 void CApp::BuildUI(ITexture* pFinalRT, ImFont* pFont)
@@ -435,7 +512,7 @@ void CApp::BuildUI(ITexture* pFinalRT, ImFont* pFont)
     ImGui::Begin("Actions", nullptr);
     if (ImGui::Button("Aardvark"))
     {
-        app.PlaySentence("Now is the time for all good men to come to the aid of their party");
+        app.PlaySentence("Aardvark");
     }
     if (ImGui::Button("Listening"))
         app.m_nextVideoIndex = 0;
@@ -490,8 +567,6 @@ CRefObj<IImage> CApp::WarpImage(IRenderer* pRenderer, IImage *pImageToWarp, int 
 
     pRenderer->BeginMarker(L"WarpGPU");
 
-    auto startTime = std::chrono::system_clock::now();
-
     D3D11_MAPPED_SUBRESOURCE ms;
     auto ctx = pRenderer->GetContext();
     CT(ctx->Map(m_spGridPosTex->GetD3DTexture(), 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
@@ -506,12 +581,6 @@ CRefObj<IImage> CApp::WarpImage(IRenderer* pRenderer, IImage *pImageToWarp, int 
     ctx->Unmap(m_spGridPosTex->GetD3DTexture(), 0);
     m_spGPUSource->SetSource(m_spGPUPipeline, pImageToWarp);
     
-    auto endTime = std::chrono::system_clock::now();
-    std::chrono::duration<double> elapsed_seconds = endTime - startTime;
-    wchar_t buf[1024];
-    swprintf_s(buf, L"GPUPipeline time:%lf\n", elapsed_seconds.count() * 1000.0);
-    OutputDebugString(buf);
-
     m_spGPUPipeline->IncrementCurrentEpoch();
     m_spGPUPipeline->Process(pRenderer, pRenderer->GetRenderCtx());
     pRenderer->EndMarker();
@@ -631,8 +700,6 @@ CRefObj<IImage> CApp::WarpImage(IRenderer* pRenderer, IImage *pImageToWarp, int 
 //**********************************************************************
 void CApp::ComputeGridWarp(IImage *pImageToWarp, int frameIndex, std::wstring& phoneme, int phonemeFrameIndex)
 {
-    auto startTime = std::chrono::system_clock::now();
-
     IRenderer* pRenderer = m_spRenderWindow->GetRenderer();
     GaussianDistribution distribution(2.0f);
     int imageW = pImageToWarp->GetWidth();
@@ -640,7 +707,12 @@ void CApp::ComputeGridWarp(IImage *pImageToWarp, int frameIndex, std::wstring& p
     float gridDeltaX = (float)imageW / (float)c_GridX;
     float gridDeltaY = (float)imageH / (float)c_GridY;
 
-    PhonemeLandmarkDelta pdelta = m_phonemeLandmarkDeltaMap[phoneme];
+    std::wstring modPhoneme = phoneme;
+    if (!m_phonemeLandmarkDeltaMap.contains(modPhoneme) && isdigit(modPhoneme[modPhoneme.length() - 1]))
+        modPhoneme = modPhoneme.substr(0, modPhoneme.length() - 1);
+    assert(m_phonemeLandmarkDeltaMap.contains(modPhoneme));
+
+    PhonemeLandmarkDelta pdelta = m_phonemeLandmarkDeltaMap[modPhoneme];
     float2* pGridLocations = m_spGridLocations.get();
     const float c_LandmarkInfluence = 1.5f * pImageToWarp->GetWidth() / c_GridX;
     for (int gridY = 0; gridY < c_GridY; gridY++)
@@ -681,11 +753,6 @@ void CApp::ComputeGridWarp(IImage *pImageToWarp, int frameIndex, std::wstring& p
             }
         }
     }
-    auto endTime = std::chrono::system_clock::now();
-    std::chrono::duration<double> elapsed_seconds = endTime - startTime;
-    wchar_t buf[1024];
-    swprintf_s(buf, L"ComputeGridWarp time:%lf\n", elapsed_seconds.count() * 1000.0);
-    OutputDebugString(buf);
 }
 
 void CApp::LoadVideos(IRenderer* pRenderer, IRenderCtx* pCtx)
@@ -697,7 +764,13 @@ void CApp::LoadVideos(IRenderer* pRenderer, IRenderCtx* pCtx)
     CRefObj<IVideo> p0 = CreateVideo(L"d:\\DittoData\\Listening.mp4");
     m_videos.push_back(p0);
     LoadDeltas();
+    LoadPhonemeAudio();
     FindLandmarks();
+
+    CAudioFormat audioFormat;
+    CRefObj<IVideo> sourceAudio = CreateVideo(L"d:\\data\\Aardvark.mp4");
+    sourceAudio->GetAudioFormat(&audioFormat);
+    m_spAudioPlayback = Caustic::CreateAudioPlayback(audioFormat.m_samplesPerSec, audioFormat.m_bitsPerSample, audioFormat.m_numChannels);
 
     CRefObj<IVideo> p1 = CreateVideo(L"d:\\DittoData\\FollowUp.mp4");
     m_videos.push_back(p1);
@@ -714,8 +787,6 @@ void CApp::LoadVideos(IRenderer* pRenderer, IRenderCtx* pCtx)
     CRefObj<IVideo> p5 = CreateVideo(L"d:\\DittoData\\ScratchFace.mp4");
     m_videos.push_back(p5);
 
-    CAudioFormat audioFormat;
-    p2->GetAudioFormat(&audioFormat);
     CVideoFormat videoFormat;
     p2->GetVideoFormat(&videoFormat);
     m_spNDIStream->Initialize("test", videoFormat.m_width, videoFormat.m_height, 30, audioFormat.m_samplesPerSec, audioFormat.m_bitsPerSample, audioFormat.m_numChannels);
@@ -789,24 +860,21 @@ void CApp::ProcessNextFrame(IRenderer* pRenderer, IRenderCtx* pCtx)
 
                 // Check if we have reached the last frame of the current phoneme.
                 // If so, move to the next phoneme
-                m_phonemeFrameIndex++;
-                if (m_phonemeFrameIndex == m_curPhonemeLandmarkDeltas.m_frameDeltas.size())
+                if (m_playPhonemes)
                 {
-                    m_phonemeFrameIndex = 0;
-                    m_phonemeIndex++;
-                    if (m_phonemeIndex == m_phonemesInCurrentWord.size())
+                    m_phonemeFrameIndex++;
+                    if (m_phonemeFrameIndex == m_curPhonemeLandmarkDeltas.m_frameDeltas.size())
                     {
-                        m_phonemeIndex = 0;
-                        // We have reached the last phoneme in the current word. Move to the next word
-                        m_wordIndex++;
-                        if (m_wordIndex == m_words.size())
+                        m_phonemeFrameIndex = 0;
+                        m_phonemeIndex++;
+
+                        if (m_phonemeIndex == m_phonemesInCurrentWord.size())
                         {
-                            // If we have reached the end of the sentence turn off phoneme playback
-                            m_playPhonemes = false;
+                            // We have reached the last phoneme in the current word. Move to the next word
+                            AdvanceToNextWord();
                         }
+                        PlayPhonemeAudio();
                     }
-                    if (m_playPhonemes)
-                        m_curPhonemeLandmarkDeltas = m_phonemeLandmarkDeltaMap[m_phonemesInCurrentWord[m_phonemeIndex]];
                 }
                 //m_spVirtualCam->SendVideoFrame(m_spLastFrame);
                 m_spLastTex = m_spCausticFactory->CreateTexture(pRenderer, m_spLastFrame, D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);

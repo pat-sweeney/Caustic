@@ -71,6 +71,11 @@ namespace Caustic
         PlayBuffer(pFrame->GetData(), pFrame->GetLength());
     }
 
+    void CAudioPlayback::Play(uint8* pData, uint32 dataLen)
+    {
+        PlayBuffer(pData, dataLen);
+    }
+
     void CAudioPlayback::SetVolume(float volume)
     {
         if (m_wpSourceVoice != nullptr)

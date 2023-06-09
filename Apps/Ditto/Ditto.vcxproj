@@ -104,6 +104,9 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\Audio\AudioPlayback\AudioPlayback.vcxproj">
+      <Project>{f1de6103-4519-4e95-b73f-5699bffbd77f}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Base\Core\Core.vcxproj">
       <Project>{aacfe62f-5400-4a81-87ad-b37573a1f5c9}</Project>
     </ProjectReference>

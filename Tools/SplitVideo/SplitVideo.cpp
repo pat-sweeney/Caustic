@@ -87,6 +87,7 @@ public:
     void ComputeGridWarp(IRenderer* pRenderer, int frameIndex, int phonemeIndex, PhonemeInfo& phonemeInfo, std::vector<std::vector<Vector2>>& faceLandmarks,
         std::vector<Vector2>& landmarkDeltas, int roiX, int roiY, int roiWidth, int roiHeight, int imageWidth, int imageHeight);
     void WritePhonemeDeltas(int phonemeIndex, std::vector<PhonemeInfo>& phonemeInfo, std::vector<std::vector<Vector2>>& phonemeLandmarkDeltas);
+    void WritePhonemeAudio(int phonemeIndex, std::vector<PhonemeInfo>& phonemeInfo, std::vector<uint8>& phonemeAudio);
 };
 CApp app;
 
@@ -234,6 +235,26 @@ void CApp::WritePhonemeDeltas(int phonemeIndex, std::vector<PhonemeInfo>& phonem
     phonemeLandmarkDeltas.clear();
 }
 
+void CApp::WritePhonemeAudio(int phonemeIndex, std::vector<PhonemeInfo>& phonemeInfo, std::vector<uint8>& phonemeAudio)
+{
+    // Write the landmark deltas to the database (which for now is just a file)
+    wchar_t buf[1024];
+    std::wstring phonemeName = Caustic::str2wstr(m_phonemes[phonemeIndex]);
+    swprintf_s(buf, L"%s\\Audio_Phoneme_%Ls.bin", m_videoPath.c_str(), phonemeName.c_str());
+    if (!FileExists(buf))
+    {
+        HANDLE hAudioFile = CreateFile(buf, GENERIC_WRITE, FILE_SHARE_READ, nullptr, CREATE_ALWAYS, 0, nullptr);
+        if (hAudioFile != INVALID_HANDLE_VALUE)
+        {
+            DWORD dwBytesWritten;
+            DWORD numAudioBytes = (DWORD)phonemeAudio.size();
+            WriteFile(hAudioFile, &numAudioBytes, sizeof(DWORD), &dwBytesWritten, nullptr);
+            WriteFile(hAudioFile, &phonemeAudio[0], numAudioBytes, &dwBytesWritten, nullptr);
+            CloseHandle(hAudioFile);
+        }
+    }
+}
+
 void CApp::ComputeWarps(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx,
     std::vector<BBox2>& faceBbox, std::vector<std::vector<Vector2>>& faceLandmarks,
     std::vector<PhonemeInfo>& phonemeInfo)
@@ -242,9 +263,40 @@ void CApp::ComputeWarps(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx
     int phonemeIndex = 0;
     m_spVideo->Restart();
     std::vector<std::vector<Vector2>> phonemeLandmarkDeltas;
+    std::vector<uint8> curPhonemeAudio;
+    std::vector<std::vector<uint8>> phonemeSounds;
     CRefObj<IImage> spImageToWarp;
-    for (int frameIndex = 0; frameIndex < numFrames; frameIndex++)
+    uint32 curtime = 0;
+    int frameIndex = 0;
+    CAudioFormat audioFormat;
+    m_spVideo->GetAudioFormat(&audioFormat);
+    bool nextVideoFrame = false;
+    while (frameIndex < numFrames)
+    //for (int frameIndex = 0; frameIndex < numFrames; frameIndex++)
     {
+        // Read next block of audio.
+        auto spAudioSample = m_spVideo->NextAudioSample();
+        if (spAudioSample != nullptr)
+        {
+            uint8* pAudioData = spAudioSample->GetData();
+            uint32 audioLen = spAudioSample->GetDataSize();
+            uint32 startIndex = curPhonemeAudio.size();
+            curPhonemeAudio.resize(startIndex + audioLen);
+            memcpy(&curPhonemeAudio[startIndex], pAudioData, audioLen);
+
+            // Update time based on audio samples read
+            int numSamples = audioLen / (audioFormat.m_numChannels * audioFormat.m_bitsPerSample / 8);
+            curtime += (1000 * numSamples) / audioFormat.m_samplesPerSec;
+            if (curtime >= 33)
+            {
+                // Advance to next video frame
+                nextVideoFrame = true;
+                curtime -= 33;
+            }
+        }
+        if (!nextVideoFrame)
+            continue;
+
         assert(!m_spVideo->EndOfStream());
         auto spVideoSample = m_spVideo->NextVideoSample();
         CRefObj<IImage> spImage;
@@ -254,6 +306,9 @@ void CApp::ComputeWarps(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx
             if (frameIndex == phonemeInfo[phonemeIndex].m_endFrame)
             {
                 WritePhonemeDeltas(phonemeIndex, phonemeInfo, phonemeLandmarkDeltas);
+                WritePhonemeAudio(phonemeIndex, phonemeInfo, curPhonemeAudio);
+                phonemeSounds.push_back(curPhonemeAudio);
+                curPhonemeAudio.clear();
                 phonemeIndex++; // Move to next phoneme
             }
 
@@ -425,8 +480,12 @@ void CApp::ComputeWarps(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx
         }
 #pragma endregion
 #pragma endregion
+        frameIndex++;
     }
     WritePhonemeDeltas(phonemeIndex, phonemeInfo, phonemeLandmarkDeltas);
+    WritePhonemeAudio(phonemeIndex, phonemeInfo, curPhonemeAudio);
+    phonemeSounds.push_back(curPhonemeAudio);
+    curPhonemeAudio.clear();
 }
 
 void CApp::WriteLandmarks(BBox2 &bb, std::vector<Vector2> &landmarks, int frameIndex)

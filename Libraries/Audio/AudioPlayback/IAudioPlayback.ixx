@@ -52,6 +52,16 @@ export namespace Caustic
         virtual void Play(IAudioFrame* pFrame) = 0;
 
         //**********************************************************************
+        // Method: Play
+        // Plays an audio buffer.
+        //
+        // Parameters:
+        // pData - PCM audio data
+        // dataLen - length of 'pData' buffer in bytes
+        //**********************************************************************
+        virtual void Play(uint8* pData, uint32 dataLen) = 0;
+
+        //**********************************************************************
         // Method: PlayTone
         // Plays a tone at the specified frequency for 1 second.
         //

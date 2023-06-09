@@ -55,6 +55,7 @@ export namespace Caustic
         // IAudioPlayback
         //**********************************************************************
         virtual void Play(IAudioFrame* pFrame) override;
+        virtual void Play(uint8* pData, uint32 dataLen) override;
         virtual void PlayTone(int frequency) override;
         virtual void SetVolume(float volume) override;
 
