@@ -777,7 +777,7 @@ void CApp::ProcessNextFrame(IRenderer* pRenderer, IRenderCtx* pCtx)
                     m_spWarpNode->SetInput(L"Source", L"sourceTexture1", L"sourceSampler1", m_spGPUSource);
                     m_spGPUPipeline->AddCustomNode(m_spWarpNode);
                     auto spShader2 = pRenderer->GetShaderMgr()->FindShader(L"RawCopy");
-                    m_spGPUSink = m_spGPUPipeline->CreateSinkNode(L"Sink", spShader2, imageW, imageH, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM);
+                    m_spGPUSink = m_spGPUPipeline->CreateSinkNode(L"Sink", spShader2, imageW, imageH, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
                     m_spGPUSink->SetInput(L"Source", L"sourceTexture1", L"sourceSampler1", m_spWarpNode);
                 }
 
