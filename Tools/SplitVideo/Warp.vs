@@ -29,7 +29,7 @@ VSOutput VS(VSInput p)
     VSOutput v;
     int3 pc = int3(p.uvs.x * width, p.uvs.y * height, 0);
     float2 delta = posTexture.Load(pc);
-    v.pos = float4(p.pos.xy + delta, 0.0f, 1.0f);
+    v.pos = float4(p.pos.x + delta.x, -(p.pos.y + delta.y), 0.0f, 1.0f);
     v.uvs = p.uvs;
     return v;
 }

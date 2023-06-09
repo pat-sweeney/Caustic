@@ -81,18 +81,8 @@ public:
 
         m_cpuFlags = (D3D11_CPU_ACCESS_FLAG)0;
         m_bindFlags = (D3D11_BIND_FLAG)(D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET | D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
-
-        auto startTime = std::chrono::system_clock::now();
-
         m_spMesh = Caustic::CreateGrid(c_GridX, c_GridY);
         m_spRenderMesh = pRenderer->ToRenderMesh(m_spMesh, pShader);
-
-        auto endTime = std::chrono::system_clock::now();
-        std::chrono::duration<double> elapsed_seconds = endTime - startTime;
-        wchar_t buf[1024];
-        swprintf_s(buf, L"CWarpNode time:%lf\n", elapsed_seconds.count() * 1000.0);
-        OutputDebugString(buf);
-
     }
 
     //**********************************************************************
@@ -168,6 +158,9 @@ public:
     CRefObj<IGPUPipelineNode> m_spWarpNode;
     CRefObj<IShader> m_spWarpShader;
     CRefObj<ITexture> m_spGridPosTex;
+    CRefObj<IGPUPipeline> m_spGPUPipeline;
+    CRefObj<IGPUPipelineSourceNode> m_spGPUSource;
+    CRefObj<IGPUPipelineSinkNode> m_spGPUSink;
 
     void InitializeCaustic(HWND hWnd);
     void LiveWebCam();
@@ -304,7 +297,6 @@ void CApp::LoadDeltas()
                 ReadFile(f, &numDeltas, sizeof(DWORD), &bytesRead, nullptr);
                 phonemeLandmarkDeltas.m_frameDeltas[i].resize(numDeltas);
                 ReadFile(f, &phonemeLandmarkDeltas.m_frameDeltas[i][0], sizeof(Vector2) * numDeltas, &bytesRead, nullptr);
-                
             }
             m_phonemeLandmarkDeltaMap.insert(std::make_pair(phonemeName, phonemeLandmarkDeltas));
             CloseHandle(f);
@@ -497,11 +489,6 @@ CRefObj<IImage> CApp::WarpImage(IRenderer* pRenderer, IImage *pImageToWarp, int 
     ComputeGridWarp(pImageToWarp, m_curFrameIndex, phoneme, phonemeFrameIndex);
 
     pRenderer->BeginMarker(L"WarpGPU");
-    // Next setup our GPU pipeline to warp the image
-    CRefObj<IGPUPipeline> spGPUPipeline = Caustic::CreateGPUPipeline(pRenderer);
-
-    auto spSource = spGPUPipeline->CreateSourceNode(L"Source", pImageToWarp, pImageToWarp->GetWidth(), pImageToWarp->GetHeight(),
-        DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM);
 
     auto startTime = std::chrono::system_clock::now();
 
@@ -509,7 +496,7 @@ CRefObj<IImage> CApp::WarpImage(IRenderer* pRenderer, IImage *pImageToWarp, int 
     auto ctx = pRenderer->GetContext();
     CT(ctx->Map(m_spGridPosTex->GetD3DTexture(), 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
     BYTE* pDst = reinterpret_cast<BYTE*>(ms.pData);
-    BYTE* pSrc = pImageToWarp->GetData();
+    BYTE* pSrc = (BYTE*)m_spGridLocations.get();
     for (int y = 0; y < c_GridY; y++)
     {
         memcpy(pDst, pSrc, c_GridX * sizeof(float) * 2);
@@ -517,24 +504,18 @@ CRefObj<IImage> CApp::WarpImage(IRenderer* pRenderer, IImage *pImageToWarp, int 
         pDst += ms.RowPitch;
     }
     ctx->Unmap(m_spGridPosTex->GetD3DTexture(), 0);
+    m_spGPUSource->SetSource(m_spGPUPipeline, pImageToWarp);
     
-    m_spWarpNode->SetInput(L"Source", L"sourceTexture1", L"sourceSampler1", spSource);
-    spGPUPipeline->AddCustomNode(m_spWarpNode);
-
     auto endTime = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = endTime - startTime;
     wchar_t buf[1024];
     swprintf_s(buf, L"GPUPipeline time:%lf\n", elapsed_seconds.count() * 1000.0);
     OutputDebugString(buf);
 
-    auto spShader2 = pRenderer->GetShaderMgr()->FindShader(L"RawCopy");
-    CRefObj<IGPUPipelineSinkNode> spSink = spGPUPipeline->CreateSinkNode(L"Sink", spShader2, pImageToWarp->GetWidth(), pImageToWarp->GetHeight(), DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM);
-    spSink->SetInput(L"Source", L"sourceTexture1", L"sourceSampler1", m_spWarpNode);
-
-    spGPUPipeline->IncrementCurrentEpoch();
-    spGPUPipeline->Process(pRenderer, pRenderer->GetRenderCtx());
+    m_spGPUPipeline->IncrementCurrentEpoch();
+    m_spGPUPipeline->Process(pRenderer, pRenderer->GetRenderCtx());
     pRenderer->EndMarker();
-    CRefObj<IImage> spFinalImage = spSink->GetOutput(spGPUPipeline);
+    CRefObj<IImage> spFinalImage = m_spGPUSink->GetOutput(m_spGPUPipeline);
 
 
 #pragma region("StoreWarpedImage")
@@ -687,10 +668,10 @@ void CApp::ComputeGridWarp(IImage *pImageToWarp, int frameIndex, std::wstring& p
                 }
                 // Compute where the pixel moves to
                 int index = gridY * c_GridX + gridX;
-                pGridLocations[index].x = std::min<float>((float)imageW - 1.0f, std::max<float>(0.0f, newGridPos.x)) / ((float)imageW - 1.0f);
-                pGridLocations[index].y = std::min<float>((float)imageH - 1.0f, std::max<float>(0.0f, newGridPos.y)) / ((float)imageH - 1.0f);
-                pGridLocations[index].x = pGridLocations[index].x * 2.0f - 1.0f;
-                pGridLocations[index].y = (1.0f - pGridLocations[index].y) * 2.0f - 1.0f;
+                pGridLocations[index].x = newGridPos.x / ((float)imageW - 1.0f);
+                pGridLocations[index].y = newGridPos.y / ((float)imageH - 1.0f);
+                pGridLocations[index].x = pGridLocations[index].x * 2.0f;
+                pGridLocations[index].y = pGridLocations[index].y * 2.0f;
             }
             else
             {
@@ -780,12 +761,24 @@ void CApp::ProcessNextFrame(IRenderer* pRenderer, IRenderCtx* pCtx)
                     m_spWarpShader = pRenderer->GetShaderMgr()->FindShader(L"Warp");
                     m_spWarpShader->SetVSParam(L"width", std::any(float(c_GridX)));
                     m_spWarpShader->SetVSParam(L"height", std::any(float(c_GridY)));
-                    m_spWarpNode = new CWarpNode(L"Warp", pRenderer, m_spWarpShader, m_spLastFrame->GetWidth(), m_spLastFrame->GetHeight(),
+                    uint32 imageW = m_spLastFrame->GetWidth();
+                    uint32 imageH = m_spLastFrame->GetHeight();
+                    m_spWarpNode = new CWarpNode(L"Warp", pRenderer, m_spWarpShader, imageW, imageH,
                         DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM);
                     m_spGridPosTex = Caustic::CreateTexture(pRenderer, c_GridX, c_GridY, DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT);
                     m_spWarpShader->SetVSParam(L"posTexture", std::any(m_spGridPosTex));
                     auto spSampler = Caustic::CreateSampler(pRenderer, m_spGridPosTex);
                     m_spWarpShader->SetVSParam(L"posSampler", std::any(spSampler));
+
+                    // Create our GPU pipeline
+                    m_spGPUPipeline = Caustic::CreateGPUPipeline(pRenderer);
+                    m_spGPUSource = m_spGPUPipeline->CreateSourceNode(L"Source", nullptr, imageW, imageH,
+                        DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM);
+                    m_spWarpNode->SetInput(L"Source", L"sourceTexture1", L"sourceSampler1", m_spGPUSource);
+                    m_spGPUPipeline->AddCustomNode(m_spWarpNode);
+                    auto spShader2 = pRenderer->GetShaderMgr()->FindShader(L"RawCopy");
+                    m_spGPUSink = m_spGPUPipeline->CreateSinkNode(L"Sink", spShader2, imageW, imageH, DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM);
+                    m_spGPUSink->SetInput(L"Source", L"sourceTexture1", L"sourceSampler1", m_spWarpNode);
                 }
 
                 if (m_playPhonemes)

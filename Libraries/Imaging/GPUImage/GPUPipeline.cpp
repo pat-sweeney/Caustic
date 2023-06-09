@@ -331,7 +331,10 @@ namespace Caustic
             m_spOutputTexture = CCausticFactory::Instance()->CreateTexture(pRenderer, m_width, m_height, m_outputFormat, m_cpuFlags, m_bindFlags);
 
         if (!IsEnabled())
+        {
+            spCtx->RSSetState(spOldRasterState);
             return;
+        }
 
         // Get the input textures from the earlier nodes in the pipeline
         std::vector<CRefObj<ITexture>> textures;
@@ -372,6 +375,7 @@ namespace Caustic
                 }
             }
 
+            pRenderer->BeginMarker(m_name.c_str());
             CComPtr<ID3D11RenderTargetView> spRTView;
             CT(spDevice->CreateRenderTargetView(m_spOutputTexture->GetD3DTexture(), nullptr, &spRTView));
 
@@ -415,6 +419,7 @@ namespace Caustic
 
             spCtx->RSSetViewports(numViewports, &oldViewport);
             spCtx->OMSetRenderTargets(1, &spOldRTV.p, spOldDSV);
+            pRenderer->EndMarker();
         }
         spCtx->RSSetState(spOldRasterState);
 #ifdef _DEBUG
