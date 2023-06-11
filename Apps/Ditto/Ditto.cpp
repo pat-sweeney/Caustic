@@ -51,6 +51,9 @@ import Imaging.Video.IVideo;
 import Parsers.Phonemes.IPhonemes;
 import Imaging.Image.GPUPipeline;
 import Imaging.Image.IGPUPipeline;
+import Parsers.JSon.IJSonParser;
+module Parsers.JSon.JSonParser;
+import Parsers.Lex.ILex;
 
 using namespace Caustic;
 
@@ -172,6 +175,7 @@ public:
     void FindLandmarks();
     void LoadPhonemeAudio();
     void LoadDeltas();
+    void LoadPhonemeTimings(std::wstring& fn);
     void ComputeGridWarp(IImage* pImageToWarp, int frameIndex, std::wstring& phoneme, int phonemeFrameIndex);
     CRefObj<IImage> WarpImage(IRenderer* pRenderer, IImage* pImageToWarp, int frameIndex, std::wstring &phoneme, int phonemeFrameIndex);
     void PlaySentence(const char* pSentence);
@@ -192,6 +196,17 @@ bool FileExists(const wchar_t* path)
 {
     DWORD dwAttrib = GetFileAttributes(path);
     return (dwAttrib != INVALID_FILE_ATTRIBUTES && !(dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
+}
+
+void CApp::LoadPhonemeTimings(std::wstring &fn)
+{
+    CRefObj<IJSonParser> spParser = Caustic::CreateJSonParser();
+    CRefObj<IJSonObj> spDOM = spParser->LoadDOM(fn);
+    Caustic::JSonEnumerator iter(spDOM);
+    std::string word = spDOM->GetValue_String("word");
+    std::vector<float> spTimings = spDOM->GetValue_FloatArray("timings");
+    std::vector<std::string> spPhonemes = spDOM->GetValue_StringArray("phonemes");
+    return;
 }
 
 void CApp::LoadPhonemeAudio()
@@ -764,6 +779,8 @@ void CApp::LoadVideos(IRenderer* pRenderer, IRenderCtx* pCtx)
     CRefObj<IVideo> p0 = CreateVideo(L"d:\\DittoData\\Listening.mp4");
     m_videos.push_back(p0);
     LoadDeltas();
+    std::wstring wstrTimings(L"d:\\data\\Aardvark.json");
+    LoadPhonemeTimings(wstrTimings);
     LoadPhonemeAudio();
     FindLandmarks();
 

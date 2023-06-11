@@ -28,22 +28,160 @@ namespace Caustic
         switch (m_type)
         {
         case CJSonType::Array:
-        {
-            std::vector<CRefObj<IJSonObj>>* vec = std::any_cast<std::vector<CRefObj<IJSonObj>>*>(GetValue());
-            delete vec;
-        }
-        break;
+            {
+                std::vector<CRefObj<IJSonObj>>* vec = std::any_cast<std::vector<CRefObj<IJSonObj>>*>(GetValue());
+                delete vec;
+            }
+            break;
         case CJSonType::Object:
+            {
+                std::map<std::string, CRefObj<IJSonObj>>* obj = std::any_cast<std::map<std::string, CRefObj<IJSonObj>>*>(GetValue());
+                delete obj;
+            }
+            break;
+        }
+    }
+    
+    //**********************************************************************
+    CRefObj<IJSonObj> CJSonObj::FindObjInternal(IJSonObj* pRootObj, std::string nameToFind, std::string curPath)
+    {
+        int nameToFindLen = nameToFind.length();
+        JSonEnumerator it(pRootObj);
+        CRefObj<IJSonObj> spObj = it.CurrentObj();
+        while (spObj != nullptr)
         {
-            std::map<std::string, CRefObj<IJSonObj>>* obj = std::any_cast<std::map<std::string, CRefObj<IJSonObj>>*>(GetValue());
-            delete obj;
+            auto objName = spObj->GetName();
+            std::string fullPath = (curPath.empty()) ? objName : curPath + '/' + objName;
+            int len = (int)fullPath.length();
+            if (len <= nameToFindLen)
+            {
+                std::string subnameToFind = nameToFind.substr(0, len);
+                if (fullPath == subnameToFind)
+                {
+                    if (subnameToFind.length() == len)
+                        return spObj;
+                    auto val = spObj->GetValue();
+                    switch (spObj->GetType())
+                    {
+                    case CJSonType::Null:
+                    case CJSonType::Number:
+                    case CJSonType::Bool:
+                    case CJSonType::String:
+                    case CJSonType::Integer:
+                        return nullptr;
+                    case CJSonType::Array:
+                    {
+                        std::vector<CRefObj<IJSonObj>>* spRecs = std::any_cast<std::vector<CRefObj<IJSonObj>> *>(spObj->GetValue());
+                        for (size_t i = 0; i < spRecs->size(); i++)
+                        {
+                            CRefObj<IJSonObj> spResult = FindObjInternal((*spRecs)[i], nameToFind, fullPath);
+                            if (spResult != nullptr)
+                                return spResult;
+                        }
+                    }
+                    break;
+                    case CJSonType::Object:
+                    {
+                        std::map<std::string, CRefObj<IJSonObj>>* spVal = std::any_cast<std::map<std::string, CRefObj<IJSonObj>>*>(spObj->GetValue());
+                        std::map<std::string, CRefObj<IJSonObj>>::iterator it = spVal->begin();
+                        while (it != spVal->end())
+                        {
+                            CRefObj<IJSonObj> spResult = FindObjInternal(it->second, nameToFind, fullPath);
+                            if (spResult != nullptr)
+                                return spResult;
+                            it++;
+                        }
+                    }
+                    break;
+                    }
+                }
+            }
+            spObj = it.NextObj();
         }
-        break;
-        }
+        return nullptr;
     }
 
     //**********************************************************************
-    // IJSonObj
+    // Method: FindObj
+    // See <IJSon::FindObj>
+    //**********************************************************************
+    CRefObj<IJSonObj> CJSonObj::FindObj(IJSonObj *pRootObj, std::string name)
+    {
+        std::string path("");
+        return FindObjInternal(pRootObj, name, path);
+    }
+
+    //**********************************************************************
+    // Method: FindValue_String
+    // See <IJSon::FindValue_String>
+    //**********************************************************************
+    std::string CJSonObj::FindValue_String(std::string name)
+    {
+        CRefObj<IJSonObj> spObj = FindObj(this, name);
+        return std::any_cast<std::string>(spObj->GetValue());
+    }
+
+    //**********************************************************************
+    // Method: FindValue_Float
+    // See <IJSon::FindValue_Float>
+    //**********************************************************************
+    float CJSonObj::FindValue_Float(std::string name)
+    {
+        CRefObj<IJSonObj> spObj = FindObj(this, name);
+        return std::any_cast<float>(spObj->GetValue());
+    }
+
+    //**********************************************************************
+    // Method: FindValue_StringArray
+    // See <IJSon::FindValue_StringArray>
+    //**********************************************************************
+    std::vector<std::string> CJSonObj::FindValue_StringArray(std::string name)
+    {
+        CRefObj<IJSonObj> spObj = FindObj(this, name);
+        std::any val = spObj->GetValue();
+        std::vector<CRefObj<IJSonObj>>* pArr = std::any_cast<std::vector<CRefObj<IJSonObj>>*>(val);
+        std::vector<std::string> vals;
+        for (size_t i = 0; i < pArr->size(); i++)
+        {
+            std::string str = std::any_cast<std::string>((*pArr)[i]->GetValue());
+            vals.push_back(str);
+        }
+        return vals;
+    }
+
+    //**********************************************************************
+    // Method: FindValue_FloatArray
+    // See <IJSon::FindValue_FloatArray>
+    //**********************************************************************
+    std::vector<float> CJSonObj::FindValue_FloatArray(std::string name)
+    {
+        CRefObj<IJSonObj> spObj = FindObj(this, name);
+        std::any val = spObj->GetValue();
+        std::vector<CRefObj<IJSonObj>>* pArr = std::any_cast<std::vector<CRefObj<IJSonObj>>*>(val);
+        std::vector<float> vals;
+        for (size_t i = 0; i < pArr->size(); i++)
+        {
+            float num = std::any_cast<float>((*pArr)[i]->GetValue());
+            vals.push_back(num);
+        }
+        return vals;
+    }
+    
+    //**********************************************************************
+    // Method: FindValue_Map
+    // See <IJSon::FindValue_Map>
+    //**********************************************************************
+    std::map<std::string, CRefObj<IJSonObj>> CJSonObj::FindValue_Map(std::string name)
+    {
+        CRefObj<IJSonObj> spObj = FindObj(this, name);
+        std::any val = spObj->GetValue();
+        std::map<std::string, CRefObj<IJSonObj>>* pArr = std::any_cast<std::map<std::string, CRefObj<IJSonObj>>*>(val);
+        return *pArr;
+    }
+
+    //**********************************************************************
+    // Method: AddElement
+    // See <IJSon::AddElement>
     //**********************************************************************
     void CJSonObj::AddElement(IJSonObj* pValue)
     {
@@ -64,6 +202,10 @@ namespace Caustic
         }
     }
 
+    //**********************************************************************
+    // Method: LoadDOM
+    // See <IJSonParser::LoadDOM>
+    //**********************************************************************
     CRefObj<IJSonObj> CJSonParser::LoadDOM(std::wstring& fn)
     {
         HANDLE f = CreateFile(fn.c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr);
@@ -82,6 +224,10 @@ namespace Caustic
         return ReadDOM(pBuffer.get());
     }
     
+    //**********************************************************************
+    // Method: SaveDOM
+    // See <IJSonParser::SaveDOM>
+    //**********************************************************************
     void CJSonParser::SaveDOM(CRefObj<IJSonObj>& dom, std::wstring& fn)
     {
         HANDLE f = CreateFile(fn.c_str(), GENERIC_WRITE, FILE_SHARE_WRITE, nullptr, CREATE_ALWAYS, 0, nullptr);

@@ -149,6 +149,12 @@
     <ProjectReference Include="..\..\Libraries\Imaging\Video\Video.vcxproj">
       <Project>{338cbc84-638b-4eea-9af1-4f6582945b28}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Parsers\JSon\JSon.vcxproj">
+      <Project>{d7cddc34-5d74-4e16-b9a5-b0e7030d6855}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Parsers\Lex\Lex.vcxproj">
+      <Project>{e96c27e0-989e-4fd1-af44-06c378e1794e}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Parsers\Phonemes\Phonemes.vcxproj">
       <Project>{87ab87b5-2d88-470d-9cbb-2fde445d3ca6}</Project>
     </ProjectReference>
