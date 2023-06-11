@@ -1,0 +1,1 @@
+﻿NDSummary.OnToolTipsLoaded("CClass:JSonEnumerator",{596:"<div class=\"NDToolTip TClass LC\"><div class=\"NDClassPrototype\" id=\"NDClassPrototype596\"><div class=\"CPEntry TClass Current\"><div class=\"CPName\">JSonEnumerator</div></div></div><div class=\"TTSummary\">Enumerates the JSON objects in a DOM</div></div>"});
