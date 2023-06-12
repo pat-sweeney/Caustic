@@ -130,8 +130,10 @@ export namespace Caustic
         virtual std::any GetValue() override { return m_value; }
         virtual std::string FindValue_String(std::string name) override;
         virtual float FindValue_Float(std::string name) override;
+        virtual int FindValue_Int(std::string name) override;
         virtual std::vector<std::string> FindValue_StringArray(std::string name) override;
         virtual std::vector<float> FindValue_FloatArray(std::string name) override;
+        virtual std::vector<int> FindValue_IntArray(std::string name) override;
         virtual std::map<std::string, CRefObj<IJSonObj>> FindValue_Map(std::string name) override;
     };
 

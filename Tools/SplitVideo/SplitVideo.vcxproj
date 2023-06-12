@@ -155,6 +155,9 @@
     <ProjectReference Include="..\..\Libraries\Interop\Renderer\Renderer.vcxproj">
       <Project>{b70dec5c-65cb-4e68-893a-d592fd8ba0b1}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Parsers\JSon\JSon.vcxproj">
+      <Project>{d7cddc34-5d74-4e16-b9a5-b0e7030d6855}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Parsers\Lex\Lex.vcxproj">
       <Project>{e96c27e0-989e-4fd1-af44-06c378e1794e}</Project>
     </ProjectReference>

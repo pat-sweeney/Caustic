@@ -96,37 +96,57 @@ export namespace Caustic
         // Parameters:
         // name - name of object path to find
         //**********************************************************************
-        virtual float GetValue_Float(std::string name) = 0;
+        virtual float FindValue_Float(std::string name) = 0;
 
         //**********************************************************************
-        // Method: GetValue_StringArray
+        // Method: FindValue_Int
+        // Searches the JSON DOM in search of the specified object and returns
+        // that object's value, which is expected to be a int
+        // 
+        // Parameters:
+        // name - name of object path to find
+        //**********************************************************************
+        virtual int FindValue_Int(std::string name) = 0;
+
+        //**********************************************************************
+        // Method: FindValue_StringArray
         // Searches the JSON DOM in search of the specified object and returns
         // that object's value, which is expected to be an array of strings
         // 
         // Parameters:
         // name - name of object path to find
         //**********************************************************************
-        virtual std::vector<std::string> GetValue_StringArray(std::string name) = 0;
+        virtual std::vector<std::string> FindValue_StringArray(std::string name) = 0;
 
         //**********************************************************************
-        // Method: GetValue_FloatArray
+        // Method: FindValue_IntArray
+        // Searches the JSON DOM in search of the specified object and returns
+        // that object's value, which is expected to be an array of ints
+        // 
+        // Parameters:
+        // name - name of object path to find
+        //**********************************************************************
+        virtual std::vector<int> FindValue_IntArray(std::string name) = 0;
+
+        //**********************************************************************
+        // Method: FindValue_FloatArray
         // Searches the JSON DOM in search of the specified object and returns
         // that object's value, which is expected to be an array of floats
         // 
         // Parameters:
         // name - name of object path to find
         //**********************************************************************
-        virtual std::vector<float> GetValue_FloatArray(std::string name) = 0;
+        virtual std::vector<float> FindValue_FloatArray(std::string name) = 0;
 
         //**********************************************************************
-        // Method: GetValue_Map
+        // Method: FindValue_Map
         // Searches the JSON DOM in search of the specified object and returns
         // that object's value, which is expected to be a map
         // 
         // Parameters:
         // name - name of object path to find
         //**********************************************************************
-        virtual std::map<std::string, CRefObj<IJSonObj>> GetValue_Map(std::string name) = 0;
+        virtual std::map<std::string, CRefObj<IJSonObj>> FindValue_Map(std::string name) = 0;
     };
 
     //**********************************************************************

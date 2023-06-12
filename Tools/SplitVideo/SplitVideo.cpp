@@ -17,6 +17,7 @@
 #include <dxgi1_3.h>
 #include <DXProgrammableCapture.h>
 #include <shlwapi.h>
+#include <vector>
 
 import Caustic.Base;
 import Base.Core.Core;
@@ -45,6 +46,8 @@ import Imaging.Video.IVideo;
 import Parsers.Phonemes.IPhonemes;
 import Imaging.Image.GPUPipeline;
 import Imaging.Image.IGPUPipeline;
+import Parsers.JSon.IJSonParser;
+import Parsers.JSon.JSonParser;
 
 #define MAX_LOADSTRING 100
 
@@ -59,6 +62,14 @@ struct PhonemeInfo
 const int c_GridX = 100;
 const int c_GridY = 100;
 
+struct CTimings
+{
+    std::string m_filename;
+    std::string m_word;
+    std::vector<int> m_timings;
+    std::vector<std::string> m_phonemes;
+};
+
 class CApp
 {
 public:
@@ -67,7 +78,7 @@ public:
     HWND m_hwnd;
     void InitializeCaustic(HWND hWnd);
     char VideoPath[1024];
-    char VideoName[1024];
+    char VideoFile[1024];
     CRefObj<IPhonemes> m_spPhonemes;
     CRefObj<IImageFilter> m_spLandmarkFilter;
     std::wstring m_videoPath;
@@ -77,17 +88,19 @@ public:
     std::vector<std::string> m_phonemes;
     std::unique_ptr<float2> m_spGridLocations;
     bool m_doConvert;
+    std::map<std::string, CTimings*> m_timings;
 
     void Convert(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx);
     void FindLandmarks(std::vector<BBox2>& faceBbox, std::vector<std::vector<Vector2>>& faceLandmarks);
     void WriteLandmarks(BBox2& bb, std::vector<Vector2>& landmarks, int frameIndex);
     void ComputeWarps(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx, std::vector<BBox2>& faceBbox, std::vector<std::vector<Vector2>>& faceLandmarks,
         std::vector<PhonemeInfo>& phonemeFrames);
-    void DeterminePhonemeInfo(std::vector<std::vector<Vector2>>& faceLandmarks, int numPhonemes, std::vector<PhonemeInfo>& phonemeInfo);
+    void DeterminePhonemeInfo(std::vector<int> timings, std::vector<std::vector<Vector2>>& faceLandmarks, int numPhonemes, std::vector<PhonemeInfo>& phonemeInfo);
     void ComputeGridWarp(IRenderer* pRenderer, int frameIndex, int phonemeIndex, PhonemeInfo& phonemeInfo, std::vector<std::vector<Vector2>>& faceLandmarks,
         std::vector<Vector2>& landmarkDeltas, int roiX, int roiY, int roiWidth, int roiHeight, int imageWidth, int imageHeight);
     void WritePhonemeDeltas(int phonemeIndex, std::vector<PhonemeInfo>& phonemeInfo, std::vector<std::vector<Vector2>>& phonemeLandmarkDeltas);
     void WritePhonemeAudio(int phonemeIndex, std::vector<PhonemeInfo>& phonemeInfo, std::vector<uint8>& phonemeAudio);
+    void LoadPhonemeTimings(std::wstring& fn);
 };
 CApp app;
 
@@ -206,6 +219,25 @@ bool FileExists(const wchar_t* path)
     return (dwAttrib != INVALID_FILE_ATTRIBUTES && !(dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
 }
 
+void CApp::LoadPhonemeTimings(std::wstring& fn)
+{
+    CRefObj<IJSonParser> spParser = Caustic::CreateJSonParser();
+    CRefObj<IJSonObj> spDOM = spParser->LoadDOM(fn);
+    Caustic::JSonEnumerator iter(spDOM);
+    CRefObj<IJSonObj> spCurObj = iter.CurrentObj();
+    while (spCurObj != nullptr)
+    {
+        CTimings* pTiming = new CTimings();
+        pTiming->m_word = spCurObj->GetName();
+        pTiming->m_filename = spCurObj->FindValue_String("filename");
+        pTiming->m_timings = spCurObj->FindValue_IntArray("timings");
+        pTiming->m_phonemes = spCurObj->FindValue_StringArray("phonemes");
+        m_timings.insert(std::make_pair(pTiming->m_word, pTiming));
+        spCurObj = iter.NextObj();
+    }
+    return;
+}
+
 void CApp::WritePhonemeDeltas(int phonemeIndex, std::vector<PhonemeInfo>& phonemeInfo, std::vector<std::vector<Vector2>>& phonemeLandmarkDeltas)
 {
     // Write the landmark deltas to the database (which for now is just a file)
@@ -280,7 +312,7 @@ void CApp::ComputeWarps(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx
         {
             uint8* pAudioData = spAudioSample->GetData();
             uint32 audioLen = spAudioSample->GetDataSize();
-            uint32 startIndex = curPhonemeAudio.size();
+            uint32 startIndex = (uint32)curPhonemeAudio.size();
             curPhonemeAudio.resize(startIndex + audioLen);
             memcpy(&curPhonemeAudio[startIndex], pAudioData, audioLen);
 
@@ -383,7 +415,7 @@ void CApp::ComputeWarps(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx
         CRefObj<IImage> spFinalImage = spSink->GetOutput(spGPUPipeline);
 
 #pragma region("StoreWarpedImage")
-        static bool drawLandmarks = false;
+        static bool drawLandmarks = true;
         if (drawLandmarks)
         {
             for (int landmarkIndex = 0; landmarkIndex < (int)faceLandmarks[frameIndex].size(); landmarkIndex++)
@@ -405,9 +437,11 @@ void CApp::ComputeWarps(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx
 
                 Vector2 phonemeLandmark = faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][landmarkIndex];
                 Caustic::uint8 color1[4] = { 255, 0, 0, 255 };
+                phonemeLandmark.y = 1080 - phonemeLandmark.y;
                 spFinalImage->DrawCircle(phonemeLandmark, 3, color1);
                 Vector2 alignedLandmark = faceLandmarks[frameIndex][landmarkIndex];
                 Caustic::uint8 color2[4] = { 0, 255, 0, 255 };
+                alignedLandmark.y = 1080 - alignedLandmark.y;
                 spFinalImage->DrawCircle(alignedLandmark, 4, color2);
                 alignedLandmark = alignedLandmark * mat;
                 Caustic::uint8 color3[4] = { 0, 0, 255, 255 };
@@ -471,7 +505,7 @@ void CApp::ComputeWarps(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx
             }
         }
 
-        static bool storeWarpedResults = false;
+        static bool storeWarpedResults = true;
         if (storeWarpedResults)
         {
             wchar_t buf[1024];
@@ -538,7 +572,7 @@ void CApp::FindLandmarks(std::vector<BBox2> &faceBbox, std::vector<std::vector<V
 
           //  WriteLandmarks(faceBbox[0], landmarks, 0);
 #pragma region("WriteMarkImages")
-            static bool writeLandmarkImages = false;
+            static bool writeLandmarkImages = true;
             if (writeLandmarkImages)
             {
                 wchar_t buf[1024];
@@ -552,22 +586,32 @@ void CApp::FindLandmarks(std::vector<BBox2> &faceBbox, std::vector<std::vector<V
 
 }
 
-void CApp::DeterminePhonemeInfo(std::vector<std::vector<Vector2>>& faceLandmarks, int numPhonemes, std::vector<PhonemeInfo> & phonemeInfo)
+void CApp::DeterminePhonemeInfo(std::vector<int> timings, std::vector<std::vector<Vector2>>& faceLandmarks, int numPhonemes, std::vector<PhonemeInfo> & phonemeInfo)
 {
     int curPhoneme = 0;
     int numFramesInVideo = (int)faceLandmarks.size();
     int framesPerPhoneme = numFramesInVideo / numPhonemes;
     int extraFrames = numFramesInVideo - framesPerPhoneme * numPhonemes;
     int lastFrame = 0;
+    int timeIndex = 0;
     for (int i = 0; i < numPhonemes; i++)
     {
         PhonemeInfo info;
-        info.m_startFrame = lastFrame;
-        info.m_endFrame = lastFrame + framesPerPhoneme;
-        if (extraFrames > 0)
+        if (timings[timeIndex] != -1)
         {
-            info.m_endFrame++;
-            extraFrames--;
+            info.m_startFrame = timings[timeIndex];
+            info.m_endFrame = timings[timeIndex + 1];
+            timeIndex += 2;
+        }
+        else
+        {
+            info.m_startFrame = lastFrame;
+            info.m_endFrame = lastFrame + framesPerPhoneme;
+            if (extraFrames > 0)
+            {
+                info.m_endFrame++;
+                extraFrames--;
+            }
         }
         lastFrame = info.m_endFrame;
         phonemeInfo.push_back(info);
@@ -576,30 +620,54 @@ void CApp::DeterminePhonemeInfo(std::vector<std::vector<Vector2>>& faceLandmarks
 
 void CApp::Convert(Caustic::IRenderer *pRenderer, Caustic::IRenderCtx* pCtx)
 {
-    m_spLandmarkFilter = CreateFaceLandmarksFilter();
     m_videoPath = Caustic::str2wstr(VideoPath);
-    m_videoName = Caustic::str2wstr(VideoName);
-    m_videoFullPath = m_videoPath + L"\\" + m_videoName + L".mp4";
-    m_spVideo = CreateVideo(m_videoFullPath.c_str());
+    std::wstring wstrFn = m_videoPath + L"\\words.json";
+    LoadPhonemeTimings(wstrFn);
 
-    // Get list of phonemes for the current word
-    std::string word(VideoName);
-    if (word == "ExclamationPoint")
-        word = "!Exclamation-Point";
-    std::transform(word.begin(), word.end(), word.begin(),
+    m_spLandmarkFilter = CreateFaceLandmarksFilter();
+    std::string vfile(VideoFile);
+    std::transform(vfile.begin(), vfile.end(), vfile.begin(),
         [](unsigned char c) { return std::toupper(c); });
-    m_spPhonemes->GetPhonemes(word.c_str(), m_phonemes);
+    std::map<std::string, CTimings*>::iterator it = m_timings.begin();
+    while (it != m_timings.end())
+    {
+        if (vfile.length() != 0 && it->second->m_word != vfile)
+        {
+            it++;
+            continue;
+        }
+        m_videoName = Caustic::str2wstr(it->second->m_word);
+        if (it->second->m_filename.empty())
+            m_videoFullPath = m_videoPath + L"\\" + m_videoName + L".mp4";
+        else
+            m_videoFullPath = m_videoPath + L"\\" + Caustic::str2wstr(it->second->m_filename);
 
-    // Make the first pass across the stream to find all the face
-    // landmarks.
-    std::vector<BBox2> faceBbox;
-    std::vector<std::vector<Vector2>> faceLandmarks;
-    FindLandmarks(faceBbox, faceLandmarks);
+        m_spVideo = CreateVideo(m_videoFullPath.c_str());
 
-    std::vector<PhonemeInfo> phonemeInfo;
-    DeterminePhonemeInfo(faceLandmarks, (int)m_phonemes.size(), phonemeInfo);
+        // Get list of phonemes for the current word
+        std::string word(it->second->m_word);
+        std::transform(word.begin(), word.end(), word.begin(),
+            [](unsigned char c) { return std::toupper(c); });
+        if (word == "EXCLAMATIONPOINT")
+            word = "!EXCLAMATION-POINT";
+        m_spPhonemes->GetPhonemes(word.c_str(), m_phonemes);
 
-    ComputeWarps(pRenderer, pCtx, faceBbox, faceLandmarks, phonemeInfo);
+        //    std::wstring wstrFn = m_videoPath + L"\\" + m_videoName + L".json";
+        //    LoadPhonemeTimings(wstrFn);
+
+            // Make the first pass across the stream to find all the face
+            // landmarks.
+        std::vector<BBox2> faceBbox;
+        std::vector<std::vector<Vector2>> faceLandmarks;
+        FindLandmarks(faceBbox, faceLandmarks);
+
+        std::vector<PhonemeInfo> phonemeInfo;
+        
+        DeterminePhonemeInfo(m_timings[it->second->m_word]->m_timings, faceLandmarks, (int)m_phonemes.size(), phonemeInfo);
+
+        ComputeWarps(pRenderer, pCtx, faceBbox, faceLandmarks, phonemeInfo);
+        it++;
+    }
 }
 
 void CApp::InitializeCaustic(HWND hwnd)
@@ -626,9 +694,9 @@ void CApp::InitializeCaustic(HWND hwnd)
             ImGui::Text("VideoPath:");
             ImGui::SameLine();
             ImGui::InputText("##VideoPath", app.VideoPath, sizeof(app.VideoPath));
-            ImGui::Text("VideoName:");
+            ImGui::Text("VideoFile:");
             ImGui::SameLine();
-            ImGui::InputText("##VideoName", app.VideoName, sizeof(app.VideoName));
+            ImGui::InputText("##VideoFile", app.VideoFile, sizeof(app.VideoFile));
             if (ImGui::Button("Convert"))
                 app.m_doConvert = true;
             ImGui::End();

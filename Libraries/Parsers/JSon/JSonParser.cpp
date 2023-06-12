@@ -45,7 +45,7 @@ namespace Caustic
     //**********************************************************************
     CRefObj<IJSonObj> CJSonObj::FindObjInternal(IJSonObj* pRootObj, std::string nameToFind, std::string curPath)
     {
-        int nameToFindLen = nameToFind.length();
+        int nameToFindLen = (int)nameToFind.length();
         JSonEnumerator it(pRootObj);
         CRefObj<IJSonObj> spObj = it.CurrentObj();
         while (spObj != nullptr)
@@ -118,6 +118,8 @@ namespace Caustic
     std::string CJSonObj::FindValue_String(std::string name)
     {
         CRefObj<IJSonObj> spObj = FindObj(this, name);
+        if (spObj == nullptr)
+            return std::string("");
         return std::any_cast<std::string>(spObj->GetValue());
     }
 
@@ -128,7 +130,21 @@ namespace Caustic
     float CJSonObj::FindValue_Float(std::string name)
     {
         CRefObj<IJSonObj> spObj = FindObj(this, name);
+        if (spObj == nullptr)
+            return 0.0f;
         return std::any_cast<float>(spObj->GetValue());
+    }
+
+    //**********************************************************************
+    // Method: FindValue_Int
+    // See <IJSon::FindValue_Int>
+    //**********************************************************************
+    int CJSonObj::FindValue_Int(std::string name)
+    {
+        CRefObj<IJSonObj> spObj = FindObj(this, name);
+        if (spObj == nullptr)
+            return 0;
+        return std::any_cast<int>(spObj->GetValue());
     }
 
     //**********************************************************************
@@ -167,6 +183,24 @@ namespace Caustic
         return vals;
     }
     
+    //**********************************************************************
+    // Method: FindValue_IntArray
+    // See <IJSon::FindValue_IntArray>
+    //**********************************************************************
+    std::vector<int> CJSonObj::FindValue_IntArray(std::string name)
+    {
+        CRefObj<IJSonObj> spObj = FindObj(this, name);
+        std::any val = spObj->GetValue();
+        std::vector<CRefObj<IJSonObj>>* pArr = std::any_cast<std::vector<CRefObj<IJSonObj>>*>(val);
+        std::vector<int> vals;
+        for (size_t i = 0; i < pArr->size(); i++)
+        {
+            int v = std::any_cast<int>((*pArr)[i]->GetValue());
+            vals.push_back(v);
+        }
+        return vals;
+    }
+
     //**********************************************************************
     // Method: FindValue_Map
     // See <IJSon::FindValue_Map>
