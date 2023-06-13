@@ -33,6 +33,9 @@ import Imaging.Image.ImageFilter.FaceLandmarks;
 import Geometry.Mesh.IMeshConstructor;
 import Geometry.MeshImport;
 import Geometry.Mesh.MeshFuncs;
+import Geometry.Mesh.IMesh;
+import Geometry.Mesh.IDelaunay;
+import Geometry.Mesh.Delaunay;
 import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.IRenderMesh;
 import Rendering.Caustic.IRenderer;
@@ -52,7 +55,7 @@ import Parsers.Phonemes.IPhonemes;
 import Imaging.Image.GPUPipeline;
 import Imaging.Image.IGPUPipeline;
 import Parsers.JSon.IJSonParser;
-module Parsers.JSon.JSonParser;
+import Parsers.JSon.JSonParser;
 import Parsers.Lex.ILex;
 
 using namespace Caustic;
@@ -77,8 +80,112 @@ class CWarpNode : public CGPUPipelineNodeBase
 {
     CRefObj<IMesh> m_spMesh;
     CRefObj<IRenderMesh> m_spRenderMesh;
+
+    CRefObj<IMesh> BuildMesh(float imageW1, float imageH1, std::vector<Vector2>& landmarks)
+    {
+        // Define our super triangles to be larger than our image
+        BBox2 sqbb;
+        sqbb.minPt = Vector2(-1000.0f, -1000.0f);
+        sqbb.maxPt = Vector2(imageW1 + 1000.0f, imageH1 + 1000.0f);
+        CRefObj<IDelaunay2> spDelaunay = Caustic::CreateDelaunay2(sqbb);
+
+#pragma region("BuildTriangulation")
+        spDelaunay->Open();
+#if 0
+        // Add the corners of the image as our boundaries
+        int numVertices = c_FaceLandmark_Mouth_LastIndex - c_FaceLandmark_Mouth_FirstIndex + 1;
+        Caustic::DelaunayVertex* pVertices = new Caustic::DelaunayVertex[numVertices];
+        for (size_t landmarkIndex = c_FaceLandmark_Mouth_FirstIndex; landmarkIndex <= c_FaceLandmark_Mouth_LastIndex; landmarkIndex++)
+        {
+            pVertices[landmarkIndex - c_FaceLandmark_Mouth_FirstIndex].flags = (landmarkIndex < c_FaceLandmark_InnerMouth_FirstIndex) ? c_InteriorVertex : c_BoundaryVertex;
+            pVertices[landmarkIndex - c_FaceLandmark_Mouth_FirstIndex].pos = landmarks[landmarkIndex];
+            pVertices[landmarkIndex - c_FaceLandmark_Mouth_FirstIndex].uv.x = landmarks[landmarkIndex].x / imageW1;
+            pVertices[landmarkIndex - c_FaceLandmark_Mouth_FirstIndex].uv.y = landmarks[landmarkIndex].y / imageH1;
+        }
+        int pIndices[] = {
+            48- c_FaceLandmark_Mouth_FirstIndex, 60 - c_FaceLandmark_Mouth_FirstIndex, 49 - c_FaceLandmark_Mouth_FirstIndex,
+            60 - c_FaceLandmark_Mouth_FirstIndex, 61 - c_FaceLandmark_Mouth_FirstIndex, 49 - c_FaceLandmark_Mouth_FirstIndex,
+            49 - c_FaceLandmark_Mouth_FirstIndex, 61 - c_FaceLandmark_Mouth_FirstIndex, 50 - c_FaceLandmark_Mouth_FirstIndex,
+            61 - c_FaceLandmark_Mouth_FirstIndex, 62 - c_FaceLandmark_Mouth_FirstIndex, 50 - c_FaceLandmark_Mouth_FirstIndex,
+            50 - c_FaceLandmark_Mouth_FirstIndex, 62 - c_FaceLandmark_Mouth_FirstIndex, 51 - c_FaceLandmark_Mouth_FirstIndex,
+            51 - c_FaceLandmark_Mouth_FirstIndex, 62 - c_FaceLandmark_Mouth_FirstIndex, 63 - c_FaceLandmark_Mouth_FirstIndex,
+            51 - c_FaceLandmark_Mouth_FirstIndex, 63 - c_FaceLandmark_Mouth_FirstIndex, 52 - c_FaceLandmark_Mouth_FirstIndex,
+            52 - c_FaceLandmark_Mouth_FirstIndex, 63 - c_FaceLandmark_Mouth_FirstIndex, 64 - c_FaceLandmark_Mouth_FirstIndex,
+            52 - c_FaceLandmark_Mouth_FirstIndex, 64 - c_FaceLandmark_Mouth_FirstIndex, 53 - c_FaceLandmark_Mouth_FirstIndex,
+            53 - c_FaceLandmark_Mouth_FirstIndex, 64 - c_FaceLandmark_Mouth_FirstIndex, 54 - c_FaceLandmark_Mouth_FirstIndex,
+            53 - c_FaceLandmark_Mouth_FirstIndex, 64 - c_FaceLandmark_Mouth_FirstIndex, 55 - c_FaceLandmark_Mouth_FirstIndex,
+            55 - c_FaceLandmark_Mouth_FirstIndex, 64 - c_FaceLandmark_Mouth_FirstIndex, 65 - c_FaceLandmark_Mouth_FirstIndex,
+            55 - c_FaceLandmark_Mouth_FirstIndex, 65 - c_FaceLandmark_Mouth_FirstIndex, 56 - c_FaceLandmark_Mouth_FirstIndex,
+            56 - c_FaceLandmark_Mouth_FirstIndex, 65 - c_FaceLandmark_Mouth_FirstIndex, 66 - c_FaceLandmark_Mouth_FirstIndex,
+            56 - c_FaceLandmark_Mouth_FirstIndex, 66 - c_FaceLandmark_Mouth_FirstIndex, 57 - c_FaceLandmark_Mouth_FirstIndex,
+            57 - c_FaceLandmark_Mouth_FirstIndex, 66 - c_FaceLandmark_Mouth_FirstIndex, 67 - c_FaceLandmark_Mouth_FirstIndex,
+            57 - c_FaceLandmark_Mouth_FirstIndex, 67 - c_FaceLandmark_Mouth_FirstIndex, 58 - c_FaceLandmark_Mouth_FirstIndex,
+            58 - c_FaceLandmark_Mouth_FirstIndex, 67 - c_FaceLandmark_Mouth_FirstIndex, 60 - c_FaceLandmark_Mouth_FirstIndex,
+            58 - c_FaceLandmark_Mouth_FirstIndex, 60 - c_FaceLandmark_Mouth_FirstIndex, 59 - c_FaceLandmark_Mouth_FirstIndex,
+            59 - c_FaceLandmark_Mouth_FirstIndex, 60 - c_FaceLandmark_Mouth_FirstIndex, 48 - c_FaceLandmark_Mouth_FirstIndex
+        };
+        spDelaunay->AddFixedMesh(pVertices, numVertices, pIndices, _countof(pIndices));
+
+#endif
+        Vector2 pt;
+        Vector2 uv;
+        spDelaunay->AddPoint(pt = Vector2(0.0f, 0.0f), uv = Vector2(0.0f, 0.0f), true);
+        spDelaunay->AddPoint(pt = Vector2(imageW1, 0.0f), uv = Vector2(1.0f, 0.0f), true);
+        spDelaunay->AddPoint(pt = Vector2(imageW1, imageH1), uv = Vector2(1.0f, 1.0f), true);
+        spDelaunay->AddPoint(pt = Vector2(0.0f, imageH1), uv = Vector2(0.0f, 1.0f), true);
+        spDelaunay->AddPoint(pt = Vector2(imageW1 / 2.0f, 0.0f), uv = Vector2(0.5f, 0.0f), true);
+        spDelaunay->AddPoint(pt = Vector2(imageW1 / 2.0f, imageH1 / 2.0f), uv = Vector2(0.5f, 0.5f), false);
+        spDelaunay->AddPoint(pt = Vector2(imageW1 / 2.0f, imageH1), uv = Vector2(0.5f, 1.0f), true);
+        spDelaunay->AddPoint(pt = Vector2(0.0f, imageH1 / 2.0f), uv = Vector2(0.0f, 0.5f), true);
+        spDelaunay->AddPoint(pt = Vector2(imageW1, imageH1 / 2.0f), uv = Vector2(1.0f, 0.5f), true);
+
+//        for (size_t landmarkIndex = 60; landmarkIndex <= 67; landmarkIndex++)
+//        {
+//            Vector2 point(landmarks[landmarkIndex].x, landmarks[landmarkIndex].y);
+//            Vector2 uv(landmarks[landmarkIndex].x / imageW1, landmarks[landmarkIndex].y / imageH1);
+//            spDelaunay->AddPoint(point, uv, false);
+//        }
+        for (size_t landmarkIndex = 48; landmarkIndex <= 65; landmarkIndex++)
+        {
+            Vector2 point(landmarks[landmarkIndex].x, landmarks[landmarkIndex].y);
+            Vector2 uv(landmarks[landmarkIndex].x / imageW1, landmarks[landmarkIndex].y / imageH1);
+            spDelaunay->AddPoint(point, uv, false);
+        }
+        spDelaunay->Close();
+#pragma endregion
+
+        Vector3 normal(0.0f, 1.0f, 0.0f);
+
+        CRefObj<IMeshConstructor> spMeshConstructor = IMeshConstructor::Create();
+        spMeshConstructor->MeshOpen();
+        spMeshConstructor->SubMeshOpen();
+        int numTris = spDelaunay->GetNumberTriangles();
+        for (int triIndex = 0; triIndex < numTris; triIndex++)
+        {
+            bool isBoundary[3];
+            Vector2 v0, v1, v2;
+            spDelaunay->GetTriangle(triIndex, v0, v1, v2, isBoundary);
+            Vector3 p0(v0.x, v0.y, 0.0f);
+            Vector3 p1(v1.x, v1.y, 0.0f);
+            Vector3 p2(v2.x, v2.y, 0.0f);
+            spMeshConstructor->FaceOpen();
+            Vector2 vuv;
+            const int c_FirstRealVert = 4; // first 4 vertices in trianglation are the Delaunay super triangles
+            Vector2 uv0(p0.x / imageW1, p0.y / imageH1);
+            Vector2 uv1(p1.x / imageW1, p1.y / imageH1);
+            Vector2 uv2(p2.x / imageW1, p2.y / imageH1);
+            spMeshConstructor->VertexAdd(p0, normal, uv0);
+            spMeshConstructor->VertexAdd(p1, normal, uv1);
+            spMeshConstructor->VertexAdd(p2, normal, uv2);
+            spMeshConstructor->FaceClose();
+        }
+        CRefObj<ISubMesh> spSubMesh = spMeshConstructor->SubMeshClose();
+        spSubMesh->SetMeshFlags(EMeshFlags::TwoSided);
+        return spMeshConstructor->MeshClose();
+    }
+
 public:
-    CWarpNode(const wchar_t* pName, IRenderer* pRenderer, IShader* pShader, uint32 inputWidth, uint32 inputHeight, DXGI_FORMAT format) :
+    CWarpNode(const wchar_t* pName, IRenderer* pRenderer, std::vector<Vector2> &landmarks, IShader* pShader, uint32 inputWidth, uint32 inputHeight, DXGI_FORMAT format) :
         CGPUPipelineNodeBase(inputWidth, inputHeight, format)
     {
         SetName(pName);
@@ -86,7 +193,8 @@ public:
 
         m_cpuFlags = (D3D11_CPU_ACCESS_FLAG)0;
         m_bindFlags = (D3D11_BIND_FLAG)(D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET | D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
-        m_spMesh = Caustic::CreateGrid(c_GridX, c_GridY);
+//        m_spMesh = Caustic::CreateGrid(c_GridX, c_GridY);
+        m_spMesh = BuildMesh((float)inputWidth - 1.0f, (float)inputHeight - 1.0f, landmarks);
         m_spRenderMesh = pRenderer->ToRenderMesh(m_spMesh, pShader);
     }
 
@@ -175,7 +283,6 @@ public:
     void FindLandmarks();
     void LoadPhonemeAudio();
     void LoadDeltas();
-    void LoadPhonemeTimings(std::wstring& fn);
     void ComputeGridWarp(IImage* pImageToWarp, int frameIndex, std::wstring& phoneme, int phonemeFrameIndex);
     CRefObj<IImage> WarpImage(IRenderer* pRenderer, IImage* pImageToWarp, int frameIndex, std::wstring &phoneme, int phonemeFrameIndex);
     void PlaySentence(const char* pSentence);
@@ -196,17 +303,6 @@ bool FileExists(const wchar_t* path)
 {
     DWORD dwAttrib = GetFileAttributes(path);
     return (dwAttrib != INVALID_FILE_ATTRIBUTES && !(dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
-}
-
-void CApp::LoadPhonemeTimings(std::wstring &fn)
-{
-    CRefObj<IJSonParser> spParser = Caustic::CreateJSonParser();
-    CRefObj<IJSonObj> spDOM = spParser->LoadDOM(fn);
-    Caustic::JSonEnumerator iter(spDOM);
-    std::string word = spDOM->GetValue_String("word");
-    std::vector<float> spTimings = spDOM->GetValue_FloatArray("timings");
-    std::vector<std::string> spPhonemes = spDOM->GetValue_StringArray("phonemes");
-    return;
 }
 
 void CApp::LoadPhonemeAudio()
@@ -275,6 +371,8 @@ void CApp::FindLandmarks()
         if (spVideoSample != nullptr)
         {
             auto spImage = spVideoSample->GetImage();
+            float imageW1 = (float)spImage->GetWidth() - 1.0f;
+            float imageH1 = (float)spImage->GetHeight() - 1.0f;
             Caustic::ImageFilterParams params;
             params.params.insert(std::make_pair("outputImage", std::any(true)));
 
@@ -779,8 +877,6 @@ void CApp::LoadVideos(IRenderer* pRenderer, IRenderCtx* pCtx)
     CRefObj<IVideo> p0 = CreateVideo(L"d:\\DittoData\\Listening.mp4");
     m_videos.push_back(p0);
     LoadDeltas();
-    std::wstring wstrTimings(L"d:\\data\\Aardvark.json");
-    LoadPhonemeTimings(wstrTimings);
     LoadPhonemeAudio();
     FindLandmarks();
 
@@ -851,7 +947,7 @@ void CApp::ProcessNextFrame(IRenderer* pRenderer, IRenderCtx* pCtx)
                     m_spWarpShader->SetVSParam(L"height", std::any(float(c_GridY)));
                     uint32 imageW = m_spLastFrame->GetWidth();
                     uint32 imageH = m_spLastFrame->GetHeight();
-                    m_spWarpNode = new CWarpNode(L"Warp", pRenderer, m_spWarpShader, imageW, imageH,
+                    m_spWarpNode = new CWarpNode(L"Warp", pRenderer, m_faceLandmarks[0], m_spWarpShader, imageW, imageH,
                         DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM);
                     m_spGridPosTex = Caustic::CreateTexture(pRenderer, c_GridX, c_GridY, DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT);
                     m_spWarpShader->SetVSParam(L"posTexture", std::any(m_spGridPosTex));

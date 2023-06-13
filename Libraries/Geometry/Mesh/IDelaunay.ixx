@@ -16,6 +16,29 @@ import Base.Math.BBox;
 
 export namespace Caustic
 {
+    const uint8 c_SuperTriangleVertex = 0x1;
+    const uint8 c_BoundaryVertex = 0x2;
+    const uint8 c_InteriorVertex = 0x4;
+    const uint8 c_FixedVertex = 0x8;
+
+    struct DelaunayVertex
+    {
+        uint8 flags;
+        Vector2 pos;
+        Vector2 uv;
+
+        DelaunayVertex() : flags(0)
+        {
+        }
+
+        DelaunayVertex(Vector2& position, Vector2& uvCoord, uint8 vertexFlag)
+        {
+            flags = vertexFlag;
+            pos = position;
+            uv = uvCoord;
+        }
+    };
+
     //**********************************************************************
     // Interface: IDelaunay2
     // Defines the interface used for creating Delaunay triangulations
@@ -40,6 +63,12 @@ export namespace Caustic
         //**********************************************************************
         virtual void AddPoint(Vector2 &pt, Vector2 &uv, bool isBoundary) = 0;
 
+        //**********************************************************************
+        // Method: AddFixedMesh
+        // Adds mesh connectivity that should be fixed on the final mesh
+        //**********************************************************************
+        virtual void AddFixedMesh(DelaunayVertex* pVertices, int numVertices, int* pIndices, int numIndices) = 0;
+        
         //**********************************************************************
         // Method: Close
         // Closes the triangulation and performs the Delaunay triangulation on
@@ -66,6 +95,20 @@ export namespace Caustic
         // triangulations boundary polygon
         //**********************************************************************
         virtual void GetTriangle(uint32 index, Vector2 &v0, Vector2 &v1, Vector2 &v2, bool isExterior[3]) = 0;
+
+        //**********************************************************************
+        // Method: GetTriangleIndices
+        // Returns the indices of the Nth triangle
+        //
+        // Parameters:
+        // index - index of triangle to be retrieved
+        // i0 - index of the first point in triangle
+        // i1 - index of the second point in triangle
+        // i2 - index of the third point in triangle
+        // isExterior - flags indicating whether the returned points are part of the
+        // triangulations boundary polygon
+        //**********************************************************************
+        virtual void GetTriangleIndices(uint32 index, uint32& i0, uint32& i1, uint32& i2, bool isExterior[3]) = 0;
 
         //**********************************************************************
         // Method: WritePLY

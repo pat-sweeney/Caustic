@@ -64,6 +64,8 @@ export namespace Caustic
     const int c_FaceLandmark_OuterMouth_LeftCorner = 54;
     const int c_FaceLandmark_OuterMouth_TopMiddle = 51;
     const int c_FaceLandmark_OuterMouth_BottomMiddle = 57;
+    const int c_FaceLandmark_InnerMouth_FirstIndex = 60;
+    const int c_FaceLandmark_InnerMouth_LastIndex = 67;
     const int c_FaceLandmark_InnerMouth_RightCorner = 60;
     const int c_FaceLandmark_InnerMouth_LeftCorner = 64;
     const int c_FaceLandmark_InnerMouth_TopMiddle = 62;

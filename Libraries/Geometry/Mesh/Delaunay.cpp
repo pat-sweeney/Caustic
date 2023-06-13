@@ -19,6 +19,47 @@ import Geometry.Mesh.Mesh;
 
 namespace Caustic
 {
+    // TODO: This isn't correct. Need to fix
+    // Ideally I want to be able to specify part of the mesh to be
+    // preset by the client even if it violates the Delaunay constraint
+    void CDelaunay2::AddFixedMesh(DelaunayVertex*pVertices, int numVertices, int *pIndices, int numIndices)
+    {
+        int indexOffset = (int)m_points.size();
+        for (int i = 0; i < numVertices; i++)
+        {
+            pVertices[i].flags |= c_FixedVertex;
+            m_points.push_back(pVertices[i]);
+        }
+        for (int j = 0; j < numIndices; j += 3)
+        {
+            bool hasBoundaryEdge = false;
+            bool isBoundary = 
+                ((pVertices[pIndices[j + 0]].flags & c_BoundaryVertex) &&
+                 (pVertices[pIndices[j + 1]].flags & c_BoundaryVertex));
+            if (isBoundary)
+                hasBoundaryEdge = true;
+            int e0 = FindOrAddEdge(pIndices[j + 0] + indexOffset, pIndices[j + 1] + indexOffset, m_numTriangles, isBoundary);
+
+            isBoundary = 
+                ((pVertices[pIndices[j + 1]].flags & c_BoundaryVertex) &&
+                 (pVertices[pIndices[j + 2]].flags & c_BoundaryVertex));
+            if (isBoundary)
+                hasBoundaryEdge = true;
+            int e1 = FindOrAddEdge(pIndices[j + 1] + indexOffset, pIndices[j + 2] + indexOffset, m_numTriangles, isBoundary);
+
+            isBoundary = 
+                ((pVertices[pIndices[j + 2]].flags & c_BoundaryVertex) && 
+                 (pVertices[pIndices[j + 0]].flags & c_BoundaryVertex));
+            if (isBoundary)
+                hasBoundaryEdge = true;
+            int e2 = FindOrAddEdge(pIndices[j + 2] + indexOffset, pIndices[j + 0] + indexOffset, m_numTriangles, isBoundary);
+            
+            m_triangles.push_back(Triangle(pIndices[j + 0] + indexOffset, pIndices[j + 1] + indexOffset, pIndices[j + 2] + indexOffset,
+                e0, e1, e2, 0));
+            m_numTriangles++;
+        }
+    }
+    
     CDelaunay2::CDelaunay2(BBox2 &bb)
     {
         // First add the super triangle
@@ -27,10 +68,10 @@ namespace Caustic
         Vector2 v2(bb.minPt.x, bb.maxPt.y);
         Vector2 v3(bb.maxPt.x, bb.maxPt.y);
         Vector2 uv(0.0f, 0.0f);
-        m_points.push_back(Vertex(v0, uv, c_SuperTriangleVertex));
-        m_points.push_back(Vertex(v1, uv, c_SuperTriangleVertex));
-        m_points.push_back(Vertex(v2, uv, c_SuperTriangleVertex));
-        m_points.push_back(Vertex(v3, uv, c_SuperTriangleVertex));
+        m_points.push_back(DelaunayVertex(v0, uv, c_SuperTriangleVertex));
+        m_points.push_back(DelaunayVertex(v1, uv, c_SuperTriangleVertex));
+        m_points.push_back(DelaunayVertex(v2, uv, c_SuperTriangleVertex));
+        m_points.push_back(DelaunayVertex(v3, uv, c_SuperTriangleVertex));
         int e0 = FindOrAddEdge(0, 2, 0, false);
         int e1 = FindOrAddEdge(2, 1, 0, false);
         int e2 = FindOrAddEdge(1, 0, 0, false);
@@ -295,7 +336,7 @@ namespace Caustic
     //**********************************************************************
     void CDelaunay2::AddPoint(Vector2 &pt, Vector2 &uv, bool isBoundary)
     {
-        m_points.push_back(Vertex(pt, uv, (isBoundary) ? c_BoundaryVertex : c_InteriorVertex));
+        m_points.push_back(DelaunayVertex(pt, uv, (isBoundary) ? c_BoundaryVertex : c_InteriorVertex));
     }
 
     //**********************************************************************
@@ -349,6 +390,9 @@ namespace Caustic
         //**********************************************************************
         for (int ptIndex = 0; ptIndex < (int)m_points.size(); ptIndex++)
         {
+            if (m_points[ptIndex].flags & c_FixedVertex)
+                continue;
+
             if (!(m_points[ptIndex].flags & flag))
                 continue;
 

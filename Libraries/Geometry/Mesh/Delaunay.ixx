@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2023
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -62,28 +62,6 @@ export namespace Caustic
         }
     };
 
-    const uint8 c_SuperTriangleVertex = 0x1;
-    const uint8 c_BoundaryVertex = 0x2;
-    const uint8 c_InteriorVertex = 0x4;
-
-    struct Vertex
-    {
-        uint8 flags;
-        Vector2 pos;
-        Vector2 uv;
-
-        Vertex() : flags(0)
-        {
-        }
-
-        Vertex(Vector2 &position, Vector2 &uvCoord, uint8 vertexFlag)
-        {
-            flags = vertexFlag;
-            pos = position;
-            uv = uvCoord;
-        }
-    };
-
     //**********************************************************************
     // Class: CDelaunay2
     // Defines a class for creating a Delaunay triangulation
@@ -91,7 +69,7 @@ export namespace Caustic
     //**********************************************************************
     class CDelaunay2 : public IDelaunay2, public CRefCount
     {
-        std::vector<Vertex> m_points;
+        std::vector<DelaunayVertex> m_points;
         std::map<std::tuple<int, int>, int> m_edgeMap; // Maps vertex index pair into edge index
         std::vector<Edge> m_edges;
         std::vector<Triangle> m_triangles;
@@ -116,10 +94,21 @@ export namespace Caustic
         virtual void Open() override {}
         virtual void AddPoint(Vector2 &pt, Vector2 &uv, bool isBoundary) override;
         virtual void Close() override;
+        virtual void AddFixedMesh(DelaunayVertex* pVertices, int numVertices, int* pIndices, int numIndices) override;
 
         virtual uint32 GetNumberTriangles() override 
         { 
             return m_numTriangles;
+        }
+
+        virtual void GetTriangleIndices(uint32 index, uint32& i0, uint32& i1, uint32& i2, bool isExterior[3]) override
+        {
+            i0 = m_triangles[index].v0;
+            i1 = m_triangles[index].v1;
+            i2 = m_triangles[index].v2;
+            isExterior[0] = (m_edges[m_triangles[index].e0].flags & c_BoundaryEdge) ? true : false;
+            isExterior[1] = (m_edges[m_triangles[index].e1].flags & c_BoundaryEdge) ? true : false;
+            isExterior[2] = (m_edges[m_triangles[index].e2].flags & c_BoundaryEdge) ? true : false;
         }
 
         virtual void GetTriangle(uint32 index, Vector2 &v0, Vector2 &v1, Vector2 &v2, bool isExterior[3]) override
