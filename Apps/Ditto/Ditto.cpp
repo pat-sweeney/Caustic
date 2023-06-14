@@ -81,78 +81,247 @@ class CWarpNode : public CGPUPipelineNodeBase
     CRefObj<IMesh> m_spMesh;
     CRefObj<IRenderMesh> m_spRenderMesh;
 
-    CRefObj<IMesh> BuildMesh(float imageW1, float imageH1, std::vector<Vector2>& landmarks)
+    CRefObj<IMesh> CreateSimpleTriangulation(float imageW1, float imageH1, std::vector<Vector2>& landmarks)
     {
-        // Define our super triangles to be larger than our image
-        BBox2 sqbb;
-        sqbb.minPt = Vector2(-1000.0f, -1000.0f);
-        sqbb.maxPt = Vector2(imageW1 + 1000.0f, imageH1 + 1000.0f);
-        CRefObj<IDelaunay2> spDelaunay = Caustic::CreateDelaunay2(sqbb);
-
-#pragma region("BuildTriangulation")
-        spDelaunay->Open();
-#if 0
-        // Add the corners of the image as our boundaries
-        int numVertices = c_FaceLandmark_Mouth_LastIndex - c_FaceLandmark_Mouth_FirstIndex + 1;
-        Caustic::DelaunayVertex* pVertices = new Caustic::DelaunayVertex[numVertices];
-        for (size_t landmarkIndex = c_FaceLandmark_Mouth_FirstIndex; landmarkIndex <= c_FaceLandmark_Mouth_LastIndex; landmarkIndex++)
-        {
-            pVertices[landmarkIndex - c_FaceLandmark_Mouth_FirstIndex].flags = (landmarkIndex < c_FaceLandmark_InnerMouth_FirstIndex) ? c_InteriorVertex : c_BoundaryVertex;
-            pVertices[landmarkIndex - c_FaceLandmark_Mouth_FirstIndex].pos = landmarks[landmarkIndex];
-            pVertices[landmarkIndex - c_FaceLandmark_Mouth_FirstIndex].uv.x = landmarks[landmarkIndex].x / imageW1;
-            pVertices[landmarkIndex - c_FaceLandmark_Mouth_FirstIndex].uv.y = landmarks[landmarkIndex].y / imageH1;
-        }
-        int pIndices[] = {
-            48- c_FaceLandmark_Mouth_FirstIndex, 60 - c_FaceLandmark_Mouth_FirstIndex, 49 - c_FaceLandmark_Mouth_FirstIndex,
-            60 - c_FaceLandmark_Mouth_FirstIndex, 61 - c_FaceLandmark_Mouth_FirstIndex, 49 - c_FaceLandmark_Mouth_FirstIndex,
-            49 - c_FaceLandmark_Mouth_FirstIndex, 61 - c_FaceLandmark_Mouth_FirstIndex, 50 - c_FaceLandmark_Mouth_FirstIndex,
-            61 - c_FaceLandmark_Mouth_FirstIndex, 62 - c_FaceLandmark_Mouth_FirstIndex, 50 - c_FaceLandmark_Mouth_FirstIndex,
-            50 - c_FaceLandmark_Mouth_FirstIndex, 62 - c_FaceLandmark_Mouth_FirstIndex, 51 - c_FaceLandmark_Mouth_FirstIndex,
-            51 - c_FaceLandmark_Mouth_FirstIndex, 62 - c_FaceLandmark_Mouth_FirstIndex, 63 - c_FaceLandmark_Mouth_FirstIndex,
-            51 - c_FaceLandmark_Mouth_FirstIndex, 63 - c_FaceLandmark_Mouth_FirstIndex, 52 - c_FaceLandmark_Mouth_FirstIndex,
-            52 - c_FaceLandmark_Mouth_FirstIndex, 63 - c_FaceLandmark_Mouth_FirstIndex, 64 - c_FaceLandmark_Mouth_FirstIndex,
-            52 - c_FaceLandmark_Mouth_FirstIndex, 64 - c_FaceLandmark_Mouth_FirstIndex, 53 - c_FaceLandmark_Mouth_FirstIndex,
-            53 - c_FaceLandmark_Mouth_FirstIndex, 64 - c_FaceLandmark_Mouth_FirstIndex, 54 - c_FaceLandmark_Mouth_FirstIndex,
-            53 - c_FaceLandmark_Mouth_FirstIndex, 64 - c_FaceLandmark_Mouth_FirstIndex, 55 - c_FaceLandmark_Mouth_FirstIndex,
-            55 - c_FaceLandmark_Mouth_FirstIndex, 64 - c_FaceLandmark_Mouth_FirstIndex, 65 - c_FaceLandmark_Mouth_FirstIndex,
-            55 - c_FaceLandmark_Mouth_FirstIndex, 65 - c_FaceLandmark_Mouth_FirstIndex, 56 - c_FaceLandmark_Mouth_FirstIndex,
-            56 - c_FaceLandmark_Mouth_FirstIndex, 65 - c_FaceLandmark_Mouth_FirstIndex, 66 - c_FaceLandmark_Mouth_FirstIndex,
-            56 - c_FaceLandmark_Mouth_FirstIndex, 66 - c_FaceLandmark_Mouth_FirstIndex, 57 - c_FaceLandmark_Mouth_FirstIndex,
-            57 - c_FaceLandmark_Mouth_FirstIndex, 66 - c_FaceLandmark_Mouth_FirstIndex, 67 - c_FaceLandmark_Mouth_FirstIndex,
-            57 - c_FaceLandmark_Mouth_FirstIndex, 67 - c_FaceLandmark_Mouth_FirstIndex, 58 - c_FaceLandmark_Mouth_FirstIndex,
-            58 - c_FaceLandmark_Mouth_FirstIndex, 67 - c_FaceLandmark_Mouth_FirstIndex, 60 - c_FaceLandmark_Mouth_FirstIndex,
-            58 - c_FaceLandmark_Mouth_FirstIndex, 60 - c_FaceLandmark_Mouth_FirstIndex, 59 - c_FaceLandmark_Mouth_FirstIndex,
-            59 - c_FaceLandmark_Mouth_FirstIndex, 60 - c_FaceLandmark_Mouth_FirstIndex, 48 - c_FaceLandmark_Mouth_FirstIndex
-        };
-        spDelaunay->AddFixedMesh(pVertices, numVertices, pIndices, _countof(pIndices));
-
-#endif
-        Vector2 pt;
+        std::vector<DelaunayVertex> vertices;
         Vector2 uv;
-        spDelaunay->AddPoint(pt = Vector2(0.0f, 0.0f), uv = Vector2(0.0f, 0.0f), true);
-        spDelaunay->AddPoint(pt = Vector2(imageW1, 0.0f), uv = Vector2(1.0f, 0.0f), true);
-        spDelaunay->AddPoint(pt = Vector2(imageW1, imageH1), uv = Vector2(1.0f, 1.0f), true);
-        spDelaunay->AddPoint(pt = Vector2(0.0f, imageH1), uv = Vector2(0.0f, 1.0f), true);
-        spDelaunay->AddPoint(pt = Vector2(imageW1 / 2.0f, 0.0f), uv = Vector2(0.5f, 0.0f), true);
-        spDelaunay->AddPoint(pt = Vector2(imageW1 / 2.0f, imageH1 / 2.0f), uv = Vector2(0.5f, 0.5f), false);
-        spDelaunay->AddPoint(pt = Vector2(imageW1 / 2.0f, imageH1), uv = Vector2(0.5f, 1.0f), true);
-        spDelaunay->AddPoint(pt = Vector2(0.0f, imageH1 / 2.0f), uv = Vector2(0.0f, 0.5f), true);
-        spDelaunay->AddPoint(pt = Vector2(imageW1, imageH1 / 2.0f), uv = Vector2(1.0f, 0.5f), true);
-
-//        for (size_t landmarkIndex = 60; landmarkIndex <= 67; landmarkIndex++)
-//        {
-//            Vector2 point(landmarks[landmarkIndex].x, landmarks[landmarkIndex].y);
-//            Vector2 uv(landmarks[landmarkIndex].x / imageW1, landmarks[landmarkIndex].y / imageH1);
-//            spDelaunay->AddPoint(point, uv, false);
-//        }
-        for (size_t landmarkIndex = 48; landmarkIndex <= 65; landmarkIndex++)
+        Vector2 pos;
+        vertices.push_back(DelaunayVertex(pos = Vector2(0.0f, 0.0f), uv = Vector2(0.0f, 0.0f), c_SuperTriangleVertex));
+        vertices.push_back(DelaunayVertex(pos = Vector2(imageW1 / 4, 0.0f), uv = Vector2(0.25f, 0.0f), c_SuperTriangleVertex));
+        vertices.push_back(DelaunayVertex(pos = Vector2((imageW1 * 2) / 4, 0.0f), uv = Vector2(0.50f, 0.0f), c_SuperTriangleVertex));
+        vertices.push_back(DelaunayVertex(pos = Vector2((imageW1 * 3) / 4, 0.0f), uv = Vector2(0.75f, 0.0f), c_SuperTriangleVertex));
+        vertices.push_back(DelaunayVertex(pos = Vector2(imageW1, 0.0f), uv = Vector2(1.0f, 0.0f), c_SuperTriangleVertex));
+        vertices.push_back(DelaunayVertex(pos = Vector2(imageW1, imageH1 / 4), uv = Vector2(1.0f, 0.25f), c_SuperTriangleVertex));
+        vertices.push_back(DelaunayVertex(pos = Vector2(imageW1, (imageH1 * 2) / 4), uv = Vector2(1.0f, 0.50f), c_SuperTriangleVertex));
+        vertices.push_back(DelaunayVertex(pos = Vector2(imageW1, (imageH1 * 3) / 4), uv = Vector2(1.0f, 0.75f), c_SuperTriangleVertex));
+        vertices.push_back(DelaunayVertex(pos = Vector2(imageW1, imageH1), uv = Vector2(1.0f, 1.0f), c_SuperTriangleVertex));
+        vertices.push_back(DelaunayVertex(pos = Vector2((imageW1 * 3) / 4, imageH1), uv = Vector2(0.75f, 1.0f), c_SuperTriangleVertex));
+        vertices.push_back(DelaunayVertex(pos = Vector2((imageW1 * 2) / 4, imageH1), uv = Vector2(0.50f, 1.0f), c_SuperTriangleVertex));
+        vertices.push_back(DelaunayVertex(pos = Vector2(imageW1 / 4, imageH1), uv = Vector2(0.25f, 1.0f), c_SuperTriangleVertex));
+        vertices.push_back(DelaunayVertex(pos = Vector2(0.0f, imageH1), uv = Vector2(0.0f, 1.0f), c_SuperTriangleVertex));
+        vertices.push_back(DelaunayVertex(pos = Vector2(0.0f, (imageH1 * 3) / 4), uv = Vector2(0.0f, 0.75f), c_SuperTriangleVertex));
+        vertices.push_back(DelaunayVertex(pos = Vector2(0.0f, (imageH1 * 2) / 4), uv = Vector2(0.0f, 0.50f), c_SuperTriangleVertex));
+        vertices.push_back(DelaunayVertex(pos = Vector2(0.0f, imageH1 / 4), uv = Vector2(0.0f, 0.25f), c_SuperTriangleVertex));
+        for (size_t landmarkIndex = c_FaceLandmark_Mouth_FirstIndex; landmarkIndex <= c_FaceLandmark_Mouth_LastIndex; landmarkIndex++)
         {
             Vector2 point(landmarks[landmarkIndex].x, landmarks[landmarkIndex].y);
             Vector2 uv(landmarks[landmarkIndex].x / imageW1, landmarks[landmarkIndex].y / imageH1);
-            spDelaunay->AddPoint(point, uv, false);
+            vertices.push_back(DelaunayVertex(point, uv, c_SuperTriangleVertex));
         }
-        spDelaunay->Close();
+        int pIndices[] = {
+            0, 49 - 32, 50 - 32,
+            0, 50 - 32, 1,
+            1, 50 - 32, 2,
+            50 - 32, 51 - 32, 2,
+            2, 51 - 32, 3,
+            51 - 32, 52 - 32, 3,
+            3, 52 - 32, 4,
+            4, 52 - 32, 53 - 32,
+            4, 53 - 32, 5,
+            5, 53 - 32, 54 - 32,
+            5, 54 - 32, 6,
+            6, 54 - 32, 55 - 32,
+            6, 55 - 32, 7,
+            7, 55 - 32, 8,
+            8, 55 - 32, 56 - 32,
+            8, 56 - 32, 9,
+            9, 56 - 32, 57 - 32,
+            9, 57 - 32, 10,
+            10, 57 - 32, 58 - 32,
+            10, 58 - 32, 11,
+            11, 58 - 32, 12,
+            12, 58 - 32, 59 - 32,
+            12, 59 - 32, 13,
+            13, 59 - 32, 14,
+            14, 59 - 32, 48 - 32,
+            14, 48 - 32, 15,
+            15, 48 - 32, 49 - 32,
+            15, 49 - 32, 0,
+            48 - 32,60 - 32,49 - 32,
+            49 - 32,60 - 32,61 - 32,
+            49 - 32,61 - 32,50 - 32,
+            50 - 32,61 - 32,62 - 32,
+            50 - 32,62 - 32,51 - 32,
+            51 - 32,62 - 32,63 - 32,
+            51 - 32,63 - 32,52 - 32,
+            52 - 32,63 - 32,64 - 32,
+            52 - 32,64 - 32,53 - 32,
+            53 - 32,64 - 32,54 - 32,
+            54 - 32,64 - 32,55 - 32,
+            55 - 32,64 - 32,56 - 32,
+            64 - 32,65 - 32,56 - 32,
+            56 - 32,65 - 32,57 - 32,
+            65 - 32,66 - 32,57 - 32,
+            66 - 32,58 - 32,57 - 32,
+            66 - 32,67 - 32,58 - 32,
+            67 - 32,59 - 32,58 - 32,
+            67 - 32,60 - 32,59 - 32,
+            59 - 32,60 - 32,48 - 32
+        };
+
+        Vector3 normal(0.0f, 1.0f, 0.0f);
+
+        CRefObj<IMeshConstructor> spMeshConstructor = IMeshConstructor::Create();
+        spMeshConstructor->MeshOpen();
+        spMeshConstructor->SubMeshOpen();
+        int numTris = (int)_countof(pIndices);
+        for (int triIndex = 0; triIndex < numTris; triIndex+=3)
+        {
+            Vector2 v0, v1, v2;
+            Vector3 p0(vertices[pIndices[triIndex+0]].pos.x, vertices[pIndices[triIndex+0]].pos.y, 0.0f);
+            Vector3 p1(vertices[pIndices[triIndex+1]].pos.x, vertices[pIndices[triIndex+1]].pos.y, 0.0f);
+            Vector3 p2(vertices[pIndices[triIndex+2]].pos.x, vertices[pIndices[triIndex+2]].pos.y, 0.0f);
+            spMeshConstructor->FaceOpen();
+            Vector2 vuv;
+            Vector2 uv0(vertices[pIndices[triIndex + 0]].uv.x, vertices[pIndices[triIndex + 0]].uv.y);
+            Vector2 uv1(vertices[pIndices[triIndex + 1]].uv.x, vertices[pIndices[triIndex + 1]].uv.y);
+            Vector2 uv2(vertices[pIndices[triIndex + 2]].uv.x, vertices[pIndices[triIndex + 2]].uv.y);
+            p0.x /= imageW1; p0.x = p0.x * 2.0f - 1.0f;
+            p0.y /= imageH1; p0.y = p0.y * 2.0f - 1.0f;
+            p1.x /= imageW1; p1.x = p1.x * 2.0f - 1.0f;
+            p1.y /= imageH1; p1.y = p1.y * 2.0f - 1.0f;
+            p2.x /= imageW1; p2.x = p2.x * 2.0f - 1.0f;
+            p2.y /= imageH1; p2.y = p2.y * 2.0f - 1.0f;
+            spMeshConstructor->VertexAdd(p0, normal, uv0);
+            spMeshConstructor->VertexAdd(p1, normal, uv1);
+            spMeshConstructor->VertexAdd(p2, normal, uv2);
+            spMeshConstructor->FaceClose();
+        }
+        CRefObj<ISubMesh> spSubMesh = spMeshConstructor->SubMeshClose();
+        spSubMesh->SetMeshFlags(EMeshFlags::TwoSided);
+        return spMeshConstructor->MeshClose();
+    }
+
+    CRefObj<IDelaunay2> CreateTriangulation(float imageW1, float imageH1, std::vector<Vector2>& landmarks)
+    {
+        // Define our super triangles to be larger than our image
+////        BBox2 sqbb;
+////        sqbb.minPt = Vector2(-1000.0f, -1000.0f);
+////        sqbb.maxPt = Vector2(imageW1 + 1000.0f, imageH1 + 1000.0f);
+////        CRefObj<IDelaunay2> spDelaunay = Caustic::CreateDelaunay2(sqbb);
+
+#pragma region("BuildTriangulation")
+////#if 0
+////        // Add the corners of the image as our boundaries
+////        int numVertices = c_FaceLandmark_Mouth_LastIndex - c_FaceLandmark_Mouth_FirstIndex + 1;
+////        Caustic::DelaunayVertex* pVertices = new Caustic::DelaunayVertex[numVertices];
+////        for (size_t landmarkIndex = c_FaceLandmark_Mouth_FirstIndex; landmarkIndex <= c_FaceLandmark_Mouth_LastIndex; landmarkIndex++)
+////        {
+////            pVertices[landmarkIndex - c_FaceLandmark_Mouth_FirstIndex].flags = (landmarkIndex < c_FaceLandmark_InnerMouth_FirstIndex) ? c_InteriorVertex : c_BoundaryVertex;
+////            pVertices[landmarkIndex - c_FaceLandmark_Mouth_FirstIndex].pos = landmarks[landmarkIndex];
+////            pVertices[landmarkIndex - c_FaceLandmark_Mouth_FirstIndex].uv.x = landmarks[landmarkIndex].x / imageW1;
+////            pVertices[landmarkIndex - c_FaceLandmark_Mouth_FirstIndex].uv.y = landmarks[landmarkIndex].y / imageH1;
+////        }
+////        int pIndices[] = {
+////            48 - c_FaceLandmark_Mouth_FirstIndex, 60 - c_FaceLandmark_Mouth_FirstIndex, 49 - c_FaceLandmark_Mouth_FirstIndex,
+////            60 - c_FaceLandmark_Mouth_FirstIndex, 61 - c_FaceLandmark_Mouth_FirstIndex, 49 - c_FaceLandmark_Mouth_FirstIndex,
+////            49 - c_FaceLandmark_Mouth_FirstIndex, 61 - c_FaceLandmark_Mouth_FirstIndex, 50 - c_FaceLandmark_Mouth_FirstIndex,
+////            61 - c_FaceLandmark_Mouth_FirstIndex, 62 - c_FaceLandmark_Mouth_FirstIndex, 50 - c_FaceLandmark_Mouth_FirstIndex,
+////            50 - c_FaceLandmark_Mouth_FirstIndex, 62 - c_FaceLandmark_Mouth_FirstIndex, 51 - c_FaceLandmark_Mouth_FirstIndex,
+////            51 - c_FaceLandmark_Mouth_FirstIndex, 62 - c_FaceLandmark_Mouth_FirstIndex, 63 - c_FaceLandmark_Mouth_FirstIndex,
+////            51 - c_FaceLandmark_Mouth_FirstIndex, 63 - c_FaceLandmark_Mouth_FirstIndex, 52 - c_FaceLandmark_Mouth_FirstIndex,
+////            52 - c_FaceLandmark_Mouth_FirstIndex, 63 - c_FaceLandmark_Mouth_FirstIndex, 64 - c_FaceLandmark_Mouth_FirstIndex,
+////            52 - c_FaceLandmark_Mouth_FirstIndex, 64 - c_FaceLandmark_Mouth_FirstIndex, 53 - c_FaceLandmark_Mouth_FirstIndex,
+////            53 - c_FaceLandmark_Mouth_FirstIndex, 64 - c_FaceLandmark_Mouth_FirstIndex, 54 - c_FaceLandmark_Mouth_FirstIndex,
+////            53 - c_FaceLandmark_Mouth_FirstIndex, 64 - c_FaceLandmark_Mouth_FirstIndex, 55 - c_FaceLandmark_Mouth_FirstIndex,
+////            55 - c_FaceLandmark_Mouth_FirstIndex, 64 - c_FaceLandmark_Mouth_FirstIndex, 65 - c_FaceLandmark_Mouth_FirstIndex,
+////            55 - c_FaceLandmark_Mouth_FirstIndex, 65 - c_FaceLandmark_Mouth_FirstIndex, 56 - c_FaceLandmark_Mouth_FirstIndex,
+////            56 - c_FaceLandmark_Mouth_FirstIndex, 65 - c_FaceLandmark_Mouth_FirstIndex, 66 - c_FaceLandmark_Mouth_FirstIndex,
+////            56 - c_FaceLandmark_Mouth_FirstIndex, 66 - c_FaceLandmark_Mouth_FirstIndex, 57 - c_FaceLandmark_Mouth_FirstIndex,
+////            57 - c_FaceLandmark_Mouth_FirstIndex, 66 - c_FaceLandmark_Mouth_FirstIndex, 67 - c_FaceLandmark_Mouth_FirstIndex,
+////            57 - c_FaceLandmark_Mouth_FirstIndex, 67 - c_FaceLandmark_Mouth_FirstIndex, 58 - c_FaceLandmark_Mouth_FirstIndex,
+////            58 - c_FaceLandmark_Mouth_FirstIndex, 67 - c_FaceLandmark_Mouth_FirstIndex, 60 - c_FaceLandmark_Mouth_FirstIndex,
+////            58 - c_FaceLandmark_Mouth_FirstIndex, 60 - c_FaceLandmark_Mouth_FirstIndex, 59 - c_FaceLandmark_Mouth_FirstIndex,
+////            59 - c_FaceLandmark_Mouth_FirstIndex, 60 - c_FaceLandmark_Mouth_FirstIndex, 48 - c_FaceLandmark_Mouth_FirstIndex
+////        };
+////        spDelaunay->AddFixedMesh(pVertices, numVertices, pIndices, _countof(pIndices));
+////
+////#endif
+        DelaunayVertex* pVertices = new DelaunayVertex[38];
+        Vector2 uv;
+        Vector2 pos;
+        pVertices[0] = DelaunayVertex(pos = Vector2(0.0f, 0.0f), uv = Vector2(0.0f, 0.0f), c_SuperTriangleVertex);
+        pVertices[1] = DelaunayVertex(pos = Vector2(imageW1 / 4, 0.0f), uv = Vector2(0.25f, 0.0f), c_SuperTriangleVertex);
+        pVertices[2] = DelaunayVertex(pos = Vector2((imageW1 * 2) / 4, 0.0f), uv = Vector2(0.50f, 0.0f), c_SuperTriangleVertex);
+        pVertices[3] = DelaunayVertex(pos = Vector2((imageW1 * 3) / 4, 0.0f), uv = Vector2(0.75f, 0.0f), c_SuperTriangleVertex);
+        pVertices[4] = DelaunayVertex(pos = Vector2(imageW1, 0.0f), uv = Vector2(1.0f, 0.0f), c_SuperTriangleVertex);
+        pVertices[5] = DelaunayVertex(pos = Vector2(imageW1, imageH1 / 4), uv = Vector2(1.0f, 0.25f), c_SuperTriangleVertex);
+        pVertices[6] = DelaunayVertex(pos = Vector2(imageW1, (imageH1 * 2) / 4), uv = Vector2(1.0f, 0.50f), c_SuperTriangleVertex);
+        pVertices[7] = DelaunayVertex(pos = Vector2(imageW1, (imageH1 * 3) / 4), uv = Vector2(1.0f, 0.75f), c_SuperTriangleVertex);
+        pVertices[8] = DelaunayVertex(pos = Vector2(imageW1, imageH1), uv = Vector2(1.0f, 1.0f), c_SuperTriangleVertex);
+        pVertices[9] = DelaunayVertex(pos = Vector2((imageW1 * 3) / 4, imageH1), uv = Vector2(0.75f, 1.0f), c_SuperTriangleVertex);
+        pVertices[10] = DelaunayVertex(pos = Vector2((imageW1 * 2) / 4, imageH1), uv = Vector2(0.50f, 1.0f), c_SuperTriangleVertex);
+        pVertices[11] = DelaunayVertex(pos = Vector2(imageW1 / 4, imageH1), uv = Vector2(0.25f, 1.0f), c_SuperTriangleVertex);
+        pVertices[12] = DelaunayVertex(pos = Vector2(0.0f, imageH1), uv = Vector2(0.0f, 1.0f), c_SuperTriangleVertex);
+        pVertices[13] = DelaunayVertex(pos = Vector2(0.0f, (imageH1 * 3) / 4), uv = Vector2(0.0f, 0.75f), c_SuperTriangleVertex);
+        pVertices[14] = DelaunayVertex(pos = Vector2(0.0f, (imageH1 * 2) / 4), uv = Vector2(0.0f, 0.50f), c_SuperTriangleVertex);
+        pVertices[15] = DelaunayVertex(pos = Vector2(0.0f, imageH1 / 4), uv = Vector2(0.0f, 0.25f), c_SuperTriangleVertex);
+
+        int ptIndex = 16;
+        for (size_t landmarkIndex = c_FaceLandmark_Mouth_FirstIndex; landmarkIndex <= c_FaceLandmark_Mouth_LastIndex; landmarkIndex++)
+        {
+            Vector2 point(landmarks[landmarkIndex].x, landmarks[landmarkIndex].y);
+            Vector2 uv(landmarks[landmarkIndex].x / imageW1, landmarks[landmarkIndex].y / imageH1);
+            pVertices[ptIndex++] = DelaunayVertex(point, uv, c_SuperTriangleVertex);
+        }
+        for (size_t k = 0; k < ptIndex; k++)
+        {
+            wchar_t buf[1024];
+            swprintf_s(buf, L"Vert: %f,%f\n", pVertices[k].pos.x, pVertices[k].pos.y);
+            OutputDebugString(buf);
+        }
+        int pIndices[] = {
+            0, 49 - 32, 50 - 32, (int)c_NormalEdge, (int)c_BoundaryEdge, (int)c_NormalEdge,
+            0, 50 - 32, 1, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
+            1, 50 - 32, 2, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
+            50 - 32, 51 - 32, 2, (int)c_BoundaryEdge, (int)c_NormalEdge, (int)c_NormalEdge,
+            2, 51 - 32, 3, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
+            51 - 32, 52 - 32, 3, (int)c_BoundaryEdge, (int)c_NormalEdge, (int)c_NormalEdge,
+            3, 52 - 32, 4, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
+            4, 52 - 32, 53 - 32, (int)c_NormalEdge, (int)c_BoundaryEdge, (int)c_NormalEdge,
+            4, 53 - 32, 5, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
+            5, 53 - 32, 54 - 32, (int)c_NormalEdge, (int)c_BoundaryEdge, (int)c_NormalEdge,
+            5, 54 - 32, 6, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
+            6, 54 - 32, 55 - 32, (int)c_NormalEdge, (int)c_BoundaryEdge, (int)c_NormalEdge,
+            6, 55 - 32, 7, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
+            7, 55 - 32, 8, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
+            8, 55 - 32, 56 - 32, (int)c_NormalEdge, (int)c_BoundaryEdge, (int)c_NormalEdge,
+            8, 56 - 32, 9, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
+            9, 56 - 32, 57 - 32, (int)c_NormalEdge, (int)c_BoundaryEdge, (int)c_NormalEdge,
+            9, 57 - 32, 10, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
+            10, 57 - 32, 58 - 32, (int)c_NormalEdge, (int)c_BoundaryEdge, (int)c_NormalEdge,
+            10, 58 - 32, 11, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
+            11, 58 - 32, 12, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
+            12, 58 - 32, 59 - 32, (int)c_NormalEdge, (int)c_BoundaryEdge, (int)c_NormalEdge,
+            12, 59 - 32, 13, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
+            13, 59 - 32, 14, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
+            14, 59 - 32, 48 - 32, (int)c_NormalEdge, (int)c_BoundaryEdge, (int)c_NormalEdge,
+            14, 48 - 32, 15, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
+            15, 48 - 32, 49 - 32, (int)c_NormalEdge, (int)c_BoundaryEdge, (int)c_NormalEdge,
+            15, 49 - 32, 0, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge
+        };
+        CRefObj<IDelaunay2> spDelaunay = Caustic::CreateDelaunay2(pVertices, ptIndex, pIndices, _countof(pIndices));
+        spDelaunay->Open();
+        int gridDeltaX = imageW1 / c_GridX;
+        int gridDeltaY = imageH1 / c_GridY;
+        for (int y = 1; y < c_GridY - 1; y++)
+        {
+            for (int x = 1; x < c_GridX - 1; x++)
+            {
+                Vector2 pos(float(x * gridDeltaX), float(y * gridDeltaY));
+                Vector2 uv(float(x) / float(c_GridY - 1), float(y) / float(c_GridX - 1));
+                spDelaunay->AddPoint(pos, uv, false);
+            }
+            break;
+        }
+        spDelaunay->Close(false);
+        return spDelaunay;
 #pragma endregion
+    }
+
+    CRefObj<IMesh> BuildMesh(float imageW1, float imageH1, std::vector<Vector2>& landmarks)
+    {
+        CRefObj<IDelaunay2> spDelaunay = CreateTriangulation(imageW1, imageH1, landmarks);
 
         Vector3 normal(0.0f, 1.0f, 0.0f);
 
@@ -193,8 +362,9 @@ public:
 
         m_cpuFlags = (D3D11_CPU_ACCESS_FLAG)0;
         m_bindFlags = (D3D11_BIND_FLAG)(D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET | D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
-//        m_spMesh = Caustic::CreateGrid(c_GridX, c_GridY);
-        m_spMesh = BuildMesh((float)inputWidth - 1.0f, (float)inputHeight - 1.0f, landmarks);
+        //m_spMesh = Caustic::CreateGrid(c_GridX, c_GridY);
+        //m_spMesh = BuildMesh((float)inputWidth - 1.0f, (float)inputHeight - 1.0f, landmarks);
+        m_spMesh = CreateSimpleTriangulation((float)inputWidth - 1.0f, (float)inputHeight - 1.0f, landmarks);
         m_spRenderMesh = pRenderer->ToRenderMesh(m_spMesh, pShader);
     }
 

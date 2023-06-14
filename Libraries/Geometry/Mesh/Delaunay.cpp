@@ -22,6 +22,8 @@ namespace Caustic
     // TODO: This isn't correct. Need to fix
     // Ideally I want to be able to specify part of the mesh to be
     // preset by the client even if it violates the Delaunay constraint
+    // NOT SUPPORTED
+    // EXPLORATORY TEST INTO ADDING CONSTRAINTS ON MESH
     void CDelaunay2::AddFixedMesh(DelaunayVertex*pVertices, int numVertices, int *pIndices, int numIndices)
     {
         int indexOffset = (int)m_points.size();
@@ -32,34 +34,37 @@ namespace Caustic
         }
         for (int j = 0; j < numIndices; j += 3)
         {
-            bool hasBoundaryEdge = false;
-            bool isBoundary = 
-                ((pVertices[pIndices[j + 0]].flags & c_BoundaryVertex) &&
-                 (pVertices[pIndices[j + 1]].flags & c_BoundaryVertex));
-            if (isBoundary)
-                hasBoundaryEdge = true;
-            int e0 = FindOrAddEdge(pIndices[j + 0] + indexOffset, pIndices[j + 1] + indexOffset, m_numTriangles, isBoundary);
-
-            isBoundary = 
-                ((pVertices[pIndices[j + 1]].flags & c_BoundaryVertex) &&
-                 (pVertices[pIndices[j + 2]].flags & c_BoundaryVertex));
-            if (isBoundary)
-                hasBoundaryEdge = true;
-            int e1 = FindOrAddEdge(pIndices[j + 1] + indexOffset, pIndices[j + 2] + indexOffset, m_numTriangles, isBoundary);
-
-            isBoundary = 
-                ((pVertices[pIndices[j + 2]].flags & c_BoundaryVertex) && 
-                 (pVertices[pIndices[j + 0]].flags & c_BoundaryVertex));
-            if (isBoundary)
-                hasBoundaryEdge = true;
-            int e2 = FindOrAddEdge(pIndices[j + 2] + indexOffset, pIndices[j + 0] + indexOffset, m_numTriangles, isBoundary);
-            
+            int e0 = FindOrAddEdge(pIndices[j + 0] + indexOffset, pIndices[j + 1] + indexOffset, m_numTriangles, c_BoundaryEdge);
+            int e1 = FindOrAddEdge(pIndices[j + 1] + indexOffset, pIndices[j + 2] + indexOffset, m_numTriangles, c_BoundaryEdge);
+            int e2 = FindOrAddEdge(pIndices[j + 2] + indexOffset, pIndices[j + 0] + indexOffset, m_numTriangles, c_BoundaryEdge);
             m_triangles.push_back(Triangle(pIndices[j + 0] + indexOffset, pIndices[j + 1] + indexOffset, pIndices[j + 2] + indexOffset,
                 e0, e1, e2, 0));
             m_numTriangles++;
         }
     }
     
+
+    // NOT SUPPORTED
+    // EXPLORATORY TEST INTO ADDING CONSTRAINTS ON MESH
+    CDelaunay2::CDelaunay2(DelaunayVertex* pVertices, int numVertices, int* pIndices, int numIndices)
+    {
+        // First add all the vertices to our vertex list
+        for (int i = 0; i < numVertices; i++)
+        {
+            pVertices[i].flags |= c_SuperTriangleVertex;
+            m_points.push_back(pVertices[i]);
+        }
+        m_numTriangles = 0;
+        for (int j = 0; j < numIndices; j += 6)
+        {
+            int e0 = FindOrAddEdge(pIndices[j], pIndices[j + 1], m_numTriangles, pIndices[j + 3]);
+            int e1 = FindOrAddEdge(pIndices[j + 1], pIndices[j + 2], m_numTriangles, pIndices[j + 4]);
+            int e2 = FindOrAddEdge(pIndices[j + 2], pIndices[j], m_numTriangles, pIndices[j + 5]);
+            m_triangles.push_back(Triangle(pIndices[j + 0], pIndices[j + 1], pIndices[j + 2], e0, e1, e2, 0));
+            m_numTriangles++;
+        }
+    }
+
     CDelaunay2::CDelaunay2(BBox2 &bb)
     {
         // First add the super triangle
@@ -72,12 +77,12 @@ namespace Caustic
         m_points.push_back(DelaunayVertex(v1, uv, c_SuperTriangleVertex));
         m_points.push_back(DelaunayVertex(v2, uv, c_SuperTriangleVertex));
         m_points.push_back(DelaunayVertex(v3, uv, c_SuperTriangleVertex));
-        int e0 = FindOrAddEdge(0, 2, 0, false);
-        int e1 = FindOrAddEdge(2, 1, 0, false);
-        int e2 = FindOrAddEdge(1, 0, 0, false);
-        int e3 = FindOrAddEdge(1, 2, 1, false);
-        int e4 = FindOrAddEdge(2, 3, 1, false);
-        int e5 = FindOrAddEdge(3, 1, 1, false);
+        int e0 = FindOrAddEdge(0, 2, 0, c_NormalEdge);
+        int e1 = FindOrAddEdge(2, 1, 0, c_NormalEdge);
+        int e2 = FindOrAddEdge(1, 0, 0, c_NormalEdge);
+        int e3 = FindOrAddEdge(1, 2, 1, c_NormalEdge);
+        int e4 = FindOrAddEdge(2, 3, 1, c_NormalEdge);
+        int e5 = FindOrAddEdge(3, 1, 1, c_NormalEdge);
         m_triangles.push_back(Triangle(0, 1, 2, e0, e1, e2, c_ExteriorTriangle));
         m_triangles.push_back(Triangle(1, 3, 2, e3, e4, e5, c_ExteriorTriangle));
         m_numTriangles = 2;
@@ -305,7 +310,7 @@ namespace Caustic
     //        +
     //        v1
     //**********************************************************************
-    int CDelaunay2::FindOrAddEdge(int v0, int v1, int tri, bool isBoundaryEdge)
+    int CDelaunay2::FindOrAddEdge(int v0, int v1, int tri, int edgeFlag)
     {
         int ei0;
         std::map<std::tuple<int, int>, int>::iterator it = m_edgeMap.find(std::make_tuple(v0, v1));
@@ -324,8 +329,7 @@ namespace Caustic
             m_edgeMap.insert(std::make_pair(std::make_tuple(v0, v1), ei0));
             m_edgeMap.insert(std::make_pair(std::make_tuple(v1, v0), ei0));
         }
-        if (isBoundaryEdge)
-            m_edges[ei0].flags |= c_BoundaryEdge;
+        m_edges[ei0].flags |= edgeFlag;
         return ei0;
     }
 
@@ -354,14 +358,14 @@ namespace Caustic
             if (m_points[i].flags & c_BoundaryVertex)
             {
                 if (lastBoundaryVertex != -1)
-                    FindOrAddEdge(lastBoundaryVertex, i, -1, true);
+                    FindOrAddEdge(lastBoundaryVertex, i, -1, c_BoundaryEdge);
                 else
                     firstBoundaryVertex = i;
                 lastBoundaryVertex = i;
             }
         }
         if (firstBoundaryVertex != -1 && lastBoundaryVertex != -1 && firstBoundaryVertex != lastBoundaryVertex)
-            FindOrAddEdge(lastBoundaryVertex, firstBoundaryVertex, -1, true);
+            FindOrAddEdge(lastBoundaryVertex, firstBoundaryVertex, -1, c_BoundaryEdge);
     }
 
     //**********************************************************************
@@ -509,8 +513,8 @@ namespace Caustic
 
                     // Create a new triangle between each edge and new point
                     int triIndex = (int)m_triangles.size();
-                    int ei0 = FindOrAddEdge(ptIndex, v0, triIndex, false);
-                    int ei1 = FindOrAddEdge(v1, ptIndex, triIndex, false);
+                    int ei0 = FindOrAddEdge(ptIndex, v0, triIndex, c_NormalEdge);
+                    int ei1 = FindOrAddEdge(v1, ptIndex, triIndex, c_NormalEdge);
                     if (IsLess(dir, 0.0f))
                         m_edges[i].t0 = triIndex;
                     else
@@ -583,27 +587,31 @@ namespace Caustic
 
     //**********************************************************************
     // Method: Close
-    // Performs the triangulation step after the points have all been added
-    // to the mesh.
+    // See <IDelauny2::Close>
     //**********************************************************************
-    void CDelaunay2::Close()
+    void CDelaunay2::Close(bool removeSuperTriangles)
     {
         ComputeTriangulation();
-        int j = 0;
-        for (int i = 0; i < (int)m_triangles.size(); i++)
+        if (removeSuperTriangles)
         {
-            if (m_triangles[i].flags & c_TriangleBad)
-                continue;
-            if (m_triangles[i].flags & c_ExteriorTriangle)
-                continue;
-            if (m_triangles[i].v0 <= 3 || m_triangles[i].v1 <= 3 || m_triangles[i].v2 <= 3) // Part of super triangle
-                continue;
+            int j = 0;
+            for (int i = 0; i < (int)m_triangles.size(); i++)
+            {
+                if (m_triangles[i].flags & c_TriangleBad)
+                    continue;
+                if (m_triangles[i].flags & c_ExteriorTriangle)
+                    continue;
+                if ((m_points[m_triangles[i].v0].flags & c_SuperTriangleVertex) &&
+                    (m_points[m_triangles[i].v1].flags & c_SuperTriangleVertex) &&
+                    (m_points[m_triangles[i].v2].flags & c_SuperTriangleVertex))
+                    continue;
 
-            if (i != j)
-                m_triangles[j++] = m_triangles[i];
+                if (i != j)
+                    m_triangles[j++] = m_triangles[i];
+            }
+            m_triangles.resize(j);
+            m_numTriangles = (uint32)m_triangles.size();
         }
-        m_triangles.resize(j);
-        m_numTriangles = (uint32)m_triangles.size();
     }
 
     //**********************************************************************
@@ -659,8 +667,17 @@ namespace Caustic
     // Method: CreateDelaunay2
     // Creates a Delaunay triangulation
     //**********************************************************************
-    CRefObj<IDelaunay2> CreateDelaunay2(BBox2 &bb)
+    CRefObj<IDelaunay2> CreateDelaunay2(BBox2& bb)
     {
         return CRefObj<IDelaunay2>(new CDelaunay2(bb));
+    }
+
+    //**********************************************************************
+    // Method: CreateDelaunay2
+    // Creates a Delaunay triangulation
+    //**********************************************************************
+    CRefObj<IDelaunay2> CreateDelaunay2(DelaunayVertex* pVertices, int numVertices, int* pIndices, int numIndices)
+    {
+        return CRefObj<IDelaunay2>(new CDelaunay2(pVertices, numVertices, pIndices, numIndices));
     }
 }

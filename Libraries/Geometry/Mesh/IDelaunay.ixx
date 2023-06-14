@@ -73,8 +73,11 @@ export namespace Caustic
         // Method: Close
         // Closes the triangulation and performs the Delaunay triangulation on
         // the set of points
+        // 
+        // Parameters:
+        // removeSuperTriangles - remove super triangles?
         //**********************************************************************
-        virtual void Close() = 0;
+        virtual void Close(bool removeSuperTriangles) = 0;
 
         //**********************************************************************
         // Method: GetNumberTriangles
@@ -118,4 +121,5 @@ export namespace Caustic
     };
 
     CRefObj<IDelaunay2> CreateDelaunay2(BBox2 &bb);
+    CRefObj<IDelaunay2> CreateDelaunay2(DelaunayVertex* pVertices, int numVertices, int* pIndices, int numIndices);
 }

@@ -45,6 +45,7 @@ export namespace Caustic
         }
     };
 
+    const int c_NormalEdge = 0x0;
     const int c_BoundaryEdge = 0x1;
     struct Edge
     {
@@ -75,11 +76,12 @@ export namespace Caustic
         std::vector<Triangle> m_triangles;
         int m_numTriangles;
 
-        int FindOrAddEdge(int v0, int v1, int tri, bool isBoundaryEdge);
+        int FindOrAddEdge(int v0, int v1, int tri, int edgeFlag);
         void CreateBoundaryEdges();
         void ComputeTriangulation();
         void TriangulatePoints(uint8 flag);
     public:
+        CDelaunay2(DelaunayVertex* pVertices, int numVertices, int* pIndices, int numIndices);
         CDelaunay2(BBox2 &bb);
 
         //**********************************************************************
@@ -93,7 +95,7 @@ export namespace Caustic
         //**********************************************************************
         virtual void Open() override {}
         virtual void AddPoint(Vector2 &pt, Vector2 &uv, bool isBoundary) override;
-        virtual void Close() override;
+        virtual void Close(bool removeSuperTriangles) override;
         virtual void AddFixedMesh(DelaunayVertex* pVertices, int numVertices, int* pIndices, int numIndices) override;
 
         virtual uint32 GetNumberTriangles() override 
