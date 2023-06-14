@@ -7,7 +7,7 @@
 struct VSOutput
 {
     float4 pos : SV_POSITION;
-    float2 uvs : TEXCOORD0;
+    float3 uvs : TEXCOORD0;
 };
 
 Texture2D sourceTexture1 : register(t0);
@@ -15,5 +15,7 @@ SamplerState sourceSampler1 : register(s0);
 
 float4 PS(VSOutput p) : SV_Target
 {
-    return float4(sourceTexture1.Sample(sourceSampler1, p.uvs).xyz, 1.0f);
+//if (p.uvs.z > 0.5)
+//return float4(1,0,0,1);
+    return float4(sourceTexture1.Sample(sourceSampler1, p.uvs.xy).xyz, 1.0f);
 }

@@ -204,15 +204,34 @@ namespace Caustic
     // Method: AllocateGeomVertex
     // See <CSubMesh::AllocateGeomVertex>
     //**********************************************************************
-    CGeomVertex *CSubMesh::AllocateGeomVertex(Vector3 &pos, Vector3 &normal, Vector2 &uv)
+    CGeomVertex* CSubMesh::AllocateGeomVertex(Vector3& pos, Vector3& normal, Vector2& uv)
     {
-        CGeomVertex *pVert = m_vertexAllocator.Allocate();
+        CGeomVertex* pVert = m_vertexAllocator.Allocate();
         pVert->pos = pos;
         pVert->norm = normal;
         pVert->uvs[0] = uv;
         int index = pVert->index = (int)m_vertices.size();
         m_vertices.push_back(pVert);
-        CGeomVertex *pVertex = m_vertices[index];
+        CGeomVertex* pVertex = m_vertices[index];
+        m_spKDTree->AddPoint(pos, pVertex);
+        m_bbox.AddPoint(pos);
+        return pVertex;
+    }
+
+    //**********************************************************************
+    // Method: AllocateGeomVertex
+    // See <CSubMesh::AllocateGeomVertex>
+    //**********************************************************************
+    CGeomVertex* CSubMesh::AllocateGeomVertex(Vector3& pos, Vector3& normal, Vector2 uvs[4])
+    {
+        CGeomVertex* pVert = m_vertexAllocator.Allocate();
+        pVert->pos = pos;
+        pVert->norm = normal;
+        for (int i = 0; i < 4; i++)
+            pVert->uvs[i] = uvs[i];
+        int index = pVert->index = (int)m_vertices.size();
+        m_vertices.push_back(pVert);
+        CGeomVertex* pVertex = m_vertices[index];
         m_spKDTree->AddPoint(pos, pVertex);
         m_bbox.AddPoint(pos);
         return pVertex;

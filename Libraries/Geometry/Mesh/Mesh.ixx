@@ -133,7 +133,8 @@ export namespace Caustic
         // Returns:
         // Newly created vertex object
         //**********************************************************************
-        CGeomVertex *AllocateGeomVertex(Caustic::Vector3 &pos, Vector3 &normal, Vector2 &uv);
+        CGeomVertex* AllocateGeomVertex(Caustic::Vector3& pos, Vector3& normal, Vector2& uv);
+        CGeomVertex* AllocateGeomVertex(Caustic::Vector3& pos, Vector3& normal, Vector2 uvs[4]);
         CFaceVertex *AllocateFaceVertex(CFace *face, Caustic::Vector3 &normal, Caustic::Vector2 &uv);
 
         //**********************************************************************

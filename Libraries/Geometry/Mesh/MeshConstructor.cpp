@@ -585,6 +585,29 @@ namespace Caustic
         return;
     }
 
+    void CMeshConstructor::VertexAdd(Vector3& pos, Vector3& normal, Vector2 uvs[4])
+    {
+        if (m_pCurFace == nullptr)
+            CT(E_FAIL); // Face isn't open
+
+        //CGeomVertex *pVertex = m_spSubMesh->FindVertex(pos, nullptr, &uv);
+        //if (pVertex == nullptr)
+        CGeomVertex* pVertex = m_spSubMesh->AllocateGeomVertex(pos, normal, uvs);
+        m_pCurFace->m_vertices.push_back(pVertex);
+
+        // Update running average of where current face's center point is
+        m_pCurFace->m_center.x += pVertex->pos.x;
+        m_pCurFace->m_center.y += pVertex->pos.y;
+        m_pCurFace->m_center.z += pVertex->pos.z;
+
+        // If this is NOT the first vertex being added to the face
+        // then create an edge between the last vertex and the new vertex.
+        if (m_pPrevVertex)
+            AddEdge(m_pPrevVertex, pVertex);
+        m_pPrevVertex = pVertex;
+        return;
+    }
+
     void CMeshConstructor::VertexAdd(Vector3 &pos, Vector3 &normal, Vector2 &uv)
     {
         if (m_pCurFace == nullptr)

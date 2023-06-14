@@ -75,8 +75,8 @@ namespace Caustic
                     {
                         _ASSERT(vertexLayout[j].Format == DXGI_FORMAT_R32G32_FLOAT);
                         float* fp = (float*)pVB;
-                        fp[0] = pVertex->uvs[0].x;
-                        fp[1] = pVertex->uvs[0].y;
+                        fp[0] = pVertex->uvs[vertexLayout[j].SemanticIndex].x;
+                        fp[1] = pVertex->uvs[vertexLayout[j].SemanticIndex].y;
                         pVB += sizeof(float) * 2;
                     }
                     else if (_strnicmp(vertexLayout[j].SemanticName, "NORMAL", 6) == 0)

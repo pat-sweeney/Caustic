@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2023
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -54,7 +54,8 @@ export namespace Caustic
         virtual CRefObj<ISubMesh> SubMeshClose() override;
         virtual void FaceOpen() override;
         virtual void FaceClose() override;
-        virtual void VertexAdd(Caustic::Vector3 &pos, Caustic::Vector3 &normal, Caustic::Vector2 &uv) override;
+        virtual void VertexAdd(Caustic::Vector3& pos, Caustic::Vector3& normal, Caustic::Vector2& uv) override;
+        virtual void VertexAdd(Caustic::Vector3& pos, Caustic::Vector3& normal, Caustic::Vector2 uvs[4]) override;
         virtual CRefObj<IMesh> MeshFromDensityFunction(int numBlocks, std::function<float(Vector3&)> fn) override;
     };
 }

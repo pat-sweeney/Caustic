@@ -65,6 +65,9 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 const int c_GridX = 100;
 const int c_GridY = 100;
 
+static bool s_useFixedDeltas = true;
+static int c_MaxDeltas = 100;
+
 // For a given phoneme, this structure contains the list
 // of landmark deltas that form the phoneme
 struct PhonemeLandmarkDelta
@@ -83,30 +86,115 @@ class CWarpNode : public CGPUPipelineNodeBase
 
     CRefObj<IMesh> CreateSimpleTriangulation(float imageW1, float imageH1, std::vector<Vector2>& landmarks)
     {
-        std::vector<DelaunayVertex> vertices;
-        Vector2 uv;
-        Vector2 pos;
-        vertices.push_back(DelaunayVertex(pos = Vector2(0.0f, 0.0f), uv = Vector2(0.0f, 0.0f), c_SuperTriangleVertex));
-        vertices.push_back(DelaunayVertex(pos = Vector2(imageW1 / 4, 0.0f), uv = Vector2(0.25f, 0.0f), c_SuperTriangleVertex));
-        vertices.push_back(DelaunayVertex(pos = Vector2((imageW1 * 2) / 4, 0.0f), uv = Vector2(0.50f, 0.0f), c_SuperTriangleVertex));
-        vertices.push_back(DelaunayVertex(pos = Vector2((imageW1 * 3) / 4, 0.0f), uv = Vector2(0.75f, 0.0f), c_SuperTriangleVertex));
-        vertices.push_back(DelaunayVertex(pos = Vector2(imageW1, 0.0f), uv = Vector2(1.0f, 0.0f), c_SuperTriangleVertex));
-        vertices.push_back(DelaunayVertex(pos = Vector2(imageW1, imageH1 / 4), uv = Vector2(1.0f, 0.25f), c_SuperTriangleVertex));
-        vertices.push_back(DelaunayVertex(pos = Vector2(imageW1, (imageH1 * 2) / 4), uv = Vector2(1.0f, 0.50f), c_SuperTriangleVertex));
-        vertices.push_back(DelaunayVertex(pos = Vector2(imageW1, (imageH1 * 3) / 4), uv = Vector2(1.0f, 0.75f), c_SuperTriangleVertex));
-        vertices.push_back(DelaunayVertex(pos = Vector2(imageW1, imageH1), uv = Vector2(1.0f, 1.0f), c_SuperTriangleVertex));
-        vertices.push_back(DelaunayVertex(pos = Vector2((imageW1 * 3) / 4, imageH1), uv = Vector2(0.75f, 1.0f), c_SuperTriangleVertex));
-        vertices.push_back(DelaunayVertex(pos = Vector2((imageW1 * 2) / 4, imageH1), uv = Vector2(0.50f, 1.0f), c_SuperTriangleVertex));
-        vertices.push_back(DelaunayVertex(pos = Vector2(imageW1 / 4, imageH1), uv = Vector2(0.25f, 1.0f), c_SuperTriangleVertex));
-        vertices.push_back(DelaunayVertex(pos = Vector2(0.0f, imageH1), uv = Vector2(0.0f, 1.0f), c_SuperTriangleVertex));
-        vertices.push_back(DelaunayVertex(pos = Vector2(0.0f, (imageH1 * 3) / 4), uv = Vector2(0.0f, 0.75f), c_SuperTriangleVertex));
-        vertices.push_back(DelaunayVertex(pos = Vector2(0.0f, (imageH1 * 2) / 4), uv = Vector2(0.0f, 0.50f), c_SuperTriangleVertex));
-        vertices.push_back(DelaunayVertex(pos = Vector2(0.0f, imageH1 / 4), uv = Vector2(0.0f, 0.25f), c_SuperTriangleVertex));
+        CGeomVertex vertices[100] = {
+            {
+                .pos = Vector3(0.0f, 0.0f, 0.0f),
+                .norm = Vector3(1.0f, 0.0f, 0.0f),
+                .uvs = { Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
+                .index = 0
+            },
+            {
+                .pos = Vector3(imageW1 / 4, 0.0f, 0.0f),
+                .norm = Vector3(1.0f, 0.0f, 0.0f),
+                .uvs = { Vector2(0.25f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
+                .index = 1
+            },
+            {
+                .pos = Vector3((imageW1 * 2) / 4, 0.0f, 0.0f),
+                .norm = Vector3(1.0f, 0.0f, 0.0f),
+                .uvs = { Vector2(0.5f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
+                .index = 2
+            },
+            {
+                .pos = Vector3((imageW1 * 3) / 4, 0.0f, 0.0f),
+                .norm = Vector3(1.0f, 0.0f, 0.0f),
+                .uvs = { Vector2(0.75f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
+                .index = 3
+            },
+            {
+                .pos = Vector3(imageW1, 0.0f, 0.0f),
+                .norm = Vector3(1.0f, 0.0f, 0.0f),
+                .uvs = { Vector2(1.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
+                .index = 4
+            },
+            {
+                .pos = Vector3(imageW1, imageH1 / 4.0f, 0.0f),
+                .norm = Vector3(1.0f, 0.0f, 0.0f),
+                .uvs = { Vector2(1.0f, 0.25f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
+                .index = 5
+            },
+            {
+                .pos = Vector3(imageW1, ((imageH1 * 2) / 4), 0.0f),
+                .norm = Vector3(1.0f, 0.0f, 0.0f),
+                .uvs = { Vector2(1.0f, 0.50f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
+                .index = 6
+            },
+            {
+                .pos = Vector3(imageW1, ((imageH1 * 3) / 4), 0.0f),
+                .norm = Vector3(1.0f, 0.0f, 0.0f),
+                .uvs = { Vector2(1.0f, 0.75f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
+                .index = 7
+            },
+            {
+                .pos = Vector3(imageW1, imageH1, 0.0f),
+                .norm = Vector3(1.0f, 0.0f, 0.0f),
+                .uvs = { Vector2(1.0f, 1.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
+                .index = 8
+            },
+            {
+                .pos = Vector3((imageW1 * 3) / 4, imageH1, 0.0f),
+                .norm = Vector3(1.0f, 0.0f, 0.0f),
+                .uvs = { Vector2(0.75f, 1.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
+                .index = 9
+            },
+            {
+                .pos = Vector3((imageW1 * 2) / 4, imageH1, 0.0f),
+                .norm = Vector3(1.0f, 0.0f, 0.0f),
+                .uvs = { Vector2(0.50f, 1.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
+                .index = 10
+            },
+            {
+                .pos = Vector3(imageW1 / 4, imageH1, 0.0f),
+                .norm = Vector3(1.0f, 0.0f, 0.0f),
+                .uvs = { Vector2(0.25f, 1.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
+                .index = 11
+            },
+            {
+                .pos = Vector3(0.0f, imageH1, 0.0f),
+                .norm = Vector3(1.0f, 0.0f, 0.0f),
+                .uvs = { Vector2(0.0f, 1.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
+                .index = 12
+            },
+            {
+                .pos = Vector3(0.0f, (imageH1 * 3) / 4, 0.0f),
+                .norm = Vector3(1.0f, 0.0f, 0.0f),
+                .uvs = { Vector2(0.0f, 0.75f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
+                .index = 13
+            },
+            {
+                .pos = Vector3(0.0f, (imageH1 * 2) / 4, 0.0f),
+                .norm = Vector3(1.0f, 0.0f, 0.0f),
+                .uvs = { Vector2(0.0f, 0.50f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
+                .index = 14
+            },
+            {
+                .pos = Vector3(0.0f, imageH1 / 4, 0.0f),
+                .norm = Vector3(1.0f, 0.0f, 0.0f),
+                .uvs = { Vector2(0.0f, 0.25f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
+                .index = 15
+            },
+        };
+        int vertIndex = 16;
         for (size_t landmarkIndex = c_FaceLandmark_Mouth_FirstIndex; landmarkIndex <= c_FaceLandmark_Mouth_LastIndex; landmarkIndex++)
         {
-            Vector2 point(landmarks[landmarkIndex].x, landmarks[landmarkIndex].y);
-            Vector2 uv(landmarks[landmarkIndex].x / imageW1, landmarks[landmarkIndex].y / imageH1);
-            vertices.push_back(DelaunayVertex(point, uv, c_SuperTriangleVertex));
+            vertices[vertIndex].pos = Vector3(landmarks[landmarkIndex].x, landmarks[landmarkIndex].y, 0.0f);
+            vertices[vertIndex].uvs[0] = Vector2(landmarks[landmarkIndex].x / imageW1, landmarks[landmarkIndex].y / imageH1);
+            vertices[vertIndex].uvs[1] = Vector2(0.0f, 0.0f);
+            vertices[vertIndex].uvs[2] = Vector2(0.0f, 0.0f);
+            vertices[vertIndex].uvs[3] = Vector2(0.0f, 0.0f);
+            vertices[vertIndex].norm = Vector3(1.0f, 0.0f, 0.0f);
+            vertices[vertIndex].index = vertIndex;
+            vertIndex++;
         }
         int pIndices[] = {
             0, 49 - 32, 50 - 32,
@@ -158,9 +246,6 @@ class CWarpNode : public CGPUPipelineNodeBase
             67 - 32,60 - 32,59 - 32,
             59 - 32,60 - 32,48 - 32
         };
-
-        Vector3 normal(0.0f, 1.0f, 0.0f);
-
         CRefObj<IMeshConstructor> spMeshConstructor = IMeshConstructor::Create();
         spMeshConstructor->MeshOpen();
         spMeshConstructor->SubMeshOpen();
@@ -168,14 +253,24 @@ class CWarpNode : public CGPUPipelineNodeBase
         for (int triIndex = 0; triIndex < numTris; triIndex+=3)
         {
             Vector2 v0, v1, v2;
+            Vector3 normal(0.0f, 1.0f, 0.0f);
             Vector3 p0(vertices[pIndices[triIndex+0]].pos.x, vertices[pIndices[triIndex+0]].pos.y, 0.0f);
             Vector3 p1(vertices[pIndices[triIndex+1]].pos.x, vertices[pIndices[triIndex+1]].pos.y, 0.0f);
             Vector3 p2(vertices[pIndices[triIndex+2]].pos.x, vertices[pIndices[triIndex+2]].pos.y, 0.0f);
             spMeshConstructor->FaceOpen();
             Vector2 vuv;
-            Vector2 uv0(vertices[pIndices[triIndex + 0]].uv.x, vertices[pIndices[triIndex + 0]].uv.y);
-            Vector2 uv1(vertices[pIndices[triIndex + 1]].uv.x, vertices[pIndices[triIndex + 1]].uv.y);
-            Vector2 uv2(vertices[pIndices[triIndex + 2]].uv.x, vertices[pIndices[triIndex + 2]].uv.y);
+            Vector2 uv0[4] = { Vector2(vertices[pIndices[triIndex + 0]].uvs[0].x, vertices[pIndices[triIndex + 0]].uvs[0].y),
+                Vector2((float)vertices[pIndices[triIndex + 0]].index / 100.0f, 0.0f),
+                Vector2(0.0f, 0.0f),
+                Vector2(0.0f, 0.0f) };
+            Vector2 uv1[4] = { Vector2(vertices[pIndices[triIndex + 1]].uvs[0].x, vertices[pIndices[triIndex + 1]].uvs[0].y),
+                Vector2((float)vertices[pIndices[triIndex + 1]].index / 100.0f, 0.0f),
+                Vector2(0.0f, 0.0f),
+                Vector2(0.0f, 0.0f) };
+            Vector2 uv2[4] = { Vector2(vertices[pIndices[triIndex + 2]].uvs[0].x, vertices[pIndices[triIndex + 2]].uvs[0].y),
+                Vector2((float)vertices[pIndices[triIndex + 2]].index / 100.0f, 0.0f),
+                Vector2(0.0f, 0.0f),
+                Vector2(0.0f, 0.0f) };
             p0.x /= imageW1; p0.x = p0.x * 2.0f - 1.0f;
             p0.y /= imageH1; p0.y = p0.y * 2.0f - 1.0f;
             p1.x /= imageW1; p1.x = p1.x * 2.0f - 1.0f;
@@ -302,8 +397,8 @@ class CWarpNode : public CGPUPipelineNodeBase
         };
         CRefObj<IDelaunay2> spDelaunay = Caustic::CreateDelaunay2(pVertices, ptIndex, pIndices, _countof(pIndices));
         spDelaunay->Open();
-        int gridDeltaX = imageW1 / c_GridX;
-        int gridDeltaY = imageH1 / c_GridY;
+        int gridDeltaX = (int)(imageW1 / c_GridX);
+        int gridDeltaY = (int)(imageH1 / c_GridY);
         for (int y = 1; y < c_GridY - 1; y++)
         {
             for (int x = 1; x < c_GridX - 1; x++)
@@ -406,6 +501,8 @@ public:
     {
         m_curFrameIndex = -1;
         m_phonemeFrameIndex = -1;
+        m_showLandmarks = false;
+        m_slowPlayback = false;
     }
     ~CApp() {}
     CRefObj<IRenderWindow> m_spRenderWindow;
@@ -426,6 +523,8 @@ public:
     int m_curFrameIndex;
     bool m_texLoaded;
     HWND m_hwnd;
+    bool m_showLandmarks;
+    bool m_slowPlayback;
     std::chrono::time_point<std::chrono::system_clock> m_prevRenderTime;
     CRefObj<IVirtualCamera> m_spVirtualCam;
     CRefObj<IVideo> m_spVideo;
@@ -433,6 +532,7 @@ public:
     std::map<std::wstring, PhonemeLandmarkDelta> m_phonemeLandmarkDeltaMap;
     std::map<std::wstring, std::vector<uint8>> m_phonemeAudioMap;
     std::unique_ptr<float2> m_spGridLocations;
+    std::unique_ptr<float2> m_spFixedDeltas;
     std::vector<std::string> m_words;           // List of words in current sentence being played
     int m_wordIndex;                            // Current index into m_words
     std::vector<std::wstring> m_phonemesInCurrentWord;        // List of phonemes in the current word for the sentence being played
@@ -443,6 +543,7 @@ public:
     CRefObj<IGPUPipelineNode> m_spWarpNode;
     CRefObj<IShader> m_spWarpShader;
     CRefObj<ITexture> m_spGridPosTex;
+    CRefObj<ITexture> m_spFixedDeltaTex;
     CRefObj<IGPUPipeline> m_spGPUPipeline;
     CRefObj<IGPUPipelineSourceNode> m_spGPUSource;
     CRefObj<IGPUPipelineSinkNode> m_spGPUSink;
@@ -797,6 +898,10 @@ void CApp::BuildUI(ITexture* pFinalRT, ImFont* pFont)
     {
         app.PlaySentence("Aardvark");
     }
+    if (ImGui::Button((app.m_slowPlayback) ? "Normal playback" : "Slow playback"))
+        app.m_slowPlayback = !app.m_slowPlayback;
+    if (ImGui::Button((app.m_showLandmarks) ? "Hide Landmarks" : "Show Landmarks"))
+        app.m_showLandmarks = !app.m_showLandmarks;
     if (ImGui::Button("Listening"))
         app.m_nextVideoIndex = 0;
     if (ImGui::Button("FollowUp"))
@@ -850,18 +955,53 @@ CRefObj<IImage> CApp::WarpImage(IRenderer* pRenderer, IImage *pImageToWarp, int 
 
     pRenderer->BeginMarker(L"WarpGPU");
 
-    D3D11_MAPPED_SUBRESOURCE ms;
-    auto ctx = pRenderer->GetContext();
-    CT(ctx->Map(m_spGridPosTex->GetD3DTexture(), 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
-    BYTE* pDst = reinterpret_cast<BYTE*>(ms.pData);
-    BYTE* pSrc = (BYTE*)m_spGridLocations.get();
-    for (int y = 0; y < c_GridY; y++)
+    if (s_useFixedDeltas)
     {
-        memcpy(pDst, pSrc, c_GridX * sizeof(float) * 2);
-        pSrc += sizeof(float) * 2 * c_GridX;
-        pDst += ms.RowPitch;
+        D3D11_MAPPED_SUBRESOURCE ms;
+        auto ctx = pRenderer->GetContext();
+        CT(ctx->Map(m_spFixedDeltaTex->GetD3DTexture(), 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
+        float* pDst = reinterpret_cast<float*>(ms.pData);
+        float2 *pDeltas = m_spFixedDeltas.get();
+        float imageW = (float)pImageToWarp->GetWidth() - 1.0f;
+        float imageH = (float)pImageToWarp->GetHeight() - 1.0f;
+        for (int i = 0; i < c_MaxDeltas; i++, pDeltas++)
+        {
+            int j = i + 32;
+            if (j >= 49 && j <= 67)
+            {
+                *pDst++ = 2.0f * pDeltas->x / imageW;
+                *pDst++ = 2.0f * pDeltas->y / imageH;
+            }
+            else
+            {
+                *pDst++ = 0.0f;
+                *pDst++ = 0.0f;
+            }
+//            *pDst++ = 0.0f;// pDeltas->y / imageH;
+//            if ((j >= 49 && j <= 53) || (j >= 61 && j <= 63))
+//                *pDst++ = 100.0f / imageW;
+//            else if ((j >= 55 && j <= 59) || (j >= 65 && j <= 67))
+//                *pDst++ = -100.0f / imageW;
+//            else
+//                *pDst++ = 0.0f;
+        }
+        ctx->Unmap(m_spFixedDeltaTex->GetD3DTexture(), 0);
     }
-    ctx->Unmap(m_spGridPosTex->GetD3DTexture(), 0);
+    else
+    {
+        D3D11_MAPPED_SUBRESOURCE ms;
+        auto ctx = pRenderer->GetContext();
+        CT(ctx->Map(m_spGridPosTex->GetD3DTexture(), 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
+        BYTE* pDst = reinterpret_cast<BYTE*>(ms.pData);
+        BYTE* pSrc = (BYTE*)m_spGridLocations.get();
+        for (int y = 0; y < c_GridY; y++)
+        {
+            memcpy(pDst, pSrc, c_GridX * sizeof(float) * 2);
+            pSrc += sizeof(float) * 2 * c_GridX;
+            pDst += ms.RowPitch;
+        }
+        ctx->Unmap(m_spGridPosTex->GetD3DTexture(), 0);
+    }
     m_spGPUSource->SetSource(m_spGPUPipeline, pImageToWarp);
     
     m_spGPUPipeline->IncrementCurrentEpoch();
@@ -871,38 +1011,38 @@ CRefObj<IImage> CApp::WarpImage(IRenderer* pRenderer, IImage *pImageToWarp, int 
 
 
 #pragma region("StoreWarpedImage")
-////    static bool drawLandmarks = false;
-////    if (drawLandmarks)
-////    {
-////        for (int landmarkIndex = 0; landmarkIndex < (int)m_faceLandmarks[frameIndex].size(); landmarkIndex++)
-////        {
-////            Matrix3x2 mat;
-////            if (frameIndex == phonemeInfo[phonemeIndex].m_startFrame)
-////            {
-////                mat = Matrix3x2(1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
-////            }
-////            else
-////            {
-////                mat = Matrix3x2::Align(
-////                    faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][c_FaceLandmark_NoseBridge_Bottom],
-////                    faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][c_FaceLandmark_NoseBridge_Top],
-////                    faceLandmarks[frameIndex][c_FaceLandmark_NoseBridge_Bottom],
-////                    faceLandmarks[frameIndex][c_FaceLandmark_NoseBridge_Top]);
-////
-////            }
-////
-////            Vector2 phonemeLandmark = faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][landmarkIndex];
-////            Caustic::uint8 color1[4] = { 255, 0, 0, 255 };
-////            spFinalImage->DrawCircle(phonemeLandmark, 3, color1);
-////            Vector2 alignedLandmark = faceLandmarks[frameIndex][landmarkIndex];
-////            Caustic::uint8 color2[4] = { 0, 255, 0, 255 };
-////            spFinalImage->DrawCircle(alignedLandmark, 4, color2);
-////            alignedLandmark = alignedLandmark * mat;
-////            Caustic::uint8 color3[4] = { 0, 0, 255, 255 };
-////            spFinalImage->DrawCircle(alignedLandmark, 5, color3);
-////        }
-////    }
-////
+    if (m_showLandmarks)
+    {
+        for (int landmarkIndex = 0; landmarkIndex < (int)m_faceLandmarks[frameIndex].size(); landmarkIndex++)
+        {
+            Matrix3x2 mat;
+            //if (frameIndex ==  phonemeInfo[phonemeIndex].m_startFrame)
+            //{
+                mat = Matrix3x2(1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+            //}
+            //else
+            //{
+            //    mat = Matrix3x2::Align(
+            //        faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][c_FaceLandmark_NoseBridge_Bottom],
+            //        faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][c_FaceLandmark_NoseBridge_Top],
+            //        faceLandmarks[frameIndex][c_FaceLandmark_NoseBridge_Bottom],
+            //        faceLandmarks[frameIndex][c_FaceLandmark_NoseBridge_Top]);
+            //
+            //}
+
+            std::map<std::wstring, PhonemeLandmarkDelta> m_phonemeLandmarkDeltaMap;
+            Vector2 phonemeLandmark = m_faceLandmarks[m_phonemeLandmarkDeltaMap[m_phonemesInCurrentWord[m_phonemeIndex]].m_startFrame][landmarkIndex];
+            Caustic::uint8 color1[4] = { 255, 0, 0, 255 };
+            spFinalImage->DrawCircle(phonemeLandmark, 3, color1);
+            Vector2 alignedLandmark = m_faceLandmarks[frameIndex][landmarkIndex];
+            Caustic::uint8 color2[4] = { 0, 255, 0, 255 };
+            spFinalImage->DrawCircle(alignedLandmark, 4, color2);
+            //alignedLandmark = alignedLandmark * mat;
+            //Caustic::uint8 color3[4] = { 0, 0, 255, 255 };
+            //spFinalImage->DrawCircle(alignedLandmark, 5, color3);
+        }
+    }
+
 ////    static bool drawGrid = false;
 ////    if (drawGrid)
 ////    {
@@ -996,43 +1136,58 @@ void CApp::ComputeGridWarp(IImage *pImageToWarp, int frameIndex, std::wstring& p
     assert(m_phonemeLandmarkDeltaMap.contains(modPhoneme));
 
     PhonemeLandmarkDelta pdelta = m_phonemeLandmarkDeltaMap[modPhoneme];
-    float2* pGridLocations = m_spGridLocations.get();
-    const float c_LandmarkInfluence = 1.5f * pImageToWarp->GetWidth() / c_GridX;
-    for (int gridY = 0; gridY < c_GridY; gridY++)
+    if (s_useFixedDeltas)
     {
-        for (int gridX = 0; gridX < c_GridX; gridX++)
+        float2* pDeltas = m_spFixedDeltas.get();
+        memset(pDeltas, 0, sizeof(float2) * c_MaxDeltas);
+        pDeltas += 16; // skip boundary points
+        for (int landmarkIndex = c_FaceLandmark_Mouth_FirstIndex; landmarkIndex <= c_FaceLandmark_Mouth_LastIndex; landmarkIndex++)
         {
-            Vector2 gridPixel((float)gridX * gridDeltaX, (float)gridY * gridDeltaY);
+            pDeltas->x = pdelta.m_frameDeltas[phonemeFrameIndex][landmarkIndex - c_FaceLandmark_Mouth_FirstIndex].x;
+            pDeltas->y = pdelta.m_frameDeltas[phonemeFrameIndex][landmarkIndex - c_FaceLandmark_Mouth_FirstIndex].y;
+            pDeltas++;
+        }
+    }
+    else
+    {
+        float2* pGridLocations = m_spGridLocations.get();
+        const float c_LandmarkInfluence = 1.5f * pImageToWarp->GetWidth() / c_GridX;
+        for (int gridY = 0; gridY < c_GridY; gridY++)
+        {
+            for (int gridX = 0; gridX < c_GridX; gridX++)
+            {
+                Vector2 gridPixel((float)gridX * gridDeltaX, (float)gridY * gridDeltaY);
 
-            if (m_faceLandmarksInfluenceBounds[m_curFrameIndex].PointInside(gridPixel))
-            {
-                // Walk each of our face landmarks and see if it effects the current grid vertex. We will
-                // use a gaussian placed on the landmark to determine influence.
-                Vector2 newGridPos(0.0f, 0.0f);
-                Vector2* pFaceLandmark = &m_faceLandmarks[m_curFrameIndex][c_FaceLandmark_Mouth_FirstIndex];
-                for (int landmarkIndex = c_FaceLandmark_Mouth_FirstIndex; landmarkIndex <= c_FaceLandmark_Mouth_LastIndex; landmarkIndex++)
+                if (m_faceLandmarksInfluenceBounds[m_curFrameIndex].PointInside(gridPixel))
                 {
-                    // Determine distance from the grid location to the landmark
-                    float dx = gridPixel.x - pFaceLandmark->x;
-                    float dy = gridPixel.y - pFaceLandmark->y;
-                    float dist = sqrtf(dx * dx + dy * dy);
-                    dist = std::min<float>(dist, c_LandmarkInfluence) / c_LandmarkInfluence;
-                    float weight = distribution.Sample(dist);
-                    newGridPos += pdelta.m_frameDeltas[phonemeFrameIndex][landmarkIndex - c_FaceLandmark_Mouth_FirstIndex] * weight;
-                    pFaceLandmark++;
+                    // Walk each of our face landmarks and see if it effects the current grid vertex. We will
+                    // use a gaussian placed on the landmark to determine influence.
+                    Vector2 newGridPos(0.0f, 0.0f);
+                    Vector2* pFaceLandmark = &m_faceLandmarks[m_curFrameIndex][c_FaceLandmark_Mouth_FirstIndex];
+                    for (int landmarkIndex = c_FaceLandmark_InnerMouth_FirstIndex; landmarkIndex <= c_FaceLandmark_InnerMouth_LastIndex; landmarkIndex++)
+                    {
+                        // Determine distance from the grid location to the landmark
+                        float dx = gridPixel.x - pFaceLandmark->x;
+                        float dy = gridPixel.y - pFaceLandmark->y;
+                        float dist = sqrtf(dx * dx + dy * dy);
+                        dist = std::min<float>(dist, c_LandmarkInfluence) / c_LandmarkInfluence;
+                        float weight = distribution.Sample(dist);
+                        newGridPos += pdelta.m_frameDeltas[phonemeFrameIndex][landmarkIndex - c_FaceLandmark_Mouth_FirstIndex] * weight;
+                        pFaceLandmark++;
+                    }
+                    // Compute where the pixel moves to
+                    int index = gridY * c_GridX + gridX;
+                    pGridLocations[index].x = newGridPos.x / ((float)imageW - 1.0f);
+                    pGridLocations[index].y = newGridPos.y / ((float)imageH - 1.0f);
+                    pGridLocations[index].x = pGridLocations[index].x * 2.0f;
+                    pGridLocations[index].y = pGridLocations[index].y * 2.0f;
                 }
-                // Compute where the pixel moves to
-                int index = gridY * c_GridX + gridX;
-                pGridLocations[index].x = newGridPos.x / ((float)imageW - 1.0f);
-                pGridLocations[index].y = newGridPos.y / ((float)imageH - 1.0f);
-                pGridLocations[index].x = pGridLocations[index].x * 2.0f;
-                pGridLocations[index].y = pGridLocations[index].y * 2.0f;
-            }
-            else
-            {
-                int index = gridY * c_GridX + gridX;
-                pGridLocations[index].x = 0.0f;
-                pGridLocations[index].y = 0.0f;
+                else
+                {
+                    int index = gridY * c_GridX + gridX;
+                    pGridLocations[index].x = 0.0f;
+                    pGridLocations[index].y = 0.0f;
+                }
             }
         }
     }
@@ -1077,6 +1232,8 @@ void CApp::LoadVideos(IRenderer* pRenderer, IRenderCtx* pCtx)
 
 void CApp::ProcessNextFrame(IRenderer* pRenderer, IRenderCtx* pCtx)
 {
+    if (m_slowPlayback)
+        Sleep(1000);
     if (!m_texLoaded)
     {
         m_texLoaded = true;
@@ -1119,10 +1276,21 @@ void CApp::ProcessNextFrame(IRenderer* pRenderer, IRenderCtx* pCtx)
                     uint32 imageH = m_spLastFrame->GetHeight();
                     m_spWarpNode = new CWarpNode(L"Warp", pRenderer, m_faceLandmarks[0], m_spWarpShader, imageW, imageH,
                         DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM);
-                    m_spGridPosTex = Caustic::CreateTexture(pRenderer, c_GridX, c_GridY, DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT);
-                    m_spWarpShader->SetVSParam(L"posTexture", std::any(m_spGridPosTex));
-                    auto spSampler = Caustic::CreateSampler(pRenderer, m_spGridPosTex);
-                    m_spWarpShader->SetVSParam(L"posSampler", std::any(spSampler));
+                    if (s_useFixedDeltas)
+                    {
+                        m_spFixedDeltaTex = Caustic::CreateTexture(pRenderer, c_MaxDeltas, 1, DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT);
+                        m_spWarpShader->SetVSParam(L"posTexture", std::any(m_spFixedDeltaTex));
+                        auto spSampler = Caustic::CreateSampler(pRenderer, m_spFixedDeltaTex);
+                        spSampler->SetFilter(pRenderer, D3D11_FILTER::D3D11_FILTER_MIN_MAG_MIP_POINT);
+                        m_spWarpShader->SetVSParam(L"posSampler", std::any(spSampler));
+                    }
+                    else
+                    {
+                        m_spGridPosTex = Caustic::CreateTexture(pRenderer, c_GridX, c_GridY, DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT);
+                        m_spWarpShader->SetVSParam(L"posTexture", std::any(m_spGridPosTex));
+                        auto spSampler = Caustic::CreateSampler(pRenderer, m_spGridPosTex);
+                        m_spWarpShader->SetVSParam(L"posSampler", std::any(spSampler));
+                    }
 
                     // Create our GPU pipeline
                     m_spGPUPipeline = Caustic::CreateGPUPipeline(pRenderer);
@@ -1184,6 +1352,7 @@ void CApp::InitializeCaustic(HWND hwnd)
     Caustic::SystemStartup();
     m_spLandmarkFilter = CreateFaceLandmarksFilter();
     m_spGridLocations.reset(new float2[c_GridX * c_GridY]);
+    m_spFixedDeltas.reset(new float2[100]);
     m_texLoaded = false;
     m_spCausticFactory = Caustic::CreateCausticFactory();
 

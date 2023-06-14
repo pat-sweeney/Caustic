@@ -29,7 +29,8 @@ export namespace Caustic
         virtual CRefObj<ISubMesh> SubMeshClose() = 0;
         virtual void FaceOpen() = 0;
         virtual void FaceClose() = 0;
-        virtual void VertexAdd(Vector3 &pos, Vector3 &normal, Vector2 &uv) = 0;
+        virtual void VertexAdd(Vector3& pos, Vector3& normal, Vector2& uv) = 0;
+        virtual void VertexAdd(Vector3& pos, Vector3& normal, Vector2 uvs[4]) = 0;
 
         //**********************************************************************
         // Method: MeshFromDensityFunction
