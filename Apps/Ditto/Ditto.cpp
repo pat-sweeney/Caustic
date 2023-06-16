@@ -82,371 +82,8 @@ struct PhonemeLandmarkDelta
 class CWarpNode : public CGPUPipelineNodeBase
 {
     CRefObj<IMesh> m_spMesh;
+    CRefObj<ISubMesh> m_spSubMesh;
     CRefObj<IRenderMesh> m_spRenderMesh;
-
-    CRefObj<IMesh> CreateSimpleTriangulation(float imageW1, float imageH1, std::vector<Vector2>& landmarks)
-    {
-        CGeomVertex vertices[100] = {
-            {
-                .pos = Vector3(0.0f, 0.0f, 0.0f),
-                .norm = Vector3(1.0f, 0.0f, 0.0f),
-                .uvs = { Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
-                .index = 0
-            },
-            {
-                .pos = Vector3(imageW1 / 4, 0.0f, 0.0f),
-                .norm = Vector3(1.0f, 0.0f, 0.0f),
-                .uvs = { Vector2(0.25f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
-                .index = 1
-            },
-            {
-                .pos = Vector3((imageW1 * 2) / 4, 0.0f, 0.0f),
-                .norm = Vector3(1.0f, 0.0f, 0.0f),
-                .uvs = { Vector2(0.5f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
-                .index = 2
-            },
-            {
-                .pos = Vector3((imageW1 * 3) / 4, 0.0f, 0.0f),
-                .norm = Vector3(1.0f, 0.0f, 0.0f),
-                .uvs = { Vector2(0.75f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
-                .index = 3
-            },
-            {
-                .pos = Vector3(imageW1, 0.0f, 0.0f),
-                .norm = Vector3(1.0f, 0.0f, 0.0f),
-                .uvs = { Vector2(1.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
-                .index = 4
-            },
-            {
-                .pos = Vector3(imageW1, imageH1 / 4.0f, 0.0f),
-                .norm = Vector3(1.0f, 0.0f, 0.0f),
-                .uvs = { Vector2(1.0f, 0.25f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
-                .index = 5
-            },
-            {
-                .pos = Vector3(imageW1, ((imageH1 * 2) / 4), 0.0f),
-                .norm = Vector3(1.0f, 0.0f, 0.0f),
-                .uvs = { Vector2(1.0f, 0.50f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
-                .index = 6
-            },
-            {
-                .pos = Vector3(imageW1, ((imageH1 * 3) / 4), 0.0f),
-                .norm = Vector3(1.0f, 0.0f, 0.0f),
-                .uvs = { Vector2(1.0f, 0.75f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
-                .index = 7
-            },
-            {
-                .pos = Vector3(imageW1, imageH1, 0.0f),
-                .norm = Vector3(1.0f, 0.0f, 0.0f),
-                .uvs = { Vector2(1.0f, 1.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
-                .index = 8
-            },
-            {
-                .pos = Vector3((imageW1 * 3) / 4, imageH1, 0.0f),
-                .norm = Vector3(1.0f, 0.0f, 0.0f),
-                .uvs = { Vector2(0.75f, 1.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
-                .index = 9
-            },
-            {
-                .pos = Vector3((imageW1 * 2) / 4, imageH1, 0.0f),
-                .norm = Vector3(1.0f, 0.0f, 0.0f),
-                .uvs = { Vector2(0.50f, 1.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
-                .index = 10
-            },
-            {
-                .pos = Vector3(imageW1 / 4, imageH1, 0.0f),
-                .norm = Vector3(1.0f, 0.0f, 0.0f),
-                .uvs = { Vector2(0.25f, 1.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
-                .index = 11
-            },
-            {
-                .pos = Vector3(0.0f, imageH1, 0.0f),
-                .norm = Vector3(1.0f, 0.0f, 0.0f),
-                .uvs = { Vector2(0.0f, 1.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
-                .index = 12
-            },
-            {
-                .pos = Vector3(0.0f, (imageH1 * 3) / 4, 0.0f),
-                .norm = Vector3(1.0f, 0.0f, 0.0f),
-                .uvs = { Vector2(0.0f, 0.75f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
-                .index = 13
-            },
-            {
-                .pos = Vector3(0.0f, (imageH1 * 2) / 4, 0.0f),
-                .norm = Vector3(1.0f, 0.0f, 0.0f),
-                .uvs = { Vector2(0.0f, 0.50f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
-                .index = 14
-            },
-            {
-                .pos = Vector3(0.0f, imageH1 / 4, 0.0f),
-                .norm = Vector3(1.0f, 0.0f, 0.0f),
-                .uvs = { Vector2(0.0f, 0.25f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f) },
-                .index = 15
-            },
-        };
-        int vertIndex = 16;
-        for (size_t landmarkIndex = c_FaceLandmark_Mouth_FirstIndex; landmarkIndex <= c_FaceLandmark_Mouth_LastIndex; landmarkIndex++)
-        {
-            vertices[vertIndex].pos = Vector3(landmarks[landmarkIndex].x, landmarks[landmarkIndex].y, 0.0f);
-            vertices[vertIndex].uvs[0] = Vector2(landmarks[landmarkIndex].x / imageW1, landmarks[landmarkIndex].y / imageH1);
-            vertices[vertIndex].uvs[1] = Vector2(0.0f, 0.0f);
-            vertices[vertIndex].uvs[2] = Vector2(0.0f, 0.0f);
-            vertices[vertIndex].uvs[3] = Vector2(0.0f, 0.0f);
-            vertices[vertIndex].norm = Vector3(1.0f, 0.0f, 0.0f);
-            vertices[vertIndex].index = vertIndex;
-            vertIndex++;
-        }
-        int pIndices[] = {
-            0, 49 - 32, 50 - 32,
-            0, 50 - 32, 1,
-            1, 50 - 32, 2,
-            50 - 32, 51 - 32, 2,
-            2, 51 - 32, 3,
-            51 - 32, 52 - 32, 3,
-            3, 52 - 32, 4,
-            4, 52 - 32, 53 - 32,
-            4, 53 - 32, 5,
-            5, 53 - 32, 54 - 32,
-            5, 54 - 32, 6,
-            6, 54 - 32, 55 - 32,
-            6, 55 - 32, 7,
-            7, 55 - 32, 8,
-            8, 55 - 32, 56 - 32,
-            8, 56 - 32, 9,
-            9, 56 - 32, 57 - 32,
-            9, 57 - 32, 10,
-            10, 57 - 32, 58 - 32,
-            10, 58 - 32, 11,
-            11, 58 - 32, 12,
-            12, 58 - 32, 59 - 32,
-            12, 59 - 32, 13,
-            13, 59 - 32, 14,
-            14, 59 - 32, 48 - 32,
-            14, 48 - 32, 15,
-            15, 48 - 32, 49 - 32,
-            15, 49 - 32, 0,
-            48 - 32,60 - 32,49 - 32,
-            49 - 32,60 - 32,61 - 32,
-            49 - 32,61 - 32,50 - 32,
-            50 - 32,61 - 32,62 - 32,
-            50 - 32,62 - 32,51 - 32,
-            51 - 32,62 - 32,63 - 32,
-            51 - 32,63 - 32,52 - 32,
-            52 - 32,63 - 32,64 - 32,
-            52 - 32,64 - 32,53 - 32,
-            53 - 32,64 - 32,54 - 32,
-            54 - 32,64 - 32,55 - 32,
-            55 - 32,64 - 32,56 - 32,
-            64 - 32,65 - 32,56 - 32,
-            56 - 32,65 - 32,57 - 32,
-            65 - 32,66 - 32,57 - 32,
-            66 - 32,58 - 32,57 - 32,
-            66 - 32,67 - 32,58 - 32,
-            67 - 32,59 - 32,58 - 32,
-            67 - 32,60 - 32,59 - 32,
-            59 - 32,60 - 32,48 - 32
-        };
-        CRefObj<IMeshConstructor> spMeshConstructor = IMeshConstructor::Create();
-        spMeshConstructor->MeshOpen();
-        spMeshConstructor->SubMeshOpen();
-        int numTris = (int)_countof(pIndices);
-        for (int triIndex = 0; triIndex < numTris; triIndex+=3)
-        {
-            Vector2 v0, v1, v2;
-            Vector3 normal(0.0f, 1.0f, 0.0f);
-            Vector3 p0(vertices[pIndices[triIndex+0]].pos.x, vertices[pIndices[triIndex+0]].pos.y, 0.0f);
-            Vector3 p1(vertices[pIndices[triIndex+1]].pos.x, vertices[pIndices[triIndex+1]].pos.y, 0.0f);
-            Vector3 p2(vertices[pIndices[triIndex+2]].pos.x, vertices[pIndices[triIndex+2]].pos.y, 0.0f);
-            spMeshConstructor->FaceOpen();
-            Vector2 vuv;
-            Vector2 uv0[4] = { Vector2(vertices[pIndices[triIndex + 0]].uvs[0].x, vertices[pIndices[triIndex + 0]].uvs[0].y),
-                Vector2((float)vertices[pIndices[triIndex + 0]].index / 100.0f, 0.0f),
-                Vector2(0.0f, 0.0f),
-                Vector2(0.0f, 0.0f) };
-            Vector2 uv1[4] = { Vector2(vertices[pIndices[triIndex + 1]].uvs[0].x, vertices[pIndices[triIndex + 1]].uvs[0].y),
-                Vector2((float)vertices[pIndices[triIndex + 1]].index / 100.0f, 0.0f),
-                Vector2(0.0f, 0.0f),
-                Vector2(0.0f, 0.0f) };
-            Vector2 uv2[4] = { Vector2(vertices[pIndices[triIndex + 2]].uvs[0].x, vertices[pIndices[triIndex + 2]].uvs[0].y),
-                Vector2((float)vertices[pIndices[triIndex + 2]].index / 100.0f, 0.0f),
-                Vector2(0.0f, 0.0f),
-                Vector2(0.0f, 0.0f) };
-            p0.x /= imageW1; p0.x = p0.x * 2.0f - 1.0f;
-            p0.y /= imageH1; p0.y = p0.y * 2.0f - 1.0f;
-            p1.x /= imageW1; p1.x = p1.x * 2.0f - 1.0f;
-            p1.y /= imageH1; p1.y = p1.y * 2.0f - 1.0f;
-            p2.x /= imageW1; p2.x = p2.x * 2.0f - 1.0f;
-            p2.y /= imageH1; p2.y = p2.y * 2.0f - 1.0f;
-            spMeshConstructor->VertexAdd(p0, normal, uv0);
-            spMeshConstructor->VertexAdd(p1, normal, uv1);
-            spMeshConstructor->VertexAdd(p2, normal, uv2);
-            spMeshConstructor->FaceClose();
-        }
-        CRefObj<ISubMesh> spSubMesh = spMeshConstructor->SubMeshClose();
-        spSubMesh->SetMeshFlags(EMeshFlags::TwoSided);
-        return spMeshConstructor->MeshClose();
-    }
-
-    CRefObj<IDelaunay2> CreateTriangulation(float imageW1, float imageH1, std::vector<Vector2>& landmarks)
-    {
-        // Define our super triangles to be larger than our image
-////        BBox2 sqbb;
-////        sqbb.minPt = Vector2(-1000.0f, -1000.0f);
-////        sqbb.maxPt = Vector2(imageW1 + 1000.0f, imageH1 + 1000.0f);
-////        CRefObj<IDelaunay2> spDelaunay = Caustic::CreateDelaunay2(sqbb);
-
-#pragma region("BuildTriangulation")
-////#if 0
-////        // Add the corners of the image as our boundaries
-////        int numVertices = c_FaceLandmark_Mouth_LastIndex - c_FaceLandmark_Mouth_FirstIndex + 1;
-////        Caustic::DelaunayVertex* pVertices = new Caustic::DelaunayVertex[numVertices];
-////        for (size_t landmarkIndex = c_FaceLandmark_Mouth_FirstIndex; landmarkIndex <= c_FaceLandmark_Mouth_LastIndex; landmarkIndex++)
-////        {
-////            pVertices[landmarkIndex - c_FaceLandmark_Mouth_FirstIndex].flags = (landmarkIndex < c_FaceLandmark_InnerMouth_FirstIndex) ? c_InteriorVertex : c_BoundaryVertex;
-////            pVertices[landmarkIndex - c_FaceLandmark_Mouth_FirstIndex].pos = landmarks[landmarkIndex];
-////            pVertices[landmarkIndex - c_FaceLandmark_Mouth_FirstIndex].uv.x = landmarks[landmarkIndex].x / imageW1;
-////            pVertices[landmarkIndex - c_FaceLandmark_Mouth_FirstIndex].uv.y = landmarks[landmarkIndex].y / imageH1;
-////        }
-////        int pIndices[] = {
-////            48 - c_FaceLandmark_Mouth_FirstIndex, 60 - c_FaceLandmark_Mouth_FirstIndex, 49 - c_FaceLandmark_Mouth_FirstIndex,
-////            60 - c_FaceLandmark_Mouth_FirstIndex, 61 - c_FaceLandmark_Mouth_FirstIndex, 49 - c_FaceLandmark_Mouth_FirstIndex,
-////            49 - c_FaceLandmark_Mouth_FirstIndex, 61 - c_FaceLandmark_Mouth_FirstIndex, 50 - c_FaceLandmark_Mouth_FirstIndex,
-////            61 - c_FaceLandmark_Mouth_FirstIndex, 62 - c_FaceLandmark_Mouth_FirstIndex, 50 - c_FaceLandmark_Mouth_FirstIndex,
-////            50 - c_FaceLandmark_Mouth_FirstIndex, 62 - c_FaceLandmark_Mouth_FirstIndex, 51 - c_FaceLandmark_Mouth_FirstIndex,
-////            51 - c_FaceLandmark_Mouth_FirstIndex, 62 - c_FaceLandmark_Mouth_FirstIndex, 63 - c_FaceLandmark_Mouth_FirstIndex,
-////            51 - c_FaceLandmark_Mouth_FirstIndex, 63 - c_FaceLandmark_Mouth_FirstIndex, 52 - c_FaceLandmark_Mouth_FirstIndex,
-////            52 - c_FaceLandmark_Mouth_FirstIndex, 63 - c_FaceLandmark_Mouth_FirstIndex, 64 - c_FaceLandmark_Mouth_FirstIndex,
-////            52 - c_FaceLandmark_Mouth_FirstIndex, 64 - c_FaceLandmark_Mouth_FirstIndex, 53 - c_FaceLandmark_Mouth_FirstIndex,
-////            53 - c_FaceLandmark_Mouth_FirstIndex, 64 - c_FaceLandmark_Mouth_FirstIndex, 54 - c_FaceLandmark_Mouth_FirstIndex,
-////            53 - c_FaceLandmark_Mouth_FirstIndex, 64 - c_FaceLandmark_Mouth_FirstIndex, 55 - c_FaceLandmark_Mouth_FirstIndex,
-////            55 - c_FaceLandmark_Mouth_FirstIndex, 64 - c_FaceLandmark_Mouth_FirstIndex, 65 - c_FaceLandmark_Mouth_FirstIndex,
-////            55 - c_FaceLandmark_Mouth_FirstIndex, 65 - c_FaceLandmark_Mouth_FirstIndex, 56 - c_FaceLandmark_Mouth_FirstIndex,
-////            56 - c_FaceLandmark_Mouth_FirstIndex, 65 - c_FaceLandmark_Mouth_FirstIndex, 66 - c_FaceLandmark_Mouth_FirstIndex,
-////            56 - c_FaceLandmark_Mouth_FirstIndex, 66 - c_FaceLandmark_Mouth_FirstIndex, 57 - c_FaceLandmark_Mouth_FirstIndex,
-////            57 - c_FaceLandmark_Mouth_FirstIndex, 66 - c_FaceLandmark_Mouth_FirstIndex, 67 - c_FaceLandmark_Mouth_FirstIndex,
-////            57 - c_FaceLandmark_Mouth_FirstIndex, 67 - c_FaceLandmark_Mouth_FirstIndex, 58 - c_FaceLandmark_Mouth_FirstIndex,
-////            58 - c_FaceLandmark_Mouth_FirstIndex, 67 - c_FaceLandmark_Mouth_FirstIndex, 60 - c_FaceLandmark_Mouth_FirstIndex,
-////            58 - c_FaceLandmark_Mouth_FirstIndex, 60 - c_FaceLandmark_Mouth_FirstIndex, 59 - c_FaceLandmark_Mouth_FirstIndex,
-////            59 - c_FaceLandmark_Mouth_FirstIndex, 60 - c_FaceLandmark_Mouth_FirstIndex, 48 - c_FaceLandmark_Mouth_FirstIndex
-////        };
-////        spDelaunay->AddFixedMesh(pVertices, numVertices, pIndices, _countof(pIndices));
-////
-////#endif
-        DelaunayVertex* pVertices = new DelaunayVertex[38];
-        Vector2 uv;
-        Vector2 pos;
-        pVertices[0] = DelaunayVertex(pos = Vector2(0.0f, 0.0f), uv = Vector2(0.0f, 0.0f), c_SuperTriangleVertex);
-        pVertices[1] = DelaunayVertex(pos = Vector2(imageW1 / 4, 0.0f), uv = Vector2(0.25f, 0.0f), c_SuperTriangleVertex);
-        pVertices[2] = DelaunayVertex(pos = Vector2((imageW1 * 2) / 4, 0.0f), uv = Vector2(0.50f, 0.0f), c_SuperTriangleVertex);
-        pVertices[3] = DelaunayVertex(pos = Vector2((imageW1 * 3) / 4, 0.0f), uv = Vector2(0.75f, 0.0f), c_SuperTriangleVertex);
-        pVertices[4] = DelaunayVertex(pos = Vector2(imageW1, 0.0f), uv = Vector2(1.0f, 0.0f), c_SuperTriangleVertex);
-        pVertices[5] = DelaunayVertex(pos = Vector2(imageW1, imageH1 / 4), uv = Vector2(1.0f, 0.25f), c_SuperTriangleVertex);
-        pVertices[6] = DelaunayVertex(pos = Vector2(imageW1, (imageH1 * 2) / 4), uv = Vector2(1.0f, 0.50f), c_SuperTriangleVertex);
-        pVertices[7] = DelaunayVertex(pos = Vector2(imageW1, (imageH1 * 3) / 4), uv = Vector2(1.0f, 0.75f), c_SuperTriangleVertex);
-        pVertices[8] = DelaunayVertex(pos = Vector2(imageW1, imageH1), uv = Vector2(1.0f, 1.0f), c_SuperTriangleVertex);
-        pVertices[9] = DelaunayVertex(pos = Vector2((imageW1 * 3) / 4, imageH1), uv = Vector2(0.75f, 1.0f), c_SuperTriangleVertex);
-        pVertices[10] = DelaunayVertex(pos = Vector2((imageW1 * 2) / 4, imageH1), uv = Vector2(0.50f, 1.0f), c_SuperTriangleVertex);
-        pVertices[11] = DelaunayVertex(pos = Vector2(imageW1 / 4, imageH1), uv = Vector2(0.25f, 1.0f), c_SuperTriangleVertex);
-        pVertices[12] = DelaunayVertex(pos = Vector2(0.0f, imageH1), uv = Vector2(0.0f, 1.0f), c_SuperTriangleVertex);
-        pVertices[13] = DelaunayVertex(pos = Vector2(0.0f, (imageH1 * 3) / 4), uv = Vector2(0.0f, 0.75f), c_SuperTriangleVertex);
-        pVertices[14] = DelaunayVertex(pos = Vector2(0.0f, (imageH1 * 2) / 4), uv = Vector2(0.0f, 0.50f), c_SuperTriangleVertex);
-        pVertices[15] = DelaunayVertex(pos = Vector2(0.0f, imageH1 / 4), uv = Vector2(0.0f, 0.25f), c_SuperTriangleVertex);
-
-        int ptIndex = 16;
-        for (size_t landmarkIndex = c_FaceLandmark_Mouth_FirstIndex; landmarkIndex <= c_FaceLandmark_Mouth_LastIndex; landmarkIndex++)
-        {
-            Vector2 point(landmarks[landmarkIndex].x, landmarks[landmarkIndex].y);
-            Vector2 uv(landmarks[landmarkIndex].x / imageW1, landmarks[landmarkIndex].y / imageH1);
-            pVertices[ptIndex++] = DelaunayVertex(point, uv, c_SuperTriangleVertex);
-        }
-        for (size_t k = 0; k < ptIndex; k++)
-        {
-            wchar_t buf[1024];
-            swprintf_s(buf, L"Vert: %f,%f\n", pVertices[k].pos.x, pVertices[k].pos.y);
-            OutputDebugString(buf);
-        }
-        int pIndices[] = {
-            0, 49 - 32, 50 - 32, (int)c_NormalEdge, (int)c_BoundaryEdge, (int)c_NormalEdge,
-            0, 50 - 32, 1, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
-            1, 50 - 32, 2, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
-            50 - 32, 51 - 32, 2, (int)c_BoundaryEdge, (int)c_NormalEdge, (int)c_NormalEdge,
-            2, 51 - 32, 3, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
-            51 - 32, 52 - 32, 3, (int)c_BoundaryEdge, (int)c_NormalEdge, (int)c_NormalEdge,
-            3, 52 - 32, 4, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
-            4, 52 - 32, 53 - 32, (int)c_NormalEdge, (int)c_BoundaryEdge, (int)c_NormalEdge,
-            4, 53 - 32, 5, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
-            5, 53 - 32, 54 - 32, (int)c_NormalEdge, (int)c_BoundaryEdge, (int)c_NormalEdge,
-            5, 54 - 32, 6, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
-            6, 54 - 32, 55 - 32, (int)c_NormalEdge, (int)c_BoundaryEdge, (int)c_NormalEdge,
-            6, 55 - 32, 7, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
-            7, 55 - 32, 8, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
-            8, 55 - 32, 56 - 32, (int)c_NormalEdge, (int)c_BoundaryEdge, (int)c_NormalEdge,
-            8, 56 - 32, 9, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
-            9, 56 - 32, 57 - 32, (int)c_NormalEdge, (int)c_BoundaryEdge, (int)c_NormalEdge,
-            9, 57 - 32, 10, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
-            10, 57 - 32, 58 - 32, (int)c_NormalEdge, (int)c_BoundaryEdge, (int)c_NormalEdge,
-            10, 58 - 32, 11, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
-            11, 58 - 32, 12, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
-            12, 58 - 32, 59 - 32, (int)c_NormalEdge, (int)c_BoundaryEdge, (int)c_NormalEdge,
-            12, 59 - 32, 13, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
-            13, 59 - 32, 14, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
-            14, 59 - 32, 48 - 32, (int)c_NormalEdge, (int)c_BoundaryEdge, (int)c_NormalEdge,
-            14, 48 - 32, 15, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge,
-            15, 48 - 32, 49 - 32, (int)c_NormalEdge, (int)c_BoundaryEdge, (int)c_NormalEdge,
-            15, 49 - 32, 0, (int)c_NormalEdge, (int)c_NormalEdge, (int)c_BoundaryEdge
-        };
-        CRefObj<IDelaunay2> spDelaunay = Caustic::CreateDelaunay2(pVertices, ptIndex, pIndices, _countof(pIndices));
-        spDelaunay->Open();
-        int gridDeltaX = (int)(imageW1 / c_GridX);
-        int gridDeltaY = (int)(imageH1 / c_GridY);
-        for (int y = 1; y < c_GridY - 1; y++)
-        {
-            for (int x = 1; x < c_GridX - 1; x++)
-            {
-                Vector2 pos(float(x * gridDeltaX), float(y * gridDeltaY));
-                Vector2 uv(float(x) / float(c_GridY - 1), float(y) / float(c_GridX - 1));
-                spDelaunay->AddPoint(pos, uv, false);
-            }
-            break;
-        }
-        spDelaunay->Close(false);
-        return spDelaunay;
-#pragma endregion
-    }
-
-    CRefObj<IMesh> BuildMesh(float imageW1, float imageH1, std::vector<Vector2>& landmarks)
-    {
-        CRefObj<IDelaunay2> spDelaunay = CreateTriangulation(imageW1, imageH1, landmarks);
-
-        Vector3 normal(0.0f, 1.0f, 0.0f);
-
-        CRefObj<IMeshConstructor> spMeshConstructor = IMeshConstructor::Create();
-        spMeshConstructor->MeshOpen();
-        spMeshConstructor->SubMeshOpen();
-        int numTris = spDelaunay->GetNumberTriangles();
-        for (int triIndex = 0; triIndex < numTris; triIndex++)
-        {
-            bool isBoundary[3];
-            Vector2 v0, v1, v2;
-            spDelaunay->GetTriangle(triIndex, v0, v1, v2, isBoundary);
-            Vector3 p0(v0.x, v0.y, 0.0f);
-            Vector3 p1(v1.x, v1.y, 0.0f);
-            Vector3 p2(v2.x, v2.y, 0.0f);
-            spMeshConstructor->FaceOpen();
-            Vector2 vuv;
-            const int c_FirstRealVert = 4; // first 4 vertices in trianglation are the Delaunay super triangles
-            Vector2 uv0(p0.x / imageW1, p0.y / imageH1);
-            Vector2 uv1(p1.x / imageW1, p1.y / imageH1);
-            Vector2 uv2(p2.x / imageW1, p2.y / imageH1);
-            spMeshConstructor->VertexAdd(p0, normal, uv0);
-            spMeshConstructor->VertexAdd(p1, normal, uv1);
-            spMeshConstructor->VertexAdd(p2, normal, uv2);
-            spMeshConstructor->FaceClose();
-        }
-        CRefObj<ISubMesh> spSubMesh = spMeshConstructor->SubMeshClose();
-        spSubMesh->SetMeshFlags(EMeshFlags::TwoSided);
-        return spMeshConstructor->MeshClose();
-    }
 
 public:
     CWarpNode(const wchar_t* pName, IRenderer* pRenderer, std::vector<Vector2> &landmarks, IShader* pShader, uint32 inputWidth, uint32 inputHeight, DXGI_FORMAT format) :
@@ -459,8 +96,13 @@ public:
         m_bindFlags = (D3D11_BIND_FLAG)(D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET | D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
         //m_spMesh = Caustic::CreateGrid(c_GridX, c_GridY);
         //m_spMesh = BuildMesh((float)inputWidth - 1.0f, (float)inputHeight - 1.0f, landmarks);
-        m_spMesh = CreateSimpleTriangulation((float)inputWidth - 1.0f, (float)inputHeight - 1.0f, landmarks);
-        m_spRenderMesh = pRenderer->ToRenderMesh(m_spMesh, pShader);
+       // m_spMesh = CreateSimpleTriangulation((float)inputWidth - 1.0f, (float)inputHeight - 1.0f, landmarks);
+       // m_spRenderMesh = pRenderer->ToRenderMesh(m_spMesh, pShader);
+    }
+
+    void SetMesh(IRenderMesh* pRenderMesh)
+    {
+        m_spRenderMesh = pRenderMesh;
     }
 
     //**********************************************************************
@@ -503,27 +145,35 @@ public:
         m_phonemeFrameIndex = -1;
         m_showLandmarks = false;
         m_slowPlayback = false;
+        m_showMesh = false;
+        m_numNonLandmarkVerts = 0;
     }
     ~CApp() {}
     CRefObj<IRenderWindow> m_spRenderWindow;
     CRefObj<Caustic::ICausticFactory> m_spCausticFactory;
     CRefObj<ITexture> defaultTex;
     CRefObj<ISampler> m_spSampler;
-    CRefObj<IImage> m_spLastFrame;
+    //CRefObj<IImage> m_spLastFrame;
     CRefObj<ITexture> m_spLastTex;
     CRefObj<IPhonemes> m_spPhonemes;
     CRefObj<IImageFilter> m_spLandmarkFilter;
     std::vector<CRefObj<IVideo>> m_videos;
     CRefObj<IAudioPlayback> m_spAudioPlayback;
     std::vector<BBox2> m_faceBbox; // Bounding box of the entire face based on face detection (ignoring landmarks)
+    std::vector<BBox2> m_faceLandmarksBbox;
+    std::vector<BBox2> m_faceLandmarksMouthBbox;
     std::vector<BBox2> m_faceLandmarksInfluenceBounds; // Bounding box of face landmarks per video frame adjusted to include influence distance
     std::vector<std::vector<Vector2>> m_faceLandmarks; // List of landmark positions per video frame
+    std::vector<CRefObj<IMesh>> m_spMeshes;
+    std::vector<CRefObj<IRenderMesh>> m_spRenderMeshes;
     int m_curVideoIndex;
     int m_nextVideoIndex;
     int m_curFrameIndex;
+    int m_numNonLandmarkVerts;
     bool m_texLoaded;
     HWND m_hwnd;
     bool m_showLandmarks;
+    bool m_showMesh;
     bool m_slowPlayback;
     std::chrono::time_point<std::chrono::system_clock> m_prevRenderTime;
     CRefObj<IVirtualCamera> m_spVirtualCam;
@@ -540,7 +190,7 @@ public:
     bool m_playPhonemes;                        // Are we playing back phonemes?
     int m_phonemeFrameIndex;                    // Index into m_curPhonemeLandmarkDeltas.m_frameDeltas
     PhonemeLandmarkDelta m_curPhonemeLandmarkDeltas;   // List of frames with list of landmark deltas for a given phoneme
-    CRefObj<IGPUPipelineNode> m_spWarpNode;
+    CRefObj<CWarpNode> m_spWarpNode;
     CRefObj<IShader> m_spWarpShader;
     CRefObj<ITexture> m_spGridPosTex;
     CRefObj<ITexture> m_spFixedDeltaTex;
@@ -561,6 +211,11 @@ public:
     void PlayPhonemeAudio();
     void ProcessNextFrame(IRenderer* pRenderer, IRenderCtx* pCtx);
     void LoadVideos(IRenderer* pRenderer, IRenderCtx* pCtx);
+    void ShowLandmarks(int frameIndex, IImage* pImage);
+    void ShowMesh(int frameIndex, IImage* pImage);
+    CRefObj<IMesh> BuildMeshUsingLandmarks(float imageW1, float imageH1, std::vector<Vector2>& landmarks, BBox2& faceBbox);
+    CRefObj<IMesh> BuildMeshUsingGrid(float imageW1, float imageH1, std::vector<Vector2>& landmarks);
+    CRefObj<IMesh> BuildMeshUsingDelaunay(float imageW1, float imageH1, std::vector<Vector2>& landmarks);
 };
 CApp app;
 
@@ -574,6 +229,241 @@ bool FileExists(const wchar_t* path)
 {
     DWORD dwAttrib = GetFileAttributes(path);
     return (dwAttrib != INVALID_FILE_ATTRIBUTES && !(dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
+}
+
+CRefObj<IMesh> CApp::BuildMeshUsingLandmarks(float imageW1, float imageH1, std::vector<Vector2>& landmarks, BBox2& faceBbox)
+{
+    m_numNonLandmarkVerts = 0;
+    Vector2 tl = faceBbox.minPt - 30.0f;
+    Vector2 br = faceBbox.maxPt + 30.0f;
+    Vector2 wh = br - tl;
+    Vector3 vertpos[100] = {
+        { 0.0f,                 0.0f,                   0.0f },
+        { imageW1 * 0.25f,      0.0f,                   0.0f },
+        { imageW1 * 0.5f,       0.0f,                   0.0f },
+        { imageW1 * 0.75f,      0.0f,                   0.0f },
+        { imageW1,              0.0f,                   0.0f },
+        { imageW1,              imageH1 * 0.25f,        0.0f },
+        { imageW1,              imageH1 * 0.5f,         0.0f },
+        { imageW1,              imageH1 * 0.75f,        0.0f },
+        { imageW1,              imageH1,                0.0f },
+        { imageW1 * 0.75f,      imageH1,                0.0f },
+        { imageW1 * 0.5f,       imageH1,                0.0f },
+        { imageW1 * 0.25f,      imageH1,                0.0f },
+        { 0.0f,                 imageH1,                0.0f },
+        { 0.0f,                 imageH1 * 0.75f,        0.0f },
+        { 0.0f,                 imageH1 * 0.5f,         0.0f },
+        { 0.0f,                 imageH1 * 0.25f,        0.0f },
+        { tl.x,                 tl.y,                   0.0f },
+        { tl.x + wh.x * 0.25f,  tl.y,                   0.0f },
+        { tl.x + wh.x * 0.5f,   tl.y,                   0.0f },
+        { tl.x + wh.x * 0.75f,  tl.y,                   0.0f },
+        { tl.x + wh.x,          tl.y,                   0.0f },
+        { tl.x + wh.x,          tl.y + wh.y * 0.25f,    0.0f },
+        { tl.x + wh.x,          tl.y + wh.y * 0.5f,     0.0f },
+        { tl.x + wh.x,          tl.y + wh.y * 0.75f,    0.0f },
+        { tl.x + wh.x,          tl.y + wh.y,            0.0f },
+        { tl.x + wh.x * 0.75f,  tl.y + wh.y,            0.0f },
+        { tl.x + wh.x * 0.5f,   tl.y + wh.y,            0.0f },
+        { tl.x + wh.x * 0.25f,  tl.y + wh.y,            0.0f },
+        { tl.x,                 tl.y + wh.y,            0.0f },
+        { tl.x,                 tl.y + wh.y * 0.75f,    0.0f },
+        { tl.x,                 tl.y + wh.y * 0.5f,     0.0f },
+        { tl.x,                 tl.y + wh.y * 0.25f,    0.0f },
+    };
+    m_numNonLandmarkVerts = 32;
+    int vertIndex = 32;
+    for (size_t landmarkIndex = c_FaceLandmark_Mouth_FirstIndex; landmarkIndex <= c_FaceLandmark_Mouth_LastIndex; landmarkIndex++)
+    {
+        vertpos[vertIndex++] = Vector3(landmarks[landmarkIndex].x, landmarks[landmarkIndex].y, 0.0f);
+    }
+    int vertIndices[] = {
+        0, 16, 1,
+        1, 16, 17,
+        17, 2, 1,
+        18, 2, 17,
+        19, 2, 18,
+        19, 3, 2,
+        20, 3, 19,
+        20, 4, 3,
+        20, 5, 4,
+        21, 5, 20,
+        21, 6, 5,
+        22, 6, 21,
+        23, 6, 22,
+        23, 7, 6,
+        24, 7, 23,
+        24, 8, 7,
+        24, 9, 8,
+        24, 25, 9,
+        25, 10, 9,
+        26, 10, 25,
+        26, 27, 10,
+        27, 11, 10,
+        27, 28, 11,
+        11, 28, 12,
+        12, 28, 13,
+        13, 28, 29,
+        14, 13, 29,
+        29, 30, 14,
+        14, 30, 31,
+        14, 31, 15,
+        16, 15, 31,
+        0, 15, 16,
+        32, 31, 30,
+        32, 33, 31,
+        31, 33, 16,
+        16, 33, 17,
+        33, 34, 17,
+        17, 34, 18,
+        34, 35, 18,
+        35, 36, 18,
+        18, 36, 19,
+        36, 37, 19,
+        19, 37, 20,
+        20, 37, 21,
+        37, 38, 21,
+        21, 38, 22,
+        38, 39, 22,
+        39, 23, 22,
+        39, 40, 23,
+        40, 24, 23,
+        40, 25, 24,
+        40, 41, 25,
+        41, 26, 25,
+        41, 42, 26,
+        42, 27, 26,
+        42, 43, 27,
+        43, 28, 27,
+        43, 29, 28,
+        43, 30, 29,
+        43, 32, 30,
+        32, 44, 33,
+        44, 45, 33,
+        45, 34, 33,
+        45, 35, 34,
+        45, 46, 35,
+        46, 47, 35,
+        47, 36, 35,
+        47, 37, 36,
+        47, 48, 37,
+        48, 38, 37,
+        48, 39, 38,
+        49, 39, 48,
+        40, 39, 49,
+        50, 40, 49,
+        50, 41, 40,
+        50, 51, 42,
+        50, 42, 41,
+        42, 50, 43,
+        43, 50, 44,
+        43, 44, 32,
+    };
+    CRefObj<IMeshConstructor> spMeshConstructor = IMeshConstructor::Create();
+    spMeshConstructor->MeshOpen();
+    spMeshConstructor->SubMeshOpen();
+    int numTris = (int)_countof(vertIndices);
+    for (int triIndex = 0; triIndex < numTris; triIndex += 3)
+    {
+        Vector2 v0, v1, v2;
+        Vector3 normal(0.0f, 1.0f, 0.0f);
+        Vector3 p0(vertpos[vertIndices[triIndex + 0]].x, vertpos[vertIndices[triIndex + 0]].y, 0.0f);
+        Vector3 p1(vertpos[vertIndices[triIndex + 1]].x, vertpos[vertIndices[triIndex + 1]].y, 0.0f);
+        Vector3 p2(vertpos[vertIndices[triIndex + 2]].x, vertpos[vertIndices[triIndex + 2]].y, 0.0f);
+        spMeshConstructor->FaceOpen();
+        Vector2 vuv;
+        Vector2 uv0[4] =
+        {
+            Vector2(p0.x / imageW1, p0.y / imageH1),
+            Vector2((float)vertIndices[triIndex + 0] / 100.0f, 0.0f),
+            Vector2(0.0f, 0.0f),
+            Vector2(0.0f, 0.0f)
+        };
+        Vector2 uv1[4] =
+        {
+            Vector2(p1.x / imageW1, p1.y / imageH1),
+            Vector2((float)vertIndices[triIndex + 1] / 100.0f, 0.0f),
+            Vector2(0.0f, 0.0f),
+            Vector2(0.0f, 0.0f)
+        };
+        Vector2 uv2[4] =
+        {
+            Vector2(p2.x / imageW1, p2.y / imageH1),
+            Vector2((float)vertIndices[triIndex + 2] / 100.0f, 0.0f),
+            Vector2(0.0f, 0.0f),
+            Vector2(0.0f, 0.0f)
+        };
+        p0.x /= imageW1; p0.x = p0.x * 2.0f - 1.0f;
+        p0.y /= imageH1; p0.y = p0.y * 2.0f - 1.0f;
+        p1.x /= imageW1; p1.x = p1.x * 2.0f - 1.0f;
+        p1.y /= imageH1; p1.y = p1.y * 2.0f - 1.0f;
+        p2.x /= imageW1; p2.x = p2.x * 2.0f - 1.0f;
+        p2.y /= imageH1; p2.y = p2.y * 2.0f - 1.0f;
+        spMeshConstructor->VertexAdd(p0, normal, uv0);
+        spMeshConstructor->VertexAdd(p1, normal, uv1);
+        spMeshConstructor->VertexAdd(p2, normal, uv2);
+        spMeshConstructor->FaceClose();
+    }
+    auto spSubMesh = spMeshConstructor->SubMeshClose();
+    spSubMesh->SetMeshFlags(EMeshFlags::TwoSided);
+    return spMeshConstructor->MeshClose();
+}
+
+CRefObj<IMesh> CApp::BuildMeshUsingGrid(float imageW1, float imageH1, std::vector<Vector2>& landmarks)
+{
+    return nullptr;
+}
+
+CRefObj<IMesh> CApp::BuildMeshUsingDelaunay(float imageW1, float imageH1, std::vector<Vector2>& landmarks)
+{
+    // Define our super triangles to be larger than our image
+    BBox2 sqbb;
+    sqbb.minPt = Vector2(-1000.0f, -1000.0f);
+    sqbb.maxPt = Vector2(imageW1 + 1000.0f, imageH1 + 1000.0f);
+    CRefObj<IDelaunay2> spDelaunay = Caustic::CreateDelaunay2(sqbb);
+    spDelaunay->Open();
+    int gridDeltaX = (int)(imageW1 / c_GridX);
+    int gridDeltaY = (int)(imageH1 / c_GridY);
+    for (int y = 1; y < c_GridY - 1; y++)
+    {
+        for (int x = 1; x < c_GridX - 1; x++)
+        {
+            Vector2 pos(float(x * gridDeltaX), float(y * gridDeltaY));
+            Vector2 uv(float(x) / float(c_GridY - 1), float(y) / float(c_GridX - 1));
+            spDelaunay->AddPoint(pos, uv, false);
+        }
+        break;
+    }
+    spDelaunay->Close(false);
+
+    Vector3 normal(0.0f, 1.0f, 0.0f);
+
+    CRefObj<IMeshConstructor> spMeshConstructor = IMeshConstructor::Create();
+    spMeshConstructor->MeshOpen();
+    spMeshConstructor->SubMeshOpen();
+    int numTris = spDelaunay->GetNumberTriangles();
+    for (int triIndex = 0; triIndex < numTris; triIndex++)
+    {
+        bool isBoundary[3];
+        Vector2 v0, v1, v2;
+        spDelaunay->GetTriangle(triIndex, v0, v1, v2, isBoundary);
+        Vector3 p0(v0.x, v0.y, 0.0f);
+        Vector3 p1(v1.x, v1.y, 0.0f);
+        Vector3 p2(v2.x, v2.y, 0.0f);
+        spMeshConstructor->FaceOpen();
+        Vector2 vuv;
+        const int c_FirstRealVert = 4; // first 4 vertices in trianglation are the Delaunay super triangles
+        Vector2 uv0(p0.x / imageW1, p0.y / imageH1);
+        Vector2 uv1(p1.x / imageW1, p1.y / imageH1);
+        Vector2 uv2(p2.x / imageW1, p2.y / imageH1);
+        spMeshConstructor->VertexAdd(p0, normal, uv0);
+        spMeshConstructor->VertexAdd(p1, normal, uv1);
+        spMeshConstructor->VertexAdd(p2, normal, uv2);
+        spMeshConstructor->FaceClose();
+    }
+    CRefObj<ISubMesh> spSubMesh = spMeshConstructor->SubMeshClose();
+    spSubMesh->SetMeshFlags(EMeshFlags::TwoSided);
+    return spMeshConstructor->MeshClose();
 }
 
 void CApp::LoadPhonemeAudio()
@@ -621,9 +511,15 @@ void CApp::FindLandmarks()
         DWORD bytesRead;
         ReadFile(f, &dw, sizeof(DWORD), &bytesRead, nullptr);
         m_faceLandmarks.resize(dw);
+        m_faceLandmarksBbox.resize(dw);
+        m_faceLandmarksMouthBbox.resize(dw);
+        m_faceBbox.resize(dw);
         m_faceLandmarksInfluenceBounds.resize(dw);
         for (int i = 0; i < (int)dw; i++)
         {
+            ReadFile(f, &m_faceLandmarksBbox[i], sizeof(BBox2), &bytesRead, nullptr);
+            ReadFile(f, &m_faceLandmarksMouthBbox[i], sizeof(BBox2), &bytesRead, nullptr);
+            ReadFile(f, &m_faceBbox[i], sizeof(BBox2), &bytesRead, nullptr);
             DWORD dw2;
             ReadFile(f, &dw2, sizeof(DWORD), &bytesRead, nullptr);
             m_faceLandmarks[i].resize(dw2);
@@ -649,16 +545,34 @@ void CApp::FindLandmarks()
 
             auto marked = m_spLandmarkFilter->Apply(spImage, &params);
 
-            auto bb = std::any_cast<BBox2>(params.params["Face0"]);
-            m_faceBbox.push_back(bb);
+            size_t numFaces = std::any_cast<size_t>(params.params["NumFaces"]);
+            BBox2 faceBbox;
+            int minDist = INT_MAX, minIndex;
+            char buf[1024];
+            for (int i = 0; i < numFaces; i++)
+            {
+                sprintf_s(buf, "Face%d", i);
+                auto bb = std::any_cast<BBox2>(params.params[buf]);
+                auto center = (bb.minPt + bb.maxPt) / 2.0f;
+                int dx = center.x - spImage->GetWidth() / 2.0f;
+                int dy = center.y - spImage->GetHeight() / 2.0f;
+                int dist = dx * dx + dy * dy;
+                if (dist < minDist)
+                {
+                    minDist = dist;
+                    minIndex = i;
+                    faceBbox = bb;
+                }
+            }
+            m_faceBbox.push_back(faceBbox);
 
-            int numLandmarks = (int)std::any_cast<size_t>(params.params["Face0_NumLandmarks"]);
+            sprintf_s(buf, "Face%d_NumLandmarks", minIndex);
+            int numLandmarks = (int)std::any_cast<size_t>(params.params[buf]);
             std::vector<Vector2> landmarks;
             BBox2 landmarksBBoxInfluenceAdjusted;
             for (int j = 0; j < numLandmarks; j++)
             {
-                char buf[1024];
-                sprintf_s(buf, "Face%d_Point%d", 0, j);
+                sprintf_s(buf, "Face%d_Point%d", minIndex, j);
                 Vector2 pt = std::any_cast<Vector2>(params.params[buf]);
                 landmarks.push_back(pt);
 
@@ -679,6 +593,17 @@ void CApp::FindLandmarks()
                 }
             }
             m_faceLandmarksInfluenceBounds.push_back(landmarksBBoxInfluenceAdjusted);
+
+            BBox2 bb2, mouthBbox;
+            for (int k = 0; k < landmarks.size(); k++)
+            {
+                if (k >= 48 && k <= 67)
+                    mouthBbox.AddPoint(landmarks[k]);
+                bb2.AddPoint(landmarks[k]);
+            }
+            m_faceLandmarksBbox.push_back(bb2);
+            m_faceLandmarksMouthBbox.push_back(mouthBbox);
+
             m_faceLandmarks.push_back(landmarks);
             frameIndex++;
         }
@@ -689,6 +614,9 @@ void CApp::FindLandmarks()
     WriteFile(f, &dw, sizeof(DWORD), &bytesWritten, nullptr);
     for (int i = 0; i < (int)dw; i++)
     {
+        WriteFile(f, &m_faceLandmarksBbox[i], sizeof(BBox2), &bytesWritten, nullptr);
+        WriteFile(f, &m_faceLandmarksMouthBbox[i], sizeof(BBox2), &bytesWritten, nullptr);
+        WriteFile(f, &m_faceBbox[i], sizeof(BBox2), &bytesWritten, nullptr);
         DWORD dw2 = (DWORD)m_faceLandmarks[i].size();
         WriteFile(f, &dw2, sizeof(DWORD), &bytesWritten, nullptr);
         WriteFile(f, &m_faceLandmarks[i][0], sizeof(Vector2) * dw2, &bytesWritten, nullptr);
@@ -902,6 +830,8 @@ void CApp::BuildUI(ITexture* pFinalRT, ImFont* pFont)
         app.m_slowPlayback = !app.m_slowPlayback;
     if (ImGui::Button((app.m_showLandmarks) ? "Hide Landmarks" : "Show Landmarks"))
         app.m_showLandmarks = !app.m_showLandmarks;
+    if (ImGui::Button((app.m_showMesh) ? "Hide Mesh" : "Show Mesh"))
+        app.m_showMesh = !app.m_showMesh;
     if (ImGui::Button("Listening"))
         app.m_nextVideoIndex = 0;
     if (ImGui::Button("FollowUp"))
@@ -966,8 +896,8 @@ CRefObj<IImage> CApp::WarpImage(IRenderer* pRenderer, IImage *pImageToWarp, int 
         float imageH = (float)pImageToWarp->GetHeight() - 1.0f;
         for (int i = 0; i < c_MaxDeltas; i++, pDeltas++)
         {
-            int j = i + 32;
-            if (j >= 49 && j <= 67)
+            int j = i + m_numNonLandmarkVerts;
+            if (j >= 48 && j <= 67)
             {
                 *pDst++ = 2.0f * pDeltas->x / imageW;
                 *pDst++ = 2.0f * pDeltas->y / imageH;
@@ -1011,37 +941,6 @@ CRefObj<IImage> CApp::WarpImage(IRenderer* pRenderer, IImage *pImageToWarp, int 
 
 
 #pragma region("StoreWarpedImage")
-    if (m_showLandmarks)
-    {
-        for (int landmarkIndex = 0; landmarkIndex < (int)m_faceLandmarks[frameIndex].size(); landmarkIndex++)
-        {
-            Matrix3x2 mat;
-            //if (frameIndex ==  phonemeInfo[phonemeIndex].m_startFrame)
-            //{
-                mat = Matrix3x2(1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
-            //}
-            //else
-            //{
-            //    mat = Matrix3x2::Align(
-            //        faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][c_FaceLandmark_NoseBridge_Bottom],
-            //        faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][c_FaceLandmark_NoseBridge_Top],
-            //        faceLandmarks[frameIndex][c_FaceLandmark_NoseBridge_Bottom],
-            //        faceLandmarks[frameIndex][c_FaceLandmark_NoseBridge_Top]);
-            //
-            //}
-
-            std::map<std::wstring, PhonemeLandmarkDelta> m_phonemeLandmarkDeltaMap;
-            Vector2 phonemeLandmark = m_faceLandmarks[m_phonemeLandmarkDeltaMap[m_phonemesInCurrentWord[m_phonemeIndex]].m_startFrame][landmarkIndex];
-            Caustic::uint8 color1[4] = { 255, 0, 0, 255 };
-            spFinalImage->DrawCircle(phonemeLandmark, 3, color1);
-            Vector2 alignedLandmark = m_faceLandmarks[frameIndex][landmarkIndex];
-            Caustic::uint8 color2[4] = { 0, 255, 0, 255 };
-            spFinalImage->DrawCircle(alignedLandmark, 4, color2);
-            //alignedLandmark = alignedLandmark * mat;
-            //Caustic::uint8 color3[4] = { 0, 0, 255, 255 };
-            //spFinalImage->DrawCircle(alignedLandmark, 5, color3);
-        }
-    }
 
 ////    static bool drawGrid = false;
 ////    if (drawGrid)
@@ -1140,7 +1039,7 @@ void CApp::ComputeGridWarp(IImage *pImageToWarp, int frameIndex, std::wstring& p
     {
         float2* pDeltas = m_spFixedDeltas.get();
         memset(pDeltas, 0, sizeof(float2) * c_MaxDeltas);
-        pDeltas += 16; // skip boundary points
+        pDeltas += m_numNonLandmarkVerts; // skip boundary points
         for (int landmarkIndex = c_FaceLandmark_Mouth_FirstIndex; landmarkIndex <= c_FaceLandmark_Mouth_LastIndex; landmarkIndex++)
         {
             pDeltas->x = pdelta.m_frameDeltas[phonemeFrameIndex][landmarkIndex - c_FaceLandmark_Mouth_FirstIndex].x;
@@ -1230,6 +1129,91 @@ void CApp::LoadVideos(IRenderer* pRenderer, IRenderCtx* pCtx)
     m_spNDIStream->Initialize("test", videoFormat.m_width, videoFormat.m_height, 30, audioFormat.m_samplesPerSec, audioFormat.m_bitsPerSample, audioFormat.m_numChannels);
 }
 
+void CApp::ShowMesh(int frameIndex, IImage* pImage)
+{
+    if (m_showMesh)
+    {
+        CRefObj<IMesh> spMesh;
+        for (uint32 subMeshIndex = 0; subMeshIndex < m_spMeshes[frameIndex]->NumberSubMeshes(); subMeshIndex++)
+        {
+            auto spSubMesh = m_spMeshes[frameIndex]->GetSubMesh(subMeshIndex);
+            int numFaces = spSubMesh->GetNumberFaces();
+            for (int i = 0; i < numFaces; i++)
+            {
+                auto spFace = spSubMesh->GetFace(i);
+                auto spFirstEdge = spFace->GetEdge();
+                auto spCurEdge = spFirstEdge;
+                do
+                {
+                    auto v0 = spCurEdge->GetHeadVertex();
+                    auto v1 = spCurEdge->GetTailVertex();
+                    Caustic::uint8 color[4] = { 255, 0,0,255 };
+                    Vector2 p0(v0->pos.x, v0->pos.y);
+                    Vector2 p1(v1->pos.x, v1->pos.y);
+                    int vertexIndex0 = (int)(v0->uvs[1].x * 100.0f);
+                    if (vertexIndex0 >= m_numNonLandmarkVerts)
+                    {
+                        p0.x = m_faceLandmarks[frameIndex][vertexIndex0 + c_FaceLandmark_Mouth_FirstIndex - m_numNonLandmarkVerts].x;
+                        p0.y = m_faceLandmarks[frameIndex][vertexIndex0 + c_FaceLandmark_Mouth_FirstIndex - m_numNonLandmarkVerts].y;
+                    }
+                    else
+                    {
+                        p0 = (p0 + 1.0f) / 2.0f;
+                        p0.x = p0.x * (pImage->GetWidth() - 1);
+                        p0.y = p0.y * (pImage->GetHeight() - 1);
+                    }
+                    int vertexIndex1 = (int)(v1->uvs[1].x * 100.0f);
+                    if (vertexIndex1 >= m_numNonLandmarkVerts)
+                    {
+                        p1.x = m_faceLandmarks[frameIndex][vertexIndex1 + c_FaceLandmark_Mouth_FirstIndex - m_numNonLandmarkVerts].x;
+                        p1.y = m_faceLandmarks[frameIndex][vertexIndex1 + c_FaceLandmark_Mouth_FirstIndex - m_numNonLandmarkVerts].y;
+                    }
+                    else
+                    {
+                        p1 = (p1 + 1.0f) / 2.0f;
+                        p1.x = p1.x * (pImage->GetWidth() - 1);
+                        p1.y = p1.y * (pImage->GetHeight() - 1);
+                    }
+                    pImage->DrawLine(p0, p1, color);
+                    spCurEdge = spCurEdge->GetNextEdge();
+                } while (spCurEdge != spFirstEdge);
+            }
+        }
+    }
+}
+
+void CApp::ShowLandmarks(int frameIndex, IImage *pImage)
+{
+    if (m_showLandmarks)
+    {
+        Caustic::uint8 color[4] = { 0, 255, 0, 255 };
+        Caustic::uint8 color2[4] = { 255, 0, 0, 255 };
+        for (int landmarkIndex = 0; landmarkIndex < (int)m_faceLandmarks[frameIndex].size(); landmarkIndex++)
+        {
+            Vector2 landmark = m_faceLandmarks[frameIndex][landmarkIndex];
+            pImage->DrawCircle(landmark, 4, color);
+            Vector2 v0, v1;
+            pImage->DrawLine(v0 = Vector2(m_faceBbox[frameIndex].minPt.x, m_faceBbox[frameIndex].minPt.y),
+                v1 = Vector2(m_faceBbox[frameIndex].maxPt.x, m_faceBbox[frameIndex].minPt.y), color);
+            pImage->DrawLine(v0 = Vector2(m_faceBbox[frameIndex].minPt.x, m_faceBbox[frameIndex].minPt.y),
+                v1 = Vector2(m_faceBbox[frameIndex].minPt.x, m_faceBbox[frameIndex].maxPt.y), color);
+            pImage->DrawLine(v0 = Vector2(m_faceBbox[frameIndex].minPt.x, m_faceBbox[frameIndex].maxPt.y),
+                v1 = Vector2(m_faceBbox[frameIndex].maxPt.x, m_faceBbox[frameIndex].maxPt.y), color);
+            pImage->DrawLine(v0 = Vector2(m_faceBbox[frameIndex].maxPt.x, m_faceBbox[frameIndex].minPt.y),
+                v1 = Vector2(m_faceBbox[frameIndex].maxPt.x, m_faceBbox[frameIndex].maxPt.y), color);
+
+            pImage->DrawLine(v0 = Vector2(m_faceLandmarksBbox[frameIndex].minPt.x, m_faceLandmarksBbox[frameIndex].minPt.y),
+                v1 = Vector2(m_faceLandmarksBbox[frameIndex].maxPt.x, m_faceLandmarksBbox[frameIndex].minPt.y), color2);
+            pImage->DrawLine(v0 = Vector2(m_faceLandmarksBbox[frameIndex].minPt.x, m_faceLandmarksBbox[frameIndex].minPt.y),
+                v1 = Vector2(m_faceLandmarksBbox[frameIndex].minPt.x, m_faceLandmarksBbox[frameIndex].maxPt.y), color2);
+            pImage->DrawLine(v0 = Vector2(m_faceLandmarksBbox[frameIndex].minPt.x, m_faceLandmarksBbox[frameIndex].maxPt.y),
+                v1 = Vector2(m_faceLandmarksBbox[frameIndex].maxPt.x, m_faceLandmarksBbox[frameIndex].maxPt.y), color2);
+            pImage->DrawLine(v0 = Vector2(m_faceLandmarksBbox[frameIndex].maxPt.x, m_faceLandmarksBbox[frameIndex].minPt.y),
+                v1 = Vector2(m_faceLandmarksBbox[frameIndex].maxPt.x, m_faceLandmarksBbox[frameIndex].maxPt.y), color2);
+        }
+    }
+}
+
 void CApp::ProcessNextFrame(IRenderer* pRenderer, IRenderCtx* pCtx)
 {
     if (m_slowPlayback)
@@ -1265,8 +1249,15 @@ void CApp::ProcessNextFrame(IRenderer* pRenderer, IRenderCtx* pCtx)
             auto spVideoSample = m_videos[m_curVideoIndex]->NextVideoSample();
             if (spVideoSample != nullptr)
             {
-                m_spLastFrame = spVideoSample->GetImage();
+                CRefObj<IImage> m_spLastFrame = spVideoSample->GetImage();
+                m_curFrameIndex++;
 
+                if (m_spMeshes.size() <= m_curFrameIndex)
+                {
+                    m_spMeshes.push_back(BuildMeshUsingLandmarks(m_spLastFrame->GetWidth() - 1, m_spLastFrame->GetHeight() - 1, m_faceLandmarks[m_curFrameIndex], m_faceLandmarksMouthBbox[0]));
+                    m_spRenderMeshes.push_back(pRenderer->ToRenderMesh(m_spMeshes[m_curFrameIndex], pRenderer->GetShaderMgr()->FindShader(L"Warp")));
+                }
+                
                 if (m_spWarpNode == nullptr)
                 {
                     m_spWarpShader = pRenderer->GetShaderMgr()->FindShader(L"Warp");
@@ -1305,9 +1296,11 @@ void CApp::ProcessNextFrame(IRenderer* pRenderer, IRenderCtx* pCtx)
 
                 if (m_playPhonemes)
                 {
+                    m_spWarpNode->SetMesh(m_spRenderMeshes[m_curFrameIndex]);
                     m_spLastFrame = WarpImage(pRenderer, m_spLastFrame, m_curFrameIndex, m_phonemesInCurrentWord[m_phonemeIndex], m_phonemeFrameIndex);
                 }
-                m_curFrameIndex++;
+                ShowLandmarks(m_curFrameIndex, m_spLastFrame);
+                ShowMesh(m_curFrameIndex, m_spLastFrame);
 
                 // Check if we have reached the last frame of the current phoneme.
                 // If so, move to the next phoneme

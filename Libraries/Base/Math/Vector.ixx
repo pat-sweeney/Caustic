@@ -116,6 +116,9 @@ export namespace Caustic
         Vector2 operator-(const Vector2 &rhs) const { return Vector2(x - rhs.x, y - rhs.y); }
         Vector2 operator+(const Vector2 &rhs) const { return Vector2(x + rhs.x, y + rhs.y); }
         Vector2 operator*(float f) const { return Vector2(x * f, y * f); }
+        Vector2 operator/(float f) const { return Vector2(x / f, y / f); }
+        Vector2 operator-(float f) const { return Vector2(x - f, y - f); }
+        Vector2 operator+(float f) const { return Vector2(x + f, y + f); }
         bool operator==(const Vector2 &rhs) const { return this->IsEq(rhs); }
         bool operator!=(const Vector2& rhs) const { return !this->IsEq(rhs); }
         void operator/=(float scale) { x /= scale;  y /= scale; }
