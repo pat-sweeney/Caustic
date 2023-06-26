@@ -542,6 +542,7 @@ void CApp::FindLandmarks()
             float imageH1 = (float)spImage->GetHeight() - 1.0f;
             Caustic::ImageFilterParams params;
             params.params.insert(std::make_pair("outputImage", std::any(true)));
+            params.params.insert(std::make_pair("downsample", std::any(false)));
 
             auto marked = m_spLandmarkFilter->Apply(spImage, &params);
 
@@ -554,8 +555,8 @@ void CApp::FindLandmarks()
                 sprintf_s(buf, "Face%d", i);
                 auto bb = std::any_cast<BBox2>(params.params[buf]);
                 auto center = (bb.minPt + bb.maxPt) / 2.0f;
-                int dx = center.x - spImage->GetWidth() / 2.0f;
-                int dy = center.y - spImage->GetHeight() / 2.0f;
+                int dx = (int)(center.x - spImage->GetWidth() / 2.0f);
+                int dy = (int)(center.y - spImage->GetHeight() / 2.0f);
                 int dist = dx * dx + dy * dy;
                 if (dist < minDist)
                 {
@@ -606,6 +607,30 @@ void CApp::FindLandmarks()
 
             m_faceLandmarks.push_back(landmarks);
             frameIndex++;
+            {
+                Vector2 v0, v1;
+                uint8 color[4] = { 255, 0, 0, 255 };
+                spImage->DrawLine(v0 = Vector2(bb2.minPt.x, bb2.minPt.y), v1 = Vector2(bb2.maxPt.x, bb2.minPt.y), color);
+                spImage->DrawLine(v0 = Vector2(bb2.maxPt.x, bb2.minPt.y), v1 = Vector2(bb2.maxPt.x, bb2.maxPt.y), color);
+                spImage->DrawLine(v0 = Vector2(bb2.minPt.x, bb2.maxPt.y), v1 = Vector2(bb2.maxPt.x, bb2.maxPt.y), color);
+                spImage->DrawLine(v0 = Vector2(bb2.minPt.x, bb2.minPt.y), v1 = Vector2(bb2.minPt.x, bb2.maxPt.y), color);
+                
+                uint8 color2[4] = { 0, 255, 0, 255 };
+                spImage->DrawLine(v0 = Vector2(mouthBbox.minPt.x, mouthBbox.minPt.y), v1 = Vector2(mouthBbox.maxPt.x, mouthBbox.minPt.y), color2);
+                spImage->DrawLine(v0 = Vector2(mouthBbox.maxPt.x, mouthBbox.minPt.y), v1 = Vector2(mouthBbox.maxPt.x, mouthBbox.maxPt.y), color2);
+                spImage->DrawLine(v0 = Vector2(mouthBbox.minPt.x, mouthBbox.maxPt.y), v1 = Vector2(mouthBbox.maxPt.x, mouthBbox.maxPt.y), color2);
+                spImage->DrawLine(v0 = Vector2(mouthBbox.minPt.x, mouthBbox.minPt.y), v1 = Vector2(mouthBbox.minPt.x, mouthBbox.maxPt.y), color2);
+
+                uint8 color3[4] = { 0, 0, 255, 255 };
+                for (size_t j = 0; j < landmarks.size(); j++)
+                {
+                    spImage->DrawCircle(landmarks[j], 4, color3);
+                }
+
+                wchar_t buf[1024];
+                swprintf_s(buf, L"d:\\test\\frame_%d.png", frameIndex-1);
+                Caustic::StoreImage(buf, spImage);
+            }
         }
     }
     HANDLE f = CreateFile(L"d:\\data\\idle_landmarks.bin", GENERIC_WRITE, FILE_SHARE_READ, nullptr, CREATE_ALWAYS, 0, nullptr);

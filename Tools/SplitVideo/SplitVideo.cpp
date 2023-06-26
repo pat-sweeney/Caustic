@@ -221,6 +221,8 @@ bool FileExists(const wchar_t* path)
 
 void CApp::LoadPhonemeTimings(std::wstring& fn)
 {
+    if (!FileExists(fn.c_str()))
+        return;
     CRefObj<IJSonParser> spParser = Caustic::CreateJSonParser();
     CRefObj<IJSonObj> spDOM = spParser->LoadDOM(fn);
     Caustic::JSonEnumerator iter(spDOM);

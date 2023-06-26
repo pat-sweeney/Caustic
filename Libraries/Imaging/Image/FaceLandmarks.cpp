@@ -45,10 +45,21 @@ namespace Caustic
         cv::Mat src(pImage->GetHeight(), pImage->GetWidth(), (pImage->GetImageType() == EImageType::BGR_24bpp) ? CV_8UC3 : CV_8UC4, pImage->GetData(), pImage->GetStride());
 
         bool outputImage = (bool)std::any_cast<bool>(pParams->params["outputImage"]);
+        bool downsample = (bool)std::any_cast<bool>(pParams->params["downsample"]);
 
         std::vector<cv::Rect> faces;
-        int grayW = 460;
-        int grayH = (pImage->GetHeight() * 460) / pImage->GetWidth();
+        int grayW;
+        int grayH;
+        if (!downsample)
+        {
+            grayW = pImage->GetWidth();
+            grayH = pImage->GetHeight();
+        }
+        else
+        {
+            grayW = 460;
+            grayH = (pImage->GetHeight() * 460) / pImage->GetWidth();
+        }
         cv::resize(src, src, cv::Size(grayW, grayH), 0, 0, cv::INTER_LINEAR_EXACT);
         cv::cvtColor(src, m_gray, (pImage->GetImageType() == EImageType::BGR_24bpp) ? cv::COLOR_BGR2GRAY : cv::COLOR_BGRA2GRAY);
         equalizeHist(m_gray, m_gray);
@@ -105,8 +116,8 @@ namespace Caustic
                 for (unsigned long k = 0; k < shapes[i].size(); k++)
                 {
                     cv::Point2f pt = shapes[i][k];
-                    pt.x = std::floorf(pImage->GetWidth() * float(pt.x) / grayW);
-                    pt.y = std::floorf(pImage->GetHeight() * float(pt.y) / grayH);
+                    pt.x = std::floorf((pImage->GetWidth() - 1) * float(pt.x) / float(grayW - 1));
+                    pt.y = std::floorf((pImage->GetHeight() - 1) * float(pt.y) / float(grayH - 1));
                     pt.x = (float)std::min<int>(std::max<int>((int)pt.x, 0), pImage->GetWidth() - 1);
                     pt.y = (float)std::min<int>(std::max<int>((int)pt.y, 0), pImage->GetHeight() - 1);
                     char buf[1024];
