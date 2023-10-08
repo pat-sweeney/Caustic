@@ -12,7 +12,7 @@ main.geometry("1920x1080")
 main.attributes('-fullscreen', True)
 canvas = tkinter.Canvas(main, width=1920, height=1080)
 canvas.pack()
-srcimg = Image.open(r'c:\users\patricsw\Pictures\image1.PNG')
+srcimg = Image.new(mode='RGB', size=(1920, 1080))
 srcimg = srcimg.resize((1920, 1080))
 canvasimg = canvas.create_image(960,540,image=ImageTk.PhotoImage(srcimg))
 
@@ -30,15 +30,13 @@ def ShowImage(path, sid):
     }
     response = requests.get(api_url,params=params)
     img = Image.open(BytesIO(response.content))
-#    if img.width > img.height:
-#        scale = img.width / float(img.height)
-#        img = img.resize((1920, int(1080 / scale)))
-#    else:
-#        scale = img.height / float(img.width)
-#        img = img.resize((int(1920 / scale), 1080))
+    if img.width > img.height:
+        img = img.resize((1920, int(img.height * 1920.0 / img.width)))
+    else:
+        img = img.resize((int(img.width * 1080.0 / img.height), 1080))
     itk2 = ImageTk.PhotoImage(img)
     canvas.itemconfigure(canvasimg, image=itk2)
-    time.sleep(10)
+    time.sleep(5)
 
 def WalkFolder(folderPath, sid):
     api_url = "http://192.168.1.136:5000/webapi/entry.cgi"
