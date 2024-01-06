@@ -91,7 +91,7 @@ export namespace Caustic
     // Base interface shared across all image types
     //
     // Header:
-    // {Link:#include "Cameras/AzureKinect/IAzureKinect.h"{Cameras/AzureKinect/IAzureKinect.h}}
+    // {Link:import Cameras.AzureKinect.IAzureKinect{Cameras/AzureKinect/IAzureKinect.ixx}}
     //**********************************************************************
     struct IAzureKinect : public Caustic::IDepthCameraDevice
     {
@@ -126,7 +126,7 @@ export namespace Caustic
         // Returns the newly created camera
         //
         // Header:
-        // {Link:#include "Cameras/AzureKinect/IAzureKinect.h"{Cameras/AzureKinect/IAzureKinect.h}}
+    // {Link:import Cameras.AzureKinect.IAzureKinect{Cameras/AzureKinect/IAzureKinect.ixx}}
         //**********************************************************************
         CRefObj<IAzureKinect> CreateAzureKinect(int deviceId, ColorMode colorMode, DepthMode depthMode, FPSMode fpsMode, bool captureBodies = false);
     }

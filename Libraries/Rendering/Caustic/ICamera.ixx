@@ -25,7 +25,7 @@ export namespace Caustic
     // to determine where to render from.
     //
     // Header:
-    // {Link:#include "Rendering/Caustic/ICamera.h"{Rendering/Caustic/ICamera.h}}
+    // {Link:import Rendering.Caustic.ICamera{Rendering/Caustic/ICamera.ixx}}
     //**********************************************************************
     struct ICamera : public ISerialize
     {
@@ -153,7 +153,7 @@ export namespace Caustic
     // Returns the newly created camera.
     //
     // Header:
-    // {Link:#include "Rendering/Caustic/ICamera.h"{Rendering/Caustic/ICamera.h}}
+    // {Link:import Rendering.Caustic.ICamera{Rendering/Caustic/ICamera.ixx}}
     //**********************************************************************
     CRefObj<ICamera> CreateCamera(bool leftHanded)
     {

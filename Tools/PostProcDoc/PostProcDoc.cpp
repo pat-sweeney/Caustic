@@ -70,7 +70,7 @@ static void ProcessFiles(std::wstring folder, int level)
                 {
                     std::wstring fn(folder + L"\\" + fd.cFileName);
                     std::string sfn = Caustic::wstr2str(fn);
-                    std::cout << "Processing file:" << sfn.c_str();
+                    std::cout << "Processing file:" << sfn.c_str() << '\n';
                     std::unique_ptr<byte> spData = ReadBytesInFile(fn);
                     if (spData != nullptr)
                     {
@@ -127,6 +127,7 @@ static void ProcessFiles(std::wstring folder, int level)
                         }
                         if (changed)
                         {
+                            convertedText[outputIndex] = '\0';
                             std::ofstream fs(fn, std::ios::binary);
                             fs.write(convertedText, outputIndex);
                             fs.close();

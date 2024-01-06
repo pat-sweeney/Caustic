@@ -29,7 +29,7 @@ export namespace Caustic
     // Constraint_ZAxis - Constrain rotations to be around Z axis
     //
     // Header:
-    // {Link:#include "Rendering/Caustic/ITrackball.h"{Rendering/Caustic/ITrackball.h}}
+    // {Link:import Rendering.Caustic.ITrackball{Rendering/Caustic/ITrackball.ixx}}
     //**********************************************************************
     enum ETrackballConstraint
     {
@@ -44,7 +44,7 @@ export namespace Caustic
     // Defines the interface to our trackball implementation
     //
     // Header:
-    // {Link:#include "Rendering/Caustic/ITrackball.h"{Rendering/Caustic/ITrackball.h}}
+    // {Link:import Rendering.Caustic.ITrackball{Rendering/Caustic/ITrackball.ixx}}
     //**********************************************************************
     struct ITrackball : public IRefCount
     {
@@ -88,7 +88,7 @@ export namespace Caustic
     // Returns the newly created trackball.
     //
     // Header:
-    // {Link:#include "Rendering/Caustic/ITrackball.h"{Rendering/Caustic/ITrackball.h}}
+    // {Link:import Rendering.Caustic.ITrackball{Rendering/Caustic/ITrackball.ixx}}
     //**********************************************************************
     CRefObj<ITrackball> CreateTrackball();
 }

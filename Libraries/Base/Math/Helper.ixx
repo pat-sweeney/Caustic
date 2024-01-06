@@ -20,7 +20,7 @@ export namespace Caustic
     // See https://en.wikipedia.org/wiki/Integer_square_root for details.
     //
     // Header:
-    // {Link:#include "Base/Math/Helper.h"{Base/Math/Helper.h}}
+    // {Link:import Base.Math.Helper{Base/Math/Helper.ixx}}
     //**********************************************************************
     inline uint32_t isqrt(uint32_t n)
     {
@@ -49,7 +49,7 @@ export namespace Caustic
     // pt - point to test
     //
     // Header:
-    // {Link:#include "Base/Math/Helper.h"{Base/Math/Helper.h}}
+    // {Link:import Base.Math.Helper{Base/Math/Helper.ixx}}
     //**********************************************************************
     float DistancePointToLine(Caustic::Vector2& p0, Caustic::Vector2& p1, Caustic::Vector2& pt);
 
@@ -65,7 +65,7 @@ export namespace Caustic
     // -------------
     //
     // Header:
-    // {Link:#include "Base/Math/Helper.h"{Base/Math/Helper.h}}
+    // {Link:import Base.Math.Helper{Base/Math/Helper.ixx}}
     //**********************************************************************
     extern float Determinant2x2(float a00, float a01, float a10, float a11);
 
@@ -82,7 +82,7 @@ export namespace Caustic
     // -------------
     //
     // Header:
-    // {Link:#include "Base/Math/Helper.h"{Base/Math/Helper.h}}
+    // {Link:import Base.Math.Helper{Base/Math/Helper.ixx}}
     //**********************************************************************
     extern float Determinant3x3(float a00, float a01, float a02, float a10, float a11, float a12, float a20, float a21, float a22);
 
@@ -98,7 +98,7 @@ export namespace Caustic
     // pRadius - returns the radius of the circumcircle
     //
     // Header:
-    // {Link:#include "Base/Math/Helper.h"{Base/Math/Helper.h}}
+    // {Link:import Base.Math.Helper{Base/Math/Helper.ixx}}
     //**********************************************************************
     extern void CircumCircle(Vector2 &p0, Vector2 &p1, Vector2 &p2, Vector2 *pCircumCenter, float *pRadius);
 
@@ -116,7 +116,7 @@ export namespace Caustic
     // True if point is in circumcircle. False otherwise.
     //
     // Header:
-    // {Link:#include "Base/Math/Helper.h"{Base/Math/Helper.h}}
+    // {Link:import Base.Math.Helper{Base/Math/Helper.ixx}}
     //**********************************************************************
     extern bool PointInTriangleCircumcircle(Vector2 &p0, Vector2 &p1, Vector2 &p2, Vector2 &pt);
 }
