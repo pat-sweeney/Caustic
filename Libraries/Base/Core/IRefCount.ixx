@@ -1,8 +1,11 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+module;
+#include <cinttypes>
+
 export module Base.Core.IRefCount;
 import Base.Core.Core;
 
@@ -21,14 +24,14 @@ export namespace Caustic
         // Method: AddRef
         // Increments the reference count
         //**********************************************************************
-        virtual uint32 AddRef() = 0;
+        virtual uint32_t AddRef() = 0;
 
         //**********************************************************************
         // Method: Release
         // Decrements the reference count. If the reference count goes to zero
         // the underlying object is destroyed.
         //**********************************************************************
-        virtual uint32 Release() = 0;
+        virtual uint32_t Release() = 0;
     };
 
     //**********************************************************************

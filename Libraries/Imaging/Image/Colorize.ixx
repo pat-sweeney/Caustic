@@ -37,8 +37,8 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IImageFilter
@@ -110,11 +110,11 @@ export namespace Caustic
             CImageIter32 dstCol = dstRow;
             for (int ix = 0; ix < (int)pImage->GetWidth(); ix++)
             {
-                uint16 depth = srcCol.GetGray();
+                uint16_t depth = srcCol.GetGray();
                 int normalizedDepth = (depth >= minDepthVal && depth <= maxDepthVal) ? (depth * 1024 / m_maxDepth) : 0;
-                dstCol.SetRed((uint8)Saturate(384 - (int)Abs(normalizedDepth - 256)));
-                dstCol.SetGreen((uint8)Saturate(384 - (int)Abs(normalizedDepth - 512)));
-                dstCol.SetBlue((uint8)Saturate(384 - (int)Abs(normalizedDepth - 768)));
+                dstCol.SetRed((uint8_t)Saturate(384 - (int)Abs(normalizedDepth - 256)));
+                dstCol.SetGreen((uint8_t)Saturate(384 - (int)Abs(normalizedDepth - 512)));
+                dstCol.SetBlue((uint8_t)Saturate(384 - (int)Abs(normalizedDepth - 768)));
                 dstCol.SetAlpha(255);
                 srcCol.Step(CImageIter::Right);
                 dstCol.Step(CImageIter::Right);

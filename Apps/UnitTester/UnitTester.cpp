@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2023
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -15,10 +15,11 @@ import Parsers.Lex.UnitTests;
 import Rendering.SceneImport.UnitTests;
 #include <stdlib.h>
 #include <string.h>
+#include <cinttypes>
 
 int main(int argc, char** argv)
 {
-    Caustic::uint32 whichTests = 0x0;
+    uint32_t whichTests = 0x0;
     if (argc > 1)
     {
         for (int i = 1; i < argc; i++)

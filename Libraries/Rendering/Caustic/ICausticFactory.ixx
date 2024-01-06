@@ -90,7 +90,7 @@ export namespace Caustic
         // Module:
         // {Link:import Rendering/Caustic/ICausticFactory;{Rendering/Caustic/ICausticFactory.ixx}}
         //**********************************************************************
-        virtual CRefObj<IPointCloud> CreatePointCloud(IRenderer* pRenderer, uint32 width, uint32 height) = 0;
+        virtual CRefObj<IPointCloud> CreatePointCloud(IRenderer* pRenderer, uint32_t width, uint32_t height) = 0;
         
         //**********************************************************************
         // Method: CreateRenderMesh
@@ -286,7 +286,7 @@ export namespace Caustic
         // Module:
         // {Link:import Rendering/Caustic/ICausticFactory;{Rendering/Caustic/ICausticFactory.ixx}}
         //**********************************************************************
-        virtual CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags) = 0;
+        virtual CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, uint32_t width, uint32_t height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags) = 0;
 
         //**********************************************************************
         // Method: CreateTexture

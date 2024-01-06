@@ -22,13 +22,13 @@ export namespace Caustic
         // Method: NumberChildren
         // Returns the number of child elements part of this group
         //**********************************************************************
-        virtual uint32 NumberChildren() = 0;
+        virtual uint32_t NumberChildren() = 0;
 
         //**********************************************************************
         // Method: GetChild
         // Gets the Nth child element
         //**********************************************************************
-        virtual CRefObj<ISceneElem> GetChild(uint32 index) = 0;
+        virtual CRefObj<ISceneElem> GetChild(uint32_t index) = 0;
 
         //**********************************************************************
         // Method: AddChild
@@ -40,7 +40,7 @@ export namespace Caustic
         // Method: InsertChild
         // Adds a new scene element to the group. The order of elements defines the render order.
         //**********************************************************************
-        virtual void InsertChild(ISceneElem* pElem, uint32 index) = 0;
+        virtual void InsertChild(ISceneElem* pElem, uint32_t index) = 0;
 
         //**********************************************************************
         // Method: GetTransform

@@ -220,7 +220,7 @@ namespace Caustic
                 {
                     CComBSTR bstr;
                     pNode->get_text(&bstr);
-                    pLight->m_mode = (uint32)_wtoi(bstr);
+                    pLight->m_mode = (uint32_t)_wtoi(bstr);
                 }
             },
             {

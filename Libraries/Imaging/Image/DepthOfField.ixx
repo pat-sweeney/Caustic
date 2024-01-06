@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 1996-2021
+// Copyright Patrick Sweeney 1996-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -8,6 +8,7 @@ module;
 #include <memory>
 #include <any>
 #include <string>
+#include <cinttypes>
 
 export module Imaging.Image.ImageFilter.DepthOfField;
 import Base.Core.Core;
@@ -49,8 +50,8 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IImageFilter
@@ -78,17 +79,17 @@ export namespace Caustic
         RGBColor clr[3][3];
         T riter[3];
         T citer[3];
-        int32 avgr, avgg, avgb;
+        int32_t avgr, avgg, avgb;
 
-        uint32 w1 = pImage->GetWidth() - 1;
-        uint32 h1 = pImage->GetHeight() - 1;
+        uint32_t w1 = pImage->GetWidth() - 1;
+        uint32_t h1 = pImage->GetHeight() - 1;
         riter[0] = T(pImage, 0, 0);
         riter[1] = T(pImage, 0, 0);
         riter[2] = T(pImage, 0, (pImage->GetHeight() > 1) ? 1 : 0);
         T dstriter(spImage, 0, 0);
-        uint32 w = pImage->GetWidth();
-        uint32 h = pImage->GetHeight();
-        for (uint32 y = 0; y < h; y++)
+        uint32_t w = pImage->GetWidth();
+        uint32_t h = pImage->GetHeight();
+        for (uint32_t y = 0; y < h; y++)
         {
             T dstciter = dstriter;
             citer[0] = riter[0];
@@ -109,8 +110,8 @@ export namespace Caustic
                 citer[1].Step(CImageIter::Right);
                 citer[2].Step(CImageIter::Right);
             }
-            uint32 x = pImage->GetWidth();
-            for (uint32 x = 0; x < pImage->GetWidth(); x++)
+            uint32_t x = pImage->GetWidth();
+            for (uint32_t x = 0; x < pImage->GetWidth(); x++)
             {
                 // Check depth
                 auto nx = pDepthImage->GetWidth() * x / pImage->GetWidth();
@@ -140,16 +141,16 @@ export namespace Caustic
                     avgb = (clr[0][0].b + clr[0][1].b + clr[0][2].b +
                         clr[1][0].b + clr[1][1].b + clr[1][2].b +
                         clr[2][0].b + clr[2][1].b + clr[2][2].b) / 9;
-                    dstciter.SetRed((uint8)avgr);
-                    dstciter.SetGreen((uint8)avgg);
-                    dstciter.SetBlue((uint8)avgb);
+                    dstciter.SetRed((uint8_t)avgr);
+                    dstciter.SetGreen((uint8_t)avgg);
+                    dstciter.SetBlue((uint8_t)avgb);
                     dstciter.SetAlpha(255);
                 }
                 else
                 {
-                    dstciter.SetRed((uint8)clr[1][1].r);
-                    dstciter.SetGreen((uint8)clr[1][1].b);
-                    dstciter.SetBlue((uint8)clr[1][1].g);
+                    dstciter.SetRed((uint8_t)clr[1][1].r);
+                    dstciter.SetGreen((uint8_t)clr[1][1].b);
+                    dstciter.SetBlue((uint8_t)clr[1][1].g);
                 }
                 clr[0][0] = clr[0][1];
                 clr[1][0] = clr[1][1];

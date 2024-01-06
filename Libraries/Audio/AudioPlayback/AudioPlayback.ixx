@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2023
+// Copyright Patrick Sweeney 2023-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -8,6 +8,7 @@ module;
 #include <xaudio2.h>
 #include <atlbase.h>
 #include <memory>
+#include <cinttypes>
 
 export module Audio.AudioPlayback.AudioPlayback;
 import Base.Core.Core;
@@ -40,7 +41,7 @@ export namespace Caustic
         int m_numChannels;
         HANDLE m_hBufferPlaying;
 
-        void PlayBuffer(uint8* pData, uint32 len);
+        void PlayBuffer(uint8_t* pData, uint32_t len);
     public:
         CAudioPlayback(int samplingRate, int bitsPerSample, int numChannels);
         ~CAudioPlayback();
@@ -48,14 +49,14 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IAudioPlayback
         //**********************************************************************
         virtual void Play(IAudioFrame* pFrame) override;
-        virtual void Play(uint8* pData, uint32 dataLen) override;
+        virtual void Play(uint8_t* pData, uint32_t dataLen) override;
         virtual void PlayTone(int frequency) override;
         virtual void SetVolume(float volume) override;
 
@@ -68,7 +69,7 @@ export namespace Caustic
         virtual void OnStreamEnd() override {}
         virtual void OnVoiceError(void* pBufferContext, HRESULT error) override {}
         virtual void OnVoiceProcessingPassEnd() override {}
-        virtual void OnVoiceProcessingPassStart(UINT32 BytesRequired) override {}
+        virtual void OnVoiceProcessingPassStart(uint32_t BytesRequired) override {}
     };
 
     //**********************************************************************

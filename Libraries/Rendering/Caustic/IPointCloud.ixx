@@ -102,5 +102,5 @@ export namespace Caustic
     // Module:
     // {Link:import Rendering.Caustic.IPointCloud;{Rendering/Caustic/IPointCloud.ixx}}
     //**********************************************************************
-    CRefObj<IPointCloud> CreatePointCloud(IRenderer* pRenderer, uint32 width, uint32 height);
+    CRefObj<IPointCloud> CreatePointCloud(IRenderer* pRenderer, uint32_t width, uint32_t height);
 }

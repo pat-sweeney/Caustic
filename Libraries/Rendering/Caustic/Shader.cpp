@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -10,6 +10,8 @@ module;
 #include <d3d11_4.h>
 #include <atlbase.h>
 #include <any>
+#include <cinttypes>
+
 module Rendering.Caustic.Shader;
 import Base.Core.Core;
 import Base.Core.Error;
@@ -26,7 +28,7 @@ import Rendering.Caustic.IRenderer;
 
 namespace Caustic
 {
-    uint32 CShader::ShaderTypeSize(ShaderParamDef& paramDef)
+    uint32_t CShader::ShaderTypeSize(ShaderParamDef& paramDef)
     {
         if (paramDef.m_type == EShaderParamType::ShaderType_Float)
             return sizeof(float);
@@ -97,13 +99,13 @@ namespace Caustic
         spShader->m_zThreads = m_zThreads;
         if (m_spShaderInfo->VertexShaderParameterDefs().size() > 0)
             CreateConstantBuffer(pDevice, m_spShaderInfo->VertexShaderParameterDefs().data(),
-                (uint32)m_spShaderInfo->VertexShaderParameterDefs().size(), spShader->m_vsParams, &spShader->m_vertexConstants);
+                (uint32_t)m_spShaderInfo->VertexShaderParameterDefs().size(), spShader->m_vsParams, &spShader->m_vertexConstants);
         if (m_spShaderInfo->PixelShaderParameterDefs().size() > 0)
             CreateConstantBuffer(pDevice, m_spShaderInfo->PixelShaderParameterDefs().data(),
-                (uint32)m_spShaderInfo->PixelShaderParameterDefs().size(), spShader->m_psParams, &spShader->m_pixelConstants);
+                (uint32_t)m_spShaderInfo->PixelShaderParameterDefs().size(), spShader->m_psParams, &spShader->m_pixelConstants);
         if (m_spShaderInfo->ComputeShaderParameterDefs().size() > 0)
             CreateConstantBuffer(pDevice, m_spShaderInfo->ComputeShaderParameterDefs().data(),
-                (uint32)m_spShaderInfo->ComputeShaderParameterDefs().size(), spShader->m_csParams, &spShader->m_computeConstants);
+                (uint32_t)m_spShaderInfo->ComputeShaderParameterDefs().size(), spShader->m_csParams, &spShader->m_computeConstants);
         return CRefObj<IShader>(spShader.release());
     }
 
@@ -119,11 +121,11 @@ namespace Caustic
     // numParams - Number of parameters in params
     // params - Parameter list we will copy definitions into
     //**********************************************************************
-    uint32 CShader::ComputeParamSize(ShaderParamDef* pDefs, uint32 numParams, std::map<std::wstring, ShaderParamInstance>& params)
+    uint32_t CShader::ComputeParamSize(ShaderParamDef* pDefs, uint32_t numParams, std::map<std::wstring, ShaderParamInstance>& params)
     {
         if (pDefs == nullptr || numParams == 0)
             return 0;
-        uint32 s = 0;
+        uint32_t s = 0;
         for (size_t i = 0; i < numParams; i++)
         {
             if (pDefs[i].m_name.length() == 0)
@@ -264,7 +266,7 @@ namespace Caustic
                 {
                     CRefObj<ITexture> v = std::any_cast<CRefObj<ITexture>>(it.second.m_value);
                     v->Render(pRenderer, it.second.m_offset, isPixelShader);
-                    if (it.second.m_offset > (uint32)m_maxTextureSlot)
+                    if (it.second.m_offset > (uint32_t)m_maxTextureSlot)
                         m_maxTextureSlot = it.second.m_offset;
                 }
             }
@@ -818,7 +820,7 @@ namespace Caustic
         return m;
     }
 
-    void CShader::PushMatrix(const wchar_t* pParamName, std::any mat, uint32 psmask, uint32 vsmask)
+    void CShader::PushMatrix(const wchar_t* pParamName, std::any mat, uint32_t psmask, uint32_t vsmask)
     {
         if ((m_matricesAvail & vsmask) == vsmask)
             SetVSParam(pParamName, mat);
@@ -828,8 +830,8 @@ namespace Caustic
 
     void CShader::PushLights(std::vector<CRefObj<ILight>> &lights)
     {
-        uint32 numLights = (uint32)lights.size();
-        for (uint32 i = 0; i < numLights; i++)
+        uint32_t numLights = (uint32_t)lights.size();
+        for (uint32_t i = 0; i < numLights; i++)
         {
             Caustic::FRGBColor color = lights[i]->GetColor();
             Float4 lightColor(color.r, color.g, color.b, 1.0f);
@@ -1029,9 +1031,9 @@ namespace Caustic
     // usage - Usage model for buffer
     // pBuffer - returns the created buffer
     //**********************************************************************
-    void CShader::CreateBuffer(ID3D11Device* pDevice, uint32 bufSize,
-        uint32 bindFlags, uint32 cpuAccessFlags, D3D11_USAGE usage,
-        uint32 miscFlags, uint32 stride, uint32 alignment, SBuffer* pBuffer, ID3D11Buffer **ppBuffer)
+    void CShader::CreateBuffer(ID3D11Device* pDevice, uint32_t bufSize,
+        uint32_t bindFlags, uint32_t cpuAccessFlags, D3D11_USAGE usage,
+        uint32_t miscFlags, uint32_t stride, uint32_t alignment, SBuffer* pBuffer, ID3D11Buffer **ppBuffer)
     {
         pBuffer->m_heapSize = 0;
         pBuffer->m_bufferSize = 0;
@@ -1045,8 +1047,8 @@ namespace Caustic
             buffDesc.StructureByteStride = stride;
             buffDesc.Usage = usage;
             CT(pDevice->CreateBuffer(&buffDesc, nullptr, ppBuffer));
-            pBuffer->m_heapSize = (uint32)buffDesc.ByteWidth;
-            pBuffer->m_bufferSize = (uint32)bufSize;
+            pBuffer->m_heapSize = (uint32_t)buffDesc.ByteWidth;
+            pBuffer->m_bufferSize = (uint32_t)bufSize;
         }
     }
 
@@ -1061,9 +1063,9 @@ namespace Caustic
     // params - Generated parameter list
     // ppBuffer - Returns the created constant buffer
     //**********************************************************************
-    void CShader::CreateConstantBuffer(ID3D11Device *pDevice, ShaderParamDef *pDefs, uint32 paramsSize, std::map<std::wstring, ShaderParamInstance> &params, SBuffer *pConstantBuffer)
+    void CShader::CreateConstantBuffer(ID3D11Device *pDevice, ShaderParamDef *pDefs, uint32_t paramsSize, std::map<std::wstring, ShaderParamInstance> &params, SBuffer *pConstantBuffer)
     {
-        uint32 s = ComputeParamSize(pDefs, paramsSize, params);
+        uint32_t s = ComputeParamSize(pDefs, paramsSize, params);
         CreateBuffer(pDevice, s, D3D11_BIND_CONSTANT_BUFFER, D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE, D3D11_USAGE_DYNAMIC, 0, 0, 16, pConstantBuffer, &pConstantBuffer->m_spBuffer);
     }
 
@@ -1090,31 +1092,31 @@ namespace Caustic
         if (pShaderInfo->HasShader(EShaderType::TypeVertexShader))
         {
             const byte* pVSByteCodes = (const byte*)pVSBlob->GetBufferPointer();
-            uint32 vsBufferLen = (uint32)pVSBlob->GetBufferSize();
+            uint32_t vsBufferLen = (uint32_t)pVSBlob->GetBufferSize();
             std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout = pShaderInfo->VertexLayout();
             D3D11_INPUT_ELEMENT_DESC* pVertexLayout = vertexLayout.data();
             CT(pDevice->CreateInputLayout(pShaderInfo->VertexLayout().data(), (UINT)pShaderInfo->VertexLayout().size(),
                 pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), &m_spLayout));
             CreateConstantBuffer(pDevice, pShaderInfo->VertexShaderParameterDefs().data(),
-                (uint32)pShaderInfo->VertexShaderParameterDefs().size(), m_vsParams, &m_vertexConstants);
+                (uint32_t)pShaderInfo->VertexShaderParameterDefs().size(), m_vsParams, &m_vertexConstants);
             CT(pDevice->CreateVertexShader(pVSByteCodes, vsBufferLen, nullptr, &m_spVertexShader));
         }
         if (pShaderInfo->HasShader(EShaderType::TypePixelShader))
         {
             const byte* pPSByteCodes = (const byte*)pPSBlob->GetBufferPointer();
-            uint32 psBufferLen = (uint32)pPSBlob->GetBufferSize();
+            uint32_t psBufferLen = (uint32_t)pPSBlob->GetBufferSize();
             CreateConstantBuffer(pDevice, pShaderInfo->PixelShaderParameterDefs().data(),
-                (uint32)pShaderInfo->PixelShaderParameterDefs().size(), m_psParams, &m_pixelConstants);
+                (uint32_t)pShaderInfo->PixelShaderParameterDefs().size(), m_psParams, &m_pixelConstants);
             CT(pDevice->CreatePixelShader(pPSByteCodes, psBufferLen, nullptr, &m_spPixelShader));
         }
         if (pShaderInfo->HasShader(EShaderType::TypeComputeShader))
         {
             const byte* pPSByteCodes = (const byte*)pCSBlob->GetBufferPointer();
-            uint32 psBufferLen = (uint32)pCSBlob->GetBufferSize();
+            uint32_t psBufferLen = (uint32_t)pCSBlob->GetBufferSize();
             CT(pDevice->CreateComputeShader(pPSByteCodes, psBufferLen, nullptr, &m_spComputeShader));
 
             CreateConstantBuffer(pDevice, pShaderInfo->ComputeShaderParameterDefs().data(),
-                (uint32)pShaderInfo->ComputeShaderParameterDefs().size(), m_csParams, &m_computeConstants);
+                (uint32_t)pShaderInfo->ComputeShaderParameterDefs().size(), m_csParams, &m_computeConstants);
         }
 
         //**********************************************************************
@@ -1135,9 +1137,9 @@ namespace Caustic
     // usage - Usage model for buffer
     // pBuffer - returns the created buffer
     //**********************************************************************
-    void CGPUBuffer::CreateBuffer(ID3D11Device* pDevice, uint32 bufSize,
-        uint32 bindFlags, uint32 cpuAccessFlags, D3D11_USAGE usage,
-        uint32 miscFlags, uint32 stride, uint32 alignment, ID3D11Buffer** ppBuffer)
+    void CGPUBuffer::CreateBuffer(ID3D11Device* pDevice, uint32_t bufSize,
+        uint32_t bindFlags, uint32_t cpuAccessFlags, D3D11_USAGE usage,
+        uint32_t miscFlags, uint32_t stride, uint32_t alignment, ID3D11Buffer** ppBuffer)
     {
         m_heapSize = 0;
         m_bufferSize = 0;
@@ -1151,21 +1153,21 @@ namespace Caustic
             buffDesc.StructureByteStride = stride;
             buffDesc.Usage = usage;
             CT(pDevice->CreateBuffer(&buffDesc, nullptr, ppBuffer));
-            m_heapSize = (uint32)buffDesc.ByteWidth;
-            m_bufferSize = (uint32)bufSize;
+            m_heapSize = (uint32_t)buffDesc.ByteWidth;
+            m_bufferSize = (uint32_t)bufSize;
         }
     }
 
-    void CGPUBuffer::Create(IRenderer *pRenderer, EBufferType bufferType, uint32 numElems, uint32 elemSize, uint32 bindFlags)
+    void CGPUBuffer::Create(IRenderer *pRenderer, EBufferType bufferType, uint32_t numElems, uint32_t elemSize, uint32_t bindFlags)
     {
         m_numElems = numElems;
         m_elemSize = elemSize;
         m_bufferType = bufferType;
-        uint32 miscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
-        uint32 bind = 0;
-        uint32 access = 0;
+        uint32_t miscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+        uint32_t bind = 0;
+        uint32_t access = 0;
         D3D11_USAGE usage = D3D11_USAGE::D3D11_USAGE_DEFAULT;
-        uint32 stride, alignment = 1;
+        uint32_t stride, alignment = 1;
         switch (bufferType)
         {
         case AppendStructuredBuffer:
@@ -1183,7 +1185,7 @@ namespace Caustic
             break;
         }
         bind |= bindFlags;
-        uint32 bufSize = numElems * stride;
+        uint32_t bufSize = numElems * stride;
         if (bufferType == RWByteAddressBuffer)
             stride = 0;
 
@@ -1232,19 +1234,19 @@ namespace Caustic
         }
     }
 
-    void CGPUBuffer::CopyFromCPU(IRenderer* pRenderer, uint8* pData)
+    void CGPUBuffer::CopyFromCPU(IRenderer* pRenderer, uint8_t* pData)
     {
         // Copy the data from the CPU memory to the buffer
         CComPtr<ID3D11DeviceContext> spCtx = pRenderer->GetContext();
         D3D11_MAPPED_SUBRESOURCE ms;
         CT(spCtx->Map(m_spStagingBuffer, 0, D3D11_MAP_WRITE, 0, &ms));
         BYTE* pb = reinterpret_cast<BYTE*>(ms.pData);
-        uint32 alignedElemSize = ((m_elemSize + 3) / 4) * 4;
+        uint32_t alignedElemSize = ((m_elemSize + 3) / 4) * 4;
         if (alignedElemSize == m_elemSize)
             memcpy(pb, pData, m_numElems * m_elemSize);
         else
         {
-            for (uint32 i = 0; i < m_numElems; i++)
+            for (uint32_t i = 0; i < m_numElems; i++)
             {
                 memcpy(pb, pData, m_elemSize);
                 pb += alignedElemSize;
@@ -1255,7 +1257,7 @@ namespace Caustic
         spCtx->CopyResource(m_spBuffer, m_spStagingBuffer);
     }
 
-    void CGPUBuffer::CopyToCPU(IRenderer* pRenderer, uint8* pData)
+    void CGPUBuffer::CopyToCPU(IRenderer* pRenderer, uint8_t* pData)
     {
         if (pData)
         {
@@ -1264,12 +1266,12 @@ namespace Caustic
             D3D11_MAPPED_SUBRESOURCE ms;
             CT(spCtx->Map(m_spStagingBuffer, 0, D3D11_MAP_READ, 0, &ms));
             BYTE* pb = reinterpret_cast<BYTE*>(ms.pData);
-            uint32 alignedElemSize = ((m_elemSize + 3) / 4) * 4;
+            uint32_t alignedElemSize = ((m_elemSize + 3) / 4) * 4;
             if (alignedElemSize == m_elemSize)
                 memcpy(pData, pb, m_numElems * m_elemSize);
             else
             {
-                for (uint32 i = 0; i < m_numElems; i++)
+                for (uint32_t i = 0; i < m_numElems; i++)
                 {
                     memcpy(pData, pb, m_elemSize);
                     pb += alignedElemSize;

@@ -1,11 +1,12 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2023
+// Copyright Patrick Sweeney 2023-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
 module;
 #include <windows.h>
 #include <xaudio2.h>
+#include <cinttypes>
 
 export module Audio.AudioPlayback.IAudioPlayback;
 import Base.Core.Core;
@@ -29,8 +30,8 @@ export namespace Caustic
     //**********************************************************************
     struct IAudioFrame : public IRefCount
     {
-        virtual uint8* GetData() = 0;
-        virtual uint32 GetLength() = 0;
+        virtual uint8_t* GetData() = 0;
+        virtual uint32_t GetLength() = 0;
     };
 
     //**********************************************************************
@@ -59,7 +60,7 @@ export namespace Caustic
         // pData - PCM audio data
         // dataLen - length of 'pData' buffer in bytes
         //**********************************************************************
-        virtual void Play(uint8* pData, uint32 dataLen) = 0;
+        virtual void Play(uint8_t* pData, uint32_t dataLen) = 0;
 
         //**********************************************************************
         // Method: PlayTone

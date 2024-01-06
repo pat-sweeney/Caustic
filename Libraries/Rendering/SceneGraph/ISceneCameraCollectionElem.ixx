@@ -36,7 +36,7 @@ export namespace Caustic
         // Method: NumberCameras
         // Returns the number of cameras in the collection
         //**********************************************************************
-        virtual uint32 NumberCameras() = 0;
+        virtual uint32_t NumberCameras() = 0;
 
         //**********************************************************************
         // Method: GetCamera

@@ -49,7 +49,7 @@ export namespace Caustic
         // Returns a set of flags associated with the mesh. See <EMeshFlags>
         // for flag definitions.
         //**********************************************************************
-        virtual uint32 GetMeshFlags() = 0;
+        virtual uint32_t GetMeshFlags() = 0;
 
         //**********************************************************************
         // Method: SetMeshFlags
@@ -59,7 +59,7 @@ export namespace Caustic
         // Parameters:
         // flags - set of flags to apply
         //**********************************************************************
-        virtual void SetMeshFlags(uint32 flags) = 0;
+        virtual void SetMeshFlags(uint32_t flags) = 0;
 
         //**********************************************************************
         // Method: SetFrontMaterial
@@ -176,7 +176,7 @@ export namespace Caustic
         // Returns:
         // Number of submeshes for this mesh
         //**********************************************************************
-        virtual uint32 NumberSubMeshes() = 0;
+        virtual uint32_t NumberSubMeshes() = 0;
 
         //**********************************************************************
         // Method: GetSubMesh
@@ -188,7 +188,7 @@ export namespace Caustic
         // Returns:
         // Returns the Nth submesh
         //**********************************************************************
-        virtual CRefObj<IRenderSubMesh> GetSubMesh(uint32 index) = 0;
+        virtual CRefObj<IRenderSubMesh> GetSubMesh(uint32_t index) = 0;
 
         //**********************************************************************
         // Method: AddSubMesh
@@ -227,7 +227,7 @@ export namespace Caustic
         // Returns:
         // Returns the associated material
         //**********************************************************************
-        virtual CRefObj<IMaterialAttrib> GetMaterial(uint32 materialID) = 0;
+        virtual CRefObj<IMaterialAttrib> GetMaterial(uint32_t materialID) = 0;
 
         //**********************************************************************
         // Method: ComputeNormals

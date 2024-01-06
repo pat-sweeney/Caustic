@@ -21,7 +21,7 @@ import Rendering.Caustic.PointCloud;
 
 namespace Caustic
 {
-    CRefObj<IPointCloud> CreatePointCloud(IRenderer* pRenderer, uint32 width, uint32 height)
+    CRefObj<IPointCloud> CreatePointCloud(IRenderer* pRenderer, uint32_t width, uint32_t height)
     {
         std::unique_ptr<CPointCloud> spPointCloud(new CPointCloud(pRenderer, width, height));
         return CRefObj<IPointCloud>(spPointCloud.release());

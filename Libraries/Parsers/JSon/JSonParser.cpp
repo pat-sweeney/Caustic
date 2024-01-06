@@ -267,7 +267,7 @@ namespace Caustic
         HANDLE f = CreateFile(fn.c_str(), GENERIC_WRITE, FILE_SHARE_WRITE, nullptr, CREATE_ALWAYS, 0, nullptr);
         if (f == INVALID_HANDLE_VALUE)
             CT(HRESULT_FROM_WIN32(GetLastError()));
-        uint32 bufSize = WriteDOM(dom, nullptr, 0);
+        uint32_t bufSize = WriteDOM(dom, nullptr, 0);
         std::unique_ptr<char> pBuffer(new char[bufSize + 1]);
         ZeroMemory(pBuffer.get(), bufSize + 1);
         bufSize = WriteDOM(dom, pBuffer.get(), bufSize + 1);
@@ -392,7 +392,7 @@ namespace Caustic
         return ParseValue(spLex, "");
     }
 
-    void CJSonParser::ConditionalWrite(bool indent, char **ppBuffer, uint32 *pTotalSize, const char *format, ...)
+    void CJSonParser::ConditionalWrite(bool indent, char **ppBuffer, uint32_t *pTotalSize, const char *format, ...)
     {
         if (indent)
         {
@@ -418,7 +418,7 @@ namespace Caustic
         *pTotalSize += count;
     }
     
-    void CJSonParser::WriteValue(CRefObj<IJSonObj> obj, char** ppBuffer, uint32 *pTotalSize)
+    void CJSonParser::WriteValue(CRefObj<IJSonObj> obj, char** ppBuffer, uint32_t *pTotalSize)
     {
         switch (obj->GetType())
         {
@@ -477,9 +477,9 @@ namespace Caustic
         }
     }
 
-    uint32 CJSonParser::WriteDOM(CRefObj<IJSonObj>& dom, char* pBuffer, uint32 bufLen)
+    uint32_t CJSonParser::WriteDOM(CRefObj<IJSonObj>& dom, char* pBuffer, uint32_t bufLen)
     {
-        uint32 totalSize = 0;
+        uint32_t totalSize = 0;
         if (dom->GetName().length() > 0)
             ConditionalWrite(true, (pBuffer) ? &pBuffer : nullptr, &totalSize, "%s : ", dom->GetName().c_str());
         WriteValue(dom, (pBuffer) ? &pBuffer : nullptr, &totalSize);

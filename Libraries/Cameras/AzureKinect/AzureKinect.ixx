@@ -68,16 +68,16 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // ICameraDevice
         //**********************************************************************
         virtual bool NextVideoFrame(IImage** ppColorImage) override;
         virtual bool NextAudioFrame(IAudioFrame** ppAudioFrame) override;
-        virtual uint32 GetColorWidth() override;
-        virtual uint32 GetColorHeight() override;
+        virtual uint32_t GetColorWidth() override;
+        virtual uint32_t GetColorHeight() override;
 
         //**********************************************************************
         // IDepthCameraDevice
@@ -87,14 +87,14 @@ export namespace Caustic
         virtual Matrix3x3 ColorIntrinsics() override;
         virtual Matrix4x4 DepthExtrinsics() override;
         virtual Matrix3x3 DepthIntrinsics() override;
-        virtual uint32 GetDepthWidth() override;
-        virtual uint32 GetDepthHeight() override;
+        virtual uint32_t GetDepthWidth() override;
+        virtual uint32_t GetDepthHeight() override;
 
         //**********************************************************************
         // IAzureKinect
         //**********************************************************************
         virtual bool NextVideoFrame(IImage** ppColorImage, std::vector<Vector3>& pts, std::vector<Vector3>& normals, BBox3 &bbox) override;
-        virtual CRefObj<IImage> BuildRayMap(uint32 w, uint32 h, bool forDepth = true) override;
+        virtual CRefObj<IImage> BuildRayMap(uint32_t w, uint32_t h, bool forDepth = true) override;
         virtual CameraIntrinsics GetAzureColorIntrinsics() override;
         virtual CameraIntrinsics GetAzureDepthIntrinsics() override;
         virtual bool BodyTrackingOn() override { return m_captureBodies; }

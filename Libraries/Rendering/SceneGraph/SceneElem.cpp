@@ -18,7 +18,7 @@ namespace Caustic
     void CSceneElem::DrawSelected(IRenderer* pRenderer, ISceneElem* pElem, SceneCtx* pSceneCtx)
     {
         // Draw manipulator around currently selected object
-        if (pElem->GetFlags() & (uint32)ESceneElemFlags::Selected)
+        if (pElem->GetFlags() & (uint32_t)ESceneElemFlags::Selected)
         {
             BBox3 bbox;
             pElem->GetBBox(&bbox);

@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -8,6 +8,7 @@ module;
 #include <atlbase.h>
 #include <vector>
 #include <string>
+#include <cinttypes>
 
 export module Rendering.SceneGraph.SceneCtx;
 import Base.Core.Core;

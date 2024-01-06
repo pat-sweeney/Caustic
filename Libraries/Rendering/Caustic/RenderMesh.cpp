@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2019-2021
+// Copyright Patrick Sweeney 2019-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -7,6 +7,7 @@ module;
 #include <d3d11.h>
 #include <atlbase.h>
 #include <float.h>
+#include <cinttypes>
 
 module Rendering.Caustic.RenderMesh;
 import Base.Core.Core;
@@ -20,6 +21,7 @@ import Rendering.Caustic.RendererFlags;
 import Rendering.Caustic.IShaderMgr;
 import Rendering.Caustic.IShader;
 import Rendering.Caustic.ICausticFactory;
+import Rendering.Caustic.ILight;
 
 namespace Caustic
 {
@@ -29,8 +31,8 @@ namespace Caustic
     {
         ID3D11DeviceContext* pContext = pRenderer->GetContext();
         pShader->BeginRender(pRenderer, pMaterial, lights, pWorld);
-        uint32 vertexSize = pShader->GetShaderInfo()->GetVertexSize();
-        uint32 numVertices = m_VB.m_numVertices;
+        uint32_t vertexSize = pShader->GetShaderInfo()->GetVertexSize();
+        uint32_t numVertices = m_VB.m_numVertices;
         UINT offset = 0;
         pContext->IASetVertexBuffers(0, 1, &m_VB.m_spVB.p, &vertexSize, &offset);
         pContext->IASetIndexBuffer(m_VB.m_spIB, DXGI_FORMAT::DXGI_FORMAT_R32_UINT, 0);
@@ -77,7 +79,7 @@ namespace Caustic
             // very often where we have actual back face materials.
             //**********************************************************************
             auto spRenderMaterial = (pFrontMaterialOverride) ? pFrontMaterialOverride : m_spFrontMaterial.p;
-            uint32 currentPass = pRenderCtx->GetCurrentPass();
+            uint32_t currentPass = pRenderCtx->GetCurrentPass();
             auto spMaterialAttrib = (spRenderMaterial) ? spRenderMaterial->GetMaterial() : nullptr;
             if (spMaterialAttrib == nullptr)
                 RenderSubMesh(pRenderer, spShader, spRenderMaterial, lights, pWorld);
@@ -107,7 +109,7 @@ namespace Caustic
             if (pBackMaterialOverride || m_spBackMaterial)
             {
                 auto spRenderMaterial = (pBackMaterialOverride) ? pBackMaterialOverride : m_spBackMaterial.p;
-                uint32 currentPass = pRenderCtx->GetCurrentPass();
+                uint32_t currentPass = pRenderCtx->GetCurrentPass();
                 auto spMaterialAttrib = spRenderMaterial->GetMaterial();
                 if (((currentPass == c_PassTransparent) && spMaterialAttrib->GetIsTransparent()) ||
                     ((currentPass != c_PassTransparent) && !spMaterialAttrib->GetIsTransparent()))
@@ -145,8 +147,8 @@ namespace Caustic
         ID3D11Device* pDevice = pRenderer->GetDevice();
         pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         pShader->BeginRender(pRenderer, pMaterial, lights, pWorld);
-        uint32 vertexSize = pShader->GetShaderInfo()->GetVertexSize();
-        uint32 numVertices = m_VB.m_numVertices;
+        uint32_t vertexSize = pShader->GetShaderInfo()->GetVertexSize();
+        uint32_t numVertices = m_VB.m_numVertices;
         UINT offset = 0;
         pContext->IASetVertexBuffers(0, 1, &m_VB.m_spVB.p, &vertexSize, &offset);
         if (m_VB.m_numIndices == 0)
@@ -171,7 +173,7 @@ namespace Caustic
     // Method: GetSubMesh
     // See <IRenderMesh::GetSubMesh>
     //**********************************************************************
-    CRefObj<IRenderSubMesh> CRenderMesh::GetSubMesh(uint32 index)
+    CRefObj<IRenderSubMesh> CRenderMesh::GetSubMesh(uint32_t index)
     {
         return m_subMeshes[index];
     }
@@ -217,7 +219,7 @@ namespace Caustic
     // Method: GetMaterial
     // See <IRenderMesh::GetMaterial>
     //**********************************************************************
-    CRefObj<IMaterialAttrib> CRenderMesh::GetMaterial(uint32 materialID)
+    CRefObj<IMaterialAttrib> CRenderMesh::GetMaterial(uint32_t materialID)
     {
         if (materialID < m_materials.size())
             return m_materials[materialID];
@@ -249,7 +251,7 @@ namespace Caustic
         if (verts.size() == 0)
             return CRefObj<IRenderSubMesh>(nullptr);
         std::vector<CGeomVertex> triangles;
-        std::vector<uint32> faces;
+        std::vector<uint32_t> faces;
         for (size_t i = 0; i < verts.size(); i++)
         {
             Vector3 pos = verts[i].pos;

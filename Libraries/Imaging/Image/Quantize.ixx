@@ -41,8 +41,8 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IImageFilter
@@ -88,7 +88,7 @@ export namespace Caustic
 
         struct Cluster
         {
-            uint32 meanR, meanG, meanB;
+            uint32_t meanR, meanG, meanB;
             int numElements;
         };
         Cluster* pClusters = new Cluster[K];
@@ -127,9 +127,9 @@ export namespace Caustic
                 {
                     int minDist = INT_MAX;
                     int minCluster = 0;
-                    uint8 r = srcCol.GetRed();
-                    uint8 g = srcCol.GetGreen();
-                    uint8 b = srcCol.GetBlue();
+                    uint8_t r = srcCol.GetRed();
+                    uint8_t g = srcCol.GetGreen();
+                    uint8_t b = srcCol.GetBlue();
                     for (int j = 0; j < K; j++)
                     {
                         int dr = (int)r - pClusters[j].meanR;
@@ -144,7 +144,7 @@ export namespace Caustic
                     }
                     if (indexCol.GetGray() != minCluster)
                         pixelsReassigned++;
-                    indexCol.SetGray((uint8)minCluster);
+                    indexCol.SetGray((uint8_t)minCluster);
                     pNewClusters[minCluster].meanR += r;
                     pNewClusters[minCluster].meanG += g;
                     pNewClusters[minCluster].meanB += b;

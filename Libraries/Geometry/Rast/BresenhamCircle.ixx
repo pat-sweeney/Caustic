@@ -1,10 +1,11 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
 module;
 #include <assert.h>
+#include <cinttypes>
 
 export module Geometry.Rast.BresenhamCircle;
 import Base.Core.Core;
@@ -20,13 +21,13 @@ export namespace Caustic
     //**********************************************************************
     class BresenhamCircle
     {
-        int32 x;        // current x coordinate
-        int32 y;        // current y coordinate
-        int32 cx;
-        int32 cy;
-        int32 d;
-        int32 deltaE;
-        int32 deltaSE;
+        int32_t x;        // current x coordinate
+        int32_t y;        // current y coordinate
+        int32_t cx;
+        int32_t cy;
+        int32_t d;
+        int32_t deltaE;
+        int32_t deltaSE;
     public:
         //**********************************************************************
         // Constructor: BresenhamCircle
@@ -43,7 +44,7 @@ export namespace Caustic
         // Parameters:
         // radius - radius of the circle in pixels
         //**********************************************************************
-        BresenhamCircle(int32 radius)
+        BresenhamCircle(int32_t radius)
         {
             x = 0;
             y = radius;
@@ -56,13 +57,13 @@ export namespace Caustic
         // Method: GetX
         // Returns the current pixel's X coordinate
         //**********************************************************************
-        int32 GetX() { return x; }
+        int32_t GetX() { return x; }
 
         //**********************************************************************
         // Method: GetY
         // Returns the current pixel's Y coordinate
         //**********************************************************************
-        int32 GetY() { return y; }
+        int32_t GetY() { return y; }
 
         //**********************************************************************
         // Method: end

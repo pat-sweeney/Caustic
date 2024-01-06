@@ -29,10 +29,10 @@ namespace Caustic
         Iter dstriter;
         int xerr, yerr;
 
-        int32 srcW = (int32)pSrcImage->GetWidth();
-        int32 srcH = (int32)pSrcImage->GetHeight();
-        int32 dstW = (int32)pDstImage->GetWidth();
-        int32 dstH = (int32)pDstImage->GetHeight();
+        int32_t srcW = (int32_t)pSrcImage->GetWidth();
+        int32_t srcH = (int32_t)pSrcImage->GetHeight();
+        int32_t dstW = (int32_t)pDstImage->GetWidth();
+        int32_t dstH = (int32_t)pDstImage->GetHeight();
         if (sx > 1.0f || sy > 1.0f)
         {
             switch (scaleUpMode)
@@ -237,11 +237,11 @@ namespace Caustic
                 break;
             case EScaleDownMode::Average:
             {
-                uint32 sumr, sumg, sumb;
-                uint32 pixels;
-                int32 xerr2, yerr2;
+                uint32_t sumr, sumg, sumb;
+                uint32_t pixels;
+                int32_t xerr2, yerr2;
                 Iter citer, riter;
-                uint8 r, g, b;
+                uint8_t r, g, b;
 
                 srcriter.Setup(pSrcImage, 0, 0);
                 dstriter.Setup(pDstImage, 0, 0);
@@ -275,9 +275,9 @@ namespace Caustic
                                 riter.Step(CImageIter::Down);
                                 yerr2 -= dstH;
                             }
-                            r = (uint8)(sumr / pixels);
-                            g = (uint8)(sumg / pixels);
-                            b = (uint8)(sumb / pixels);
+                            r = (uint8_t)(sumr / pixels);
+                            g = (uint8_t)(sumg / pixels);
+                            b = (uint8_t)(sumb / pixels);
                         }
                         dstciter.SetRed(r);
                         dstciter.SetGreen(g);
@@ -338,8 +338,8 @@ namespace Caustic
             if (it != pParams->params.end())
                 scaleDownMode = std::any_cast<EScaleDownMode>(it->second);
         }
-        uint32 newWidth = (int)ceil(scaleX * pImage->GetWidth());
-        uint32 newHeight = (int)ceil(scaleY * pImage->GetHeight());
+        uint32_t newWidth = (int)ceil(scaleX * pImage->GetWidth());
+        uint32_t newHeight = (int)ceil(scaleY * pImage->GetHeight());
         CRefObj<IImage> spScaledImage = CreateImageImpl(newWidth, newHeight, pImage->GetImageType());
 
         switch (pImage->GetBPP())

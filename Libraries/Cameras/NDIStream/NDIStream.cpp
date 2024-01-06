@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2023
+// Copyright Patrick Sweeney 2023-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -69,9 +69,9 @@ namespace Caustic
     {
         int w = pImage->GetWidth();
         int h = pImage->GetHeight();
-        uint8* pSrc = pImage->GetData();
-        uint8* pDst = m_pVideoFrames[m_videoFrameIndex].p_data;
-        uint32 stride = pImage->GetStride();
+        uint8_t* pSrc = pImage->GetData();
+        uint8_t* pDst = m_pVideoFrames[m_videoFrameIndex].p_data;
+        uint32_t stride = pImage->GetStride();
         int th = (h > m_pVideoFrames[m_videoFrameIndex].yres) ? m_pVideoFrames[m_videoFrameIndex].yres : h;
         for (int y = 0; y < th; y++)
         {
@@ -89,12 +89,12 @@ namespace Caustic
         return;
     }
 
-    void CNDIStream::SendAudioFrame(uint8* pBuffer, uint32 bufferLen)
+    void CNDIStream::SendAudioFrame(uint8_t* pBuffer, uint32_t bufferLen)
     {
         NDIlib_audio_frame_interleaved_16s_t t;
         t.no_channels = m_numChannels;
         t.no_samples = bufferLen / (m_numChannels * m_bitsPerSample / 8);
-        t.p_data = (int16*)pBuffer;
+        t.p_data = (int16_t*)pBuffer;
         t.sample_rate = m_samplingRate;
         t.timecode = 0;
         NDIlib_util_send_send_audio_interleaved_16s(m_pSendInstance, &t);

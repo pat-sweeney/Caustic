@@ -1,8 +1,11 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 1995-2021
+// Copyright Patrick Sweeney 1995-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+module;
+#include <cinttypes>
+
 export module Imaging.Color;
 import Base.Core.Core;
 import Base.Math.Vector;
@@ -28,7 +31,7 @@ export namespace Caustic
     //**********************************************************************
     struct YIQColor
     {
-        uint8 y, i, q;
+        uint8_t y, i, q;
     public:
         YIQColor()
         {
@@ -127,7 +130,7 @@ export namespace Caustic
     //**********************************************************************
     struct RGBColor
     {
-        uint8 r, g, b;
+        uint8_t r, g, b;
 
         int value(int n1, int n2, int hue)
         {
@@ -148,7 +151,7 @@ export namespace Caustic
         {
         }
 
-        RGBColor(uint8 _r, uint8 _g, uint8 _b)
+        RGBColor(uint8_t _r, uint8_t _g, uint8_t _b)
         {
             r = _r;
             g = _g;
@@ -174,7 +177,7 @@ export namespace Caustic
     //**********************************************************************
     struct HLSColor
     {
-        uint8 h, l, s;
+        uint8_t h, l, s;
     public:
         HLSColor()
         {
@@ -215,9 +218,9 @@ export namespace Caustic
                     _h += 360;
             }
             _h = (255 * _h) / 360;
-            h = (uint8)_h;
-            l = (uint8)_l;
-            s = (uint8)_s;
+            h = (uint8_t)_h;
+            l = (uint8_t)_l;
+            s = (uint8_t)_s;
         }
     };
 
@@ -233,9 +236,9 @@ export namespace Caustic
             r = g = b = c.l;
         else
         {
-            r = (uint8)value(m1, m2, (360 * c.h) / 255 + 120);
-            g = (uint8)value(m1, m2, (360 * c.h) / 255);
-            b = (uint8)value(m1, m2, (360 * c.h) / 255 - 120);
+            r = (uint8_t)value(m1, m2, (360 * c.h) / 255 + 120);
+            g = (uint8_t)value(m1, m2, (360 * c.h) / 255);
+            b = (uint8_t)value(m1, m2, (360 * c.h) / 255 - 120);
         }
     }
 
@@ -256,9 +259,9 @@ export namespace Caustic
         int _y = ((int)c.r * 299 + (int)c.g * 587 + (int)c.b * 114) / 1000;
         int _i = ((int)c.r * 596 + (int)c.g * -275 + (int)c.b * -321) / 1000;
         int _q = ((int)c.r * 212 + (int)c.g * -528 + (int)c.b * 311) / 1000;
-        y = (uint8)Caustic::Clamp(_y, 0, 255);
-        i = (uint8)Caustic::Clamp(_i, 0, 255);
-        q = (uint8)Caustic::Clamp(_q, 0, 255);
+        y = (uint8_t)Caustic::Clamp(_y, 0, 255);
+        i = (uint8_t)Caustic::Clamp(_i, 0, 255);
+        q = (uint8_t)Caustic::Clamp(_q, 0, 255);
     }
 
     inline RGBColor::RGBColor(YIQColor& c)
@@ -266,9 +269,9 @@ export namespace Caustic
         int _r = ((int)c.y * 1003 + (int)c.i * 955 + (int)c.q * 618) / 1000;
         int _g = ((int)c.y * 997 + (int)c.i * -271 + (int)c.q * -645) / 1000;
         int _b = ((int)c.y * 1008 + (int)c.i * -1110 + (int)c.q * 1700) / 1000;
-        r = (uint8)Caustic::Clamp(_r, 0, 255);
-        g = (uint8)Caustic::Clamp(_g, 0, 255);
-        b = (uint8)Caustic::Clamp(_b, 0, 255);
+        r = (uint8_t)Caustic::Clamp(_r, 0, 255);
+        g = (uint8_t)Caustic::Clamp(_g, 0, 255);
+        b = (uint8_t)Caustic::Clamp(_b, 0, 255);
     }
 }
 #pragma warning(pop)

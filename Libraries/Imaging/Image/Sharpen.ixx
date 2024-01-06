@@ -41,8 +41,8 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IImageFilter
@@ -71,8 +71,8 @@ export namespace Caustic
         T citer[3];
 
         CRefObj<IImage> spImage = CreateImage(pImage->GetWidth(), pImage->GetHeight(), pImage->GetImageType());
-        uint32 w1 = pImage->GetWidth() - 1;
-        uint32 h1 = pImage->GetHeight() - 1;
+        uint32_t w1 = pImage->GetWidth() - 1;
+        uint32_t h1 = pImage->GetHeight() - 1;
         riter[0] = T(pImage, 0, 0);
         riter[1] = T(pImage, 0, 0);
         riter[2] = T(pImage, 0, (pImage->GetHeight() > 1) ? 1 : 0);
@@ -80,9 +80,9 @@ export namespace Caustic
         CImageIter1 riter1;
         if (pMask)
             riter1 = CImageIter1(pMask, 0, 0);
-        uint32 w = pImage->GetWidth();
-        uint32 h = pImage->GetHeight();
-        for (uint32 y = 0; y < h; y++)
+        uint32_t w = pImage->GetWidth();
+        uint32_t h = pImage->GetHeight();
+        for (uint32_t y = 0; y < h; y++)
         {
             T dstciter = dstriter;
             citer[0] = riter[0];
@@ -104,7 +104,7 @@ export namespace Caustic
                 citer[1].Step(CImageIter::Right);
                 citer[2].Step(CImageIter::Right);
             }
-            uint32 x = pImage->GetWidth();
+            uint32_t x = pImage->GetWidth();
             while (x--)
             {
                 //
@@ -132,7 +132,7 @@ export namespace Caustic
                         xgradient = -xgradient;
                     if (ygradient < 0)
                         ygradient = -ygradient;
-                    dstciter.SetRed((uint8)clr[1][1].r + ((xgradient + ygradient > threshold) ? boost : 0));
+                    dstciter.SetRed((uint8_t)clr[1][1].r + ((xgradient + ygradient > threshold) ? boost : 0));
                     xgradient = (-1 * clr[0][0].g + -2 * clr[0][1].g + -1 * clr[0][2].g +
                                   1 * clr[2][0].g +  2 * clr[2][1].g +  1 * clr[2][2].g);
                     ygradient = (-1 * clr[0][0].g + -2 * clr[1][0].g + -1 * clr[2][0].g +
@@ -141,7 +141,7 @@ export namespace Caustic
                         xgradient = -xgradient;
                     if (ygradient < 0)
                         ygradient = -ygradient;
-                    dstciter.SetGreen((uint8)clr[1][1].g + ((xgradient + ygradient > threshold) ? boost : 0));
+                    dstciter.SetGreen((uint8_t)clr[1][1].g + ((xgradient + ygradient > threshold) ? boost : 0));
                     xgradient = (-1 * clr[0][0].b + -2 * clr[0][1].b + -1 * clr[0][2].b +
                                   1 * clr[2][0].b +  2 * clr[2][1].b +  1 * clr[2][2].b);
                     ygradient = (-1 * clr[0][0].b + -2 * clr[1][0].b + -1 * clr[2][0].b +
@@ -150,7 +150,7 @@ export namespace Caustic
                         xgradient = -xgradient;
                     if (ygradient < 0)
                         ygradient = -ygradient;
-                    dstciter.SetBlue((uint8)clr[1][1].b + ((xgradient + ygradient > threshold) ? boost : 0));
+                    dstciter.SetBlue((uint8_t)clr[1][1].b + ((xgradient + ygradient > threshold) ? boost : 0));
                     dstciter.SetAlpha(255);
                 }
                 clr[0][0] = clr[0][1];

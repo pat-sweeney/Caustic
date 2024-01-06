@@ -74,7 +74,7 @@ namespace Caustic
         return Caustic::CreateMeshElem();
     }
 
-    CRefObj<ISceneMarchingCubesElem> CSceneFactory::CreateMarchingCubesElem(IRenderer* pRenderer, uint32 subdivisions, std::function<float(Vector3&)> sdf, bool drawIndexed)
+    CRefObj<ISceneMarchingCubesElem> CSceneFactory::CreateMarchingCubesElem(IRenderer* pRenderer, uint32_t subdivisions, std::function<float(Vector3&)> sdf, bool drawIndexed)
     {
         return Caustic::CreateMarchingCubesElem(pRenderer, subdivisions, sdf, drawIndexed);
     }

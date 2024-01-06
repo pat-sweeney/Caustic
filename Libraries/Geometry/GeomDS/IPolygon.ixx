@@ -21,7 +21,7 @@ export namespace Caustic
         // Method: GetNumberPoints
         // Returns the number of points in the polygon
         //**********************************************************************
-        virtual uint32 GetNumberPoints() = 0;
+        virtual uint32_t GetNumberPoints() = 0;
 
         //**********************************************************************
         // Method: GetPoint
@@ -31,7 +31,7 @@ export namespace Caustic
         // index - index of point to get
         // pt - Returns the found point
         //**********************************************************************
-        virtual void GetPoint(uint32 index, Vector2 *pt) = 0;
+        virtual void GetPoint(uint32_t index, Vector2 *pt) = 0;
 
         //**********************************************************************
         // Method: AddPoint

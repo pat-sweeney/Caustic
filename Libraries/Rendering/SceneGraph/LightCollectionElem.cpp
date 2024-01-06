@@ -73,9 +73,9 @@ namespace Caustic
         return spObj;
     }
 
-    uint32 CSceneLightCollectionElem::NumberLights()
+    uint32_t CSceneLightCollectionElem::NumberLights()
     {
-        return (uint32)m_lights.size();
+        return (uint32_t)m_lights.size();
     }
 
     CRefObj<ILight> CSceneLightCollectionElem::GetLight(int index)

@@ -78,9 +78,9 @@ export namespace Caustic
     {
         EShaderParamType m_type; // Defines type of this parameter
         std::wstring m_name;     // Name of shader parameter
-        uint32 m_offset;         // register offset
-        uint32 m_members;        // Number of elements (i.e. some parameters can be arrays)
-        uint32 m_elemSize;       // size of a single element (used by buffers)
+        uint32_t m_offset;         // register offset
+        uint32_t m_members;        // Number of elements (i.e. some parameters can be arrays)
+        uint32_t m_elemSize;       // size of a single element (used by buffers)
     };
 
     //**********************************************************************
@@ -102,7 +102,7 @@ export namespace Caustic
         std::any m_value;      // Value assigned to this parameter
         std::vector<std::any> m_values;
         bool m_dirty;            // Is parameter dirty and needs to be pushed to constant buffer
-        uint32 m_cbOffset;      // Byte offset of this variable in the constant buffer
+        uint32_t m_cbOffset;      // Byte offset of this variable in the constant buffer
     };
 
     struct Float { float x; Float(float _x) { x = _x; } };
@@ -200,8 +200,8 @@ export namespace Caustic
         CComPtr<ID3D11Buffer> m_spStagingBuffer;
         CComPtr<ID3D11UnorderedAccessView> m_spUAView;
         CComPtr<ID3D11ShaderResourceView> m_spSRView;
-        uint32 m_bufferSize;
-        uint32 m_heapSize;
+        uint32_t m_bufferSize;
+        uint32_t m_heapSize;
         int m_bufferSlot;
         std::wstring m_name;
 
@@ -227,17 +227,17 @@ export namespace Caustic
         CComPtr<ID3D11Buffer> m_spStagingBuffer;
         CComPtr<ID3D11UnorderedAccessView> m_spUAView;
         CComPtr<ID3D11ShaderResourceView> m_spSRView;
-        uint32 m_bufferSize;
-        uint32 m_heapSize;
+        uint32_t m_bufferSize;
+        uint32_t m_heapSize;
         int m_bufferSlot;
         std::wstring m_name;
         EBufferType m_bufferType;
-        uint32 m_numElems; // Number of elemens in buffer
-        uint32 m_elemSize; // Element size (unaligned on CPU)
+        uint32_t m_numElems; // Number of elemens in buffer
+        uint32_t m_elemSize; // Element size (unaligned on CPU)
         
-        void CreateBuffer(ID3D11Device* pDevice, uint32 bufSize,
-            uint32 bindFlags, uint32 cpuAccessFlags, D3D11_USAGE usage,
-            uint32 miscFlags, uint32 stride, uint32 alignment, ID3D11Buffer** ppBuffer);
+        void CreateBuffer(ID3D11Device* pDevice, uint32_t bufSize,
+            uint32_t bindFlags, uint32_t cpuAccessFlags, D3D11_USAGE usage,
+            uint32_t miscFlags, uint32_t stride, uint32_t alignment, ID3D11Buffer** ppBuffer);
     public:
         CGPUBuffer() :
             m_bufferSize(0),
@@ -252,13 +252,13 @@ export namespace Caustic
             m_numElems = 0;
         }
 
-        void Create(IRenderer* pRenderer, EBufferType bufferType, uint32 numElems, uint32 elemSize, uint32 bindFlags);
+        void Create(IRenderer* pRenderer, EBufferType bufferType, uint32_t numElems, uint32_t elemSize, uint32_t bindFlags);
 
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IGPUBuffer
@@ -268,8 +268,8 @@ export namespace Caustic
         virtual CComPtr<ID3D11Buffer> GetStagingBuffer() override { return m_spStagingBuffer; }
         virtual CComPtr<ID3D11UnorderedAccessView> GetUAView() override { return m_spUAView; }
         virtual CComPtr<ID3D11ShaderResourceView> GetSRView() override { return m_spSRView; }
-        virtual void CopyFromCPU(IRenderer* pRenderer, uint8* pData) override;
-        virtual void CopyToCPU(IRenderer* pRenderer, uint8* pData) override;
+        virtual void CopyFromCPU(IRenderer* pRenderer, uint8_t* pData) override;
+        virtual void CopyToCPU(IRenderer* pRenderer, uint8_t* pData) override;
     };
 
     //**********************************************************************
@@ -310,7 +310,7 @@ export namespace Caustic
             VSMatrixAvail_worldViewProj = 1 << 20,
             VSMatrixAvail_worldViewProjInv = 1 << 21,
         };
-        uint32 m_matricesAvail; // Combination of MatrixTypesAvail flags indicating which matrices are referenced by the shader
+        uint32_t m_matricesAvail; // Combination of MatrixTypesAvail flags indicating which matrices are referenced by the shader
         std::wstring m_name;
         std::vector<D3D11_INPUT_ELEMENT_DESC> m_layout;
         CComPtr<ID3D11SamplerState> m_spSamplerState;
@@ -331,11 +331,11 @@ export namespace Caustic
         int m_maxTextureSlot;
     protected:
         void DetermineMatricesUsed();
-        void PushMatrix(const wchar_t* pParamName, std::any mat, uint32 vsmask, uint32 psmask);
+        void PushMatrix(const wchar_t* pParamName, std::any mat, uint32_t vsmask, uint32_t psmask);
         void PushLights(std::vector<CRefObj<ILight>>& lights);
         void PushMatrices(IRenderer* pRenderer, DirectX::XMMATRIX *pWorld);
-        uint32 ComputeParamSize(ShaderParamDef *pParams, uint32 numParams, std::map<std::wstring, ShaderParamInstance> &params);
-        uint32 ShaderTypeSize(ShaderParamDef& paramDef);
+        uint32_t ComputeParamSize(ShaderParamDef *pParams, uint32_t numParams, std::map<std::wstring, ShaderParamInstance> &params);
+        uint32_t ShaderTypeSize(ShaderParamDef& paramDef);
         void PushConstants(IRenderer* pRenderer, SBuffer *pBuffer, std::map<std::wstring, ShaderParamInstance> &params);
         void ClearSamplers(IRenderer* pRenderer);
         void PushSamplers(IRenderer* pRenderer, std::map<std::wstring, ShaderParamInstance>& params, bool isPixelShader);
@@ -347,8 +347,8 @@ export namespace Caustic
         void SetParam(const wchar_t* paramName, int index, const std::any& value, std::map<std::wstring, ShaderParamInstance>& params);
     public:
         void Create(IRenderer *pRenderer, const wchar_t *pShaderName, IShaderInfo *pShaderInfo, ID3DBlob *pPSBlob, ID3DBlob* pVSBlob, ID3DBlob* pCSBlob);
-        void CreateBuffer(ID3D11Device* pDevice, uint32 bufSize, uint32 bindFlags, uint32 cpuAccessFlags, D3D11_USAGE usage, uint32 miscFlags, uint32 stride, uint32 alignment, SBuffer* pBuffer, ID3D11Buffer **ppBuffer);
-        void CreateConstantBuffer(ID3D11Device *pDevice, ShaderParamDef *pDefs, uint32 paramsSize, std::map<std::wstring, ShaderParamInstance> &params, SBuffer *pConstantBuffer);
+        void CreateBuffer(ID3D11Device* pDevice, uint32_t bufSize, uint32_t bindFlags, uint32_t cpuAccessFlags, D3D11_USAGE usage, uint32_t miscFlags, uint32_t stride, uint32_t alignment, SBuffer* pBuffer, ID3D11Buffer **ppBuffer);
+        void CreateConstantBuffer(ID3D11Device *pDevice, ShaderParamDef *pDefs, uint32_t paramsSize, std::map<std::wstring, ShaderParamInstance> &params, SBuffer *pConstantBuffer);
 
         CShader() :
             m_xThreads(32),
@@ -362,8 +362,8 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IShader

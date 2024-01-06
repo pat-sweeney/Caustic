@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -82,7 +82,7 @@ export namespace Caustic
         // Returns:
         // Width of the color image in pixels
         //**********************************************************************
-        virtual uint32 GetColorWidth() = 0;
+        virtual uint32_t GetColorWidth() = 0;
 
         //**********************************************************************
         // Method: GetColorHeight
@@ -91,7 +91,7 @@ export namespace Caustic
         // Returns:
         // Height of the color image in pixels
         //**********************************************************************
-        virtual uint32 GetColorHeight() = 0;
+        virtual uint32_t GetColorHeight() = 0;
     };
 
     //**********************************************************************
@@ -132,7 +132,7 @@ export namespace Caustic
         // Returns:
         // Width of the depth image in pixels
         //**********************************************************************
-        virtual uint32 GetDepthWidth() = 0;
+        virtual uint32_t GetDepthWidth() = 0;
 
         //**********************************************************************
         // Method: GetDepthHeight
@@ -141,7 +141,7 @@ export namespace Caustic
         // Returns:
         // Height of the depthimage in pixels
         //**********************************************************************
-        virtual uint32 GetDepthHeight() = 0;
+        virtual uint32_t GetDepthHeight() = 0;
 
         //**********************************************************************
         // Method: ColorExtrinsics

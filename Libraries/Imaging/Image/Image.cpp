@@ -1,11 +1,12 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
 module;
 #include <atlbase.h>
 #include <wincodec.h>
+#include <cinttypes>
 
 module Imaging.Image.Image;
 import Base.Core.Core;
@@ -28,7 +29,7 @@ namespace Caustic
         CT(CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&s_wic.m_spFactory)));
     }
 
-    uint32 CIntegralImage::GetSum(int channel, int x1, int y1, int x2, int y2)
+    uint32_t CIntegralImage::GetSum(int channel, int x1, int y1, int x2, int y2)
     {
         /*  . . . . . . . . . .
             . . . . o . . . . .
@@ -36,13 +37,13 @@ namespace Caustic
             . . . . . . . . o .
             . . . . . . . . . .
             */
-        uint32* pData = (uint32*)GetData();
+        uint32_t* pData = (uint32_t*)GetData();
         x1 = Caustic::Clamp<int>(x1, 0, GetWidth() - 1);
         x2 = Caustic::Clamp<int>(x2, 0, GetWidth() - 1);
         y1 = Caustic::Clamp<int>(y1, 0, GetHeight() - 1);
         y2 = Caustic::Clamp<int>(y2, 0, GetHeight() - 1);
-        uint32 w = GetWidth();
-        uint32 sum = pData[y2 * 3 * w + 3 * x2 + channel];
+        uint32_t w = GetWidth();
+        uint32_t sum = pData[y2 * 3 * w + 3 * x2 + channel];
         if (x1 > 0)
             sum -= pData[y2 * 3 * w + 3 * (x1 - 1) + channel];
         if (y1 > 0)
@@ -96,11 +97,11 @@ namespace Caustic
         memset(GetData(), 0, GetStride() * GetHeight());
     }
 
-    void CImage::SetPixel(int32 x, int32 y, uint8 color[4])
+    void CImage::SetPixel(int32_t x, int32_t y, uint8_t color[4])
     {
         if (GetImageType() != EImageType::RGBA_32bpp)
             CT(E_INVALIDARG);
-        if (x >= (int32)GetWidth() || y >= (int32)GetHeight())
+        if (x >= (int32_t)GetWidth() || y >= (int32_t)GetHeight())
             return;
         int bytesPerPixel = this->GetBPP() / 8;
         BYTE* pData = GetData() + y * this->GetStride() + x * bytesPerPixel;
@@ -110,29 +111,29 @@ namespace Caustic
         pData[3] = color[3];
     }
 
-    void CImage::SetPixel(int32 x, int32 y, uint8 gray)
+    void CImage::SetPixel(int32_t x, int32_t y, uint8_t gray)
     {
         if (GetImageType() != EImageType::Gray_8bpp)
             CT(E_INVALIDARG);
-        if (x >= (int32)GetWidth() || y >= (int32)GetHeight())
+        if (x >= (int32_t)GetWidth() || y >= (int32_t)GetHeight())
             return;
         int bytesPerPixel = this->GetBPP() / 8;
         BYTE* pData = GetData() + y * this->GetStride() + x * bytesPerPixel;
         pData[0] = gray;
     }
 
-    void CImage::SetPixel(int32 x, int32 y, uint16 v)
+    void CImage::SetPixel(int32_t x, int32_t y, uint16_t v)
     {
         if (GetImageType() != EImageType::Gray_16bpp)
             CT(E_INVALIDARG);
-        if (x >= (int32)GetWidth() || y >= (int32)GetHeight())
+        if (x >= (int32_t)GetWidth() || y >= (int32_t)GetHeight())
             return;
         int bytesPerPixel = this->GetBPP() / 8;
-        uint16* pData = (uint16*)(GetData() + y * this->GetStride() + x * bytesPerPixel);
+        uint16_t* pData = (uint16_t*)(GetData() + y * this->GetStride() + x * bytesPerPixel);
         pData[0] = v;
     }
 
-    void CImage::DrawCircle(Vector2& center, uint32 radius, uint8 color[4])
+    void CImage::DrawCircle(Vector2& center, uint32_t radius, uint8_t color[4])
     {
         int bytesPerPixel = this->GetBPP() / 8;
         if (bytesPerPixel != 4)
@@ -140,12 +141,12 @@ namespace Caustic
         BresenhamCircle circle(radius);
         while (!circle.end())
         {
-            int32 curx = circle.GetX();
-            int32 cury = circle.GetY();
+            int32_t curx = circle.GetX();
+            int32_t cury = circle.GetY();
             auto setPixel = [&](int x, int y) {
-                int32 nx = (int32)center.x + x;
-                int32 ny = (int32)center.y + y;
-                if (nx >= 0 && nx < (int32)GetWidth() && ny >= 0 && ny < (int32)GetHeight())
+                int32_t nx = (int32_t)center.x + x;
+                int32_t ny = (int32_t)center.y + y;
+                if (nx >= 0 && nx < (int32_t)GetWidth() && ny >= 0 && ny < (int32_t)GetHeight())
                 {
                     BYTE* pData = GetData() + ny * this->GetStride() + nx * bytesPerPixel;
                     pData[0] = color[2];
@@ -170,7 +171,7 @@ namespace Caustic
     {
         CRefObj<IPath2> flatPath = path->Flatten(1.0f);
         int numElems = flatPath->GetNumberElems();
-        uint8 color[4] = { 255, 0, 0, 255 };
+        uint8_t color[4] = { 255, 0, 0, 255 };
         const PathElem* pPrevElem = flatPath->GetElement(0);
         for (int i = 1; i < numElems; i++)
         {
@@ -180,15 +181,15 @@ namespace Caustic
         }
     }
 
-    void CImage::DrawLine(const Vector2& v0, const Vector2& v1, uint8 color[4])
+    void CImage::DrawLine(const Vector2& v0, const Vector2& v1, uint8_t color[4])
     {
         int bytesPerPixel = this->GetBPP() / 8;
         if (bytesPerPixel != 4)
             CT(E_UNEXPECTED);
-        Bresenham b((int32)v0.x, (int32)v0.y, (int32)v1.x, (int32)v1.y);
+        Bresenham b((int32_t)v0.x, (int32_t)v0.y, (int32_t)v1.x, (int32_t)v1.y);
         while (!b.eol())
         {
-            if (b.get_x() >= 0 && b.get_x() < (int32)GetWidth() && b.get_y() >= 0 && b.get_y() < (int32)GetHeight())
+            if (b.get_x() >= 0 && b.get_x() < (int32_t)GetWidth() && b.get_y() >= 0 && b.get_y() < (int32_t)GetHeight())
             {
                 BYTE* pData = GetData() + b.get_y() * this->GetStride() + b.get_x() * bytesPerPixel;
                 pData[0] = color[2];
@@ -216,8 +217,8 @@ namespace Caustic
         if (guid != GUID_WICPixelFormat32bppBGRA)
         {
             spImage = CreateImage(w, h, EImageType::BGRA_32bpp);
-            uint32 stride = spImage->GetStride();
-            uint32 numbytes = stride * h;
+            uint32_t stride = spImage->GetStride();
+            uint32_t numbytes = stride * h;
             CComPtr<IWICBitmapSource> spNewFrame;
             WICConvertBitmapSource(GUID_WICPixelFormat32bppBGRA, spFrame, &spNewFrame);
             CT(spNewFrame->CopyPixels(nullptr, stride, numbytes, spImage->GetData()));
@@ -225,8 +226,8 @@ namespace Caustic
         else
         {
             spImage = CreateImage(w, h, EImageType::RGBA_32bpp);
-            uint32 stride = spImage->GetStride();
-            uint32 numbytes = stride * h;
+            uint32_t stride = spImage->GetStride();
+            uint32_t numbytes = stride * h;
             spFrame->CopyPixels(nullptr, stride, numbytes, spImage->GetData());
         }
         return spImage;
@@ -253,16 +254,16 @@ namespace Caustic
         else
         {
             CT((bpp == 3) ? S_OK : E_UNEXPECTED);
-            uint32 w = pImage->GetWidth();
-            uint32 h = pImage->GetHeight();
-            uint8* data = new uint8[w * h * 4];
-            uint8* pRow = data;
+            uint32_t w = pImage->GetWidth();
+            uint32_t h = pImage->GetHeight();
+            uint8_t* data = new uint8_t[w * h * 4];
+            uint8_t* pRow = data;
             Caustic::CImageIter24 riter(pImage, 0, 0);
-            for (uint32 y = 0; y < h; y++)
+            for (uint32_t y = 0; y < h; y++)
             {
                 Caustic::CImageIter24 citer = riter;
-                uint8* pCol = pRow;
-                for (uint32 x = 0; x < w; x++)
+                uint8_t* pCol = pRow;
+                for (uint32_t x = 0; x < w; x++)
                 {
                     pCol[0] = citer.GetRed();
                     pCol[1] = citer.GetGreen();
@@ -280,7 +281,7 @@ namespace Caustic
         CT(spEncoder->Commit());
     }
 
-    CRefObj<IImage> CreateImageImpl(uint32 width, uint32 height, EImageType imageType)
+    CRefObj<IImage> CreateImageImpl(uint32_t width, uint32_t height, EImageType imageType)
     {
         return CRefObj<IImage>(new CImage(width, height, imageType));
     }
@@ -288,17 +289,17 @@ namespace Caustic
     CRefObj<IIntegralImage> CreateIntegralImageImpl(IImage* pImage)
     {
         std::unique_ptr<CIntegralImage> spIntegralImage(new CIntegralImage(pImage->GetWidth(), pImage->GetHeight()));
-        uint32* pDstRow = (uint32*)spIntegralImage->GetData();
+        uint32_t* pDstRow = (uint32_t*)spIntegralImage->GetData();
         BYTE* pSrcRow = pImage->GetData();
         int w = (int)spIntegralImage->GetWidth();
         int bpp = (pImage->GetBPP() / 8);
-        for (uint32 y = 0; y < pImage->GetHeight(); y++)
+        for (uint32_t y = 0; y < pImage->GetHeight(); y++)
         {
-            uint32* pDstCol = pDstRow;
+            uint32_t* pDstCol = pDstRow;
             BYTE* pSrcCol = pSrcRow;
-            for (uint32 x = 0; x < pImage->GetWidth(); x++)
+            for (uint32_t x = 0; x < pImage->GetWidth(); x++)
             {
-                uint32 sum[3];
+                uint32_t sum[3];
                 sum[0] = pSrcCol[0];
                 sum[1] = pSrcCol[1];
                 sum[2] = pSrcCol[2];

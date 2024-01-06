@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2023
+// Copyright Patrick Sweeney 2023-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -7,6 +7,7 @@ module;
 #include <windows.h>
 #include <string>
 #include <atlbase.h>
+#include <cinttypes>
 
 module Cameras.VirtualCamera.VirtualCamera;
 import Base.Core.Core;
@@ -45,7 +46,7 @@ namespace Caustic
         m_pAudioMemory = (BYTE*)MapViewOfFile(m_hAudioMapping, FILE_MAP_ALL_ACCESS, 0, 0, 0);
     }
 
-    void CVirtualCamera::SendAudioFrame(uint8* pData, uint32 dataSize)
+    void CVirtualCamera::SendAudioFrame(uint8_t* pData, uint32_t dataSize)
     {
         // create or open events and shared memory:
         if (WaitForSingleObject(m_hAudioDataConsumed, 1) == WAIT_OBJECT_0)
@@ -75,10 +76,10 @@ namespace Caustic
             *pDataLen = IMAGE_WIDTH * IMAGE_HEIGHT * 3;
             auto pDst = m_pVideoMemory + sizeof(DWORD);
             CImageIter32 rowSrc(pImage, 0, pImage->GetHeight() - 1);
-            for (uint32 y = 0; y < IMAGE_HEIGHT; y++)
+            for (uint32_t y = 0; y < IMAGE_HEIGHT; y++)
             {
                 CImageIter32 colSrc = rowSrc;
-                for (uint32 x = 0; x < IMAGE_WIDTH; x++)
+                for (uint32_t x = 0; x < IMAGE_WIDTH; x++)
                 {
                     if (x < pImage->GetWidth() && y < pImage->GetHeight())
                     {

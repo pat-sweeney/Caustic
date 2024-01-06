@@ -97,7 +97,7 @@ namespace Caustic
 
                 if (outputImage)
                 {
-                    uint8 color[4] = { 255, 0, 0, 255 };
+                    uint8_t color[4] = { 255, 0, 0, 255 };
                     p0.x = (float)ptl.x; p0.y = (float)ptl.y; p1.x = (float)pbr.x; p1.y = (float)ptl.y;
                     pImage->DrawLine(p0, p1, color);
                     p0.x = (float)pbr.x; p0.y = (float)ptl.y; p1.x = (float)pbr.x; p1.y = (float)pbr.y;
@@ -129,7 +129,7 @@ namespace Caustic
                     
                     if (outputImage)
                     {
-                        uint8 color[4] = { 255, 0, 0, 255 };
+                        uint8_t color[4] = { 255, 0, 0, 255 };
                         p0.x = pt.x; p0.y = pt.y;
                         pImage->DrawCircle(p0, 3, color);
                     }

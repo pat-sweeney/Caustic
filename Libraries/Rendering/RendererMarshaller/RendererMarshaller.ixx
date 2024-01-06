@@ -91,8 +91,8 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IRendererMarshaller methods
@@ -113,7 +113,7 @@ export namespace Caustic
         //**********************************************************************
         // IRenderer methods
         //**********************************************************************
-        virtual void DeviceWindowResized(uint32 width, uint32 height) override;
+        virtual void DeviceWindowResized(uint32_t width, uint32_t height) override;
         virtual void SetViewport(float x0, float y0, float x1, float y1) override;
         virtual DWORD GetRenderThreadID() override { return m_renderThreadID; }
         virtual CRefObj<IRenderMesh> ToRenderMesh(IMesh* pMesh, IShader* pShader) override;
@@ -152,8 +152,8 @@ export namespace Caustic
             std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)> renderCallback,
             std::function<void(IRenderer* pRenderer)> prePresentCallback
         ) override; // Have renderer draw and present next frame
-        virtual uint32 GetBackBufferWidth() override;
-        virtual uint32 GetBackBufferHeight() override;
+        virtual uint32_t GetBackBufferWidth() override;
+        virtual uint32_t GetBackBufferHeight() override;
         virtual CComPtr<ID3D11Texture2D> GetBackBuffer() override;
         virtual void CopyFrameBackBuffer(IImage* pImage) override;
         virtual void SetCamera(ICamera* pCamera) override; // Sets camera

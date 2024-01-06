@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2023
+// Copyright Patrick Sweeney 2023-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -8,111 +8,50 @@ module;
 #include <atlbase.h>
 #include <string>
 
-export module Rendering.ECS.Mesh;
+export module Rendering.ECS.RenderSystem;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Rendering.ECS.ECS;
 import Rendering.ECS.IECS;
+import Rendering.ECS.IHierarchySystem;
+import Rendering.ECS.IRenderSystem;
+import Rendering.ECS.MaterialComponent;
+import Rendering.ECS.MeshComponent;
+import Rendering.ECS.HierarchyComponent;
 import Base.Core.ISerialize;
 import Rendering.Caustic.IRenderMesh;
+import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IShader;
 import Geometry.Mesh.IMesh;
-import Rendering.SceneGraph.SceneGraph;
-import Rendering.SceneGraph.SceneElem;
 
 export namespace Caustic
 {
     class RenderSystem : public System, public IRenderSystem
     {
-        CRefObj<IMesh> m_spMesh;
-        CRefObj<IRenderMesh> m_spRenderMesh;
-        CRefObj<IShader> m_spShader;
+        CRefObj<IHierarchySystem> m_spHierarchySystem;
+
+        void DrawSelected(IRenderer* pRenderer, IRenderCtx* pRenderCtx);
+        void RenderMesh(IEntity* pEntity, MeshComponent* pMeshComponent, IShader* pShader, IRenderer* pRenderer, IRenderCtx* pRenderCtx);
     public:
         //**********************************************************************
-        // Constructor: CSceneMeshElem
+        // Constructor: RenderSystem
         // Default constructor
         //**********************************************************************
-        CSceneMeshElem()
+        RenderSystem()
         {
         }
 
         //**********************************************************************
         // IUnknown
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
-        // ISceneElem
+        // IRenderSystem
         //**********************************************************************
+        virtual void Render(IRenderer* pRenderer, IRenderCtx* pRenderCtx) override;
     };
-    //**********************************************************************
-// Class: CSceneMeshElem
-// Defines a mesh element in our scene graph
-//**********************************************************************
-    class CSceneMeshElem :
-        public CSceneElem,
-        public ISceneMeshElem,
-        public CRefCount
-    {
-    public:
-        //**********************************************************************
-        // Constructor: CSceneMeshElem
-        // Default constructor
-        //**********************************************************************
-        CSceneMeshElem()
-        {
-        }
-
-        //**********************************************************************
-        // IUnknown
-        //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
-
-        //**********************************************************************
-        // ISceneElem
-        //**********************************************************************
-        virtual CRefObj<IJSonObj> AsJson(const char* pPropertyName, IJSonParser* pParser) override
-        {
-            auto spObj = pParser->CreateJSonMap((pPropertyName) ? pPropertyName : "Mesh", nullptr);
-            auto spBase = CSceneElem::AsJson(pPropertyName, pParser);
-            spObj->AddElement(spBase);
-            return spObj;
-        }
-
-        virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** pMaterial) override;
-        virtual ESceneElemType GetType() override { return ESceneElemType::Mesh; }
-        virtual std::wstring GetName() override { return CSceneElem::GetName(); }
-        virtual void SetName(const wchar_t* name) override { return CSceneElem::SetName(name); }
-        virtual void SetPreRenderCallback(std::function<bool(int pass)> prerenderCallback) override
-        {
-            CSceneElem::SetPreRenderCallback(prerenderCallback);
-        }
-        virtual void SetPostRenderCallback(std::function<void(int pass)> postrenderCallback) override
-        {
-            CSceneElem::SetPostRenderCallback(postrenderCallback);
-        }
-        virtual void Render(IRenderer* pRenderer, IRenderCtx* pRenderCtx, SceneCtx* pSceneCtx) override;
-        virtual void GetBBox(BBox3* pBBox) override;
-        virtual uint32 GetFlags() override { return m_Flags; }
-        virtual void SetFlags(uint32 flags) override { m_Flags = flags; }
-        virtual void SetInPass(uint32 pass) override { CSceneElem::SetInPass(pass); }
-        virtual uint32 GetInPass() override { return CSceneElem::GetInPass(); }
-
-        //**********************************************************************
-        // ISerialize
-        //**********************************************************************
-        virtual void Load(IStream* pStream) override;
-        virtual void Store(IStream* pStream) override;
-
-        //**********************************************************************
-        // ISceneMeshElem
-        //**********************************************************************
-        virtual void SetMesh(IMesh* pMesh) override;
-        virtual CRefObj<IMesh> GetMesh() override;
-        virtual void SetShader(IShader* pShader) override { m_spShader = pShader; }
-    };
-};
+}

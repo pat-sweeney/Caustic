@@ -78,12 +78,12 @@ namespace Caustic
     {
         CComPtr<IMFMediaType> spType;
         CT(m_spSourceReader->GetCurrentMediaType((DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, &spType));
-        UINT32 width, height;
+        uint32_t width, height;
         CT(MFGetAttributeSize(spType, MF_MT_FRAME_SIZE, &width, &height));
         LONG lStride = (LONG)MFGetAttributeUINT32(spType, MF_MT_DEFAULT_STRIDE, 1);
         pFormat->m_topDown = (lStride > 0);
         MFRatio par = { 0 , 0 };
-        HRESULT hr = MFGetAttributeRatio(spType, MF_MT_PIXEL_ASPECT_RATIO, (UINT32*)&par.Numerator, (UINT32*)&par.Denominator);
+        HRESULT hr = MFGetAttributeRatio(spType, MF_MT_PIXEL_ASPECT_RATIO, (uint32_t*)&par.Numerator, (uint32_t*)&par.Denominator);
         if (SUCCEEDED(hr) && (par.Denominator != par.Numerator))
         {
             RECT rcSrc = { 0, 0, (LONG)width, (LONG)height };
@@ -152,7 +152,7 @@ namespace Caustic
             BYTE* pBitmapData;
             DWORD cbBitmapData;
             CT(spBuffer->Lock(&pBitmapData, NULL, &cbBitmapData));
-            CRefObj<IAudioSample> spAudioSample = new CAudioSample((uint32)cbBitmapData, (uint32)timestamp);
+            CRefObj<IAudioSample> spAudioSample = new CAudioSample((uint32_t)cbBitmapData, (uint32_t)timestamp);
             memcpy(spAudioSample->GetData(), pBitmapData, cbBitmapData);
             CT(spBuffer->Unlock());
             return spAudioSample;
@@ -161,7 +161,7 @@ namespace Caustic
     }
     
     //**********************************************************************
-    CVideoSample::CVideoSample(uint32 width, uint32 height, uint64 timestamp)
+    CVideoSample::CVideoSample(uint32_t width, uint32_t height, uint64_t timestamp)
     {
         if (sm_spImagePool == nullptr)
         {
@@ -171,7 +171,7 @@ namespace Caustic
         m_timestamp = timestamp;
     }
 
-    CAudioSample::CAudioSample(uint32 bufferSize, uint32 timestamp)
+    CAudioSample::CAudioSample(uint32_t bufferSize, uint32_t timestamp)
     {
         m_spBuffer.reset(new byte[bufferSize]);
         m_timestamp = timestamp;
@@ -204,7 +204,7 @@ namespace Caustic
         {
             CRefObj<IVideoSample> spVideoSample = new CVideoSample(m_videoFormat.m_width, m_videoFormat.m_height, timestamp);
 
-            UINT32 pitch = 4 * m_videoFormat.m_width;
+            uint32_t pitch = 4 * m_videoFormat.m_width;
             CComPtr<IMFMediaBuffer> spBuffer;
             CT(spSample->ConvertToContiguousBuffer(&spBuffer));
             BYTE* pBitmapData;
@@ -248,7 +248,7 @@ namespace Caustic
         CT(spConfig->SetGUID(MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE, MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_VIDCAP_GUID));
 
         IMFActivate** ppDevices = nullptr;
-        UINT32 count = 0;
+        uint32_t count = 0;
         CT(MFEnumDeviceSources(spConfig, &ppDevices, &count));
         CT((count <= 0) ? MF_E_NOT_FOUND : S_OK);
         CT(ppDevices[0]->ActivateObject(IID_PPV_ARGS(ppSource)));
@@ -264,7 +264,7 @@ namespace Caustic
     //{
     //    CComPtr<IMFAttributes> spAttributes;
     //    CT(MFCreateAttributes(&spAttributes, 1));
-    //    CT(spAttributes->SetUINT32(MF_SOURCE_READER_ENABLE_VIDEO_PROCESSING, TRUE));
+    //    CT(spAttributes->Setuint32_t(MF_SOURCE_READER_ENABLE_VIDEO_PROCESSING, TRUE));
     //    CComPtr<IMFMediaSource> spMediaSource;
     //    CreateVideoCaptureDevice(&spMediaSource);
     //    CComPtr<IMFSourceReader> spSourceReader;
@@ -293,10 +293,10 @@ namespace Caustic
         CT(m_spSourceReader->SetStreamSelection((DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, TRUE));
         CComPtr<IMFMediaType> spCurMediaType;
         CT(m_spSourceReader->GetCurrentMediaType(static_cast<DWORD>(MF_SOURCE_READER_FIRST_VIDEO_STREAM), &spCurMediaType));
-        UINT32 width, height;
+        uint32_t width, height;
         CT(MFGetAttributeSize(spCurMediaType, MF_MT_FRAME_SIZE, &width, &height));
 
-        UINT32 stride;
+        uint32_t stride;
         HRESULT hr = spCurMediaType->GetUINT32(MF_MT_DEFAULT_STRIDE, &stride);
         if (FAILED(hr))
         {
@@ -306,7 +306,7 @@ namespace Caustic
             if (SUCCEEDED(hr))
             {
                 bool inverted = (stride < 0) ? true : false;
-                stride = static_cast<UINT32>((inverted) ? -stride : stride);
+                stride = static_cast<uint32_t>((inverted) ? -stride : stride);
             }
         }
 

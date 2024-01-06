@@ -68,7 +68,7 @@ namespace Caustic
     // Method: RayIntersect
     // See <IMesh::RayIntersect>
     //**********************************************************************
-    bool CMesh::RayIntersect(Ray3& ray, RayIntersect3* pIntersection, uint32* pMaterialID)
+    bool CMesh::RayIntersect(Ray3& ray, RayIntersect3* pIntersection, uint32_t* pMaterialID)
     {
         bool hitMesh = false;
         for (size_t i = 0; i < m_subMeshes.size(); i++)
@@ -81,7 +81,7 @@ namespace Caustic
     // Method: GetSubMesh
     // See <IMesh::GetSubMesh>
     //**********************************************************************
-    CRefObj<ISubMesh> CMesh::GetSubMesh(uint32 index)
+    CRefObj<ISubMesh> CMesh::GetSubMesh(uint32_t index)
     {
         return m_subMeshes[index];
     }
@@ -138,16 +138,16 @@ namespace Caustic
     // Method: GetNumberMaterials
     // See <IMesh::GetNumberMaterials>
     //**********************************************************************
-    uint32 CMesh::GetNumberMaterials()
+    uint32_t CMesh::GetNumberMaterials()
     {
-        return (uint32)m_materials.size();
+        return (uint32_t)m_materials.size();
     }
 
     //**********************************************************************
     // Method: GetMaterial
     // See <IMesh::GetMaterial>
     //**********************************************************************
-    CRefObj<IMaterialAttrib> CMesh::GetMaterial(uint32 materialID)
+    CRefObj<IMaterialAttrib> CMesh::GetMaterial(uint32_t materialID)
     {
         if (materialID < m_materials.size())
             return m_materials[materialID];
@@ -163,10 +163,10 @@ namespace Caustic
     //**********************************************************************
     void CMesh::Load(IStream *pStream)
     {
-        uint32 numSubMeshes;
+        uint32_t numSubMeshes;
         ULONG bytesWritten;
         CT(pStream->Read(&numSubMeshes, sizeof(numSubMeshes), &bytesWritten));
-        for (uint32 i = 0; i < numSubMeshes; i++)
+        for (uint32_t i = 0; i < numSubMeshes; i++)
         {
             CRefObj<ISubMesh> spSubMesh(new CSubMesh());
             spSubMesh->Load(pStream);
@@ -183,10 +183,10 @@ namespace Caustic
     //**********************************************************************
     void CMesh::Store(IStream *pStream)
     {
-        uint32 numSubMeshes = (uint32)NumberSubMeshes();
+        uint32_t numSubMeshes = (uint32_t)NumberSubMeshes();
         DWORD bytesWritten;
         CT(pStream->Write(&numSubMeshes, sizeof(numSubMeshes), &bytesWritten));
-        for (uint32 i = 0; i < numSubMeshes; i++)
+        for (uint32_t i = 0; i < numSubMeshes; i++)
         {
             CRefObj<ISubMesh> spSubMesh = GetSubMesh(i);
             spSubMesh->Store(pStream);

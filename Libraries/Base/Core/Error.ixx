@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -7,6 +7,7 @@ module;
 #include <exception>
 #include <Windows.h>
 #include <string>
+
 export module Base.Core.Error;
 
 export namespace Caustic

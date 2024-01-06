@@ -9,25 +9,52 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Components">
+      <UniqueIdentifier>{d8325145-91a5-405d-be68-4a5de447b4f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Systems">
+      <UniqueIdentifier>{d0721796-57e3-42cb-bfad-e0019e0a9c9f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ECS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="IECS.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialComponent.ixx">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshComponent.ixx">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="HierarchyComponent.ixx">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderSystem.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="IRenderSystem.ixx">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="HiearchySystem.ixx">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="HierarchySystem.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
     <ClCompile Include="ECS.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Hierarchy.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="IHierarchySystem.ixx">
+      <Filter>Source Files\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="IHierarchy.ixx">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="RenderSystem.ixx">
+      <Filter>Source Files\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Hiearchy.ixx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IECS.ixx">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="BaseComponent.ixx">
+      <Filter>Source Files\Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

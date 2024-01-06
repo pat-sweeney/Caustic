@@ -1,10 +1,11 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
 #include <Windows.h>
 #include <crtdbg.h>
+#include <cinttypes>
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Math.Ray;
@@ -29,10 +30,10 @@ namespace Caustic
     // Method: RayIntersect
     // See <ISubMesh::RayIntersect>
     //**********************************************************************
-    bool CSubMesh::RayIntersect(Ray3& ray, RayIntersect3* pIntersection, uint32* pMaterialID)
+    bool CSubMesh::RayIntersect(Ray3& ray, RayIntersect3* pIntersection, uint32_t* pMaterialID)
     {
         bool hitMesh = false;
-        uint32 minMaterial = 0;
+        uint32_t minMaterial = 0;
         for (size_t i = 0; i < m_faces.size(); i++)
         {
             _ASSERT(m_faces[i]->m_vertices.size() == 3);
@@ -86,8 +87,8 @@ namespace Caustic
         float scalex = dx / maxdelta;
         float scaley = dy / maxdelta;
         float scalez = dz / maxdelta;
-        uint32 numVerts = GetNumberVertices();
-        for (uint32 i = 0; i < numVerts; i++)
+        uint32_t numVerts = GetNumberVertices();
+        for (uint32_t i = 0; i < numVerts; i++)
         {
             CGeomVertex *pv = GetVertex(i);
             // Convert vert to -0.5..+0.5 range and then rescale to maintain aspect ratio
@@ -98,7 +99,7 @@ namespace Caustic
             if (!IsZero(dz))
                 pv->pos.z = scalez * ((pv->pos.z - minz) / dz - 0.5f);
         }
-        for (uint32 j = 0; j < GetNumberFaces(); j++)
+        for (uint32_t j = 0; j < GetNumberFaces(); j++)
         {
             CFace *pFace = GetFace(j);
             if (!IsZero(dx))
@@ -163,7 +164,7 @@ namespace Caustic
     // Method: VertexToIndex
     // See <ISubMesh::VertexToIndex>
     //**********************************************************************
-    uint32 CSubMesh::VertexToIndex(CGeomVertex *pVertex)
+    uint32_t CSubMesh::VertexToIndex(CGeomVertex *pVertex)
     {
         return pVertex->index;
     }
@@ -172,7 +173,7 @@ namespace Caustic
     // Method: EdgeToIndex
     // See <ISubMesh::EdgeToIndex>
     //**********************************************************************
-    uint32 CSubMesh::EdgeToIndex(CHalfEdge *pEdge)
+    uint32_t CSubMesh::EdgeToIndex(CHalfEdge *pEdge)
     {
         return pEdge->index;
     };
@@ -181,7 +182,7 @@ namespace Caustic
     // Method: FaceToIndex
     // See <ISubMesh::FaceToIndex>
     //**********************************************************************
-    uint32 CSubMesh::FaceToIndex(CFace *pFace)
+    uint32_t CSubMesh::FaceToIndex(CFace *pFace)
     {
         return pFace->index;
     };
@@ -276,9 +277,9 @@ namespace Caustic
         // Use cantor pairing to come up with hash value
         // For complete description of cantor pairing see:
         // https://en.wikipedia.org/wiki/Pairing_function#Cantor_pairing_function
-        uint64 addr1 = (uint64)pHead;
-        uint64 addr2 = (uint64)pTail;
-        uint64 value = ((addr1 + addr2) * (addr1 + addr2 + 1)) / 2 + addr2;
+        uint64_t addr1 = (uint64_t)pHead;
+        uint64_t addr2 = (uint64_t)pTail;
+        uint64_t value = ((addr1 + addr2) * (addr1 + addr2 + 1)) / 2 + addr2;
 
         m_vertToEdge[value] = pLeftHalf;
         return m_edges[m_edges.size() - 1];
@@ -293,9 +294,9 @@ namespace Caustic
         // Use cantor pairing to come up with hash value
         // For complete description of cantor pairing see:
         // https://en.wikipedia.org/wiki/Pairing_function#Cantor_pairing_function
-        uint64 addr1 = (uint64)pHead;
-        uint64 addr2 = (uint64)pTail;
-        uint64 value = ((addr1 + addr2) * (addr1 + addr2 + 1)) / 2 + addr2;
+        uint64_t addr1 = (uint64_t)pHead;
+        uint64_t addr2 = (uint64_t)pTail;
+        uint64_t value = ((addr1 + addr2) * (addr1 + addr2 + 1)) / 2 + addr2;
         CHalfEdge *pEdge = m_vertToEdge[value];
         if (pEdge == nullptr || pEdge->GetHeadVertex() == pHead)
             return pEdge;
@@ -425,9 +426,9 @@ namespace Caustic
         _ASSERT(version == 1);
 
         // Read vertices
-        uint32 numVerts;
+        uint32_t numVerts;
         CT(pStream->Read(&numVerts, sizeof(numVerts), &bytesRead));
-        for (uint32 i = 0; i < numVerts; i++)
+        for (uint32_t i = 0; i < numVerts; i++)
         {
             CGeomVertex *pVertex = m_vertexAllocator.Allocate();
             CT(pStream->Read(pVertex, sizeof(CGeomVertex), &bytesRead));
@@ -435,17 +436,17 @@ namespace Caustic
         }
 
         // Read edges
-        uint32 numEdges;
+        uint32_t numEdges;
         CT(pStream->Read(&numEdges, sizeof(numEdges), &bytesRead));
-        for (uint32 i = 0; i < (uint32)numEdges; i++)
+        for (uint32_t i = 0; i < (uint32_t)numEdges; i++)
             m_edges.emplace_back(new CHalfEdge());
-        uint32 numFaces;
+        uint32_t numFaces;
         CT(pStream->Read(&numFaces, sizeof(numFaces), &bytesRead));
-        for (uint32 i = 0; i < (uint32)numFaces; i++)
+        for (uint32_t i = 0; i < (uint32_t)numFaces; i++)
             m_faces.emplace_back(new CFace());
-        for (uint32 i = 0; i < (uint32)numEdges; i++)
+        for (uint32_t i = 0; i < (uint32_t)numEdges; i++)
         {
-            uint32 index;
+            uint32_t index;
             CHalfEdge *pEdge = m_edges[i];
             CT(pStream->Read(&index, sizeof(index), &bytesRead));
             pEdge->m_pNext = m_edges[index];
@@ -462,20 +463,20 @@ namespace Caustic
         }
         
         // Read faces
-        for (uint32 i = 0; i < numFaces; i++)
+        for (uint32_t i = 0; i < numFaces; i++)
         {
             CFace *pFace = m_faces[i];
             CT(pStream->Read(&pFace->m_normal, sizeof(pFace->m_normal), &bytesRead));
             CT(pStream->Read(&pFace->m_center, sizeof(pFace->m_center), &bytesRead));
-            uint32 edgeIndex;
+            uint32_t edgeIndex;
             CT(pStream->Read(&edgeIndex, sizeof(edgeIndex), &bytesRead));
             pFace->m_pEdge = m_edges[edgeIndex];
 
-            uint32 numVertices;
+            uint32_t numVertices;
             CT(pStream->Read(&numVertices, sizeof(numVertices), &bytesRead));
-            for (uint32 j = 0; j < numVertices; j++)
+            for (uint32_t j = 0; j < numVertices; j++)
             {
-                uint32 vertIndex;
+                uint32_t vertIndex;
                 CT(pStream->Read(&vertIndex, sizeof(vertIndex), &bytesRead));
                 pFace->m_vertices.push_back(m_vertices[vertIndex]);
             }
@@ -485,7 +486,7 @@ namespace Caustic
         // Read miscellaneous fields
         CT(pStream->Read(&m_bbox, sizeof(m_bbox), &bytesRead));
         CT(pStream->Read(&m_materialID, sizeof(m_materialID), &bytesRead));
-        uint32 flags;
+        uint32_t flags;
         CT(pStream->Read(&flags, sizeof(flags), &bytesRead));
         m_vertexFlags = (EVertexFlags)flags;
         CT(pStream->Read(&flags, sizeof(flags), &bytesRead));
@@ -503,20 +504,20 @@ namespace Caustic
         CT(pStream->Write(&c_Version, sizeof(c_Version), &bytesWritten));
 
         // Write out vertices
-        uint32 numVerts = (uint32)m_vertices.size();
+        uint32_t numVerts = (uint32_t)m_vertices.size();
         CT(pStream->Write(&numVerts, sizeof(numVerts), &bytesWritten));
-        for (uint32 i = 0; i < (uint32)numVerts; i++)
+        for (uint32_t i = 0; i < (uint32_t)numVerts; i++)
             CT(pStream->Write(m_vertices[i], sizeof(CGeomVertex), &bytesWritten));
         
         // Write out edges
-        uint32 numEdges = (uint32)m_edges.size();
+        uint32_t numEdges = (uint32_t)m_edges.size();
         CT(pStream->Write(&numEdges, sizeof(numEdges), &bytesWritten));
-        uint32 numFaces = (uint32)m_faces.size();
+        uint32_t numFaces = (uint32_t)m_faces.size();
         CT(pStream->Write(&numFaces, sizeof(numFaces), &bytesWritten));
-        for (uint32 i = 0; i < (uint32)m_edges.size(); i++)
+        for (uint32_t i = 0; i < (uint32_t)m_edges.size(); i++)
         {
             CHalfEdge *pEdge = m_edges[i];
-            uint32 index = EdgeToIndex(pEdge->m_pNext);
+            uint32_t index = EdgeToIndex(pEdge->m_pNext);
             CT(pStream->Write(&index, sizeof(index), &bytesWritten));
             index = EdgeToIndex(pEdge->m_pPrev);
             CT(pStream->Write(&index, sizeof(index), &bytesWritten));
@@ -531,18 +532,18 @@ namespace Caustic
         }
 
         // Write out faces
-        for (uint32 i = 0; i < (uint32)numFaces; i++)
+        for (uint32_t i = 0; i < (uint32_t)numFaces; i++)
         {
             CFace *pFace = m_faces[i];
             CT(pStream->Write(&pFace->m_normal, sizeof(pFace->m_normal), &bytesWritten));
             CT(pStream->Write(&pFace->m_center, sizeof(pFace->m_center), &bytesWritten));
-            uint32 edgeIndex = EdgeToIndex(pFace->m_pEdge);
+            uint32_t edgeIndex = EdgeToIndex(pFace->m_pEdge);
             CT(pStream->Write(&edgeIndex, sizeof(edgeIndex), &bytesWritten));
-            uint32 numVertices = (uint32)pFace->m_vertices.size();
+            uint32_t numVertices = (uint32_t)pFace->m_vertices.size();
             CT(pStream->Write(&numVertices, sizeof(numVertices), &bytesWritten));
-            for (uint32 j = 0; j < numVertices; j++)
+            for (uint32_t j = 0; j < numVertices; j++)
             {
-                uint32 vertIndex = VertexToIndex(pFace->m_vertices[j]);
+                uint32_t vertIndex = VertexToIndex(pFace->m_vertices[j]);
                 CT(pStream->Write(&vertIndex, sizeof(vertIndex), &bytesWritten));
             }
             CT(pStream->Write(&pFace->index, sizeof(pFace->index), &bytesWritten));
@@ -551,7 +552,7 @@ namespace Caustic
         // Write other miscellaneous fields
         CT(pStream->Write(&m_bbox, sizeof(m_bbox), &bytesWritten));
         CT(pStream->Write(&m_materialID, sizeof(m_materialID), &bytesWritten));
-        uint32 flags = m_vertexFlags;
+        uint32_t flags = m_vertexFlags;
         CT(pStream->Write(&flags, sizeof(flags), &bytesWritten));
         flags = m_meshFlags;
         CT(pStream->Write(&flags, sizeof(flags), &bytesWritten));

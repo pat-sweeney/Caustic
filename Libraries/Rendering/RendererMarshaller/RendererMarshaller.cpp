@@ -131,7 +131,7 @@ namespace Caustic
     // Method: DeviceWindowResized
     // See <IRenderer::DeviceWindowResized>
     //**********************************************************************
-    void CRendererMarshaller::DeviceWindowResized(uint32 width, uint32 height)
+    void CRendererMarshaller::DeviceWindowResized(uint32_t width, uint32_t height)
     {
         RunOnRenderer(
             [this, width, height](IRenderer* pRenderer)
@@ -688,10 +688,10 @@ namespace Caustic
     // Method: GetBackBufferWidth
     // See <IRenderer::GetBackBufferWidth>
     //**********************************************************************
-    uint32 CRendererMarshaller::GetBackBufferWidth()
+    uint32_t CRendererMarshaller::GetBackBufferWidth()
     {
         HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-        uint32 width;
+        uint32_t width;
         m_renderQueue.AddLambda(
             [this, evt, &width]()
             {
@@ -708,10 +708,10 @@ namespace Caustic
     // Method: GetBackBufferHeight
     // See <IRenderer::GetBackBufferHeight>
     //**********************************************************************
-    uint32 CRendererMarshaller::GetBackBufferHeight()
+    uint32_t CRendererMarshaller::GetBackBufferHeight()
     {
         HANDLE evt = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-        uint32 height;
+        uint32_t height;
         m_renderQueue.AddLambda(
             [this, evt, &height]()
             {

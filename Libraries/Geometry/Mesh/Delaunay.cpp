@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2023
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -283,7 +283,7 @@ namespace Caustic
             float radius;
             CircumCircle(m_points[m_triangles[currentTri].v0].pos, m_points[m_triangles[currentTri].v1].pos, m_points[m_triangles[currentTri].v2].pos,
                 &center, &radius);
-            spImage->DrawCircle(center, (uint32)radius, grey);
+            spImage->DrawCircle(center, (uint32_t)radius, grey);
             for (int j = -3; j < 3; j++)
                 for (int k = -3; k < 3; k++)
                     spImage->SetPixel((int)m_points[currentPoint].pos.x + j, (int)m_points[currentPoint].pos.y + k, yellow);
@@ -387,7 +387,7 @@ namespace Caustic
     // Adds the set of vertex points that match the specified vertex
     // flag to the current triangulation.
     //**********************************************************************
-    void CDelaunay2::TriangulatePoints(uint8 flag)
+    void CDelaunay2::TriangulatePoints(uint8_t flag)
     {
         //**********************************************************************
         // Next add each of our points to the triangulation
@@ -610,7 +610,7 @@ namespace Caustic
                     m_triangles[j++] = m_triangles[i];
             }
             m_triangles.resize(j);
-            m_numTriangles = (uint32)m_triangles.size();
+            m_numTriangles = (uint32_t)m_triangles.size();
         }
     }
 

@@ -49,8 +49,8 @@ namespace Caustic
         //**********************************************************************
         // Create index buffer used to draw full quad
         //**********************************************************************
-        CD3D11_BUFFER_DESC ibdesc(sizeof(uint32) * 6, D3D11_BIND_INDEX_BUFFER);
-        uint32 quadIndices[2][3] = {
+        CD3D11_BUFFER_DESC ibdesc(sizeof(uint32_t) * 6, D3D11_BIND_INDEX_BUFFER);
+        uint32_t quadIndices[2][3] = {
             { 0, 2, 1 },
             { 0, 3, 2 },
         };

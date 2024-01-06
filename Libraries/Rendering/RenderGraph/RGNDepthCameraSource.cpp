@@ -58,12 +58,12 @@ namespace Caustic
         //         vertices.reset(new Vertex[numVertices]);
         //     }
         //     OutputDebugString(L"Read frame\n");
-        //     uint32 depthWidth2 = spDepthImage->GetWidth() / 2; // We need half the width since the shader does 2 depth points at a time
+        //     uint32_t depthWidth2 = spDepthImage->GetWidth() / 2; // We need half the width since the shader does 2 depth points at a time
         //     pComputeElem->SetShaderParam(L"depthImageWidth", depthWidth2);
         //     pComputeElem->SetInputBuffer(L"DepthBuffer", spDepthImage->GetData(), spDepthImage->GetStride() * spDepthImage->GetHeight(), spDepthImage->GetBytesPerPixel() * 2);
         //     pComputeElem->SetInputBuffer(L"RayBuffer", spRayMap->GetData(), spRayMap->GetStride() * spRayMap->GetHeight(), spRayMap->GetBytesPerPixel());
         //     pComputeElem->SetInputThreads(depthWidth2, spDepthImage->GetHeight());
-        //     pComputeElem->SetOutputBuffer(L"Points", (uint8*)vertices.get(), (uint32)(sizeof(Vertex) * numVertices), (uint32)sizeof(Vertex));
+        //     pComputeElem->SetOutputBuffer(L"Points", (uint8*)vertices.get(), (uint32_t)(sizeof(Vertex) * numVertices), (uint32_t)sizeof(Vertex));
         // }
     }
 }

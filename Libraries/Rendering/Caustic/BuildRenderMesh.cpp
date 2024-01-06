@@ -64,16 +64,16 @@ namespace Caustic
     {
         CComPtr<ID3D11Device> spDevice = pRenderer->GetDevice();
         std::vector<D3D11_INPUT_ELEMENT_DESC> vertexLayout = pShaderInfo->VertexLayout();
-        uint32 numVerts = uint32(verts.size());
-        uint32 vertexSize = pShaderInfo->GetVertexSize();
+        uint32_t numVerts = uint32_t(verts.size());
+        uint32_t vertexSize = pShaderInfo->GetVertexSize();
 
         BBox3 bbox;
 
         // Create buffer with our vertex data
         byte* pVertexBuffer = new byte[numVerts * vertexSize];
         std::unique_ptr<byte> spVertBuffer(pVertexBuffer);
-        uint32 vout = 0;
-        for (uint32 i = 0; i < numVerts; i++)
+        uint32_t vout = 0;
+        for (uint32_t i = 0; i < numVerts; i++)
         {
             if (vertexReferenced[i] == c_Vertex_Referenced)
             {
@@ -150,16 +150,16 @@ namespace Caustic
         std::vector<int>& vertexReferenced, MeshData* pMeshData)
     {
         CComPtr<ID3D11Device> spDevice = pRenderer->GetDevice();
-        uint32 numFaces = (uint32)faces.size();
-        uint32* pIndexBuffer = new uint32[numFaces * 3];
-        std::unique_ptr<uint32> spIndexBuffer(pIndexBuffer);
-        uint32 numIndices = 0;
-        for (uint32 i = 0; i < numFaces; i++)
+        uint32_t numFaces = (uint32_t)faces.size();
+        uint32_t* pIndexBuffer = new uint32_t[numFaces * 3];
+        std::unique_ptr<uint32_t> spIndexBuffer(pIndexBuffer);
+        uint32_t numIndices = 0;
+        for (uint32_t i = 0; i < numFaces; i++)
         {
             CGeomFace* pFace = &faces[i];
-            uint32 i0 = pFace->indices[0];
-            uint32 i1 = pFace->indices[1];
-            uint32 i2 = pFace->indices[2];
+            uint32_t i0 = pFace->indices[0];
+            uint32_t i1 = pFace->indices[1];
+            uint32_t i2 = pFace->indices[2];
             CGeomVertex* v0 = &verts[i0];
             CGeomVertex* v1 = &verts[i1];
             CGeomVertex* v2 = &verts[i2];
@@ -171,14 +171,14 @@ namespace Caustic
             }
         }
 
-        UINT ibSize = (UINT)(numIndices * sizeof(uint32));
+        UINT ibSize = (UINT)(numIndices * sizeof(uint32_t));
         D3D11_BUFFER_DESC desc = { 0 };
         desc.ByteWidth = ibSize;
         desc.Usage = D3D11_USAGE_DEFAULT;
         desc.CPUAccessFlags = 0;
         desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
         desc.MiscFlags = 0;
-        desc.StructureByteStride = sizeof(uint32);
+        desc.StructureByteStride = sizeof(uint32_t);
         D3D11_SUBRESOURCE_DATA data;
         data.pSysMem = pIndexBuffer;
         data.SysMemPitch = 0;
@@ -203,8 +203,8 @@ namespace Caustic
         std::vector<CGeomVertex> &verts,
         std::vector<int>& vertexReferenced)
     {
-        uint32 numFaces = (uint32)faces.size();
-        for (uint32 i = 0; i < numFaces; i++)
+        uint32_t numFaces = (uint32_t)faces.size();
+        for (uint32_t i = 0; i < numFaces; i++)
         {
             CGeomFace* pFace = &faces[i];
             CGeomVertex* v0 = &verts[pFace->indices[0]];
@@ -263,7 +263,7 @@ namespace Caustic
     // Returns:
     // Returns the new render submesh
     //**********************************************************************
-    CRefObj<IRenderSubMesh> CreateDepthGridMesh(IRenderer* pRenderer, uint32 width, uint32 height, IShader* pShader)
+    CRefObj<IRenderSubMesh> CreateDepthGridMesh(IRenderer* pRenderer, uint32_t width, uint32_t height, IShader* pShader)
     {
         std::vector<CGeomVertex> verts;
         std::vector<CGeomFace> faces;
@@ -275,10 +275,10 @@ namespace Caustic
         Vector3 normal(0.0f, 1.0f, 0.0f);
         int vertIndex = 0;
         int faceIndex = 0;
-        for (uint32 y = 0; y < height; y++)
+        for (uint32_t y = 0; y < height; y++)
         {
             float cx = -1.0f;
-            for (uint32 x = 0; x < width; x++)
+            for (uint32_t x = 0; x < width; x++)
             {
                 verts[vertIndex].pos = Vector3(cx, cy, 0.0f);
                 verts[vertIndex].norm = normal;

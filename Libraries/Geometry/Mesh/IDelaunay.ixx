@@ -1,8 +1,11 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+module;
+#include <cinttypes>
+
 export module Geometry.Mesh.IDelaunay;
 import Base.Core.Core;
 import Base.Core.IRefCount;
@@ -16,14 +19,14 @@ import Base.Math.BBox;
 
 export namespace Caustic
 {
-    const uint8 c_SuperTriangleVertex = 0x1;
-    const uint8 c_BoundaryVertex = 0x2;
-    const uint8 c_InteriorVertex = 0x4;
-    const uint8 c_FixedVertex = 0x8;
+    const uint8_t c_SuperTriangleVertex = 0x1;
+    const uint8_t c_BoundaryVertex = 0x2;
+    const uint8_t c_InteriorVertex = 0x4;
+    const uint8_t c_FixedVertex = 0x8;
 
     struct DelaunayVertex
     {
-        uint8 flags;
+        uint8_t flags;
         Vector2 pos;
         Vector2 uv;
 
@@ -31,7 +34,7 @@ export namespace Caustic
         {
         }
 
-        DelaunayVertex(Vector2& position, Vector2& uvCoord, uint8 vertexFlag)
+        DelaunayVertex(Vector2& position, Vector2& uvCoord, uint8_t vertexFlag)
         {
             flags = vertexFlag;
             pos = position;
@@ -83,7 +86,7 @@ export namespace Caustic
         // Method: GetNumberTriangles
         // Returns the number of triangles in the triangulation
         //**********************************************************************
-        virtual uint32 GetNumberTriangles() = 0;
+        virtual uint32_t GetNumberTriangles() = 0;
 
         //**********************************************************************
         // Method: GetTriangle
@@ -97,7 +100,7 @@ export namespace Caustic
         // isExterior - flags indicating whether the returned points are part of the
         // triangulations boundary polygon
         //**********************************************************************
-        virtual void GetTriangle(uint32 index, Vector2 &v0, Vector2 &v1, Vector2 &v2, bool isExterior[3]) = 0;
+        virtual void GetTriangle(uint32_t index, Vector2 &v0, Vector2 &v1, Vector2 &v2, bool isExterior[3]) = 0;
 
         //**********************************************************************
         // Method: GetTriangleIndices
@@ -111,7 +114,7 @@ export namespace Caustic
         // isExterior - flags indicating whether the returned points are part of the
         // triangulations boundary polygon
         //**********************************************************************
-        virtual void GetTriangleIndices(uint32 index, uint32& i0, uint32& i1, uint32& i2, bool isExterior[3]) = 0;
+        virtual void GetTriangleIndices(uint32_t index, uint32_t& i0, uint32_t& i1, uint32_t& i2, bool isExterior[3]) = 0;
 
         //**********************************************************************
         // Method: WritePLY

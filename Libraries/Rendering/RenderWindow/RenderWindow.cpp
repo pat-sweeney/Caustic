@@ -94,12 +94,12 @@ namespace Caustic
         CBaseRenderWindow::SetViewport(x0, y0, x1, y1);
     }
 
-    void CRenderWindow::MouseDown(int x, int y, uint32 button, uint32 flags)
+    void CRenderWindow::MouseDown(int x, int y, uint32_t button, uint32_t flags)
     {
         CBaseRenderWindow::MouseDown(x, y, button, flags);
     }
 
-    void CBaseRenderWindow::MouseDown(int x, int y, uint32 button, uint32 flags)
+    void CBaseRenderWindow::MouseDown(int x, int y, uint32_t button, uint32_t flags)
     {
         if (button == c_LeftButton)
         {
@@ -126,12 +126,12 @@ namespace Caustic
         }
     }
 
-    void CRenderWindow::MouseMove(int x, int y, uint32 flags)
+    void CRenderWindow::MouseMove(int x, int y, uint32_t flags)
     {
         CBaseRenderWindow::MouseMove(x, y, flags);
     }
 
-    void CBaseRenderWindow::MouseMove(int x, int y, uint32 flags)
+    void CBaseRenderWindow::MouseMove(int x, int y, uint32_t flags)
     {
         if (m_tracking)
         {
@@ -202,12 +202,12 @@ namespace Caustic
         m_snapPosZ = zAxis;
     }
 
-    void CRenderWindow::MouseUp(int x, int y, uint32 button, uint32 flags)
+    void CRenderWindow::MouseUp(int x, int y, uint32_t button, uint32_t flags)
     {
         CBaseRenderWindow::MouseUp(x, y, button, flags);
     }
 
-    void CBaseRenderWindow::MouseUp(int x, int y, uint32 button, uint32 flags)
+    void CBaseRenderWindow::MouseUp(int x, int y, uint32_t button, uint32_t flags)
     {
         if (button == c_LeftButton)
         {
@@ -233,12 +233,12 @@ namespace Caustic
         m_spCamera->SetPosition(eye, look, up);
     }
 
-    void CRenderWindow::MapKey(uint32 wParam, uint32 lParam)
+    void CRenderWindow::MapKey(uint32_t wParam, uint32_t lParam)
     {
         CBaseRenderWindow::MapKey(wParam, lParam);
     }
 
-    void CBaseRenderWindow::MapKey(uint32 wParam, uint32 lParam)
+    void CBaseRenderWindow::MapKey(uint32_t wParam, uint32_t lParam)
     {
         switch (wParam)
         {

@@ -6,19 +6,20 @@
     <AzureKinectSDKDir Condition="'$(AzureKinectSDKDir)'==''">C:\Program Files\Azure Kinect SDK v1.4.1</AzureKinectSDKDir>
     <AzureBodySDKDir Condition="'$(AzureBodySDKDir)'==''">c:\Program Files\Azure Kinect Body Tracking SDK</AzureBodySDKDir>
     
-    <CausticRoot Condition="'$(CausticRoot)'==''">d:\github\Caustic</CausticRoot>
+    <GithubRoot Condition="'$(GithubRoot)'==''">d:\github</GithubRoot>
+    <CausticRoot Condition="'$(CausticRoot)'==''">$(GithubRoot)\Caustic</CausticRoot>
     <CausticFXCPath Condition="'$(CausticFXCPath)'==''">C:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x64\fxc.exe</CausticFXCPath>
 
     <UseOpenCVDefine Condition="'$(UseOpenCV)'=='True'">USE_OPENCV</UseOpenCVDefine>
-    <OpenCVInclude Condition="'$(UseOpenCV)'=='True'">d:\github\opencv\build\install\include;D:\github\opencv\opencv_contrib\modules\face\include</OpenCVInclude>
-    <OpenCVLibDir Condition="'$(UseOpenCV)'=='True'">d:\github\opencv\build\install\x64\vc17\lib</OpenCVLibDir>
-    <OpenCVBinDir Condition="'$(UseOpenCV)'=='True'">d:\github\opencv\build\install\x64\vc17\bin</OpenCVBinDir>
+    <OpenCVInclude Condition="'$(UseOpenCV)'=='True'">$(GithubRoot)\opencv\build\install\include;$(GithubRoot)\opencv\opencv_contrib\modules\face\include</OpenCVInclude>
+    <OpenCVLibDir Condition="'$(UseOpenCV)'=='True'">$(GithubRoot)\opencv\build\install\x64\vc17\lib</OpenCVLibDir>
+    <OpenCVBinDir Condition="'$(UseOpenCV)'=='True'">$(GithubRoot)\opencv\build\install\x64\vc17\bin</OpenCVBinDir>
     <OpenCVLibs Condition="'$(UseOpenCV)|$(Configuration)'=='True|Debug'">opencv_core470d.lib;opencv_objdetect470d.lib;opencv_xobjdetect470d.lib;opencv_face470d.lib;opencv_imgproc470d.lib</OpenCVLibs>
     <OpenCVLibs Condition="'$(UseOpenCV)|$(Configuration)'=='True|Release'">opencv_core470.lib;opencv_objdetect470.lib;opencv_xobjdetect470.lib;opencv_face470.lib;opencv_imgproc470.lib</OpenCVLibs>
     <OpenCVCopy Condition="'$(UseOpenCV)'=='True'">$(CausticRoot)\CopyOpenCV.bat $(CausticRoot) $(OpenCVBinDir) $(OutDir)</OpenCVCopy>
     
     <CausticDefaultExtLibs>$(OpenCVLibs);windowscodecs.lib;msxml6.lib;d3dcompiler.lib;d3d11.lib;mf.lib;mfplat.lib;mfuuid.lib;mfreadwrite.lib;k4abt.lib;k4a.lib;msxml6.lib;d3dcompiler.lib;d3d11.lib</CausticDefaultExtLibs>
-    <CausticDefaultExtLibDirs>$(AzureBodySDKDir)\sdk\windows-desktop\amd64\release\lib;$(AzureKinectSDKDir)\sdk\windows-desktop\amd64\release\lib</CausticDefaultExtLibDirs>
+    <CausticDefaultExtLibDirs>$(OpenCVLibDir);$(AzureBodySDKDir)\sdk\windows-desktop\amd64\release\lib;$(AzureKinectSDKDir)\sdk\windows-desktop\amd64\release\lib</CausticDefaultExtLibDirs>
 
     <WXWidgetsDir>$(CausticRoot)\External\wxWidgets</WXWidgetsDir>
     <WXWidgetsInclude>$(CausticRoot)\External\wxWidgets\include</WXWidgetsInclude>

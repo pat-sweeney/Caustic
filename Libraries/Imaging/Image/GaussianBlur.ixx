@@ -42,8 +42,8 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IImageFilter
@@ -115,15 +115,15 @@ export namespace Caustic
             kernelWeights[i + kw] = (int)(255.0f * weight);
         }
 
-        auto HorizBlurPass = [&](IImage* pSrc, IImage* pDst, uint32 w, uint32 h)
+        auto HorizBlurPass = [&](IImage* pSrc, IImage* pDst, uint32_t w, uint32_t h)
         {
             CImageIterGeneric rowSrc(pSrc, 0, 0);
             CImageIterGeneric rowDst(pDst, 0, 0);
-            for (uint32 y = 0; y < h; y++)
+            for (uint32_t y = 0; y < h; y++)
             {
                 CImageIterGeneric colSrc = rowSrc;
                 CImageIterGeneric colDst = rowDst;
-                for (uint32 x = 0; x < w; x++)
+                for (uint32_t x = 0; x < w; x++)
                 {
                     float sum[3] = { 0.0f , 0.0f , 0.0f };
                     CImageIterGeneric kSrc(pSrc, x - kw, y, true);
@@ -151,15 +151,15 @@ export namespace Caustic
                 rowDst.Step(CImageIter::EStepDirection::Down);
             }
         };
-        auto VertBlurPass = [&](IImage* pSrc, IImage* pDst, uint32 w, uint32 h)
+        auto VertBlurPass = [&](IImage* pSrc, IImage* pDst, uint32_t w, uint32_t h)
         {
             CImageIterGeneric colSrc(pSrc, 0, 0);
             CImageIterGeneric colDst(pDst, 0, 0);
-            for (uint32 x = 0; x < w; x++)
+            for (uint32_t x = 0; x < w; x++)
             {
                 CImageIterGeneric rowSrc = colSrc;
                 CImageIterGeneric rowDst = colDst;
-                for (uint32 y = 0; y < h; y++)
+                for (uint32_t y = 0; y < h; y++)
                 {
                     float sum[3] = { 0.0f , 0.0f , 0.0f };
                     CImageIterGeneric kSrc(pSrc, x, y - kw, true);
@@ -184,8 +184,8 @@ export namespace Caustic
                 colDst.Step(CImageIter::EStepDirection::Right);
             }
         };
-        uint32 w = pImage->GetWidth();
-        uint32 h = pImage->GetHeight();
+        uint32_t w = pImage->GetWidth();
+        uint32_t h = pImage->GetHeight();
         EImageType t = pImage->GetImageType();
         CRefObj<IImage> spImage = CreateImage(w, h, t);
         HorizBlurPass(pImage, spImage, w, h);

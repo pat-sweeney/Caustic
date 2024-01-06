@@ -103,12 +103,12 @@ export namespace Caustic
     //**********************************************************************
     class CRenderCtx : public IRenderCtx, public CRefCount
     {
-        uint32 m_debugFlags;
+        uint32_t m_debugFlags;
         float m_NormalScale;
         int m_currentPass;
         bool m_passBlendable;
-        uint32 m_currentEpoch;
-        uint32 m_mostRecentEpoch;
+        uint32_t m_currentEpoch;
+        uint32_t m_mostRecentEpoch;
 
     public:
         friend class CRenderer;
@@ -127,22 +127,22 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IRenderCtx
         //**********************************************************************
-        virtual void SetDebugFlags(uint32 flags) override { m_debugFlags = flags; }
-        virtual uint32 GetDebugFlags() override { return m_debugFlags; }
+        virtual void SetDebugFlags(uint32_t flags) override { m_debugFlags = flags; }
+        virtual uint32_t GetDebugFlags() override { return m_debugFlags; }
         virtual void SetNormalScale(float normalScale) override { m_NormalScale = normalScale; };
         virtual float GetNormalScale() override { return m_NormalScale; }
-        virtual uint32 GetCurrentPass() override { return m_currentPass; }
+        virtual uint32_t GetCurrentPass() override { return m_currentPass; }
         virtual bool PassBlendable() override { return m_passBlendable; }
-        virtual uint32 GetEpoch() override { return m_currentEpoch; }
-        virtual uint32 IncrementEpoch() override { return ++m_currentEpoch; }
-        virtual uint32 GetMostRecentEpoch() override { return m_mostRecentEpoch; }
-        virtual void SetMostRecentEpoch(uint32 v) override { m_mostRecentEpoch = v; }
+        virtual uint32_t GetEpoch() override { return m_currentEpoch; }
+        virtual uint32_t IncrementEpoch() override { return ++m_currentEpoch; }
+        virtual uint32_t GetMostRecentEpoch() override { return m_mostRecentEpoch; }
+        virtual void SetMostRecentEpoch(uint32_t v) override { m_mostRecentEpoch = v; }
     };
 
     //**********************************************************************
@@ -188,7 +188,7 @@ export namespace Caustic
         D3D11_VIEWPORT m_viewport;
 
         void AdjustViewport();
-        void DeviceWindowResizedInternal(uint32 width, uint32 height);
+        void DeviceWindowResizedInternal(uint32_t width, uint32_t height);
         virtual void InitializeD3D(HWND hwnd, BBox2 &viewport);
         void Setup(HWND hwnd, BBox2 &viewport, bool createDebugDevice, int desktopIndex);
         void SetCamera(ICamera* pCamera);
@@ -281,13 +281,13 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CGraphicsBase::AddRef(); }
-        virtual uint32 Release() override { return CGraphicsBase::Release(); }
+        virtual uint32_t AddRef() override { return CGraphicsBase::AddRef(); }
+        virtual uint32_t Release() override { return CGraphicsBase::Release(); }
 
         //**********************************************************************
         // IRenderer
         //**********************************************************************
-        virtual void DeviceWindowResized(uint32 width, uint32 height) override;
+        virtual void DeviceWindowResized(uint32_t width, uint32_t height) override;
         virtual void SetViewport(float x0, float y0, float x1, float y1) override;
         virtual DWORD GetRenderThreadID() override { return m_renderThreadId; }
         virtual CRefObj<IRenderMesh> ToRenderMesh(IMesh* pMesh, IShader* pShader) override;
@@ -335,8 +335,8 @@ export namespace Caustic
             std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)> renderCallback,
             std::function<void(IRenderer* pRenderer)> prePresentCallback
         ) override;
-        virtual uint32 GetBackBufferWidth() override { return m_BBDesc.Width; }
-        virtual uint32 GetBackBufferHeight() override { return m_BBDesc.Height; }
+        virtual uint32_t GetBackBufferWidth() override { return m_BBDesc.Width; }
+        virtual uint32_t GetBackBufferHeight() override { return m_BBDesc.Height; }
         virtual CComPtr<ID3D11Texture2D> GetBackBuffer() { return m_spBackBuffer; }
         virtual void CopyFrameBackBuffer(IImage* pImage) override;
         virtual void DrawScreenQuad(float minU, float minV, float maxU, float maxV, ITexture* pTexture, ISampler *pSampler, bool disableDepth = false) override;

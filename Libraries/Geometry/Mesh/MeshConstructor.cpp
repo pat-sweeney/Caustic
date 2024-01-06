@@ -1,11 +1,12 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
 module;
 #include <Windows.h>
 #include <vector>
+#include <cinttypes>
 
 module Geometry.Mesh.MeshConstructor;
 import Base.Core.Core;
@@ -427,7 +428,7 @@ namespace Caustic
                     edgePos[9] = e1 + (e5 - e1) * t9;
                     edgePos[10] = e2 + (e6 - e2) * t10;
                     edgePos[11] = e3 + (e7 - e3) * t11;
-                    uint8 code = 0;
+                    uint8_t code = 0;
                     code = (code << 1) | ((d7 >= 0.0f) ? 1 : 0);
                     code = (code << 1) | ((d6 >= 0.0f) ? 1 : 0);
                     code = (code << 1) | ((d5 >= 0.0f) ? 1 : 0);

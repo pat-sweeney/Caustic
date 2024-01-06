@@ -85,8 +85,8 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IImageFilter
@@ -119,8 +119,8 @@ export namespace Caustic
         CImageIter32 citer[3];
         bool hasMask = pParams && pParams->spMask;
 
-        uint32 w1 = pImage->GetWidth() - 1;
-        uint32 h1 = pImage->GetHeight() - 1;
+        uint32_t w1 = pImage->GetWidth() - 1;
+        uint32_t h1 = pImage->GetHeight() - 1;
         riter[0] = CImageIter32(pImage, 0, 0);
         riter[1] = CImageIter32(pImage, 0, 0);
         riter[2] = CImageIter32(pImage, 0, (pImage->GetHeight() > 1) ? 1 : 0);
@@ -128,9 +128,9 @@ export namespace Caustic
         CImageIter1 riter1;
         if (hasMask)
             riter1 = CImageIter1(pParams->spMask, 0, 0);
-        uint32 w = pImage->GetWidth();
-        uint32 h = pImage->GetHeight();
-        for (uint32 y = 0; y < h; y++)
+        uint32_t w = pImage->GetWidth();
+        uint32_t h = pImage->GetHeight();
+        for (uint32_t y = 0; y < h; y++)
         {
             CImageIter32 dstciter = dstriter;
             citer[0] = riter[0];
@@ -152,7 +152,7 @@ export namespace Caustic
                 citer[1].Step(CImageIter::Right);
                 citer[2].Step(CImageIter::Right);
             }
-            uint32 x = pImage->GetWidth();
+            uint32_t x = pImage->GetWidth();
             while (x--)
             {
                 //
@@ -191,9 +191,9 @@ export namespace Caustic
                     sumr = 255 * (sumr + 1024) / 2048;
                     sumg = 255 * (sumg + 1024) / 2048;
                     sumb = 255 * (sumb + 1024) / 2048;
-                    dstciter.SetRed(Clamp<uint8>((uint8)sumr, 0, 255));
-                    dstciter.SetGreen(Clamp<uint8>((uint8)sumg, 0, 255));
-                    dstciter.SetBlue(Clamp<uint8>((uint8)sumb, 0, 255));
+                    dstciter.SetRed(Clamp<uint8_t>((uint8_t)sumr, 0, 255));
+                    dstciter.SetGreen(Clamp<uint8_t>((uint8_t)sumg, 0, 255));
+                    dstciter.SetBlue(Clamp<uint8_t>((uint8_t)sumb, 0, 255));
                 }
                 clr[0][0] = clr[0][1];
                 clr[1][0] = clr[1][1];

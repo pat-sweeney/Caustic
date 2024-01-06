@@ -42,25 +42,25 @@ namespace CausticInterop
 //                });
         }
         
-//        void MouseMove(int x, int y, uint32 flags)
+//        void MouseMove(int x, int y, uint32_t flags)
 //        {
 //            if (m_spRenderWindow)
 //                m_spRenderWindow->MouseMove(x, y, flags);
 //        }
 //
-//        void MouseUp(int x, int y, uint32 button, uint32 flags)
+//        void MouseUp(int x, int y, uint32_t button, uint32_t flags)
 //        {
 //            if (m_spRenderWindow)
 //                m_spRenderWindow->MouseUp(x, y, button, flags);
 //        }
 //
-//        void MouseDown(int x, int y, uint32 button, uint32 flags)
+//        void MouseDown(int x, int y, uint32_t button, uint32_t flags)
 //        {
 //            if (m_spRenderWindow)
 //                m_spRenderWindow->MouseDown(x, y, button, flags);
 //        }
 //
-//        void Key(uint32 wParam, uint32 lParam)
+//        void Key(uint32_t wParam, uint32_t lParam)
 //        {
 //            if (m_spRenderWindow)
 //                m_spRenderWindow->MapKey(wParam, lParam);
@@ -83,7 +83,7 @@ namespace CausticInterop
 //        D3D11Image^ m_d3dimage;
 //        bool lastVisible;
 //        System::TimeSpan^ lastRender;
-//        uint32 lastButton;
+//        uint32_t lastButton;
 //
 //        void HandleMouseUp(Object^ sender, MouseButtonEventArgs^ e)
 //        {
@@ -92,12 +92,12 @@ namespace CausticInterop
 //                (lastButton == c_RightButton && e->RightButton == MouseButtonState::Released))
 //            {
 //                auto pt = e->GetPosition(this);
-//                uint32 flags = 0;
+//                uint32_t flags = 0;
 //                if (Keyboard::IsKeyDown(Key::LeftCtrl) || Keyboard::IsKeyDown(Key::RightCtrl))
 //                    flags |= MK_CONTROL;
 //                if (Keyboard::IsKeyDown(Key::LeftShift) || Keyboard::IsKeyDown(Key::RightShift))
 //                    flags |= MK_SHIFT;
-//                m_pRendererInfo->MouseUp((uint32)pt.X, (uint32)pt.Y, lastButton, flags);
+//                m_pRendererInfo->MouseUp((uint32_t)pt.X, (uint32_t)pt.Y, lastButton, flags);
 //            }
 //        }
 //
@@ -113,23 +113,23 @@ namespace CausticInterop
 //                lastButton = c_RightButton;
 //            else
 //                return;
-//            uint32 flags = 0;
+//            uint32_t flags = 0;
 //            if (Keyboard::IsKeyDown(Key::LeftCtrl) || Keyboard::IsKeyDown(Key::RightCtrl))
 //                flags |= MK_CONTROL;
 //            if (Keyboard::IsKeyDown(Key::LeftShift) || Keyboard::IsKeyDown(Key::RightShift))
 //                flags |= MK_SHIFT;
-//            m_pRendererInfo->MouseDown((uint32)pt.X, (uint32)pt.Y, lastButton, flags);
+//            m_pRendererInfo->MouseDown((uint32_t)pt.X, (uint32_t)pt.Y, lastButton, flags);
 //        }
 //
 //        void HandleMouseMove(Object^ sender, MouseEventArgs^ e)
 //        {
 //            auto pt = e->GetPosition(this);
-//            uint32 flags = 0;
+//            uint32_t flags = 0;
 //            if (Keyboard::IsKeyDown(Key::LeftCtrl) || Keyboard::IsKeyDown(Key::RightCtrl))
 //                flags |= MK_CONTROL;
 //            if (Keyboard::IsKeyDown(Key::LeftShift) || Keyboard::IsKeyDown(Key::RightShift))
 //                flags |= MK_SHIFT;
-//            m_pRendererInfo->MouseMove((uint32)pt.X, (uint32)pt.Y, flags);
+//            m_pRendererInfo->MouseMove((uint32_t)pt.X, (uint32_t)pt.Y, flags);
 //        }
 //
 //        void HandleKeyDown(Object^ sender, KeyEventArgs^ e)

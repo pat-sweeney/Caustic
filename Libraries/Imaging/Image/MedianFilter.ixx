@@ -38,8 +38,8 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IImageFilter
@@ -71,10 +71,10 @@ export namespace Caustic
         CImageIter1 riter1;
 
         bool hasMask = pParams && pParams->spMask;
-        uint32 w = pImage->GetWidth();
-        uint32 h = pImage->GetHeight();
-        uint32 w1 = w - 1;
-        uint32 h1 = h - 1;
+        uint32_t w = pImage->GetWidth();
+        uint32_t h = pImage->GetHeight();
+        uint32_t w1 = w - 1;
+        uint32_t h1 = h - 1;
         riter[0] = CImageIter32(pImage, 0, 0);
         riter[1] = CImageIter32(pImage, 0, 0);
         riter[2] = CImageIter32(pImage, 0, (h > 1) ? 1 : 0);

@@ -204,7 +204,7 @@ export namespace Caustic
         // Returns:
         // Number of characters written
         //**********************************************************************
-        virtual uint32 WriteDOM(CRefObj<IJSonObj>& dom, char* pBuffer, uint32 bufLen) = 0;
+        virtual uint32_t WriteDOM(CRefObj<IJSonObj>& dom, char* pBuffer, uint32_t bufLen) = 0;
 
         //**********************************************************************
         // Method: CreateJSon

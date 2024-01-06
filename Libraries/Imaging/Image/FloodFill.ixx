@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 1996-2021
+// Copyright Patrick Sweeney 1996-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -9,6 +9,7 @@ module;
 #include <any>
 #include <string>
 #include <map>
+#include <cinttypes>
 
 export module Imaging.Image.ImageFilter.FloodFill;
 import Base.Core.Core;
@@ -64,8 +65,8 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IImageFilter
@@ -93,9 +94,9 @@ export namespace Caustic
 
         CRefObj<IImage> filled = CreateImage(pImage->GetWidth(), pImage->GetHeight(), EImageType::BW_1bpp);
         memset((void*)filled->GetData(), '\0', filled->GetStride() * filled->GetHeight());
-        uint8 ropacitytbl[256];
-        uint8 gopacitytbl[256];
-        uint8 bopacitytbl[256];
+        uint8_t ropacitytbl[256];
+        uint8_t gopacitytbl[256];
+        uint8_t bopacitytbl[256];
         if (opacity < 255)
         {
             for (int i = 0; i < 256; i++)
@@ -157,9 +158,9 @@ export namespace Caustic
                     filledciter.Step(CImageIter::Left);
                     break;
                 }
-                uint8 r = citer.GetRed();
-                uint8 g = citer.GetGreen();
-                uint8 b = citer.GetBlue();
+                uint8_t r = citer.GetRed();
+                uint8_t g = citer.GetGreen();
+                uint8_t b = citer.GetBlue();
                 //
                 // Compute color distance between pixel and seed
                 //
@@ -224,9 +225,9 @@ export namespace Caustic
                     filledciter.Step(CImageIter::Right);
                     break;
                 }
-                uint8 r = citer.GetRed();
-                uint8 g = citer.GetGreen();
-                uint8 b = citer.GetBlue();
+                uint8_t r = citer.GetRed();
+                uint8_t g = citer.GetGreen();
+                uint8_t b = citer.GetBlue();
                 //
                 // Compute color distance between pixel and seed
                 //
@@ -302,9 +303,9 @@ export namespace Caustic
                             filledciter.Step(CImageIter::Left);
                             break;
                         }
-                        uint8 r = citer.GetRed();
-                        uint8 g = citer.GetGreen();
-                        uint8 b = citer.GetBlue();
+                        uint8_t r = citer.GetRed();
+                        uint8_t g = citer.GetGreen();
+                        uint8_t b = citer.GetBlue();
                         if (tolerance)
                         {
                             RGBColor rgb(r, g, b);
@@ -349,9 +350,9 @@ export namespace Caustic
                             filledciter.Step(CImageIter::Left);
                             break;
                         }
-                        uint8 r = citer.GetRed();
-                        uint8 g = citer.GetGreen();
-                        uint8 b = citer.GetBlue();
+                        uint8_t r = citer.GetRed();
+                        uint8_t g = citer.GetGreen();
+                        uint8_t b = citer.GetBlue();
                         if (tolerance)
                         {
                             RGBColor rgb(r, g, b);
@@ -404,9 +405,9 @@ export namespace Caustic
                             filledciter.Step(CImageIter::Left);
                             break;
                         }
-                        uint8 r = citer.GetRed();
-                        uint8 g = citer.GetGreen();
-                        uint8 b = citer.GetBlue();
+                        uint8_t r = citer.GetRed();
+                        uint8_t g = citer.GetGreen();
+                        uint8_t b = citer.GetBlue();
                         if (tolerance)
                         {
                             RGBColor rgb(r, g, b);
@@ -451,9 +452,9 @@ export namespace Caustic
                             filledciter.Step(CImageIter::Left);
                             break;
                         }
-                        uint8 r = citer.GetRed();
-                        uint8 g = citer.GetGreen();
-                        uint8 b = citer.GetBlue();
+                        uint8_t r = citer.GetRed();
+                        uint8_t g = citer.GetGreen();
+                        uint8_t b = citer.GetBlue();
                         if (tolerance)
                         {
                             RGBColor rgb(r, g, b);

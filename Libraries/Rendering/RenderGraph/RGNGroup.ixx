@@ -27,8 +27,8 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IRenderGraphNode
@@ -37,8 +37,8 @@ export namespace Caustic
         virtual std::string GetName() { return m_name; }
         virtual void SetName(std::string name) { CRenderGraphNode::SetName(name); }
         virtual void SetProperty(std::string name, std::any value) { CRenderGraphNode::SetProperty(name, value); }
-        virtual uint32 NumberInputPins() { return CRenderGraphNode::NumberInputPins(); }
-        virtual uint32 NumberOutputPins() { return CRenderGraphNode::NumberOutputPins(); }
+        virtual uint32_t NumberInputPins() { return CRenderGraphNode::NumberInputPins(); }
+        virtual uint32_t NumberOutputPins() { return CRenderGraphNode::NumberOutputPins(); }
         virtual CRefObj<IRenderGraphPin> GetInputPin(int index) { return CRenderGraphNode::GetInputPin(index); }
         virtual CRefObj<IRenderGraphPin> GetOutputPin(int index) { return CRenderGraphNode::GetOutputPin(index); }
         virtual CRefObj<IRenderGraphPin> FindInputPin(std::string name) { return CRenderGraphNode::FindInputPin(name); }

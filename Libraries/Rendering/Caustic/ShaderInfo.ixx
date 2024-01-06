@@ -30,8 +30,8 @@ export namespace Caustic
         std::vector<ShaderParamDef> m_pixelShaderParamDefs;
         std::vector<ShaderParamDef> m_vertexShaderParamDefs;
         std::vector<ShaderParamDef> m_computeShaderParamDefs;
-        uint32 m_shaderTypeFlags;
-        uint32 m_vertexSize;
+        uint32_t m_shaderTypeFlags;
+        uint32_t m_vertexSize;
         int m_xThreads, m_yThreads, m_zThreads;
         D3D11_PRIMITIVE_TOPOLOGY m_topologyType;
 
@@ -41,7 +41,7 @@ export namespace Caustic
         void ParseCBuffer(IXMLDOMNode* pNode, EShaderType shaderType);
         void ParseBuffers(IXMLDOMNode* pNode);
         DXGI_FORMAT StringToFormat(BSTR bstrStr);
-        uint32 FormatSize(DXGI_FORMAT format);
+        uint32_t FormatSize(DXGI_FORMAT format);
         void ParseShaderEntry(IXMLDOMNode *pNode, EShaderType shaderType);
     public:
         CShaderInfo() :
@@ -59,8 +59,8 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IShaderInfo
@@ -79,8 +79,8 @@ export namespace Caustic
         virtual bool GetVertexShaderParameterDef(const wchar_t* pParamName, ShaderParamDef* pDef) override;
         virtual bool GetComputeShaderParameterDef(const wchar_t* pParamName, ShaderParamDef* pDef) override;
         virtual std::vector<D3D11_INPUT_ELEMENT_DESC> &VertexLayout() override;
-        virtual uint32 GetVertexSize() override;
-        virtual void GetThreadGroupSize(uint32* pXThreads, uint32* pYThreads, uint32* pZThreads) override
+        virtual uint32_t GetVertexSize() override;
+        virtual void GetThreadGroupSize(uint32_t* pXThreads, uint32_t* pYThreads, uint32_t* pZThreads) override
         {
             if (pXThreads)
                 *pXThreads = m_xThreads;

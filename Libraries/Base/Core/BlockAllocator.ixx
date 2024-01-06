@@ -1,11 +1,12 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
 module;
 #include <vector>
 #include <list>
+#include <cinttypes>
 
 export module Base.Core.BlockAllocator;
 import Base.Core.Core;
@@ -121,7 +122,7 @@ export namespace Caustic
         //**********************************************************************
         void Free(T *p)
         {
-            uint64 offset = (uint64)(uint64*)(&((CItem<T>*)nullptr)->m_data);
+            uint64_t offset = (uint64_t)(uint64_t*)(&((CItem<T>*)nullptr)->m_data);
             CItem<T> *pItem = (CItem<T>*)((char*)p - offset);
             pItem->m_inuse = false;
             pItem->m_parent->m_itemsFree++;

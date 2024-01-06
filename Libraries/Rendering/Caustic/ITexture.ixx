@@ -36,14 +36,14 @@ export namespace Caustic
         // Returns:
         // Returns the width of the texture in pixels
         //**********************************************************************
-        virtual uint32 GetWidth() = 0;
+        virtual uint32_t GetWidth() = 0;
 
         //**********************************************************************
         // Method: GetHeight
         // Returns:
         // Returns the height of the texture in pixels
         //**********************************************************************
-        virtual uint32 GetHeight() = 0;
+        virtual uint32_t GetHeight() = 0;
 
         //**********************************************************************
         // Method: GetFormat
@@ -157,7 +157,7 @@ export namespace Caustic
     // Module:
     // {Link:import Rendering.Caustic.ITexture;{Rendering/Caustic/ITexture.ixx}}
     //**********************************************************************
-    CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags);
+    CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, uint32_t width, uint32_t height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags);
     
     //**********************************************************************
     // Function: CreateTexture
@@ -175,7 +175,7 @@ export namespace Caustic
     // Module:
     // {Link:import Rendering.Caustic.ITexture;{Rendering/Caustic/ITexture.ixx}}
     //**********************************************************************
-    CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, uint32 width, uint32 height, DXGI_FORMAT format);
+    CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, uint32_t width, uint32_t height, DXGI_FORMAT format);
     
     //**********************************************************************
     // Function: CreateTexture

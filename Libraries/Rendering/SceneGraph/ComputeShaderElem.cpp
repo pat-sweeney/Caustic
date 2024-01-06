@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -8,6 +8,7 @@ module;
 #include <any>
 #include <d3d11.h>
 #include <atlbase.h>
+#include <cinttypes>
 
 module Rendering.SceneGraph.SceneComputeShaderElem;
 import Base.Core.Core;
@@ -38,20 +39,20 @@ namespace Caustic
         return spObj;
     }
 
-    void CSceneComputeShaderElem::SetInputThreads(uint32 width, uint32 height, uint32 depth /* = 1 */)
+    void CSceneComputeShaderElem::SetInputThreads(uint32_t width, uint32_t height, uint32_t depth /* = 1 */)
     {
-        uint32 xThreads, yThreads, zThreads;
+        uint32_t xThreads, yThreads, zThreads;
         m_spComputeShader->GetShaderInfo()->GetThreadGroupSize(&xThreads, &yThreads, &zThreads);
         // Determine the correct number of thread groups so we process the entire image
-        uint32 xGroups = (width + xThreads - 1) / xThreads;
-        uint32 yGroups = (height + yThreads - 1) / yThreads;
-        uint32 zGroups = (depth + zThreads - 1) / zThreads;
+        uint32_t xGroups = (width + xThreads - 1) / xThreads;
+        uint32_t yGroups = (height + yThreads - 1) / yThreads;
+        uint32_t zGroups = (depth + zThreads - 1) / zThreads;
         m_xThreads = xGroups;
         m_yThreads = yGroups;
         m_zThreads = zGroups;
     }
 
-    void CSceneComputeShaderElem::SetShaderParam(const wchar_t* pParamName, uint32 value)
+    void CSceneComputeShaderElem::SetShaderParam(const wchar_t* pParamName, uint32_t value)
     {
         std::any wv = std::any(Int(value));
         m_spComputeShader->SetCSParam(pParamName, wv);
@@ -70,7 +71,7 @@ namespace Caustic
         m_zThreads = zThreads;
     }
 
-    void CSceneComputeShaderElem::SetBuffer(IRenderer *pRenderer, const wchar_t * pBufferName, uint8* pData, uint32 bufSize, uint32 elemSize)
+    void CSceneComputeShaderElem::SetBuffer(IRenderer *pRenderer, const wchar_t * pBufferName, uint8_t* pData, uint32_t bufSize, uint32_t elemSize)
     {
         EBufferType bufferType;
         ShaderParamDef def;

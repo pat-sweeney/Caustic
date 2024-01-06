@@ -40,7 +40,7 @@ namespace Caustic
     // Method: GetWidth
     // Returns the width of the texture
     //**********************************************************************
-    uint32 CVideoTexture::GetWidth()
+    uint32_t CVideoTexture::GetWidth()
     {
         return m_Width;
     }
@@ -49,7 +49,7 @@ namespace Caustic
     // Method: GetHeight
     // Returns the height of the texture
     //**********************************************************************
-    uint32 CVideoTexture::GetHeight()
+    uint32_t CVideoTexture::GetHeight()
     {
         return m_Height;
     }
@@ -96,12 +96,12 @@ namespace Caustic
     {
         CComPtr<IMFMediaType> spType;
         CT(m_spSourceReader->GetCurrentMediaType((DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, &spType));
-        UINT32 width, height;
+        uint32_t width, height;
         CT(MFGetAttributeSize(spType, MF_MT_FRAME_SIZE, &width, &height));
         LONG lStride = (LONG)MFGetAttributeUINT32(spType, MF_MT_DEFAULT_STRIDE, 1);
         pFormat->m_topDown = (lStride > 0);
         MFRatio par = { 0 , 0 };
-        HRESULT hr = MFGetAttributeRatio(spType, MF_MT_PIXEL_ASPECT_RATIO, (UINT32*)&par.Numerator, (UINT32*)&par.Denominator);
+        HRESULT hr = MFGetAttributeRatio(spType, MF_MT_PIXEL_ASPECT_RATIO, (uint32_t*)&par.Numerator, (uint32_t*)&par.Denominator);
         if (SUCCEEDED(hr) && (par.Denominator != par.Numerator))
         {
             RECT rcSrc = { 0, 0, (LONG)width, (LONG)height };
@@ -159,7 +159,7 @@ namespace Caustic
             D3D11_MAPPED_SUBRESOURCE ms;
             CT(pRenderer->GetContext()->Map(spD3DTexture, 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
 
-            UINT32 pitch = 4 * m_format.m_width;
+            uint32_t pitch = 4 * m_format.m_width;
             CComPtr<IMFMediaBuffer> spBuffer;
             CT(spSample->ConvertToContiguousBuffer(&spBuffer));
             BYTE *pBitmapData;
@@ -197,7 +197,7 @@ namespace Caustic
         CT(spConfig->SetGUID(MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE, MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_VIDCAP_GUID));
 
         IMFActivate** ppDevices = nullptr;
-        UINT32 count = 0;
+        uint32_t count = 0;
         CT(MFEnumDeviceSources(spConfig, &ppDevices, &count));
         CT((count <= 0) ? MF_E_NOT_FOUND : S_OK);
         CT(ppDevices[0]->ActivateObject(IID_PPV_ARGS(ppSource)));
@@ -269,10 +269,10 @@ namespace Caustic
         CT(m_spSourceReader->SetStreamSelection((DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, TRUE));
         CComPtr<IMFMediaType> spCurMediaType;
         CT(m_spSourceReader->GetCurrentMediaType(static_cast<DWORD>(MF_SOURCE_READER_FIRST_VIDEO_STREAM), &spCurMediaType));
-        UINT32 width, height;
+        uint32_t width, height;
         CT(MFGetAttributeSize(spCurMediaType, MF_MT_FRAME_SIZE, &width, &height));
 
-        UINT32 stride;
+        uint32_t stride;
         HRESULT hr = spCurMediaType->GetUINT32(MF_MT_DEFAULT_STRIDE, &stride);
         if (FAILED(hr))
         {
@@ -282,7 +282,7 @@ namespace Caustic
             if (SUCCEEDED(hr))
             {
                 bool inverted = (stride < 0) ? true : false;
-                stride = static_cast<UINT32>((inverted) ? -stride : stride);
+                stride = static_cast<uint32_t>((inverted) ? -stride : stride);
             }
         }
 

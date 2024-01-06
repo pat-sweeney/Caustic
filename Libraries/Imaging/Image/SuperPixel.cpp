@@ -16,16 +16,16 @@ namespace Caustic
     void CreateSLIC(IImage *pImage, IImage **ppImage)
     {
         std::unique_ptr<CIntegralImage> spIntegralImage(new CIntegralImage(pImage->GetWidth(), pImage->GetHeight()));
-        uint32 *pDstRow = (uint32*)spIntegralImage->GetData();
+        uint32_t *pDstRow = (uint32_t*)spIntegralImage->GetData();
         BYTE *pSrcRow = pImage->GetData();
         int w = (int)spIntegralImage->GetWidth();
-        for (uint32 y = 0; y < pImage->GetHeight(); y++)
+        for (uint32_t y = 0; y < pImage->GetHeight(); y++)
         {
-            uint32 *pDstCol = pDstRow;
+            uint32_t *pDstCol = pDstRow;
             BYTE *pSrcCol = pSrcRow;
-            for (uint32 x = 0; x < pImage->GetWidth(); x++)
+            for (uint32_t x = 0; x < pImage->GetWidth(); x++)
             {
-                uint32 sum[3];
+                uint32_t sum[3];
                 sum[0] = pSrcCol[0];
                 sum[1] = pSrcCol[1];
                 sum[2] = pSrcCol[2];

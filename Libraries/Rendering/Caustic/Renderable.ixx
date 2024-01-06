@@ -49,7 +49,7 @@ export namespace Caustic
     protected:
         CRefObj<IRenderMaterial> m_spFrontMaterial;
         CRefObj<IRenderMaterial> m_spBackMaterial;
-        uint32 m_passes;
+        uint32_t m_passes;
         DirectX::XMMATRIX m_xform;
         CRefObj<IRenderSubMesh> m_spSubMesh;
 
@@ -65,8 +65,8 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IRenderable

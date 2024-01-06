@@ -100,12 +100,12 @@ namespace Caustic
         *pBBox = m_BBox;
     }
     
-    uint32 CSceneGroupElem::NumberChildren()
+    uint32_t CSceneGroupElem::NumberChildren()
     {
-        return static_cast<uint32>(m_Children.size());
+        return static_cast<uint32_t>(m_Children.size());
     }
 
-    CRefObj<ISceneElem> CSceneGroupElem::GetChild(uint32 index)
+    CRefObj<ISceneElem> CSceneGroupElem::GetChild(uint32_t index)
     {
         return m_Children[index];
     }
@@ -116,7 +116,7 @@ namespace Caustic
         m_Children.push_back(pElem);
     }
 
-    void CSceneGroupElem::InsertChild(ISceneElem *pElem, uint32 index)
+    void CSceneGroupElem::InsertChild(ISceneElem *pElem, uint32_t index)
     {
         SetFlags(GetFlags() | ESceneElemFlags::BBoxDirty);
         m_Children.insert(m_Children.begin() + index, pElem);
@@ -125,13 +125,13 @@ namespace Caustic
     void CSceneGroupElem::Store(IStream *pStream, std::function<void(ISceneElem *pElem)> func)
     {
         ULONG bytesWritten;
-        uint32 numChildren = (uint32)m_Children.size();
+        uint32_t numChildren = (uint32_t)m_Children.size();
         CT(pStream->Write(&numChildren, sizeof(numChildren), &bytesWritten));
         CT(pStream->Write(&m_Transform, sizeof(m_Transform), &bytesWritten));
-        for (uint32 i = 0; i < (uint32)numChildren; i++)
+        for (uint32_t i = 0; i < (uint32_t)numChildren; i++)
         {
-            uint32 type = (uint32)m_Children[i]->GetType();
-            CT(pStream->Write(&type, sizeof(uint32), &bytesWritten));
+            uint32_t type = (uint32_t)m_Children[i]->GetType();
+            CT(pStream->Write(&type, sizeof(uint32_t), &bytesWritten));
             func(m_Children[i]);
         }
     }
@@ -140,14 +140,14 @@ namespace Caustic
     {
         CRefObj<ISceneFactory> spSceneFactory = CSceneFactory::Instance();
         ULONG bytesRead;
-        uint32 numChildren;
+        uint32_t numChildren;
         CT(pStream->Read(&numChildren, sizeof(numChildren), &bytesRead));
         CT(pStream->Read(&m_Transform, sizeof(m_Transform), &bytesRead));
-        for (uint32 i = 0; i < (uint32)numChildren; i++)
+        for (uint32_t i = 0; i < (uint32_t)numChildren; i++)
         {
             CRefObj<ISceneElem> spElem;
-            uint32 type;
-            CT(pStream->Read(&type, sizeof(uint32), &bytesRead));
+            uint32_t type;
+            CT(pStream->Read(&type, sizeof(uint32_t), &bytesRead));
             switch ((ESceneElemType)type)
             {
             case ESceneElemType::Group:

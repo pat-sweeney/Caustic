@@ -156,7 +156,7 @@ export namespace Caustic
         // Returns:
         // Returns the size of each vertex in bytes
         //**********************************************************************
-        virtual uint32 GetVertexSize() = 0;
+        virtual uint32_t GetVertexSize() = 0;
 
         //**********************************************************************
         // Method: GetThreadGroupSize
@@ -165,6 +165,6 @@ export namespace Caustic
         // pYThreads - Number of threads in Y (as defined by numthreads() in compute shader)
         // pZThreads - Number of threads in Z (as defined by numthreads() in compute shader)
         //**********************************************************************
-        virtual void GetThreadGroupSize(uint32* pXThreads, uint32* pYThreads, uint32* pZThreads) = 0;
+        virtual void GetThreadGroupSize(uint32_t* pXThreads, uint32_t* pYThreads, uint32_t* pZThreads) = 0;
     };
 }

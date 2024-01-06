@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -8,6 +8,7 @@ module;
 #include <k4abt.h>
 #include <memory>
 #include <winerror.h>
+#include <cinttypes>
 
 module Cameras.AzureKinect.AzureKinect;
 import Base.Core.Error;
@@ -111,7 +112,7 @@ namespace Caustic
         }
 
         k4a_color_resolution_t ak_colorMode = K4A_COLOR_RESOLUTION_OFF;
-        uint32 colorW = 0, colorH = 0;
+        uint32_t colorW = 0, colorH = 0;
         switch (colorMode)
         {
         case AzureKinect::ColorMode::ColorOff:
@@ -260,7 +261,7 @@ namespace Caustic
     // Method: GetDepthWidth
     // See <IDepthCameraDevice::GetDepthWidth>
     //**********************************************************************
-    uint32 CAzureKinectDevice::GetDepthWidth()
+    uint32_t CAzureKinectDevice::GetDepthWidth()
     {
         switch (m_calibration.depth_mode)
         {
@@ -277,7 +278,7 @@ namespace Caustic
     // Method: GetDepthHeight
     // See <IDepthCameraDevice::GetDepthHeight>
     //**********************************************************************
-    uint32 CAzureKinectDevice::GetDepthHeight()
+    uint32_t CAzureKinectDevice::GetDepthHeight()
     {
         switch (m_calibration.depth_mode)
         {
@@ -294,7 +295,7 @@ namespace Caustic
     // Method: GetColorWidth
     // See <IDepthCameraDevice::GetColorHeight>
     //**********************************************************************
-    uint32 CAzureKinectDevice::GetColorWidth()
+    uint32_t CAzureKinectDevice::GetColorWidth()
     {
         switch (m_calibration.color_resolution)
         {
@@ -312,7 +313,7 @@ namespace Caustic
     // Method: GetColorHeight
     // See <IDepthCameraDevice::GetColorHeight>
     //**********************************************************************
-    uint32 CAzureKinectDevice::GetColorHeight()
+    uint32_t CAzureKinectDevice::GetColorHeight()
     {
         switch (m_calibration.color_resolution)
         {
@@ -468,7 +469,7 @@ namespace Caustic
                         int h = k4a_image_get_height_pixels(colorimage);
                         int stride = k4a_image_get_stride_bytes(colorimage);
                         CRefObj<IImage> spImage = m_spColorImagePool->Acquire();
-                        uint8* pRow = spImage->GetData();
+                        uint8_t* pRow = spImage->GetData();
                         int imgWidth = spImage->GetWidth();
                         int bpp = spImage->GetBPP() / 8;
                         int bps = imgWidth * bpp;
@@ -571,15 +572,15 @@ namespace Caustic
         return mat;
     }
 
-    CRefObj<IImage> CAzureKinectDevice::BuildRayMap(uint32 w, uint32 h, bool forDepth /*= true*/)
+    CRefObj<IImage> CAzureKinectDevice::BuildRayMap(uint32_t w, uint32_t h, bool forDepth /*= true*/)
     {
         CRefObj<IImage> spImage = CreateImage(w, h, EImageType::Float4_128bpp);
         CImageIter128 row(spImage, 0, 0);
         int index = 0;
-        for (uint32 iy = 0; iy < h; iy++)
+        for (uint32_t iy = 0; iy < h; iy++)
         {
             CImageIter128 col = row;
-            for (uint32 ix = 0; ix < w; ix++)
+            for (uint32_t ix = 0; ix < w; ix++)
             {
                 // Convert pixel coords+depth to 3D point
                 k4a_float2_t pt;
@@ -630,7 +631,7 @@ namespace Caustic
                 CImageIter16 srcCol = srcRow;
                 for (int ix = 0; ix < w; ix++)
                 {
-                    uint16 depth = srcCol.GetGray();
+                    uint16_t depth = srcCol.GetGray();
                     if (depth == 0)
                     {
                         srcCol.Step(CImageIter::Right);

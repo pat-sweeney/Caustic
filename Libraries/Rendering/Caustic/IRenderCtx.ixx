@@ -1,8 +1,11 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+module;
+#include <cinttypes>
+
 export module Rendering.Caustic.IRenderCtx;
 
 import Base.Core.Core;
@@ -36,14 +39,14 @@ export namespace Caustic
     //**********************************************************************
     namespace RenderCtxFlags
     {
-        const uint32 c_DisplayNormalsAsColors = 0x01;
-        const uint32 c_DisplayNormalsAsLines = 0x02;
-        const uint32 c_DisplayFaceNormals = 0x04;
-        const uint32 c_DisplayWireframe = 0x08;
-        const uint32 c_DisplayWorldAxis = 0x10;
-        const uint32 c_DisplayUVsAsColors = 0x20;
-        const uint32 c_DisplayLightDir = 0x40;
-        const uint32 c_DisplayGrid = 0x80;
+        const uint32_t c_DisplayNormalsAsColors = 0x01;
+        const uint32_t c_DisplayNormalsAsLines = 0x02;
+        const uint32_t c_DisplayFaceNormals = 0x04;
+        const uint32_t c_DisplayWireframe = 0x08;
+        const uint32_t c_DisplayWorldAxis = 0x10;
+        const uint32_t c_DisplayUVsAsColors = 0x20;
+        const uint32_t c_DisplayLightDir = 0x40;
+        const uint32_t c_DisplayGrid = 0x80;
     }
 
     //**********************************************************************
@@ -63,13 +66,13 @@ export namespace Caustic
         // Parameters:
         // flags - new debug flags
         //**********************************************************************
-        virtual void SetDebugFlags(uint32 flags) = 0;
+        virtual void SetDebugFlags(uint32_t flags) = 0;
 
         //**********************************************************************
         // Method: GetDebugFlags
         // Returns the current debug flags used for rendering
         //**********************************************************************
-        virtual uint32 GetDebugFlags() = 0;
+        virtual uint32_t GetDebugFlags() = 0;
 
         //**********************************************************************
         // Method: SetNormalScale
@@ -90,7 +93,7 @@ export namespace Caustic
         // Method: GetCurrentPass
         // Returns the current render pass
         //**********************************************************************
-        virtual uint32 GetCurrentPass() = 0;
+        virtual uint32_t GetCurrentPass() = 0;
 
         //**********************************************************************
         // Method: PassBlendable
@@ -105,7 +108,7 @@ export namespace Caustic
         // Returns:
         // Returns the new epoch
         //**********************************************************************
-        virtual uint32 IncrementEpoch() = 0;
+        virtual uint32_t IncrementEpoch() = 0;
 
         //**********************************************************************
         // Method: GetEpoch
@@ -114,7 +117,7 @@ export namespace Caustic
         // Returns:
         // Returns the current epoch
         //**********************************************************************
-        virtual uint32 GetEpoch() = 0;
+        virtual uint32_t GetEpoch() = 0;
 
         //**********************************************************************
         // Method: GetMostRecentEpoch
@@ -123,7 +126,7 @@ export namespace Caustic
         // Returns:
         // Returns the most recent epoch
         //**********************************************************************
-        virtual uint32 GetMostRecentEpoch() = 0;
+        virtual uint32_t GetMostRecentEpoch() = 0;
 
         //**********************************************************************
         // Method: SetMostRecentEpoch
@@ -132,6 +135,6 @@ export namespace Caustic
         // Parameters:
         // v - value to set most recent epoch to
         //**********************************************************************
-        virtual void SetMostRecentEpoch(uint32 v) = 0;
+        virtual void SetMostRecentEpoch(uint32_t v) = 0;
     };
 }

@@ -1,11 +1,12 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Ported from Nestegg Software (Copyright 1995-1997)
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
 module;
 #include <assert.h>
+#include <cinttypes>
 
 export module Geometry.Rast.Bresenham;
 import Base.Core.Core;
@@ -21,16 +22,16 @@ export namespace Caustic
     //**********************************************************************
     class Bresenham
     {
-        int32 x;        // current x coordinate
-        int32 y;        // current y coordinate
-        int32 dx;        // direction to walk in x
-        int32 dy;        // direction to walk in y
-        int32 ex;        // error in x
-        int32 ey;        // error in y
-        int32 stopx, stopy;    // end of line
+        int32_t x;        // current x coordinate
+        int32_t y;        // current y coordinate
+        int32_t dx;        // direction to walk in x
+        int32_t dy;        // direction to walk in y
+        int32_t ex;        // error in x
+        int32_t ey;        // error in y
+        int32_t stopx, stopy;    // end of line
         bool swapped;        // slope greater than 1
     public:
-        int32 err;        // total error
+        int32_t err;        // total error
 
         //**********************************************************************
         // Constructor: Bresenham
@@ -50,7 +51,7 @@ export namespace Caustic
         // tx - ending X coordinate of line
         // ty - ending Y coordinate of line
         //**********************************************************************
-        Bresenham(int32 fx, int32 fy, int32 tx, int32 ty)
+        Bresenham(int32_t fx, int32_t fy, int32_t tx, int32_t ty)
         {
             stopx = tx;
             stopy = ty;
@@ -88,25 +89,25 @@ export namespace Caustic
         // Method: get_x
         // Returns the X coordinate where the iterator is currently positioned
         //**********************************************************************
-        int32 get_x() { return x; }
+        int32_t get_x() { return x; }
 
         //**********************************************************************
         // Method: get_y
         // Returns the Y coordinate where the iterator is currently positioned
         //**********************************************************************
-        int32 get_y() { return y; }
+        int32_t get_y() { return y; }
 
         //**********************************************************************
         // Method: get_endx
         // Returns the ending pixel's X coordinate
         //**********************************************************************
-        int32 get_endx() { return stopx; }
+        int32_t get_endx() { return stopx; }
 
         //**********************************************************************
         // Method: get_endy
         // Returns the ending pixel's Y coordinate
         //**********************************************************************
-        int32 get_endy() { return stopy; }
+        int32_t get_endy() { return stopy; }
 
         //**********************************************************************
         // Method: eol
@@ -186,9 +187,9 @@ export namespace Caustic
         // Parameters:
         // dx - Number of units to step along the x axis
         //**********************************************************************
-        void step_x(int32 dx)
+        void step_x(int32_t dx)
         {
-            int32 _dy;
+            int32_t _dy;
 
             assert(!swapped);
             assert(ex >= 0);
@@ -202,7 +203,7 @@ export namespace Caustic
                     _dy = -_dy;
                 if (dx < 0)
                 {
-                    int32 _diff;
+                    int32_t _diff;
 
                     _diff = ey - ex;
                     if (err < _diff || (err == _diff && dy > 0))
@@ -232,9 +233,9 @@ export namespace Caustic
         // Parameters:
         // dy - Number of units to step along the y axis
         //**********************************************************************
-        void step_y(int32 dy)
+        void step_y(int32_t dy)
         {
-            int32 _dx;
+            int32_t _dx;
 
             assert(swapped);
             assert(ex >= 0);
@@ -248,7 +249,7 @@ export namespace Caustic
                     _dx = -_dx;
                 if (dy < 0)
                 {
-                    int32 _diff;
+                    int32_t _diff;
 
                     _diff = ey - ex;
                     if (err < _diff || (err == _diff && dx > 0))
@@ -277,7 +278,7 @@ export namespace Caustic
         // Parameters:
         // delta - Number of units to step along the major axis
         //**********************************************************************
-        void step_inc(int32 delta)
+        void step_inc(int32_t delta)
         {
             if (swapped)
                 step_y(delta);

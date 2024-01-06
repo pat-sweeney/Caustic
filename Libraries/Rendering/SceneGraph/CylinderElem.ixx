@@ -56,8 +56,8 @@ export namespace Caustic
         //**********************************************************************
         // IUnknown
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // ISceneElem
@@ -116,10 +116,10 @@ export namespace Caustic
             return;
         }
         
-        virtual uint32 GetFlags() override { return m_Flags; }
-        virtual void SetFlags(uint32 flags) override { m_Flags = flags; }
-        virtual void SetInPass(uint32 pass) override { CSceneElem::SetInPass(pass); }
-        virtual uint32 GetInPass() override { return CSceneElem::GetInPass(); }
+        virtual uint32_t GetFlags() override { return m_Flags; }
+        virtual void SetFlags(uint32_t flags) override { m_Flags = flags; }
+        virtual void SetInPass(uint32_t pass) override { CSceneElem::SetInPass(pass); }
+        virtual uint32_t GetInPass() override { return CSceneElem::GetInPass(); }
 
         //**********************************************************************
         // ISerialize

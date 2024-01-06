@@ -96,14 +96,14 @@ void FillInspector_Elem(ISceneElem* pElem)
             pElem->SetName(wn.c_str());
         }
 
-        uint32 flags = pElem->GetFlags();
+        uint32_t flags = pElem->GetFlags();
         bool isHidden = (flags & ESceneElemFlags::Hidden) ? true : false;
         bool isSelected = (flags & ESceneElemFlags::Selected) ? true : false;
         bool depthTested = (flags & ESceneElemFlags::DepthTested) ? true : false;
         bool bboxDirty = (flags & ESceneElemFlags::BBoxDirty) ? true : false;
         bool renderableDirty = (flags & ESceneElemFlags::RenderableDirty) ? true : false;
         bool materialDirty = (flags & ESceneElemFlags::MaterialDirty) ? true : false;
-        uint32 finalFlags = 0;
+        uint32_t finalFlags = 0;
         ImGui::Checkbox("Hidden", &isHidden);
         finalFlags |= (isHidden) ? ESceneElemFlags::Hidden : 0;
         ImGui::Checkbox("Selected", &isSelected);
@@ -375,19 +375,19 @@ void FillInspector_Mesh(ISceneMeshElem *pMeshElem)
 {
     FillInspector_Elem(pMeshElem);
     auto spMesh = pMeshElem->GetMesh();
-    uint32 numSubmeshes = spMesh->NumberSubMeshes();
+    uint32_t numSubmeshes = spMesh->NumberSubMeshes();
     if (ImGui::CollapsingHeader("SubMeshes:", ImGuiTreeNodeFlags_None))
     {
-        for (uint32 i = 0; i < numSubmeshes; i++)
+        for (uint32_t i = 0; i < numSubmeshes; i++)
         {
             auto spSubMesh = spMesh->GetSubMesh(i);
             std::string name = spSubMesh->GetName();
-            uint32 numFaces = spSubMesh->GetNumberFaces();
-            uint32 numVerts = spSubMesh->GetNumberVertices();
-            uint32 numEdges = spSubMesh->GetNumberEdges();
+            uint32_t numFaces = spSubMesh->GetNumberFaces();
+            uint32_t numVerts = spSubMesh->GetNumberVertices();
+            uint32_t numEdges = spSubMesh->GetNumberEdges();
             EVertexFlags vertexFlags = spSubMesh->GetVertexFlags();
             EMeshFlags meshFlags = spSubMesh->GetMeshFlags();
-            uint32 materialID = spSubMesh->GetMaterialID();
+            uint32_t materialID = spSubMesh->GetMaterialID();
             BBox3 bbox = spSubMesh->GetBBox();
             bool hasPosition = (vertexFlags & EVertexFlags::HasPosition) ? true : false;
             bool hasNormal = (vertexFlags & EVertexFlags::HasNormal) ? true : false;
@@ -416,9 +416,9 @@ void FillInspector_Mesh(ISceneMeshElem *pMeshElem)
         }
         if (ImGui::CollapsingHeader("Materials", ImGuiTreeNodeFlags_None))
         {
-            uint32 numMaterials = spMesh->GetNumberMaterials();
+            uint32_t numMaterials = spMesh->GetNumberMaterials();
             int index = 0;
-            for (uint32 j = 0; j < numMaterials; j++)
+            for (uint32_t j = 0; j < numMaterials; j++)
             {
                 CRefObj<IMaterialAttrib> spMaterial = spMesh->GetMaterial(j);
                 if (ImGui::CollapsingHeader((std::string("Material ")+std::to_string(j)).c_str(), ImGuiTreeNodeFlags_None))
@@ -580,7 +580,7 @@ void FillInspector_Material(ISceneMaterialElem *pMaterialElem, IMaterialAttrib* 
     bool isShadowReceiver = pMaterial->GetIsShadowReceiver();
     if (ImGui::Checkbox("ShadowReceiver", &isShadowReceiver))
         pMaterial->SetIsShadowReceiver(isShadowReceiver);
-    uint32 materialID = pMaterial->GetMaterialID();
+    uint32_t materialID = pMaterial->GetMaterialID();
     ImGui::Text((std::string("MaterialID: ") + std::to_string(materialID)).c_str());
     pMaterial->EnumerateColors([&](const wchar_t* pName, FRGBAColor& v) {
         std::wstring s(pName);
@@ -668,8 +668,8 @@ void BuildGroupUI(ISceneGraph* pSceneGraph, ISceneGroupElem* pGroup, const char*
 
 void AddGroupNodesCallback(ISceneGraph* pSceneGraph, ISceneGroupElem* pGroup)
 {
-    uint32 numChildren = pGroup->NumberChildren();
-    for (uint32 i = 0; i < numChildren; i++)
+    uint32_t numChildren = pGroup->NumberChildren();
+    for (uint32_t i = 0; i < numChildren; i++)
     {
         CRefObj<ISceneElem> spChild = pGroup->GetChild(i);
         std::wstring name = spChild->GetName();
@@ -684,8 +684,8 @@ void AddGroupNodesCallback(ISceneGraph* pSceneGraph, ISceneGroupElem* pGroup)
         case ESceneElemType::Mesh:
             BuildCollapsableNode(pSceneGraph, spChild, false, "Mesh", [pSceneGraph, spChild]() {
                 auto spMesh = static_cast<ISceneMeshElem*>(spChild.p)->GetMesh();
-                uint32 numMats = spMesh->GetNumberMaterials();
-                for (uint32 i = 0; i < numMats; i++)
+                uint32_t numMats = spMesh->GetNumberMaterials();
+                for (uint32_t i = 0; i < numMats; i++)
                 {
                     CRefObj<IMaterialAttrib> spMat = spMesh->GetMaterial(i);
                     std::string matName = spMat->GetName();
@@ -708,8 +708,8 @@ void AddGroupNodesCallback(ISceneGraph* pSceneGraph, ISceneGroupElem* pGroup)
                 [pSceneGraph, spChild]()
                 {
                     ISceneLightCollectionElem* pCollection = (ISceneLightCollectionElem*)spChild.p;
-                    uint32 numLights = pCollection->NumberLights();
-                    for (uint32 i = 0; i < numLights; i++)
+                    uint32_t numLights = pCollection->NumberLights();
+                    for (uint32_t i = 0; i < numLights; i++)
                     {
                         CRefObj<ILight> spLight = pCollection->GetLight(i);
                         std::string lightName = std::string("Light-") + std::to_string(i);
@@ -1193,8 +1193,8 @@ void BuildPanels(ITexture *pFinalRT, ImFont *pFont)
     BuildCollapsableNode(spSceneGraph, spCameraCollection, true, "CameraCollection",
         [pSceneGraph, pCameraCollection]()
         {
-            uint32 numCameras = pCameraCollection->NumberCameras();
-            for (uint32 i = 0; i < numCameras; i++)
+            uint32_t numCameras = pCameraCollection->NumberCameras();
+            for (uint32_t i = 0; i < numCameras; i++)
             {
                 CRefObj<ICamera> spCamera = pCameraCollection->GetCamera(i);
                 std::string cameraName = std::string("Camera-") + std::to_string(i);
@@ -1242,12 +1242,12 @@ void BuildPanels(ITexture *pFinalRT, ImFont *pFont)
         {
             if (!wasDown && ImGui::IsMouseDown(ImGuiMouseButton_Left))
             {
-                app.m_spRenderWindow->MouseDown((int)mousePositionRelative.x, (int)mousePositionRelative.y, c_LeftButton, (uint32)0);
+                app.m_spRenderWindow->MouseDown((int)mousePositionRelative.x, (int)mousePositionRelative.y, c_LeftButton, (uint32_t)0);
                 wasDown = true;
             }
             else if (wasDown && !ImGui::IsMouseDown(ImGuiMouseButton_Left))
             {
-                app.m_spRenderWindow->MouseUp((int)mousePositionRelative.x, (int)mousePositionRelative.y, c_LeftButton, (uint32)0);
+                app.m_spRenderWindow->MouseUp((int)mousePositionRelative.x, (int)mousePositionRelative.y, c_LeftButton, (uint32_t)0);
                 wasDown = false;
             }
             float dx = lastRel.x - mousePositionRelative.x;
@@ -1255,14 +1255,14 @@ void BuildPanels(ITexture *pFinalRT, ImFont *pFont)
             static ImVec2 lastRel = mousePositionRelative;
             if (wasDown && (!IsZero(dx) || !IsZero(dy)))
             {
-                app.m_spRenderWindow->MouseMove((int)mousePositionRelative.x, (int)mousePositionRelative.y, (uint32)0);
+                app.m_spRenderWindow->MouseMove((int)mousePositionRelative.x, (int)mousePositionRelative.y, (uint32_t)0);
             }
             if ((int)ImGui::GetIO().MouseWheel != 0)
                 app.m_spRenderWindow->MouseWheel((int)ImGui::GetIO().MouseWheel);
 
             // TODO: Still need to support KeyDown along with modifier keys on mouse events
             //    case WM_KEYDOWN:
-            //        app.m_spRenderWindow->MapKey((uint32)wParam, (uint32)lParam);
+            //        app.m_spRenderWindow->MapKey((uint32_t)wParam, (uint32_t)lParam);
             //        break;
             //for (int i = 0; i < IM_ARRAYSIZE(io.KeysDown); i++)
             //{

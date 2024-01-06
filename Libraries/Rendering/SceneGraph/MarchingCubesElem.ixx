@@ -41,13 +41,13 @@ export namespace Caustic
         CRefObj<IShader> m_spMCEmitVertsShader;
         CRefObj<IShader> m_spMCShader;
         std::function<float(Vector3&)> m_sdf;
-        uint32 m_subdivisions;          // Original voxel grid size request by client
-        uint32 m_xRoundedSubdivisions;  // Voxel grid size rounded up to nearest multiple of thread group size
-        uint32 m_yRoundedSubdivisions;  // Voxel grid size rounded up to nearest multiple of thread group size
-        uint32 m_zRoundedSubdivisions;  // Voxel grid size rounded up to nearest multiple of thread group size
-        uint32 m_numGroupsX;            // Number of groups in X direction for Dispatch
-        uint32 m_numGroupsY;            // Number of groups in Y direction for Dispatch
-        uint32 m_numGroupsZ;            // Number of groups in Z direction for Dispatch
+        uint32_t m_subdivisions;          // Original voxel grid size request by client
+        uint32_t m_xRoundedSubdivisions;  // Voxel grid size rounded up to nearest multiple of thread group size
+        uint32_t m_yRoundedSubdivisions;  // Voxel grid size rounded up to nearest multiple of thread group size
+        uint32_t m_zRoundedSubdivisions;  // Voxel grid size rounded up to nearest multiple of thread group size
+        uint32_t m_numGroupsX;            // Number of groups in X direction for Dispatch
+        uint32_t m_numGroupsY;            // Number of groups in Y direction for Dispatch
+        uint32_t m_numGroupsZ;            // Number of groups in Z direction for Dispatch
         float* m_sdfData;
         bool m_initialized;
         bool m_drawIndexed;
@@ -60,13 +60,13 @@ export namespace Caustic
         // Parameters:
         // pComputeShader - underlying compute shader
         //**********************************************************************
-        CSceneMarchingCubesElem(IRenderer* pRenderer, uint32 subdivisions, std::function<float(Vector3&)> sdf, bool drawIndexed = false);
+        CSceneMarchingCubesElem(IRenderer* pRenderer, uint32_t subdivisions, std::function<float(Vector3&)> sdf, bool drawIndexed = false);
 
         //**********************************************************************
         // IUnknown
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // ISceneElem
@@ -104,10 +104,10 @@ export namespace Caustic
         }
         virtual void Render(IRenderer* pRenderer, IRenderCtx* pRenderCtx, SceneCtx* pSceneCtx) override;
         virtual void GetBBox(BBox3* pBBox) { CSceneElem::GetBBox(pBBox); }
-        virtual uint32 GetFlags() override { return CSceneElem::GetFlags(); }
-        virtual void SetFlags(uint32 flags) override { CSceneElem::SetFlags(flags); }
-        virtual void SetInPass(uint32 pass) override { CSceneElem::SetInPass(pass); }
-        virtual uint32 GetInPass() override { return CSceneElem::GetInPass(); }
+        virtual uint32_t GetFlags() override { return CSceneElem::GetFlags(); }
+        virtual void SetFlags(uint32_t flags) override { CSceneElem::SetFlags(flags); }
+        virtual void SetInPass(uint32_t pass) override { CSceneElem::SetInPass(pass); }
+        virtual uint32_t GetInPass() override { return CSceneElem::GetInPass(); }
 
         //**********************************************************************
         // ISerialize
@@ -119,8 +119,8 @@ export namespace Caustic
         // ISceneMarchingCubesElem
         //**********************************************************************
         virtual CRefObj<IShader> GetShader() override { return CRefObj<IShader>(nullptr); }
-        virtual void SetSubdivisions(uint32 numCells) override { m_subdivisions = numCells; }
-        virtual void SetShaderParam(const wchar_t* pParamName, uint32 value) override;
+        virtual void SetSubdivisions(uint32_t numCells) override { m_subdivisions = numCells; }
+        virtual void SetShaderParam(const wchar_t* pParamName, uint32_t value) override;
         virtual void SetShaderParam(const wchar_t* pParamName, float value) override;
         virtual void SetSignedDistanceFunction(std::function<float(Vector3& v)> fn) override { m_sdf = fn; };
     };

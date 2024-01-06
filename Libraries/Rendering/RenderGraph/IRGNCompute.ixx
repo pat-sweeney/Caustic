@@ -23,9 +23,9 @@ export namespace Caustic
     {
         virtual CRefObj<IShader> GetShader() = 0;
         virtual void SetNumberThreads(int xThreads, int yThreads, int zThreads) = 0;
-        virtual void SetInputThreads(uint32 width, uint32 height, uint32 depth /* = 1 */) = 0;
-        virtual void SetShaderParam(const wchar_t* pParamName, uint32 value) = 0;
+        virtual void SetInputThreads(uint32_t width, uint32_t height, uint32_t depth /* = 1 */) = 0;
+        virtual void SetShaderParam(const wchar_t* pParamName, uint32_t value) = 0;
         virtual void SetShaderParam(const wchar_t* pParamName, float value) = 0;
-        virtual void SetBuffer(IRenderer* pRenderer, const wchar_t* pBufferName, uint8* pData, uint32 bufSize, uint32 stride) = 0;
+        virtual void SetBuffer(IRenderer* pRenderer, const wchar_t* pBufferName, uint8* pData, uint32_t bufSize, uint32_t stride) = 0;
     };
 }

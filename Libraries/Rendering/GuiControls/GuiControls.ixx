@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -227,7 +227,7 @@ export namespace Caustic
         return changed;
     }
 
-    void ImGui_Color(const char* pLabel, uint32 index, std::function<FRGBColor()>getFunc, std::function<void(FRGBColor v)>setFunc)
+    void ImGui_Color(const char* pLabel, uint32_t index, std::function<FRGBColor()>getFunc, std::function<void(FRGBColor v)>setFunc)
     {
         FRGBColor clr = getFunc();
         ImGui::Text(pLabel);

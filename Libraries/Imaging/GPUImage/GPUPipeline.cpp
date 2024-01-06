@@ -38,7 +38,7 @@ namespace Caustic
     // Method: CreateSourceNode
     // See <IGPUPipeline::CreateSourceNode>
     //**********************************************************************
-    CRefObj<IGPUPipelineSourceNode> CGPUPipeline::CreateSourceNode(const wchar_t* pName, IImage *pImage, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format)
+    CRefObj<IGPUPipelineSourceNode> CGPUPipeline::CreateSourceNode(const wchar_t* pName, IImage *pImage, uint32_t outputWidth, uint32_t outputHeight, DXGI_FORMAT format)
     {
         std::unique_ptr<CGPUPipelineSourceNode> spSource(new CGPUPipelineSourceNode(outputWidth, outputHeight, format));
         spSource->SetSource(this, pImage);
@@ -51,7 +51,7 @@ namespace Caustic
     // Method: CreateSinkNode
     // See <IGPUPipeline::CreateSinkNode>
     //**********************************************************************
-    CRefObj<IGPUPipelineSinkNode> CGPUPipeline::CreateSinkNode(const wchar_t *pName, IShader *pShader, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format)
+    CRefObj<IGPUPipelineSinkNode> CGPUPipeline::CreateSinkNode(const wchar_t *pName, IShader *pShader, uint32_t outputWidth, uint32_t outputHeight, DXGI_FORMAT format)
     {
         std::unique_ptr<CGPUPipelineSinkNode> spSource(new CGPUPipelineSinkNode(outputWidth, outputHeight, format));
         spSource->SetName(pName);
@@ -70,10 +70,10 @@ namespace Caustic
         {
             va_list argptr;
             va_start(argptr, pName);
-            uint32 depthWidth = (uint32)va_arg(argptr, unsigned int);
-            uint32 depthHeight = (uint32)va_arg(argptr, unsigned int);
-            uint32 colorWidth = (uint32)va_arg(argptr, unsigned int);
-            uint32 colorHeight = (uint32)va_arg(argptr, unsigned int);
+            uint32_t depthWidth = (uint32_t)va_arg(argptr, unsigned int);
+            uint32_t depthHeight = (uint32_t)va_arg(argptr, unsigned int);
+            uint32_t colorWidth = (uint32_t)va_arg(argptr, unsigned int);
+            uint32_t colorHeight = (uint32_t)va_arg(argptr, unsigned int);
             CRefObj<ITexture> spRayTex = va_arg(argptr, CRefObj<ITexture>);
             Matrix4x4 extrinsics = va_arg(argptr, Matrix4x4);
             CameraIntrinsics intrinsics = va_arg(argptr, CameraIntrinsics);
@@ -95,10 +95,10 @@ namespace Caustic
         {
             va_list argptr;
             va_start(argptr, pName);
-            uint32 depthWidth = (uint32)va_arg(argptr, unsigned int);
-            uint32 depthHeight = (uint32)va_arg(argptr, unsigned int);
-            uint32 colorWidth = (uint32)va_arg(argptr, unsigned int);
-            uint32 colorHeight = (uint32)va_arg(argptr, unsigned int);
+            uint32_t depthWidth = (uint32_t)va_arg(argptr, unsigned int);
+            uint32_t depthHeight = (uint32_t)va_arg(argptr, unsigned int);
+            uint32_t colorWidth = (uint32_t)va_arg(argptr, unsigned int);
+            uint32_t colorHeight = (uint32_t)va_arg(argptr, unsigned int);
             CRefObj<ITexture> spRayTex = va_arg(argptr, CRefObj<ITexture>);
             Matrix4x4 extrinsics = va_arg(argptr, Matrix4x4);
             CameraIntrinsics intrinsics = va_arg(argptr, CameraIntrinsics);
@@ -133,7 +133,7 @@ namespace Caustic
     // Method: CreateNode
     // See <IGPUPipeline::CreateNode>
     //**********************************************************************
-    CRefObj<IGPUPipelineNode> CGPUPipeline::CreateNode(const wchar_t* pName, IShader *pShader, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format)
+    CRefObj<IGPUPipelineNode> CGPUPipeline::CreateNode(const wchar_t* pName, IShader *pShader, uint32_t outputWidth, uint32_t outputHeight, DXGI_FORMAT format)
     {
         std::unique_ptr<CGPUPipelineNode> spSource(new CGPUPipelineNode(outputWidth, outputHeight, format));
         spSource->SetName(pName);
@@ -207,8 +207,8 @@ namespace Caustic
         //**********************************************************************
         // Create index buffer used to draw full quad
         //**********************************************************************
-        CD3D11_BUFFER_DESC ibdesc(sizeof(uint32) * 6, D3D11_BIND_INDEX_BUFFER);
-        uint32 quadIndices[2][3] = {
+        CD3D11_BUFFER_DESC ibdesc(sizeof(uint32_t) * 6, D3D11_BIND_INDEX_BUFFER);
+        uint32_t quadIndices[2][3] = {
             { 0, 2, 1 },
             { 0, 3, 2 },
         };
@@ -439,8 +439,8 @@ namespace Caustic
     //**********************************************************************
     CGPUPipelineDepthMeshNode::CGPUPipelineDepthMeshNode(
         IRenderer* pRenderer, IShader* pShader,
-        uint32 depthInputWidth, uint32 depthInputHeight,
-        uint32 outputColorWidth, uint32 outputColorHeight,
+        uint32_t depthInputWidth, uint32_t depthInputHeight,
+        uint32_t outputColorWidth, uint32_t outputColorHeight,
         CRefObj<ITexture> spRayTex, Matrix4x4& extrinsics, CameraIntrinsics& intrinsics,
         float minDepth, float maxDepth,
         DXGI_FORMAT format) :
@@ -595,7 +595,7 @@ namespace Caustic
         spCtx->Map(spTexture, 0, D3D11_MAP::D3D11_MAP_READ, 0, &mapinfo);
         BYTE *pSrcRow = (BYTE*)mapinfo.pData;
         BYTE *pDstRow = spImage->GetData();
-        for (uint32 y = 0; y < spImage->GetHeight(); y++)
+        for (uint32_t y = 0; y < spImage->GetHeight(); y++)
         {
             BYTE *pSrcCol = pSrcRow;
             BYTE *pDstCol = pDstRow;

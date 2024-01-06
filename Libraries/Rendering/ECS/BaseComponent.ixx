@@ -1,22 +1,27 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2023
+// Copyright Patrick Sweeney 2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
 module;
+#include <vector>
+#include <DirectXMath.h>
 #include <string>
 
-module Rendering.ECS.Hierarchy;
+export module Rendering.ECS.BaseComponent;
 import Base.Core.Core;
-import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Rendering.ECS.ECS;
+import Rendering.ECS.IECS;
 
-namespace Caustic
+export namespace Caustic
 {
-	void HierarchySystem::SetParent(IEntity* pParent)
-	{
-		m_spParent = pParent;
-	}
+    struct BaseComponent : public Component
+    {
+        std::wstring m_name;
+        uint32_t m_flags;
+        uint32_t m_passes;
+        DirectX::XMMATRIX m_xm;
+    };
 }

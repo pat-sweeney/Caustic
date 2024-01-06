@@ -135,7 +135,7 @@ export namespace Caustic
         // Method: NumberConnections
         // Returns the number of connections (i.e. other pins) this pin is connected to
         //**********************************************************************
-        virtual uint32 NumberConnections() = 0;
+        virtual uint32_t NumberConnections() = 0;
 
         //**********************************************************************
         // Method: GetConnection

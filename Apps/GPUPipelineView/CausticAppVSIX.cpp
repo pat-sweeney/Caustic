@@ -172,7 +172,7 @@ public:
     void InitializeCaustic(HWND hwnd);
     void Setup3DScene(IRenderWindow* pRenderWindow);
     void DrawLine(Vector3 p1, Vector3 p2);
-    void SetupAzureCameraParameters(IShader *pShader, uint32 depthW, uint32 depthH, uint32 colorW, uint32 colorH);
+    void SetupAzureCameraParameters(IShader *pShader, uint32_t depthW, uint32_t depthH, uint32_t colorW, uint32_t colorH);
 };
 CApp app;
 
@@ -314,7 +314,7 @@ void CApp::Setup3DScene(IRenderWindow *pRenderWindow)
     spSceneGraph->AddChild(app.m_spLightCollectionElem);
 }
 
-void CApp::SetupAzureCameraParameters(IShader *pShader, uint32 depthW, uint32 depthH, uint32 colorW, uint32 colorH)
+void CApp::SetupAzureCameraParameters(IShader *pShader, uint32_t depthW, uint32_t depthH, uint32_t colorW, uint32_t colorH)
 {
     app.spRenderer->Freeze();
     auto intrinsics = app.spCamera->GetAzureColorIntrinsics();
@@ -401,10 +401,10 @@ void CApp::InitializeCaustic(HWND hwnd)
                 return;
             app.cameraExt = app.spCamera->ColorExtrinsics();
             app.cameraInt = app.spCamera->ColorIntrinsics();
-            uint32 depthW = app.spCamera->GetDepthWidth();
-            uint32 depthH = app.spCamera->GetDepthHeight();
-            uint32 colorW = app.spCamera->GetColorWidth();
-            uint32 colorH = app.spCamera->GetColorHeight();
+            uint32_t depthW = app.spCamera->GetDepthWidth();
+            uint32_t depthH = app.spCamera->GetDepthHeight();
+            uint32_t colorW = app.spCamera->GetColorWidth();
+            uint32_t colorH = app.spCamera->GetColorHeight();
             app.SetupAzureCameraParameters(app.spModelShader, depthW, depthH, colorW, colorH);
             app.SetupAzureCameraParameters(app.spDesktopShader, depthW, depthH, colorW, colorH);
             app.SetupAzureCameraParameters(app.spLightShader, depthW, depthH, colorW, colorH);
@@ -674,8 +674,8 @@ void CApp::InitializeCaustic(HWND hwnd)
 
              if (app.pBackImage == nullptr)
              {
-                 uint32 w = pRenderer->GetBackBufferWidth();
-                 uint32 h = pRenderer->GetBackBufferHeight();
+                 uint32_t w = pRenderer->GetBackBufferWidth();
+                 uint32_t h = pRenderer->GetBackBufferHeight();
                  app.pBackImage = Caustic::CreateImage(1920, 1080, EImageType::RGBA_32bpp);
              }
              DWORD res = WaitForSingleObject(app.hCanWrite[app.currentFrame], 0);
@@ -683,15 +683,15 @@ void CApp::InitializeCaustic(HWND hwnd)
              {
                  ResetEvent(app.hCanWrite[app.currentFrame]);
                  pRenderer->CopyFrameBackBuffer(app.pBackImage);
-                 uint32 w = app.spRenderer->GetBackBufferWidth();
-                 uint32 h = app.spRenderer->GetBackBufferHeight();
-                 uint32 mw = min(w, app.pBackImage->GetWidth());
-                 uint32 mh = min(h, app.pBackImage->GetHeight());
+                 uint32_t w = app.spRenderer->GetBackBufferWidth();
+                 uint32_t h = app.spRenderer->GetBackBufferHeight();
+                 uint32_t mw = min(w, app.pBackImage->GetWidth());
+                 uint32_t mh = min(h, app.pBackImage->GetHeight());
                  const int imageSize = 1920 * 1080 * 4;
                  BYTE* pDstRow = (BYTE*)&app.pMemBuf[imageSize * app.currentFrame];
                  BYTE* pSrcRow = app.pBackImage->GetData();
                  ZeroMemory(pDstRow, 1920 * 1080 * 4);
-                 for (uint32 y = 0; y < mh; y++)
+                 for (uint32_t y = 0; y < mh; y++)
                  {
                      CopyMemory((PVOID)pDstRow, pSrcRow, mw * 4);
                      pSrcRow += app.pBackImage->GetStride();
@@ -715,10 +715,10 @@ void CApp::InitializeCaustic(HWND hwnd)
     app.spCamera = Caustic::AzureKinect::CreateAzureKinect(0, AzureKinect::Color1080p, AzureKinect::Depth1024x1024, AzureKinect::FPS30, true);
     app.cameraExt = app.spCamera->ColorExtrinsics();
     app.cameraInt = app.spCamera->ColorIntrinsics();
-    uint32 depthW = app.spCamera->GetDepthWidth();
-    uint32 depthH = app.spCamera->GetDepthHeight();
-    uint32 colorW = app.spCamera->GetColorWidth();
-    uint32 colorH = app.spCamera->GetColorHeight();
+    uint32_t depthW = app.spCamera->GetDepthWidth();
+    uint32_t depthH = app.spCamera->GetDepthHeight();
+    uint32_t colorW = app.spCamera->GetColorWidth();
+    uint32_t colorH = app.spCamera->GetColorHeight();
 
     Setup3DScene(app.spRenderWindow);
     SetupAzureCameraParameters(app.spLineShader, depthW, depthH, colorW, colorH);
@@ -779,7 +779,7 @@ void CApp::InitializeCaustic(HWND hwnd)
     app.spColor2Depth = app.spGPUPipeline->CreatePredefinedNode(c_CustomNode_Color2Depth, (unsigned int)depthW, (unsigned int)depthH, (unsigned int)colorW, (unsigned int)colorH,
         app.spRayTex, extrinsics, intrinsics, 10.0, 8000.0,
         DXGI_FORMAT_R32G32_FLOAT, L"Color2Depth");
-    app.spColor2Depth->SetInput(L"depthTex", nullptr, app.spSourceDepthNode);
+    app.spColor2Depth->SetInput(nullptr, L"depthTex", nullptr, app.spSourceDepthNode);
 
     //**********************************************************************
     // Create shader to convert depth map into normal map
@@ -792,8 +792,8 @@ void CApp::InitializeCaustic(HWND hwnd)
     spNormShader->SetPSParamInt(L"depthWidth", depthW);
     spNormShader->SetPSParamInt(L"depthHeight", depthH);
     app.spNormNode = app.spGPUPipeline->CreateNode(L"Depth2Normals", spNormShader, colorW, colorH, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT);
-    app.spNormNode->SetInput(L"depthTex", nullptr, app.spSourceDepthNode);
-    app.spNormNode->SetInput(L"color2Depth", nullptr, app.spColor2Depth);
+    app.spNormNode->SetInput(nullptr, L"depthTex", nullptr, app.spSourceDepthNode);
+    app.spNormNode->SetInput(nullptr, L"color2Depth", nullptr, app.spColor2Depth);
 
     //**********************************************************************
     // Setup Z prepass shader
@@ -809,8 +809,8 @@ void CApp::InitializeCaustic(HWND hwnd)
     spResizeDepthShader->SetPSParamFloat(L"depthH", (float)depthH);
     spResizeDepthShader->SetPSParamFloat(L"minDepth", 10.0f);
     spResizeDepthShader->SetPSParamFloat(L"maxDepth", 8000.0f);
-    spResizeDepthNode->SetInput(L"depthTex", nullptr, app.spSourceDepthNode);
-    spResizeDepthNode->SetInput(L"color2Depth", nullptr, app.spColor2Depth);
+    spResizeDepthNode->SetInput(nullptr, L"depthTex", nullptr, app.spSourceDepthNode);
+    spResizeDepthNode->SetInput(nullptr, L"color2Depth", nullptr, app.spColor2Depth);
 
     //**********************************************************************
     // Create downsampled depth using a median filter
@@ -818,29 +818,29 @@ void CApp::InitializeCaustic(HWND hwnd)
     app.spHoleFillShaderH = app.spRenderer->GetShaderMgr()->FindShader(L"FillHolesHP");
     app.spHoleFillShaderV = app.spRenderer->GetShaderMgr()->FindShader(L"FillHolesVP");
     auto spFillHolesH = app.spGPUPipeline->CreateNode(L"FillHoleHorizontal", app.spHoleFillShaderH, colorW, colorH, DXGI_FORMAT_R16_UINT);
-    spFillHolesH->SetInput(L"depthTex", nullptr, spResizeDepthNode);
+    spFillHolesH->SetInput(nullptr, L"depthTex", nullptr, spResizeDepthNode);
     auto spFillHolesV = app.spGPUPipeline->CreateNode(L"FillHoleVertical", app.spHoleFillShaderV, colorW, colorH, DXGI_FORMAT_R16_UINT);
-    spFillHolesV->SetInput(L"depthTex", nullptr, spFillHolesH);
+    spFillHolesV->SetInput(nullptr, L"depthTex", nullptr, spFillHolesH);
 
     //**********************************************************************
     // Normalize the depth map to be in the range 0..1
     //**********************************************************************
     auto spnd = app.spRenderer->GetShaderMgr()->FindShader(L"NormDepth");
     auto spNormFilledDepth = app.spGPUPipeline->CreateNode(L"NormalizeDepth", spnd, colorW, colorH, DXGI_FORMAT_R32_FLOAT);
-    spNormFilledDepth->SetInput(L"depthTex", nullptr, spFillHolesV);
+    spNormFilledDepth->SetInput(nullptr, L"depthTex", nullptr, spFillHolesV);
 
     app.spNormDepth = app.spGPUPipeline->CreateNode(L"NormalizeDepth", spnd, colorW, colorH, DXGI_FORMAT_R32_FLOAT);
-    app.spNormDepth->SetInput(L"depthTex", nullptr, spResizeDepthNode);
+    app.spNormDepth->SetInput(nullptr, L"depthTex", nullptr, spResizeDepthNode);
     
     //**********************************************************************
     // Create depth of field node
     //**********************************************************************
     app.spBokehShader = app.spRenderer->GetShaderMgr()->FindShader(L"Bokeh");
     app.spDepthOfField = app.spGPUPipeline->CreateNode(L"ComputeDoF", app.spBokehShader, colorW, colorH, DXGI_FORMAT_B8G8R8A8_UNORM);
-    app.spDepthOfField->SetInput(L"colorTex", L"colorSampler", app.spSourceColorNode);
-    app.spDepthOfField->SetInput(L"depthTex", nullptr, app.spNormDepth);
-    app.spDepthOfField->SetInput(L"meshNorms", nullptr, app.spNormNode);
-    app.spDepthOfField->SetInput(L"color2Depth", nullptr, app.spColor2Depth);
+    app.spDepthOfField->SetInput(nullptr, L"colorTex", L"colorSampler", app.spSourceColorNode);
+    app.spDepthOfField->SetInput(nullptr, L"depthTex", nullptr, app.spNormDepth);
+    app.spDepthOfField->SetInput(nullptr, L"meshNorms", nullptr, app.spNormNode);
+    app.spDepthOfField->SetInput(nullptr, L"color2Depth", nullptr, app.spColor2Depth);
     app.spBokehShader->SetPSParamFloat(L"depthW", (float)depthW);
     app.spBokehShader->SetPSParamFloat(L"depthH", (float)depthH);
     app.spBokehShader->SetPSParamFloat(L"colorW", (float)colorW);
@@ -848,8 +848,8 @@ void CApp::InitializeCaustic(HWND hwnd)
     app.spBokehShader->SetPSParam(L"rayTexture", raymap);
 
     app.spDepthOfFieldFilled = app.spGPUPipeline->CreateNode(L"bokehFilled", app.spBokehShader, colorW, colorH, DXGI_FORMAT_B8G8R8A8_UNORM);
-    app.spDepthOfFieldFilled->SetInput(L"colorTex", L"colorSampler", app.spSourceColorNode);
-    app.spDepthOfFieldFilled->SetInput(L"depthTex", nullptr, spNormFilledDepth);
+    app.spDepthOfFieldFilled->SetInput(nullptr, L"colorTex", L"colorSampler", app.spSourceColorNode);
+    app.spDepthOfFieldFilled->SetInput(nullptr, L"depthTex", nullptr, spNormFilledDepth);
 
     app.spRenderer->Unfreeze();
 }
@@ -1029,19 +1029,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         PostQuitMessage(0);
         break;
 //    case WM_LBUTTONDOWN:
-//            app.spRenderWindow->MouseDown((int)LOWORD(lParam), (int)HIWORD(lParam), c_LeftButton, (uint32)wParam);
+//            app.spRenderWindow->MouseDown((int)LOWORD(lParam), (int)HIWORD(lParam), c_LeftButton, (uint32_t)wParam);
 //        break;
 //    case WM_LBUTTONUP:
-//            app.spRenderWindow->MouseUp((int)LOWORD(lParam), (int)HIWORD(lParam), c_LeftButton, (uint32)wParam);
+//            app.spRenderWindow->MouseUp((int)LOWORD(lParam), (int)HIWORD(lParam), c_LeftButton, (uint32_t)wParam);
 //        break;
 //    case WM_MOUSEMOVE:
-//            app.spRenderWindow->MouseMove((int)LOWORD(lParam), (int)HIWORD(lParam), (uint32)wParam);
+//            app.spRenderWindow->MouseMove((int)LOWORD(lParam), (int)HIWORD(lParam), (uint32_t)wParam);
 //        break;
 //    case WM_MOUSEWHEEL:
 //            app.spRenderWindow->MouseWheel((int)wParam);
 //        break;
     case WM_KEYDOWN:
-        //app.spRenderWindow->MapKey((uint32)wParam, (uint32)lParam);
+        //app.spRenderWindow->MapKey((uint32_t)wParam, (uint32_t)lParam);
         break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);

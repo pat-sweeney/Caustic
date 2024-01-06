@@ -38,10 +38,10 @@ namespace Caustic
     }
 
     //**********************************************************************
-    void CSubMesh::BuildVertexBuffer(ID3D11Device* pDevice, std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout, uint32 vertexSize,
+    void CSubMesh::BuildVertexBuffer(ID3D11Device* pDevice, std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout, uint32_t vertexSize,
         std::vector<int>& vertexReferenced, MeshData* pMeshData)
     {
-        uint32 numVerts = GetNumberVertices();
+        uint32_t numVerts = GetNumberVertices();
 
         if (numVerts == 0)
             return;
@@ -51,8 +51,8 @@ namespace Caustic
         // Create buffer with our vertex data
         byte* pVertexBuffer = new byte[numVerts * vertexSize];
         std::unique_ptr<byte> spVertBuffer(pVertexBuffer);
-        uint32 vout = 0;
-        for (uint32 i = 0; i < numVerts; i++)
+        uint32_t vout = 0;
+        for (uint32_t i = 0; i < numVerts; i++)
         {
             if (vertexReferenced[i] == c_Vertex_Referenced)
             {
@@ -116,23 +116,23 @@ namespace Caustic
     //**********************************************************************
     void CSubMesh::BuildIndexBuffer(ID3D11Device* pDevice, std::vector<int> &vertexReferenced, MeshData *pMeshData)
     {
-        uint32 numFaces = GetNumberFaces();
-        uint32 *pIndexBuffer = new uint32[numFaces * 6 /* 6 is worst case */];
-        std::unique_ptr<uint32> spIndexBuffer(pIndexBuffer);
-        uint32 numIndices = 0;
-        for (uint32 i = 0; i < numFaces; i++)
+        uint32_t numFaces = GetNumberFaces();
+        uint32_t *pIndexBuffer = new uint32_t[numFaces * 6 /* 6 is worst case */];
+        std::unique_ptr<uint32_t> spIndexBuffer(pIndexBuffer);
+        uint32_t numIndices = 0;
+        for (uint32_t i = 0; i < numFaces; i++)
         {
             CFace *pFace = GetFace(i);
-            uint32 numVerts = pFace->GetNumberVertices();
+            uint32_t numVerts = pFace->GetNumberVertices();
             _ASSERT(numVerts == 3 || numVerts == 4);
             if (numVerts == 3)
             {
                 CGeomVertex *v0 = pFace->GetVertex(0);
                 CGeomVertex *v1 = pFace->GetVertex(1);
                 CGeomVertex *v2 = pFace->GetVertex(2);
-                uint32 i0 = VertexToIndex(v0);
-                uint32 i1 = VertexToIndex(v1);
-                uint32 i2 = VertexToIndex(v2);
+                uint32_t i0 = VertexToIndex(v0);
+                uint32_t i1 = VertexToIndex(v1);
+                uint32_t i2 = VertexToIndex(v2);
                 if (!IsDegenerate(v0, v1, v2))
                 {
                     pIndexBuffer[numIndices++] = vertexReferenced[i0];
@@ -146,10 +146,10 @@ namespace Caustic
                 CGeomVertex *v1 = pFace->GetVertex(1);
                 CGeomVertex *v2 = pFace->GetVertex(2);
                 CGeomVertex *v3 = pFace->GetVertex(3);
-                uint32 i0 = VertexToIndex(v0);
-                uint32 i1 = VertexToIndex(v1);
-                uint32 i2 = VertexToIndex(v2);
-                uint32 i3 = VertexToIndex(v3);
+                uint32_t i0 = VertexToIndex(v0);
+                uint32_t i1 = VertexToIndex(v1);
+                uint32_t i2 = VertexToIndex(v2);
+                uint32_t i3 = VertexToIndex(v3);
                 if (!IsDegenerate(v0, v1, v2))
                 {
                     pIndexBuffer[numIndices++] = vertexReferenced[i0];
@@ -167,14 +167,14 @@ namespace Caustic
         
         if (numIndices == 0)
             return;
-        UINT ibSize = (UINT)(numIndices * sizeof(uint32));
+        UINT ibSize = (UINT)(numIndices * sizeof(uint32_t));
         D3D11_BUFFER_DESC desc = { 0 };
         desc.ByteWidth = ibSize;
         desc.Usage = D3D11_USAGE_DEFAULT;
         desc.CPUAccessFlags = 0;
         desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
         desc.MiscFlags = 0;
-        desc.StructureByteStride = sizeof(uint32);
+        desc.StructureByteStride = sizeof(uint32_t);
         D3D11_SUBRESOURCE_DATA data;
         data.pSysMem = pIndexBuffer;
         data.SysMemPitch = 0;
@@ -187,11 +187,11 @@ namespace Caustic
 
     void CSubMesh::BuildReferencedVertexList(std::vector<int> &vertexReferenced)
     {
-        uint32 numFaces = GetNumberFaces();
-        for (uint32 i = 0; i < numFaces; i++)
+        uint32_t numFaces = GetNumberFaces();
+        for (uint32_t i = 0; i < numFaces; i++)
         {
             CFace *pFace = GetFace(i);
-            uint32 numVerts = pFace->GetNumberVertices();
+            uint32_t numVerts = pFace->GetNumberVertices();
             _ASSERT(numVerts == 3 || numVerts == 4);
             if (numVerts == 3)
             {
@@ -228,7 +228,7 @@ namespace Caustic
     }
 
     //**********************************************************************
-    MeshData CSubMesh::ToMeshData(ID3D11Device* pDevice, std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout, uint32 vertexSize)
+    MeshData CSubMesh::ToMeshData(ID3D11Device* pDevice, std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout, uint32_t vertexSize)
     {
         std::vector<int> vertexReferenced(GetNumberVertices(), c_Vertex_Unreferenced);
         BuildReferencedVertexList(vertexReferenced);
@@ -255,7 +255,7 @@ namespace Caustic
     // Returns:
     // Returns array of meshData for each submesh
     //**********************************************************************
-    std::vector<MeshData> CMesh::ToMeshData(ID3D11Device* pDevice, std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout, uint32 vertexSize)
+    std::vector<MeshData> CMesh::ToMeshData(ID3D11Device* pDevice, std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout, uint32_t vertexSize)
     {
         std::vector<MeshData> mdv;
         for (auto pSubMesh : m_subMeshes)

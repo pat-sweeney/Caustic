@@ -1,8 +1,11 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+module;
+#include <cinttypes>
+
 export module Base.Math.Helper;
 import Base.Core.Core;
 import Base.Math.BBox;
@@ -19,10 +22,10 @@ export namespace Caustic
     // Header:
     // {Link:#include "Base/Math/Helper.h"{Base/Math/Helper.h}}
     //**********************************************************************
-    inline uint32 isqrt(uint32 n)
+    inline uint32_t isqrt(uint32_t n)
     {
-        uint32 next = n >> 1;
-        uint32 cur;
+        uint32_t next = n >> 1;
+        uint32_t cur;
 
         if (n <= 1)
             return n;

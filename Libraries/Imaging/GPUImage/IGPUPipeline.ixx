@@ -1,10 +1,11 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
 module;
 #include <varargs.h>
+#include <cinttypes>
 
 export module Imaging.Image.IGPUPipeline;
 import Base.Core.Core;
@@ -99,19 +100,19 @@ export namespace Caustic
         // width - width of this image in pixels
         // height - height of this image in pixels
         //**********************************************************************
-        virtual void SetOutputSize(uint32 width, uint32 height) = 0;
+        virtual void SetOutputSize(uint32_t width, uint32_t height) = 0;
 
         //**********************************************************************
         // Method: GetOutputWidth
         // Returns the width of the output image in pixels
         //**********************************************************************
-        virtual uint32 GetOutputWidth() = 0;
+        virtual uint32_t GetOutputWidth() = 0;
 
         //**********************************************************************
         // Method: GetOutputHeight
         // Returns the height of the output image in pixels
         //**********************************************************************
-        virtual uint32 GetOutputHeight() = 0;
+        virtual uint32_t GetOutputHeight() = 0;
 
         //**********************************************************************
         // Method: GetOutputTexture
@@ -210,7 +211,7 @@ export namespace Caustic
         // pImage - image to feed through pipeline
         // format - format of output texture
         //**********************************************************************
-        virtual CRefObj<IGPUPipelineSourceNode> CreateSourceNode(const wchar_t *pName, IImage *pImage, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM) = 0;
+        virtual CRefObj<IGPUPipelineSourceNode> CreateSourceNode(const wchar_t *pName, IImage *pImage, uint32_t outputWidth, uint32_t outputHeight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM) = 0;
 
         //**********************************************************************
         // Method: CreateSinkNode
@@ -221,7 +222,7 @@ export namespace Caustic
         // pShader - shader to run on inputs
         // format - format of output texture
         //**********************************************************************
-        virtual CRefObj<IGPUPipelineSinkNode> CreateSinkNode(const wchar_t* pName, IShader *pShader, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM) = 0;
+        virtual CRefObj<IGPUPipelineSinkNode> CreateSinkNode(const wchar_t* pName, IShader *pShader, uint32_t outputWidth, uint32_t outputHeight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM) = 0;
 
         //**********************************************************************
         // Method: CreateNode
@@ -232,7 +233,7 @@ export namespace Caustic
         // pShader - shader to run on inputs
         // format - format of output texture
         //**********************************************************************
-        virtual CRefObj<IGPUPipelineNode> CreateNode(const wchar_t* pName, IShader *pShader, uint32 outputWidth, uint32 outputHeight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM) = 0;
+        virtual CRefObj<IGPUPipelineNode> CreateNode(const wchar_t* pName, IShader *pShader, uint32_t outputWidth, uint32_t outputHeight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM) = 0;
 
         //**********************************************************************
         // Method: CreatePredefinedNode
@@ -268,7 +269,7 @@ export namespace Caustic
         // Method: GetCurrentEpoch
         // Returns the current Epoch
         //**********************************************************************
-        virtual uint32 GetCurrentEpoch() = 0;
+        virtual uint32_t GetCurrentEpoch() = 0;
     };
 
     //**********************************************************************
@@ -278,10 +279,10 @@ export namespace Caustic
     // to map the depth to its corresponding color camera.
     //
     // Arguments:
-    // <uint32> depthWidth - width in pixels of depth map
-    // <uint32> depthHeight - height in pixels of depth map
-    // <uint32> colorWidth - width in pixels of color map
-    // <uint32> colorHeight - height in pixels of color map
+    // <uint32_t> depthWidth - width in pixels of depth map
+    // <uint32_t> depthHeight - height in pixels of depth map
+    // <uint32_t> colorWidth - width in pixels of color map
+    // <uint32_t> colorHeight - height in pixels of color map
     // <DXGI_FORMAT> colorFormat - pixel format for color image
     //**********************************************************************
     const wchar_t* c_CustomNode_DepthMeshNode = L"DepthMeshNode";
@@ -294,10 +295,10 @@ export namespace Caustic
     // texture coordinates.
     //
     // Arguments:
-    // <uint32> depthWidth - width in pixels of depth map
-    // <uint32> depthHeight - height in pixels of depth map
-    // <uint32> colorWidth - width in pixels of color map
-    // <uint32> colorHeight - height in pixels of color map
+    // <uint32_t> depthWidth - width in pixels of depth map
+    // <uint32_t> depthHeight - height in pixels of depth map
+    // <uint32_t> colorWidth - width in pixels of color map
+    // <uint32_t> colorHeight - height in pixels of color map
     //**********************************************************************
     const wchar_t* c_CustomNode_Color2Depth = L"Color2DepthNode";
 }

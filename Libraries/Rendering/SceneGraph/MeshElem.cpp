@@ -26,7 +26,7 @@ namespace Caustic
 {
     bool CSceneMeshElem::RayIntersect(Ray3& ray, RayIntersect3* pIntersection, IMaterialAttrib** ppMaterial)
     {
-        uint32 materialID;
+        uint32_t materialID;
         if (m_spMesh->RayIntersect(ray, pIntersection, &materialID))
         {
             *ppMaterial = m_spMesh->GetMaterial(materialID);

@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2019
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -8,6 +8,7 @@
 #include <commdlg.h>
 #include <any>
 #include <string>
+#include <cinttypes>
 import Caustic.Base;
 import Base.Core.Core;
 import Base.Core.IRefCount;

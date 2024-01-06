@@ -24,14 +24,14 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::AddRef(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::AddRef(); }
 
         //**********************************************************************
         // IPolygon2
         //**********************************************************************
-        uint32 GetNumberPoints() override { return (uint32)m_pts.size(); }
-        void GetPoint(uint32 index, Vector2 *pt) override { *pt = m_pts[index]; }
+        uint32_t GetNumberPoints() override { return (uint32_t)m_pts.size(); }
+        void GetPoint(uint32_t index, Vector2 *pt) override { *pt = m_pts[index]; }
         void AddPoint(Vector2 &pt) override
         {
             m_bbox.AddPoint(pt);

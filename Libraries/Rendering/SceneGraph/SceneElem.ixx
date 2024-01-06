@@ -31,9 +31,9 @@ export namespace Caustic
     {
     protected:
         std::wstring m_Name; // User provided name for this element
-        uint32 m_Flags;
+        uint32_t m_Flags;
         BBox3 m_BBox;
-        uint32 m_passes; // List of passes this element is rendered in
+        uint32_t m_passes; // List of passes this element is rendered in
         std::function<bool(int pass)> m_prerenderCallback;
         std::function<void(int pass)> m_postrenderCallback;
 
@@ -85,9 +85,9 @@ export namespace Caustic
             CT(E_UNEXPECTED);
         }
         void GetBBox(BBox3* pBBox) { *pBBox = m_BBox; }
-        uint32 GetFlags() { return m_Flags; }
-        void SetFlags(uint32 flags) { m_Flags = flags; }
-        void SetInPass(uint32 pass) { m_passes = pass; }
-        uint32 GetInPass() { return m_passes; }
+        uint32_t GetFlags() { return m_Flags; }
+        void SetFlags(uint32_t flags) { m_Flags = flags; }
+        void SetInPass(uint32_t pass) { m_passes = pass; }
+        uint32_t GetInPass() { return m_passes; }
     };
 }

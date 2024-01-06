@@ -73,13 +73,13 @@ export namespace Caustic
         // Method: NumberInputPins
         // Returns the number of input pins
         //**********************************************************************
-        virtual uint32 NumberInputPins() = 0;
+        virtual uint32_t NumberInputPins() = 0;
 
         //**********************************************************************
         // Method: NumberOutputPins
         // Returns the number of input pins
         //**********************************************************************
-        virtual uint32 NumberOutputPins() = 0;
+        virtual uint32_t NumberOutputPins() = 0;
 
         //**********************************************************************
         // Method: GetInputPin

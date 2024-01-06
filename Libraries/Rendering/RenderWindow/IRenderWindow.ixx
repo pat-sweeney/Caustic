@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2018-2023
+// Copyright Patrick Sweeney 2018-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -11,6 +11,7 @@ module;
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 #include "imgui_internal.h"
+#include <cinttypes>
 
 export module Rendering.RenderWindow.IRenderWindow;
 import Base.Core.Core;
@@ -114,7 +115,7 @@ export namespace Caustic
         // button - integer indicating which button was pressed
         // flags - flags (control, shift, etc)
         //**********************************************************************
-        virtual void MouseDown(int x, int y, uint32 button, uint32 flags) = 0;
+        virtual void MouseDown(int x, int y, uint32_t button, uint32_t flags) = 0;
 
         //**********************************************************************
         // Method: MouseMove
@@ -125,7 +126,7 @@ export namespace Caustic
         // y - Y position of mouse in pixels
         // flags - flags (control, shift, etc)
         //**********************************************************************
-        virtual void MouseMove(int x, int y, uint32 flags) = 0;
+        virtual void MouseMove(int x, int y, uint32_t flags) = 0;
 
         //**********************************************************************
         // Method: MouseUp
@@ -137,7 +138,7 @@ export namespace Caustic
         // button - integer indicating which button was pressed
         // flags - flags (control, shift, etc)
         //**********************************************************************
-        virtual void MouseUp(int x, int y, uint32 button, uint32 flags) = 0;
+        virtual void MouseUp(int x, int y, uint32_t button, uint32_t flags) = 0;
 
         //**********************************************************************
         // Method: MouseWheel
@@ -156,7 +157,7 @@ export namespace Caustic
         // wParam - wParam from WM_KEY event
         // lParam - lParam from WM_KEY event
         //**********************************************************************
-        virtual void MapKey(uint32 wParam, uint32 lParam) = 0;
+        virtual void MapKey(uint32_t wParam, uint32_t lParam) = 0;
     };
 
     //**********************************************************************

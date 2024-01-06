@@ -67,9 +67,9 @@ export namespace Caustic
     {
         CComPtr<ID3D11Buffer> m_spVB;
         CComPtr<ID3D11Buffer> m_spIB;
-        uint32 m_vertexSize;
-        uint32 m_numVertices;
-        uint32 m_numIndices;
+        uint32_t m_vertexSize;
+        uint32_t m_numVertices;
+        uint32_t m_numIndices;
         BBox3 m_bbox;
         std::string m_name;
 

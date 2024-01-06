@@ -46,7 +46,7 @@ export namespace Caustic
         MeshData m_NormalVB;
         CRefObj<IRenderMaterial> m_spFrontMaterial;
         CRefObj<IRenderMaterial> m_spBackMaterial;
-        uint32 m_flags;
+        uint32_t m_flags;
 
         void RenderSubMesh(IRenderer* pRenderer, IShader* pShader, IRenderMaterial* pMaterial,
             std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld);
@@ -59,16 +59,16 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IRenderSubMesh
         //**********************************************************************
         virtual void SetName(const char* pName) override { m_name = std::string(pName); }
         virtual std::string GetName() override { return m_name; }
-        virtual uint32 GetMeshFlags() override { return m_flags; }
-        virtual void SetMeshFlags(uint32 flags) override { m_flags = flags; }
+        virtual uint32_t GetMeshFlags() override { return m_flags; }
+        virtual void SetMeshFlags(uint32_t flags) override { m_flags = flags; }
         virtual void SetFrontMaterial(IRenderMaterial *pFrontMaterial) override { m_spFrontMaterial = pFrontMaterial; }
         virtual CRefObj<IRenderMaterial> GetFrontMaterial() override { return m_spFrontMaterial; }
         virtual void SetBackMaterial(IRenderMaterial *pBackMaterial) override { m_spBackMaterial = pBackMaterial; }
@@ -104,18 +104,18 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IRenderMesh
         //**********************************************************************
-        virtual uint32 NumberSubMeshes() override { return (uint32)m_subMeshes.size(); };
-        virtual CRefObj<IRenderSubMesh> GetSubMesh(uint32 index) override;
+        virtual uint32_t NumberSubMeshes() override { return (uint32_t)m_subMeshes.size(); };
+        virtual CRefObj<IRenderSubMesh> GetSubMesh(uint32_t index) override;
         virtual void AddSubMesh(IRenderSubMesh *pSubMesh) override;
         virtual void GetBBox(Caustic::BBox3 *pBBox) override;
         virtual void SetMaterials(std::vector<CRefObj<IMaterialAttrib>> &materials) override;
-        virtual CRefObj<IMaterialAttrib> GetMaterial(uint32 materialID) override;
+        virtual CRefObj<IMaterialAttrib> GetMaterial(uint32_t materialID) override;
         virtual void ComputeNormals() override {}
         virtual void Render(IRenderer* pRenderer, IRenderCtx* pRenderCtx, IRenderMaterial* pFrontMaterialOverride, IRenderMaterial* pBackMaterialOverride, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld) override;
         virtual void Render(IRenderer* pRenderer, IRenderCtx* pRenderCtx, IShader *pShader, IRenderMaterial*pMaterial, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld) override;

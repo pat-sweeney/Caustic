@@ -41,8 +41,8 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IImageFilter
@@ -74,24 +74,24 @@ export namespace Caustic
             if (it != pParams->params.end())
                 useLuminance = std::any_cast<bool>(it->second);
         }
-        uint32 rhistogram[256] = {};
-        uint32 ghistogram[256] = {};
-        uint32 bhistogram[256] = {};
-        uint32 rmapping[256] = {};
-        uint32 gmapping[256] = {};
-        uint32 bmapping[256] = {};
+        uint32_t rhistogram[256] = {};
+        uint32_t ghistogram[256] = {};
+        uint32_t bhistogram[256] = {};
+        uint32_t rmapping[256] = {};
+        uint32_t gmapping[256] = {};
+        uint32_t bmapping[256] = {};
         bool hasMask = (pParams && pParams->spMask != nullptr) ? true : false;
 
         T riter(pImage, 0, 0);
         CImageIter1 riter1;
         if (hasMask)
             riter1 = CImageIter1(pParams->spMask, 0, 0);
-        uint32 y = pImage->GetHeight();
+        uint32_t y = pImage->GetHeight();
         while (y--)
         {
             T citer = riter;
             CImageIter1 citer1 = riter1;
-            uint32 x = pImage->GetWidth();
+            uint32_t x = pImage->GetWidth();
             if (useLuminance)
             {
                 while (x--)
@@ -127,20 +127,20 @@ export namespace Caustic
             riter.Step(CImageIter::Down);
             riter1.Step(CImageIter::Down);
         }
-        int32 rprob = 0;
-        int32 gprob = 0;
-        int32 bprob = 0;
-        uint32 npixels = pImage->GetHeight() * pImage->GetWidth();
+        int32_t rprob = 0;
+        int32_t gprob = 0;
+        int32_t bprob = 0;
+        uint32_t npixels = pImage->GetHeight() * pImage->GetWidth();
         for (int k = 0; k < 256; k++)
         {
             rprob += (255 * rhistogram[k] / npixels);
-            rmapping[k] = (uint8)rprob;
+            rmapping[k] = (uint8_t)rprob;
             if (!useLuminance)
             {
                 gprob += (255 * ghistogram[k] / npixels);
-                gmapping[k] = (uint8)gprob;
+                gmapping[k] = (uint8_t)gprob;
                 bprob += (255 * bhistogram[k] / npixels);
-                bmapping[k] = (uint8)bprob;
+                bmapping[k] = (uint8_t)bprob;
             }
         }
         //

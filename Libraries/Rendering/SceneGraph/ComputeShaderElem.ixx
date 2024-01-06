@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -7,6 +7,7 @@ module;
 #include <d3d11.h>
 #include <atlbase.h>
 #include <string>
+#include <cinttypes>
 
 export module Rendering.SceneGraph.SceneComputeShaderElem;
 import Base.Core.Core;
@@ -40,7 +41,7 @@ export namespace Caustic
         public CRefCount
     {
         CRefObj<IShader> m_spComputeShader;
-        uint32 m_xThreads, m_yThreads, m_zThreads;
+        uint32_t m_xThreads, m_yThreads, m_zThreads;
 
     public:
         //**********************************************************************
@@ -59,8 +60,8 @@ export namespace Caustic
         //**********************************************************************
         // IUnknown
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // ISceneElem
@@ -90,10 +91,10 @@ export namespace Caustic
                 m_postrenderCallback(pRenderCtx->GetCurrentPass());
         }
         virtual void GetBBox(BBox3* pBBox) { CSceneElem::GetBBox(pBBox); }
-        virtual uint32 GetFlags() override { return CSceneElem::GetFlags(); }
-        virtual void SetFlags(uint32 flags) override { CSceneElem::SetFlags(flags); }
-        virtual void SetInPass(uint32 pass) override { CSceneElem::SetInPass(pass); }
-        virtual uint32 GetInPass() override { return CSceneElem::GetInPass(); }
+        virtual uint32_t GetFlags() override { return CSceneElem::GetFlags(); }
+        virtual void SetFlags(uint32_t flags) override { CSceneElem::SetFlags(flags); }
+        virtual void SetInPass(uint32_t pass) override { CSceneElem::SetInPass(pass); }
+        virtual uint32_t GetInPass() override { return CSceneElem::GetInPass(); }
 
         //**********************************************************************
         // ISerialize
@@ -105,10 +106,10 @@ export namespace Caustic
         // IComputeShaderElem
         //**********************************************************************
         virtual CRefObj<IShader> GetShader() override { return m_spComputeShader; }
-        virtual void SetInputThreads(uint32 width, uint32 height, uint32 depth = 1) override;
-        virtual void SetShaderParam(const wchar_t* pParamName, uint32 value) override;
+        virtual void SetInputThreads(uint32_t width, uint32_t height, uint32_t depth = 1) override;
+        virtual void SetShaderParam(const wchar_t* pParamName, uint32_t value) override;
         virtual void SetShaderParam(const wchar_t* pParamName, float value) override;
-        virtual void SetBuffer(IRenderer* pRenderer, const wchar_t* pBufferName, uint8* pData, uint32 bufSize, uint32 elemSize) override;
+        virtual void SetBuffer(IRenderer* pRenderer, const wchar_t* pBufferName, uint8_t* pData, uint32_t bufSize, uint32_t elemSize) override;
         virtual void SetNumberThreads(int xThreads, int yThreads, int zThreads) override;
     };
 }

@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 1996-2021
+// Copyright Patrick Sweeney 1996-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -9,6 +9,7 @@ module;
 #include <any>
 #include <map>
 #include <string>
+#include <cinttypes>
 
 export module Imaging.Image.ImageFilter.Convert;
 import Base.Core.Core;
@@ -52,8 +53,8 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IImageFilter
@@ -133,7 +134,7 @@ export namespace Caustic
             CImageIter24 dstCol = dstRow;
             for (int x = 0; x < w; x++)
             {
-                uint8 gray = srcCol.GetGray();
+                uint8_t gray = srcCol.GetGray();
                 dstCol.SetRed(gray);
                 dstCol.SetGreen(gray);
                 dstCol.SetBlue(gray);
@@ -169,7 +170,7 @@ export namespace Caustic
             CImageIter32 dstCol = dstRow;
             for (int x = 0; x < w; x++)
             {
-                uint8 gray = srcCol.GetGray();
+                uint8_t gray = srcCol.GetGray();
                 dstCol.SetRed(gray);
                 dstCol.SetGreen(gray);
                 dstCol.SetBlue(gray);
@@ -206,7 +207,7 @@ export namespace Caustic
             CImageIterFloat1 dstCol = dstRow;
             for (int x = 0; x < w; x++)
             {
-                uint8 gray = srcCol.GetGray();
+                uint8_t gray = srcCol.GetGray();
                 dstCol.SetValue(gray / 255.0f);
                 srcCol.Step(CImageIter::EStepDirection::Right);
                 dstCol.Step(CImageIter::EStepDirection::Right);
@@ -389,9 +390,9 @@ export namespace Caustic
             for (int x = 0; x < w; x++)
             {
                 float3 v = srcCol.GetValue();
-                dstCol.SetRed(uint8(v.x * 255.0f));
-                dstCol.SetGreen(uint8(v.y * 255.0f));
-                dstCol.SetBlue(uint8(v.z * 255.0f));
+                dstCol.SetRed(uint8_t(v.x * 255.0f));
+                dstCol.SetGreen(uint8_t(v.y * 255.0f));
+                dstCol.SetBlue(uint8_t(v.z * 255.0f));
                 srcCol.Step(CImageIter::EStepDirection::Right);
                 dstCol.Step(CImageIter::EStepDirection::Right);
             }

@@ -46,5 +46,5 @@ export namespace Caustic
     // Module:
     // {Link:import Rendering.Caustic.ConstructBuffer;{Rendering/Caustic/ConstructBuffer.ixx}}
     //**********************************************************************
-    void BuildIndexBuffer(IRenderer* pRenderer, std::vector<uint32>& faces, MeshData* pMeshData);
+    void BuildIndexBuffer(IRenderer* pRenderer, std::vector<uint32_t>& faces, MeshData* pMeshData);
 }

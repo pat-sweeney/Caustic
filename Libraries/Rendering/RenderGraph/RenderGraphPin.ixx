@@ -55,8 +55,8 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IRenderGraphPin
@@ -68,7 +68,7 @@ export namespace Caustic
         virtual std::any GetValue(IRenderer *pRenderer, IRenderCtx *pRenderCtx) override;
         virtual CRefObj<IRenderGraphNode> GetParent() override { return m_parent; }
         virtual void LinkTo(IRenderGraphPin* pPin) override;
-        virtual uint32 NumberConnections() override { return (uint32)m_connections.size(); }
+        virtual uint32_t NumberConnections() override { return (uint32_t)m_connections.size(); }
         virtual CRefObj<IRenderGraphPin> GetConnection(int index) override
         {
             if (index >= 0 && index < m_connections.size())

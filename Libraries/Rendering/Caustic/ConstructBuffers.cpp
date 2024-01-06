@@ -23,14 +23,14 @@ namespace Caustic
     {
         CComPtr<ID3D11Device> spDevice = pRenderer->GetDevice();
         std::vector<D3D11_INPUT_ELEMENT_DESC> vertexLayout = pShaderInfo->VertexLayout();
-        uint32 numVerts = (uint32)pts.size();
-        uint32 vertexSize = pShaderInfo->GetVertexSize();
+        uint32_t numVerts = (uint32_t)pts.size();
+        uint32_t vertexSize = pShaderInfo->GetVertexSize();
         BBox3 bbox;
 
         // Create buffer with our vertex data
         byte* pVertexBuffer = new byte[numVerts * vertexSize];
         std::unique_ptr<byte> spVertBuffer(pVertexBuffer);
-        for (uint32 i = 0; i < numVerts; i++)
+        for (uint32_t i = 0; i < numVerts; i++)
         {
             CGeomVertex* pVertex = &pts[i];
             byte* pVB = &pVertexBuffer[i * vertexSize];
@@ -96,24 +96,24 @@ namespace Caustic
     // faces - List of vertices that are referenced
     // MeshData - place to store created index buffer
     //**********************************************************************
-    void BuildIndexBuffer(IRenderer* pRenderer, std::vector<uint32>& faces, MeshData* pMeshData)
+    void BuildIndexBuffer(IRenderer* pRenderer, std::vector<uint32_t>& faces, MeshData* pMeshData)
     {
         CComPtr<ID3D11Device> spDevice = pRenderer->GetDevice();
-        UINT ibSize = (UINT)(faces.size() * sizeof(uint32));
+        UINT ibSize = (UINT)(faces.size() * sizeof(uint32_t));
         D3D11_BUFFER_DESC desc = { 0 };
         desc.ByteWidth = ibSize;
         desc.Usage = D3D11_USAGE_DEFAULT;
         desc.CPUAccessFlags = 0;
         desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
         desc.MiscFlags = 0;
-        desc.StructureByteStride = sizeof(uint32);
+        desc.StructureByteStride = sizeof(uint32_t);
         D3D11_SUBRESOURCE_DATA data;
         data.pSysMem = &faces[0];
         data.SysMemPitch = 0;
         data.SysMemSlicePitch = 0;
         CComPtr<ID3D11Buffer> spIB;
         CT(spDevice->CreateBuffer(&desc, &data, &spIB));
-        pMeshData->m_numIndices = (uint32)faces.size();
+        pMeshData->m_numIndices = (uint32_t)faces.size();
         pMeshData->m_spIB = spIB;
     }
 }

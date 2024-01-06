@@ -23,11 +23,11 @@ export namespace Caustic
     struct ISceneMarchingCubesElem : public ISceneElem
     {
         virtual CRefObj<IShader> GetShader() = 0;
-        virtual void SetSubdivisions(uint32 numCells) = 0;
-        virtual void SetShaderParam(const wchar_t* pParamName, uint32 value) = 0;
+        virtual void SetSubdivisions(uint32_t numCells) = 0;
+        virtual void SetShaderParam(const wchar_t* pParamName, uint32_t value) = 0;
         virtual void SetShaderParam(const wchar_t* pParamName, float value) = 0;
         virtual void SetSignedDistanceFunction(std::function<float(Vector3& v)> fn) = 0;
     };
 
-    CRefObj<ISceneMarchingCubesElem> CreateMarchingCubesElem(IRenderer* pRenderer, uint32 subdivisions, std::function<float(Vector3&)> sdf, bool drawIndexed);
+    CRefObj<ISceneMarchingCubesElem> CreateMarchingCubesElem(IRenderer* pRenderer, uint32_t subdivisions, std::function<float(Vector3&)> sdf, bool drawIndexed);
 }

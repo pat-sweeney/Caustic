@@ -3,6 +3,9 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+module;
+#include <cinttypes>
+
 export module Imaging.Image.IImage;
 import Base.Core.Core;
 import Base.Core.Error;
@@ -75,31 +78,31 @@ export namespace Caustic
         // Method: GetData
         // Returns a pointer to the image data
         //**********************************************************************
-        virtual uint8* GetData() = 0;
+        virtual uint8_t* GetData() = 0;
 
         //**********************************************************************
         // Method: GetWidth
         // Returns the image's width in pixels
         //**********************************************************************
-        virtual uint32 GetWidth() = 0;
+        virtual uint32_t GetWidth() = 0;
 
         //**********************************************************************
         // Method: GetHeight
         // Returns the image's height in pixels
         //**********************************************************************
-        virtual uint32 GetHeight() = 0;
+        virtual uint32_t GetHeight() = 0;
 
         //**********************************************************************
         // Method: GetSubX
         // Returns the X offset into our parent image (if this is a subimage)
         //**********************************************************************
-        virtual int32 GetSubX() = 0;
+        virtual int32_t GetSubX() = 0;
 
         //**********************************************************************
         // Method: GetSubY
         // Returns the Y offset into our parent image (if this is a subimage)
         //**********************************************************************
-        virtual int32 GetSubY() = 0;
+        virtual int32_t GetSubY() = 0;
 
         //**********************************************************************
         // Method: GetParent
@@ -112,13 +115,13 @@ export namespace Caustic
         // Method: GetBPP
         // Returns the image's bits per pixel
         //**********************************************************************
-        virtual uint32 GetBPP() = 0;
+        virtual uint32_t GetBPP() = 0;
 
         //**********************************************************************
         // Method: GetStride
         // Returns the image's stride (bytes/scanline)
         //**********************************************************************
-        virtual uint32 GetStride() = 0;
+        virtual uint32_t GetStride() = 0;
     };
 
     //**********************************************************************
@@ -165,7 +168,7 @@ export namespace Caustic
         // y - pixel's Y coordinate
         // color - color to set pixel to
         //**********************************************************************
-        virtual void SetPixel(int32 x, int32 y, uint8 color[4]) = 0;
+        virtual void SetPixel(int32_t x, int32_t y, uint8_t color[4]) = 0;
 
         //**********************************************************************
         // Method: SetPixel
@@ -177,7 +180,7 @@ export namespace Caustic
         // y - pixel's Y coordinate
         // gray - color to set pixel to
         //**********************************************************************
-        virtual void SetPixel(int32 x, int32 y, uint8 gray) = 0;
+        virtual void SetPixel(int32_t x, int32_t y, uint8_t gray) = 0;
 
         //**********************************************************************
         // Method: SetPixel
@@ -189,7 +192,7 @@ export namespace Caustic
         // y - pixel's Y coordinate
         // v - color to set pixel to
         //**********************************************************************
-        virtual void SetPixel(int32 x, int32 y, uint16 v) = 0;
+        virtual void SetPixel(int32_t x, int32_t y, uint16_t v) = 0;
 
         //**********************************************************************
         // Method: DrawCircle
@@ -200,7 +203,7 @@ export namespace Caustic
         // radius - radius of the circle (in pixels)
         // color - color used for rendering the circle
         //**********************************************************************
-        virtual void DrawCircle(Vector2& center, uint32 radius, uint8 color[4]) = 0;
+        virtual void DrawCircle(Vector2& center, uint32_t radius, uint8_t color[4]) = 0;
 
         //**********************************************************************
         // Method: DrawLine
@@ -211,7 +214,7 @@ export namespace Caustic
         // v1 - end of line (in pixel coordinates)
         // color - color used for rendering the line
         //**********************************************************************
-        virtual void DrawLine(const Vector2& v0, const Vector2& v1, uint8 color[4]) = 0;
+        virtual void DrawLine(const Vector2& v0, const Vector2& v1, uint8_t color[4]) = 0;
 
         //**********************************************************************
         // Method: DrawPath
@@ -243,7 +246,7 @@ export namespace Caustic
         // x2 - bottom right corner's X coordinate (in pixel coordinates)
         // y2 - bottom right corner's Y coordinate (in pixel coordinates)
         //**********************************************************************
-        virtual uint32 GetSum(int channel, int x1, int y1, int x2, int y2) = 0;
+        virtual uint32_t GetSum(int channel, int x1, int y1, int x2, int y2) = 0;
 
         //**********************************************************************
         // Method: BoxBlur
@@ -259,7 +262,7 @@ export namespace Caustic
         virtual CRefObj<IImage> BoxBlur(int width, int height) = 0;
     };
 
-    CRefObj<IImage> CreateImage(uint32 width, uint32 height, EImageType imageType);
+    CRefObj<IImage> CreateImage(uint32_t width, uint32_t height, EImageType imageType);
     CRefObj<IIntegralImage> CreateIntegralImage(IImage* pImage);
 
     //**********************************************************************

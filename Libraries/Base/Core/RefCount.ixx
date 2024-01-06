@@ -1,10 +1,11 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
 module;
 #include <Windows.h>
+#include <cinttypes>
 
 export module Base.Core.RefCount;
 import Base.Core.Core;
@@ -32,12 +33,12 @@ export namespace Caustic
             
         virtual ~CRefCount() {}
         
-        virtual uint32 AddRef()
+        virtual uint32_t AddRef()
         {
             return InterlockedIncrement(&m_RefCnt);
         }
         
-        virtual uint32 Release()
+        virtual uint32_t Release()
         {
             ULONG refcnt = InterlockedDecrement(&m_RefCnt);
             if (m_RefCnt == 0)

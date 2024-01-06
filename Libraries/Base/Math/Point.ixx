@@ -1,8 +1,11 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+module;
+#include <cinttypes>
+
 export module Base.Math.Point;
 import Base.Core.Core;
 import Base.Math.Helper;
@@ -22,7 +25,7 @@ export namespace Caustic
     //**********************************************************************
     struct Point2
     {
-        int32 x, y;
+        int32_t x, y;
 
         //**********************************************************************
         // Constructor: Point2
@@ -38,7 +41,7 @@ export namespace Caustic
         // _x - X coordinate
         // _y - Y coordinate
         //**********************************************************************
-        Point2(int32 _x, int32 _y) { x = _x; y = _y; }
+        Point2(int32_t _x, int32_t _y) { x = _x; y = _y; }
 
         //**********************************************************************
         // Method: IsEq
@@ -64,7 +67,7 @@ export namespace Caustic
         // Returns:
         // Length of vector
         //**********************************************************************
-        uint32 Length() { return isqrt((uint32)(x * x + y * y)); }
+        uint32_t Length() { return isqrt((uint32_t)(x * x + y * y)); }
 
         Point2 operator-() { return Point2(-x, -y); }
         Point2 operator-(Point2& rhs) { return Point2(x - rhs.x, y - rhs.y); }

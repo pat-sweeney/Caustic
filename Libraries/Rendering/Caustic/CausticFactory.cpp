@@ -71,7 +71,7 @@ namespace Caustic
     // Method: CreatePointCloud
     // See <ICausticFactory::CreatePointCloud>
     //**********************************************************************
-    CRefObj<IPointCloud> CCausticFactory::CreatePointCloud(IRenderer* pRenderer, uint32 width, uint32 height)
+    CRefObj<IPointCloud> CCausticFactory::CreatePointCloud(IRenderer* pRenderer, uint32_t width, uint32_t height)
     {
         return CRefObj<IPointCloud>(Caustic::CreatePointCloud(pRenderer, width, height));
     }
@@ -179,7 +179,7 @@ namespace Caustic
     // Method: CreateTexture
     // See <ICausticFactory::CreateTexture>
     //**********************************************************************
-    CRefObj<ITexture> CCausticFactory::CreateTexture(IRenderer* pRenderer, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags)
+    CRefObj<ITexture> CCausticFactory::CreateTexture(IRenderer* pRenderer, uint32_t width, uint32_t height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags)
     {
         return Caustic::CreateTexture(pRenderer, width, height, format, cpuFlags, bindFlags);
     }

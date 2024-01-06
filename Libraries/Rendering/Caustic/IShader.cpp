@@ -35,7 +35,7 @@ namespace Caustic
     // Module:
     // {Link:import Rendering.Caustic.IShader;{Rendering/Caustic/IShader.cpp}}
     //**********************************************************************
-    CRefObj<IGPUBuffer> CreateGPUBuffer(IRenderer* pRenderer, EBufferType type, uint32 numElems, uint32 elemSize, uint32 bindFlags)
+    CRefObj<IGPUBuffer> CreateGPUBuffer(IRenderer* pRenderer, EBufferType type, uint32_t numElems, uint32_t elemSize, uint32_t bindFlags)
     {
         std::unique_ptr<CGPUBuffer> spBuffer(new CGPUBuffer());
         spBuffer->Create(pRenderer, type, numElems, elemSize, bindFlags);

@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -99,7 +99,7 @@ export namespace Caustic
         using IDepthCameraDevice::NextVideoFrame;
 
         virtual bool NextVideoFrame(IImage** ppColorImage, std::vector<Vector3>& pts, std::vector<Vector3>& normals, BBox3 &bbox) = 0;
-        virtual CRefObj<IImage> BuildRayMap(uint32 w, uint32 h, bool forDepth = true) = 0;
+        virtual CRefObj<IImage> BuildRayMap(uint32_t w, uint32_t h, bool forDepth = true) = 0;
         virtual CameraIntrinsics GetAzureColorIntrinsics() = 0;
         virtual CameraIntrinsics GetAzureDepthIntrinsics() = 0;
 

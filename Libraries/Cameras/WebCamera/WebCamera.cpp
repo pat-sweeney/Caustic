@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2022
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -170,7 +170,7 @@ namespace Caustic
         CT(MFGetAttributeSize(spCurMediaType, MF_MT_FRAME_SIZE, &m_width, &m_height));
         CT(MFGetAttributeSize(spCurMediaType, MF_MT_FRAME_RATE, &m_width, &m_height));
 
-        HRESULT hr = spCurMediaType->GetUINT32(MF_MT_DEFAULT_STRIDE, (UINT32*)&m_stride);
+        HRESULT hr = spCurMediaType->GetUINT32(MF_MT_DEFAULT_STRIDE, (uint32_t*)&m_stride);
         if (FAILED(hr))
         {
             // Attribute not set. Try to calculate the default stride.
@@ -178,7 +178,7 @@ namespace Caustic
             if (SUCCEEDED(hr))
             {
                 bool inverted = (m_stride < 0) ? true : false;
-                m_stride = static_cast<UINT32>((inverted) ? -m_stride : m_stride);
+                m_stride = static_cast<uint32_t>((inverted) ? -m_stride : m_stride);
             }
         }
 
@@ -223,9 +223,9 @@ namespace Caustic
         if (m_spColorImagePool == nullptr)
             m_spColorImagePool = Caustic::CreateImagePool(20, width, height, EImageType::BGRA_32bpp);
 
-        uint32 stride = width * 4;
+        uint32_t stride = width * 4;
         CRefObj<IImage> spImage = m_spColorImagePool->Acquire();
-        uint8* pRow = spImage->GetData();
+        uint8_t* pRow = spImage->GetData();
         int imgWidth = spImage->GetWidth();
         int bpp = spImage->GetBPP() / 8;
         int bps = imgWidth * bpp;

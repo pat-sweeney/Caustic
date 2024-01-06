@@ -118,8 +118,8 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::AddRef(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::AddRef(); }
 
         //**********************************************************************
         // IJSonObj
@@ -146,8 +146,8 @@ export namespace Caustic
         CRefObj<ILex> m_spLex;
         int m_indentLevel;
 
-        void WriteValue(CRefObj<IJSonObj> obj, char** ppBuffer, uint32* pTotalSize);
-        void ConditionalWrite(bool indent, char** ppBuffer, uint32* pTotalSize, const char* format, ...);
+        void WriteValue(CRefObj<IJSonObj> obj, char** ppBuffer, uint32_t* pTotalSize);
+        void ConditionalWrite(bool indent, char** ppBuffer, uint32_t* pTotalSize, const char* format, ...);
         void ParseObject(ILex* pLex, std::map<std::string, CRefObj<IJSonObj>>& data);
         CRefObj<IJSonObj> ParseValue(ILex* pLex, const char* pName);
         void ParseArray(ILex* pLex, std::vector<CRefObj<IJSonObj>>&data);
@@ -159,8 +159,8 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::AddRef(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::AddRef(); }
 
         //**********************************************************************
         // IJSonParser
@@ -168,7 +168,7 @@ export namespace Caustic
         virtual CRefObj<IJSonObj> LoadDOM(std::wstring& fn) override;
         virtual void SaveDOM(CRefObj<IJSonObj>& dom, std::wstring& fn) override;
         virtual CRefObj<IJSonObj> ReadDOM(const char *pBuffer) override;
-        virtual uint32 WriteDOM(CRefObj<IJSonObj>& dom, char *pBuffer, uint32 bufLen) override;
+        virtual uint32_t WriteDOM(CRefObj<IJSonObj>& dom, char *pBuffer, uint32_t bufLen) override;
         virtual CRefObj<IJSonObj> CreateJSon(const char* pPropertyName, float value) override;
         virtual CRefObj<IJSonObj> CreateJSon(const char* pPropertyName, int value) override;
         virtual CRefObj<IJSonObj> CreateJSon(const char *pPropertyName, std::string value) override;

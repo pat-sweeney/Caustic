@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -20,6 +20,7 @@ module;
 #include <atlbase.h>
 #include <vector>
 #include <Wmcodecdsp.h>
+#include <cinttypes>
 
 module Cameras.WebCamera.IWebCamera;
 import Base.Core.Core;
@@ -60,7 +61,7 @@ namespace Caustic
         CT(MFCreateAttributes(&spAttributes, 1));
         CT(spAttributes->SetGUID(MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE, MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_VIDCAP_GUID));
         IMFActivate** ppDevices;
-        UINT32 count;
+        uint32_t count;
         CT(MFEnumDeviceSources(spAttributes, &ppDevices, &count));
         for (int i = 0; i < (int)count; i++)
         {
@@ -70,12 +71,12 @@ namespace Caustic
             {
                 CameraInfo caminfo;
                 wchar_t buffer[1024];
-                UINT32 length;
+                uint32_t length;
                 CT(ppDevices[i]->GetString(MF_DEVSOURCE_ATTRIBUTE_FRIENDLY_NAME, buffer, 1024, &length));
                 caminfo.name = std::wstring(buffer);
                 CT(ppDevices[i]->GetString(MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_VIDCAP_SYMBOLIC_LINK, buffer, 1024, &length));
                 caminfo.symlink = std::wstring(buffer);
-                UINT32 blobSize;
+                uint32_t blobSize;
                 CT(ppDevices[i]->GetBlob(MF_DEVSOURCE_ATTRIBUTE_MEDIA_TYPE, (UINT8*)&caminfo.info, sizeof(caminfo.info), &blobSize));
 
 
@@ -110,11 +111,11 @@ namespace Caustic
                         {
                             CComPtr<IMFMediaType> spType;
                             CT(spHandler->GetMediaTypeByIndex(i, &spType));
-                            UINT32 w, h;
+                            uint32_t w, h;
                             MFGetAttributeSize(spType, MF_MT_FRAME_SIZE, &w, &h);
                             Point2 wxh((int)w, (int)h);
                             caminfo.resolutions.push_back(wxh);
-                            UINT32 n, d;
+                            uint32_t n, d;
                             MFGetAttributeSize(spType, MF_MT_FRAME_RATE, &n, &d);
                             Point2 nxd((int)n, (int)d);
                             caminfo.framerates.push_back(nxd);
@@ -141,7 +142,7 @@ namespace Caustic
         CT(MFCreateAttributes(&spAttributes, 1));
         CT(spAttributes->SetGUID(MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE, MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_AUDCAP_GUID));
         IMFActivate** ppDevices;
-        UINT32 count;
+        uint32_t count;
         CT(MFEnumDeviceSources(spAttributes, &ppDevices, &count));
         for (int i = 0; i < (int)count; i++)
         {
@@ -151,7 +152,7 @@ namespace Caustic
             {
                 AudioInfo audioInfo;
                 wchar_t buffer[1024];
-                UINT32 length;
+                uint32_t length;
                 CT(ppDevices[i]->GetString(MF_DEVSOURCE_ATTRIBUTE_FRIENDLY_NAME, buffer, 1024, &length));
                 audioInfo.name = std::wstring(buffer);
                 CT(ppDevices[i]->GetString(MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_AUDCAP_ENDPOINT_ID, buffer, 1024, &length));
@@ -188,13 +189,13 @@ namespace Caustic
                         {
                             CComPtr<IMFMediaType> spType;
                             CT(spHandler->GetMediaTypeByIndex(i, &spType));
-                            UINT32 samplingRate;
+                            uint32_t samplingRate;
                             spType->GetUINT32(MF_MT_AUDIO_SAMPLES_PER_SECOND, &samplingRate);
                             audioInfo.samplingRates.push_back(samplingRate);
-                            UINT32 bitsPerSample;
+                            uint32_t bitsPerSample;
                             spType->GetUINT32(MF_MT_AUDIO_BITS_PER_SAMPLE, &bitsPerSample);
                             audioInfo.bitsPerSample.push_back(bitsPerSample);
-                            UINT32 numChannels;
+                            uint32_t numChannels;
                             spType->GetUINT32(MF_MT_AUDIO_NUM_CHANNELS, &numChannels);
                             audioInfo.channels.push_back(numChannels);
                         }

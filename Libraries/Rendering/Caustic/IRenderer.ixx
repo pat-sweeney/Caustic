@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -10,6 +10,7 @@ module;
 #include <directxmath.h>
 #include <dxgi1_6.h>
 #include <string>
+#include <cinttypes>
 
 export module Rendering.Caustic.IRenderer;
 import Base.Core.Core;
@@ -296,7 +297,7 @@ export namespace Caustic
         // width - width of output device in pixels
         // height - height of output device in pixels
         //**********************************************************************
-        virtual void DeviceWindowResized(uint32 width, uint32 height) = 0;
+        virtual void DeviceWindowResized(uint32_t width, uint32_t height) = 0;
 
         //**********************************************************************
         // Method: DrawMesh
@@ -345,13 +346,13 @@ export namespace Caustic
         // Method: GetBackBufferWidth
         // Returns the width in pixels of the back buffer
         //**********************************************************************
-        virtual uint32 GetBackBufferWidth() = 0;
+        virtual uint32_t GetBackBufferWidth() = 0;
 
         //**********************************************************************
         // Method: GetBackBufferHeight
         // Returns the height in pixels of the back buffer
         //**********************************************************************
-        virtual uint32 GetBackBufferHeight() = 0;
+        virtual uint32_t GetBackBufferHeight() = 0;
 
         //**********************************************************************
         // Method: GetBackBuffer

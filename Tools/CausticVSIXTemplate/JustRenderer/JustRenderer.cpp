@@ -159,19 +159,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         PostQuitMessage(0);
         break;
     case WM_LBUTTONDOWN:
-        app.m_spRenderWindow->MouseDown((int)LOWORD(lParam), (int)HIWORD(lParam), c_LeftButton, (uint32)wParam);
+        app.m_spRenderWindow->MouseDown((int)LOWORD(lParam), (int)HIWORD(lParam), c_LeftButton, (uint32_t)wParam);
         break;
     case WM_LBUTTONUP:
-        app.m_spRenderWindow->MouseUp((int)LOWORD(lParam), (int)HIWORD(lParam), c_LeftButton, (uint32)wParam);
+        app.m_spRenderWindow->MouseUp((int)LOWORD(lParam), (int)HIWORD(lParam), c_LeftButton, (uint32_t)wParam);
         break;
     case WM_MOUSEMOVE:
-        app.m_spRenderWindow->MouseMove((int)LOWORD(lParam), (int)HIWORD(lParam), (uint32)wParam);
+        app.m_spRenderWindow->MouseMove((int)LOWORD(lParam), (int)HIWORD(lParam), (uint32_t)wParam);
         break;
     case WM_MOUSEWHEEL:
         app.m_spRenderWindow->MouseWheel((int)wParam);
         break;
     case WM_KEYDOWN:
-        app.m_spRenderWindow->MapKey((uint32)wParam, (uint32)lParam);
+        app.m_spRenderWindow->MapKey((uint32_t)wParam, (uint32_t)lParam);
         break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);

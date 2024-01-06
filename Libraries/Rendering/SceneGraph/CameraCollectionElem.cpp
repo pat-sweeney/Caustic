@@ -29,9 +29,9 @@ import Rendering.SceneGraph.SceneCubeElem;
 
 namespace Caustic
 {
-    uint32 CSceneCameraCollectionElem::NumberCameras()
+    uint32_t CSceneCameraCollectionElem::NumberCameras()
     {
-        return (uint32)m_Cameras.size();
+        return (uint32_t)m_Cameras.size();
     }
 
     CRefObj<ICamera> CSceneCameraCollectionElem::GetCamera(int index)

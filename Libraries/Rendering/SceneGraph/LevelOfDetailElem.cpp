@@ -133,14 +133,14 @@ namespace Caustic
     void CSceneLevelOfDetailElem::Store(IStream* pStream)
     {
         ULONG bytesWritten;
-        uint32 numChildren = (uint32)m_children.size();
+        uint32_t numChildren = (uint32_t)m_children.size();
         CT(pStream->Write(&numChildren, sizeof(numChildren), &bytesWritten));
-        for (uint32 i = 0; i < (uint32)numChildren; i++)
+        for (uint32_t i = 0; i < (uint32_t)numChildren; i++)
         {
             CT(pStream->Write(&m_children[i].m_minRenderDistance, sizeof(m_children[i].m_minRenderDistance), &bytesWritten));
             CT(pStream->Write(&m_children[i].m_maxRenderDistance, sizeof(m_children[i].m_maxRenderDistance), &bytesWritten));
-            uint32 type = (uint32)m_children[i].m_spChild->GetType();
-            CT(pStream->Write(&type, sizeof(uint32), &bytesWritten));
+            uint32_t type = (uint32_t)m_children[i].m_spChild->GetType();
+            CT(pStream->Write(&type, sizeof(uint32_t), &bytesWritten));
             m_children[i].m_spChild->Store(pStream);
         }
     }
@@ -149,16 +149,16 @@ namespace Caustic
     {
         CRefObj<ISceneFactory> spSceneFactory = CSceneFactory::Instance();
         ULONG bytesRead;
-        uint32 numChildren;
+        uint32_t numChildren;
         CT(pStream->Read(&numChildren, sizeof(numChildren), &bytesRead));
-        for (uint32 i = 0; i < (uint32)numChildren; i++)
+        for (uint32_t i = 0; i < (uint32_t)numChildren; i++)
         {
             CSceneLevelOfDetailElem::LODChild child;
             CT(pStream->Read(&child.m_minRenderDistance, sizeof(child.m_minRenderDistance), &bytesRead));
             CT(pStream->Read(&child.m_maxRenderDistance, sizeof(child.m_maxRenderDistance), &bytesRead));
             CRefObj<ISceneElem> spElem;
-            uint32 type;
-            CT(pStream->Read(&type, sizeof(uint32), &bytesRead));
+            uint32_t type;
+            CT(pStream->Read(&type, sizeof(uint32_t), &bytesRead));
             switch ((ESceneElemType)type)
             {
             case ESceneElemType::Group:

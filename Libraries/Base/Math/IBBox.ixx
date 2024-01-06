@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 1996-2021
+// Copyright Patrick Sweeney 1996-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -43,7 +43,7 @@ export namespace Caustic
             p2 = bottomright;
         }
 
-        IBBox2(int32 topleftx, int32 toplefty, int32 bottomrightx, int32 bottomrighty) :
+        IBBox2(int32_t topleftx, int32_t toplefty, int32_t bottomrightx, int32_t bottomrighty) :
             p1(topleftx, toplefty),
             p2(bottomrightx, bottomrighty)
         {
@@ -103,7 +103,7 @@ export namespace Caustic
         // x - X coordinate of point to add
         // y - Y coordinate of point to add
         //**********************************************************************
-        void AddPoint(int32 x, int32 y)
+        void AddPoint(int32_t x, int32_t y)
         {
             if (x < p1.x)
                 p1.x = x;
@@ -143,7 +143,7 @@ export namespace Caustic
         // Returns:
         // Returns true if point is inside bounding box. False otherwise.
         //**********************************************************************
-        bool PointInside(const Point2& p, int32 tolerance)
+        bool PointInside(const Point2& p, int32_t tolerance)
         {
             return (p.x >= p1.x - tolerance && p.x <= p2.x + tolerance &&
                     p.y >= p1.y - tolerance && p.y <= p2.y + tolerance) ? true : false;
@@ -158,13 +158,13 @@ export namespace Caustic
         {
             if (p1.x > p2.x)
             {
-                int32 tmp = p1.x;
+                int32_t tmp = p1.x;
                 p1.x = p2.x;
                 p2.x = tmp;
             }
             if (p1.y > p2.y)
             {
-                int32 tmp = p1.y;
+                int32_t tmp = p1.y;
                 p1.y = p2.y;
                 p2.y = tmp;
             }

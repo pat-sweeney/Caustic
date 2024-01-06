@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2023
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -8,6 +8,7 @@ module;
 #include <map>
 #include <string>
 #include <d3d11.h>
+#include <cinttypes>
 
 export module Geometry.Mesh.Mesh;
 import Base.Core.Core;
@@ -37,10 +38,10 @@ export namespace Caustic
         std::vector<CFaceVertex*> m_faceVertices;
         std::vector<CFace*> m_faces;
         std::vector<CHalfEdge*> m_edges;
-        std::map<uint64, CHalfEdge*> m_vertToEdge;
+        std::map<uint64_t, CHalfEdge*> m_vertToEdge;
         CRefObj<IKDTree> m_spKDTree;
         Caustic::BBox3 m_bbox;
-        uint32 m_materialID;
+        uint32_t m_materialID;
         EVertexFlags m_vertexFlags;
         EMeshFlags m_meshFlags;
         static bool s_allocatorInitialized;
@@ -186,7 +187,7 @@ export namespace Caustic
         // vertexReferenced - List of vertices that are referenced
         // MeshData - place to store created vertex buffer
         //**********************************************************************
-        void BuildVertexBuffer(ID3D11Device* pDevice, std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout, uint32 vertexSize, std::vector<int> &vertexReferenced, MeshData *pMeshData);
+        void BuildVertexBuffer(ID3D11Device* pDevice, std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout, uint32_t vertexSize, std::vector<int> &vertexReferenced, MeshData *pMeshData);
 
         //**********************************************************************
         // Method: BuildIndexBuffer
@@ -232,35 +233,35 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // ISubMesh
         //**********************************************************************
-        virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, uint32* pMaterialID) override;
+        virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, uint32_t* pMaterialID) override;
         virtual void SetName(const char* pName) override { m_name = std::string(pName); }
         virtual std::string GetName() override { return m_name; }
-        virtual uint32 GetNumberFaces() override { return (uint32)m_faces.size(); }
-        virtual CFace *GetFace(uint32 index) override { return m_faces[index]; }
-        virtual uint32 GetNumberVertices() override { return (uint32)m_vertices.size(); }
-        virtual CGeomVertex *GetVertex(uint32 index) override { return m_vertices[index]; }
-        virtual uint32 GetNumberEdges() override { return (uint32)m_edges.size(); }
-        virtual CHalfEdge *GetEdge(uint32 index) override { return m_edges[index]; }
+        virtual uint32_t GetNumberFaces() override { return (uint32_t)m_faces.size(); }
+        virtual CFace *GetFace(uint32_t index) override { return m_faces[index]; }
+        virtual uint32_t GetNumberVertices() override { return (uint32_t)m_vertices.size(); }
+        virtual CGeomVertex *GetVertex(uint32_t index) override { return m_vertices[index]; }
+        virtual uint32_t GetNumberEdges() override { return (uint32_t)m_edges.size(); }
+        virtual CHalfEdge *GetEdge(uint32_t index) override { return m_edges[index]; }
         virtual EVertexFlags GetVertexFlags() override { return m_vertexFlags; }
         virtual void SetVertexFlags(EVertexFlags flags) override { m_vertexFlags = flags; }
         virtual EMeshFlags GetMeshFlags() override { return m_meshFlags; }
         virtual void SetMeshFlags(EMeshFlags  flags) override { m_meshFlags = flags; }
-        virtual uint32 GetMaterialID() override { return m_materialID; }
-        virtual void SetMaterialID(uint32 materialID) override { m_materialID = materialID; }
+        virtual uint32_t GetMaterialID() override { return m_materialID; }
+        virtual void SetMaterialID(uint32_t materialID) override { m_materialID = materialID; }
         virtual const BBox3 &GetBBox() override { return m_bbox; }
         virtual void Normalize(const BBox3 &bbox) override; // See <ISubMesh::Normalize>
         virtual void ComputeNormals() override;
-        virtual uint32 VertexToIndex(CGeomVertex *pVertex) override;
-        virtual uint32 FaceToIndex(CFace *pFace) override;
-        virtual uint32 EdgeToIndex(CHalfEdge *pEdge) override;
+        virtual uint32_t VertexToIndex(CGeomVertex *pVertex) override;
+        virtual uint32_t FaceToIndex(CFace *pFace) override;
+        virtual uint32_t EdgeToIndex(CHalfEdge *pEdge) override;
         virtual void Triangulate(ETriangulateMethod method) override;
-        virtual MeshData ToMeshData(ID3D11Device* pDevice, std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout, uint32 vertexSize) override;
+        virtual MeshData ToMeshData(ID3D11Device* pDevice, std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout, uint32_t vertexSize) override;
 
         //**********************************************************************
         // ISerialize
@@ -285,23 +286,23 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
         
         //**********************************************************************
         // IMesh
         //**********************************************************************
-        virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, uint32* pMaterialID);
-        virtual uint32 NumberSubMeshes() override { return (uint32)m_subMeshes.size(); };
-        virtual CRefObj<ISubMesh> GetSubMesh(uint32 index) override;
+        virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, uint32_t* pMaterialID);
+        virtual uint32_t NumberSubMeshes() override { return (uint32_t)m_subMeshes.size(); };
+        virtual CRefObj<ISubMesh> GetSubMesh(uint32_t index) override;
         virtual void AddSubMesh(ISubMesh *pSubMesh) override;
         virtual void GetBBox(Caustic::BBox3 *pBBox) override;
         virtual void Normalize() override;
         virtual void SetMaterials(std::vector<CRefObj<IMaterialAttrib>> &materials) override;
-        virtual uint32 GetNumberMaterials() override;
-        virtual CRefObj<IMaterialAttrib> GetMaterial(uint32 materialID) override;
+        virtual uint32_t GetNumberMaterials() override;
+        virtual CRefObj<IMaterialAttrib> GetMaterial(uint32_t materialID) override;
         virtual void ComputeNormals() override;
-        virtual std::vector<MeshData> ToMeshData(ID3D11Device* pDevice, std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout, uint32 vertexSize) override;
+        virtual std::vector<MeshData> ToMeshData(ID3D11Device* pDevice, std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout, uint32_t vertexSize) override;
 
         //**********************************************************************
         // ISerialize

@@ -36,7 +36,7 @@ export namespace Caustic
         CRefObj<ISceneGroupElem> m_spRoot;
         CRefObj<IRenderer> m_spRenderer;
         std::vector<CRefObj<ISceneElem>> m_Selected; // List of elements in our scene graph that are currently selected
-        uint32 m_Flags;
+        uint32_t m_Flags;
         bool m_showProxyObjects;
         CRefObj<ISceneCameraCollectionElem> m_CameraCollection;
 
@@ -54,8 +54,8 @@ export namespace Caustic
         //**********************************************************************
         // IUnknown
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // ISceneElem
@@ -80,10 +80,10 @@ export namespace Caustic
         }
         virtual void Render(IRenderer *pRenderer, IRenderCtx *pRenderCtx, SceneCtx *pSceneCtx) override;
         virtual void GetBBox(BBox3* pBBox) override;
-        virtual uint32 GetFlags() { return m_Flags; }
-        virtual void SetFlags(uint32 flags) { m_Flags = flags; }
-        virtual void SetInPass(uint32 pass) override { CSceneElem::SetInPass(pass); }
-        virtual uint32 GetInPass() override { return CSceneElem::GetInPass(); }
+        virtual uint32_t GetFlags() { return m_Flags; }
+        virtual void SetFlags(uint32_t flags) { m_Flags = flags; }
+        virtual void SetInPass(uint32_t pass) override { CSceneElem::SetInPass(pass); }
+        virtual uint32_t GetInPass() override { return CSceneElem::GetInPass(); }
 
         //**********************************************************************
         // ISerialize
@@ -94,10 +94,10 @@ export namespace Caustic
         //**********************************************************************
         // ISceneGroupElem
         //**********************************************************************
-        virtual uint32 NumberChildren() override;
-        virtual CRefObj<ISceneElem> GetChild(uint32 index) override;
+        virtual uint32_t NumberChildren() override;
+        virtual CRefObj<ISceneElem> GetChild(uint32_t index) override;
         virtual void AddChild(ISceneElem *pElem) override;
-        virtual void InsertChild(ISceneElem *pElem, uint32 index) override;
+        virtual void InsertChild(ISceneElem *pElem, uint32_t index) override;
         virtual Matrix4x4 GetTransform() override;
         virtual void SetTransform(Matrix4x4 &mat) override;
 

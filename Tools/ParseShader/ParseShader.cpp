@@ -15,6 +15,7 @@
 #include <d3d11shader.h>
 #include <d3dcompiler.h>
 #include <atlbase.h>
+#include <cinttypes>
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.ConvertStr;
@@ -95,9 +96,9 @@ void GetDXGIFormat(D3D11_SIGNATURE_PARAMETER_DESC &pd, std::string &format)
     }
 }
 
-Caustic::uint32 TypeSize(D3D11_SHADER_TYPE_DESC &typeDesc)
+uint32_t TypeSize(D3D11_SHADER_TYPE_DESC &typeDesc)
 {
-    Caustic::uint32 elemSize = 0;
+    uint32_t elemSize = 0;
     switch (typeDesc.Type)
     {
     case D3D_SHADER_VARIABLE_TYPE::D3D10_SVT_VOID:
@@ -162,7 +163,7 @@ void ParseLoop(ID3D11ShaderReflection *pReflection, HANDLE oh, EShaderType shade
         CT(pReflection->GetResourceBindingDesc(i, &bindDesc));
         const char* tagName = nullptr;
         bool findTypeSize = true;
-        Caustic::uint32 elemSize = 1;
+        uint32_t elemSize = 1;
         if (bindDesc.Type == D3D_SIT_UAV_RWBYTEADDRESS)
         {
             tagName = "RWByteAddressBuffer";

@@ -151,13 +151,13 @@ export namespace Caustic
         // Returns the flags associated with this scene element
         // See also: ESceneElemFlags
         //**********************************************************************
-        virtual uint32 GetFlags() = 0;
+        virtual uint32_t GetFlags() = 0;
 
         //**********************************************************************
         // Method: SetFlags
         // Sets the flags associated with this scene element
         //**********************************************************************
-        virtual void SetFlags(uint32 flags) = 0;
+        virtual void SetFlags(uint32_t flags) = 0;
 
         //**********************************************************************
         // Method: Render
@@ -178,7 +178,7 @@ export namespace Caustic
         // Parameters:
         // pass - pass to render this element in
         //**********************************************************************
-        virtual void SetInPass(uint32 pass) = 0;
+        virtual void SetInPass(uint32_t pass) = 0;
 
         //**********************************************************************
         // Method: GetInPass
@@ -187,6 +187,6 @@ export namespace Caustic
         // Returns:
         // mask indicating which passes this element is rendered in
         //**********************************************************************
-        virtual uint32 GetInPass() = 0;
+        virtual uint32_t GetInPass() = 0;
     };
 }

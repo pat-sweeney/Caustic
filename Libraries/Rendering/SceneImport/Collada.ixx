@@ -138,7 +138,7 @@ export namespace Caustic
             float m_attenuationLinear;
             float m_attenuationQuadratic;
             float m_angle;
-            uint32 m_mode;
+            uint32_t m_mode;
         };
 
         struct SMaterial

@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -50,8 +50,8 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IMaterialAttrib
@@ -74,8 +74,8 @@ export namespace Caustic
         virtual CRefObj<IImage> GetTexture(const wchar_t* pName) override;
         virtual void SetTexture(const wchar_t* pName, IImage* pImage, EShaderAccess access) override;
         virtual void SetTextureViaFilename(const wchar_t* pName, std::wstring& filename, EShaderAccess access) override;
-        virtual uint32 GetMaterialID() override { return m_materialID; }
-        virtual void SetMaterialID(uint32 v) override { m_materialID = v; }
+        virtual uint32_t GetMaterialID() override { return m_materialID; }
+        virtual void SetMaterialID(uint32_t v) override { m_materialID = v; }
         virtual void EnumerateColors(std::function<void(const wchar_t* pName, FRGBAColor& v)> func) override;
         virtual void EnumerateScalars(std::function<void(const wchar_t* pName, float s)> func) override;
         virtual void EnumerateTextures(std::function<void(const wchar_t* pName, IImage * pTexture, EShaderAccess access)> func) override;

@@ -22,15 +22,15 @@ export namespace Caustic
     protected:
         CRefObj<IShader> m_spComputeShader;
         CRefObj<IRenderGraphPin> m_spComputeBufferPin;
-        uint32 m_xThreads, m_yThreads, m_zThreads;
+        uint32_t m_xThreads, m_yThreads, m_zThreads;
     public:
         CRenderGraphNode_Compute(IShader *pShader);
 
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IRenderGraphNode
@@ -39,8 +39,8 @@ export namespace Caustic
         virtual std::string GetName() { return m_name; }
         virtual void SetName(std::string name) { CRenderGraphNode::SetName(name); }
         virtual void SetProperty(std::string name, std::any value) { CRenderGraphNode::SetProperty(name, value); }
-        virtual uint32 NumberInputPins() { return CRenderGraphNode::NumberInputPins(); }
-        virtual uint32 NumberOutputPins() { return CRenderGraphNode::NumberOutputPins(); }
+        virtual uint32_t NumberInputPins() { return CRenderGraphNode::NumberInputPins(); }
+        virtual uint32_t NumberOutputPins() { return CRenderGraphNode::NumberOutputPins(); }
         virtual CRefObj<IRenderGraphPin> GetInputPin(int index) { return CRenderGraphNode::GetInputPin(index); }
         virtual CRefObj<IRenderGraphPin> GetOutputPin(int index) { return CRenderGraphNode::GetOutputPin(index); }
         virtual CRefObj<IRenderGraphPin> FindInputPin(std::string name) { return CRenderGraphNode::FindInputPin(name); }
@@ -59,9 +59,9 @@ export namespace Caustic
             m_yThreads = yThreads;
             m_zThreads = zThreads;
         }
-        virtual void SetInputThreads(uint32 width, uint32 height, uint32 depth /* = 1 */) override;
-        virtual void SetShaderParam(const wchar_t* pParamName, uint32 value) override;
+        virtual void SetInputThreads(uint32_t width, uint32_t height, uint32_t depth /* = 1 */) override;
+        virtual void SetShaderParam(const wchar_t* pParamName, uint32_t value) override;
         virtual void SetShaderParam(const wchar_t* pParamName, float value) override;
-        virtual void SetBuffer(IRenderer* pRenderer, const wchar_t* pBufferName, uint8* pData, uint32 bufSize, uint32 stride);
+        virtual void SetBuffer(IRenderer* pRenderer, const wchar_t* pBufferName, uint8* pData, uint32_t bufSize, uint32_t stride);
     };
 }

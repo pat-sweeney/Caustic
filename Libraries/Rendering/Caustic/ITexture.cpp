@@ -36,7 +36,7 @@ namespace Caustic
     // Returns:
     // Returns the created texture
     //**********************************************************************
-    CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags)
+    CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, uint32_t width, uint32_t height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags)
     {
         CRefObj<ITexture> spTexture;
         pRenderer->RunOnRenderer(
@@ -60,7 +60,7 @@ namespace Caustic
     // Returns:
     // Returns the created texture
     //**********************************************************************
-    CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, uint32 width, uint32 height, DXGI_FORMAT format)
+    CRefObj<ITexture> CreateTexture(IRenderer* pRenderer, uint32_t width, uint32_t height, DXGI_FORMAT format)
     {
         return CreateTexture(pRenderer, width, height, format, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
     }

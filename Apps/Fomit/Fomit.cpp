@@ -133,12 +133,12 @@ void CApp::InitializeCaustic(HWND hwnd)
     CRefObj<IRenderGraphPin> spGroupLightsPin = spGroupNode->FindInputPin("lights");
     spLightsNode->FindOutputPin("lights")->LinkTo(spGroupLightsPin);
 
-    //                   uint32 depthWidth2 = spDepthImage->GetWidth() / 2; // We need half the width since the shader does 2 depth points at a time
+    //                   uint32_t depthWidth2 = spDepthImage->GetWidth() / 2; // We need half the width since the shader does 2 depth points at a time
  //                   pComputeElem->SetShaderParam(L"depthImageWidth", depthWidth2);
  //                   pComputeElem->SetInputBuffer(L"DepthBuffer", spDepthImage->GetData(), spDepthImage->GetStride() * spDepthImage->GetHeight(), spDepthImage->GetBytesPerPixel() * 2);
  //                   pComputeElem->SetInputBuffer(L"RayBuffer", spRayMap->GetData(), spRayMap->GetStride() * spRayMap->GetHeight(), spRayMap->GetBytesPerPixel());
  //                   pComputeElem->SetInputThreads(depthWidth2, spDepthImage->GetHeight());
- //                   pComputeElem->SetOutputBuffer(L"Points", (uint8*)vertices.get(), (uint32)(sizeof(Vertex) * numVertices), (uint32)sizeof(Vertex));
+ //                   pComputeElem->SetOutputBuffer(L"Points", (uint8*)vertices.get(), (uint32_t)(sizeof(Vertex) * numVertices), (uint32_t)sizeof(Vertex));
    // spComputeElem->SetPostRenderCallback([pComputeShader, pComputeElem](int pass) {
    //     //spMeshElem->SetFlags(spMeshElem->GetFlags() | ESceneElemFlags::MaterialDirty);
    //     //spMaterial->SetTexture(L"diffuseTexture", spOutputImage, EShaderAccess::PixelShader);
@@ -300,19 +300,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         PostQuitMessage(0);
         break;
     case WM_LBUTTONDOWN:
-        app.m_spRenderWindow->MouseDown((int)LOWORD(lParam), (int)HIWORD(lParam), c_LeftButton, (uint32)wParam);
+        app.m_spRenderWindow->MouseDown((int)LOWORD(lParam), (int)HIWORD(lParam), c_LeftButton, (uint32_t)wParam);
         break;
     case WM_LBUTTONUP:
-        app.m_spRenderWindow->MouseUp((int)LOWORD(lParam), (int)HIWORD(lParam), c_LeftButton, (uint32)wParam);
+        app.m_spRenderWindow->MouseUp((int)LOWORD(lParam), (int)HIWORD(lParam), c_LeftButton, (uint32_t)wParam);
         break;
     case WM_MOUSEMOVE:
-        app.m_spRenderWindow->MouseMove((int)LOWORD(lParam), (int)HIWORD(lParam), (uint32)wParam);
+        app.m_spRenderWindow->MouseMove((int)LOWORD(lParam), (int)HIWORD(lParam), (uint32_t)wParam);
         break;
     case WM_MOUSEWHEEL:
         app.m_spRenderWindow->MouseWheel((int)wParam);
         break;
     case WM_KEYDOWN:
-        app.m_spRenderWindow->MapKey((uint32)wParam, (uint32)lParam);
+        app.m_spRenderWindow->MapKey((uint32_t)wParam, (uint32_t)lParam);
         break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);

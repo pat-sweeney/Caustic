@@ -37,7 +37,7 @@ namespace Caustic
     // Method: GetWidth
     // Returns the width of the texture
     //**********************************************************************
-    uint32 CDesktopTexture::GetWidth()
+    uint32_t CDesktopTexture::GetWidth()
     {
         return m_desc.Width;
     }
@@ -46,7 +46,7 @@ namespace Caustic
     // Method: GetHeight
     // Returns the height of the texture
     //**********************************************************************
-    uint32 CDesktopTexture::GetHeight()
+    uint32_t CDesktopTexture::GetHeight()
     {
         return m_desc.Height;
     }

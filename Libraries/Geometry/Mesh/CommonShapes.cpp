@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -34,7 +34,7 @@ namespace Caustic
     // Returns:
     // Return newly generated mesh
     //**********************************************************************
-    CRefObj<IMesh> CreateSurfaceRevolution(std::vector<Vector3> &pts, uint32 npts, uint32 subdivisions, float maxAngle)
+    CRefObj<IMesh> CreateSurfaceRevolution(std::vector<Vector3> &pts, uint32_t npts, uint32_t subdivisions, float maxAngle)
     {
         CRefObj<IMeshConstructor> spMeshConstructor = IMeshConstructor::Create();
         spMeshConstructor->MeshOpen();
@@ -55,7 +55,7 @@ namespace Caustic
         Vector3 _bottomvertex(0.0F, pts[0].y, 0.0F);
         Vector3 *top = &_topvertex;
         Vector3 *bottom = &_bottomvertex;
-        uint32 endIndex = npts - 1;
+        uint32_t endIndex = npts - 1;
         if (IsZero(pts[0].x) && IsZero(pts[0].z))
         {
             bottom = &pts[0];
@@ -82,12 +82,12 @@ namespace Caustic
         //
         float du = 1.0F / (float)(npts + 1);
         float dv = 1.0F / (float)(subdivisions + 1);
-        for (uint32 i = 0; i < (uint32)npts; i++)
+        for (uint32_t i = 0; i < (uint32_t)npts; i++)
             lt[i] = Vector2(0.0f, du * float(i + 1));
         float v = 0.0F;
         float angle = 0.0F;
         float delta = maxAngle / (float)subdivisions;
-        for (uint32 i = 0; i <= subdivisions; i++)
+        for (uint32_t i = 0; i <= subdivisions; i++)
         {
             if (i == subdivisions)
                 angle = 0.0F;
@@ -101,7 +101,7 @@ namespace Caustic
             }
             else
             {
-                for (uint32 j = 0; j < npts; j++)
+                for (uint32_t j = 0; j < npts; j++)
                 {
                     cp[j].x = (origPts[j].x * (float)cos(M_PI * angle / 180.0) + origPts[j].z * (float)sin(M_PI * angle / 180.0));
                     cp[j].y = origPts[j].y;
@@ -130,7 +130,7 @@ namespace Caustic
                 spMeshConstructor->FaceClose();
 
                 // Create face list
-                for (uint32 j = 1; j < npts; j++)
+                for (uint32_t j = 1; j < npts; j++)
                 {
                     // Here we create two faces on our sphere:
                     //
@@ -163,7 +163,7 @@ namespace Caustic
 
                 // Create top face
                 spMeshConstructor->FaceOpen();
-                uint32 j = npts - 1;
+                uint32_t j = npts - 1;
 
                 // Compute normal vector
                 np = (cp[j] - *top).Normalize();
@@ -206,13 +206,13 @@ namespace Caustic
     // Returns:
     // Returns the created mesh
     //**********************************************************************
-    CRefObj<IMesh> CreateSphere(uint32 subdivisions)
+    CRefObj<IMesh> CreateSphere(uint32_t subdivisions)
     {
         std::vector<Vector3> pts(subdivisions + 2);
         pts[0] = Vector3(0.0F, -1.0F, 0.0F);
         float delta = 180.0F / float(subdivisions + 1);
         float angle = -90.0F + delta;
-        uint32 i;
+        uint32_t i;
         for (i = 1; i <= subdivisions; i++)
         {
             pts[i] = Vector3((float)cos(M_PI * angle / 180.0), (float)sin(M_PI * angle / 180.0), 0.0F);
@@ -278,7 +278,7 @@ namespace Caustic
     // Returns:
     // Returns the created mesh
     //**********************************************************************
-    CRefObj<IMesh> CreateWarpedGrid(uint32 width, uint32 height, float2 *pPositions)
+    CRefObj<IMesh> CreateWarpedGrid(uint32_t width, uint32_t height, float2 *pPositions)
     {
         CRefObj<IMeshConstructor> spMeshConstructor = IMeshConstructor::Create();
 
@@ -288,10 +288,10 @@ namespace Caustic
         float du = 1.0f / float(height);
         Vector3 normal(0.0f, 1.0f, 0.0f);
         float cv = 0.0f;
-        for (uint32 y = 0; y < height - 1; y++)
+        for (uint32_t y = 0; y < height - 1; y++)
         {
             float cu = 0.0f;
-            for (uint32 x = 0; x < width - 1; x++)
+            for (uint32_t x = 0; x < width - 1; x++)
             {
                 spMeshConstructor->FaceOpen();
                 Vector3 vpos;
@@ -332,7 +332,7 @@ namespace Caustic
     // Returns:
     // Returns the created mesh
     //**********************************************************************
-    CRefObj<IMesh> CreateGrid(uint32 width, uint32 height, float2* uvs)
+    CRefObj<IMesh> CreateGrid(uint32_t width, uint32_t height, float2* uvs)
     {
         CRefObj<IMeshConstructor> spMeshConstructor = IMeshConstructor::Create();
 
@@ -342,10 +342,10 @@ namespace Caustic
         float dy = 2.0f / float(height);
         Vector3 normal(0.0f, 1.0f, 0.0f);
         float cy = -1.0f;
-        for (uint32 y = 0; y < height; y++)
+        for (uint32_t y = 0; y < height; y++)
         {
             float cx = -1.0f;
-            for (uint32 x = 0; x < width; x++)
+            for (uint32_t x = 0; x < width; x++)
             {
                 spMeshConstructor->FaceOpen();
                 Vector3 vpos;
@@ -384,7 +384,7 @@ namespace Caustic
     // Returns:
     // Returns the created mesh
     //**********************************************************************
-    CRefObj<IMesh> CreateGrid(uint32 width, uint32 height)
+    CRefObj<IMesh> CreateGrid(uint32_t width, uint32_t height)
     {
         CRefObj<IMeshConstructor> spMeshConstructor = IMeshConstructor::Create();
 
@@ -397,11 +397,11 @@ namespace Caustic
         Vector3 normal(0.0f, 1.0f, 0.0f);
         float cy = -1.0f;
         float cv = 0.0f;
-        for (uint32 y = 0; y < height; y++)
+        for (uint32_t y = 0; y < height; y++)
         {
             float cx = -1.0f;
             float cu = 0.0f;
-            for (uint32 x = 0; x < width; x++)
+            for (uint32_t x = 0; x < width; x++)
             {
                 spMeshConstructor->FaceOpen();
                 Vector3 vpos;
@@ -437,7 +437,7 @@ namespace Caustic
     // Returns:
     // Returns the created mesh
     //**********************************************************************
-    CRefObj<IMesh> CreateGrid(uint32 subdivisions)
+    CRefObj<IMesh> CreateGrid(uint32_t subdivisions)
     {
         return CreateGrid(subdivisions, subdivisions);
     }
@@ -583,14 +583,14 @@ namespace Caustic
         return CRefObj<ISubMesh>(new CSubMesh());
     }
 
-    CRefObj<ISubMesh> CreateSubMesh(std::vector<CGeomVertex>& verts, std::vector<int>& faces, uint32 materialID)
+    CRefObj<ISubMesh> CreateSubMesh(std::vector<CGeomVertex>& verts, std::vector<int>& faces, uint32_t materialID)
     {
         CMeshConstructor meshConstructor;
         meshConstructor.SubMeshOpen();
         for (size_t i = 0; i < faces.size();)
         {
             meshConstructor.FaceOpen();
-            uint32 vIndex = faces[i++];
+            uint32_t vIndex = faces[i++];
             meshConstructor.VertexAdd(verts[vIndex].pos, verts[vIndex].norm, verts[vIndex].uvs[0]);
             vIndex = faces[i++];
             meshConstructor.VertexAdd(verts[vIndex].pos, verts[vIndex].norm, verts[vIndex].uvs[0]);
@@ -605,7 +605,7 @@ namespace Caustic
 
     CRefObj<ISubMesh> CreateSubMesh(std::vector<Vector3>& vertPos,
         std::vector<int>& faces,
-        uint32 materialID)
+        uint32_t materialID)
     {
         std::vector<Vector3> norms;
         std::vector<Vector2> uvs;
@@ -617,14 +617,14 @@ namespace Caustic
         std::vector<Vector2>& vertUVs,
         std::vector<int>& faces,
         EVertexFlags flags,
-        uint32 materialID)
+        uint32_t materialID)
     {
         CMeshConstructor meshConstructor;
         meshConstructor.SubMeshOpen();
         for (size_t i = 0; i < faces.size(); i += 3)
         {
             meshConstructor.FaceOpen();
-            uint32 vIndex = faces[i];
+            uint32_t vIndex = faces[i];
             Vector3 norm = (vIndex < vertNorms.size()) ? vertNorms[vIndex] : Vector3(0.0f, 0.0f, 0.0f);
             Vector2 uv = (vIndex < vertUVs.size()) ? vertUVs[vIndex] : Vector2(0.0f, 0.0f);
             meshConstructor.VertexAdd(vertPos[vIndex], norm, uv);

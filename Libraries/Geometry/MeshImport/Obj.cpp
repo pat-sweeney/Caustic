@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //
@@ -253,7 +253,7 @@ namespace Caustic
     void CObjParser::ParseMaterial(const char *pData, std::map<std::wstring, std::any> *pDefaultMaterialValues)
     {
         CRefObj<IMaterialAttrib> spMaterial;
-        uint32 materialID = 0;
+        uint32_t materialID = 0;
         while (true)
         {
             std::string line;
@@ -525,7 +525,7 @@ namespace Caustic
                     // m_matmap is indexed based on materialName=>IMaterialAttrib. We want
                     // materials to be indexed based on MaterialID=>IMaterialAttrib. Thus we
                     // need to get the materialID from m and use it as the index into materials.
-                    uint32 materialID = m.second->GetMaterialID();
+                    uint32_t materialID = m.second->GetMaterialID();
                     if (materialID >= materials.size())
                         materials.resize(materialID + 1, nullptr);
                     materials[materialID] = m.second;

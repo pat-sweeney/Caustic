@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2023
+// Copyright Patrick Sweeney 2023-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -7,6 +7,7 @@ module;
 #include <windows.h>
 #include <xaudio2.h>
 #include <math.h>
+#include <cinttypes>
 
 module Audio.AudioPlayback.AudioPlayback;
 import Base.Core.Core;
@@ -51,7 +52,7 @@ namespace Caustic
             m_spXAudio->StopEngine();
     }
 
-    void CAudioPlayback::PlayBuffer(uint8 *pData, uint32 len)
+    void CAudioPlayback::PlayBuffer(uint8_t*pData, uint32_t len)
     {
         XAUDIO2_BUFFER buf;
         buf.Flags = 0;
@@ -71,7 +72,7 @@ namespace Caustic
         PlayBuffer(pFrame->GetData(), pFrame->GetLength());
     }
 
-    void CAudioPlayback::Play(uint8* pData, uint32 dataLen)
+    void CAudioPlayback::Play(uint8_t* pData, uint32_t dataLen)
     {
         PlayBuffer(pData, dataLen);
     }
@@ -84,15 +85,15 @@ namespace Caustic
 
     void CAudioPlayback::PlayTone(int frequency)
     {
-        uint32 bufLen = m_samplingRate * m_numChannels * m_bitsPerSample / 8;
+        uint32_t bufLen = m_samplingRate * m_numChannels * m_bitsPerSample / 8;
         byte* pData = new byte[bufLen];
-        uint16* pw = reinterpret_cast<uint16*>(pData);
+        uint16_t* pw = reinterpret_cast<uint16_t*>(pData);
         for (UINT i = 0; i < bufLen / 4; i++)
         {
             float a = 2 * 3.1415f * float(i) / (float(m_samplingRate) / 440.0f);
             float v = (float)sin(a);
-            *pw++ = static_cast<uint16>(v * 32767);
-            *pw++ = static_cast<uint16>(v * 32767);
+            *pw++ = static_cast<uint16_t>(v * 32767);
+            *pw++ = static_cast<uint16_t>(v * 32767);
         }
         PlayBuffer(pData, bufLen);
     }

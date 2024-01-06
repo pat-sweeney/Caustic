@@ -76,20 +76,20 @@ namespace Caustic
         return std::any(nullptr); // TODO: Return output buffer
     }
 
-    void CRenderGraphNode_Compute::SetInputThreads(uint32 width, uint32 height, uint32 depth /* = 1 */)
+    void CRenderGraphNode_Compute::SetInputThreads(uint32_t width, uint32_t height, uint32_t depth /* = 1 */)
     {
-        uint32 xThreads, yThreads, zThreads;
+        uint32_t xThreads, yThreads, zThreads;
         m_spComputeShader->GetShaderInfo()->GetThreadGroupSize(&xThreads, &yThreads, &zThreads);
         // Determine the correct number of thread groups so we process the entire image
-        uint32 xGroups = (width + xThreads - 1) / xThreads;
-        uint32 yGroups = (height + yThreads - 1) / yThreads;
-        uint32 zGroups = (depth + zThreads - 1) / zThreads;
+        uint32_t xGroups = (width + xThreads - 1) / xThreads;
+        uint32_t yGroups = (height + yThreads - 1) / yThreads;
+        uint32_t zGroups = (depth + zThreads - 1) / zThreads;
         m_xThreads = xGroups;
         m_yThreads = yGroups;
         m_zThreads = zGroups;
     }
 
-    void CRenderGraphNode_Compute::SetShaderParam(const wchar_t* pParamName, uint32 value)
+    void CRenderGraphNode_Compute::SetShaderParam(const wchar_t* pParamName, uint32_t value)
     {
         std::any wv = std::any(Int(value));
         m_spComputeShader->SetCSParam(pParamName, wv);
@@ -102,7 +102,7 @@ namespace Caustic
     }
 
 
-    void CRenderGraphNode_Compute::SetBuffer(IRenderer *pRenderer, const wchar_t* pBufferName, uint8* pData, uint32 bufSize, uint32 elemSize)
+    void CRenderGraphNode_Compute::SetBuffer(IRenderer *pRenderer, const wchar_t* pBufferName, uint8* pData, uint32_t bufSize, uint32_t elemSize)
     {
         EBufferType bufferType;
         ShaderParamDef def;

@@ -90,16 +90,44 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BaseComponent.ixx" />
     <ClCompile Include="ECS.cpp" />
     <ClCompile Include="ECS.ixx" />
-    <ClCompile Include="Hiearchy.ixx" />
-    <ClCompile Include="Hierarchy.cpp" />
+    <ClCompile Include="HiearchySystem.ixx" />
+    <ClCompile Include="HierarchySystem.cpp" />
+    <ClCompile Include="HierarchyComponent.ixx" />
     <ClCompile Include="IECS.ixx" />
-    <ClCompile Include="IHierarchy.ixx" />
+    <ClCompile Include="IHierarchySystem.ixx" />
+    <ClCompile Include="IRenderSystem.ixx" />
+    <ClCompile Include="MaterialComponent.ixx" />
+    <ClCompile Include="MeshComponent.ixx" />
+    <ClCompile Include="RenderSystem.cpp" />
+    <ClCompile Include="RenderSystem.ixx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Base\Core\Core.vcxproj">
       <Project>{aacfe62f-5400-4a81-87ad-b37573a1f5c9}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Base\Math\Math.vcxproj">
+      <Project>{a82bd627-0746-4f67-856f-396335084fee}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Geometry\GeomDS\GeomDS.vcxproj">
+      <Project>{163426b2-af7c-4713-8e3c-1a56a9cc0abf}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Geometry\Mesh\Mesh.vcxproj">
+      <Project>{e7cf4287-e8ff-4d29-8883-5a05a6590af3}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Imaging\Color\Color.vcxproj">
+      <Project>{6bd55e78-59f0-402f-9bbd-650c8fe563f3}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Imaging\Image\Image.vcxproj">
+      <Project>{f7bef797-220c-4585-a489-f06df155ea60}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Interop\Renderer\Renderer.vcxproj">
+      <Project>{b70dec5c-65cb-4e68-893a-d592fd8ba0b1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Caustic\Caustic.vcxproj">
+      <Project>{60a04400-10f9-4c6d-b34c-d5c7ebafa262}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

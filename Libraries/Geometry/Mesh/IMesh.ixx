@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2023
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -67,7 +67,7 @@ export namespace Caustic
         CHalfEdge *m_pOpposite;        // Opposite half edge
         CGeomVertex *m_pVertex;        // Vertex at head of edge
         CFace *m_pFace;                // Face to the left of edge
-        uint32 m_smoothingGroup;       // Smoothing group this edge belongs to
+        uint32_t m_smoothingGroup;       // Smoothing group this edge belongs to
         int index;
 
         //friend class CFace;
@@ -120,7 +120,7 @@ export namespace Caustic
         // Returns:
         // ID of the smoothing group this edge belongs to
         //**********************************************************************
-        uint32 GetSmoothingGroup() { return m_smoothingGroup; }
+        uint32_t GetSmoothingGroup() { return m_smoothingGroup; }
     };
 
     //**********************************************************************
@@ -164,7 +164,7 @@ export namespace Caustic
         // Method: GetNumberVertices
         // Returns the number of vertices in the face.
         //**********************************************************************
-        uint32 GetNumberVertices() { return (uint32)m_vertices.size(); }
+        uint32_t GetNumberVertices() { return (uint32_t)m_vertices.size(); }
 
         //**********************************************************************
         // Method: GetVertex
@@ -173,7 +173,7 @@ export namespace Caustic
         // Parameters:
         // idx - index of vertex
         //**********************************************************************
-        CGeomVertex *GetVertex(uint32 idx) { return m_vertices[idx]; }
+        CGeomVertex *GetVertex(uint32_t idx) { return m_vertices[idx]; }
 
 
         //**********************************************************************
@@ -213,7 +213,7 @@ export namespace Caustic
         PointInsertion // Use "Point-Insertion" method (insert new vertices to form triangles)
     };
 
-    const uint32 c_InvalidIndex = 0xffffffff;
+    const uint32_t c_InvalidIndex = 0xffffffff;
 
     //**********************************************************************
     // Class: EMeshFlags
@@ -247,7 +247,7 @@ export namespace Caustic
         // Returns:
         // Returns true if ray intersects mesh. False otherwise.
         //**********************************************************************
-        virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, uint32* pMaterialID) = 0;
+        virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, uint32_t* pMaterialID) = 0;
 
         //**********************************************************************
         // Method: SetName
@@ -268,7 +268,7 @@ export namespace Caustic
         // Method: GetNumberFaces
         // Returns the number of faces in the submesh
         //**********************************************************************
-        virtual uint32 GetNumberFaces() = 0;
+        virtual uint32_t GetNumberFaces() = 0;
 
         //**********************************************************************
         // Method: GetFace
@@ -277,13 +277,13 @@ export namespace Caustic
         // Parameters:
         // index - index of face
         //**********************************************************************
-        virtual CFace *GetFace(uint32 index) = 0;
+        virtual CFace *GetFace(uint32_t index) = 0;
 
         //**********************************************************************
         // Method: GetNumberVertices
         // Returns number of vertices in submesh
         //**********************************************************************
-        virtual uint32 GetNumberVertices() = 0;
+        virtual uint32_t GetNumberVertices() = 0;
 
         //**********************************************************************
         // Method: GetVertex
@@ -292,13 +292,13 @@ export namespace Caustic
         // Parameters:
         // index - index of requested vertex
         //**********************************************************************
-        virtual CGeomVertex *GetVertex(uint32 index) = 0;
+        virtual CGeomVertex *GetVertex(uint32_t index) = 0;
 
         //**********************************************************************
         // Method: GetNumberEdges
         // Returns number of edges in submesh
         //**********************************************************************
-        virtual uint32 GetNumberEdges() = 0;
+        virtual uint32_t GetNumberEdges() = 0;
 
         //**********************************************************************
         // Method: GetEdge
@@ -307,7 +307,7 @@ export namespace Caustic
         // Parameters:
         // index - index of requested edge
         //**********************************************************************
-        virtual CHalfEdge *GetEdge(uint32 index) = 0;
+        virtual CHalfEdge *GetEdge(uint32_t index) = 0;
 
         //**********************************************************************
         // Method: GetVertexFlags
@@ -343,7 +343,7 @@ export namespace Caustic
         // Method: GetMaterialID
         // Returns the material ID associated with the submesh
         //**********************************************************************
-        virtual uint32 GetMaterialID() = 0;
+        virtual uint32_t GetMaterialID() = 0;
 
         //**********************************************************************
         // Method: SetMaterialID
@@ -352,7 +352,7 @@ export namespace Caustic
         // Parameters:
         // materialID - ID of material
         //**********************************************************************
-        virtual void SetMaterialID(uint32 materialID) = 0;
+        virtual void SetMaterialID(uint32_t materialID) = 0;
 
         //**********************************************************************
         // Method: GetBBOX
@@ -389,7 +389,7 @@ export namespace Caustic
         // Parameters:
         // pVertex - vertex to convert into index
         //**********************************************************************
-        virtual uint32 VertexToIndex(CGeomVertex *pVertex) = 0;
+        virtual uint32_t VertexToIndex(CGeomVertex *pVertex) = 0;
 
         //**********************************************************************
         // Method: FaceToIndex
@@ -398,7 +398,7 @@ export namespace Caustic
         // Parameters:
         // pFace - face to convert into index
         //**********************************************************************
-        virtual uint32 FaceToIndex(CFace *pFace) = 0;
+        virtual uint32_t FaceToIndex(CFace *pFace) = 0;
 
         //**********************************************************************
         // Method: EdgeToIndex
@@ -407,7 +407,7 @@ export namespace Caustic
         // Parameters:
         // pEdge - edge to convert into index
         //**********************************************************************
-        virtual uint32 EdgeToIndex(CHalfEdge *pEdge) = 0;
+        virtual uint32_t EdgeToIndex(CHalfEdge *pEdge) = 0;
 
         //**********************************************************************
         // Method: Triangulate
@@ -431,7 +431,7 @@ export namespace Caustic
         // Returns:
         // Returns renderable form of the mesh
         //**********************************************************************
-        virtual MeshData ToMeshData(ID3D11Device* pDevice, std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout, uint32 vertexSize) = 0;
+        virtual MeshData ToMeshData(ID3D11Device* pDevice, std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout, uint32_t vertexSize) = 0;
     };
 
     //**********************************************************************
@@ -452,13 +452,13 @@ export namespace Caustic
         // pIntersection - returns the intersection point if a ray intersect occurs
         // pMaterialID - returns the material for the part of the mesh interested
         //**********************************************************************
-        virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, uint32* pMaterialID) = 0;
+        virtual bool RayIntersect(Ray3& ray, RayIntersect3* pIntersection, uint32_t* pMaterialID) = 0;
          
         //**********************************************************************
         // Method: NumberSubMeshes
         // Returns number of submeshes in the mesh
         //**********************************************************************
-        virtual uint32 NumberSubMeshes() = 0;
+        virtual uint32_t NumberSubMeshes() = 0;
 
         //**********************************************************************
         // Method: GetSubMesh
@@ -470,7 +470,7 @@ export namespace Caustic
         // Returns:
         // Returns the Nth submesh
         //**********************************************************************
-        virtual CRefObj<ISubMesh> GetSubMesh(uint32 index) = 0;
+        virtual CRefObj<ISubMesh> GetSubMesh(uint32_t index) = 0;
 
         //**********************************************************************
         // Method: AddSubMesh
@@ -512,7 +512,7 @@ export namespace Caustic
         // Returns:
         // Returns number of materials
         //**********************************************************************
-        virtual uint32 GetNumberMaterials() = 0;
+        virtual uint32_t GetNumberMaterials() = 0;
 
         //**********************************************************************
         // Method: GetMaterial
@@ -524,7 +524,7 @@ export namespace Caustic
         // Returns:
         // Returns the Nth material
         //**********************************************************************
-        virtual CRefObj<IMaterialAttrib> GetMaterial(uint32 materialID) = 0;
+        virtual CRefObj<IMaterialAttrib> GetMaterial(uint32_t materialID) = 0;
 
         //**********************************************************************
         // Method: ComputeNormals
@@ -544,6 +544,6 @@ export namespace Caustic
         // Returns:
         // Returns list of MeshData associated with each submesh
         //**********************************************************************
-        virtual std::vector<MeshData> ToMeshData(ID3D11Device* pDevice, std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout, uint32 vertexSize) = 0;
+        virtual std::vector<MeshData> ToMeshData(ID3D11Device* pDevice, std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout, uint32_t vertexSize) = 0;
     };
 }

@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 1996-2021
+// Copyright Patrick Sweeney 1996-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -8,6 +8,7 @@ module;
 #include <any>
 #include <string>
 #include <memory>
+#include <cinttypes>
 
 export module Imaging.Image.ImageFilter.UnsharpMask;
 import Base.Core.Core;
@@ -40,8 +41,8 @@ export namespace Caustic
 		//**********************************************************************
 		// IRefCount
 		//**********************************************************************
-		virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-		virtual uint32 Release() override { return CRefCount::Release(); }
+		virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+		virtual uint32_t Release() override { return CRefCount::Release(); }
 
 		//**********************************************************************
 		// IImageFilter
@@ -69,11 +70,11 @@ export namespace Caustic
 		RGBColor clr[3][3];
 		T riter[3];
 		T citer[3];
-		int32 sumr, sumg, sumb;
-		int32 avgr, avgg, avgb;
+		int32_t sumr, sumg, sumb;
+		int32_t avgr, avgg, avgb;
 
-		uint32 w1 = pImage->GetWidth() - 1;
-		uint32 h1 = pImage->GetHeight() - 1;
+		uint32_t w1 = pImage->GetWidth() - 1;
+		uint32_t h1 = pImage->GetHeight() - 1;
 		riter[0] = T(pImage, 0, 0);
 		riter[1] = T(pImage, 0, 0);
 		riter[2] = T(pImage, 0, (pImage->GetHeight() > 1) ? 1 : 0);
@@ -81,9 +82,9 @@ export namespace Caustic
 		CImageIter1 riter1;
 		if (pMask)
 			riter1 = CImageIter1(pMask, 0, 0);
-		uint32 w = pImage->GetWidth();
-		uint32 h = pImage->GetHeight();
-		for (uint32 y = 0; y < h; y++)
+		uint32_t w = pImage->GetWidth();
+		uint32_t h = pImage->GetHeight();
+		for (uint32_t y = 0; y < h; y++)
 		{
 			T dstciter = dstriter;
 			citer[0] = riter[0];
@@ -105,7 +106,7 @@ export namespace Caustic
 				citer[1].Step(CImageIter::Right);
 				citer[2].Step(CImageIter::Right);
 			}
-			uint32 x = pImage->GetWidth();
+			uint32_t x = pImage->GetWidth();
 			while (x--)
 			{
 				//
@@ -146,9 +147,9 @@ export namespace Caustic
 					//
 					// Scale value into range
 					//
-					dstciter.SetRed((uint8)sumr);
-					dstciter.SetGreen((uint8)sumg);
-					dstciter.SetBlue((uint8)sumb);
+					dstciter.SetRed((uint8_t)sumr);
+					dstciter.SetGreen((uint8_t)sumg);
+					dstciter.SetBlue((uint8_t)sumb);
 					dstciter.SetAlpha(255);
 				}
 				clr[0][0] = clr[0][1];

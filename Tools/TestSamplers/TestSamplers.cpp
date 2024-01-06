@@ -4,6 +4,7 @@
 #include "framework.h"
 #include "TestSamplers.h"
 #include <vector>
+#include <cinttypes>
 import Base.Math.FuncFilter;
 import Base.Core.Core;
 import Base.Math.Vector;
@@ -42,7 +43,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         else
             offsets[i] = 10.0f * float(rand()) / float(RAND_MAX) - 5.0f;
 
-    Caustic::uint8 clr[4];
+    uint8_t clr[4];
     float ls = offsets[0] + 128;
     for (int i = 1; i < totalSamples; i++)
     {

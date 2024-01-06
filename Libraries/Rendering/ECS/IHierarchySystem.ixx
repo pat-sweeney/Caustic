@@ -1,12 +1,13 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2023
+// Copyright Patrick Sweeney 2023-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
 module;
 #include <string>
+#include <functional>
 
-export module Rendering.ECS.IHierarchy;
+export module Rendering.ECS.IHierarchySystem;
 import Base.Core.Core;
 import Base.Core.Error;
 import Base.Core.RefCount;
@@ -21,8 +22,8 @@ export namespace Caustic
     // Defines the interface to the HierarchySystem. The HierarchySystem handles
     // parenting entities to other entities via the HierarchyComponent.
     //**********************************************************************
-    struct IHierarchySystem
+    struct IHierarchySystem : public ISystem
     {
-        virtual void SetParent(IEntity* pParent) = 0;
+        virtual void Traverse(std::function<void(IEntity*)> func) = 0;
     };
 }

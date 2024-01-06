@@ -16,9 +16,9 @@ import Imaging.Image.ImagePool;
 namespace Caustic
 {
     //**********************************************************************
-    uint32 CImagePoolImg::Release()
+    uint32_t CImagePoolImg::Release()
     {
-        uint32 refcnt = CRefCount::Release();
+        uint32_t refcnt = CRefCount::Release();
         if (refcnt == 1)
         {
             // Last external reference is about to go away. Push image back into our pool.
@@ -35,7 +35,7 @@ namespace Caustic
         return refcnt;
     }
 
-    CImagePool::CImagePool(uint32 maxImages, uint32 w, uint32 h, EImageType imageType)
+    CImagePool::CImagePool(uint32_t maxImages, uint32_t w, uint32_t h, EImageType imageType)
     {
         m_maxImages = maxImages;
         m_width = w;
@@ -58,7 +58,7 @@ namespace Caustic
         default:
             CT(E_INVALIDARG);
         }
-        for (uint32 i = 0; i < maxImages; i++)
+        for (uint32_t i = 0; i < maxImages; i++)
         {
             auto img = Caustic::CreateImage(w, h, imageType);
             auto poolimg = new CImagePoolImg(img, this);
@@ -77,7 +77,7 @@ namespace Caustic
         return CRefObj<IImage>(wpImg);
     }
 
-    CRefObj<IImagePool> CreateImagePool(uint32 maxImages, uint32 width, uint32 height, EImageType imageType)
+    CRefObj<IImagePool> CreateImagePool(uint32_t maxImages, uint32_t width, uint32_t height, EImageType imageType)
     {
         return CRefObj<IImagePool>(new CImagePool(maxImages, width, height, imageType));
     }

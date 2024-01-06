@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2021
+// Copyright Patrick Sweeney 2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -56,10 +56,10 @@ export namespace Caustic
         // Returns:
         // Number of milliseconds since timer started
         //**********************************************************************
-        uint32 Stop()
+        uint32_t Stop()
         {
             auto t = std::chrono::system_clock::now();
-            return (uint32)(std::chrono::duration_cast<std::chrono::milliseconds>(t - m_startTime).count());
+            return (uint32_t)(std::chrono::duration_cast<std::chrono::milliseconds>(t - m_startTime).count());
         }
     };
 };

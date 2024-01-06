@@ -35,8 +35,8 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IRenderGraphNode
@@ -45,7 +45,7 @@ export namespace Caustic
         virtual std::string GetName() override { return m_name; }
         virtual void SetName(std::string name) override { m_name = name; }
         virtual void SetProperty(std::string name, std::any value) override { CRenderGraphNode::SetProperty(name, value); }
-//        virtual uint32 NumberPins() override { return CRenderGraphNode::NumberPins(); }
+//        virtual uint32_t NumberPins() override { return CRenderGraphNode::NumberPins(); }
 //        virtual CRefObj<IRenderGraphPin> GetPin(int index) override { return CRenderGraphNode::GetPin(index); }
 //        virtual CRefObj<IRenderGraphPin> FindPin(std::string name) override { return CRenderGraphNode::FindPin(name); }
 //        virtual bool Render(IRenderer* pRenderer, IRenderCtx* pRenderCtx) override

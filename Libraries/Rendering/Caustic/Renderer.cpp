@@ -81,7 +81,7 @@ namespace Caustic
     void CRenderer::ToRenderMaterials(IMesh* pMesh, IShader* pShader, IRenderMesh* pRenderMesh, IMaterialAttrib* pDefaultMaterial)
     {
         CRefObj<ICausticFactory> spFactory = CreateCausticFactory();
-        for (uint32 i = 0; i < pMesh->NumberSubMeshes(); i++)
+        for (uint32_t i = 0; i < pMesh->NumberSubMeshes(); i++)
         {
             ISubMesh* pSubMesh = pMesh->GetSubMesh(i);
             CRefObj<IRenderSubMesh> spRenderSubMesh = pRenderMesh->GetSubMesh(i);
@@ -99,7 +99,7 @@ namespace Caustic
     // Method: DeviceWindowResized
     // Set <IRenderer::DeviceWindowResized>.
     //**********************************************************************
-    void CRenderer::DeviceWindowResized(uint32 width, uint32 height)
+    void CRenderer::DeviceWindowResized(uint32_t width, uint32_t height)
     {
         CGraphicsBase::DeviceWindowResizedInternal(width, height);
     }
@@ -739,7 +739,7 @@ namespace Caustic
                 DrawLine(m_lights[i]->GetPosition(), Vector3(0.0f, 0.0f, 0.0f), Vector4(1.0f, 1.0f, 0.0f, 1.0f));
         }
 
-        for (uint32 pass = c_PassFirst; pass <= c_PassLast; pass++)
+        for (uint32_t pass = c_PassFirst; pass <= c_PassLast; pass++)
         {
             CRenderCtx *pCtx = (CRenderCtx*)m_spRenderCtx.p;
 #ifdef _DEBUG
@@ -959,8 +959,8 @@ namespace Caustic
 
         CT(m_spDevice->CreateRenderTargetView(pTexture, nullptr, &m_spFinalRTView));
         
-        uint32 width = m_viewRect.right - m_viewRect.left + 1;
-        uint32 height = m_viewRect.bottom - m_viewRect.top + 1;
+        uint32_t width = m_viewRect.right - m_viewRect.left + 1;
+        uint32_t height = m_viewRect.bottom - m_viewRect.top + 1;
         if (desc.Width != width || desc.Height != height)
         {
             ZeroMemory(&m_viewport, sizeof(m_viewport));
@@ -1089,7 +1089,7 @@ namespace Caustic
         m_spCamera = pCamera;
     }
 
-    void CGraphicsBase::DeviceWindowResizedInternal(uint32 width, uint32 height)
+    void CGraphicsBase::DeviceWindowResizedInternal(uint32_t width, uint32_t height)
     {
         m_spBackBuffer = nullptr;
         m_spRTView = nullptr;

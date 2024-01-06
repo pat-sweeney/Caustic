@@ -18,6 +18,7 @@
 #include <DXProgrammableCapture.h>
 #include <shlwapi.h>
 #include <vector>
+#include <cinttypes>
 
 import Caustic.Base;
 import Base.Core.Core;
@@ -99,7 +100,7 @@ public:
     void ComputeGridWarp(IRenderer* pRenderer, int frameIndex, int phonemeIndex, PhonemeInfo& phonemeInfo, std::vector<std::vector<Vector2>>& faceLandmarks,
         std::vector<Vector2>& landmarkDeltas, int roiX, int roiY, int roiWidth, int roiHeight, int imageWidth, int imageHeight);
     void WritePhonemeDeltas(int phonemeIndex, std::vector<PhonemeInfo>& phonemeInfo, std::vector<std::vector<Vector2>>& phonemeLandmarkDeltas);
-    void WritePhonemeAudio(int phonemeIndex, std::vector<PhonemeInfo>& phonemeInfo, std::vector<uint8>& phonemeAudio);
+    void WritePhonemeAudio(int phonemeIndex, std::vector<PhonemeInfo>& phonemeInfo, std::vector<uint8_t>& phonemeAudio);
     void LoadPhonemeTimings(std::wstring& fn);
 };
 CApp app;
@@ -170,7 +171,7 @@ class CWarpNode : public CGPUPipelineNodeBase
     CRefObj<IMesh> m_spMesh;
     CRefObj<IRenderMesh> m_spRenderMesh;
 public:
-    CWarpNode(const wchar_t* pName, IRenderer* pRenderer, IShader* pShader, uint32 inputWidth, uint32 inputHeight, DXGI_FORMAT format, float2* pGridLocations) :
+    CWarpNode(const wchar_t* pName, IRenderer* pRenderer, IShader* pShader, uint32_t inputWidth, uint32_t inputHeight, DXGI_FORMAT format, float2* pGridLocations) :
         CGPUPipelineNodeBase(inputWidth, inputHeight, format)
     {
         SetName(pName);
@@ -185,8 +186,8 @@ public:
     //**********************************************************************
     // IRefCount
     //**********************************************************************
-    virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-    virtual uint32 Release() override { return CRefCount::Release(); }
+    virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+    virtual uint32_t Release() override { return CRefCount::Release(); }
 
     //**********************************************************************
     // IGPUPipelineNode
@@ -199,9 +200,9 @@ public:
     virtual CRefObj<IShader> GetShader() override { return CGPUPipelineNodeBase::GetShader(); }
     virtual CRefObj<IGPUPipelineNode> GetInput(const wchar_t* pName) override { return CGPUPipelineNodeBase::GetInput(pName); }
     virtual void SetInput(const wchar_t* pName, const wchar_t* pTextureName, const wchar_t* pSamplerName, IGPUPipelineNode* pNode) override { CGPUPipelineNodeBase::SetInput(pName, pTextureName, pSamplerName, pNode); }
-    virtual void SetOutputSize(uint32 width, uint32 height) override { CGPUPipelineNodeBase::SetOutputSize(width, height); }
-    virtual uint32 GetOutputWidth() override { return CGPUPipelineNodeBase::GetOutputWidth(); }
-    virtual uint32 GetOutputHeight() override { return CGPUPipelineNodeBase::GetOutputHeight(); }
+    virtual void SetOutputSize(uint32_t width, uint32_t height) override { CGPUPipelineNodeBase::SetOutputSize(width, height); }
+    virtual uint32_t GetOutputWidth() override { return CGPUPipelineNodeBase::GetOutputWidth(); }
+    virtual uint32_t GetOutputHeight() override { return CGPUPipelineNodeBase::GetOutputHeight(); }
     virtual CRefObj<ITexture> GetOutputTexture(IGPUPipeline* pPipeline) override { return CGPUPipelineNodeBase::GetOutputTexture(pPipeline); }
     virtual void Process(IGPUPipeline* pPipeline, IRenderer* pRenderer, IRenderCtx* pRenderCtx) override
     {
@@ -269,7 +270,7 @@ void CApp::WritePhonemeDeltas(int phonemeIndex, std::vector<PhonemeInfo>& phonem
     phonemeLandmarkDeltas.clear();
 }
 
-void CApp::WritePhonemeAudio(int phonemeIndex, std::vector<PhonemeInfo>& phonemeInfo, std::vector<uint8>& phonemeAudio)
+void CApp::WritePhonemeAudio(int phonemeIndex, std::vector<PhonemeInfo>& phonemeInfo, std::vector<uint8_t>& phonemeAudio)
 {
     // Write the landmark deltas to the database (which for now is just a file)
     wchar_t buf[1024];
@@ -297,10 +298,10 @@ void CApp::ComputeWarps(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx
     int phonemeIndex = 0;
     m_spVideo->Restart();
     std::vector<std::vector<Vector2>> phonemeLandmarkDeltas;
-    std::vector<uint8> curPhonemeAudio;
-    std::vector<std::vector<uint8>> phonemeSounds;
+    std::vector<uint8_t> curPhonemeAudio;
+    std::vector<std::vector<uint8_t>> phonemeSounds;
     CRefObj<IImage> spImageToWarp;
-    uint32 curtime = 0;
+    uint32_t curtime = 0;
     int frameIndex = 0;
     CAudioFormat audioFormat;
     m_spVideo->GetAudioFormat(&audioFormat);
@@ -312,9 +313,9 @@ void CApp::ComputeWarps(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx
         auto spAudioSample = m_spVideo->NextAudioSample();
         if (spAudioSample != nullptr)
         {
-            uint8* pAudioData = spAudioSample->GetData();
-            uint32 audioLen = spAudioSample->GetDataSize();
-            uint32 startIndex = (uint32)curPhonemeAudio.size();
+            uint8_t* pAudioData = spAudioSample->GetData();
+            uint32_t audioLen = spAudioSample->GetDataSize();
+            uint32_t startIndex = (uint32_t)curPhonemeAudio.size();
             curPhonemeAudio.resize(startIndex + audioLen);
             memcpy(&curPhonemeAudio[startIndex], pAudioData, audioLen);
 
@@ -438,15 +439,15 @@ void CApp::ComputeWarps(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx
                 }
 
                 Vector2 phonemeLandmark = faceLandmarks[phonemeInfo[phonemeIndex].m_startFrame][landmarkIndex];
-                Caustic::uint8 color1[4] = { 255, 0, 0, 255 };
+                uint8_t color1[4] = { 255, 0, 0, 255 };
                 phonemeLandmark.y = 1080 - phonemeLandmark.y;
                 spFinalImage->DrawCircle(phonemeLandmark, 3, color1);
                 Vector2 alignedLandmark = faceLandmarks[frameIndex][landmarkIndex];
-                Caustic::uint8 color2[4] = { 0, 255, 0, 255 };
+                uint8_t color2[4] = { 0, 255, 0, 255 };
                 alignedLandmark.y = 1080 - alignedLandmark.y;
                 spFinalImage->DrawCircle(alignedLandmark, 4, color2);
                 alignedLandmark = alignedLandmark * mat;
-                Caustic::uint8 color3[4] = { 0, 0, 255, 255 };
+                uint8_t color3[4] = { 0, 0, 255, 255 };
                 spFinalImage->DrawCircle(alignedLandmark, 5, color3);
             }
         }
@@ -458,7 +459,7 @@ void CApp::ComputeWarps(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx
             {
                 for (int j = 0; j < c_GridX - 1; j++)
                 {
-                    uint8 color[4] = { 255, 255, 255, 255 };
+                    uint8_t color[4] = { 255, 255, 255, 255 };
                     int index00 = i * c_GridX + j;
                     int index10 = index00 + 1;
                     int index01 = (i + 1) * c_GridX + j;

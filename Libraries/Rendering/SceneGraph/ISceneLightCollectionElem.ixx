@@ -35,7 +35,7 @@ export namespace Caustic
         // Method: NumberLights
         // Returns the number of lights in the collection
         //**********************************************************************
-        virtual uint32 NumberLights() = 0;
+        virtual uint32_t NumberLights() = 0;
 
         //**********************************************************************
         // Method: GetLight

@@ -23,8 +23,8 @@ export namespace Caustic
     // Defines the format for a video
     //
     // Members:
-    // <uint32 at Caustic::uint32> m_width - width of video in pixels
-    // <uint32 at Caustic::uint32> m_height - heightof video in pixels
+    // <uint32_t at Caustic::uint32_t> m_width - width of video in pixels
+    // <uint32_t at Caustic::uint32_t> m_height - heightof video in pixels
     // bool m_topDown - is video oriented from top to bottom (pixel 0,0 in top left corner)
     // RECT m_rect - Video rect corrected for pixel aspect ratio
     //
@@ -33,8 +33,8 @@ export namespace Caustic
     //**********************************************************************
     struct CVideoFormat
     {
-        uint32 m_width;
-        uint32 m_height;
+        uint32_t m_width;
+        uint32_t m_height;
         bool m_topDown;
         RECT m_rect;    // Corrected for pixel aspect ratio
 
@@ -73,14 +73,14 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // ITexture
         //**********************************************************************
-        virtual uint32 GetWidth() override;
-        virtual uint32 GetHeight() override;
+        virtual uint32_t GetWidth() override;
+        virtual uint32_t GetHeight() override;
         virtual DXGI_FORMAT GetFormat() { return DXGI_FORMAT_B8G8R8A8_UNORM; }
         virtual void Update(IRenderer* pRenderer) override;
         virtual CComPtr<ID3D11Texture2D> GetD3DTexture() override { return m_spDesktopCopy->GetD3DTexture(); }

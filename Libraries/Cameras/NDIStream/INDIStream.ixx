@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2023
+// Copyright Patrick Sweeney 2023-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -62,7 +62,7 @@ export namespace Caustic
         // Module:
         // {Link:import Cameras.NDIStream.INDIStream;{Cameras/NDIStream/INDIStream.ixx}}
         //**********************************************************************
-        virtual void SendAudioFrame(uint8* pBuffer, uint32 bufferLen) = 0;
+        virtual void SendAudioFrame(uint8_t* pBuffer, uint32_t bufferLen) = 0;
     };
 
     //**********************************************************************

@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -55,13 +55,13 @@ namespace Caustic
         if (pRenderer == nullptr)
             return;
         auto spCamera = pRenderer->GetCamera();
-        uint32 w = pDest->GetWidth();
-        uint32 h = pDest->GetHeight();
+        uint32_t w = pDest->GetWidth();
+        uint32_t h = pDest->GetHeight();
         Caustic::CImageIter24 rowIter(pDest, 0, 0);
-        for (uint32 y = 0; y < h; y++)
+        for (uint32_t y = 0; y < h; y++)
         {
             Caustic::CImageIter24 colIter = rowIter;
-            for (uint32 x = 0; x < w; x++)
+            for (uint32_t x = 0; x < w; x++)
             {
                 Ray3 ray;
                 FRGBColor finalClr(0.0f, 0.0f, 0.0f);
@@ -92,9 +92,9 @@ namespace Caustic
                 finalClr.r /= (float)pCtx->spp;
                 finalClr.g /= (float)pCtx->spp;
                 finalClr.b /= (float)pCtx->spp;
-                colIter.SetRed(uint8(finalClr.r * 255.0f));
-                colIter.SetGreen(uint8(finalClr.g * 255.0f));
-                colIter.SetBlue(uint8(finalClr.b * 255.0f));
+                colIter.SetRed(uint8_t(finalClr.r * 255.0f));
+                colIter.SetGreen(uint8_t(finalClr.g * 255.0f));
+                colIter.SetBlue(uint8_t(finalClr.b * 255.0f));
                 colIter.Step(Caustic::CImageIter24::EStepDirection::Right);
             }
             rowIter.Step(Caustic::CImageIter24::EStepDirection::Down);
@@ -113,12 +113,12 @@ namespace Caustic
         LeaveCriticalSection(&m_cs);
     }
 
-    uint32 CSceneGraph::NumberChildren()
+    uint32_t CSceneGraph::NumberChildren()
     {
         return m_spRoot->NumberChildren();
     }
 
-    CRefObj<ISceneElem> CSceneGraph::GetChild(uint32 index)
+    CRefObj<ISceneElem> CSceneGraph::GetChild(uint32_t index)
     {
         return m_spRoot->GetChild(index);
     }
@@ -163,7 +163,7 @@ namespace Caustic
         SetFlags(GetFlags() | ESceneElemFlags::BBoxDirty);
     }
 
-    void CSceneGraph::InsertChild(ISceneElem *pElem, uint32 index)
+    void CSceneGraph::InsertChild(ISceneElem *pElem, uint32_t index)
     {
         return m_spRoot->InsertChild(pElem, index);
     }

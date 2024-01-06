@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -13,6 +13,7 @@ module;
 #include <mfreadwrite.h>
 #include <winnt.h>
 #include <atlbase.h>
+#include <cinttypes>
 
 export module Cameras.WebCamera.WebCamera;
 import Base.Core.Core;
@@ -34,8 +35,8 @@ export namespace Caustic
     // Members:
     // CComPtr<IMFSourceReader> m_spReader - Media Foundation's source reader
     // CRefObj<IImagePool> m_spColorImagePool - image pool
-    // UINT32 m_width - width of output image
-    // UINT32 m_height - height of output image
+    // uint32_t m_width - width of output image
+    // uint32_t m_height - height of output image
     // LONG m_stride - stride of output image
     //
     // Module:
@@ -45,7 +46,7 @@ export namespace Caustic
     {
         CComPtr<IMFSourceReader> m_spReader;
         CRefObj<IImagePool> m_spColorImagePool;
-        UINT32 m_width, m_height;
+        uint32_t m_width, m_height;
         LONG m_stride;
         bool m_hasAudio;
 
@@ -79,16 +80,16 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // ICameraDevice
         //**********************************************************************
         virtual bool NextVideoFrame(IImage** ppColorImage) override;
         virtual bool NextAudioFrame(IAudioFrame** ppAudioFrame) override;
-        virtual uint32 GetColorWidth() override { return 0; }
-        virtual uint32 GetColorHeight() override { return 0; }
+        virtual uint32_t GetColorWidth() override { return 0; }
+        virtual uint32_t GetColorHeight() override { return 0; }
 
         //**********************************************************************
         // IWebCamera

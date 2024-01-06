@@ -116,7 +116,7 @@ namespace Caustic
             float ysteps = 0.0f;
             for (int x = 0; x < dstw; x++)
             {
-                uint8 r, g, b;
+                uint8_t r, g, b;
 
                 if (srcx >= 0 && srcx < (int)pImage->GetWidth() &&
                     srcy >= 0 && srcy < (int)pImage->GetHeight())

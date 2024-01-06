@@ -1,11 +1,12 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
 module;
 #include <memory>
 #include <Windows.h>
+#include <cinttypes>
 
 export module Imaging.Image.Image;
 import Base.Core.Core;
@@ -21,13 +22,13 @@ export namespace Caustic
     // Members:
     // <EImageType at Caustic::EImageType> m_imageType - Type of data stored in the image
     // <CRefObj> < <CImage> > m_spParent - parent image if image is a subimage
-    // <uint32 at Caustic::uint32> m_subx - X offset into parent image
-    // <uint32 at Caustic::uint32> m_suby - Y offset into parent image
+    // <uint32_t at Caustic::uint32_t> m_subx - X offset into parent image
+    // <uint32_t at Caustic::uint32_t> m_suby - Y offset into parent image
     // <uint8 at Caustic::uint8>* m_pData - pointer to image data
     // bool m_ownData - Did this object allocate m_pData?
-    // <uint32 at Caustic::uint32> m_width - width of image in pixels
-    // <uint32 at Caustic::uint32> m_height - height of image in pixels
-    // <uint32 at Caustic::uint32> m_bytesPerPixel - width of each pixel in bytes
+    // <uint32_t at Caustic::uint32_t> m_width - width of image in pixels
+    // <uint32_t at Caustic::uint32_t> m_height - height of image in pixels
+    // <uint32_t at Caustic::uint32_t> m_bytesPerPixel - width of each pixel in bytes
     // bool m_isRGB - Order pixel data is layed out in memory
     //
     // Header:
@@ -37,14 +38,14 @@ export namespace Caustic
     {
         EImageType m_imageType;         // Type of data stored in the image
         CRefObj<CImage> m_spParent;     // parent image if image is a subimage
-        int32 m_subx;                  // X offset into parent image
-        int32 m_suby;                  // Y offset into parent image
-        uint8 *m_pData;                 // pointer to image data
+        int32_t m_subx;                  // X offset into parent image
+        int32_t m_suby;                  // Y offset into parent image
+        uint8_t *m_pData;                 // pointer to image data
         bool m_ownData;                 // Did this object allocate m_pData?
-        uint32 m_width;                 // width of image in pixels
-        uint32 m_height;                // height of image in pixels
-        uint32 m_bitsPerPixel;          // width of each pixel in bits
-        uint32 m_stride;                // Number of bytes in a row of pixels
+        uint32_t m_width;                 // width of image in pixels
+        uint32_t m_height;                // height of image in pixels
+        uint32_t m_bitsPerPixel;          // width of each pixel in bits
+        uint32_t m_stride;                // Number of bytes in a row of pixels
 
         friend class CImageIter;
         friend CRefObj<IImage> LoadImageFileImpl(const wchar_t *pFilename);
@@ -110,21 +111,21 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IImageBase
         //**********************************************************************
         virtual EImageType GetImageType() override { return m_imageType; }
-        virtual uint8 *GetData() override { return m_pData; }
-        virtual uint32 GetWidth() override { return m_width; }
-        virtual uint32 GetHeight() override { return m_height; }
-        virtual int32 GetSubX() override { return m_subx; }
-        virtual int32 GetSubY() override { return m_suby; }
+        virtual uint8_t*GetData() override { return m_pData; }
+        virtual uint32_t GetWidth() override { return m_width; }
+        virtual uint32_t GetHeight() override { return m_height; }
+        virtual int32_t GetSubX() override { return m_subx; }
+        virtual int32_t GetSubY() override { return m_suby; }
         virtual CRefObj<IImageBase> GetParent() { return CRefObj((IImageBase*)m_spParent); }
-        virtual uint32 GetBPP() override { return m_bitsPerPixel; }
-        virtual uint32 GetStride() override { return m_stride; }
+        virtual uint32_t GetBPP() override { return m_bitsPerPixel; }
+        virtual uint32_t GetStride() override { return m_stride; }
 
         //**********************************************************************
         // IImage
@@ -132,19 +133,19 @@ export namespace Caustic
         virtual void Clear() override;
         virtual CRefObj<IImage> Clone() override;
         virtual void TakeDataOwnership() override {}
-        virtual void SetPixel(int32 x, int32 y, uint8 color[4]) override;
-        virtual void SetPixel(int32 x, int32 y, uint8 gray) override;
-        virtual void SetPixel(int32 x, int32 y, uint16 v) override;
-        virtual void DrawCircle(Vector2 &center, uint32 radius, uint8 color[4]) override;
-        virtual void DrawLine(const Vector2 &v0, const Vector2 &v1, uint8 color[4]) override;
+        virtual void SetPixel(int32_t x, int32_t y, uint8_t color[4]) override;
+        virtual void SetPixel(int32_t x, int32_t y, uint8_t gray) override;
+        virtual void SetPixel(int32_t x, int32_t y, uint16_t v) override;
+        virtual void DrawCircle(Vector2 &center, uint32_t radius, uint8_t color[4]) override;
+        virtual void DrawLine(const Vector2 &v0, const Vector2 &v1, uint8_t color[4]) override;
         virtual void DrawPath(IPath2* pPath) override;
     };
 
     class CIntegralImage : public IIntegralImage, public CRefCount
     {
-        std::unique_ptr<uint32> m_spData;
-        uint32 m_width;
-        uint32 m_height;
+        std::unique_ptr<uint32_t> m_spData;
+        uint32_t m_width;
+        uint32_t m_height;
         CRefObj<IImage> m_spImage;
 
         friend extern CRefObj<IIntegralImage> CreateIntegralImageImpl(IImage *pImage);
@@ -157,36 +158,36 @@ export namespace Caustic
         {
             m_width = w;
             m_height = h;
-            m_spData.reset(new uint32[w * h * 3]);
+            m_spData.reset(new uint32_t[w * h * 3]);
         }
 
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IImageBase
         //**********************************************************************
         virtual EImageType GetImageType() override { return EImageType::Float4_128bpp; }
         virtual BYTE *GetData() override { return (BYTE*)m_spData.get(); }
-        virtual uint32 GetStride() override { return m_width * sizeof(uint32) * 3; }
-        virtual uint32 GetWidth() override { return m_width; }
-        virtual uint32 GetHeight() override { return m_height; }
-        virtual int32 GetSubX() override { return 0; }
-        virtual int32 GetSubY() override { return 0; }
+        virtual uint32_t GetStride() override { return m_width * sizeof(uint32_t) * 3; }
+        virtual uint32_t GetWidth() override { return m_width; }
+        virtual uint32_t GetHeight() override { return m_height; }
+        virtual int32_t GetSubX() override { return 0; }
+        virtual int32_t GetSubY() override { return 0; }
         virtual CRefObj<IImageBase> GetParent() override { return nullptr; }
-        virtual uint32 GetBPP() override { return sizeof(uint32) * 3 * 8; }
+        virtual uint32_t GetBPP() override { return sizeof(uint32_t) * 3 * 8; }
 
         //**********************************************************************
         // IIntegralImage
         //**********************************************************************
-        virtual uint32 GetSum(int channel, int x1, int y1, int x2, int y2) override;
+        virtual uint32_t GetSum(int channel, int x1, int y1, int x2, int y2) override;
         virtual CRefObj<IImage> BoxBlur(int width, int height) override;
     };
 
-    CRefObj<IImage> CreateImageImpl(uint32 width, uint32 height, EImageType imageType);
+    CRefObj<IImage> CreateImageImpl(uint32_t width, uint32_t height, EImageType imageType);
     CRefObj<IIntegralImage> CreateIntegralImageImpl(IImage* pImage);
     CRefObj<IImage> LoadImageFileImpl(const wchar_t* pFilename);
     void StoreImageImpl(const wchar_t* pFilename, IImage* pImage);

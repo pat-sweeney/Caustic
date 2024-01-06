@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2023
+// Copyright Patrick Sweeney 2023-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -10,6 +10,7 @@ module;
 #include <mfcaptureengine.h>
 #include <atlbase.h>
 #include <memory>
+#include <cinttypes>
 
 export module Imaging.Video.IVideo;
 import Base.Core.Core;
@@ -25,8 +26,8 @@ export namespace Caustic
     // Defines the format for a video
     //
     // Members:
-    // <uint32 at Caustic::uint32> m_width - width of video in pixels
-    // <uint32 at Caustic::uint32> m_height - heightof video in pixels
+    // <uint32_t at Caustic::uint32_t> m_width - width of video in pixels
+    // <uint32_t at Caustic::uint32_t> m_height - heightof video in pixels
     // bool m_topDown - is video oriented from top to bottom (pixel 0,0 in top left corner)
     // RECT m_rect - Video rect corrected for pixel aspect ratio
     //
@@ -35,8 +36,8 @@ export namespace Caustic
     //**********************************************************************
     struct CVideoFormat
     {
-        uint32 m_width;
-        uint32 m_height;
+        uint32_t m_width;
+        uint32_t m_height;
         bool m_topDown;
         RECT m_rect;    // Corrected for pixel aspect ratio
 
@@ -54,17 +55,17 @@ export namespace Caustic
     // Defines the audio format for a video
     //
     // Members:
-    // <uint32 at Caustic::uint32> m_numChannels - number of channels
-    // <uint32 at Caustic::uint32> m_bitsPerSample - bits per audio sample
+    // <uint32_t at Caustic::uint32_t> m_numChannels - number of channels
+    // <uint32_t at Caustic::uint32_t> m_bitsPerSample - bits per audio sample
     //
     // Module:
     // {Link:import Imaging.Video.IVideo;{Imaging/Video/IVideo.ixx}}
     //**********************************************************************
     struct CAudioFormat
     {
-        uint32 m_numChannels;
-        uint32 m_bitsPerSample;
-        uint32 m_samplesPerSec;
+        uint32_t m_numChannels;
+        uint32_t m_bitsPerSample;
+        uint32_t m_samplesPerSec;
 
         CAudioFormat() :
             m_numChannels(1),
@@ -77,15 +78,15 @@ export namespace Caustic
     //**********************************************************************
     struct IAudioSample : public IRefCount
     {
-        virtual uint64 Timestamp() = 0;
-        virtual uint8* GetData() = 0;
-        virtual uint32 GetDataSize() = 0;
+        virtual uint64_t Timestamp() = 0;
+        virtual uint8_t* GetData() = 0;
+        virtual uint32_t GetDataSize() = 0;
     };
 
     //**********************************************************************
     struct IVideoSample : public IRefCount
     {
-        virtual uint64 Timestamp() = 0;
+        virtual uint64_t Timestamp() = 0;
         virtual CRefObj<IImage> GetImage() = 0;
     };
 

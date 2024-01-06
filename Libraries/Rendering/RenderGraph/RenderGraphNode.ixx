@@ -41,7 +41,7 @@ export namespace Caustic
         std::vector<CRefObj<IRenderGraphPin>> m_outputs;
         std::map<std::string, std::any> m_properties;
         CRefObj<IRenderGraphNode> m_parent;
-        uint32 m_lastEpochModified;
+        uint32_t m_lastEpochModified;
     public:
         CRenderGraphNode() :
             m_type(ERenderGraphNodeType::UnknownNode),
@@ -64,8 +64,8 @@ export namespace Caustic
         std::string GetName() { return m_name; }
         void SetProperty(std::string name, std::any value) { m_properties[name] = value; }
         void SetName(std::string name) { m_name = name; }
-        uint32 NumberInputPins() { return (uint32)m_inputs.size(); }
-        uint32 NumberOutputPins() { return (uint32)m_outputs.size(); }
+        uint32_t NumberInputPins() { return (uint32_t)m_inputs.size(); }
+        uint32_t NumberOutputPins() { return (uint32_t)m_outputs.size(); }
         CRefObj<IRenderGraphPin> GetInputPin(int index) { return m_inputs[index]; }
         CRefObj<IRenderGraphPin> GetOutputPin(int index) { return m_outputs[index]; }
         CRefObj<IRenderGraphPin> FindInputPin(std::string name);

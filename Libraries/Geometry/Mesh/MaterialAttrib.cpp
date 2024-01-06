@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -179,7 +179,7 @@ namespace Caustic
         pStream->Read(&SpecularExp, sizeof(SpecularExp), &dwBytesRead);
         pStream->Read(&Alpha, sizeof(Alpha), &dwBytesRead);
         pStream->Read(&MaterialID, sizeof(MaterialID), &dwBytesRead);
-        uint32 len;
+        uint32_t len;
         pStream->Read(&len, sizeof(len), &dwBytesRead);
         AmbientTextureFN.resize(len + 1);
         pStream->Read((LPVOID)AmbientTextureFN.c_str(), len, &dwBytesRead);
@@ -215,13 +215,13 @@ namespace Caustic
         pStream->Write(&SpecularExp, sizeof(SpecularExp), &dwBytesWritten);
         pStream->Write(&Alpha, sizeof(Alpha), &dwBytesWritten);
         pStream->Write(&MaterialID, sizeof(MaterialID), &dwBytesWritten);
-        uint32 len = (uint32)AmbientTextureFN.length();
+        uint32_t len = (uint32_t)AmbientTextureFN.length();
         pStream->Write(&len, sizeof(len), &dwBytesWritten);
         pStream->Write((void*)AmbientTextureFN.c_str(), len, &dwBytesWritten);
-        len = (uint32)DiffuseTextureFN.length();
+        len = (uint32_t)DiffuseTextureFN.length();
         pStream->Write(&len, sizeof(len), &dwBytesWritten);
         pStream->Write((void*)DiffuseTextureFN.c_str(), len, &dwBytesWritten);
-        len = (uint32)SpecularTextureFN.length();
+        len = (uint32_t)SpecularTextureFN.length();
         pStream->Write(&len, sizeof(len), &dwBytesWritten);
         pStream->Write((void*)SpecularTextureFN.c_str(), len, &dwBytesWritten);
 #endif

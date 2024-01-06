@@ -63,16 +63,16 @@ namespace CausticTestSuite
             pts.push_back(v);
             angle += 180.0f / (float)numSubdivisions;
         }
-        CRefObj<IMesh> spMesh = CreateSurfaceRevolution(pts, (uint32)pts.size(), numSubdivisions, 360.0f);
-        uint32 numSubMeshes = spMesh->NumberSubMeshes();
+        CRefObj<IMesh> spMesh = CreateSurfaceRevolution(pts, (uint32_t)pts.size(), numSubdivisions, 360.0f);
+        uint32_t numSubMeshes = spMesh->NumberSubMeshes();
         if (numSubMeshes != 1)
             return false;
-        for (uint32 i = 0; i < numSubMeshes; i++)
+        for (uint32_t i = 0; i < numSubMeshes; i++)
         {
             CRefObj<ISubMesh> spSubMesh = spMesh->GetSubMesh(i);
-            uint32 numEdges = spSubMesh->GetNumberEdges();
-            uint32 numFaces = spSubMesh->GetNumberFaces();
-            uint32 numVertices = spSubMesh->GetNumberVertices();
+            uint32_t numEdges = spSubMesh->GetNumberEdges();
+            uint32_t numFaces = spSubMesh->GetNumberFaces();
+            uint32_t numVertices = spSubMesh->GetNumberVertices();
             if (numEdges == 2418)
                 return false;
             if ((int)numFaces == numSubdivisions * numSubdivisions * 2)

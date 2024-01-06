@@ -19,20 +19,20 @@ import Geometry.Mesh.IMesh;
 
 export namespace Caustic
 {
-    CRefObj<IMesh> CreateSurfaceRevolution(std::vector<Vector3>& pts, uint32 npts, uint32 subdivisions, float maxAngle);
+    CRefObj<IMesh> CreateSurfaceRevolution(std::vector<Vector3>& pts, uint32_t npts, uint32_t subdivisions, float maxAngle);
     CRefObj<IMesh> CreateEmptyMesh();
     CRefObj<ISubMesh> CreateSubMesh(std::vector<CGeomVertex>& verts,
         std::vector<int>& faces,
-        uint32 materialID);
+        uint32_t materialID);
     CRefObj<ISubMesh> CreateSubMesh(std::vector<Vector3>& vertPos,
         std::vector<Vector3>& vertNorms,
         std::vector<Vector2>& vertUVs,
         std::vector<int>& faces,
         EVertexFlags flags,
-        uint32 materialID);
+        uint32_t materialID);
     CRefObj<ISubMesh> CreateSubMesh(std::vector<Vector3>& vertPos,
         std::vector<int>& faces,
-        uint32 materialID);
+        uint32_t materialID);
 
     //**********************************************************************
     // Method: CreateEmptySubMesh
@@ -40,10 +40,10 @@ export namespace Caustic
     //**********************************************************************
     CRefObj<ISubMesh> CreateEmptySubMesh();
     CRefObj<IMesh> CreateCube();
-    CRefObj<IMesh> CreateSphere(uint32 subdivisions);
+    CRefObj<IMesh> CreateSphere(uint32_t subdivisions);
     CRefObj<IMesh> CreateTetrahedron();
-    CRefObj<IMesh> CreateGrid(uint32 subdivisions);
-    CRefObj<IMesh> CreateGrid(uint32 width, uint32 height);
-    CRefObj<IMesh> CreateGrid(uint32 width, uint32 height, float2* uvs);
-    CRefObj<IMesh> CreateWarpedGrid(uint32 width, uint32 height, float2* pPositions);
+    CRefObj<IMesh> CreateGrid(uint32_t subdivisions);
+    CRefObj<IMesh> CreateGrid(uint32_t width, uint32_t height);
+    CRefObj<IMesh> CreateGrid(uint32_t width, uint32_t height, float2* uvs);
+    CRefObj<IMesh> CreateWarpedGrid(uint32_t width, uint32_t height, float2* pPositions);
 };

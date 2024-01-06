@@ -57,8 +57,8 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IRenderWindow
@@ -75,11 +75,11 @@ export namespace Caustic
         virtual void SetSnapPositions(const Vector3& home, const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis) override;
         virtual CRefObj<ISceneGraph> GetSceneGraph() override { return m_spSceneGraph; }
         virtual void SetSceneGraph(ISceneGraph* pSceneGraph) override { m_spSceneGraph = pSceneGraph; }
-        virtual void MouseDown(int x, int y, uint32 button, uint32 flags) override;
-        virtual void MouseMove(int x, int y, uint32 flags) override;
-        virtual void MouseUp(int x, int y, uint32 button, uint32 flags) override;
+        virtual void MouseDown(int x, int y, uint32_t button, uint32_t flags) override;
+        virtual void MouseMove(int x, int y, uint32_t flags) override;
+        virtual void MouseUp(int x, int y, uint32_t button, uint32_t flags) override;
         virtual void MouseWheel(int factor) override;
-        virtual void MapKey(uint32 wParam, uint32 lParam) override;
+        virtual void MapKey(uint32_t wParam, uint32_t lParam) override;
         virtual CRefObj<IRenderer> GetRenderer() { return m_spMarshaller->GetRenderer(); }
     };
 
@@ -97,8 +97,8 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IRenderWindow
@@ -107,11 +107,11 @@ export namespace Caustic
         virtual void SetViewport(float x0, float y0, float x1, float y1) override;
         virtual void SetSnapPositions(const Vector3& home, const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis) override;
         virtual CRefObj<ISceneGraph> GetSceneGraph() override { return m_spSceneGraph; }
-        virtual void MouseDown(int x, int y, uint32 button, uint32 flags) override;
-        virtual void MouseMove(int x, int y, uint32 flags) override;
-        virtual void MouseUp(int x, int y, uint32 button, uint32 flags) override;
+        virtual void MouseDown(int x, int y, uint32_t button, uint32_t flags) override;
+        virtual void MouseMove(int x, int y, uint32_t flags) override;
+        virtual void MouseUp(int x, int y, uint32_t button, uint32_t flags) override;
         virtual void MouseWheel(int factor) override;
-        virtual void MapKey(uint32 wParam, uint32 lParam) override;
+        virtual void MapKey(uint32_t wParam, uint32_t lParam) override;
         virtual CRefObj<IRenderer> GetRenderer() { return m_spMarshaller->GetRenderer(); }
     };
 
@@ -143,8 +143,8 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IRenderWindow

@@ -63,15 +63,15 @@ export namespace Caustic
         Matrix4x4 m_extrinsics;
         Matrix3x3 m_intrinsics;
     public:
-        CPointCloud(IRenderer* pRenderer, uint32 width, uint32 height);
+        CPointCloud(IRenderer* pRenderer, uint32_t width, uint32_t height);
         CPointCloud() {}
         friend class CRenderer;
 
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IRenderable

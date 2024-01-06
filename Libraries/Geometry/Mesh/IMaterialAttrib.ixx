@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -256,7 +256,7 @@ export namespace Caustic
         // Method: GetMaterialID
         // Returns a unique Id associated with this material
         //**********************************************************************
-        virtual uint32 GetMaterialID() = 0;
+        virtual uint32_t GetMaterialID() = 0;
 
         //**********************************************************************
         // Method: SetMaterialID
@@ -265,6 +265,6 @@ export namespace Caustic
         // Parameters:
         // v - material identifier
         //**********************************************************************
-        virtual void SetMaterialID(uint32 v) = 0;
+        virtual void SetMaterialID(uint32_t v) = 0;
     };
 }

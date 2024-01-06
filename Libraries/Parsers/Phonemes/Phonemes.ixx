@@ -23,8 +23,8 @@ export namespace Caustic
     {
         std::map<std::string, std::vector<std::string>> m_words;
         std::unique_ptr<char> m_spBuffer;
-        uint32 m_bufferIndex;
-        uint32 m_bufferLen;
+        uint32_t m_bufferIndex;
+        uint32_t m_bufferLen;
         const int c_BufferSize = 10240;
 
         bool ReadBuffer(HANDLE f);
@@ -40,8 +40,8 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::AddRef(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::AddRef(); }
 
         //**********************************************************************
         // IPhonemes

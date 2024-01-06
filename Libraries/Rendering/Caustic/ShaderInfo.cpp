@@ -94,7 +94,7 @@ namespace Caustic
         return m_vertexLayout;
     }
 
-    uint32 CShaderInfo::GetVertexSize()
+    uint32_t CShaderInfo::GetVertexSize()
     {
         return m_vertexSize;
     }
@@ -242,7 +242,7 @@ namespace Caustic
     // Method: FormatSize
     // Given a DXGI_FORMAT type this method returns the size of that format in bytes
     //**********************************************************************
-    uint32 CShaderInfo::FormatSize(DXGI_FORMAT format)
+    uint32_t CShaderInfo::FormatSize(DXGI_FORMAT format)
     {
         switch (format)
         {

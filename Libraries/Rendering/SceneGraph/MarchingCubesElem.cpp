@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -8,6 +8,7 @@ module;
 #include <atlbase.h>
 #include <d3d11_4.h>
 #include <any>
+#include <cinttypes>
 
 module Rendering.SceneGraph.SceneMarchingCubesElem;
 import Base.Core.Core;
@@ -23,7 +24,7 @@ import Rendering.SceneGraph.ISceneMarchingCubesElem;
 
 namespace Caustic
 {
-    static int32 s_edgeTable[256][16] = {
+    static int32_t s_edgeTable[256][16] = {
         /* 00000000 */ { 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
         /* 00000001 */ { 1, 0,  8,  3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
         /* 00000010 */ { 1, 0,  1,  9, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
@@ -282,7 +283,7 @@ namespace Caustic
         /* 11111111 */ { 0,-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 }
     };
 
-    CSceneMarchingCubesElem::CSceneMarchingCubesElem(IRenderer* pRenderer, uint32 subdivisions, std::function<float(Vector3&)> sdf, bool drawIndexed)
+    CSceneMarchingCubesElem::CSceneMarchingCubesElem(IRenderer* pRenderer, uint32_t subdivisions, std::function<float(Vector3&)> sdf, bool drawIndexed)
     {
         m_initialized = false;
         m_drawIndexed = drawIndexed;
@@ -320,7 +321,7 @@ namespace Caustic
         // match these sizes even if the client requested something different. For instance, if the shader sets its
         // numThreads(8,8,8) then we will need the SDF to also be a multiple of 8. To do this we will make the SDF
         // larger but filled with zeroes.
-        uint32 xThreads, yThreads, zThreads;
+        uint32_t xThreads, yThreads, zThreads;
         if (m_drawIndexed)
             m_spMCCountVertsShader->GetShaderInfo()->GetThreadGroupSize(&xThreads, &yThreads, &zThreads);
         else
@@ -334,16 +335,16 @@ namespace Caustic
 
         float delta = 1.0f / float(subdivisions);
         m_sdfData = new float[m_xRoundedSubdivisions * m_yRoundedSubdivisions * m_zRoundedSubdivisions];
-        for (uint32 i = 0; i < m_xRoundedSubdivisions * m_yRoundedSubdivisions * m_zRoundedSubdivisions; i++)
+        for (uint32_t i = 0; i < m_xRoundedSubdivisions * m_yRoundedSubdivisions * m_zRoundedSubdivisions; i++)
             m_sdfData[i] = FLT_MAX;
         float z = 0.0f;
-        for (uint32 i = 0; i < m_subdivisions; i++)
+        for (uint32_t i = 0; i < m_subdivisions; i++)
         {
             float y = 0.0f;
-            for (uint32 j = 0; j < m_subdivisions; j++)
+            for (uint32_t j = 0; j < m_subdivisions; j++)
             {
                 float x = 0.0f;
-                for (uint32 k = 0; k < m_subdivisions; k++)
+                for (uint32_t k = 0; k < m_subdivisions; k++)
                 {
                     Vector3 v(x, y, z);
                     float val = sdf(v);
@@ -365,12 +366,12 @@ namespace Caustic
                 return;
         std::vector<CRefObj<ILight>> lights;
         
-        uint32 totalCells = m_xRoundedSubdivisions * m_yRoundedSubdivisions * m_zRoundedSubdivisions;
+        uint32_t totalCells = m_xRoundedSubdivisions * m_yRoundedSubdivisions * m_zRoundedSubdivisions;
         if (!m_initialized)
         {
             m_initialized = true;
             auto spGPUBuffer = CreateGPUBuffer(pRenderer, EBufferType::StructuredBuffer, totalCells, sizeof(float), 0);
-            spGPUBuffer->CopyFromCPU(pRenderer, (uint8*)m_sdfData);
+            spGPUBuffer->CopyFromCPU(pRenderer, (uint8_t*)m_sdfData);
             std::any v(spGPUBuffer);
             if (m_drawIndexed)
             {
@@ -381,8 +382,8 @@ namespace Caustic
             else
                 m_spMCShader->SetCSParam(L"densityField", v);
 
-            spGPUBuffer = CreateGPUBuffer(pRenderer, EBufferType::StructuredBuffer, 256 * 16, sizeof(int32), 0);
-            spGPUBuffer->CopyFromCPU(pRenderer, (uint8*)s_edgeTable);
+            spGPUBuffer = CreateGPUBuffer(pRenderer, EBufferType::StructuredBuffer, 256 * 16, sizeof(int32_t), 0);
+            spGPUBuffer->CopyFromCPU(pRenderer, (uint8_t*)s_edgeTable);
             std::any ed(spGPUBuffer);
             if (m_drawIndexed)
             {
@@ -418,10 +419,10 @@ namespace Caustic
 
         if (m_drawIndexed)
         {
-            auto spGPUCellBuffer = CreateGPUBuffer(pRenderer, EBufferType::RWStructuredBuffer, totalCells, sizeof(uint32), 0);
-            uint8* pCellBuffer = (uint8*)new uint32[totalCells];
-            ZeroMemory(pCellBuffer, totalCells * sizeof(uint32));
-            spGPUCellBuffer->CopyFromCPU(pRenderer, (uint8*)pCellBuffer);
+            auto spGPUCellBuffer = CreateGPUBuffer(pRenderer, EBufferType::RWStructuredBuffer, totalCells, sizeof(uint32_t), 0);
+            uint8_t* pCellBuffer = (uint8_t*)new uint32_t[totalCells];
+            ZeroMemory(pCellBuffer, totalCells * sizeof(uint32_t));
+            spGPUCellBuffer->CopyFromCPU(pRenderer, (uint8_t*)pCellBuffer);
             std::any v(spGPUCellBuffer);
             m_spMCCountVertsShader->SetCSParam(L"cellMasks", v);
             m_spMCAllocVertsShader->SetCSParam(L"cellMasks", v);
@@ -429,15 +430,15 @@ namespace Caustic
         }
         
         struct Counts {
-            uint32 numVertices; // Total number of unique vertices
-            uint32 numIndices; // Total number of indices (will be > numVertices * 3 due to vertex sharing)
-            uint32 numAllocatedVerts; // Index of last allocated vertex
-            uint32 numEmittedIndices; // Index of last emitted index
+            uint32_t numVertices; // Total number of unique vertices
+            uint32_t numIndices; // Total number of indices (will be > numVertices * 3 due to vertex sharing)
+            uint32_t numAllocatedVerts; // Index of last allocated vertex
+            uint32_t numEmittedIndices; // Index of last emitted index
         };
         Counts *counts = new Counts();
         ZeroMemory(counts, sizeof(Counts));
         auto spGPUCountBuffer = CreateGPUBuffer(pRenderer, EBufferType::RWStructuredBuffer, 1, sizeof(Counts), 0);
-        spGPUCountBuffer->CopyFromCPU(pRenderer, (uint8*)counts);
+        spGPUCountBuffer->CopyFromCPU(pRenderer, (uint8_t*)counts);
         std::any anyCounts(spGPUCountBuffer);
         if (m_drawIndexed)
         {
@@ -462,7 +463,7 @@ namespace Caustic
             m_spMCShader->Dispatch(pRenderer, m_numGroupsX, m_numGroupsY, m_numGroupsZ);
         }
 
-        spGPUCountBuffer->CopyToCPU(pRenderer, (uint8*)counts);
+        spGPUCountBuffer->CopyToCPU(pRenderer, (uint8_t*)counts);
 
         struct Vertex
         {
@@ -496,13 +497,13 @@ namespace Caustic
             else
             {
                 counts->numVertices = 0;
-                spGPUCountBuffer->CopyFromCPU(pRenderer, (uint8*)counts);
+                spGPUCountBuffer->CopyFromCPU(pRenderer, (uint8_t*)counts);
                 std::any countOnly(Int(0));
                 m_spMCShader->SetCSParam(L"countOnly", countOnly);
                 m_spMCShader->Dispatch(pRenderer, m_numGroupsX, m_numGroupsY, m_numGroupsZ);
             }
 
-            spGPUCountBuffer->CopyToCPU(pRenderer, (uint8*)counts);
+            spGPUCountBuffer->CopyToCPU(pRenderer, (uint8_t*)counts);
         }
 
         if (m_postrenderCallback)
@@ -530,7 +531,7 @@ namespace Caustic
         spRenderSubMesh->Render(pRenderer, pRenderCtx, spShader, nullptr, lights, nullptr);
     }
 
-    void CSceneMarchingCubesElem::SetShaderParam(const wchar_t* pParamName, uint32 value)
+    void CSceneMarchingCubesElem::SetShaderParam(const wchar_t* pParamName, uint32_t value)
     {
         return;
     }

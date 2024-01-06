@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2023
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -11,6 +11,7 @@ module;
 #include <d3d11.h>
 #include <string>
 #include <atlbase.h>
+#include <cinttypes>
 
 module Rendering.Caustic.Texture;
 import Base.Core.Core;
@@ -102,7 +103,7 @@ namespace Caustic
                                 pc++;
                                 break;
                             case DXGI_FORMAT::DXGI_FORMAT_R16_UINT:
-                                ((uint16*)pc)[0] = (uint16)srcCol.GetGray();
+                                ((uint16_t*)pc)[0] = (uint16_t)srcCol.GetGray();
                                 pc += 2;
                                 break;
                             case DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM:
@@ -278,7 +279,7 @@ namespace Caustic
     // cpuFlags - Flags indicating allowed access to texture from CPU (see D3D11 documentation)
     // bindFlags - bind flags (see D3D11 documentation)
     //**********************************************************************
-    CTexture::CTexture(IRenderer *pRenderer, uint32 width, uint32 height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags) :
+    CTexture::CTexture(IRenderer *pRenderer, uint32_t width, uint32_t height, DXGI_FORMAT format, D3D11_CPU_ACCESS_FLAG cpuFlags, D3D11_BIND_FLAG bindFlags) :
         m_Format(format),
         m_Width(width),
         m_Height(height)
@@ -316,12 +317,12 @@ namespace Caustic
     {
     }
     
-    uint32 CTexture::GetWidth()
+    uint32_t CTexture::GetWidth()
     {
         return m_Width;
     }
     
-    uint32 CTexture::GetHeight()
+    uint32_t CTexture::GetHeight()
     {
         return m_Height;
     }

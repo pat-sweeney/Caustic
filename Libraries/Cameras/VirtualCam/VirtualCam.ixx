@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2023
+// Copyright Patrick Sweeney 2023-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -43,14 +43,14 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IVirtualCamera
         //**********************************************************************
         virtual void SendVideoFrame(IImage* pTexture) override;
-        virtual void SendAudioFrame(uint8* pData, uint32 dataSize) override;
+        virtual void SendAudioFrame(uint8_t* pData, uint32_t dataSize) override;
     };
 
     CRefObj<IVirtualCamera> CreateVirtualCamera()

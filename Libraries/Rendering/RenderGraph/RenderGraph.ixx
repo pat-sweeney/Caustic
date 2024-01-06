@@ -41,7 +41,7 @@ export namespace Caustic
         bool m_locked;
         CRITICAL_SECTION m_cs;
         CRefObj<IRenderer> m_spRenderer;
-        uint32 m_Flags;
+        uint32_t m_Flags;
     public:
         CRenderGraph() :
             m_locked(false)
@@ -54,8 +54,8 @@ export namespace Caustic
         //**********************************************************************
         // IRefCount
         //**********************************************************************
-        virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32 Release() override { return CRefCount::Release(); }
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IRenderGraph

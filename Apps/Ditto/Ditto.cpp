@@ -86,7 +86,7 @@ class CWarpNode : public CGPUPipelineNodeBase
     CRefObj<IRenderMesh> m_spRenderMesh;
 
 public:
-    CWarpNode(const wchar_t* pName, IRenderer* pRenderer, std::vector<Vector2> &landmarks, IShader* pShader, uint32 inputWidth, uint32 inputHeight, DXGI_FORMAT format) :
+    CWarpNode(const wchar_t* pName, IRenderer* pRenderer, std::vector<Vector2> &landmarks, IShader* pShader, uint32_t inputWidth, uint32_t inputHeight, DXGI_FORMAT format) :
         CGPUPipelineNodeBase(inputWidth, inputHeight, format)
     {
         SetName(pName);
@@ -108,8 +108,8 @@ public:
     //**********************************************************************
     // IRefCount
     //**********************************************************************
-    virtual uint32 AddRef() override { return CRefCount::AddRef(); }
-    virtual uint32 Release() override { return CRefCount::Release(); }
+    virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+    virtual uint32_t Release() override { return CRefCount::Release(); }
 
     //**********************************************************************
     // IGPUPipelineNode
@@ -122,9 +122,9 @@ public:
     virtual CRefObj<IShader> GetShader() override { return CGPUPipelineNodeBase::GetShader(); }
     virtual CRefObj<IGPUPipelineNode> GetInput(const wchar_t* pName) override { return CGPUPipelineNodeBase::GetInput(pName); }
     virtual void SetInput(const wchar_t* pName, const wchar_t* pTextureName, const wchar_t* pSamplerName, IGPUPipelineNode* pNode) override { CGPUPipelineNodeBase::SetInput(pName, pTextureName, pSamplerName, pNode); }
-    virtual void SetOutputSize(uint32 width, uint32 height) override { CGPUPipelineNodeBase::SetOutputSize(width, height); }
-    virtual uint32 GetOutputWidth() override { return CGPUPipelineNodeBase::GetOutputWidth(); }
-    virtual uint32 GetOutputHeight() override { return CGPUPipelineNodeBase::GetOutputHeight(); }
+    virtual void SetOutputSize(uint32_t width, uint32_t height) override { CGPUPipelineNodeBase::SetOutputSize(width, height); }
+    virtual uint32_t GetOutputWidth() override { return CGPUPipelineNodeBase::GetOutputWidth(); }
+    virtual uint32_t GetOutputHeight() override { return CGPUPipelineNodeBase::GetOutputHeight(); }
     virtual CRefObj<ITexture> GetOutputTexture(IGPUPipeline* pPipeline) override { return CGPUPipelineNodeBase::GetOutputTexture(pPipeline); }
     virtual void Process(IGPUPipeline* pPipeline, IRenderer* pRenderer, IRenderCtx* pRenderCtx) override
     {
@@ -180,7 +180,7 @@ public:
     CRefObj<IVideo> m_spVideo;
     CRefObj<INDIStream> m_spNDIStream;
     std::map<std::wstring, PhonemeLandmarkDelta> m_phonemeLandmarkDeltaMap;
-    std::map<std::wstring, std::vector<uint8>> m_phonemeAudioMap;
+    std::map<std::wstring, std::vector<uint8_t>> m_phonemeAudioMap;
     std::unique_ptr<float2> m_spGridLocations;
     std::unique_ptr<float2> m_spFixedDeltas;
     std::vector<std::string> m_words;           // List of words in current sentence being played
@@ -484,7 +484,7 @@ void CApp::LoadPhonemeAudio()
             DWORD bytesRead;
             DWORD dwNumBytes;
             ReadFile(f, &dwNumBytes, sizeof(DWORD), &bytesRead, nullptr);
-            std::vector<uint8> phonemeAudio;
+            std::vector<uint8_t> phonemeAudio;
             phonemeAudio.resize(dwNumBytes);
             ReadFile(f, &phonemeAudio[0], dwNumBytes, &bytesRead, nullptr);
             m_phonemeAudioMap.insert(std::make_pair(phonemeName, phonemeAudio));
@@ -609,19 +609,19 @@ void CApp::FindLandmarks()
             frameIndex++;
             {
                 Vector2 v0, v1;
-                uint8 color[4] = { 255, 0, 0, 255 };
+                uint8_t color[4] = { 255, 0, 0, 255 };
                 spImage->DrawLine(v0 = Vector2(bb2.minPt.x, bb2.minPt.y), v1 = Vector2(bb2.maxPt.x, bb2.minPt.y), color);
                 spImage->DrawLine(v0 = Vector2(bb2.maxPt.x, bb2.minPt.y), v1 = Vector2(bb2.maxPt.x, bb2.maxPt.y), color);
                 spImage->DrawLine(v0 = Vector2(bb2.minPt.x, bb2.maxPt.y), v1 = Vector2(bb2.maxPt.x, bb2.maxPt.y), color);
                 spImage->DrawLine(v0 = Vector2(bb2.minPt.x, bb2.minPt.y), v1 = Vector2(bb2.minPt.x, bb2.maxPt.y), color);
                 
-                uint8 color2[4] = { 0, 255, 0, 255 };
+                uint8_t color2[4] = { 0, 255, 0, 255 };
                 spImage->DrawLine(v0 = Vector2(mouthBbox.minPt.x, mouthBbox.minPt.y), v1 = Vector2(mouthBbox.maxPt.x, mouthBbox.minPt.y), color2);
                 spImage->DrawLine(v0 = Vector2(mouthBbox.maxPt.x, mouthBbox.minPt.y), v1 = Vector2(mouthBbox.maxPt.x, mouthBbox.maxPt.y), color2);
                 spImage->DrawLine(v0 = Vector2(mouthBbox.minPt.x, mouthBbox.maxPt.y), v1 = Vector2(mouthBbox.maxPt.x, mouthBbox.maxPt.y), color2);
                 spImage->DrawLine(v0 = Vector2(mouthBbox.minPt.x, mouthBbox.minPt.y), v1 = Vector2(mouthBbox.minPt.x, mouthBbox.maxPt.y), color2);
 
-                uint8 color3[4] = { 0, 0, 255, 255 };
+                uint8_t color3[4] = { 0, 0, 255, 255 };
                 for (size_t j = 0; j < landmarks.size(); j++)
                 {
                     spImage->DrawCircle(landmarks[j], 4, color3);
@@ -773,13 +773,13 @@ void CApp::PlayPhonemeAudio()
         if (m_phonemeIndex < m_phonemesInCurrentWord.size())
         {
             std::wstring phoneme = m_phonemesInCurrentWord[m_phonemeIndex];
-            uint8* pBuffer;
-            uint32 bufferLen;
+            uint8_t* pBuffer;
+            uint32_t bufferLen;
             if ( ! m_phonemeAudioMap.contains(phoneme) && isdigit(phoneme[phoneme.length() - 1]))
                 phoneme = phoneme.substr(0, phoneme.length() - 1);
             assert(m_phonemeAudioMap.contains(phoneme));
-            pBuffer = (uint8*)&m_phonemeAudioMap[phoneme][0];
-            bufferLen = (uint32)m_phonemeAudioMap[phoneme].size();
+            pBuffer = (uint8_t*)&m_phonemeAudioMap[phoneme][0];
+            bufferLen = (uint32_t)m_phonemeAudioMap[phoneme].size();
             m_spAudioPlayback->Play(pBuffer, bufferLen);
         }
     }
@@ -1159,7 +1159,7 @@ void CApp::ShowMesh(int frameIndex, IImage* pImage)
     if (m_showMesh)
     {
         CRefObj<IMesh> spMesh;
-        for (uint32 subMeshIndex = 0; subMeshIndex < m_spMeshes[frameIndex]->NumberSubMeshes(); subMeshIndex++)
+        for (uint32_t subMeshIndex = 0; subMeshIndex < m_spMeshes[frameIndex]->NumberSubMeshes(); subMeshIndex++)
         {
             auto spSubMesh = m_spMeshes[frameIndex]->GetSubMesh(subMeshIndex);
             int numFaces = spSubMesh->GetNumberFaces();
@@ -1172,7 +1172,7 @@ void CApp::ShowMesh(int frameIndex, IImage* pImage)
                 {
                     auto v0 = spCurEdge->GetHeadVertex();
                     auto v1 = spCurEdge->GetTailVertex();
-                    Caustic::uint8 color[4] = { 255, 0,0,255 };
+                    uint8_t color[4] = { 255, 0,0,255 };
                     Vector2 p0(v0->pos.x, v0->pos.y);
                     Vector2 p1(v1->pos.x, v1->pos.y);
                     int vertexIndex0 = (int)(v0->uvs[1].x * 100.0f);
@@ -1211,8 +1211,8 @@ void CApp::ShowLandmarks(int frameIndex, IImage *pImage)
 {
     if (m_showLandmarks)
     {
-        Caustic::uint8 color[4] = { 0, 255, 0, 255 };
-        Caustic::uint8 color2[4] = { 255, 0, 0, 255 };
+        uint8_t color[4] = { 0, 255, 0, 255 };
+        uint8_t color2[4] = { 255, 0, 0, 255 };
         for (int landmarkIndex = 0; landmarkIndex < (int)m_faceLandmarks[frameIndex].size(); landmarkIndex++)
         {
             Vector2 landmark = m_faceLandmarks[frameIndex][landmarkIndex];
@@ -1279,7 +1279,7 @@ void CApp::ProcessNextFrame(IRenderer* pRenderer, IRenderCtx* pCtx)
 
                 if (m_spMeshes.size() <= m_curFrameIndex)
                 {
-                    m_spMeshes.push_back(BuildMeshUsingLandmarks(m_spLastFrame->GetWidth() - 1, m_spLastFrame->GetHeight() - 1, m_faceLandmarks[m_curFrameIndex], m_faceLandmarksMouthBbox[0]));
+                    m_spMeshes.push_back(BuildMeshUsingLandmarks((float)m_spLastFrame->GetWidth() - 1, (float)m_spLastFrame->GetHeight() - 1, m_faceLandmarks[m_curFrameIndex], m_faceLandmarksMouthBbox[0]));
                     m_spRenderMeshes.push_back(pRenderer->ToRenderMesh(m_spMeshes[m_curFrameIndex], pRenderer->GetShaderMgr()->FindShader(L"Warp")));
                 }
                 
@@ -1288,8 +1288,8 @@ void CApp::ProcessNextFrame(IRenderer* pRenderer, IRenderCtx* pCtx)
                     m_spWarpShader = pRenderer->GetShaderMgr()->FindShader(L"Warp");
                     m_spWarpShader->SetVSParam(L"width", std::any(float(c_GridX)));
                     m_spWarpShader->SetVSParam(L"height", std::any(float(c_GridY)));
-                    uint32 imageW = m_spLastFrame->GetWidth();
-                    uint32 imageH = m_spLastFrame->GetHeight();
+                    uint32_t imageW = m_spLastFrame->GetWidth();
+                    uint32_t imageH = m_spLastFrame->GetHeight();
                     m_spWarpNode = new CWarpNode(L"Warp", pRenderer, m_faceLandmarks[0], m_spWarpShader, imageW, imageH,
                         DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM);
                     if (s_useFixedDeltas)

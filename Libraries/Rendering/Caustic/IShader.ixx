@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -12,6 +12,7 @@ module;
 #include <DirectXMath.h>
 #include <vector>
 #include <memory>
+#include <cinttypes>
 
 export module Rendering.Caustic.IShader;
 import Base.Core.Core;
@@ -67,7 +68,7 @@ export namespace Caustic
         // pRenderer - renderer
         // pData - pointer to buffer owned by client that contains the data
         //**********************************************************************
-        virtual void CopyFromCPU(IRenderer* pRenderer, uint8* pData) = 0;
+        virtual void CopyFromCPU(IRenderer* pRenderer, uint8_t* pData) = 0;
 
         //**********************************************************************
         // Method: CopyToCPU
@@ -78,7 +79,7 @@ export namespace Caustic
         // pRenderer - renderer
         // pData - pointer to buffer owned by client that contains the data
         //**********************************************************************
-        virtual void CopyToCPU(IRenderer* pRenderer, uint8* pData) = 0;
+        virtual void CopyToCPU(IRenderer* pRenderer, uint8_t* pData) = 0;
     };
 
     //**********************************************************************
@@ -95,7 +96,7 @@ export namespace Caustic
     // Module:
     // {Link:import Rendering.Caustic.IShader;{Rendering/Caustic/IShader.ixx}}
     //**********************************************************************
-    CRefObj<IGPUBuffer> CreateGPUBuffer(IRenderer* pRenderer, EBufferType type, uint32 numElems, uint32 elemSize, uint32 bindFlags);
+    CRefObj<IGPUBuffer> CreateGPUBuffer(IRenderer* pRenderer, EBufferType type, uint32_t numElems, uint32_t elemSize, uint32_t bindFlags);
 
         
     //**********************************************************************

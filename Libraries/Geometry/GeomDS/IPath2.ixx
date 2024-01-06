@@ -47,7 +47,7 @@ export namespace Caustic
         // Returns:
         // Number of PathElems comprising the path
         //**********************************************************************
-        virtual uint32 GetNumberElems() = 0;
+        virtual uint32_t GetNumberElems() = 0;
 
         //**********************************************************************
         // Method: GetPathElem
