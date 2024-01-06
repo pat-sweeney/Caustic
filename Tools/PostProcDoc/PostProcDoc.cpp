@@ -127,7 +127,7 @@ static void ProcessFiles(std::wstring folder, int level)
                         }
                         if (changed)
                         {
-                            std::ofstream fs(fd.cFileName, std::ios::binary);
+                            std::ofstream fs(fn, std::ios::binary);
                             fs.write(convertedText, outputIndex);
                             fs.close();
                         }
