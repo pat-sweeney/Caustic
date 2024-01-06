@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/ECS/IHierarchySystem.ixx","IHierarchySystem.ixx");NDSummary.OnSummaryLoaded("File:Rendering/ECS/IHierarchySystem.ixx",[["C/C++","C"]],[["Classes","Class"]],[[1149,0,0,"IHierarchySystem","IHierarchySystem"]]);

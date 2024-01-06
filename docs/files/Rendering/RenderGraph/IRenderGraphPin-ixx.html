@@ -70,9 +70,9 @@
  <div class="CBody"><p>Links one pin to another. NOTE: This perform linking in only a single direction. The opposite link (i.e. p1-&gt;LinkTo(p2); p2-&gt;LinkTo(p1);) must also happen.</p><p>NOTE: Clients should not be calling this method. Instead they should be using &lt;IRenderGraphNode::Link&gt; method.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">pPin<div class="CDLParameterType"><a href="../../../index.html#File:Rendering/RenderGraph/IRenderGraphPin.ixx:IRenderGraphPin" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,1532);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >IRenderGraphPin</a>*</div></td><td class="CDLDefinition"><p>Pin (on another IRenderGraphNode) to connect to</p></td></tr></table></div>
 </div>
 
-<a name="IRenderGraphPin.NumberConnections"></a><a name="Topic1541"></a><div class="CTopic TFunction LC">
+<a name="IRenderGraphPin.NumberConnections"></a><a name="Topic1301"></a><div class="CTopic TFunction LC">
  <div class="CTitle">NumberConnections</div>
- <div id="NDPrototype1541" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> <span class="SHKeyword">uint32</span> NumberConnections() = <span class="SHNumber">0</span></div></div>
+ <div id="NDPrototype1301" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">virtual</span> uint32_t NumberConnections() = <span class="SHNumber">0</span></div></div>
  <div class="CBody"><p>Returns the number of connections (i.e. other pins) this pin is connected to</p></div>
 </div>
 

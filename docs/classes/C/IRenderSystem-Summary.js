@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("CClass:IRenderSystem","IRenderSystem");NDSummary.OnSummaryLoaded("CClass:IRenderSystem",[["C/C++","C"]],[["Classes","Class"]],[[1125,0,0,"IRenderSystem"]]);

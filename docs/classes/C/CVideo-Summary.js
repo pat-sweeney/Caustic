@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CVideo","CVideo");NDSummary.OnSummaryLoaded("CClass:CVideo",[["C/C++","C"]],[["Classes","Class"]],[[1818,0,0,"CVideo"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CVideo","CVideo");NDSummary.OnSummaryLoaded("CClass:CVideo",[["C/C++","C"]],[["Classes","Class"]],[[1380,0,0,"CVideo"]]);
