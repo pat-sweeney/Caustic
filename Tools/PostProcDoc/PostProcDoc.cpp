@@ -9,7 +9,7 @@ import Base.Core.ConvertStr;
 
 static void Usage()
 {
-    std::cout << "Usage:  PostProcDoc <path>";
+    std::cout << "Usage:  PostProcDoc [-help] [-debug] <path>";
     exit(0);
 }
 
@@ -51,79 +51,86 @@ static void ProcessFiles(std::wstring folder, int level)
 {
     // Recursively process each HTML file
     WIN32_FIND_DATA fd;
-    HANDLE h = ::FindFirstFile(folder.c_str(), &fd);
+    std::wstring wildcardFolder = folder + L"\\*";
+    HANDLE h = ::FindFirstFile(wildcardFolder.c_str(), &fd);
     if (h != INVALID_HANDLE_VALUE)
     {
         do {
             if (fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
             {
+                if (fd.cFileName[0] == '.')
+                    continue;
                 std::wstring dirname(fd.cFileName);
-                ProcessFiles(dirname, level + 1);
+                ProcessFiles(folder + L"\\" + dirname, level + 1);
             }
             else
             {
                 std::wstring ext = getExtension(fd.cFileName);
-                if (ext == L".html")
+                if (ext == L"html")
                 {
-                    std::wstring fn(fd.cFileName);
+                    std::wstring fn(folder + L"\\" + fd.cFileName);
                     std::string sfn = Caustic::wstr2str(fn);
                     std::cout << "Processing file:" << sfn.c_str();
                     std::unique_ptr<byte> spData = ReadBytesInFile(fn);
-                    // scan text and find {Link:#include "..."{...}} tags
-                    bool changed = false;
-                    std::string s2((char*)spData.get());
-                    char* convertedText = new char[s2.length() * 2];
-                    int outputIndex = 0;
-                    int inputIndex = 0;
-                    while (inputIndex < s2.length())
+                    if (spData != nullptr)
                     {
-                        if (s2[inputIndex] == '{')
+                        // scan text and find {Link:#include "..."{...}} or
+                        // {Link:import ...;{...}} tags
+                        bool changed = false;
+                        std::string s2((char*)spData.get());
+                        char* convertedText = new char[s2.length() * 2];
+                        int outputIndex = 0;
+                        int inputIndex = 0;
+                        while (inputIndex < s2.length())
                         {
-                            if ("{Link:" == s2.substr(inputIndex, 6))
+                            if (s2[inputIndex] == '{')
                             {
-                                inputIndex += 6;
-                                int l = inputIndex;
-                                while (s2[l] != '}' && s2[l] != '{')
-                                    l++;
-                                std::string linkName = s2.substr(inputIndex, l - inputIndex);
-                                inputIndex = l;
-
-                                std::string refpath;
-                                if (s2[l] == '{')
+                                if ("{Link:" == s2.substr(inputIndex, 6))
                                 {
-                                    l = ++inputIndex;
-                                    while (s2[l] != '}')
+                                    inputIndex += 6;
+                                    int l = inputIndex;
+                                    while (s2[l] != '}' && s2[l] != '{')
                                         l++;
-                                    refpath = s2.substr(inputIndex, l - inputIndex);
-                                    inputIndex = l + 1;
-                                }
-                                inputIndex++; // skip final ']'
-                                std::string levels;
-                                for (int k = 0; k < level; k++)
-                                    levels += "../";
-                                if (refpath.length() == 0)
-                                    refpath = linkName;
+                                    std::string linkName = s2.substr(inputIndex, l - inputIndex);
+                                    inputIndex = l;
 
-                                std::string newlink = "<a href='" + levels + "index.html#File:" + refpath + "' target='_top'>" + linkName + "</a>";
-                                for (int i = 0; i < newlink.length(); i++)
-                                    convertedText[outputIndex++] = newlink[i];
-                                changed = true;
+                                    std::string refpath;
+                                    if (s2[l] == '{')
+                                    {
+                                        l = ++inputIndex;
+                                        while (s2[l] != '}')
+                                            l++;
+                                        refpath = s2.substr(inputIndex, l - inputIndex);
+                                        inputIndex = l + 1;
+                                    }
+                                    inputIndex++; // skip final ']'
+                                    std::string levels;
+                                    for (int k = 0; k < level; k++)
+                                        levels += "../";
+                                    if (refpath.length() == 0)
+                                        refpath = linkName;
+
+                                    std::string newlink = "<a href='" + levels + "index.html#File:" + refpath + "' target='_top'>" + linkName + "</a>";
+                                    for (int i = 0; i < newlink.length(); i++)
+                                        convertedText[outputIndex++] = newlink[i];
+                                    changed = true;
+                                }
+                                else
+                                {
+                                    convertedText[outputIndex++] = s2[inputIndex++];
+                                }
                             }
                             else
                             {
                                 convertedText[outputIndex++] = s2[inputIndex++];
                             }
                         }
-                        else
+                        if (changed)
                         {
-                            convertedText[outputIndex++] = s2[inputIndex++];
+                            std::ofstream fs(fd.cFileName, std::ios::binary);
+                            fs.write(convertedText, outputIndex);
+                            fs.close();
                         }
-                    }
-                    if (changed)
-                    {
-                        std::ofstream fs(fd.cFileName, std::ios::binary);
-                        fs.write(convertedText, outputIndex);
-                        fs.close();
                     }
                 }
             }
@@ -135,17 +142,19 @@ static void ProcessFiles(std::wstring folder, int level)
 // This app is used to post-process our documentation so
 // that we can support features that aren't directly supported
 // by NaturalDocs.
-int main(const char** argv, int argc)
+int main(int argc, const char** argv)
 {
     if (argc == 0)
         Usage();
     for (int i = 1; i < argc; i++)
     {
         std::string arg(argv[i]);
-        if (arg == std::string("-help"))
+        if (arg == std::string("-debug"))
+            while (true); // Give debugger chance to connect
+        else if (arg == std::string("-help"))
             Usage();
     }
-    std::string folder = std::string(argv[1]);
+    std::string folder = std::string(argv[argc - 1]);
     std::wstring f = Caustic::str2wstr(folder);
     ProcessFiles(f, 0);
 }
