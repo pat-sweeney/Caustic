@@ -17,8 +17,10 @@ export module Rendering.RenderWindow.IRenderWindow;
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Base.Math.Vector;
+import Base.Math.BBox;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.ICamera;
+import Rendering.Caustic.ITexture;
 import Rendering.SceneGraph.ISceneGraph;
 
 export namespace Caustic

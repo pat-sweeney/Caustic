@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2019-2022
+// Copyright Patrick Sweeney 2019-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -31,6 +31,9 @@ import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.ISampler;
 import Rendering.Caustic.IShaderInfo;
 import Rendering.Caustic.IVideoTexture;
+import Rendering.Caustic.IRenderMesh;
+import Rendering.Caustic.ITexture;
+import Geometry.Mesh.IMaterialAttrib;
 
 //**********************************************************************
 // File: ICausticFactory.ixx

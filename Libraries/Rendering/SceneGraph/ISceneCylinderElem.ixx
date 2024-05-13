@@ -7,6 +7,7 @@ export module Rendering.SceneGraph.ISceneCylinderElem;
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
+import Base.Math.Vector;
 import Base.Math.Matrix;
 import Rendering.SceneGraph.ISceneElem;
 

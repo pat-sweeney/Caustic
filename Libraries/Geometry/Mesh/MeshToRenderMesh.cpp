@@ -12,6 +12,7 @@ import Base.Core.Core;
 import Base.Core.Error;
 import Geometry.Mesh.RenderTypes;
 import Geometry.Mesh.Mesh;
+import Base.Math.Vector;
 
 namespace Caustic
 {

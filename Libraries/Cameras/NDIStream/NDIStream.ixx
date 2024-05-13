@@ -5,8 +5,8 @@
 //**********************************************************************
 module;
 #include <string>
-#include <Processing.NDI.Advanced.h>
-#include <Processing.NDI.Lib.h>
+#include "Processing.NDI.Advanced.h"
+#include "Processing.NDI.Lib.h"
 
 export module Cameras.NDIStream.NDIStream;
 import Base.Core.Core;

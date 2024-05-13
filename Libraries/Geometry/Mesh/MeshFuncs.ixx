@@ -30,9 +30,6 @@ export namespace Caustic
         std::vector<int>& faces,
         EVertexFlags flags,
         uint32_t materialID);
-    CRefObj<ISubMesh> CreateSubMesh(std::vector<Vector3>& vertPos,
-        std::vector<int>& faces,
-        uint32_t materialID);
 
     //**********************************************************************
     // Method: CreateEmptySubMesh

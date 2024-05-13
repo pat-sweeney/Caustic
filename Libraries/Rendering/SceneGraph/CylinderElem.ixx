@@ -21,6 +21,7 @@ import Rendering.SceneGraph.SceneElem;
 import Rendering.SceneGraph.ISceneCylinderElem;
 import Rendering.SceneGraph.ISceneGroupElem;
 import Rendering.SceneGraph.ISceneMeshElem;
+import Geometry.Mesh.IMesh;
 
 export namespace Caustic
 {

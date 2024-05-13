@@ -20,6 +20,7 @@ import Base.Math.Vector;
 import Geometry.Mesh.IMeshConstructor;
 import Rendering.SceneGraph.ISceneGraph;
 import Rendering.SceneGraph.ISceneLightCollectionElem;
+import Base.Math.Matrix;
 
 export namespace Caustic
 {

@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -17,6 +17,7 @@ import Base.Math.Vector;
 import Geometry.Mesh.Mesh;
 import Geometry.Mesh.IMesh;
 import Geometry.MeshImport;
+import Geometry.Mesh.RenderTypes;
 
 namespace Caustic
 {
@@ -184,7 +185,20 @@ namespace Caustic
             CLightWaveParser parser(spBuffer.get(), dwSize);
             parser.ParseChunk(FormTable, spBuffer.get(), dwSize);
             CRefObj<Caustic::IMesh> spMesh = CreateEmptyMesh();
-            CRefObj<Caustic::ISubMesh> spSubMesh = CreateSubMesh(parser.m_Verts, parser.m_Faces, 0);
+            std::vector<CGeomVertex> verts;
+            for (int i = 0; i < parser.m_Verts.size(); i++)
+            {
+                CGeomVertex v;
+                v.pos = parser.m_Verts[i];
+                v.norm = Vector3(0.0f, 1.0f, 0.0f);
+                v.uvs[0] = Vector2(0.0f, 0.0f);
+                v.uvs[1] = Vector2(0.0f, 0.0f);
+                v.uvs[2] = Vector2(0.0f, 0.0f);
+                v.uvs[3] = Vector2(0.0f, 0.0f);
+                v.index = i;
+                verts.push_back(v);
+            }
+            CRefObj<Caustic::ISubMesh> spSubMesh = CreateSubMesh(verts, parser.m_Faces, 0);
             spMesh->AddSubMesh(spSubMesh);
             return spMesh;
         }

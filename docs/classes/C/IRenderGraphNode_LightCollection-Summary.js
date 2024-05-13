@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:IRenderGraphNode_LightCollection","IRenderGraphNode_LightCollection");NDSummary.OnSummaryLoaded("CClass:IRenderGraphNode_LightCollection",[["C/C++","C"]],[["Interfaces","Interface"]],[[1483,0,0,"IRenderGraphNode_LightCollection"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:IRenderGraphNode_LightCollection","IRenderGraphNode_LightCollection");NDSummary.OnSummaryLoaded("CClass:IRenderGraphNode_LightCollection",[["C/C++","C"]],[["Interfaces","Interface"]],[[1561,0,0,"IRenderGraphNode_LightCollection"]]);

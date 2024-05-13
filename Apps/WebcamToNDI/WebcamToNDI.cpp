@@ -1,5 +1,5 @@
 ﻿//**********************************************************************
-// Copyright Patrick Sweeney 2015-2023
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -19,12 +19,14 @@
 #include "imgui_impl_dx11.h"
 #include "imgui_internal.h"
 #include <sstream>
+#include <vector>
 
 import Caustic.Base;
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Base.Core.ConvertStr;
+import Base.Math.BBox;
 import Geometry.Mesh.IMeshConstructor;
 import Geometry.MeshImport;
 import Geometry.Mesh.Mesh;
@@ -38,11 +40,13 @@ import Rendering.Caustic.IShader;
 import Rendering.Caustic.IShaderMgr;
 import Rendering.Caustic.RendererFlags;
 import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.ITexture;
 import Rendering.GuiControls.Common;
 import Rendering.RenderWindow.IRenderWindow;
 import Rendering.SceneGraph.ISceneFactory;
 import Cameras.WebCamera.IWebCamera;
 import Cameras.NDIStream.INDIStream;
+import Base.Math.Point;
 
 #define MAX_LOADSTRING 100
 

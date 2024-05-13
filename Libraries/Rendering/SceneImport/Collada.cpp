@@ -15,6 +15,7 @@ import Rendering.Caustic.CausticFactory;
 import Rendering.SceneGraph.SceneFactory;
 import Rendering.SceneGraph.SceneGraph;
 import Rendering.SceneImport.Collada;
+import Geometry.Mesh.RenderTypes;
 
 namespace Caustic
 {

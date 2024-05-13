@@ -1,1 +1,1 @@
-﻿NDSummary.OnToolTipsLoaded("File:Rendering/ECS/RenderSystem.ixx",{1118:"<div class=\"NDToolTip TFunction LC\"><div id=\"NDPrototype1118\" class=\"NDPrototype\"><div class=\"PSection PPlainSection\">RenderSystem()</div></div><div class=\"TTSummary\">Default constructor</div></div>"});
+﻿NDSummary.OnToolTipsLoaded("File:Rendering/ECS/RenderSystem.ixx",{1455:"<div class=\"NDToolTip TFunction LC\"><div id=\"NDPrototype1455\" class=\"NDPrototype\"><div class=\"PSection PPlainSection\">RenderSystem()</div></div><div class=\"TTSummary\">Default constructor</div></div>"});

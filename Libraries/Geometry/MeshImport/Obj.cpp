@@ -23,8 +23,11 @@ import Base.Core.Error;
 import Base.Core.ConvertStr;
 import Base.Math.Vector;
 import Geometry.Mesh.MaterialAttrib;
+import Geometry.Mesh.IMaterialAttrib;
 import Geometry.MeshImport;
 import Imaging.Color;
+import Geometry.Mesh.RenderTypes;
+import Imaging.Image.IImage;
 
 namespace Caustic
 {

@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Cameras/NDIStream/NDIStream.ixx","NDIStream.ixx");NDSummary.OnSummaryLoaded("File:Cameras/NDIStream/NDIStream.ixx",[["C/C++","C"]],[["Classes","Class"]],[[1806,0,0,"Caustic","Caustic"],[1807,0,0,"CNDIStream","CNDIStream"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:Cameras/NDIStream/NDIStream.ixx","NDIStream.ixx");NDSummary.OnSummaryLoaded("File:Cameras/NDIStream/NDIStream.ixx",[["C/C++","C"]],[["Classes","Class"]],[[277,0,0,"Caustic","Caustic"],[278,0,0,"CNDIStream","CNDIStream"]]);

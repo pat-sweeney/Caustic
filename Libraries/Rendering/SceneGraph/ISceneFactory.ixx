@@ -1,8 +1,11 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2019-2021
+// Copyright Patrick Sweeney 2019-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+module;
+#include <functional>
+
 export module Rendering.SceneGraph.ISceneFactory;
 import Base.Core.Core;
 import Base.Core.RefCount;
@@ -26,6 +29,7 @@ import Rendering.SceneGraph.ISceneCylinderElem;
 import Rendering.SceneGraph.ISceneCustomRenderElem;
 import Rendering.SceneGraph.ISceneOverlay2DElem;
 import Rendering.SceneGraph.ISceneGraph;
+import Rendering.SceneGraph.SceneCtx;
 
 export namespace Caustic
 {

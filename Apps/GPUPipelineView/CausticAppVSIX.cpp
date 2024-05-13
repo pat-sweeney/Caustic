@@ -35,12 +35,15 @@ import Rendering.Caustic.IShader;
 import Rendering.Caustic.IShaderMgr;
 import Rendering.Caustic.RendererFlags;
 import Rendering.Caustic.ITexture;
+import Rendering.Caustic.IRenderer;
 import Rendering.SceneGraph.ISceneFactory;
 import Rendering.SceneGraph.ISceneGraph;
 import Rendering.SceneGraph.ISceneLightCollectionElem;
 import Rendering.SceneGraph.ISceneMaterialElem;
 import Rendering.SceneGraph.ISceneMeshElem;
 import Rendering.RenderWindow.IRenderWindow;
+import Imaging.Image.IImage;
+import Geometry.Mesh.IMesh;
 
 #define MAX_LOADSTRING 100
 

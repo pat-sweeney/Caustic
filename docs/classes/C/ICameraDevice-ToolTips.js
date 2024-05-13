@@ -1,1 +1,1 @@
-﻿NDContentPage.OnToolTipsLoaded({10:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines interface used to playback of audio</div></div>",731:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Interface to an image (CPU based)</div></div>"});
+﻿NDContentPage.OnToolTipsLoaded({9:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Defines interface used to playback of audio</div></div>",766:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Interface to an image (CPU based)</div></div>"});

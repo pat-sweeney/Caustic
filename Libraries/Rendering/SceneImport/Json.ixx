@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2022
+// Copyright Patrick Sweeney 2022-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -22,6 +22,7 @@ import Rendering.SceneGraph.ISceneLightCollectionElem;
 import Rendering.Caustic.ITexture;
 import Parsers.JSon.IJSonParser;
 import Rendering.SceneGraph.ISceneFactory;
+import Rendering.SceneGraph.ISceneGroupElem;
 
 export namespace Caustic
 {

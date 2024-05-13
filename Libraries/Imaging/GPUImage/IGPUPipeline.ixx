@@ -4,8 +4,10 @@
 // See file LICENSE for details.
 //**********************************************************************
 module;
-#include <varargs.h>
+#include <stdarg.h>
 #include <cinttypes>
+#include <d3d11.h>
+#include <dxgi1_6.h>
 
 export module Imaging.Image.IGPUPipeline;
 import Base.Core.Core;
@@ -15,6 +17,7 @@ import Imaging.Image.IImage;
 import Rendering.Caustic.Shader;
 import Rendering.Caustic.IShader;
 import Rendering.Caustic.ITexture;
+import Rendering.Caustic.IRenderCtx;
 
 export namespace Caustic
 {

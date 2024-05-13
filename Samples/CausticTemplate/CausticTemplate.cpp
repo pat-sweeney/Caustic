@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2022
+// Copyright Patrick Sweeney 2022-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -39,6 +39,8 @@ import Rendering.SceneGraph.ISceneFactory;
 import Rendering.SceneGraph.ISceneCameraCollectionElem;
 import Rendering.SceneImport.Collada;
 import Rendering.RenderWindow.RenderWindow;
+import Base.Math.Vector;
+import Base.Math.BBox;
 
 #define MAX_LOADSTRING 100
 

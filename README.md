@@ -79,6 +79,7 @@ Azure Kinect Body Tracking: https://docs.microsoft.com/en-us/azure/kinect-dk/bod
 If you wish to compile WebcamToNDI you will need to have the NDI Advanced SDK installed.
 The SDK can be found at:
 https://www.ndi.tv/sdk/
+Install the SDKs (NDI_5_SDK and NDI_5_ADVANCED_SDK) until $(CausticRoot)\External\NDI.
 You will also need to define an environment variabled named 'UseNDI'
 ```
 setx UseNDI "true" /M

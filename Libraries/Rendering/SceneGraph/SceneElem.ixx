@@ -20,6 +20,7 @@ import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.RendererFlags;
 import Rendering.SceneGraph.ISceneElem;
 import Parsers.JSon.IJSonParser;
+import Rendering.SceneGraph.SceneCtx;
 
 export namespace Caustic
 {

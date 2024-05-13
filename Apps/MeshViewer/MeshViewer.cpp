@@ -1,5 +1,5 @@
 ﻿//**********************************************************************
-// Copyright Patrick Sweeney 2015-2022
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -29,7 +29,9 @@ import Geometry.MeshImport;
 import Geometry.Mesh.Mesh;
 import Imaging.Color;
 import Parsers.JSon.JSonParser;
+import Rendering.Caustic.ICamera;
 import Rendering.Caustic.ISpotLight;
+import Rendering.Caustic.ILight;
 import Rendering.Caustic.ISampler;
 import Rendering.Caustic.ICausticFactory;
 import Rendering.Caustic.IShader;
@@ -39,8 +41,20 @@ import Rendering.Caustic.IRenderer;
 import Rendering.GuiControls.Common;
 import Rendering.RenderWindow.IRenderWindow;
 import Rendering.SceneGraph.ISceneFactory;
+import Rendering.SceneGraph.ISceneCubeElem;
 import Rendering.SceneGraph.ISceneCameraCollectionElem;
 import Rendering.SceneImport.Collada;
+import Rendering.SceneGraph.ISceneElem;
+import Rendering.SceneGraph.ISceneComputeShaderElem;
+import Rendering.SceneGraph.ISceneOverlay2DElem;
+import Rendering.SceneGraph.ISceneLineElem;
+import Rendering.SceneGraph.ISceneCustomRenderElem;
+import Rendering.SceneGraph.ISceneCylinderElem;
+import Rendering.SceneGraph.ISceneSphereElem;
+import Rendering.SceneGraph.ISceneMeshElem;
+import Rendering.SceneGraph.ISceneGroupElem;
+import Rendering.SceneGraph.ISceneLightCollectionElem;
+import Rendering.SceneGraph.ISceneMaterialElem;
 
 #define MAX_LOADSTRING 100
 

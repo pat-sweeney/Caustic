@@ -23,6 +23,7 @@ import Rendering.SceneGraph.SceneElem;
 import Rendering.SceneGraph.ISceneSphereElem;
 import Rendering.SceneGraph.ISceneGroupElem;
 import Rendering.SceneGraph.ISceneMeshElem;
+import Base.Math.Matrix;
 
 export namespace Caustic
 {

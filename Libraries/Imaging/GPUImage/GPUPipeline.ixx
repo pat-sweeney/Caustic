@@ -9,6 +9,7 @@ module;
 #include <d3d11.h>
 #include <map>
 #include <string>
+#include <functional>
 
 export module Imaging.Image.GPUPipeline;
 import Base.Core.Core;
@@ -20,6 +21,7 @@ import Geometry.Mesh.IMesh;
 import Rendering.Caustic.IRenderMesh;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IRenderCtx;
+import Base.Math.Matrix.Matrix4x4;
 
 export namespace Caustic
 {

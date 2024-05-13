@@ -6,6 +6,7 @@
 module;
 #include <d3d11.h>
 #include <atlbase.h>
+#include <any>
 
 module Rendering.Caustic.Renderable;
 import Geometry.Mesh.Mesh;
@@ -20,6 +21,7 @@ import Rendering.Caustic.IShader;
 import Rendering.Caustic.IShaderMgr;
 import Rendering.Caustic.CausticFactory;
 import Rendering.Caustic.RendererFlags;
+import Geometry.Mesh.RenderTypes;
 
 //**********************************************************************
 // File: Renderable.cpp

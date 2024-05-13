@@ -12,8 +12,10 @@ import Rendering.Caustic.ICausticFactory;
 import Rendering.Caustic.IShader;
 import Rendering.Caustic.IShaderMgr;
 import Rendering.Caustic.RendererFlags;
+import Rendering.Caustic.IRenderer;
 import Rendering.RenderWindow.IRenderWindow;
 import Geometry.Mesh.MeshFuncs;
+import Imaging.Color;
 
 CRefObj<IRenderMesh> CApp::CreateMesh(IRenderer* pRenderer, IMesh *pMesh, IMaterialAttrib *pMaterial)
 {

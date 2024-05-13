@@ -25,6 +25,7 @@ import Rendering.Caustic.IShader;
 import Rendering.Caustic.ISampler;
 import Rendering.Caustic.ITexture;
 import Rendering.Caustic.IRenderer;
+import Imaging.Color;
 
 namespace Caustic
 {

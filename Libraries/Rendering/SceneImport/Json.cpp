@@ -10,6 +10,7 @@ module;
 #include <memory>
 #include <any>
 #include <map>
+#include <vector>
 
 module Rendering.SceneImport.Json;
 import Base.Core.Core;

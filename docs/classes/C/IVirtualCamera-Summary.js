@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:IVirtualCamera","IVirtualCamera");NDSummary.OnSummaryLoaded("CClass:IVirtualCamera",[["C/C++","C"]],[["Interfaces","Interface"]],[[1810,0,0,"IVirtualCamera"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:IVirtualCamera","IVirtualCamera");NDSummary.OnSummaryLoaded("CClass:IVirtualCamera",[["C/C++","C"]],[["Interfaces","Interface"]],[[329,0,0,"IVirtualCamera"]]);

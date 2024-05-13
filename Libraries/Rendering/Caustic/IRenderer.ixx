@@ -18,10 +18,12 @@ import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Base.Math.BBox;
+import Base.Math.Vector;
 import Geometry.Mesh.IMesh;
 import Geometry.Mesh.IMaterialAttrib;
 import Rendering.Caustic.RendererFlags;
 import Rendering.Caustic.ITexture;
+import Imaging.Image.IImage;
 
 //**********************************************************************
 // File: IRenderer.ixx

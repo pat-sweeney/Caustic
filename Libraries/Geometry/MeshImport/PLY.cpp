@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2018
+// Copyright Patrick Sweeney 2018-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -8,6 +8,7 @@ module;
 #include <map>
 #include <string>
 #include <memory>
+#include <vector>
 
 module Geometry.MeshImport.PLY;
 import Base.Core.Core;
@@ -19,6 +20,8 @@ import Geometry.Mesh.IMesh;
 import Geometry.Mesh.MeshConstructor;
 import Geometry.Mesh.IMeshConstructor;
 import Geometry.MeshImport;
+import Geometry.Mesh.MeshFuncs;
+import Geometry.Mesh.RenderTypes;
 
 namespace Caustic
 {

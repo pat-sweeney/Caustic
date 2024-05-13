@@ -26,6 +26,7 @@ import Rendering.RendererMarshaller.IRendererMarshaller;
 import Rendering.SceneGraph.SceneGraph;
 import Rendering.SceneGraph.SceneElem;
 import Rendering.Caustic.RendererFlags;
+import Imaging.Color;
 
 namespace Caustic
 {

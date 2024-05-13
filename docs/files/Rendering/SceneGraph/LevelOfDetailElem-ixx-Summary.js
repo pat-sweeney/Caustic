@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Rendering/SceneGraph/LevelOfDetailElem.ixx","LevelOfDetailElem.ixx");NDSummary.OnSummaryLoaded("File:Rendering/SceneGraph/LevelOfDetailElem.ixx",[["C/C++","C"]],[["Classes","Class"]],[[1650,0,0,"CSceneLevelOfDetailElem","CSceneLevelOfDetailElem"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/SceneGraph/LevelOfDetailElem.ixx","LevelOfDetailElem.ixx");NDSummary.OnSummaryLoaded("File:Rendering/SceneGraph/LevelOfDetailElem.ixx",[["C/C++","C"]],[["Classes","Class"]],[[1726,0,0,"CSceneLevelOfDetailElem","CSceneLevelOfDetailElem"]]);

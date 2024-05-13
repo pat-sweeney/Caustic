@@ -16,6 +16,7 @@ import Base.Core.IRefCount;
 import Base.Math.BBox;
 import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IVideoTexture;
+import Rendering.Caustic.ITexture;
 
 //**********************************************************************
 // File: IRendererMarshaller.ixx

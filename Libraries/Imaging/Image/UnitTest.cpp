@@ -21,6 +21,7 @@ import Base.Core.Error;
 import Base.Math.Matrix.Matrix3x2;
 import Base.Math.Vector;
 import Geometry.GeomDS.Path2;
+import Geometry.GeomDS.IPath2;
 import Imaging.Image.IImage;
 import Imaging.Image.ImageFilter;
 import Imaging.Image.ImageFilter.Scale;

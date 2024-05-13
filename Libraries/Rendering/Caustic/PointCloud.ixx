@@ -24,6 +24,9 @@ import Rendering.Caustic.ISampler;
 import Rendering.Caustic.IRenderable;
 import Rendering.Caustic.IPointCloud;
 import Rendering.Caustic.ITexture;
+import Rendering.Caustic.IRenderMaterial;
+import Geometry.Mesh.IMaterialAttrib;
+import Rendering.Caustic.IShader;
 
 //**********************************************************************
 // File: PointCloud.ixx

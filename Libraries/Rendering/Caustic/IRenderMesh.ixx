@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -7,6 +7,7 @@ module;
 #include <string>
 #include <d3d11.h>
 #include <DirectXMath.h>
+#include <vector>
 
 export module Rendering.Caustic.IRenderMesh;
 import Base.Core.Core;
@@ -18,6 +19,7 @@ import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.IShaderInfo;
 import Rendering.Caustic.IShader;
 import Geometry.Mesh.RenderTypes;
+import Geometry.Mesh.IMaterialAttrib;
 
 //**********************************************************************
 // File: IRenderMesh.ixx

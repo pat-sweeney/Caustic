@@ -31,6 +31,7 @@ import Rendering.Caustic.Sampler;
 import Rendering.Caustic.ShaderMgr;
 import Rendering.Caustic.CausticFactory;
 import Rendering.Caustic.ICausticFactory;
+import Geometry.Mesh.RenderTypes;
 
 //**********************************************************************
 // File: Renderer.cpp

@@ -11,15 +11,19 @@
     <CausticFXCPath Condition="'$(CausticFXCPath)'==''">C:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x64\fxc.exe</CausticFXCPath>
 
     <UseOpenCVDefine Condition="'$(UseOpenCV)'=='True'">USE_OPENCV</UseOpenCVDefine>
-    <OpenCVInclude Condition="'$(UseOpenCV)'=='True'">$(GithubRoot)\opencv\build\install\include;$(GithubRoot)\opencv\opencv_contrib\modules\face\include</OpenCVInclude>
+    <OpenCVInclude Condition="'$(UseOpenCV)'=='True'">$(GithubRoot)\opencv\build\install\include;$(CausticRoot)\External\opencv\opencv_contrib\modules\face\include</OpenCVInclude>
     <OpenCVLibDir Condition="'$(UseOpenCV)'=='True'">$(GithubRoot)\opencv\build\install\x64\vc17\lib</OpenCVLibDir>
     <OpenCVBinDir Condition="'$(UseOpenCV)'=='True'">$(GithubRoot)\opencv\build\install\x64\vc17\bin</OpenCVBinDir>
     <OpenCVLibs Condition="'$(UseOpenCV)|$(Configuration)'=='True|Debug'">opencv_core470d.lib;opencv_objdetect470d.lib;opencv_xobjdetect470d.lib;opencv_face470d.lib;opencv_imgproc470d.lib</OpenCVLibs>
     <OpenCVLibs Condition="'$(UseOpenCV)|$(Configuration)'=='True|Release'">opencv_core470.lib;opencv_objdetect470.lib;opencv_xobjdetect470.lib;opencv_face470.lib;opencv_imgproc470.lib</OpenCVLibs>
     <OpenCVCopy Condition="'$(UseOpenCV)'=='True'">$(CausticRoot)\CopyOpenCV.bat $(CausticRoot) $(OpenCVBinDir) $(OutDir)</OpenCVCopy>
-    
-    <CausticDefaultExtLibs>$(OpenCVLibs);windowscodecs.lib;msxml6.lib;d3dcompiler.lib;d3d11.lib;mf.lib;mfplat.lib;mfuuid.lib;mfreadwrite.lib;k4abt.lib;k4a.lib;msxml6.lib;d3dcompiler.lib;d3d11.lib</CausticDefaultExtLibs>
-    <CausticDefaultExtLibDirs>$(OpenCVLibDir);$(AzureBodySDKDir)\sdk\windows-desktop\amd64\release\lib;$(AzureKinectSDKDir)\sdk\windows-desktop\amd64\release\lib</CausticDefaultExtLibDirs>
+
+    <NDIIncludePath>$(CausticRoot)\External\NDI\NDI 5 Advanced SDK\include;$(CausticRoot)\External\NDI\NDI 5 SDK\include</NDIIncludePath>
+    <NDILibDirs>$(CausticRoot)\External\NDI\NDI 5 Advanced SDK\lib\x64;$(CausticRoot)\External\NDI\NDI 5 SDK\lib\x64</NDILibDirs>
+    <NDILibs>Processing.NDI.Lib.Advanced.x64.lib;Processing.NDI.Lib.x64.lib</NDILibs>
+
+    <CausticDefaultExtLibs>$(OpenCVLibs);$(NDILibs);windowscodecs.lib;msxml6.lib;d3dcompiler.lib;d3d11.lib;mf.lib;mfplat.lib;mfuuid.lib;mfreadwrite.lib;k4abt.lib;k4a.lib;msxml6.lib;d3dcompiler.lib;d3d11.lib</CausticDefaultExtLibs>
+    <CausticDefaultExtLibDirs>$(OpenCVLibDir);$(NDILibDirs);$(AzureBodySDKDir)\sdk\windows-desktop\amd64\release\lib;$(AzureKinectSDKDir)\sdk\windows-desktop\amd64\release\lib</CausticDefaultExtLibDirs>
 
     <WXWidgetsDir>$(CausticRoot)\External\wxWidgets</WXWidgetsDir>
     <WXWidgetsInclude>$(CausticRoot)\External\wxWidgets\include</WXWidgetsInclude>

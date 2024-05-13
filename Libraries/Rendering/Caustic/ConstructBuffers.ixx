@@ -1,10 +1,11 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2021
+// Copyright Patrick Sweeney 2021-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
 module;
 #include <d3d11.h>
+#include <vector>
 
 export module Rendering.Caustic.ConstructBuffer;
 import Base.Core.Core;
@@ -16,6 +17,7 @@ import Rendering.Caustic.Shader;
 import Rendering.Caustic.IRenderMesh;
 import Rendering.Caustic.IShaderInfo;
 import Rendering.Caustic.IRenderer;
+import Geometry.Mesh.RenderTypes;
 
 export namespace Caustic
 {

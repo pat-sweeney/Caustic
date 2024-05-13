@@ -22,6 +22,7 @@ import Rendering.SceneGraph.SceneElem;
 import Rendering.SceneGraph.ISceneElem;
 import Rendering.SceneGraph.ISceneGraph;
 import Rendering.SceneGraph.ISceneCameraCollectionElem;
+import Imaging.Color;
 
 export namespace Caustic
 {

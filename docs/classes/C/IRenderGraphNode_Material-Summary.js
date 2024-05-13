@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:IRenderGraphNode_Material","IRenderGraphNode_Material");NDSummary.OnSummaryLoaded("CClass:IRenderGraphNode_Material",[["C/C++","C"]],[["Interfaces","Interface"]],[[1484,0,0,"IRenderGraphNode_Material"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:IRenderGraphNode_Material","IRenderGraphNode_Material");NDSummary.OnSummaryLoaded("CClass:IRenderGraphNode_Material",[["C/C++","C"]],[["Interfaces","Interface"]],[[1560,0,0,"IRenderGraphNode_Material"]]);

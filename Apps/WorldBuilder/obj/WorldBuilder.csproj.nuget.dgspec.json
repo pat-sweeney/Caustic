@@ -1,0 +1,633 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Apps\\WorldBuilder\\WorldBuilder.csproj": {}
+  },
+  "projects": {
+    "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Apps\\WorldBuilder\\WorldBuilder.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Apps\\WorldBuilder\\WorldBuilder.csproj",
+        "projectName": "WorldBuilder",
+        "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Apps\\WorldBuilder\\WorldBuilder.csproj",
+        "packagesPath": "C:\\Users\\patricsw\\.nuget\\packages\\",
+        "outputPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Apps\\WorldBuilder\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\patricsw\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0-windows"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "D:\\GitHub\\opencv\\build\\install": {},
+          "https://pkgs.dev.azure.com/msresearch/Malta/_packaging/MaltaNugetPackages/nuget/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0-windows7.0": {
+            "targetAlias": "net5.0-windows",
+            "projectReferences": {
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Interop\\Renderer\\Renderer.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Interop\\Renderer\\Renderer.vcxproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net5.0-windows7.0": {
+          "targetAlias": "net5.0-windows",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[5.0.0, 5.0.0]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[5.0.17, 5.0.17]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[5.0.0, 5.0.0]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[5.0.0, 5.0.0]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.WindowsDesktop.App.WPF": {
+              "privateAssets": "none"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj",
+        "projectName": "Core",
+        "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj",
+        "frameworks": {
+          "native": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "native": {}
+      }
+    },
+    "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Math\\Math.vcxproj",
+        "projectName": "Math",
+        "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Math\\Math.vcxproj",
+        "frameworks": {
+          "native": {
+            "projectReferences": {
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "native": {}
+      }
+    },
+    "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Cameras\\CameraBase\\CameraBase.vcxproj": {
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Cameras\\CameraBase\\CameraBase.vcxproj",
+        "projectName": "CameraBase",
+        "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Cameras\\CameraBase\\CameraBase.vcxproj",
+        "frameworks": {
+          "native": {
+            "projectReferences": {
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Image\\Image.vcxproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "native": {}
+      }
+    },
+    "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj",
+        "projectName": "GeomDS",
+        "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj",
+        "frameworks": {
+          "native": {
+            "projectReferences": {
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "native": {}
+      }
+    },
+    "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\MeshImport\\MeshImport.vcxproj": {
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\MeshImport\\MeshImport.vcxproj",
+        "projectName": "MeshImport",
+        "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\MeshImport\\MeshImport.vcxproj",
+        "frameworks": {
+          "native": {
+            "projectReferences": {
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Image\\Image.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "native": {}
+      }
+    },
+    "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj": {
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj",
+        "projectName": "Mesh",
+        "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj",
+        "frameworks": {
+          "native": {
+            "projectReferences": {
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Image\\Image.vcxproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "native": {}
+      }
+    },
+    "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\Rast\\Rast.vcxproj": {
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\Rast\\Rast.vcxproj",
+        "projectName": "Rast",
+        "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\Rast\\Rast.vcxproj",
+        "frameworks": {
+          "native": {
+            "projectReferences": {
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "native": {}
+      }
+    },
+    "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Color\\Color.vcxproj",
+        "projectName": "Color",
+        "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Color\\Color.vcxproj",
+        "frameworks": {
+          "native": {
+            "projectReferences": {
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "native": {}
+      }
+    },
+    "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Image\\Image.vcxproj",
+        "projectName": "Image",
+        "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Image\\Image.vcxproj",
+        "frameworks": {
+          "native": {
+            "projectReferences": {
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\Rast\\Rast.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\Rast\\Rast.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "native": {}
+      }
+    },
+    "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Interop\\Renderer\\Renderer.vcxproj": {
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Interop\\Renderer\\Renderer.vcxproj",
+        "projectName": "Renderer",
+        "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Interop\\Renderer\\Renderer.vcxproj",
+        "frameworks": {
+          "native": {
+            "projectReferences": {
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\Rast\\Rast.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\Rast\\Rast.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Image\\Image.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\ImGui\\ImGui.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\ImGui\\ImGui.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\ImPlot\\ImPlot.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\ImPlot\\ImPlot.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\RenderWindow\\RenderWindow.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\RenderWindow\\RenderWindow.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "native": {}
+      }
+    },
+    "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Parsers\\JSon\\JSon.vcxproj": {
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Parsers\\JSon\\JSon.vcxproj",
+        "projectName": "JSon",
+        "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Parsers\\JSon\\JSon.vcxproj",
+        "frameworks": {
+          "native": {
+            "projectReferences": {
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Parsers\\Lex\\Lex.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Parsers\\Lex\\Lex.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\ImGui\\ImGui.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\ImGui\\ImGui.vcxproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "native": {}
+      }
+    },
+    "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Parsers\\Lex\\Lex.vcxproj": {
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Parsers\\Lex\\Lex.vcxproj",
+        "projectName": "Lex",
+        "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Parsers\\Lex\\Lex.vcxproj",
+        "frameworks": {
+          "native": {
+            "projectReferences": {
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "native": {}
+      }
+    },
+    "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj": {
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj",
+        "projectName": "Caustic",
+        "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj",
+        "frameworks": {
+          "native": {
+            "projectReferences": {
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Image\\Image.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Tools\\ParseShader\\ParseShader.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Tools\\ParseShader\\ParseShader.vcxproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "native": {}
+      }
+    },
+    "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\ImGui\\ImGui.vcxproj": {
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\ImGui\\ImGui.vcxproj",
+        "projectName": "ImGui",
+        "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\ImGui\\ImGui.vcxproj",
+        "frameworks": {
+          "native": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "native": {}
+      }
+    },
+    "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\ImPlot\\ImPlot.vcxproj": {
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\ImPlot\\ImPlot.vcxproj",
+        "projectName": "ImPlot",
+        "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\ImPlot\\ImPlot.vcxproj",
+        "frameworks": {
+          "native": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "native": {}
+      }
+    },
+    "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\RendererMarshaller\\RendererMarshaller.vcxproj": {
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\RendererMarshaller\\RendererMarshaller.vcxproj",
+        "projectName": "RendererMarshaller",
+        "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\RendererMarshaller\\RendererMarshaller.vcxproj",
+        "frameworks": {
+          "native": {
+            "projectReferences": {
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "native": {}
+      }
+    },
+    "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\RenderWindow\\RenderWindow.vcxproj": {
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\RenderWindow\\RenderWindow.vcxproj",
+        "projectName": "RenderWindow",
+        "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\RenderWindow\\RenderWindow.vcxproj",
+        "frameworks": {
+          "native": {
+            "projectReferences": {
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Cameras\\CameraBase\\CameraBase.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Cameras\\CameraBase\\CameraBase.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Image\\Image.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\ImGui\\ImGui.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\ImGui\\ImGui.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\RendererMarshaller\\RendererMarshaller.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\RendererMarshaller\\RendererMarshaller.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "native": {}
+      }
+    },
+    "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj": {
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj",
+        "projectName": "SceneGraph",
+        "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\SceneGraph\\SceneGraph.vcxproj",
+        "frameworks": {
+          "native": {
+            "projectReferences": {
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Math\\Math.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Math\\Math.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\GeomDS\\GeomDS.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\MeshImport\\MeshImport.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\MeshImport\\MeshImport.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Geometry\\Mesh\\Mesh.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Color\\Color.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Color\\Color.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Image\\Image.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Imaging\\Image\\Image.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Parsers\\JSon\\JSon.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Parsers\\JSon\\JSon.vcxproj"
+              },
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Rendering\\Caustic\\Caustic.vcxproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "native": {}
+      }
+    },
+    "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Tools\\ParseShader\\ParseShader.vcxproj": {
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Tools\\ParseShader\\ParseShader.vcxproj",
+        "projectName": "ParseShader",
+        "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Tools\\ParseShader\\ParseShader.vcxproj",
+        "frameworks": {
+          "native": {
+            "projectReferences": {
+              "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj": {
+                "projectPath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Libraries\\Base\\Core\\Core.vcxproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "native": {}
+      }
+    }
+  }
+}

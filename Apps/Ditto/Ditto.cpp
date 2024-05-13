@@ -15,6 +15,7 @@
 #include <iostream>
 #include <sstream>
 #include <d3d11.h>
+#include <algorithm>
 
 import Caustic.Base;
 import Base.Core.Core;
@@ -44,6 +45,7 @@ import Rendering.Caustic.IShaderMgr;
 import Rendering.Caustic.ITexture;
 import Rendering.Caustic.IVideoTexture;
 import Rendering.Caustic.ICausticFactory;
+import Rendering.Caustic.ISampler;
 import Rendering.RenderWindow.IRenderWindow;
 import Cameras.WebCamera.WebCamera;
 import Cameras.WebCamera.IWebCamera;

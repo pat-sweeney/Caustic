@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2022
+// Copyright Patrick Sweeney 2022-2024
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -26,6 +26,7 @@ import Rendering.SceneGraph.ISceneFactory;
 import Rendering.SceneGraph.ISceneCameraCollectionElem;
 import Rendering.Caustic.IShaderMgr;
 import Rendering.SceneGraph.SceneCubeElem;
+import Geometry.Mesh.IMesh;
 
 namespace Caustic
 {

@@ -7,6 +7,7 @@ module;
 #include <functional>
 #include <atlbase.h>
 #include <string>
+#include <d3d11.h>
 
 export module Rendering.SceneGraph.SceneOverlay2DElem;
 import Base.Core.Core;

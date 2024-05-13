@@ -7,12 +7,16 @@ import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Base.Math.Matrix;
+import Geometry.Mesh.IMaterialAttrib;
 import Rendering.Caustic.Shader;
 import Rendering.Caustic.ICausticFactory;
 import Rendering.Caustic.IShader;
 import Rendering.Caustic.IShaderMgr;
 import Rendering.Caustic.RendererFlags;
 import Rendering.RenderWindow.IRenderWindow;
+import Geometry.Mesh.IMesh;
+import Rendering.Caustic.IRenderMesh;
+import Rendering.Caustic.ILight;
 
 struct CLineVertex
 {

@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Geometry/GeomDS/Path2.cpp","Path2.cpp");NDSummary.OnSummaryLoaded("File:Geometry/GeomDS/Path2.cpp",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"]],[[325,0,1,"Functions","Functions"],[326,0,0,"CreatePath2","CreatePath2"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:Geometry/GeomDS/Path2.cpp","Path2.cpp");NDSummary.OnSummaryLoaded("File:Geometry/GeomDS/Path2.cpp",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"]],[[330,0,1,"Functions","Functions"],[331,0,0,"CreatePath2","CreatePath2"]]);

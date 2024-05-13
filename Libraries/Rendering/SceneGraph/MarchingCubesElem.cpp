@@ -21,6 +21,7 @@ import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IRenderCtx;
 import Rendering.Caustic.ICausticFactory;
 import Rendering.SceneGraph.ISceneMarchingCubesElem;
+import Geometry.Mesh.RenderTypes;
 
 namespace Caustic
 {

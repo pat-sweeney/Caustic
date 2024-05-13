@@ -12,6 +12,7 @@ import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Geometry.Mesh.IMaterialAttrib;
 import Rendering.Caustic.ITexture;
+//import Rendering.Caustic.IShader;
 
 //**********************************************************************
 // File: IRenderMaterial.ixx

@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Cameras/AzureKinect/AzureKinect.ixx","AzureKinect.ixx");NDSummary.OnSummaryLoaded("File:Cameras/AzureKinect/AzureKinect.ixx",[["C/C++","C"]],[["Classes","Class"]],[[276,0,0,"Caustic","Caustic"],[277,0,0,"CAzureKinectDevice","CAzureKinectDevice"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:Cameras/AzureKinect/AzureKinect.ixx","AzureKinect.ixx");NDSummary.OnSummaryLoaded("File:Cameras/AzureKinect/AzureKinect.ixx",[["C/C++","C"]],[["Classes","Class"]],[[275,0,0,"Caustic","Caustic"],[276,0,0,"CAzureKinectDevice","CAzureKinectDevice"]]);

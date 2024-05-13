@@ -26,6 +26,7 @@ import Rendering.SceneGraph.ISceneFactory;
 import Rendering.SceneGraph.ISceneLightCollectionElem;
 import Rendering.Caustic.IShaderMgr;
 import Rendering.SceneGraph.SceneCubeElem;
+import Geometry.Mesh.IMesh;
 
 namespace Caustic
 {

@@ -26,6 +26,7 @@ import Base.Core.IRefCount;
 import Base.Core.Error;
 import Base.Core.ConvertStr;
 import Base.Math.Matrix;
+import Base.Math.BBox;
 import Base.Math.Distributions;
 import Base.Math.Vector;
 import Imaging.Image.ImageFilter;
@@ -407,7 +408,7 @@ void CApp::ComputeWarps(Caustic::IRenderer* pRenderer, Caustic::IRenderCtx* pCtx
             new CWarpNode(L"Warp", pRenderer, spShader, spImageToWarp->GetWidth(), spImageToWarp->GetHeight(), DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM,
                 m_spGridLocations.get()));
         spWarpNode->SetInput(L"Source", L"sourceTexture1", L"sourceSampler1", spSource);
-        spGPUPipeline->AddCustomNode(spWarpNode.get());
+        spGPUPipeline.p->AddCustomNode(spWarpNode.get());
 
         auto spShader2 = spRenderer->GetShaderMgr()->FindShader(L"RawCopy");
         CRefObj<IGPUPipelineSinkNode> spSink = spGPUPipeline->CreateSinkNode(L"Sink", spShader2, spImageToWarp->GetWidth(), spImageToWarp->GetHeight(), DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM);

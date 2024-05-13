@@ -6,6 +6,7 @@
 module;
 #define _USE_MATH_DEFINES
 #include <cmath>
+#include <stdio.h>
 
 module Audio.AudioPlayback.UnitTests;
 import Base.Core.Core;

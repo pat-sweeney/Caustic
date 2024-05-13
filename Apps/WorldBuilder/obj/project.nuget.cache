@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "qJXapcGZge6M3/t9o8aVCN3xskRvsMrpRRx9uzCEKs0uctLMAzppdHwXJC5m+es4nGwudfD8/VBnKMq8kB5Yfw==",
+  "success": true,
+  "projectFilePath": "D:\\GitHub\\CE_WoL\\dev\\patricsw\\caustic\\Apps\\WorldBuilder\\WorldBuilder.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\patricsw\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\5.0.0\\microsoft.windowsdesktop.app.ref.5.0.0.nupkg.sha512",
+    "C:\\Users\\patricsw\\.nuget\\packages\\microsoft.netcore.app.ref\\5.0.0\\microsoft.netcore.app.ref.5.0.0.nupkg.sha512",
+    "C:\\Users\\patricsw\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\5.0.0\\microsoft.aspnetcore.app.ref.5.0.0.nupkg.sha512",
+    "C:\\Users\\patricsw\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\5.0.17\\microsoft.netcore.app.host.win-x64.5.0.17.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,1 +1,1 @@
-﻿NDSummary.OnToolTipsLoaded("File:Rendering/SceneGraph/ISceneMarchingCubesElem.ixx",{1670:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Implements marching cubes on a signed distance function</div></div>"});
+﻿NDSummary.OnToolTipsLoaded("File:Rendering/SceneGraph/ISceneMarchingCubesElem.ixx",{1771:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Implements marching cubes on a signed distance function</div></div>"});
