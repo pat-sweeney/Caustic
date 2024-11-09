@@ -1,0 +1,61 @@
+﻿<Window x:Class="ConvertImages.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ConvertImages"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <local:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <TreeView x:Name="FileTree" Grid.Row="0" Grid.Column="0"/>
+        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" Background="LightBlue"/>
+        <DockPanel LastChildFill="True" Grid.Column="2">
+            <StackPanel Orientation="Vertical" DockPanel.Dock="Top" Background="SteelBlue" Margin="10,10">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Source Image Format:"/>
+                    <ComboBox x:Name="SourceFilterCB" Width="200" SelectedIndex="0" SelectionChanged="SourceFilterCB_SelectionChanged">
+                        <ComboBoxItem Content="PNG (*.png)"/>
+                        <ComboBoxItem Content="BMP (*.bmp)"/>
+                        <ComboBoxItem Content="JPEG (*.jpg;*.jpeg)"/>
+                        <ComboBoxItem Content="HEIC (*.heic)"/>
+                        <ComboBoxItem Content="MOV (*.mov)"/>
+                        <ComboBoxItem Content="MPEG-4 (*.mp4)"/>
+                        <ComboBoxItem Content="Any (*.png;*.bmp;*.jpg;*.jpeg)"/>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Destination Image Format:"/>
+                    <ComboBox Width="200" SelectedIndex="0">
+                        <ComboBoxItem Content="PNG (*.png)"/>
+                        <ComboBoxItem Content="BMP (*.bmp)"/>
+                        <ComboBoxItem Content="JPEG (*.jpg;*.jpeg)"/>
+                        <ComboBoxItem Content="MPEG-4 (*.mp4)"/>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="5,5">
+                    <CheckBox Content="Delete after conversion?"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Convert All" Margin="5,5"/>
+                    <Button Content="Convert Selected" Margin="5,5"/>
+                </StackPanel>
+            </StackPanel>
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                Visibility="{Binding FolderView, Mode=TwoWay}">
+                <WrapPanel x:Name="FolderGrid"></WrapPanel>
+            </ScrollViewer>
+            <Image x:Name="DispImage" DockPanel.Dock="Top" Source="{Binding Image}"
+                          Visibility="{Binding ImageView, Mode=TwoWay}"
+                   />
+        </DockPanel>
+    </Grid>
+</Window>
