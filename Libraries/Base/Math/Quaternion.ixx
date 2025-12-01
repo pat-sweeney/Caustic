@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2025
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -9,8 +9,6 @@ module;
 export module Base.Math.Quaternion;
 import Base.Core.Core;
 import Base.Math.Vector;
-//import Base.Math.Matrix;
-//import Base.Math.Matrix.Matrix4x4;
 
 export namespace Caustic
 {
@@ -133,7 +131,7 @@ export namespace Caustic
         //**********************************************************************
         Quaternion Slerp(Quaternion &q1, Quaternion &q2, float t);
 
-        static Matrix4x3 ToMatrix4x3(const Quaternion& q);
+        static Matrix4x3 ToMatrix4x3(const Quaternion &q);
         static Matrix4x4 ToMatrix4x4(const Quaternion &q);
     };
 }

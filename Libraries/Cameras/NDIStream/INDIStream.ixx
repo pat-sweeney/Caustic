@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2023-2024
+// Copyright Patrick Sweeney 2023-2025
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
