@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("ime",["Interface","File"],[["IMesh",,[[,,,,0,"File:Geometry/Mesh/IMesh.ixx:IMesh","CClass:IMesh"],[,"IMesh.h",,,1,"File:Geometry/Mesh/IMesh.ixx:IMesh.h"]]],["IMeshConstructor",,[[,,,,0,"File:Geometry/Mesh/IMeshConstructor.ixx:IMeshConstructor","CClass:IMeshConstructor"]]]]);

@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("sha",["Struct"],[["ShaderParamDef",,[[,,,,0,"File:Rendering/Caustic/Shader.ixx:ShaderParamDef","CClass:ShaderParamDef"]]],["ShaderParamInstance",,[[,,,,0,"File:Rendering/Caustic/Shader.ixx:ShaderParamInstance","CClass:ShaderParamInstance"]]]]);

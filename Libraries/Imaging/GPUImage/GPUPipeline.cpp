@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2025
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -26,6 +26,7 @@ import Rendering.Caustic.Sampler;
 import Rendering.Caustic.Shader;
 import Rendering.Caustic.IShader;
 import Rendering.Caustic.IShaderMgr;
+import Rendering.Caustic.ILight;
 import Rendering.Caustic.CausticFactory;
 import Rendering.Caustic.ISampler;
 import Rendering.Caustic.BuildRenderMesh;
@@ -375,7 +376,9 @@ namespace Caustic
                 }
             }
 
+#ifdef _DEBUG
             pRenderer->BeginMarker(m_name.c_str());
+#endif
             CComPtr<ID3D11RenderTargetView> spRTView;
             CT(spDevice->CreateRenderTargetView(m_spOutputTexture->GetD3DTexture(), nullptr, &spRTView));
 
@@ -419,7 +422,9 @@ namespace Caustic
 
             spCtx->RSSetViewports(numViewports, &oldViewport);
             spCtx->OMSetRenderTargets(1, &spOldRTV.p, spOldDSV);
+#ifdef _DEBUG
             pRenderer->EndMarker();
+#endif
         }
         spCtx->RSSetState(spOldRasterState);
 #ifdef _DEBUG

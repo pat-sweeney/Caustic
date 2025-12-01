@@ -3,11 +3,11 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+#include <float.h>
+#include <cmath>
 import Base.Core.Core;
 import Base.Math.BBox;
 import Base.Math.OBBox;
-#include <float.h>
-#include <cmath>
 
 namespace Caustic
 {

@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("fla",["Function"],[["Flatten",,[["IPath2",,,,0,"File:Geometry/GeomDS/IPath2.ixx:IPath2.Flatten","CClass:IPath2:Flatten"]]]]);

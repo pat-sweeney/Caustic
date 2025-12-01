@@ -1,1 +1,0 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CRefObj","CRefObj");NDSummary.OnSummaryLoaded("CClass:CRefObj",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Structs","Struct"]],[[193,0,2,"CRefObj&lt;T&gt;"],[194,0,1,"Functions","Functions"],[195,0,0,"CRefObj","CRefObj"],[196,0,0,"CRefObj","CRefObj(2)"],[197,0,0,"CRefObj","CRefObj(3)"],[198,0,0,"~CRefObj","~CRefObj"]]);

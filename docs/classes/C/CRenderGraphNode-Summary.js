@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CRenderGraphNode","CRenderGraphNode");NDSummary.OnSummaryLoaded("CClass:CRenderGraphNode",[["C/C++","C"]],[["Classes","Class"]],[[1489,0,0,"CRenderGraphNode"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CRenderGraphNode","CRenderGraphNode");NDSummary.OnSummaryLoaded("CClass:CRenderGraphNode",[["C/C++","C"]],[["Classes","Class"]],[[1542,0,0,"CRenderGraphNode"]]);

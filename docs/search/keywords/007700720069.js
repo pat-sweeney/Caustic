@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("wri",["Function"],[["WriteDOM",,[["IJSonParser",,,,0,"File:Parsers/JSon/IJSonParser.ixx:IJSonParser.WriteDOM","CClass:IJSonParser:WriteDOM"]]],["WritePLY",,[["IDelaunay2",,,,0,"File:Geometry/Mesh/IDelaunay.ixx:IDelaunay2.WritePLY","CClass:IDelaunay2:WritePLY"]]],["WriteString",,[[,,,,0,"File:Geometry/Mesh/Delaunay.cpp:WriteString"]]]]);

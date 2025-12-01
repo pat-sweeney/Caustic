@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("ipa",["Interface"],[["IPath2",,[[,,,,0,"File:Geometry/GeomDS/IPath2.ixx:IPath2","CClass:IPath2"]]]]);

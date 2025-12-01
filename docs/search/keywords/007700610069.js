@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("wai",["Function"],[["Wait",,[["CEvent",,,,0,"File:Base/Core/Event.ixx:CEvent.Wait","CClass:CEvent:Wait"]]]]);

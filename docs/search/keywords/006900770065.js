@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("iwe",["Interface"],[["IWebCamera",,[[,,,,0,"File:Cameras/WebCamera/IWebCamera.ixx:IWebCamera","CClass:IWebCamera"]]]]);

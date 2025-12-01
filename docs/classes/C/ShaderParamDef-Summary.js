@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:ShaderParamDef","ShaderParamDef");NDSummary.OnSummaryLoaded("CClass:ShaderParamDef",[["C/C++","C"]],[["Structs","Struct"]],[[932,0,0,"ShaderParamDef"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:ShaderParamDef","ShaderParamDef");NDSummary.OnSummaryLoaded("CClass:ShaderParamDef",[["C/C++","C"]],[["Structs","Struct"]],[[930,0,0,"ShaderParamDef"]]);

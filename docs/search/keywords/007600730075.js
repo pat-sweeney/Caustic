@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("vsu",["Function"],[["VSUsesVariable",,[["IShaderInfo",,,,0,"File:Rendering/Caustic/IShaderInfo.ixx:IShaderInfo.VSUsesVariable","CClass:IShaderInfo:VSUsesVariable"]]]]);

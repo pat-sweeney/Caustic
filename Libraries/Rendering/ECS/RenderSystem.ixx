@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2023-2024
+// Copyright Patrick Sweeney 2023-2025
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -35,11 +35,14 @@ export namespace Caustic
         void DrawSelected(IRenderer* pRenderer, IRenderCtx* pRenderCtx);
         void RenderMesh(IEntity* pEntity, MeshComponent* pMeshComponent, IShader* pShader, IRenderer* pRenderer, IRenderCtx* pRenderCtx);
     public:
+        static const SystemID c_RenderSystemID = ECSManager::GenerateECSId();
+
         //**********************************************************************
         // Constructor: RenderSystem
         // Default constructor
         //**********************************************************************
-        RenderSystem()
+        RenderSystem() :
+            System(c_RenderSystemID, "RenderSystem")
         {
         }
 

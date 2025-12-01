@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/ECS/Archetype.ixx","Archetype.ixx");NDSummary.OnSummaryLoaded("File:Rendering/ECS/Archetype.ixx",[["C/C++","C"]],[["Classes","Class"]],[[1470,0,0,"ArchetypeBlock","ArchetypeBlock"]]);

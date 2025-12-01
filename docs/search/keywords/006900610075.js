@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("iau",["Interface","File"],[["IAudioFrame",,[[,,,,0,"File:Audio/AudioPlayback/IAudioPlayback.ixx:IAudioFrame","CClass:IAudioFrame"]]],["IAudioPlayback",,[[,,,,0,"File:Audio/AudioPlayback/IAudioPlayback.ixx:IAudioPlayback","CClass:IAudioPlayback"],[,"IAudioPlayback.ixx",,,1,"File:Audio/AudioPlayback/AudioPlayback.ixx:IAudioPlayback.ixx"]]]]);

@@ -25,10 +25,6 @@
     <ClCompile Include="UnitTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="UnitTest.ixx">
-      <Filter>Source Files</Filter>
-    </ClInclude>
+    <ClCompile Include="UnitTest.ixx" />
   </ItemGroup>
 </Project>

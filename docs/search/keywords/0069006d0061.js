@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("ima",["Interface"],[["ImageFilterParams",,[[,,,,0,"File:Imaging/Image/ImageFilter.ixx:ImageFilterParams","CClass:ImageFilterParams"]]],["IMaterialAttrib",,[[,,,,0,"File:Geometry/Mesh/IMaterialAttrib.ixx:IMaterialAttrib","CClass:IMaterialAttrib"]]]]);

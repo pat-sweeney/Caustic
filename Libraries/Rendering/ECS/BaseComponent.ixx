@@ -19,8 +19,6 @@ export namespace Caustic
 {
     struct BaseComponent : public Component
     {
-        std::wstring m_name;
-        uint32_t m_flags;
         uint32_t m_passes;
         DirectX::XMMATRIX m_xm;
     };

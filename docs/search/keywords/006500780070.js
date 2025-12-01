@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("exp",["Function"],[["ExpandEnvironmentVariables",,[["Caustic",,,,0,"File:Base/Core/convertStr.ixx:Caustic.ExpandEnvironmentVariables","CClass:Caustic:ExpandEnvironmentVariables"]]]]);

@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("cvi",["Class"],[["CVideo",,[[,,,,0,"File:Imaging/Video/Video.ixx:CVideo","CClass:CVideo"]]],["CVideoFormat",,[[,,,,0,"File:Imaging/Video/IVideo.ixx:CVideoFormat","CClass:CVideoFormat"]]],["CVideoTexture",,[[,,,,0,"File:Rendering/Caustic/VideoTexture.ixx:CVideoTexture","CClass:CVideoTexture"]]]]);

@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("etr",["Class","Enumeration"],[["ETrackballConstraint",,[[,,,,0,"File:Rendering/Caustic/ITrackball.ixx:ETrackballConstraint","CClass:ETrackballConstraint"]]],["ETriangulateMethod",,[["CFace",,,,1,"File:Geometry/Mesh/IMesh.ixx:CFace.ETriangulateMethod","CClass:CFace:ETriangulateMethod"]]]]);

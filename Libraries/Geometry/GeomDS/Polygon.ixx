@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2018
+// Copyright Patrick Sweeney 2015-2025
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -11,7 +11,8 @@ import Base.Core.Core;
 import Base.Core.RefCount;
 import Base.Math.Vector;
 import Base.Math.BBox;
-import Geometry.GeomDS.IPolygon;
+import Geometry.GeomDS.IPolygon;
+
 export namespace Caustic
 {
     class CPolygon2 : public IPolygon2, public CRefCount
@@ -25,7 +26,7 @@ export namespace Caustic
         // IRefCount
         //**********************************************************************
         virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32_t Release() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
 
         //**********************************************************************
         // IPolygon2

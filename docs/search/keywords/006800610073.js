@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("has",["Function"],[["HasShader",,[["IShaderInfo",,,,0,"File:Rendering/Caustic/IShaderInfo.ixx:IShaderInfo.HasShader","CClass:IShaderInfo:HasShader"]]]]);

@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("eol",["Function"],[["eol",,[["Bresenham",,,,0,"File:Geometry/Rast/Bresenham.ixx:Bresenham.eol","CClass:Bresenham:eol"]]]]);

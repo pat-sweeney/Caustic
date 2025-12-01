@@ -1,8 +1,9 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2025
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+#include <memory>
 import Geometry.GeomDS.Polygon;
 import Geometry.GeomDS.IPolygon;
 import Base.Core.Core;
@@ -10,7 +11,6 @@ import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Base.Math.Ray;
 import Base.Math.Helper;
-#include <memory>
 
 namespace Caustic
 {
@@ -90,6 +90,14 @@ namespace Caustic
     CRefObj<IPolygon2> CPolygon2::Simplify(float err, float maxLen)
     {
         CRefObj<IPolygon2> spPolygon = CreatePolygon2();
+
+        if (m_pts.size() < 3)
+        {
+            // Nothing to simplify
+            for (int i = 0; i < m_pts.size(); i++)
+                spPolygon->AddPoint(m_pts[i]);
+            return spPolygon;
+		}
 
         // Should probably replace this at some point with Zhao&Saalfeld's method which is faster
         // http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.494.7321&rep=rep1&type=pdf

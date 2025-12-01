@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:IImagePool","IImagePool");NDSummary.OnSummaryLoaded("CClass:IImagePool",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Interfaces","Interface"]],[[734,0,2,"IImagePool"],[735,0,1,"Functions","Functions"],[736,0,0,"Acquire","Acquire"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:IImagePool","IImagePool");NDSummary.OnSummaryLoaded("CClass:IImagePool",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Interfaces","Interface"]],[[739,0,2,"IImagePool"],[740,0,1,"Functions","Functions"],[741,0,0,"Acquire","Acquire"]]);

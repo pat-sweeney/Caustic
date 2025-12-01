@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("isy",["Class"],[["ISystem",,[[,,,,0,"File:Rendering/ECS/IECS.ixx:ISystem","CClass:ISystem"]]]]);

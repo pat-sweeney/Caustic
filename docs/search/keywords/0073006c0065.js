@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("sle",["Function"],[["Slerp",,[["Quaternion",,,,0,"File:Base/Math/Quaternion.ixx:Quaternion.Slerp","CClass:Quaternion:Slerp"]]]]);

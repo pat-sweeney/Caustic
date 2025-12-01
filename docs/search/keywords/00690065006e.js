@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("ien",["Class"],[["IEntity",,[[,,,,0,"File:Rendering/ECS/IECS.ixx:IEntity","CClass:IEntity"]]]]);

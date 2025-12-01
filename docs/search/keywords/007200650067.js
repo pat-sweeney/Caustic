@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("reg",["Function"],[["RegisterShader",,[[,,,,0,"File:Rendering/Caustic/ShaderMgr.cpp:RegisterShader"],["IShaderMgr",,,,0,"File:Rendering/Caustic/IShaderMgr.ixx:IShaderMgr.RegisterShader","CClass:IShaderMgr:RegisterShader"]]]]);

@@ -20,11 +20,11 @@ namespace Caustic
 {
     void HierarchySystem::TraverseRecursive(IEntity* pEntity, std::function<void(IEntity*)> func)
     {
-        Component *pComponent = pEntity->HasComponent(c_HierarchyComponent);
-        if (pComponent != nullptr)
+        CRefObj<IComponent> spComponent = pEntity->GetComponent(c_HierarchyComponent);
+        if (spComponent != nullptr)
         {
             func(pEntity);
-            HierarchyComponent* pHierarchyComponent = (HierarchyComponent*)pComponent;
+            HierarchyComponent* pHierarchyComponent = (HierarchyComponent*)spComponent.p;
             for (uint32_t i = 0; i < pHierarchyComponent->m_children.size(); i++)
             {
                 CRefObj<IEntity> spEntity = pHierarchyComponent->m_children[i];

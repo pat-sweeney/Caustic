@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("img",["Function"],[["ImGui_ScalableSlider",,[[,,,,0,"File:Rendering/GuiControls/GuiControls.ixx:ImGui_ScalableSlider"]]],["ImGui_Vector",,[[,,,,0,"File:Rendering/GuiControls/GuiControls.ixx:ImGui_Vector"]]]]);

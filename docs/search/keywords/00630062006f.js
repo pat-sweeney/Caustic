@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("cbo",["Class"],[["CBoxFilter",,[[,,,,0,"File:Imaging/Image/BoxFilter.ixx:CBoxFilter","CClass:CBoxFilter"]]]]);

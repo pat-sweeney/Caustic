@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("cun",["Class"],[["CUnsharpMaskFilter",,[[,,,,0,"File:Imaging/Image/UnsharpMask.ixx:CUnsharpMaskFilter","CClass:CUnsharpMaskFilter"]]]]);

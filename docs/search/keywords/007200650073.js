@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("res",["Function"],[["Restart",,[["IVideoTexture",,,,0,"File:Rendering/Caustic/IVideoTexture.ixx:IVideoTexture.Restart","CClass:IVideoTexture:Restart"]]]]);

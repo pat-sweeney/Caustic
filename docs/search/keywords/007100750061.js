@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("qua",["Struct"],[["Quaternion",,[[,,,,0,"File:Base/Math/Quaternion.ixx:Quaternion","CClass:Quaternion"]]]]);

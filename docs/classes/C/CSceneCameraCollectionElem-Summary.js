@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CSceneCameraCollectionElem","CSceneCameraCollectionElem");NDSummary.OnSummaryLoaded("CClass:CSceneCameraCollectionElem",[["C/C++","C"]],[["Classes","Class"]],[[1860,0,0,"CSceneCameraCollectionElem"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CSceneCameraCollectionElem","CSceneCameraCollectionElem");NDSummary.OnSummaryLoaded("CClass:CSceneCameraCollectionElem",[["C/C++","C"]],[["Classes","Class"]],[[1874,0,0,"CSceneCameraCollectionElem"]]);

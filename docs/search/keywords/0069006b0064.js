@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("ikd",["Interface"],[["IKDTree",,[[,,,,0,"File:Geometry/GeomDS/IKDTree.ixx:IKDTree","CClass:IKDTree"]]]]);

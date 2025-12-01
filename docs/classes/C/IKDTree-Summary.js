@@ -1,1 +1,0 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:IKDTree","IKDTree");NDSummary.OnSummaryLoaded("CClass:IKDTree",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Interfaces","Interface"]],[[339,0,2,"IKDTree"],[340,0,1,"Functions","Functions"],[341,0,0,"AddPoint","AddPoint"],[342,0,0,"FindPoint","FindPoint"]]);

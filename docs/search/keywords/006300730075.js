@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("csu",["Class"],[["CSubMesh",,[[,,,,0,"File:Geometry/Mesh/Mesh.ixx:CSubMesh","CClass:CSubMesh"]]]]);

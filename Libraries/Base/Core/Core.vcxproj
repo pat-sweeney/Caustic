@@ -34,13 +34,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -65,6 +65,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;CAUSTIC_ROOT_DIRECTORY=LR"($(CausticRoot))";CAUSTIC_SHADER_DIRECTORY=LR"($(CausticRoot)\$(Configuration))";_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnableModules>true</EnableModules>
       <SDLCheck>true</SDLCheck>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -80,6 +81,7 @@
       <PreprocessorDefinitions>NDEBUG;_LIB;CAUSTIC_ROOT_DIRECTORY=LR"($(CausticRoot))";CAUSTIC_SHADER_DIRECTORY=LR"($(CausticRoot)\$(Configuration))";_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnableModules>true</EnableModules>
       <SDLCheck>true</SDLCheck>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

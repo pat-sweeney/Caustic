@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2019-2024
+// Copyright Patrick Sweeney 2019-2025
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -28,6 +28,7 @@ import Rendering.Caustic.IPointLight;
 import Rendering.Caustic.IPointCloud;
 import Rendering.Caustic.IDirectionalLight;
 import Rendering.Caustic.IRenderMaterial;
+import Rendering.Caustic.IRenderable;
 import Rendering.Caustic.ISampler;
 import Rendering.Caustic.IShaderInfo;
 import Rendering.Caustic.IVideoTexture;

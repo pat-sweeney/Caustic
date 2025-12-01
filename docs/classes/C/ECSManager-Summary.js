@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("CClass:ECSManager","ECSManager");NDSummary.OnSummaryLoaded("CClass:ECSManager",[["C/C++","C"]],[["Classes","Class"]],[[1465,0,0,"ECSManager"]]);

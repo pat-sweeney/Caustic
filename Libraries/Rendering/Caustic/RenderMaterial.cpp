@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2025
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -17,6 +17,7 @@ import Geometry.Mesh.Mesh;
 import Rendering.Caustic.Sampler;
 import Rendering.Caustic.Renderer;
 import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.ILight;
 import Rendering.Caustic.Shader;
 import Rendering.Caustic.CausticFactory;
 import Rendering.Caustic.RendererFlags;

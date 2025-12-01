@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("rel",["Function"],[["Release",,[["IRefCount",,,,0,"File:Base/Core/IRefCount.ixx:IRefCount.Release","CClass:IRefCount:Release"]]]]);

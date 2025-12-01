@@ -1,1 +1,0 @@
-﻿NDMenu.OnSectionLoaded("classes.js",[[2,"C#","CSharpClass:",[[1,"Counts"],[1,"Vector"],[1,"Vertex"]]],[2,"C/C++","CClass:","classes2.js"]]);

@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:Rendering/RenderGraph/RenderGraphNode.ixx","RenderGraphNode.ixx");NDSummary.OnSummaryLoaded("File:Rendering/RenderGraph/RenderGraphNode.ixx",[["C/C++","C"]],[["Classes","Class"]],[[1489,0,0,"CRenderGraphNode","CRenderGraphNode"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:Rendering/RenderGraph/RenderGraphNode.ixx","RenderGraphNode.ixx");NDSummary.OnSummaryLoaded("File:Rendering/RenderGraph/RenderGraphNode.ixx",[["C/C++","C"]],[["Classes","Class"]],[[1542,0,0,"CRenderGraphNode","CRenderGraphNode"]]);
