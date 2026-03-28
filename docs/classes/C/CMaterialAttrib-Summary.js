@@ -1,1 +1,0 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CMaterialAttrib","CMaterialAttrib");NDSummary.OnSummaryLoaded("CClass:CMaterialAttrib",[["C/C++","C"]],[["Functions","Function"],["Groups","Group"],["Structs","Struct"]],[[398,0,2,"CMaterialAttrib"],[399,0,1,"Functions","Functions"],[400,0,0,"CreateStandardMaterial","CreateStandardMaterial"],[401,0,0,"CreateMaterial","CreateMaterial"]]);

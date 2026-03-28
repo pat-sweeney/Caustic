@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("low",["Class"],[["LowPassFilter",,[[,,,,0,"File:Base/Math/FuncFilter.ixx:LowPassFilter","CClass:LowPassFilter"]]]]);

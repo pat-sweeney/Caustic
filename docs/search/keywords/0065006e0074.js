@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("ent",["Function","Class"],[["Enter",,[["CCritSec",,,,0,"File:Base/Core/CritSec.ixx:CCritSec.Enter","CClass:CCritSec:Enter"]]],["Entity",,[[,,,,1,"File:Rendering/ECS/ECS.ixx:Entity","CClass:Entity"]]]]);

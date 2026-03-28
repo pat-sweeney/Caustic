@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("swa",["Function"],[["Swap",,[["Caustic",,,,0,"File:Base/Core/Core.ixx:Caustic.Swap","CClass:Caustic:Swap"]]]]);

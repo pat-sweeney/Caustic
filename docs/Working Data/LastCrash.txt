@@ -1,34 +1,41 @@
-Generated on 8/29/2020 9:24:18 PM
+Generated on 11/30/2025 6:32:41 PM
 
 Crash Message:
 
-   Object reference not set to an instance of an object. (Finalizer Thread 3)
-   (System.NullReferenceException)
+   Continuous and built types don't match: "std::function<void(const wchar_t* pName, FRGBAColor & v)>", "std::function<void(const wchar_t* pName, FRGBAColor& v)>" (Builder Thread 1)
+   (System.Exception)
+
+Task:
+
+   Building HTML file d:\GitHub\Caustic\docs\files\Geometry\Mesh\IMaterialAttrib-ixx.html
+   Building HTML for topic "EnumerateColors" from file d:\GitHub\Caustic\Libraries\Geometry\Mesh\IMaterialAttrib.ixx line 216
 
 Stack Trace:
 
-   ----- Finalizer Thread 3 -----
-   at CodeClear.NaturalDocs.Engine.Files.Manager.FileSourceOf(File file)
-   at CodeClear.NaturalDocs.Engine.Output.Menu.FindOrCreateFileSourceEntryOf(File file)
-   at CodeClear.NaturalDocs.Engine.Output.Menu.AddFile(File file)
-   at CodeClear.NaturalDocs.Engine.Output.Builders.HTML.BuildMenu(Accessor accessor, CancelDelegate cancelDelegate)
-   at CodeClear.NaturalDocs.Engine.Output.Builders.HTML.WorkOnFinalizingOutput(CancelDelegate cancelDelegate)
-   at CodeClear.NaturalDocs.Engine.Output.Manager.WorkOnFinalizingOutput(CancelDelegate cancelDelegate)
-   at CodeClear.NaturalDocs.Engine.Thread.InternalStart()
+   ----- Builder Thread 1 -----
+   at CodeClear.NaturalDocs.Engine.Prototypes.Section.BuildFullType(TokenIterator& fullTypeStart, TokenIterator& fullTypeEnd) in D:\github\Caustic\External\NaturalDocs\Engine\Source\Prototypes\Section.cs:line 307
+   at CodeClear.NaturalDocs.Engine.Prototypes.ParameterSection.BuildFullParameterType(Int32 index, TokenIterator& fullTypeStart, TokenIterator& fullTypeEnd, Boolean impliedTypes) in D:\github\Caustic\External\NaturalDocs\Engine\Source\Prototypes\ParameterSection.cs:line 401
+   at CodeClear.NaturalDocs.Engine.Prototypes.ParsedPrototype.BuildFullParameterType(Int32 parameterIndex, TokenIterator& fullTypeStart, TokenIterator& fullTypeEnd, Boolean impliedTypes) in D:\github\Caustic\External\NaturalDocs\Engine\Source\Prototypes\ParsedPrototype.cs:line 145
+   at CodeClear.NaturalDocs.Engine.Output.HTML.Components.Topic.AppendBody(StringBuilder output) in D:\github\Caustic\External\NaturalDocs\Engine\Source\Output\HTML\Components\Topic.cs:line 459
+   at CodeClear.NaturalDocs.Engine.Output.HTML.Components.Topic.AppendTopic(Topic topic, Context context, IList`1 links, IList`1 linkTargets, IList`1 imageLinks, StringBuilder output, IList`1 embeddedTopics, Int32 embeddedTopicIndex, String extraClass) in D:\github\Caustic\External\NaturalDocs\Engine\Source\Output\HTML\Components\Topic.cs:line 165
+   at CodeClear.NaturalDocs.Engine.Output.HTML.Components.TopicPage.BuildDataFiles(Context context, Accessor accessor, CancelDelegate cancelDelegate, Boolean releaseExistingLocks) in D:\github\Caustic\External\NaturalDocs\Engine\Source\Output\HTML\Components\TopicPage.cs:line 332
+   at CodeClear.NaturalDocs.Engine.Output.HTML.TargetBuilder.BuildSourceFile(Int32 fileID, Accessor accessor, CancelDelegate cancelDelegate) in D:\github\Caustic\External\NaturalDocs\Engine\Source\Output\HTML\TargetBuilder.cs:line 875
+   at CodeClear.NaturalDocs.Engine.Output.HTML.TargetBuilder.WorkOnUpdatingOutput(CancelDelegate cancelDelegate) in D:\github\Caustic\External\NaturalDocs\Engine\Source\Output\HTML\TargetBuilder.cs:line 184
+   at CodeClear.NaturalDocs.Engine.Output.Builder.WorkOnUpdatingOutput(CancelDelegate cancelDelegate) in D:\github\Caustic\External\NaturalDocs\Engine\Source\Output\Builder.cs:line 91
+   at CodeClear.NaturalDocs.Engine.Thread.InternalStart() in D:\github\Caustic\External\NaturalDocs\Engine\Source\Thread.cs:line 149
    ----- Parent Thread -----
-   at CodeClear.NaturalDocs.CLI.Application.Multithread(String threadName, CancellableTask task)
-   at CodeClear.NaturalDocs.CLI.Application.BuildDocumentation(ErrorList errorList)
-   at CodeClear.NaturalDocs.CLI.Application.Main(String[] commandLine)
+   at CodeClear.NaturalDocs.Engine.Thread.ThrowExceptions() in D:\github\Caustic\External\NaturalDocs\Engine\Source\Thread.cs:line 67
+   at CodeClear.NaturalDocs.CLI.Application.Multithread(String threadName, CancellableTask task) in D:\github\Caustic\External\NaturalDocs\CLI\Source\Application.cs:line 710
+   at CodeClear.NaturalDocs.CLI.Application.BuildDocumentation(ErrorList errorList) in D:\github\Caustic\External\NaturalDocs\CLI\Source\Application.cs:line 273
+   at CodeClear.NaturalDocs.CLI.Application.Main(String[] commandLine) in D:\github\Caustic\External\NaturalDocs\CLI\Source\Application.cs:line 127
 
 Command Line:
 
-   "C:\Program Files (x86)\Natural Docs\NaturalDocs.exe"  j:\github\Caustic\docs
+   "d:\GitHub\Caustic\External\NaturalDocs\CLI\bin\Release\NaturalDocs.exe"  d:\GitHub\Caustic\docs
 
 Versions:
 
-   Natural Docs 2.0.2
-
-   .NET 4.8.4200.0
-   Microsoft Windows NT 6.2.9200.0 (Win32NT)
-
-   SQLite 3.13.0
+   Natural Docs 2.4 (Development Release 1)
+   Windows 10 Pro version 22H2
+   .NET 4.8.1
+   SQLite 3.43.2

@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("cge",["Struct"],[["CGeomFace",,[[,,,,0,"File:Geometry/Mesh/RenderTypes.ixx:CGeomFace","CClass:CGeomFace"]]],["CGeomVertex",,[[,,,,0,"File:Geometry/Mesh/RenderTypes.ixx:CGeomVertex","CClass:CGeomVertex"]]]]);

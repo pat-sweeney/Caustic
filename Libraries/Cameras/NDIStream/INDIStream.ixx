@@ -1,5 +1,6 @@
+#ifdef USE_NDI
 //**********************************************************************
-// Copyright Patrick Sweeney 2023-2024
+// Copyright Patrick Sweeney 2023-2026
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -88,3 +89,4 @@ export namespace Caustic
     //**********************************************************************
     CRefObj<INDIStream> CreateNDIStream();
 }
+#endif

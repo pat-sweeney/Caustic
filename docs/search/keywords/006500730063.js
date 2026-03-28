@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("esc",["Enumeration"],[["ESceneElemFlags",,[[,,,,0,"File:Rendering/SceneGraph/ISceneElem.ixx:ESceneElemFlags"]]],["ESceneElemType",,[[,,,,0,"File:Rendering/SceneGraph/ISceneElem.ixx:ESceneElemType"]]]]);

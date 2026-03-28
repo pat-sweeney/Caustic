@@ -55,6 +55,7 @@
       <AdditionalIncludeDirectories>$(CausticRoot)\External\$(BoostVersion);$(CausticRoot)\Libraries</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>true</EnableModules>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -72,6 +73,7 @@
       <AdditionalIncludeDirectories>$(CausticRoot)\External\$(BoostVersion);$(CausticRoot)\Libraries</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>true</EnableModules>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

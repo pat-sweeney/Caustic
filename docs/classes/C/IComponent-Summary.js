@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("CClass:IComponent","IComponent");NDSummary.OnSummaryLoaded("CClass:IComponent",[["C/C++","C"]],[["Interfaces","Interface"]],[[1439,0,0,"IComponent"]]);

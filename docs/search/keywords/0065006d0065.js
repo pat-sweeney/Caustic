@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("eme",["Class"],[["EMeshFlags",,[[,,,,0,"File:Geometry/Mesh/IMesh.ixx:EMeshFlags","CClass:EMeshFlags"]]]]);

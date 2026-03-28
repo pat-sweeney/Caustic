@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("jso",["Class"],[["JSonEnumerator",,[[,,,,0,"File:Parsers/JSon/JSonParser.ixx:JSonEnumerator","CClass:JSonEnumerator"]]]]);

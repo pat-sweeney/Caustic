@@ -1,14 +1,14 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2025
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+#include <atlbase.h>
+#include <wincodec.h>
 import Base.Core.Core;
 import Base.Core.Error;
 import Imaging.Image.IImage;
 import Imaging.Image.Image;
-#include <atlbase.h>
-#include <wincodec.h>
 
 namespace Caustic
 {

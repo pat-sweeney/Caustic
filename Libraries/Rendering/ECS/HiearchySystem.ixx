@@ -31,12 +31,6 @@ export namespace Caustic
         void TraverseRecursive(IEntity* pEntity, std::function<void(IEntity*)> func);
     public:
         //**********************************************************************
-        // IRefCount
-        //************************************************************* *********
-        virtual uint32_t  AddRef() override { return CRefCount::AddRef(); }
-        virtual uint32_t  Release() override { return CRefCount::Release(); }
-
-        //**********************************************************************
         // IHierarchySystem
         //**********************************************************************
         virtual void Traverse(std::function<void(IEntity*)> func) override;

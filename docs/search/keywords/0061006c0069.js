@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("ali",["Function"],[["Align",,[["Matrix3x2",,,,0,"File:Base/Math/Matrix3x2.ixx:Matrix3x2.Align","CClass:Matrix3x2:Align"]]]]);

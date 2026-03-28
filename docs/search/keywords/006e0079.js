@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("ny",["Variable"],[["ny",,[["Vertex",,,,0,"File:Rendering/SceneGraph/MCEmitVerts.cs:Vertex.ny","CSharpClass:Vertex:ny"]]]]);

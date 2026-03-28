@@ -19,6 +19,7 @@ import Base.Core.IRefCount;
 import Base.Math.Vector;
 import Base.Math.BBox;
 import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IRenderCtx;
 import Rendering.Caustic.ICamera;
 import Rendering.Caustic.ITexture;
 import Rendering.SceneGraph.ISceneGraph;

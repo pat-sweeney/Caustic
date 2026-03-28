@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("ctr",["Class"],[["CTrackball",,[[,,,,0,"File:Rendering/Caustic/Trackball.ixx:CTrackball","CClass:CTrackball"]]],["CTransformFilter",,[[,,,,0,"File:Imaging/Image/Transform.ixx:CTransformFilter","CClass:CTransformFilter"]]]]);

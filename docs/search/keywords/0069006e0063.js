@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("inc",["Function"],[["IncrementCurrentEpoch",,[["IGPUPipeline",,,,0,"File:Imaging/GPUImage/IGPUPipeline.ixx:IGPUPipeline.IncrementCurrentEpoch","CClass:IGPUPipeline:IncrementCurrentEpoch"]]],["IncrementEpoch",,[["IRenderCtx",,,,0,"File:Rendering/Caustic/IRenderCtx.ixx:IRenderCtx.IncrementEpoch","CClass:IRenderCtx:IncrementEpoch"]]]]);

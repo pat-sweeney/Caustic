@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("ccu",["Class"],[["CCustomFilter",,[[,,,,0,"File:Imaging/Image/CustomFilter.ixx:CCustomFilter","CClass:CCustomFilter"]]]]);

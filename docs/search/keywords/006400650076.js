@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("dev",["Function"],[["DeviceWindowResized",,[[,,,,0,"File:Rendering/Caustic/Renderer.cpp:DeviceWindowResized"],["IRenderer",,,,0,"File:Rendering/Caustic/IRenderer.ixx:IRenderer.DeviceWindowResized","CClass:IRenderer:DeviceWindowResized"]]]]);

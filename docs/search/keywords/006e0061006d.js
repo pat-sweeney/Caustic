@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("nam",["Function"],[["Name",,[["ISceneElem",,,,0,"File:Rendering/SceneGraph/ISceneElem.ixx:ISceneElem.Name","CClass:ISceneElem:Name"],["IShader",,,,0,"File:Rendering/Caustic/IShader.ixx:IShader.Name","CClass:IShader:Name"]]]]);

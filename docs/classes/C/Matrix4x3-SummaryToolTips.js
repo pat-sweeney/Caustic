@@ -1,1 +1,0 @@
-﻿NDSummary.OnToolTipsLoaded("CClass:Matrix4x3",{137:"<div class=\"NDToolTip TStruct LC\"><div class=\"NDClassPrototype\" id=\"NDClassPrototype137\"><div class=\"CPEntry TStruct Current\"><div class=\"CPModifiers\"><span class=\"SHKeyword\">struct</span></div><div class=\"CPName\">Matrix4x3</div></div></div><div class=\"TTSummary\">3-dimensional affine matrix</div></div>"});

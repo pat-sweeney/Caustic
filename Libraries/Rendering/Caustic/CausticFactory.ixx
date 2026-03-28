@@ -14,6 +14,7 @@ import Base.Core.RefCount;
 import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.ISampler;
 import Rendering.Caustic.ICausticFactory;
+import Rendering.Caustic.IRenderable;
 
 //**********************************************************************
 // File: CausticFactory.ixx

@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("cmo",["Class"],[["CMosaicFilter",,[[,,,,0,"File:Imaging/Image/MosaicFilter.ixx:CMosaicFilter","CClass:CMosaicFilter"]]],["CMotionBlurFilter",,[[,,,,0,"File:Imaging/Image/MotionBlurFilter.ixx:CMotionBlurFilter","CClass:CMotionBlurFilter"]]]]);

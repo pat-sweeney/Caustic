@@ -1,5 +1,5 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2023
+// Copyright Patrick Sweeney 2015-2025
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -8,7 +8,9 @@
 #include <commdlg.h>
 import Base.Core.Core;
 import Base.Core.IRefCount;
+import Imaging.Image.IImage;
 import Imaging.Image.ImageFilter;
+import Geometry.Mesh.RenderTypes;
 import Geometry.Mesh.IMeshConstructor;
 import Geometry.MeshImport;
 import Cameras.AzureKinect.IAzureKinect;

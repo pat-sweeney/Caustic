@@ -7,11 +7,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="UnitTests.ixx">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="Core.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -48,5 +43,6 @@
     <ClCompile Include="convertStr.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UnitTests.ixx" />
   </ItemGroup>
 </Project>

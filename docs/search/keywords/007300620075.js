@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("sbu",["Class"],[["SBuffer",,[[,,,,0,"File:Rendering/Caustic/Shader.ixx:SBuffer","CClass:SBuffer"]]]]);

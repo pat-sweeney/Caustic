@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("eim",["Class"],[["EImageType",,[[,,,,0,"File:Imaging/Image/IImage.ixx:EImageType","CClass:EImageType"]]]]);

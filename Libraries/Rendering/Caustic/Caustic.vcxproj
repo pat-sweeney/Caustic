@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -57,6 +57,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
       <EnableModules>true</EnableModules>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -76,6 +77,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
       <EnableModules>true</EnableModules>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -286,6 +288,7 @@
     <ClCompile Include="IRenderable.cpp" />
     <ClCompile Include="IRenderable.ixx" />
     <ClCompile Include="IRenderCtx.ixx" />
+    <ClCompile Include="IRenderer.cpp" />
     <ClCompile Include="IRenderer.ixx" />
     <ClCompile Include="IRenderMaterial.cpp" />
     <ClCompile Include="IRenderMaterial.ixx" />

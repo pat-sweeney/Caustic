@@ -1,1 +1,0 @@
-﻿NDSummary.OnToolTipsLoaded("CClass:CNDIStream",{278:"<div class=\"NDToolTip TClass LC\"><div class=\"NDClassPrototype\" id=\"NDClassPrototype278\"><div class=\"CPEntry TClass Current\"><div class=\"CPName\">CNDIStream</div></div></div><div class=\"TTSummary\">Implements INDIStream</div></div>"});

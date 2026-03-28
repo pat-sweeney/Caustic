@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("c_e",["Constant"],[["c_Epsilon",,[["Caustic",,,,0,"File:Base/Core/Core.ixx:Caustic.c_Epsilon","CClass:Caustic:c_Epsilon"]]]]);

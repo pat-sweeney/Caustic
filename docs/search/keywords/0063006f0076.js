@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("cov",["Function"],[["Covariance",,[["Caustic",,,,0,"File:Base/Math/Covariance.ixx:Caustic.Covariance","CClass:Caustic:Covariance"]]]]);

@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("hie",["Class"],[["HierarchySystem",,[[,,,,0,"File:Rendering/ECS/HiearchySystem.ixx:HierarchySystem","CClass:HierarchySystem"]]]]);

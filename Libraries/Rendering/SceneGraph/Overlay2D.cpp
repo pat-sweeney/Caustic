@@ -14,6 +14,7 @@ import Base.Core.Error;
 import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Rendering.Caustic.Sampler;
+import Rendering.Caustic.ILight;
 import Rendering.Caustic.IShader;
 import Rendering.Caustic.Shader;
 import Rendering.Caustic.IShaderMgr;

@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("acq",["Function"],[["Acquire",,[["IImagePool",,,,0,"File:Imaging/Image/IImagePool.ixx:IImagePool.Acquire","CClass:IImagePool:Acquire"]]]]);

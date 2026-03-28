@@ -45,7 +45,9 @@ import Rendering.GuiControls.Common;
 import Rendering.RenderWindow.IRenderWindow;
 import Rendering.SceneGraph.ISceneFactory;
 import Cameras.WebCamera.IWebCamera;
+#ifdef USE_NDI
 import Cameras.NDIStream.INDIStream;
+#endif
 import Base.Math.Point;
 
 #define MAX_LOADSTRING 100
@@ -79,7 +81,9 @@ public:
     ImVec2 imageWinSize;
     char NDIStreamName[1024];
     char ImagePath[1024];
+#ifdef USE_NDI
     CRefObj<INDIStream> m_spNDIStream;
+#endif
 
     CApp()
     {
@@ -207,9 +211,11 @@ void BuildPanels(ITexture *pFinalRT, ImFont *pFont)
 
         int w = app.cameraResPoints[app.currentCamera][app.currentResolution].x;
         int h = app.cameraResPoints[app.currentCamera][app.currentResolution].y;
+#ifdef USE_NDI
         app.m_spNDIStream = CreateNDIStream();
         std::string streamName(app.NDIStreamName);
         app.m_spNDIStream->Initialize(streamName, w, h, 30, 48000, 16, 2);
+#endif
         app.startBroadcast = true;
     }
     ImGui::PopItemFlag();
@@ -232,9 +238,11 @@ void BuildPanels(ITexture *pFinalRT, ImFont *pFont)
         app.m_spStaticImage = Caustic::LoadImageFile(Caustic::str2wstr(app.ImagePath).c_str());
         int w = app.m_spStaticImage->GetWidth();
         int h = app.m_spStaticImage->GetHeight();
+#ifdef USE_NDI
         app.m_spNDIStream = CreateNDIStream();
         std::string streamName(app.NDIStreamName);
         app.m_spNDIStream->Initialize(streamName, w, h, 30, 48000, 16, 2);
+#endif
         app.startBroadcast = true;
     }
     ImGui::PopItemFlag();
@@ -248,7 +256,7 @@ void BuildPanels(ITexture *pFinalRT, ImFont *pFont)
         if (app.m_spTexture)
         {
             app.imageWinSize = ImGui::GetContentRegionAvail();
-            ImGui::Image((void*)app.m_spTexture->GetD3DTextureRV(), app.imageWinSize);
+            ImGui::Image((ImTextureID)(intptr_t)app.m_spTexture->GetD3DTextureRV().p, app.imageWinSize);
         }
         ImGui::End();
     }
@@ -319,7 +327,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         {
             app.m_spTexture = app.m_spCausticFactory->CreateTexture(app.m_spRenderer, app.m_spStaticImage,
                 D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
+#ifdef USE_NDI
             app.m_spNDIStream->SendImage(app.m_spStaticImage);
+#endif
         }
         else if (app.m_spCamera)
         {
@@ -329,7 +339,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             {
                 app.m_spTexture = app.m_spCausticFactory->CreateTexture(app.m_spRenderer, app.m_spColorImage,
                     D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
+#ifdef USE_NDI
                 app.m_spNDIStream->SendImage(app.m_spColorImage);
+#endif
             }
         }
     }
@@ -450,7 +462,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_QUIT:
 
         // Free the video frame
+#ifdef USE_NDI
         app.m_spNDIStream->Shutdown();
+#endif
 
         Caustic::SystemShutdown();
         break;

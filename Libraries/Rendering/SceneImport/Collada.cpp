@@ -1,12 +1,15 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2026
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
+module;
 #include <msxml6.h>
 #include <atlbase.h>
 #include <string>
 #include <memory>
+
+module Rendering.SceneImport.Collada;
 import Base.Core.Core;
 import Base.Core.Error;
 import Rendering.Caustic.ICamera;

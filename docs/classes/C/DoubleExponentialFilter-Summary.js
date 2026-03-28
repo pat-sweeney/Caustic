@@ -1,1 +1,0 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:DoubleExponentialFilter","DoubleExponentialFilter");NDSummary.OnSummaryLoaded("CClass:DoubleExponentialFilter",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[222,0,0,"DoubleExponentialFilter"],[223,0,2,"Functions","Functions"],[224,0,1,"Sample","Sample"]]);

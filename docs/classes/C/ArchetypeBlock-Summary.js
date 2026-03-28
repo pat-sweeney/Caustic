@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("CClass:ArchetypeBlock","ArchetypeBlock");NDSummary.OnSummaryLoaded("CClass:ArchetypeBlock",[["C/C++","C"]],[["Classes","Class"]],[[1470,0,0,"ArchetypeBlock"]]);

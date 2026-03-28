@@ -658,7 +658,7 @@ void CApp::InitializeCaustic(HWND hwnd)
                      }
                      ImVec2 uv0(0.0f, (flip) ? 1.0f : 0.0f);
                      ImVec2 uv1(1.0f, (flip) ? 0.0f : 1.0f);
-                     ImGui::Image((ImTextureID)spTexture->GetD3DTextureRV(), winsize, uv0, uv1);
+                     ImGui::Image((ImTextureID)(intptr_t)spTexture->GetD3DTextureRV().p, winsize, uv0, uv1);
                      ImGui::End();
                  }
              };

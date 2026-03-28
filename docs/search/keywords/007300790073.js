@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("sys",["Class","Function"],[["System",,[[,,,,0,"File:Rendering/ECS/ECS.ixx:System","CClass:System"]]],["SystemShutdown",,[[,,,,1,"File:Rendering/Caustic/Caustic.ixx:SystemShutdown"]]],["SystemStartup",,[[,,,,1,"File:Rendering/Caustic/Caustic.ixx:SystemStartup"]]]]);

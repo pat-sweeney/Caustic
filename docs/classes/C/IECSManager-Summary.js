@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("CClass:IECSManager","IECSManager");NDSummary.OnSummaryLoaded("CClass:IECSManager",[["C/C++","C"]],[["Interfaces","Interface"]],[[1442,0,0,"IECSManager"]]);

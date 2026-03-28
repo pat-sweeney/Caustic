@@ -1,5 +1,5 @@
 ﻿//**********************************************************************
-// Copyright Patrick Sweeney 2015-2024
+// Copyright Patrick Sweeney 2015-2026
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
@@ -43,7 +43,6 @@ import Rendering.RenderWindow.IRenderWindow;
 import Rendering.SceneGraph.ISceneFactory;
 import Rendering.SceneGraph.ISceneCubeElem;
 import Rendering.SceneGraph.ISceneCameraCollectionElem;
-import Rendering.SceneImport.Collada;
 import Rendering.SceneGraph.ISceneElem;
 import Rendering.SceneGraph.ISceneComputeShaderElem;
 import Rendering.SceneGraph.ISceneOverlay2DElem;
@@ -55,6 +54,7 @@ import Rendering.SceneGraph.ISceneMeshElem;
 import Rendering.SceneGraph.ISceneGroupElem;
 import Rendering.SceneGraph.ISceneLightCollectionElem;
 import Rendering.SceneGraph.ISceneMaterialElem;
+import Rendering.SceneImport.Collada;
 
 #define MAX_LOADSTRING 100
 
@@ -934,7 +934,7 @@ ImVec2 BuildMenuBar(ImFont *pFont)
 
                     CRefObj<ISceneOverlay2DElem> spOverlay;
                     spOverlay = app.m_spSceneFactory->CreateOverlay2DElem();
-                    auto spTexture = app.m_spCausticFactory->LoadTexture(L"c:\\users\\patricsw\\Pictures\\Capture.PNG", app.m_spRenderWindow->GetRenderer());
+                    auto spTexture = app.m_spCausticFactory->LoadTexture(L"c:\\users\\patri\\Pictures\\Capture.PNG", app.m_spRenderWindow->GetRenderer());
                     BBox2 bb;
                     bb.minPt = Vector2(0.0f, 0.0f);
                     bb.maxPt = Vector2(0.1f, 0.1f);
@@ -1239,7 +1239,7 @@ void BuildPanels(ITexture *pFinalRT, ImFont *pFont)
         ImVec2 vMax = ImGui::GetWindowContentRegionMax();
         ImVec2 vSize = ImVec2(vMax.x - vMin.x, vMax.y - vMin.y);
         auto x = ImGui::GetCursorPos();
-        ImGui::Image((void*)pFinalRT->GetD3DTextureRV(), vSize);
+        ImGui::Image((ImTextureID)(intptr_t)pFinalRT->GetD3DTextureRV().p, vSize);
         ImGui::SetCursorPos(x);
         ImGui::InvisibleButton("##HiddenEventHandler", vSize);
         ImVec2 mousePositionRelative;
@@ -1251,7 +1251,7 @@ void BuildPanels(ITexture *pFinalRT, ImFont *pFont)
             mousePositionRelative = ImVec2(mousePositionAbsolute.x - screenPositionAbsolute.x, mousePositionAbsolute.y - screenPositionAbsolute.y);
         }
         static bool wasDown = false;
-        ImGui::SetItemUsingMouseWheel();
+        ImGui::SetItemKeyOwner(ImGuiKey_MouseWheelY);
         if (ImGui::IsItemFocused())
         {
             if (!wasDown && ImGui::IsMouseDown(ImGuiMouseButton_Left))

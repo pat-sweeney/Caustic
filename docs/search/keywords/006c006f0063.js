@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("loc",["Function"],[["Lock",,[[,,,,0,"File:Rendering/RenderGraph/RenderGraph.cpp:Lock"],["IRenderGraph",,,,0,"File:Rendering/RenderGraph/IRenderGraph.ixx:IRenderGraph.Lock","CClass:IRenderGraph:Lock"],["ISceneGraph",,,,0,"File:Rendering/SceneGraph/ISceneGraph.ixx:ISceneGraph.Lock","CClass:ISceneGraph:Lock"]]]]);

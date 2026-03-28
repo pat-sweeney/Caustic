@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CGraphicsBase","CGraphicsBase");NDSummary.OnSummaryLoaded("CClass:CGraphicsBase",[["C/C++","C"]],[["Classes","Class"]],[[964,0,0,"CGraphicsBase"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CGraphicsBase","CGraphicsBase");NDSummary.OnSummaryLoaded("CClass:CGraphicsBase",[["C/C++","C"]],[["Classes","Class"]],[[979,0,0,"CGraphicsBase"]]);

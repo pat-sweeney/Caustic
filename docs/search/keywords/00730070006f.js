@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("spo",["File"],[["SpotLight",,[[,"SpotLight.cpp",,,0,"File:Rendering/Caustic/SpotLight.cpp:SpotLight.cpp"],[,"SpotLight.ixx",,,0,"File:Rendering/Caustic/SpotLight.ixx:SpotLight.ixx"]]]]);

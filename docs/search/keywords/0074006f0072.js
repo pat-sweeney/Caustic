@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("tor",["Function"],[["ToRenderMaterials",,[["IRenderer",,,,0,"File:Rendering/Caustic/IRenderer.ixx:IRenderer.ToRenderMaterials","CClass:IRenderer:ToRenderMaterials"]]],["ToRenderMesh",,[["IRenderer",,,,0,"File:Rendering/Caustic/IRenderer.ixx:IRenderer.ToRenderMesh","CClass:IRenderer:ToRenderMesh"]]]]);

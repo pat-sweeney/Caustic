@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:CGPUPipelineNodeBase","CGPUPipelineNodeBase");NDSummary.OnSummaryLoaded("CClass:CGPUPipelineNodeBase",[["C/C++","C"]],[["Classes","Class"]],[[543,0,0,"CGPUPipelineNodeBase"]]);
+﻿NDFramePage.OnPageTitleLoaded("CClass:CGPUPipelineNodeBase","CGPUPipelineNodeBase");NDSummary.OnSummaryLoaded("CClass:CGPUPipelineNodeBase",[["C/C++","C"]],[["Classes","Class"]],[[711,0,0,"CGPUPipelineNodeBase"]]);

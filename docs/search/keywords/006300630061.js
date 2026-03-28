@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("cca",["Class"],[["CCamera",,[[,,,,0,"File:Rendering/Caustic/Camera.ixx:CCamera","CClass:CCamera"]]],["CCausticFactory",,[[,,,,0,"File:Rendering/Caustic/CausticFactory.ixx:CCausticFactory","CClass:CCausticFactory"]]]]);

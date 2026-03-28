@@ -1,0 +1,1 @@
+﻿NDSummary.OnToolTipsLoaded("CClass:IComponent",{1439:"<div class=\"NDToolTip TInterface LC\"><div class=\"TTSummary\">Base interface for all components</div></div>"});

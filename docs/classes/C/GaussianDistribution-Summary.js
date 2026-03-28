@@ -1,1 +1,0 @@
-﻿NDFramePage.OnPageTitleLoaded("CClass:GaussianDistribution","GaussianDistribution");NDSummary.OnSummaryLoaded("CClass:GaussianDistribution",[["C/C++","C"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[281,0,0,"GaussianDistribution"],[282,0,2,"Functions","Functions"],[283,0,1,"Sample","Sample"]]);

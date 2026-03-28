@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("ins",["Function"],[["InsertChild",,[["ISceneGroupElem",,,,0,"File:Rendering/SceneGraph/ISceneGroupElem.ixx:ISceneGroupElem.InsertChild","CClass:ISceneGroupElem:InsertChild"]]],["Instance",,[["CCausticFactory",,,,0,"File:Rendering/Caustic/CausticFactory.ixx:CCausticFactory.Instance","CClass:CCausticFactory:Instance"]]]]);
