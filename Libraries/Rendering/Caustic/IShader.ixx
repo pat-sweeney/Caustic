@@ -22,6 +22,7 @@ import Base.Core.IRefCount;
 import Base.Math.BBox;
 import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.IShaderInfo;
+import Rendering.Caustic.IRenderer;
 
 //**********************************************************************
 // File: IShader.ixx
@@ -31,7 +32,6 @@ import Rendering.Caustic.IShaderInfo;
 export namespace Caustic
 {
     struct ILight;
-    struct IRenderer;
 
     enum EBufferType
     {

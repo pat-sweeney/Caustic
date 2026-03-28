@@ -12,6 +12,8 @@ import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Geometry.Mesh.IMaterialAttrib;
 import Rendering.Caustic.ITexture;
+import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IRenderCtx;
 //import Rendering.Caustic.IShader;
 
 //**********************************************************************
@@ -24,8 +26,6 @@ export namespace Caustic
     struct IShader;
     //struct IMaterialAttrib;
     struct ILight;
-    struct IRenderCtx;
-    struct IRenderer;
 
     //**********************************************************************
     // Interface: IRenderMaterial

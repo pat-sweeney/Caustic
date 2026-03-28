@@ -20,13 +20,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -57,10 +57,10 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
-    <PreBuildEvent>
+    <PreBuildEvent Condition="'$(USE_NATURALDOCS)'=='true' or '$(USE_NATURALDOCS)'=='True'">
       <Command>"$(CausticRoot)\External\NaturalDocs\CLI\bin\Release\NaturalDocs.exe" $(CausticRoot)\docs</Command>
     </PreBuildEvent>
-    <PostBuildEvent>
+    <PostBuildEvent Condition="'$(USE_NATURALDOCS)'=='true' or '$(USE_NATURALDOCS)'=='True'">
       <Command>call $(CausticRoot)\DocumentOverrides\FinalizeDocs.cmd $(Platform)\$(Configuration)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -71,10 +71,10 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
-    <PreBuildEvent>
+	  <PreBuildEvent Condition="'$(USE_NATURALDOCS)'=='true' or '$(USE_NATURALDOCS)'=='True'">
       <Command>"$(CausticRoot)\External\NaturalDocs\CLI\bin\Release\NaturalDocs.exe" $(CausticRoot)\docs</Command>
     </PreBuildEvent>
-    <PostBuildEvent>
+	  <PostBuildEvent Condition="'$(USE_NATURALDOCS)'=='true' or '$(USE_NATURALDOCS)'=='True'">
       <Command>call $(CausticRoot)\DocumentOverrides\FinalizeDocs.cmd $(Platform)\$(Configuration)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

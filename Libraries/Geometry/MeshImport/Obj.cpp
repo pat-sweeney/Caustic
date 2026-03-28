@@ -257,10 +257,10 @@ namespace Caustic
     {
         CRefObj<IMaterialAttrib> spMaterial;
         uint32_t materialID = 0;
-        while (true)
+        while (*pData)
         {
             std::string line;
-            ReadLine(pData, line, true);
+            ReadLine(pData, line, false);
             if (line.empty())
                 break;
             if (line.substr(0, 6) == "newmtl")
@@ -514,6 +514,8 @@ namespace Caustic
             {
                 std::string fn = m_Folder + line.substr(7);
                 HANDLE h = CreateFileA(fn.c_str(), FILE_GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr);
+                if (h == INVALID_HANDLE_VALUE)
+                    CT(HRESULT_FROM_WIN32(GetLastError()));
                 DWORD dwSize = GetFileSize(h, nullptr);
                 std::unique_ptr<BYTE[]> spBuffer(new BYTE[dwSize + 1]);
                 DWORD dwBytesRead;

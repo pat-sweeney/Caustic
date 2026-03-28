@@ -18,6 +18,7 @@ import Rendering.Caustic.Shader;
 import Rendering.Caustic.IShader;
 import Rendering.Caustic.ITexture;
 import Rendering.Caustic.IRenderCtx;
+import Rendering.Caustic.IRenderer;
 
 export namespace Caustic
 {

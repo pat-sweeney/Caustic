@@ -18,6 +18,8 @@ import Base.Math.BBox;
 import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.IShaderInfo;
 import Rendering.Caustic.IShader;
+import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IRenderCtx;
 import Geometry.Mesh.RenderTypes;
 import Geometry.Mesh.IMaterialAttrib;
 
@@ -29,8 +31,6 @@ import Geometry.Mesh.IMaterialAttrib;
 
 export namespace Caustic
 {
-    struct IRenderer;
-
     //**********************************************************************
     // Interface: IRenderSubMesh
     // Defines the D3D counterpart to an ISubMesh object (i.e. the renderable

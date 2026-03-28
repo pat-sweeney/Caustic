@@ -237,6 +237,9 @@
     <ClCompile Include="IVideoTexture.ixx">
       <Filter>Source Files\Interfaces</Filter>
     </ClCompile>
+    <ClCompile Include="IRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Brighten.xml">

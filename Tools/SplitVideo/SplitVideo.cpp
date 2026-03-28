@@ -4,21 +4,14 @@
 #include "framework.h"
 #include "SplitVideo.h"
 #include "imgui.h"
-#include "imgui_impl_win32.h"
-#include "imgui_impl_dx11.h"
-#include "imgui_internal.h"
 #include <string>
 #include <any>
 #include <algorithm>
 #include <memory>
 #include <d3d11.h>
 #include <DXGItype.h>
-#include <dxgi1_2.h>
-#include <dxgi1_3.h>
-#include <DXProgrammableCapture.h>
-#include <shlwapi.h>
 #include <vector>
-#include <cinttypes>
+#include <map>
 
 import Caustic.Base;
 import Base.Core.Core;
@@ -35,6 +28,7 @@ import Geometry.Mesh.IMesh;
 import Geometry.Mesh.IMeshConstructor;
 import Geometry.MeshImport;
 import Geometry.Mesh.MeshFuncs;
+import Rendering.Caustic.ILight;
 import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.IRenderMesh;
 import Rendering.Caustic.IRenderer;

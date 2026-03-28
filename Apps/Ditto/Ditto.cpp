@@ -40,6 +40,7 @@ import Geometry.Mesh.Delaunay;
 import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.IRenderMesh;
 import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.ILight;
 import Rendering.Caustic.IShader;
 import Rendering.Caustic.IShaderMgr;
 import Rendering.Caustic.ITexture;
@@ -51,7 +52,9 @@ import Cameras.WebCamera.WebCamera;
 import Cameras.WebCamera.IWebCamera;
 import Cameras.VirtualCamera.IVirtualCamera;
 import Cameras.VirtualCamera.VirtualCamera;
+#ifdef USE_NDI
 import Cameras.NDIStream.INDIStream;
+#endif
 import Imaging.Video.IVideo;
 import Parsers.Phonemes.IPhonemes;
 import Imaging.Image.GPUPipeline;
@@ -180,7 +183,9 @@ public:
     std::chrono::time_point<std::chrono::system_clock> m_prevRenderTime;
     CRefObj<IVirtualCamera> m_spVirtualCam;
     CRefObj<IVideo> m_spVideo;
+#ifdef USE_NDI
     CRefObj<INDIStream> m_spNDIStream;
+#endif
     std::map<std::wstring, PhonemeLandmarkDelta> m_phonemeLandmarkDeltaMap;
     std::map<std::wstring, std::vector<uint8_t>> m_phonemeAudioMap;
     std::unique_ptr<float2> m_spGridLocations;
@@ -885,7 +890,7 @@ void CApp::BuildUI(ITexture* pFinalRT, ImFont* pFont)
         ImVec2 vMax = ImGui::GetWindowContentRegionMax();
         ImVec2 vSize = ImVec2(vMax.x - vMin.x, vMax.y - vMin.y);
         auto x = ImGui::GetCursorPos();
-        ImGui::Image((void*)pFinalRT->GetD3DTextureRV(), vSize);
+        ImGui::Image((ImTextureID)(intptr_t)pFinalRT->GetD3DTextureRV().p, vSize);
         ImGui::End();
     }
     ImGui::End();
@@ -1153,7 +1158,9 @@ void CApp::LoadVideos(IRenderer* pRenderer, IRenderCtx* pCtx)
 
     CVideoFormat videoFormat;
     p2->GetVideoFormat(&videoFormat);
+#ifdef USE_NDI
     m_spNDIStream->Initialize("test", videoFormat.m_width, videoFormat.m_height, 30, audioFormat.m_samplesPerSec, audioFormat.m_bitsPerSample, audioFormat.m_numChannels);
+#endif
 }
 
 void CApp::ShowMesh(int frameIndex, IImage* pImage)
@@ -1350,14 +1357,18 @@ void CApp::ProcessNextFrame(IRenderer* pRenderer, IRenderCtx* pCtx)
                 //m_spVirtualCam->SendVideoFrame(m_spLastFrame);
                 m_spLastTex = m_spCausticFactory->CreateTexture(pRenderer, m_spLastFrame, D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE, D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE);
                 m_spSampler = m_spCausticFactory->CreateSampler(pRenderer, m_spLastTex);
+#ifdef USE_NDI
                 m_spNDIStream->SendImage(m_spLastFrame);
+#endif
             }
         }
         auto spAudioSample = m_videos[m_curVideoIndex]->NextAudioSample();
         if (spAudioSample != nullptr)
         {
             //m_spVirtualCam->SendAudioFrame(spAudioSample->GetData(), spAudioSample->GetDataSize());
+#ifdef USE_NDI
             m_spNDIStream->SendAudioFrame(spAudioSample->GetData(), spAudioSample->GetDataSize());
+#endif
         }
     }
 
@@ -1377,7 +1388,9 @@ void CApp::InitializeCaustic(HWND hwnd)
     m_spCausticFactory = Caustic::CreateCausticFactory();
 
     // Next create our output window
+#ifdef USE_NDI
     m_spNDIStream = CreateNDIStream();
+#endif
     std::wstring shaderFolder(SHADERPATH);
     BBox2 viewport(0.0f, 0.0f, 1.0f, 1.0f);
     m_spVirtualCam = Caustic::CreateVirtualCamera();
@@ -1611,7 +1624,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         PostQuitMessage(0);
         break;
     case WM_QUIT:
+#ifdef USE_NDI
         app.m_spNDIStream.p->Shutdown();
+#endif
         Caustic::SystemShutdown();
         break;
     default:

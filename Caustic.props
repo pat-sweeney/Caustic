@@ -2,7 +2,9 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
-    <UseNDIDefine Condition="'$(UseNDI)'=='True'">USE_NDI</UseNDIDefine>
+    <UseNDIDefine Condition="'$(UseNDI)'=='true' or '$(UseNDI)'=='True'">USE_NDI</UseNDIDefine>
+    <UseNaturalDocs Condition="'$(USE_NATURALDOCS)'==''">false</UseNaturalDocs>
+    <UseNaturalDocs Condition="'$(USE_NATURALDOCS)'=='true' or '$(USE_NATURALDOCS)'=='True'">true</UseNaturalDocs>
     <AzureKinectSDKDir Condition="'$(AzureKinectSDKDir)'==''">C:\Program Files\Azure Kinect SDK v1.4.1</AzureKinectSDKDir>
     <AzureBodySDKDir Condition="'$(AzureBodySDKDir)'==''">c:\Program Files\Azure Kinect Body Tracking SDK</AzureBodySDKDir>
     
@@ -10,17 +12,17 @@
     <CausticRoot Condition="'$(CausticRoot)'==''">$(GithubRoot)\Caustic</CausticRoot>
     <CausticFXCPath Condition="'$(CausticFXCPath)'==''">C:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x64\fxc.exe</CausticFXCPath>
 
-    <UseOpenCVDefine Condition="'$(UseOpenCV)'=='True'">USE_OPENCV</UseOpenCVDefine>
-    <OpenCVInclude Condition="'$(UseOpenCV)'=='True'">$(GithubRoot)\opencv\build\install\include;$(CausticRoot)\External\opencv\opencv_contrib\modules\face\include</OpenCVInclude>
-    <OpenCVLibDir Condition="'$(UseOpenCV)'=='True'">$(GithubRoot)\opencv\build\install\x64\vc17\lib</OpenCVLibDir>
-    <OpenCVBinDir Condition="'$(UseOpenCV)'=='True'">$(GithubRoot)\opencv\build\install\x64\vc17\bin</OpenCVBinDir>
-    <OpenCVLibs Condition="'$(UseOpenCV)|$(Configuration)'=='True|Debug'">opencv_core470d.lib;opencv_objdetect470d.lib;opencv_xobjdetect470d.lib;opencv_face470d.lib;opencv_imgproc470d.lib</OpenCVLibs>
-    <OpenCVLibs Condition="'$(UseOpenCV)|$(Configuration)'=='True|Release'">opencv_core470.lib;opencv_objdetect470.lib;opencv_xobjdetect470.lib;opencv_face470.lib;opencv_imgproc470.lib</OpenCVLibs>
-    <OpenCVCopy Condition="'$(UseOpenCV)'=='True'">$(CausticRoot)\CopyOpenCV.bat $(CausticRoot) $(OpenCVBinDir) $(OutDir)</OpenCVCopy>
+    <UseOpenCVDefine Condition="'$(UseOpenCV)'=='true' or '$(UseOpenCV)'=='True'">USE_OPENCV</UseOpenCVDefine>
+    <OpenCVInclude Condition="'$(UseOpenCV)'=='true' or '$(UseOpenCV)'=='True'">$(GithubRoot)\opencv\build\install\include;$(CausticRoot)\External\opencv\opencv_contrib\modules\face\include</OpenCVInclude>
+    <OpenCVLibDir Condition="'$(UseOpenCV)'=='true' or '$(UseOpenCV)'=='True'">$(GithubRoot)\opencv\build\install\x64\vc17\lib</OpenCVLibDir>
+    <OpenCVBinDir Condition="'$(UseOpenCV)'=='true' or '$(UseOpenCV)'=='True'">$(GithubRoot)\opencv\build\install\x64\vc17\bin</OpenCVBinDir>
+    <OpenCVLibs Condition="('$(UseOpenCV)'=='true' or '$(UseOpenCV)'=='True') and '$(Configuration)'=='Debug'">opencv_core470d.lib;opencv_objdetect470d.lib;opencv_xobjdetect470d.lib;opencv_face470d.lib;opencv_imgproc470d.lib</OpenCVLibs>
+    <OpenCVLibs Condition="('$(UseOpenCV)'=='true' or '$(UseOpenCV)'=='True') and '$(Configuration)'=='Release'">opencv_core470.lib;opencv_objdetect470.lib;opencv_xobjdetect470.lib;opencv_face470.lib;opencv_imgproc470.lib</OpenCVLibs>
+    <OpenCVCopy Condition="'$(UseOpenCV)'=='true' or '$(UseOpenCV)'=='True'">$(CausticRoot)\CopyOpenCV.bat $(CausticRoot) $(OpenCVBinDir) $(OutDir)</OpenCVCopy>
 
-    <NDIIncludePath>$(CausticRoot)\External\NDI\NDI 6 Advanced SDK\include;$(CausticRoot)\External\NDI\NDI 6 SDK\include</NDIIncludePath>
-    <NDILibDirs>$(CausticRoot)\External\NDI\NDI 6 Advanced SDK\lib\x64;$(CausticRoot)\External\NDI\NDI 6 SDK\lib\x64</NDILibDirs>
-    <NDILibs>Processing.NDI.Lib.Advanced.x64.lib;Processing.NDI.Lib.x64.lib</NDILibs>
+    <NDIIncludePath Condition="'$(UseNDI)'=='true' or '$(UseNDI)'=='True'">$(CausticRoot)\External\NDI\NDI 6 Advanced SDK\include;$(CausticRoot)\External\NDI\NDI 6 SDK\include</NDIIncludePath>
+    <NDILibDirs Condition="'$(UseNDI)'=='true' or '$(UseNDI)'=='True'">$(CausticRoot)\External\NDI\NDI 6 Advanced SDK\lib\x64;$(CausticRoot)\External\NDI\NDI 6 SDK\lib\x64</NDILibDirs>
+    <NDILibs Condition="'$(UseNDI)'=='true' or '$(UseNDI)'=='True'">Processing.NDI.Lib.Advanced.x64.lib;Processing.NDI.Lib.x64.lib</NDILibs>
 
     <CausticDefaultExtLibs>$(OpenCVLibs);$(NDILibs);windowscodecs.lib;msxml6.lib;d3dcompiler.lib;d3d11.lib;mf.lib;mfplat.lib;mfuuid.lib;mfreadwrite.lib;k4abt.lib;k4a.lib;msxml6.lib;d3dcompiler.lib;d3d11.lib</CausticDefaultExtLibs>
     <CausticDefaultExtLibDirs>$(OpenCVLibDir);$(NDILibDirs);$(AzureBodySDKDir)\sdk\windows-desktop\amd64\release\lib;$(AzureKinectSDKDir)\sdk\windows-desktop\amd64\release\lib</CausticDefaultExtLibDirs>

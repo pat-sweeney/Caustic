@@ -14,6 +14,8 @@ import Base.Core.IRefCount;
 import Base.Math.Vector;
 import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.IRenderMesh;
+import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IRenderCtx;
 
 //**********************************************************************
 // File: IRenderable.ixx
@@ -27,9 +29,7 @@ import Rendering.Caustic.IRenderMesh;
 
 export namespace Caustic
 {
-    struct IRenderer;
     struct IPointLight;
-    struct IRenderCtx;
 
     //**********************************************************************
     // Interface: IRenderable

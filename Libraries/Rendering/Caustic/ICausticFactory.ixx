@@ -34,6 +34,8 @@ import Rendering.Caustic.IShaderInfo;
 import Rendering.Caustic.IVideoTexture;
 import Rendering.Caustic.IRenderMesh;
 import Rendering.Caustic.ITexture;
+import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IRenderCtx;
 import Geometry.Mesh.IMaterialAttrib;
 
 //**********************************************************************

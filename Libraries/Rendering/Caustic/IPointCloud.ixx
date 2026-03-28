@@ -14,6 +14,8 @@ import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Base.Math.Vector;
 import Rendering.Caustic.IRenderable;
+import Rendering.Caustic.IRenderer;
+import Rendering.Caustic.IRenderCtx;
 import Imaging.Image.IImage;
 import Base.Math.Matrix;
 
@@ -25,9 +27,7 @@ import Base.Math.Matrix;
 
 export namespace Caustic
 {
-    struct IRenderer;
     struct IPointLight;
-    struct IRenderCtx;
 
     //**********************************************************************
     // Interface: IPointCloud

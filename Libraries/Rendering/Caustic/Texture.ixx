@@ -11,11 +11,10 @@ export module Rendering.Caustic.Texture;
 import Base.Core.Core;
 import Base.Core.RefCount;
 import Rendering.Caustic.ITexture;
+import Rendering.Caustic.IRenderer;
 
 export namespace Caustic
 {
-    struct IRenderer;
-
     //**********************************************************************
     // Class: CTexture
     // Implementation of ITexture
