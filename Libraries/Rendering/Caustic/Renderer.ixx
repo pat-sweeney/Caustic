@@ -11,6 +11,7 @@ module;
 #include <atlbase.h>
 #include <d3d11.h>
 #include <d3d11_4.h>
+#include <DirectXMath.h>
 #include <string>
 #ifdef SUPPORT_GRAPHICS_CAPTURE
 #include <DXGItype.h>
@@ -213,6 +214,17 @@ export namespace Caustic
     };
 
     //**********************************************************************
+    // Struct: CascadeShadowData
+    // Stores per-cascade light view-projection matrices and split depths
+    // for cascaded shadow mapping.
+    //**********************************************************************
+    struct CascadeShadowData
+    {
+        DirectX::XMMATRIX cascadeViewProj[c_NumCascades];
+        float cascadeSplitDepths[c_NumCascades];
+    };
+
+    //**********************************************************************
     // Class: CRenderer
     // Implementation of <IRenderer>
     //
@@ -243,6 +255,7 @@ export namespace Caustic
         HANDLE m_freezeEvent;
         int m_freeze;
         std::stack<ShadowMapRenderState> m_shadowMapRenderState; // Render state changes due to shadow mapping
+        CascadeShadowData m_cascadeData; // Cascade shadow map data for the current frame
         DWORD m_renderThreadId;                             // Render thread's ID
         std::vector<CRefObj<IRenderable>> m_singleObjs;              // List of individual renderable objects (outside scene graph)
         std::vector<CRefObj<ILight>> m_lights;              // List of lights in this scene
@@ -273,6 +286,8 @@ export namespace Caustic
         void RenderScene(std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback);
         void DrawSceneObjects(int pass, std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback);
         void SetShadowmapViewport(int whichShadowMap, int lightMapIndex);
+        void ComputeCascadeSplits(float nearClip, float farClip, float splitDepths[c_NumCascades]);
+        void ComputeCascadeViewProj(ICamera* pCamera, const Vector3& lightDir, float nearSplit, float farSplit, DirectX::XMMATRIX& outViewProj);
     public:
         explicit CRenderer();
         virtual ~CRenderer();

@@ -50,4 +50,10 @@ export namespace Caustic
     const int c_MidResShadowMap = 1;
     const int c_LowResShadowMap = 2;
     const int c_MaxShadowMaps = 3; // Hi-res, Mid-res, Low-res
+
+    // Cascaded shadow map constants.
+    // The hi-res 8192x8192 shadow atlas is divided into a 2x2 grid
+    // of 4096x4096 tiles, one per cascade.
+    const int c_NumCascades = 4;
+    const float c_CascadeSplitLambda = 0.5f; // Blend factor between log and uniform split
 }

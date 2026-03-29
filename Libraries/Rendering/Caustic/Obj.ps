@@ -31,7 +31,7 @@ cbuffer PS_CONSTANT_BUFFER
     float bumpFactor;
     matrix viewInv; // View => World
     int numLights;
-    float4 shadowMapBounds;
+    float4 cascadeSplitDepths[NUM_CASCADES];
 };
 
 float4 PS(VSOutput p) : SV_Target

@@ -12,6 +12,7 @@ module;
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 #include <algorithm>
+#include <cfloat>
 #include <dxgi1_6.h>
 #include <string>
 #include <atlbase.h>
@@ -534,6 +535,122 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Method: ComputeCascadeSplits
+    // Computes the split depths for cascaded shadow maps using a practical
+    // split scheme that blends logarithmic and uniform distributions.
+    //
+    // Parameters:
+    // nearClip - camera near clip distance
+    // farClip - camera far clip distance
+    // splitDepths - output array of c_NumCascades split depths
+    //**********************************************************************
+    void CRenderer::ComputeCascadeSplits(float nearClip, float farClip, float splitDepths[c_NumCascades])
+    {
+        float clipRange = farClip - nearClip;
+        float ratio = farClip / nearClip;
+        for (int i = 0; i < c_NumCascades; i++)
+        {
+            float p = (float)(i + 1) / (float)c_NumCascades;
+            float logSplit = nearClip * powf(ratio, p);
+            float uniformSplit = nearClip + clipRange * p;
+            splitDepths[i] = c_CascadeSplitLambda * logSplit + (1.0f - c_CascadeSplitLambda) * uniformSplit;
+        }
+    }
+
+    //**********************************************************************
+    // Method: ComputeCascadeViewProj
+    // Computes the orthographic light view-projection matrix for a single
+    // cascade by fitting to the camera frustum slice.
+    //
+    // Parameters:
+    // pCamera - the main camera
+    // lightDir - normalized direction of the directional light
+    // nearSplit - near depth of this cascade slice
+    // farSplit - far depth of this cascade slice
+    // outViewProj - resulting light view-projection matrix
+    //**********************************************************************
+    void CRenderer::ComputeCascadeViewProj(ICamera* pCamera, const Vector3& lightDir, float nearSplit, float farSplit, DirectX::XMMATRIX& outViewProj)
+    {
+        float fov, aspectRatio, nearZ, farZ;
+        pCamera->GetParams(&fov, &aspectRatio, &nearZ, &farZ);
+
+        // Compute frustum corners in world space for this cascade slice
+        DirectX::XMMATRIX viewMatrix = pCamera->GetView();
+        DirectX::XMMATRIX projMatrix = DirectX::XMMatrixPerspectiveFovLH(fov, aspectRatio, nearSplit, farSplit);
+        DirectX::XMMATRIX viewProjInv = DirectX::XMMatrixInverse(nullptr, viewMatrix * projMatrix);
+
+        // NDC corners of a unit cube
+        DirectX::XMFLOAT3 ndcCorners[8] = {
+            { -1.0f, -1.0f, 0.0f }, { -1.0f,  1.0f, 0.0f },
+            {  1.0f, -1.0f, 0.0f }, {  1.0f,  1.0f, 0.0f },
+            { -1.0f, -1.0f, 1.0f }, { -1.0f,  1.0f, 1.0f },
+            {  1.0f, -1.0f, 1.0f }, {  1.0f,  1.0f, 1.0f }
+        };
+
+        // Transform NDC corners to world space
+        DirectX::XMFLOAT3 worldCorners[8];
+        DirectX::XMFLOAT3 center = { 0.0f, 0.0f, 0.0f };
+        for (int i = 0; i < 8; i++)
+        {
+            DirectX::XMVECTOR corner = DirectX::XMVector3TransformCoord(
+                DirectX::XMLoadFloat3(&ndcCorners[i]), viewProjInv);
+            DirectX::XMStoreFloat3(&worldCorners[i], corner);
+            center.x += worldCorners[i].x;
+            center.y += worldCorners[i].y;
+            center.z += worldCorners[i].z;
+        }
+        center.x /= 8.0f;
+        center.y /= 8.0f;
+        center.z /= 8.0f;
+
+        // Build light view matrix looking at the frustum center from the light direction
+        DirectX::XMVECTOR vLightDir = DirectX::XMVectorSet(lightDir.x, lightDir.y, lightDir.z, 0.0f);
+        vLightDir = DirectX::XMVector3Normalize(vLightDir);
+        DirectX::XMVECTOR vCenter = DirectX::XMLoadFloat3(&center);
+        DirectX::XMVECTOR vUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+
+        // If light direction is nearly parallel to up, use a different up vector
+        float dotUp = fabsf(DirectX::XMVectorGetX(DirectX::XMVector3Dot(vLightDir, vUp)));
+        if (dotUp > 0.99f)
+            vUp = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
+
+        DirectX::XMVECTOR vEye = DirectX::XMVectorSubtract(vCenter, DirectX::XMVectorScale(vLightDir, 100.0f));
+        DirectX::XMMATRIX lightView = DirectX::XMMatrixLookAtLH(vEye, vCenter, vUp);
+
+        // Find min/max in light space to compute tight orthographic bounds
+        float minX = FLT_MAX, maxX = -FLT_MAX;
+        float minY = FLT_MAX, maxY = -FLT_MAX;
+        float minZ = FLT_MAX, maxZ = -FLT_MAX;
+        for (int i = 0; i < 8; i++)
+        {
+            DirectX::XMVECTOR cornerLS = DirectX::XMVector3TransformCoord(
+                DirectX::XMLoadFloat3(&worldCorners[i]), lightView);
+            DirectX::XMFLOAT3 ls;
+            DirectX::XMStoreFloat3(&ls, cornerLS);
+            minX = (std::min)(minX, ls.x);
+            maxX = (std::max)(maxX, ls.x);
+            minY = (std::min)(minY, ls.y);
+            maxY = (std::max)(maxY, ls.y);
+            minZ = (std::min)(minZ, ls.z);
+            maxZ = (std::max)(maxZ, ls.z);
+        }
+
+        // Stabilize the shadow map: snap to texel-aligned increments to prevent shimmer
+        float cascadeTexelSize = (maxX - minX) / 4096.0f; // 4096 = per-cascade resolution
+        minX = floorf(minX / cascadeTexelSize) * cascadeTexelSize;
+        maxX = floorf(maxX / cascadeTexelSize) * cascadeTexelSize;
+        minY = floorf(minY / cascadeTexelSize) * cascadeTexelSize;
+        maxY = floorf(maxY / cascadeTexelSize) * cascadeTexelSize;
+
+        // Extend depth range to catch shadow casters behind the frustum
+        float zPadding = (maxZ - minZ) * 2.0f;
+        minZ -= zPadding;
+
+        DirectX::XMMATRIX lightProj = DirectX::XMMatrixOrthographicOffCenterLH(minX, maxX, minY, maxY, minZ, maxZ);
+        outViewProj = lightView * lightProj;
+    }
+
+    //**********************************************************************
     // Method: DrawSceneObjects
     // First calls the renderCallback provided. Then renders each Renderable.
     //
@@ -549,23 +666,88 @@ namespace Caustic
         // Render any single objects
         if (pass == c_PassShadow)
         {
-            int totalLights = 0; // We will only take the first 16 lights
+            // Find the first directional light that casts shadows
+            int shadowLightIndex = -1;
             for (int i = 0; i < (int)m_lights.size(); i++)
             {
-                if (totalLights >= c_MaxLights)
-                    break;
-                if (m_lights[i]->GetType() != ELightType::DirectionalLight)
-                    continue; // For the moment skip all light types except directional
-
-                if (m_lights[i]->GetCastsShadows())
+                if (m_lights[i]->GetType() == ELightType::DirectionalLight &&
+                    m_lights[i]->GetCastsShadows())
                 {
-                    PushShadowmapRT(c_HiResShadowMap, totalLights++, m_lights[i]->GetPosition(), m_lights[i]->GetDirection());
-                    for (size_t i = 0; i < m_singleObjs.size(); i++)
+                    shadowLightIndex = i;
+                    break;
+                }
+            }
+
+            if (shadowLightIndex >= 0)
+            {
+                Vector3 lightDir = m_lights[shadowLightIndex]->GetDirection();
+                float nearClip = m_spCamera->GetNear();
+                float farClip = m_spCamera->GetFar();
+
+                // Compute cascade split depths
+                ComputeCascadeSplits(nearClip, farClip, m_cascadeData.cascadeSplitDepths);
+
+                // Clear the entire shadow atlas once
+                m_spContext->ClearDepthStencilView(m_spShadowMapStencilView[c_HiResShadowMap], D3D11_CLEAR_DEPTH, 1.0f, 0);
+
+                // Render each cascade
+                for (int cascade = 0; cascade < c_NumCascades; cascade++)
+                {
+                    float cascadeNear = (cascade == 0) ? nearClip : m_cascadeData.cascadeSplitDepths[cascade - 1];
+                    float cascadeFar = m_cascadeData.cascadeSplitDepths[cascade];
+
+                    // Compute tight orthographic projection for this cascade
+                    ComputeCascadeViewProj(m_spCamera, lightDir, cascadeNear, cascadeFar,
+                        m_cascadeData.cascadeViewProj[cascade]);
+
+                    // Set up render target and viewport for this cascade tile (2x2 grid)
+                    ShadowMapRenderState rs;
+                    m_spContext->OMGetRenderTargets(1, &rs.m_spOldRT, &rs.m_spOldStencil);
+                    rs.m_spOldCamera = m_spCamera;
+                    rs.m_viewport = m_viewport;
+                    m_shadowMapRenderState.push(rs);
+                    m_spContext->OMSetRenderTargets(0, nullptr, m_spShadowMapStencilView[c_HiResShadowMap].p);
+
+                    // Set viewport to the cascade tile in 2x2 grid (each tile is 4096x4096)
+                    int tileX = cascade % 2;
+                    int tileY = cascade / 2;
+                    ZeroMemory(&m_viewport, sizeof(m_viewport));
+                    m_viewport.TopLeftX = (float)(tileX * 4096);
+                    m_viewport.TopLeftY = (float)(tileY * 4096);
+                    m_viewport.Width = 4096.0f;
+                    m_viewport.Height = 4096.0f;
+                    m_viewport.MinDepth = 0.0f;
+                    m_viewport.MaxDepth = 1.0f;
+                    m_spContext->RSSetViewports(1, &m_viewport);
+
+                    // Create a camera from the cascade's light view-projection
+                    // We extract the view/proj from the combined matrix by constructing
+                    // a camera that matches. Since the shadow shader uses worldViewProj
+                    // directly, we set the camera to identity and use the cascade VP.
+                    CRefObj<ICamera> spShadowCamera = CreateCamera(true);
+                    Vector3 lightPos = m_lights[shadowLightIndex]->GetPosition();
+                    spShadowCamera->SetPosition(lightPos, lightDir, Vector3(0.0f, 1.0f, 0.0f));
+
+                    // Override with our computed orthographic projection
+                    float fov, aspect, nearZ, farZ;
+                    spShadowCamera->GetParams(&fov, &aspect, &nearZ, &farZ);
+                    spShadowCamera->SetParams(fov, aspect, nearZ, farZ);
+                    this->SetCamera(spShadowCamera);
+
+                    // Render all shadow-casting objects
+                    for (size_t j = 0; j < m_singleObjs.size(); j++)
                     {
-                        if (m_singleObjs[i]->InPass(pass))
-                            m_singleObjs[i]->Render(this, m_lights, m_spRenderCtx);
+                        if (m_singleObjs[j]->InPass(pass))
+                            m_singleObjs[j]->Render(this, m_lights, m_spRenderCtx);
                     }
-                    PopShadowmapRT();
+
+                    // Restore state
+                    ShadowMapRenderState rsPop = m_shadowMapRenderState.top();
+                    this->SetCamera(rsPop.m_spOldCamera);
+                    m_viewport = rsPop.m_viewport;
+                    m_spContext->RSSetViewports(1, &m_viewport);
+                    m_shadowMapRenderState.pop();
+                    m_spContext->OMSetRenderTargets(1, &rsPop.m_spOldRT.p, rsPop.m_spOldStencil);
                 }
             }
         }
@@ -633,29 +815,14 @@ namespace Caustic
         if (lights.size() == 0)
             return;
         pShader->SetPSParam(L"shadowMapTexture", std::any(m_spShadowTexture[whichShadowMap]));
-        int lx = lightMapIndex % m_shadowMapLightWidth[whichShadowMap];
-        int ly = lightMapIndex / m_shadowMapLightHeight[whichShadowMap];
-        Float4 bounds(
-            float(lx * m_shadowMapWidth[whichShadowMap] / m_shadowMapLightWidth[whichShadowMap]),
-            float(ly * m_shadowMapHeight[whichShadowMap] / m_shadowMapLightHeight[whichShadowMap]),
-            (float)(m_shadowMapWidth[whichShadowMap] / m_shadowMapLightWidth[whichShadowMap]),
-            (float)(m_shadowMapHeight[whichShadowMap] / m_shadowMapLightHeight[whichShadowMap])
-            );
-        pShader->SetPSParam(L"shadowMapBounds", std::any(bounds));
 
-        // TODO: Need to fix this. For now we assume only the first light casts shadows
-        // We will set our lightViewProj matrix based on that light.
-        // We also assume a left-handed coordinate system
-        Vector3 lightPos = lights[0]->GetPosition();
-        Vector3 lightDir = lights[0]->GetDirection();
-        DirectX::XMVECTOR vEye = DirectX::XMVectorSet(lightPos.x, lightPos.y, lightPos.z, 1.0f);
-        if (Caustic::IsZero(lightDir.x) && Caustic::IsZero(lightDir.y) && Caustic::IsZero(lightDir.z))
-            lightDir.x = 1000.0f;
-        DirectX::XMVECTOR vLook = DirectX::XMVectorSet(lightPos.x + lightDir.x, lightPos.y + lightDir.y, lightPos.z + lightDir.z, 1.0f);
-        DirectX::XMVECTOR vUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-        DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(vEye, vLook, vUp);
-        DirectX::XMMATRIX pers = DirectX::XMMatrixPerspectiveFovLH(DegreesToRadians(90.0F), 1.0F, 0.001F, 1000.0F);
-        pShader->SetVSParam(L"lightViewProj", std::any(view * pers));
+        // Pass cascade view-projection matrices and split depths to shaders
+        for (int i = 0; i < c_NumCascades; i++)
+        {
+            pShader->SetVSParam(L"cascadeViewProj", i, std::any(m_cascadeData.cascadeViewProj[i]));
+            Float4 splitDepth(m_cascadeData.cascadeSplitDepths[i], 0.0f, 0.0f, 0.0f);
+            pShader->SetPSParam(L"cascadeSplitDepths", i, std::any(splitDepth));
+        }
     }
 
     //**********************************************************************
@@ -1131,8 +1298,8 @@ namespace Caustic
             case c_HiResShadowMap:
                 m_shadowMapWidth[i] = 8192;
                 m_shadowMapHeight[i] = 8192;
-                m_shadowMapLightWidth[i] = 4;
-                m_shadowMapLightHeight[i] = 4;
+                m_shadowMapLightWidth[i] = 2;  // 2x2 grid for 4 cascades
+                m_shadowMapLightHeight[i] = 2;
                 break;
             case c_MidResShadowMap:
                 m_shadowMapWidth[i] = 4096;

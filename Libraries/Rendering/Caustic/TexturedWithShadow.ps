@@ -1,10 +1,11 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2021
+// Copyright Patrick Sweeney 2015-2026
 // Licensed under the MIT license.
 // See file LICENSE for details.
 // File: TexturedWithShadow.ps
 //**********************************************************************
 #define MAX_LIGHTS 4
+#define NUM_CASCADES 4
 
 struct VSOutput
 {
@@ -12,13 +13,20 @@ struct VSOutput
     float3 posWS : TEXCOORD0;
     float3 normWS : TEXCOORD1; // Normal vector in world coordinates
     float2 uvs : TEXCOORD2; // UV coordinates
-    float4 lightPS[MAX_LIGHTS] : TEXCOORD3;
+    float viewDepth : TEXCOORD3; // View-space depth for cascade selection
+    float4 cascadePosLS[NUM_CASCADES] : TEXCOORD4; // Position in each cascade's light space
 };
 
 Texture2D diffuseTexture : register(t0);
 SamplerState diffuseSampler : register(s0);
 Texture2D shadowMapTexture : register(t1);
 SamplerState shadowMapSampler : register(s1);
+
+// Atlas offsets for each cascade in the 2x2 grid
+static const float2 cascadeOffsets[NUM_CASCADES] = {
+    float2(0.0, 0.0), float2(0.5, 0.0),
+    float2(0.0, 0.5), float2(0.5, 0.5)
+};
 
 cbuffer PS_CONSTANT_BUFFER
 {
@@ -32,8 +40,57 @@ cbuffer PS_CONSTANT_BUFFER
     float4 transparency;
     matrix viewInv; // View => World
     int numLights;
-    float4 shadowMapBounds[MAX_LIGHTS];
+    float4 cascadeSplitDepths[NUM_CASCADES];
 };
+
+float ComputeShadowCSM(VSOutput p)
+{
+    // Select cascade based on view-space depth
+    int cascade = NUM_CASCADES - 1;
+    for (int i = 0; i < NUM_CASCADES; i++)
+    {
+        if (p.viewDepth < cascadeSplitDepths[i].x)
+        {
+            cascade = i;
+            break;
+        }
+    }
+
+    // Project into cascade's light space
+    float4 lightSpacePos = p.cascadePosLS[cascade];
+    float3 projCoords = lightSpacePos.xyz / lightSpacePos.w;
+
+    // Convert from NDC [-1,1] to UV [0,1]
+    float2 shadowUV;
+    shadowUV.x = projCoords.x * 0.5 + 0.5;
+    shadowUV.y = -projCoords.y * 0.5 + 0.5; // Flip Y for D3D
+
+    // Clamp to valid range
+    if (shadowUV.x < 0.0 || shadowUV.x > 1.0 || shadowUV.y < 0.0 || shadowUV.y > 1.0)
+        return 1.0;
+
+    // Offset into atlas tile (2x2 grid, each tile is 0.5 of the atlas)
+    shadowUV = shadowUV * 0.5 + cascadeOffsets[cascade];
+
+    // PCF 3x3 sampling
+    float shadow = 0.0;
+    float bias = 0.002;
+    float fragDepth = projCoords.z;
+    float texelSize = 1.0 / 8192.0;
+
+    [unroll]
+    for (int x = -1; x <= 1; x++)
+    {
+        [unroll]
+        for (int y = -1; y <= 1; y++)
+        {
+            float depth = shadowMapTexture.Sample(shadowMapSampler,
+                shadowUV + float2(x, y) * texelSize).r;
+            shadow += (fragDepth - bias > depth) ? 0.0 : 1.0;
+        }
+    }
+    return shadow / 9.0;
+}
 
 float4 PS(VSOutput p) : SV_Target
 {
@@ -42,28 +99,22 @@ float4 PS(VSOutput p) : SV_Target
     float3 color = float3(0.0f, 0.0f, 0.0f);
     float3 normWS = normalize(p.normWS);
 
-    // Check if in shadow. For now only assume 1 light is shadow caster
-    float shadowDist = shadowMapTexture.Sample(shadowMapSampler, p.lightPS[0].xy).x;
-    float diffuseAttenuation = 1.0f;
-    float specularAttenuation = 1.0f;
-    if (p.lightPS[0].z > shadowDist)
-    {
-        diffuseAttenuation = 0.5f;
-        specularAttenuation = 0.0f;
-    }
+    // Compute shadow attenuation using cascaded shadow maps
+    float shadowFactor = ComputeShadowCSM(p);
+    float specularAttenuation = shadowFactor;
 
     for (int i = 0; i < numLights; i++)
     {
         float3 lightDirWS = normalize(lightPosWS[i].xyz - p.posWS);
 
         // L.N
-        float dp = diffuseAttenuation * saturate(dot(normWS, lightDirWS));
+        float dp = shadowFactor * saturate(dot(normWS, lightDirWS));
         
         // Diffuse
         float4 clr = diffuseTexture.Sample(diffuseSampler, p.uvs);
         color.xyz += clr.zyx * dp * lightColor[i].xyz;
 
-        // specular
+        // Specular
         float3 reflectWS = reflect(lightDirWS, normWS);
         float specdp = saturate(dot(reflectWS, -viewDirWS));
         float spec = specularAttenuation * pow(specdp, specularExp.x);

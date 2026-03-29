@@ -1,9 +1,10 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2015-2019
+// Copyright Patrick Sweeney 2015-2026
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
 #define MAX_LIGHTS 4
+#define NUM_CASCADES 4
 
 struct VSInput
 {
@@ -18,4 +19,6 @@ struct VSOutput
     float3 posWS : TEXCOORD0;
     float3 normWS : TEXCOORD1; // Normal vector in world coordinates
     float2 uvs : TEXCOORD2; // UV coordinates
+    float viewDepth : TEXCOORD3; // View-space depth for cascade selection
+    float4 cascadePosLS[NUM_CASCADES] : TEXCOORD4; // Position in each cascade's light space
 };

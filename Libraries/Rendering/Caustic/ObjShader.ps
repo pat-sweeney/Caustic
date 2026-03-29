@@ -1,8 +1,8 @@
 //**********************************************************************
-// Copyright Patrick Sweeney 2021
+// Copyright Patrick Sweeney 2021-2026
 // Licensed under the MIT license.
 // See file LICENSE for details.
-// File: ObjShader.cs
+// File: ObjShader.ps
 //**********************************************************************
 #include "defs.h"
 
@@ -12,6 +12,12 @@ Texture2D shadowMapTexture : register(t1);
 SamplerState shadowMapSampler : register(s1);
 Texture2D transparencyTexture : register(t2);
 SamplerState transparencySampler : register(s2);
+
+// Atlas offsets for each cascade in the 2x2 grid
+static const float2 cascadeOffsets[NUM_CASCADES] = {
+    float2(0.0, 0.0), float2(0.5, 0.0),
+    float2(0.0, 0.5), float2(0.5, 0.5)
+};
 
 cbuffer PS_CONSTANT_BUFFER
 {
@@ -26,9 +32,58 @@ cbuffer PS_CONSTANT_BUFFER
     float4 transparency;
     matrix viewInv; // View => World
     int numLights;
-    float4 shadowMapBounds;
+    float4 cascadeSplitDepths[NUM_CASCADES];
     float transparencyAvail;
 };
+
+float ComputeShadowCSM(VSOutput p)
+{
+    // Select cascade based on view-space depth
+    int cascade = NUM_CASCADES - 1;
+    for (int i = 0; i < NUM_CASCADES; i++)
+    {
+        if (p.viewDepth < cascadeSplitDepths[i].x)
+        {
+            cascade = i;
+            break;
+        }
+    }
+
+    // Project into cascade's light space
+    float4 lightSpacePos = p.cascadePosLS[cascade];
+    float3 projCoords = lightSpacePos.xyz / lightSpacePos.w;
+
+    // Convert from NDC [-1,1] to UV [0,1]
+    float2 shadowUV;
+    shadowUV.x = projCoords.x * 0.5 + 0.5;
+    shadowUV.y = -projCoords.y * 0.5 + 0.5; // Flip Y for D3D
+
+    // Clamp to valid range
+    if (shadowUV.x < 0.0 || shadowUV.x > 1.0 || shadowUV.y < 0.0 || shadowUV.y > 1.0)
+        return 1.0;
+
+    // Offset into atlas tile (2x2 grid, each tile is 0.5 of the atlas)
+    shadowUV = shadowUV * 0.5 + cascadeOffsets[cascade];
+
+    // PCF 3x3 sampling
+    float shadow = 0.0;
+    float bias = 0.002;
+    float fragDepth = projCoords.z;
+    float texelSize = 1.0 / 8192.0;
+
+    [unroll]
+    for (int x = -1; x <= 1; x++)
+    {
+        [unroll]
+        for (int y = -1; y <= 1; y++)
+        {
+            float depth = shadowMapTexture.Sample(shadowMapSampler,
+                shadowUV + float2(x, y) * texelSize).r;
+            shadow += (fragDepth - bias > depth) ? 0.0 : 1.0;
+        }
+    }
+    return shadow / 9.0;
+}
 
 float4 PS(VSOutput p) : SV_Target
 {
@@ -37,8 +92,8 @@ float4 PS(VSOutput p) : SV_Target
     float3 color = float3(0.0f, 0.0f, 0.0f);
     float3 normWS = normalize(p.normWS);
 
-    // Check if point is in shadow
-    //float shadowDist = shadowMapTexture.Sample(shadowMapSampler, p.uvs);
+    // Compute shadow attenuation using cascaded shadow maps
+    float shadowFactor = ComputeShadowCSM(p);
 
     float4 clr = diffuseTexture.Sample(diffuseSampler, p.uvs);
     clr.rgb += diffuseColor.rgb;
@@ -50,14 +105,14 @@ float4 PS(VSOutput p) : SV_Target
         // L.N
         float dp = saturate(dot(normWS, lightDirWS));
         
-        // Diffuse
+        // Diffuse (attenuated by shadow)
         float3 lightClr;
-        lightClr.xyz = clr.xyz * dp * lightColor[i].xyz;
+        lightClr.xyz = clr.xyz * dp * lightColor[i].xyz * shadowFactor;
 
-        // specular
+        // Specular (fully shadowed when in shadow)
         float3 reflectWS = reflect(lightDirWS, normWS);
         float specdp = saturate(dot(reflectWS, -viewDirWS));
-        float spec = pow(specdp, specularExp.x);
+        float spec = pow(specdp, specularExp.x) * shadowFactor;
         lightClr.xyz += specularColor.xyz * spec * lightColor[i].xyz;
         lightClr *= intensity[i].xyz;
         color.xyz += lightClr.xyz;
