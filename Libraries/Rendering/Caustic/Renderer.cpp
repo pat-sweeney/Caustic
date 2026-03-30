@@ -819,7 +819,11 @@ namespace Caustic
         // Pass cascade view-projection matrices and split depths to shaders
         for (int i = 0; i < c_NumCascades; i++)
         {
-            pShader->SetVSParam(L"cascadeViewProj", i, std::any(m_cascadeData.cascadeViewProj[i]));
+            // Convert XMMATRIX to Caustic::Matrix for the shader param system
+            DirectX::XMFLOAT4X4 f4x4;
+            DirectX::XMStoreFloat4x4(&f4x4, m_cascadeData.cascadeViewProj[i]);
+            Matrix mat(reinterpret_cast<float*>(&f4x4));
+            pShader->SetVSParam(L"cascadeViewProj", i, std::any(mat));
             Float4 splitDepth(m_cascadeData.cascadeSplitDepths[i], 0.0f, 0.0f, 0.0f);
             pShader->SetPSParam(L"cascadeSplitDepths", i, std::any(splitDepth));
         }

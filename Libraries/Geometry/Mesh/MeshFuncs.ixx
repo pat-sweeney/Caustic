@@ -43,4 +43,6 @@ export namespace Caustic
     CRefObj<IMesh> CreateGrid(uint32_t width, uint32_t height);
     CRefObj<IMesh> CreateGrid(uint32_t width, uint32_t height, float2* uvs);
     CRefObj<IMesh> CreateWarpedGrid(uint32_t width, uint32_t height, float2* pPositions);
+    CRefObj<IMesh> CreateCone(uint32_t subdivisions, float height = 2.0f, float radius = 1.0f);
+    CRefObj<IMesh> CreateGroundPlane(float size = 100.0f, uint32_t subdivisions = 10);
 };

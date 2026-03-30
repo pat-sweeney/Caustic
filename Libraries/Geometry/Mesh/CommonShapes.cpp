@@ -567,6 +567,88 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Function: CreateCone
+    // Creates a cone mesh using surface of revolution. The cone has its
+    // tip at the top (positive Y) and base at the bottom (negative Y).
+    //
+    // Parameters:
+    // subdivisions - number of radial subdivisions around the Y axis
+    // height - total height of the cone
+    // radius - radius of the base circle
+    //
+    // Returns:
+    // Returns the created mesh
+    //**********************************************************************
+    CRefObj<IMesh> CreateCone(uint32_t subdivisions, float height, float radius)
+    {
+        std::vector<Vector3> pts(3);
+        float halfHeight = height / 2.0f;
+        pts[0] = Vector3(0.0f, -halfHeight, 0.0f);     // Bottom center point
+        pts[1] = Vector3(radius, -halfHeight, 0.0f);    // Base edge
+        pts[2] = Vector3(0.0f, halfHeight, 0.0f);       // Tip
+        return CreateSurfaceRevolution(pts, 3, subdivisions, 360.0f);
+    }
+
+    //**********************************************************************
+    // Function: CreateGroundPlane
+    // Creates a large flat grid on the XZ plane at Y=0, suitable for use
+    // as a ground plane / floor in a scene.
+    //
+    // Parameters:
+    // size - half-extent of the plane (total width/depth = 2 * size)
+    // subdivisions - number of grid cells along each axis
+    //
+    // Returns:
+    // Returns the created mesh
+    //**********************************************************************
+    CRefObj<IMesh> CreateGroundPlane(float size, uint32_t subdivisions)
+    {
+        CRefObj<IMeshConstructor> spMeshConstructor = IMeshConstructor::Create();
+        spMeshConstructor->MeshOpen();
+        spMeshConstructor->SubMeshOpen();
+
+        float step = (2.0f * size) / (float)subdivisions;
+        float uvStep = 1.0f / (float)subdivisions;
+        Vector3 normal(0.0f, 1.0f, 0.0f);
+
+        for (uint32_t z = 0; z < subdivisions; z++)
+        {
+            for (uint32_t x = 0; x < subdivisions; x++)
+            {
+                float x0 = -size + x * step;
+                float x1 = x0 + step;
+                float z0 = -size + z * step;
+                float z1 = z0 + step;
+                float u0 = x * uvStep;
+                float u1 = u0 + uvStep;
+                float v0 = z * uvStep;
+                float v1 = v0 + uvStep;
+
+                Vector3 p00(x0, 0.0f, z0), p01(x0, 0.0f, z1);
+                Vector3 p10(x1, 0.0f, z0), p11(x1, 0.0f, z1);
+                Vector2 uv00(u0, v0), uv01(u0, v1);
+                Vector2 uv10(u1, v0), uv11(u1, v1);
+
+                // Triangle 1
+                spMeshConstructor->FaceOpen();
+                spMeshConstructor->VertexAdd(p00, normal, uv00);
+                spMeshConstructor->VertexAdd(p01, normal, uv01);
+                spMeshConstructor->VertexAdd(p11, normal, uv11);
+                spMeshConstructor->FaceClose();
+
+                // Triangle 2
+                spMeshConstructor->FaceOpen();
+                spMeshConstructor->VertexAdd(p00, normal, uv00);
+                spMeshConstructor->VertexAdd(p11, normal, uv11);
+                spMeshConstructor->VertexAdd(p10, normal, uv10);
+                spMeshConstructor->FaceClose();
+            }
+        }
+        spMeshConstructor->SubMeshClose();
+        return spMeshConstructor->MeshClose();
+    }
+
+    //**********************************************************************
     // Function: CreateEmptyMesh
     // Returns an empty mesh
     //

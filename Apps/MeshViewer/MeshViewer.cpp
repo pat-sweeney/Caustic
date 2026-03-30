@@ -25,9 +25,11 @@ import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Base.Core.ConvertStr;
 import Geometry.Mesh.IMeshConstructor;
+import Geometry.Mesh.MeshFuncs;
 import Geometry.MeshImport;
 import Geometry.Mesh.Mesh;
 import Imaging.Color;
+import Imaging.Image.IImage;
 import Parsers.JSon.JSonParser;
 import Rendering.Caustic.ICamera;
 import Rendering.Caustic.ISpotLight;
@@ -1001,6 +1003,61 @@ ImVec2 BuildMenuBar(ImFont *pFont)
                 if (ImGui::MenuItem("Plane"))
                 {
                     auto spMesh = Caustic::CreateGrid(1, 1);
+                    auto spMeshElem = app.m_spSceneFactory->CreateMeshElem();
+                    spMeshElem->SetMesh(spMesh);
+                    AddNewElement(spMeshElem.p);
+                }
+                if (ImGui::MenuItem("Ground Plane"))
+                {
+                    auto spMesh = Caustic::CreateGroundPlane(100.0f, 10);
+                    auto spMeshElem = app.m_spSceneFactory->CreateMeshElem();
+                    spMeshElem->SetMesh(spMesh);
+                    spMeshElem->SetName(L"GroundPlane");
+
+                    // Create checkerboard texture
+                    const uint32_t texSize = 512;
+                    const uint32_t tileSize = 64;
+                    auto spCheckerImage = Caustic::CreateImage(texSize, texSize, EImageType::RGBA_32bpp);
+                    uint8_t* pData = spCheckerImage->GetData();
+                    uint32_t stride = spCheckerImage->GetStride();
+                    for (uint32_t y = 0; y < texSize; y++)
+                    {
+                        uint8_t* pRow = pData + y * stride;
+                        for (uint32_t x = 0; x < texSize; x++)
+                        {
+                            bool white = ((x / tileSize) + (y / tileSize)) % 2 == 0;
+                            uint8_t v = white ? 200 : 50;
+                            pRow[x * 4 + 0] = v;     // R
+                            pRow[x * 4 + 1] = v;     // G
+                            pRow[x * 4 + 2] = v;     // B
+                            pRow[x * 4 + 3] = 255;   // A
+                        }
+                    }
+
+                    CRefObj<IMaterialAttrib> spMaterial = app.m_spCausticFactory->CreateMaterialAttrib();
+                    FRGBColor ambient(0.1f, 0.1f, 0.1f);
+                    FRGBColor diffuse(0.8f, 0.8f, 0.8f);
+                    spMaterial->SetColor(L"ambientColor", ambient);
+                    spMaterial->SetColor(L"diffuseColor", diffuse);
+                    spMaterial->SetTexture(L"diffuseTexture", spCheckerImage, EShaderAccess::PixelShader);
+                    spMaterial->SetCullMode(D3D11_CULL_NONE);
+
+                    CRefObj<IShader> spShader = app.m_spRenderWindow->GetRenderer()->GetShaderMgr()->FindShader(L"Textured");
+                    CRefObj<ISceneMaterialElem> spMaterialElem = app.m_spSceneFactory->CreateMaterialElem();
+                    spMaterialElem->SetMaterial(spMaterial);
+                    spMaterialElem->SetShader(spShader);
+                    spMaterialElem->AddChild(spMeshElem);
+
+                    auto spLightElem = app.m_spSceneFactory->CreateLightCollectionElem();
+                    Vector3 lightPos(0.0f, 100.0f, 0.0f);
+                    FRGBColor lightColor(1.0f, 1.0f, 1.0f);
+                    spLightElem->AddLight(app.m_spCausticFactory->CreatePointLight(lightPos, lightColor, 1.0f, true));
+                    spLightElem->AddChild(spMaterialElem);
+                    AddNewElement(spLightElem.p);
+                }
+                if (ImGui::MenuItem("Cone"))
+                {
+                    auto spMesh = Caustic::CreateCone(16);
                     auto spMeshElem = app.m_spSceneFactory->CreateMeshElem();
                     spMeshElem->SetMesh(spMesh);
                     AddNewElement(spMeshElem.p);
