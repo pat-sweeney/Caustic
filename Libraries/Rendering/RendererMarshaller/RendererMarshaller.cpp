@@ -819,4 +819,37 @@ namespace Caustic
                 pTexture->Release();
             }, false);
     }
+
+    //**********************************************************************
+    // Post-processing control methods - marshalled to render thread
+    //**********************************************************************
+    void CRendererMarshaller::SetPostProcessEnabled(bool enabled)
+    {
+        RunOnRenderer([enabled](IRenderer* pRenderer) { pRenderer->SetPostProcessEnabled(enabled); }, false);
+    }
+
+    void CRendererMarshaller::SetBloomEnabled(bool enabled)
+    {
+        RunOnRenderer([enabled](IRenderer* pRenderer) { pRenderer->SetBloomEnabled(enabled); }, false);
+    }
+
+    void CRendererMarshaller::SetBloomParams(float threshold, float intensity)
+    {
+        RunOnRenderer([threshold, intensity](IRenderer* pRenderer) { pRenderer->SetBloomParams(threshold, intensity); }, false);
+    }
+
+    void CRendererMarshaller::SetFXAAEnabled(bool enabled)
+    {
+        RunOnRenderer([enabled](IRenderer* pRenderer) { pRenderer->SetFXAAEnabled(enabled); }, false);
+    }
+
+    void CRendererMarshaller::SetSSAOEnabled(bool enabled)
+    {
+        RunOnRenderer([enabled](IRenderer* pRenderer) { pRenderer->SetSSAOEnabled(enabled); }, false);
+    }
+
+    void CRendererMarshaller::SetExposure(float exposure)
+    {
+        RunOnRenderer([exposure](IRenderer* pRenderer) { pRenderer->SetExposure(exposure); }, false);
+    }
 }

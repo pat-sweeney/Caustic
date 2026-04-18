@@ -1,0 +1,145 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2026
+// Licensed under the MIT license.
+// See file LICENSE for details.
+// File: SSAO.ps
+//
+// Screen-Space Ambient Occlusion shader. Reconstructs view-space
+// positions from depth buffer, samples a hemisphere kernel around
+// each pixel, and computes an occlusion factor. The AO factor is
+// multiplied into the scene color (applied to ambient term only in
+// the ideal case, but applied uniformly here as an approximation).
+//**********************************************************************
+Texture2D sceneTexture : register(t0);
+SamplerState sceneSampler : register(s0);
+Texture2D depthTexture : register(t1);
+SamplerState depthSampler : register(s1);
+
+struct VSOutput
+{
+    float4 posPS : SV_POSITION;
+    float2 uvs : TEXCOORD0;
+};
+
+cbuffer PS_CONSTANT_BUFFER
+{
+    float screenWidth;
+    float screenHeight;
+};
+
+// Reconstruct view-space position from depth
+// Uses reverse-engineered projection assuming standard perspective
+float3 ReconstructViewPos(float2 uv, float depth)
+{
+    // Remap UV to clip space [-1, 1]
+    float x = uv.x * 2.0 - 1.0;
+    float y = (1.0 - uv.y) * 2.0 - 1.0;
+
+    // Approximate perspective reconstruction
+    // Assumes near=0.1, far=1000 for depth linearization
+    float near = 0.1;
+    float far = 1000.0;
+    float linearDepth = near * far / (far - depth * (far - near));
+
+    // Approximate FOV-based reconstruction (assumes ~60 degree FOV)
+    float aspect = screenWidth / screenHeight;
+    float tanHalfFov = 0.5773502; // tan(30 degrees)
+    float viewX = x * linearDepth * tanHalfFov * aspect;
+    float viewY = y * linearDepth * tanHalfFov;
+
+    return float3(viewX, viewY, linearDepth);
+}
+
+// Simple hash for pseudo-random kernel rotation per pixel
+float2 GetNoiseVec(float2 uv)
+{
+    float noiseX = frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453);
+    float noiseY = frac(sin(dot(uv, float2(93.9898, 67.345))) * 24634.6345);
+    return normalize(float2(noiseX, noiseY) * 2.0 - 1.0);
+}
+
+// Reconstruct view-space normal from depth via cross product of neighbors
+float3 ReconstructNormal(float2 uv, float2 texelSize)
+{
+    float depthC = depthTexture.Sample(depthSampler, uv).r;
+    float depthR = depthTexture.Sample(depthSampler, uv + float2(texelSize.x, 0.0)).r;
+    float depthU = depthTexture.Sample(depthSampler, uv + float2(0.0, -texelSize.y)).r;
+
+    float3 posC = ReconstructViewPos(uv, depthC);
+    float3 posR = ReconstructViewPos(uv + float2(texelSize.x, 0.0), depthR);
+    float3 posU = ReconstructViewPos(uv + float2(0.0, -texelSize.y), depthU);
+
+    float3 normal = normalize(cross(posR - posC, posU - posC));
+    return normal;
+}
+
+// Hemisphere sample kernel (8 samples for reasonable quality/performance)
+static const float3 ssaoKernel[8] = {
+    float3( 0.2024537,  0.8414984,  0.1531024),
+    float3(-0.3265630, -0.1959330,  0.6935066),
+    float3( 0.5835228,  0.2347714,  0.3641148),
+    float3(-0.6440040,  0.5227710,  0.2105740),
+    float3( 0.1014600, -0.6870860,  0.4291000),
+    float3(-0.1570400,  0.1359740,  0.8671940),
+    float3( 0.4427980, -0.3714700,  0.5362090),
+    float3(-0.7692680,  0.0635500,  0.3060460)
+};
+
+float4 PS(VSOutput p) : SV_Target
+{
+    float2 texelSize = float2(1.0 / screenWidth, 1.0 / screenHeight);
+
+    float depth = depthTexture.Sample(depthSampler, p.uvs).r;
+
+    // Skip sky pixels
+    if (depth >= 1.0)
+    {
+        float3 scene = sceneTexture.Sample(sceneSampler, p.uvs).rgb;
+        return float4(scene, 1.0);
+    }
+
+    float3 viewPos = ReconstructViewPos(p.uvs, depth);
+    float3 viewNormal = ReconstructNormal(p.uvs, texelSize);
+    float2 noiseVec = GetNoiseVec(p.uvs * float2(screenWidth, screenHeight) * 0.25);
+
+    float ssaoRadius = 0.5;
+    float ssaoBias = 0.025;
+    float occlusion = 0.0;
+
+    [unroll]
+    for (int i = 0; i < 8; i++)
+    {
+        // Rotate kernel sample by noise
+        float3 sampleVec = ssaoKernel[i];
+        float3 rotated;
+        rotated.x = sampleVec.x * noiseVec.x - sampleVec.y * noiseVec.y;
+        rotated.y = sampleVec.x * noiseVec.y + sampleVec.y * noiseVec.x;
+        rotated.z = sampleVec.z;
+
+        // Orient to hemisphere
+        if (dot(rotated, viewNormal) < 0.0)
+            rotated = -rotated;
+
+        float3 samplePos = viewPos + rotated * ssaoRadius;
+
+        // Project sample to screen space
+        float aspect = screenWidth / screenHeight;
+        float tanHalfFov = 0.5773502;
+        float2 sampleUV;
+        sampleUV.x = (samplePos.x / (samplePos.z * tanHalfFov * aspect)) * 0.5 + 0.5;
+        sampleUV.y = 1.0 - ((samplePos.y / (samplePos.z * tanHalfFov)) * 0.5 + 0.5);
+
+        float sampleDepth = depthTexture.Sample(depthSampler, sampleUV).r;
+        float3 actualPos = ReconstructViewPos(sampleUV, sampleDepth);
+
+        // Range check and accumulate
+        float rangeCheck = smoothstep(0.0, 1.0, ssaoRadius / abs(viewPos.z - actualPos.z));
+        occlusion += (actualPos.z >= samplePos.z + ssaoBias ? 1.0 : 0.0) * rangeCheck;
+    }
+
+    float ao = 1.0 - (occlusion / 8.0);
+    ao = pow(ao, 2.0); // Strengthen effect
+
+    float3 scene = sceneTexture.Sample(sceneSampler, p.uvs).rgb;
+    return float4(scene * ao, 1.0);
+}

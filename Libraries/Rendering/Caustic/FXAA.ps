@@ -1,0 +1,84 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2026
+// Licensed under the MIT license.
+// See file LICENSE for details.
+// File: FXAA.ps
+//
+// FXAA (Fast Approximate Anti-Aliasing) implementation based on
+// FXAA 3.11 by Timothy Lottes (NVIDIA). Operates on the tonemapped
+// LDR image to smooth jagged edges.
+//**********************************************************************
+Texture2D tex : register(t0);
+SamplerState s : register(s0);
+
+struct VSOutput
+{
+    float4 posPS : SV_POSITION;
+    float2 uvs : TEXCOORD0;
+};
+
+cbuffer PS_CONSTANT_BUFFER
+{
+    float rcpFrameX;    // 1.0 / screenWidth
+    float rcpFrameY;    // 1.0 / screenHeight
+};
+
+// Compute luminance for edge detection
+float FxaaLuma(float3 rgb)
+{
+    return dot(rgb, float3(0.299, 0.587, 0.114));
+}
+
+float4 PS(VSOutput p) : SV_Target
+{
+    float2 rcpFrame = float2(rcpFrameX, rcpFrameY);
+    float2 uv = p.uvs;
+
+    // Sample neighborhood luminances
+    float3 rgbM  = tex.Sample(s, uv).rgb;
+    float3 rgbNW = tex.Sample(s, uv + float2(-1.0, -1.0) * rcpFrame).rgb;
+    float3 rgbNE = tex.Sample(s, uv + float2( 1.0, -1.0) * rcpFrame).rgb;
+    float3 rgbSW = tex.Sample(s, uv + float2(-1.0,  1.0) * rcpFrame).rgb;
+    float3 rgbSE = tex.Sample(s, uv + float2( 1.0,  1.0) * rcpFrame).rgb;
+
+    float lumM  = FxaaLuma(rgbM);
+    float lumNW = FxaaLuma(rgbNW);
+    float lumNE = FxaaLuma(rgbNE);
+    float lumSW = FxaaLuma(rgbSW);
+    float lumSE = FxaaLuma(rgbSE);
+
+    float lumMin = min(lumM, min(min(lumNW, lumNE), min(lumSW, lumSE)));
+    float lumMax = max(lumM, max(max(lumNW, lumNE), max(lumSW, lumSE)));
+    float lumRange = lumMax - lumMin;
+
+    // Skip if contrast is below threshold
+    if (lumRange < max(0.0312, lumMax * 0.125))
+        return float4(rgbM, 1.0);
+
+    // Compute edge direction
+    float2 dir;
+    dir.x = -((lumNW + lumNE) - (lumSW + lumSE));
+    dir.y =  ((lumNW + lumSW) - (lumNE + lumSE));
+
+    float dirReduce = max((lumNW + lumNE + lumSW + lumSE) * 0.03125, 0.0078125);
+    float rcpDirMin = 1.0 / (min(abs(dir.x), abs(dir.y)) + dirReduce);
+    dir = clamp(dir * rcpDirMin, float2(-8.0, -8.0), float2(8.0, 8.0)) * rcpFrame;
+
+    // Two-tap filter along edge direction
+    float3 rgbA = 0.5 * (
+        tex.Sample(s, uv + dir * (1.0 / 3.0 - 0.5)).rgb +
+        tex.Sample(s, uv + dir * (2.0 / 3.0 - 0.5)).rgb);
+
+    // Four-tap filter along edge direction
+    float3 rgbB = rgbA * 0.5 + 0.25 * (
+        tex.Sample(s, uv + dir * -0.5).rgb +
+        tex.Sample(s, uv + dir *  0.5).rgb);
+
+    float lumB = FxaaLuma(rgbB);
+
+    // If B is out of range, use A (two-tap) instead
+    if (lumB < lumMin || lumB > lumMax)
+        return float4(rgbA, 1.0);
+    else
+        return float4(rgbB, 1.0);
+}

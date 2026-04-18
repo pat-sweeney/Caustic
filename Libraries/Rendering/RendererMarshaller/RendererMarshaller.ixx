@@ -168,5 +168,11 @@ export namespace Caustic
         virtual CRefObj<ITexture> GetShadowmapTexture(int whichShadowmap) override;
         virtual void SetFinalRenderTarget(ID3D11Texture2D* pTexture) override;
         virtual void SetFinalRenderTargetUsingSharedTexture(IUnknown* pTexture) override;
+        virtual void SetPostProcessEnabled(bool enabled) override;
+        virtual void SetBloomEnabled(bool enabled) override;
+        virtual void SetBloomParams(float threshold, float intensity) override;
+        virtual void SetFXAAEnabled(bool enabled) override;
+        virtual void SetSSAOEnabled(bool enabled) override;
+        virtual void SetExposure(float exposure) override;
     };
 }

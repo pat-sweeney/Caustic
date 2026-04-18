@@ -176,7 +176,22 @@ export namespace Caustic
         CComPtr<ID3D11Texture2D> m_spFinalDepthStencilBuffer; // Depth map if final RT override is set
         CComPtr<ID3D11DepthStencilView> m_spStencilView;    // Stencil view
         CComPtr<ID3D11Texture2D> m_spDepthStencilBuffer;    // Our depth map
+        CComPtr<ID3D11ShaderResourceView> m_spDepthSRView;  // SRV for reading depth in post-processing
+        CRefObj<ITexture> m_spDepthTextureObj;               // ITexture wrapper for depth in shader binding
         D3D11_TEXTURE2D_DESC m_BBDesc;                      // Description of our back buffer
+
+        // HDR post-processing render targets
+        CComPtr<ID3D11Texture2D> m_spHDRTexture;            // HDR scene color RT (R16G16B16A16_FLOAT)
+        CComPtr<ID3D11RenderTargetView> m_spHDRRTView;      // RTV for HDR scene render
+        CRefObj<ITexture> m_spHDRTextureObj;                 // ITexture wrapper for shader binding
+        CComPtr<ID3D11Texture2D> m_spPostProcessRT[2];      // Ping-pong post-processing RTs
+        CComPtr<ID3D11RenderTargetView> m_spPostProcessRTV[2]; // RTVs for ping-pong
+        CRefObj<ITexture> m_spPostProcessTexObj[2];          // ITexture wrappers for shader binding
+        // Bloom downsample chain (half-res, quarter-res, eighth-res, sixteenth-res)
+        static const int c_BloomMipCount = 4;
+        CComPtr<ID3D11Texture2D> m_spBloomMipTexture[c_BloomMipCount];
+        CComPtr<ID3D11RenderTargetView> m_spBloomMipRTV[c_BloomMipCount];
+        CRefObj<ITexture> m_spBloomMipTexObj[c_BloomMipCount]; // ITexture wrappers for shader binding
         CRefObj<IShaderMgr> m_spShaderMgr;                  // Our shader manager
         CComPtr<ID3D11Texture2D> m_spShadowTexture[c_MaxShadowMaps];        // Texture for shadow map
         CComPtr<ID3D11ShaderResourceView> m_spShadowSRView[c_MaxShadowMaps];  // Shader resource view for m_spShadowTexture
@@ -270,6 +285,20 @@ export namespace Caustic
         CRefObj<IShader> m_spQuadShader;                    // Shader used to draw screen space quads
         CComPtr<ID3D11RasterizerState> m_spRasterizerState;
         bool m_depthTestEnabled;
+        // Post-processing shaders
+        CRefObj<IShader> m_spBloomExtractShader;
+        CRefObj<IShader> m_spBloomBlurShader;
+        CRefObj<IShader> m_spBloomCompositeShader;
+        CRefObj<IShader> m_spFXAAShader;
+        CRefObj<IShader> m_spSSAOShader;
+        CRefObj<IShader> m_spSSAOBlurShader;
+        bool m_postProcessEnabled;
+        bool m_bloomEnabled;
+        bool m_fxaaEnabled;
+        bool m_ssaoEnabled;
+        float m_bloomThreshold;
+        float m_bloomIntensity;
+        float m_exposure;
 
         void CheckThread()
         {
@@ -288,6 +317,7 @@ export namespace Caustic
         void SetShadowmapViewport(int whichShadowMap, int lightMapIndex);
         void ComputeCascadeSplits(float nearClip, float farClip, float splitDepths[c_NumCascades]);
         void ComputeCascadeViewProj(ICamera* pCamera, const Vector3& lightDir, float nearSplit, float farSplit, DirectX::XMMATRIX& outViewProj);
+        void RunPostProcessing();
     public:
         explicit CRenderer();
         virtual ~CRenderer();
@@ -376,5 +406,11 @@ export namespace Caustic
         virtual CRefObj<ITexture> GetShadowmapTexture(int whichShadowMap) override;
         virtual void SetFinalRenderTarget(ID3D11Texture2D* pTexture) override;
         virtual void SetFinalRenderTargetUsingSharedTexture(IUnknown* pTexture) override;
+        virtual void SetPostProcessEnabled(bool enabled) override { m_postProcessEnabled = enabled; }
+        virtual void SetBloomEnabled(bool enabled) override { m_bloomEnabled = enabled; }
+        virtual void SetBloomParams(float threshold, float intensity) override { m_bloomThreshold = threshold; m_bloomIntensity = intensity; }
+        virtual void SetFXAAEnabled(bool enabled) override { m_fxaaEnabled = enabled; }
+        virtual void SetSSAOEnabled(bool enabled) override { m_ssaoEnabled = enabled; }
+        virtual void SetExposure(float exposure) override { m_exposure = exposure; }
     };
 }

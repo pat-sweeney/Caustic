@@ -479,6 +479,61 @@ export namespace Caustic
         // as final render target
         //**********************************************************************
         virtual void SetFinalRenderTargetUsingSharedTexture(IUnknown* pTexture) = 0;
+
+        //**********************************************************************
+        // Method: SetPostProcessEnabled
+        // Enables or disables the entire post-processing chain
+        //
+        // Parameters:
+        // enabled - true to enable post-processing
+        //**********************************************************************
+        virtual void SetPostProcessEnabled(bool enabled) = 0;
+
+        //**********************************************************************
+        // Method: SetBloomEnabled
+        // Enables or disables the bloom effect
+        //
+        // Parameters:
+        // enabled - true to enable bloom
+        //**********************************************************************
+        virtual void SetBloomEnabled(bool enabled) = 0;
+
+        //**********************************************************************
+        // Method: SetBloomParams
+        // Sets bloom parameters
+        //
+        // Parameters:
+        // threshold - luminance threshold for bright-pass extraction
+        // intensity - bloom intensity multiplier
+        //**********************************************************************
+        virtual void SetBloomParams(float threshold, float intensity) = 0;
+
+        //**********************************************************************
+        // Method: SetFXAAEnabled
+        // Enables or disables FXAA anti-aliasing
+        //
+        // Parameters:
+        // enabled - true to enable FXAA
+        //**********************************************************************
+        virtual void SetFXAAEnabled(bool enabled) = 0;
+
+        //**********************************************************************
+        // Method: SetSSAOEnabled
+        // Enables or disables screen-space ambient occlusion
+        //
+        // Parameters:
+        // enabled - true to enable SSAO
+        //**********************************************************************
+        virtual void SetSSAOEnabled(bool enabled) = 0;
+
+        //**********************************************************************
+        // Method: SetExposure
+        // Sets the exposure value for HDR tonemapping
+        //
+        // Parameters:
+        // exposure - exposure value (default 1.0)
+        //**********************************************************************
+        virtual void SetExposure(float exposure) = 0;
     };
 
     //**********************************************************************

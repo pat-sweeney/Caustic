@@ -1,0 +1,67 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2026
+// Licensed under the MIT license.
+// See file LICENSE for details.
+// File: BloomComposite.ps
+//
+// Composites bloom mip levels with the scene, applies ACES filmic
+// tonemapping and gamma correction for final LDR output.
+//**********************************************************************
+Texture2D sceneTexture : register(t0);
+SamplerState sceneSampler : register(s0);
+Texture2D bloom0 : register(t1);
+SamplerState bloom0Sampler : register(s1);
+Texture2D bloom1 : register(t2);
+SamplerState bloom1Sampler : register(s2);
+Texture2D bloom2 : register(t3);
+SamplerState bloom2Sampler : register(s3);
+Texture2D bloom3 : register(t4);
+SamplerState bloom3Sampler : register(s4);
+
+struct VSOutput
+{
+    float4 posPS : SV_POSITION;
+    float2 uvs : TEXCOORD0;
+};
+
+cbuffer PS_CONSTANT_BUFFER
+{
+    float bloomIntensity;
+    float exposure;
+};
+
+// ACES filmic tonemapping curve (Narkowicz 2015 fit)
+float3 ACESFilm(float3 x)
+{
+    float a = 2.51;
+    float b = 0.03;
+    float c = 2.43;
+    float d = 0.59;
+    float e = 0.14;
+    return saturate((x * (a * x + b)) / (x * (c * x + d) + e));
+}
+
+float4 PS(VSOutput p) : SV_Target
+{
+    float3 scene = sceneTexture.Sample(sceneSampler, p.uvs).rgb;
+
+    // Accumulate bloom from all mip levels
+    float3 bloomColor = float3(0.0, 0.0, 0.0);
+    bloomColor += bloom0.Sample(bloom0Sampler, p.uvs).rgb * 0.5;
+    bloomColor += bloom1.Sample(bloom1Sampler, p.uvs).rgb * 0.3;
+    bloomColor += bloom2.Sample(bloom2Sampler, p.uvs).rgb * 0.15;
+    bloomColor += bloom3.Sample(bloom3Sampler, p.uvs).rgb * 0.05;
+
+    float3 color = scene + bloomColor * bloomIntensity;
+
+    // Exposure adjustment
+    color *= exposure;
+
+    // ACES filmic tonemapping
+    color = ACESFilm(color);
+
+    // Gamma correction (linear to sRGB)
+    color = pow(color, 1.0 / 2.2);
+
+    return float4(color, 1.0);
+}

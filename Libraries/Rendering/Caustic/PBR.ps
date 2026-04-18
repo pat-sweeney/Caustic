@@ -237,9 +237,6 @@ float4 PS(VSOutput p) : SV_Target
     float3 ambient = float3(0.03, 0.03, 0.03) * baseColor * aoFactor;
     float3 color = ambient + Lo;
 
-    // HDR tone mapping (Reinhard) and gamma correction
-    color = color / (color + 1.0);
-    color = pow(color, 1.0 / 2.2);
-
+    // Output linear HDR - tonemapping and gamma are applied in the post-processing chain
     return float4(color, 1.0);
 }

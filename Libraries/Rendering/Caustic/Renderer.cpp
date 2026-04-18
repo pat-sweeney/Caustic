@@ -47,7 +47,14 @@ namespace Caustic
     CRenderer::CRenderer() :
         m_waitForShutdown(true, true),
         m_exitThread(false),
-        m_depthTestEnabled(true)
+        m_depthTestEnabled(true),
+        m_postProcessEnabled(true),
+        m_bloomEnabled(true),
+        m_fxaaEnabled(true),
+        m_ssaoEnabled(true),
+        m_bloomThreshold(1.0f),
+        m_bloomIntensity(0.5f),
+        m_exposure(1.0f)
     {
         m_freezeEvent = CreateEvent(nullptr, true, false, nullptr);
         m_freeze = 0;
@@ -168,6 +175,14 @@ namespace Caustic
 
         m_spLineShader = m_spShaderMgr->FindShader(L"Line");
         m_spQuadShader = m_spShaderMgr->FindShader(L"ScreenQuad");
+
+        // Load post-processing shaders (these may not exist yet; fail gracefully)
+        try { m_spBloomExtractShader = m_spShaderMgr->FindShader(L"BloomExtract"); } catch (...) {}
+        try { m_spBloomBlurShader = m_spShaderMgr->FindShader(L"BloomBlur"); } catch (...) {}
+        try { m_spBloomCompositeShader = m_spShaderMgr->FindShader(L"BloomComposite"); } catch (...) {}
+        try { m_spFXAAShader = m_spShaderMgr->FindShader(L"FXAA"); } catch (...) {}
+        try { m_spSSAOShader = m_spShaderMgr->FindShader(L"SSAO"); } catch (...) {}
+        try { m_spSSAOBlurShader = m_spShaderMgr->FindShader(L"SSAOBlur"); } catch (...) {}
 
         //**********************************************************************
         // Create vertex buffer used to draw lines
@@ -1045,13 +1060,26 @@ namespace Caustic
         if (m_freeze > 0)
             WaitForSingleObject(m_freezeEvent, INFINITE);
 
-        ID3D11RenderTargetView *pView = (m_spFinalRTView) ? m_spFinalRTView : m_spRTView;
-        ID3D11DepthStencilView* pStencilView = (m_spFinalRTView) ? m_spFinalStencilView : m_spStencilView;
-        m_spContext->OMSetRenderTargets(1, &pView, nullptr);
+        // Determine scene render target: if post-processing is enabled, render to HDR RT
+        bool usePostProcess = m_postProcessEnabled && m_spHDRRTView != nullptr;
+        ID3D11RenderTargetView* pSceneRTV;
+        ID3D11DepthStencilView* pStencilView;
+        if (usePostProcess)
+        {
+            pSceneRTV = m_spHDRRTView;
+            pStencilView = m_spStencilView;
+        }
+        else
+        {
+            pSceneRTV = (m_spFinalRTView) ? m_spFinalRTView : m_spRTView;
+            pStencilView = (m_spFinalRTView) ? m_spFinalStencilView : m_spStencilView;
+        }
+
+        m_spContext->OMSetRenderTargets(1, &pSceneRTV, nullptr);
 
         FLOAT bgClr[4] = { 0.4f, 0.4f, 0.4f, 1.0f };
-        m_spContext->ClearRenderTargetView(pView, bgClr);
-        if (m_spFinalRTView != nullptr)
+        m_spContext->ClearRenderTargetView(pSceneRTV, bgClr);
+        if (!usePostProcess && m_spFinalRTView != nullptr)
             m_spContext->ClearRenderTargetView(m_spFinalRTView, bgClr);
         m_spContext->ClearDepthStencilView(pStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
         m_spContext->ClearDepthStencilView(m_spStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -1064,12 +1092,22 @@ namespace Caustic
         CT(m_spDevice->CreateDepthStencilState(&depthDesc, &spDepthStencilState));
         m_spContext->OMSetDepthStencilState(spDepthStencilState, 1);
 
-        m_spContext->OMSetRenderTargets(1, &pView, pStencilView);
+        m_spContext->OMSetRenderTargets(1, &pSceneRTV, pStencilView);
 
         RenderScene(renderCallback);
 
-        if (m_spFinalRTView != nullptr)
-            m_spContext->OMSetRenderTargets(1, &m_spRTView.p, m_spStencilView);
+        // Run post-processing chain
+        if (usePostProcess)
+        {
+            // Unbind depth so SSAO can read it
+            m_spContext->OMSetRenderTargets(1, &pSceneRTV, nullptr);
+            RunPostProcessing();
+        }
+        else
+        {
+            if (m_spFinalRTView != nullptr)
+                m_spContext->OMSetRenderTargets(1, &m_spRTView.p, m_spStencilView);
+        }
 
         if (prePresentCallback)
             (prePresentCallback)(this);
@@ -1269,6 +1307,75 @@ namespace Caustic
         CT(m_spSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&m_spBackBuffer)));
         m_spBackBuffer->GetDesc(&m_BBDesc);
         CT(m_spDevice->CreateRenderTargetView(m_spBackBuffer, nullptr, &m_spRTView));
+
+        // Recreate depth buffer at new size
+        m_spStencilView = nullptr;
+        m_spDepthSRView = nullptr;
+        m_spDepthStencilBuffer = nullptr;
+        m_spDepthTextureObj = nullptr;
+        {
+            CD3D11_TEXTURE2D_DESC texDesc2D(DXGI_FORMAT_R32_TYPELESS, m_BBDesc.Width, m_BBDesc.Height, 1, 1,
+                D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE);
+            CT(m_spDevice->CreateTexture2D(&texDesc2D, NULL, &m_spDepthStencilBuffer));
+            CD3D11_DEPTH_STENCIL_VIEW_DESC stencilDesc(D3D11_DSV_DIMENSION_TEXTURE2D, DXGI_FORMAT_D32_FLOAT);
+            CT(m_spDevice->CreateDepthStencilView(m_spDepthStencilBuffer, &stencilDesc, &m_spStencilView));
+            CD3D11_SHADER_RESOURCE_VIEW_DESC depthSRVDesc(D3D11_SRV_DIMENSION_TEXTURE2D, DXGI_FORMAT_R32_FLOAT);
+            CT(m_spDevice->CreateShaderResourceView(m_spDepthStencilBuffer, &depthSRVDesc, &m_spDepthSRView));
+            m_spDepthTextureObj = CRefObj<ITexture>(new CTexture(m_spDepthStencilBuffer, m_spDepthSRView));
+        }
+
+        // Recreate HDR render target
+        m_spHDRRTView = nullptr;
+        m_spHDRTexture = nullptr;
+        m_spHDRTextureObj = nullptr;
+        {
+            CD3D11_TEXTURE2D_DESC hdrDesc(DXGI_FORMAT_R16G16B16A16_FLOAT, m_BBDesc.Width, m_BBDesc.Height,
+                1, 1, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
+            CT(m_spDevice->CreateTexture2D(&hdrDesc, NULL, &m_spHDRTexture));
+            CT(m_spDevice->CreateRenderTargetView(m_spHDRTexture, NULL, &m_spHDRRTView));
+            CComPtr<ID3D11ShaderResourceView> spHDRSRV;
+            CT(m_spDevice->CreateShaderResourceView(m_spHDRTexture, NULL, &spHDRSRV));
+            m_spHDRTextureObj = CRefObj<ITexture>(new CTexture(m_spHDRTexture, spHDRSRV));
+        }
+
+        // Recreate ping-pong post-processing render targets
+        for (int i = 0; i < 2; i++)
+        {
+            m_spPostProcessRTV[i] = nullptr;
+            m_spPostProcessRT[i] = nullptr;
+            m_spPostProcessTexObj[i] = nullptr;
+            CD3D11_TEXTURE2D_DESC ppDesc(DXGI_FORMAT_R16G16B16A16_FLOAT, m_BBDesc.Width, m_BBDesc.Height,
+                1, 1, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
+            CT(m_spDevice->CreateTexture2D(&ppDesc, NULL, &m_spPostProcessRT[i]));
+            CT(m_spDevice->CreateRenderTargetView(m_spPostProcessRT[i], NULL, &m_spPostProcessRTV[i]));
+            CComPtr<ID3D11ShaderResourceView> spSRV;
+            CT(m_spDevice->CreateShaderResourceView(m_spPostProcessRT[i], NULL, &spSRV));
+            m_spPostProcessTexObj[i] = CRefObj<ITexture>(new CTexture(m_spPostProcessRT[i], spSRV));
+        }
+
+        // Recreate bloom mip chain
+        {
+            uint32_t mipW = m_BBDesc.Width / 2;
+            uint32_t mipH = m_BBDesc.Height / 2;
+            for (int i = 0; i < c_BloomMipCount; i++)
+            {
+                m_spBloomMipRTV[i] = nullptr;
+                m_spBloomMipTexture[i] = nullptr;
+                m_spBloomMipTexObj[i] = nullptr;
+                mipW = (mipW < 1) ? 1 : mipW;
+                mipH = (mipH < 1) ? 1 : mipH;
+                CD3D11_TEXTURE2D_DESC bloomDesc(DXGI_FORMAT_R16G16B16A16_FLOAT, mipW, mipH,
+                    1, 1, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
+                CT(m_spDevice->CreateTexture2D(&bloomDesc, NULL, &m_spBloomMipTexture[i]));
+                CT(m_spDevice->CreateRenderTargetView(m_spBloomMipTexture[i], NULL, &m_spBloomMipRTV[i]));
+                CComPtr<ID3D11ShaderResourceView> spSRV;
+                CT(m_spDevice->CreateShaderResourceView(m_spBloomMipTexture[i], NULL, &spSRV));
+                m_spBloomMipTexObj[i] = CRefObj<ITexture>(new CTexture(m_spBloomMipTexture[i], spSRV));
+                mipW /= 2;
+                mipH /= 2;
+            }
+        }
+
         AdjustViewport();
     }
 
@@ -1333,13 +1440,63 @@ namespace Caustic
             CT(m_spDevice->CreateShaderResourceView(m_spShadowTexture[i], &srvDesc, &m_spShadowSRView[i]));
         }
 
-        // Create depth buffer
-        CD3D11_TEXTURE2D_DESC texDesc2D(DXGI_FORMAT_D24_UNORM_S8_UINT, m_BBDesc.Width, m_BBDesc.Height, 1, 1, D3D11_BIND_DEPTH_STENCIL);
+        // Create depth buffer (typeless for SRV access by post-processing effects like SSAO)
+        CD3D11_TEXTURE2D_DESC texDesc2D(DXGI_FORMAT_R32_TYPELESS, m_BBDesc.Width, m_BBDesc.Height, 1, 1, D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE);
         CT(m_spDevice->CreateTexture2D(&texDesc2D, NULL, &m_spDepthStencilBuffer));
 
-        // Create the depth buffer ressource view
-        CD3D11_DEPTH_STENCIL_VIEW_DESC stencilDesc(D3D11_DSV_DIMENSION_TEXTURE2D, DXGI_FORMAT_D24_UNORM_S8_UINT);
+        // Create the depth buffer stencil view
+        CD3D11_DEPTH_STENCIL_VIEW_DESC stencilDesc(D3D11_DSV_DIMENSION_TEXTURE2D, DXGI_FORMAT_D32_FLOAT);
         CT(m_spDevice->CreateDepthStencilView(m_spDepthStencilBuffer, &stencilDesc, &m_spStencilView));
+
+        // Create shader resource view for reading depth in post-processing
+        CD3D11_SHADER_RESOURCE_VIEW_DESC depthSRVDesc(D3D11_SRV_DIMENSION_TEXTURE2D, DXGI_FORMAT_R32_FLOAT);
+        CT(m_spDevice->CreateShaderResourceView(m_spDepthStencilBuffer, &depthSRVDesc, &m_spDepthSRView));
+
+        // Create HDR scene render target (R16G16B16A16_FLOAT)
+        {
+            CD3D11_TEXTURE2D_DESC hdrDesc(DXGI_FORMAT_R16G16B16A16_FLOAT, m_BBDesc.Width, m_BBDesc.Height,
+                1, 1, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
+            CT(m_spDevice->CreateTexture2D(&hdrDesc, NULL, &m_spHDRTexture));
+            CT(m_spDevice->CreateRenderTargetView(m_spHDRTexture, NULL, &m_spHDRRTView));
+            CComPtr<ID3D11ShaderResourceView> spHDRSRV;
+            CT(m_spDevice->CreateShaderResourceView(m_spHDRTexture, NULL, &spHDRSRV));
+            m_spHDRTextureObj = CRefObj<ITexture>(new CTexture(m_spHDRTexture, spHDRSRV));
+        }
+
+        // Create ping-pong post-processing render targets
+        for (int i = 0; i < 2; i++)
+        {
+            CD3D11_TEXTURE2D_DESC ppDesc(DXGI_FORMAT_R16G16B16A16_FLOAT, m_BBDesc.Width, m_BBDesc.Height,
+                1, 1, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
+            CT(m_spDevice->CreateTexture2D(&ppDesc, NULL, &m_spPostProcessRT[i]));
+            CT(m_spDevice->CreateRenderTargetView(m_spPostProcessRT[i], NULL, &m_spPostProcessRTV[i]));
+            CComPtr<ID3D11ShaderResourceView> spSRV;
+            CT(m_spDevice->CreateShaderResourceView(m_spPostProcessRT[i], NULL, &spSRV));
+            m_spPostProcessTexObj[i] = CRefObj<ITexture>(new CTexture(m_spPostProcessRT[i], spSRV));
+        }
+
+        // Create bloom downsample mip chain
+        {
+            uint32_t mipW = m_BBDesc.Width / 2;
+            uint32_t mipH = m_BBDesc.Height / 2;
+            for (int i = 0; i < c_BloomMipCount; i++)
+            {
+                mipW = (mipW < 1) ? 1 : mipW;
+                mipH = (mipH < 1) ? 1 : mipH;
+                CD3D11_TEXTURE2D_DESC bloomDesc(DXGI_FORMAT_R16G16B16A16_FLOAT, mipW, mipH,
+                    1, 1, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
+                CT(m_spDevice->CreateTexture2D(&bloomDesc, NULL, &m_spBloomMipTexture[i]));
+                CT(m_spDevice->CreateRenderTargetView(m_spBloomMipTexture[i], NULL, &m_spBloomMipRTV[i]));
+                CComPtr<ID3D11ShaderResourceView> spSRV;
+                CT(m_spDevice->CreateShaderResourceView(m_spBloomMipTexture[i], NULL, &spSRV));
+                m_spBloomMipTexObj[i] = CRefObj<ITexture>(new CTexture(m_spBloomMipTexture[i], spSRV));
+                mipW /= 2;
+                mipH /= 2;
+            }
+        }
+
+        // Create ITexture wrapper for depth SRV
+        m_spDepthTextureObj = CRefObj<ITexture>(new CTexture(m_spDepthStencilBuffer, m_spDepthSRView));
 
         m_finalViewport = viewport;
         AdjustViewport();
@@ -1449,5 +1606,315 @@ namespace Caustic
 
         // Create a default camera
         m_spCamera = CCausticFactory::Instance()->CreateCamera(false);
+    }
+
+    //**********************************************************************
+    // Method: RunPostProcessing
+    // Executes the post-processing chain after scene rendering.
+    // The scene has been rendered to m_spHDRRTView. This method runs
+    // SSAO, bloom, tonemapping, and FXAA, then blits the final result
+    // to the backbuffer (or final RT override).
+    //**********************************************************************
+    void CRenderer::RunPostProcessing()
+    {
+#ifdef _DEBUG
+        CComPtr<ID3D11DeviceContext2> spCtx2;
+        CT(m_spContext->QueryInterface<ID3D11DeviceContext2>(&spCtx2));
+        spCtx2->BeginEventInt(L"PostProcessing", 0);
+#endif
+
+        // Disable depth testing for all post-processing passes
+        D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
+        ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
+        depthStencilDesc.DepthEnable = false;
+        CComPtr<ID3D11DepthStencilState> spNoDepthState;
+        CT(m_spDevice->CreateDepthStencilState(&depthStencilDesc, &spNoDepthState));
+        m_spContext->OMSetDepthStencilState(spNoDepthState, 0);
+
+        // Set up rasterizer for fullscreen quads
+        D3D11_RASTERIZER_DESC rastDesc;
+        rastDesc.FrontCounterClockwise = false;
+        rastDesc.CullMode = D3D11_CULL_NONE;
+        rastDesc.AntialiasedLineEnable = false;
+        rastDesc.DepthBias = 0;
+        rastDesc.DepthBiasClamp = 0.0f;
+        rastDesc.DepthClipEnable = true;
+        rastDesc.FillMode = D3D11_FILL_SOLID;
+        rastDesc.MultisampleEnable = false;
+        rastDesc.SlopeScaledDepthBias = 0.0f;
+        rastDesc.ScissorEnable = false;
+        CComPtr<ID3D11RasterizerState> spRasterizerState;
+        CT(m_spDevice->CreateRasterizerState(&rastDesc, &spRasterizerState));
+        m_spContext->RSSetState(spRasterizerState);
+
+        // Bind quad geometry
+        UINT offset = 0;
+        UINT vertexSize = sizeof(CQuadVertex);
+        m_spContext->IASetVertexBuffers(0, 1, &m_spQuadVB.p, &vertexSize, &offset);
+        m_spContext->IASetIndexBuffer(m_spQuadIB, DXGI_FORMAT_R32_UINT, 0);
+        m_spContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+        // Track which ITexture holds the current scene image
+        // Start with HDR scene render
+        CRefObj<ITexture> pCurrentTex = m_spHDRTextureObj;
+        int pingPongIndex = 0; // next write target
+
+        std::vector<CRefObj<ILight>> emptyLights;
+
+        //**********************************************************************
+        // Pass: SSAO
+        //**********************************************************************
+        if (m_ssaoEnabled && m_spSSAOShader != nullptr)
+        {
+#ifdef _DEBUG
+            spCtx2->BeginEventInt(L"SSAO", 0);
+#endif
+            // SSAO pass: read scene color + depth, write AO-modulated result
+            m_spContext->OMSetRenderTargets(1, &m_spPostProcessRTV[pingPongIndex].p, nullptr);
+            FLOAT black[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+            m_spContext->ClearRenderTargetView(m_spPostProcessRTV[pingPongIndex], black);
+
+            D3D11_VIEWPORT ppVP = {};
+            ppVP.Width = (float)m_BBDesc.Width;
+            ppVP.Height = (float)m_BBDesc.Height;
+            ppVP.MaxDepth = 1.0f;
+            m_spContext->RSSetViewports(1, &ppVP);
+
+            m_spSSAOShader->SetPSParam(L"sceneTexture", std::any(pCurrentTex));
+            m_spSSAOShader->SetPSParam(L"depthTexture", std::any(m_spDepthTextureObj));
+            m_spSSAOShader->SetPSParamFloat(L"screenWidth", (float)m_BBDesc.Width);
+            m_spSSAOShader->SetPSParamFloat(L"screenHeight", (float)m_BBDesc.Height);
+
+            m_spSSAOShader->SetVSParamFloat(L"minu", 0.0f);
+            m_spSSAOShader->SetVSParamFloat(L"minv", 0.0f);
+            m_spSSAOShader->SetVSParamFloat(L"maxu", 1.0f);
+            m_spSSAOShader->SetVSParamFloat(L"maxv", 1.0f);
+
+            m_spSSAOShader->BeginRender(this, nullptr, emptyLights, nullptr);
+            m_spContext->DrawIndexed(6, 0, 0);
+            m_spSSAOShader->EndRender(this);
+
+            pCurrentTex = m_spPostProcessTexObj[pingPongIndex];
+            pingPongIndex = 1 - pingPongIndex;
+
+            // SSAO blur pass
+            if (m_spSSAOBlurShader != nullptr)
+            {
+                m_spContext->OMSetRenderTargets(1, &m_spPostProcessRTV[pingPongIndex].p, nullptr);
+                m_spContext->ClearRenderTargetView(m_spPostProcessRTV[pingPongIndex], black);
+
+                m_spSSAOBlurShader->SetPSParam(L"tex", std::any(pCurrentTex));
+                m_spSSAOBlurShader->SetPSParamFloat(L"texelWidth", 1.0f / (float)m_BBDesc.Width);
+                m_spSSAOBlurShader->SetPSParamFloat(L"texelHeight", 1.0f / (float)m_BBDesc.Height);
+
+                m_spSSAOBlurShader->SetVSParamFloat(L"minu", 0.0f);
+                m_spSSAOBlurShader->SetVSParamFloat(L"minv", 0.0f);
+                m_spSSAOBlurShader->SetVSParamFloat(L"maxu", 1.0f);
+                m_spSSAOBlurShader->SetVSParamFloat(L"maxv", 1.0f);
+
+                m_spSSAOBlurShader->BeginRender(this, nullptr, emptyLights, nullptr);
+                m_spContext->DrawIndexed(6, 0, 0);
+                m_spSSAOBlurShader->EndRender(this);
+
+                pCurrentTex = m_spPostProcessTexObj[pingPongIndex];
+                pingPongIndex = 1 - pingPongIndex;
+            }
+#ifdef _DEBUG
+            spCtx2->EndEvent();
+#endif
+        }
+
+        //**********************************************************************
+        // Pass: Bloom
+        //**********************************************************************
+        if (m_bloomEnabled && m_spBloomExtractShader != nullptr && m_spBloomBlurShader != nullptr && m_spBloomCompositeShader != nullptr)
+        {
+#ifdef _DEBUG
+            spCtx2->BeginEventInt(L"Bloom", 0);
+#endif
+            // Step 1: Bright-pass extraction into first bloom mip
+            {
+                D3D11_TEXTURE2D_DESC mipDesc;
+                m_spBloomMipTexture[0]->GetDesc(&mipDesc);
+                D3D11_VIEWPORT bloomVP = {};
+                bloomVP.Width = (float)mipDesc.Width;
+                bloomVP.Height = (float)mipDesc.Height;
+                bloomVP.MaxDepth = 1.0f;
+                m_spContext->RSSetViewports(1, &bloomVP);
+                m_spContext->OMSetRenderTargets(1, &m_spBloomMipRTV[0].p, nullptr);
+                FLOAT black[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+                m_spContext->ClearRenderTargetView(m_spBloomMipRTV[0], black);
+
+                m_spBloomExtractShader->SetPSParam(L"tex", std::any(pCurrentTex));
+                m_spBloomExtractShader->SetPSParamFloat(L"threshold", m_bloomThreshold);
+                m_spBloomExtractShader->SetVSParamFloat(L"minu", 0.0f);
+                m_spBloomExtractShader->SetVSParamFloat(L"minv", 0.0f);
+                m_spBloomExtractShader->SetVSParamFloat(L"maxu", 1.0f);
+                m_spBloomExtractShader->SetVSParamFloat(L"maxv", 1.0f);
+
+                m_spBloomExtractShader->BeginRender(this, nullptr, emptyLights, nullptr);
+                m_spContext->DrawIndexed(6, 0, 0);
+                m_spBloomExtractShader->EndRender(this);
+            }
+
+            // Step 2: Progressive downsample + blur
+            for (int i = 1; i < c_BloomMipCount; i++)
+            {
+                D3D11_TEXTURE2D_DESC mipDesc;
+                m_spBloomMipTexture[i]->GetDesc(&mipDesc);
+                D3D11_VIEWPORT bloomVP = {};
+                bloomVP.Width = (float)mipDesc.Width;
+                bloomVP.Height = (float)mipDesc.Height;
+                bloomVP.MaxDepth = 1.0f;
+                m_spContext->RSSetViewports(1, &bloomVP);
+                m_spContext->OMSetRenderTargets(1, &m_spBloomMipRTV[i].p, nullptr);
+                FLOAT black[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+                m_spContext->ClearRenderTargetView(m_spBloomMipRTV[i], black);
+
+                D3D11_TEXTURE2D_DESC prevDesc;
+                m_spBloomMipTexture[i - 1]->GetDesc(&prevDesc);
+                m_spBloomBlurShader->SetPSParam(L"tex", std::any(m_spBloomMipTexObj[i - 1]));
+                m_spBloomBlurShader->SetPSParamFloat(L"texelWidth", 1.0f / (float)prevDesc.Width);
+                m_spBloomBlurShader->SetPSParamFloat(L"texelHeight", 1.0f / (float)prevDesc.Height);
+                m_spBloomBlurShader->SetVSParamFloat(L"minu", 0.0f);
+                m_spBloomBlurShader->SetVSParamFloat(L"minv", 0.0f);
+                m_spBloomBlurShader->SetVSParamFloat(L"maxu", 1.0f);
+                m_spBloomBlurShader->SetVSParamFloat(L"maxv", 1.0f);
+
+                m_spBloomBlurShader->BeginRender(this, nullptr, emptyLights, nullptr);
+                m_spContext->DrawIndexed(6, 0, 0);
+                m_spBloomBlurShader->EndRender(this);
+            }
+
+            // Step 3: Bloom composite + ACES tonemap to post-process RT
+            {
+                D3D11_VIEWPORT ppVP = {};
+                ppVP.Width = (float)m_BBDesc.Width;
+                ppVP.Height = (float)m_BBDesc.Height;
+                ppVP.MaxDepth = 1.0f;
+                m_spContext->RSSetViewports(1, &ppVP);
+                m_spContext->OMSetRenderTargets(1, &m_spPostProcessRTV[pingPongIndex].p, nullptr);
+                FLOAT black[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+                m_spContext->ClearRenderTargetView(m_spPostProcessRTV[pingPongIndex], black);
+
+                m_spBloomCompositeShader->SetPSParam(L"sceneTexture", std::any(pCurrentTex));
+                m_spBloomCompositeShader->SetPSParam(L"bloom0", std::any(m_spBloomMipTexObj[0]));
+                m_spBloomCompositeShader->SetPSParam(L"bloom1", std::any(m_spBloomMipTexObj[1]));
+                m_spBloomCompositeShader->SetPSParam(L"bloom2", std::any(m_spBloomMipTexObj[2]));
+                m_spBloomCompositeShader->SetPSParam(L"bloom3", std::any(m_spBloomMipTexObj[3]));
+                m_spBloomCompositeShader->SetPSParamFloat(L"bloomIntensity", m_bloomIntensity);
+                m_spBloomCompositeShader->SetPSParamFloat(L"exposure", m_exposure);
+                m_spBloomCompositeShader->SetVSParamFloat(L"minu", 0.0f);
+                m_spBloomCompositeShader->SetVSParamFloat(L"minv", 0.0f);
+                m_spBloomCompositeShader->SetVSParamFloat(L"maxu", 1.0f);
+                m_spBloomCompositeShader->SetVSParamFloat(L"maxv", 1.0f);
+
+                m_spBloomCompositeShader->BeginRender(this, nullptr, emptyLights, nullptr);
+                m_spContext->DrawIndexed(6, 0, 0);
+                m_spBloomCompositeShader->EndRender(this);
+
+                pCurrentTex = m_spPostProcessTexObj[pingPongIndex];
+                pingPongIndex = 1 - pingPongIndex;
+            }
+#ifdef _DEBUG
+            spCtx2->EndEvent();
+#endif
+        }
+        else
+        {
+            // No bloom: just do basic ACES tonemap using BloomComposite with zero bloom
+            if (m_spBloomCompositeShader != nullptr)
+            {
+                D3D11_VIEWPORT ppVP = {};
+                ppVP.Width = (float)m_BBDesc.Width;
+                ppVP.Height = (float)m_BBDesc.Height;
+                ppVP.MaxDepth = 1.0f;
+                m_spContext->RSSetViewports(1, &ppVP);
+                m_spContext->OMSetRenderTargets(1, &m_spPostProcessRTV[pingPongIndex].p, nullptr);
+
+                m_spBloomCompositeShader->SetPSParam(L"sceneTexture", std::any(pCurrentTex));
+                m_spBloomCompositeShader->SetPSParam(L"bloom0", std::any(pCurrentTex)); // dummy
+                m_spBloomCompositeShader->SetPSParam(L"bloom1", std::any(pCurrentTex));
+                m_spBloomCompositeShader->SetPSParam(L"bloom2", std::any(pCurrentTex));
+                m_spBloomCompositeShader->SetPSParam(L"bloom3", std::any(pCurrentTex));
+                m_spBloomCompositeShader->SetPSParamFloat(L"bloomIntensity", 0.0f);
+                m_spBloomCompositeShader->SetPSParamFloat(L"exposure", m_exposure);
+                m_spBloomCompositeShader->SetVSParamFloat(L"minu", 0.0f);
+                m_spBloomCompositeShader->SetVSParamFloat(L"minv", 0.0f);
+                m_spBloomCompositeShader->SetVSParamFloat(L"maxu", 1.0f);
+                m_spBloomCompositeShader->SetVSParamFloat(L"maxv", 1.0f);
+
+                m_spBloomCompositeShader->BeginRender(this, nullptr, emptyLights, nullptr);
+                m_spContext->DrawIndexed(6, 0, 0);
+                m_spBloomCompositeShader->EndRender(this);
+
+                pCurrentTex = m_spPostProcessTexObj[pingPongIndex];
+                pingPongIndex = 1 - pingPongIndex;
+            }
+        }
+
+        //**********************************************************************
+        // Pass: FXAA
+        //**********************************************************************
+        if (m_fxaaEnabled && m_spFXAAShader != nullptr)
+        {
+#ifdef _DEBUG
+            spCtx2->BeginEventInt(L"FXAA", 0);
+#endif
+            // FXAA writes to the final backbuffer directly
+            ID3D11RenderTargetView* pFinalRTV = (m_spFinalRTView) ? m_spFinalRTView : m_spRTView;
+            m_spContext->OMSetRenderTargets(1, &pFinalRTV, nullptr);
+
+            D3D11_VIEWPORT ppVP = {};
+            ppVP.Width = (float)m_BBDesc.Width;
+            ppVP.Height = (float)m_BBDesc.Height;
+            ppVP.MaxDepth = 1.0f;
+            m_spContext->RSSetViewports(1, &ppVP);
+
+            m_spFXAAShader->SetPSParam(L"tex", std::any(pCurrentTex));
+            m_spFXAAShader->SetPSParamFloat(L"rcpFrameX", 1.0f / (float)m_BBDesc.Width);
+            m_spFXAAShader->SetPSParamFloat(L"rcpFrameY", 1.0f / (float)m_BBDesc.Height);
+            m_spFXAAShader->SetVSParamFloat(L"minu", 0.0f);
+            m_spFXAAShader->SetVSParamFloat(L"minv", 0.0f);
+            m_spFXAAShader->SetVSParamFloat(L"maxu", 1.0f);
+            m_spFXAAShader->SetVSParamFloat(L"maxv", 1.0f);
+
+            m_spFXAAShader->BeginRender(this, nullptr, emptyLights, nullptr);
+            m_spContext->DrawIndexed(6, 0, 0);
+            m_spFXAAShader->EndRender(this);
+#ifdef _DEBUG
+            spCtx2->EndEvent();
+#endif
+        }
+        else
+        {
+            // No FXAA: blit current result to backbuffer
+            ID3D11RenderTargetView* pFinalRTV = (m_spFinalRTView) ? m_spFinalRTView : m_spRTView;
+            m_spContext->OMSetRenderTargets(1, &pFinalRTV, nullptr);
+
+            D3D11_VIEWPORT ppVP = {};
+            ppVP.Width = (float)m_BBDesc.Width;
+            ppVP.Height = (float)m_BBDesc.Height;
+            ppVP.MaxDepth = 1.0f;
+            m_spContext->RSSetViewports(1, &ppVP);
+
+            m_spQuadShader->SetPSParam(L"tex", std::any(pCurrentTex));
+            m_spQuadShader->SetVSParamFloat(L"minu", 0.0f);
+            m_spQuadShader->SetVSParamFloat(L"minv", 0.0f);
+            m_spQuadShader->SetVSParamFloat(L"maxu", 1.0f);
+            m_spQuadShader->SetVSParamFloat(L"maxv", 1.0f);
+
+            m_spQuadShader->BeginRender(this, nullptr, emptyLights, nullptr);
+            m_spContext->DrawIndexed(6, 0, 0);
+            m_spQuadShader->EndRender(this);
+        }
+
+        // Restore normal viewport
+        m_spContext->RSSetViewports(1, &m_viewport);
+        m_spContext->RSSetState(m_spRasterizerState);
+
+#ifdef _DEBUG
+        spCtx2->EndEvent();
+#endif
     }
 }

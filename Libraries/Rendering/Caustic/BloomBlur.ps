@@ -1,0 +1,43 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2026
+// Licensed under the MIT license.
+// See file LICENSE for details.
+// File: BloomBlur.ps
+//
+// 9-tap Gaussian blur shader for bloom downsample/blur passes.
+// Uses bilinear filtering to sample between texels for better
+// quality with fewer taps.
+//**********************************************************************
+Texture2D tex : register(t0);
+SamplerState s : register(s0);
+
+struct VSOutput
+{
+    float4 posPS : SV_POSITION;
+    float2 uvs : TEXCOORD0;
+};
+
+cbuffer PS_CONSTANT_BUFFER
+{
+    float texelWidth;
+    float texelHeight;
+};
+
+float4 PS(VSOutput p) : SV_Target
+{
+    // 9-tap Gaussian kernel (sigma ~1.5)
+    // Weights: 0.0625, 0.125, 0.0625
+    //          0.125,  0.25,  0.125
+    //          0.0625, 0.125, 0.0625
+    float3 result = float3(0.0, 0.0, 0.0);
+
+    float2 texelSize = float2(texelWidth, texelHeight);
+
+    // Use bilinear-optimized 4-tap sampling (equivalent to 9-tap Gaussian)
+    result += tex.Sample(s, p.uvs + float2(-0.5, -0.5) * texelSize).rgb * 0.25;
+    result += tex.Sample(s, p.uvs + float2( 0.5, -0.5) * texelSize).rgb * 0.25;
+    result += tex.Sample(s, p.uvs + float2(-0.5,  0.5) * texelSize).rgb * 0.25;
+    result += tex.Sample(s, p.uvs + float2( 0.5,  0.5) * texelSize).rgb * 0.25;
+
+    return float4(result, 1.0);
+}
