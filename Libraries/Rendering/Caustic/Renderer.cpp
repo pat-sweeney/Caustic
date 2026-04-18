@@ -32,6 +32,9 @@ import Rendering.Caustic.Sampler;
 import Rendering.Caustic.ShaderMgr;
 import Rendering.Caustic.CausticFactory;
 import Rendering.Caustic.ICausticFactory;
+import Rendering.Caustic.ISpotLight;
+import Rendering.Caustic.IAreaLight;
+import Rendering.Caustic.ICamera;
 import Geometry.Mesh.RenderTypes;
 
 //**********************************************************************
@@ -54,7 +57,8 @@ namespace Caustic
         m_ssaoEnabled(true),
         m_bloomThreshold(1.0f),
         m_bloomIntensity(0.5f),
-        m_exposure(1.0f)
+        m_exposure(1.0f),
+        m_frustumCullingEnabled(true)
     {
         m_freezeEvent = CreateEvent(nullptr, true, false, nullptr);
         m_freeze = 0;
@@ -190,6 +194,22 @@ namespace Caustic
         for (int i = 0; i < c_MaxPointShadowLights; i++)
         {
             m_spPointShadowCubemap[i] = CreateCubemapDepthTexture(this, c_PointShadowMapSize);
+        }
+
+        // Create spot-light shadow maps
+        m_numSpotShadowLights = 0;
+        for (int i = 0; i < c_MaxSpotShadowLights; i++)
+        {
+            CComPtr<ID3D11Texture2D> spTex;
+            CD3D11_TEXTURE2D_DESC texDesc(DXGI_FORMAT_R32_TYPELESS, c_SpotShadowMapSize, c_SpotShadowMapSize,
+                1, 1, D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE);
+            CT(m_spDevice->CreateTexture2D(&texDesc, NULL, &spTex));
+            CD3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc(D3D11_DSV_DIMENSION_TEXTURE2D, DXGI_FORMAT_D32_FLOAT);
+            CT(m_spDevice->CreateDepthStencilView(spTex, &dsvDesc, &m_spSpotShadowDSV[i]));
+            CComPtr<ID3D11ShaderResourceView> spSRV;
+            CD3D11_SHADER_RESOURCE_VIEW_DESC srvDesc(D3D11_SRV_DIMENSION_TEXTURE2D, DXGI_FORMAT_R32_FLOAT);
+            CT(m_spDevice->CreateShaderResourceView(spTex, &srvDesc, &spSRV));
+            m_spSpotShadowMap[i] = CRefObj<ITexture>(new CTexture(spTex, spSRV));
         }
 
         // Load IBL shaders
@@ -731,6 +751,26 @@ namespace Caustic
     // pass - which pass are we rendering
     // renderCallback - Render callback
     //**********************************************************************
+    //**********************************************************************
+    // Method: IsBoxInFrustum
+    // Tests whether an AABB intersects the view frustum defined by 6 planes.
+    // Uses the "positive vertex" test (conservative — no false negatives).
+    //**********************************************************************
+    bool CRenderer::IsBoxInFrustum(const BBox3& bbox, const DirectX::XMVECTOR frustumPlanes[6])
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            // Find the "positive vertex" — the corner most in the direction of the plane normal
+            float px = (DirectX::XMVectorGetX(frustumPlanes[i]) >= 0.0f) ? bbox.maxPt.x : bbox.minPt.x;
+            float py = (DirectX::XMVectorGetY(frustumPlanes[i]) >= 0.0f) ? bbox.maxPt.y : bbox.minPt.y;
+            float pz = (DirectX::XMVectorGetZ(frustumPlanes[i]) >= 0.0f) ? bbox.maxPt.z : bbox.minPt.z;
+            DirectX::XMVECTOR pVertex = DirectX::XMVectorSet(px, py, pz, 1.0f);
+            if (DirectX::XMVectorGetX(DirectX::XMPlaneDotCoord(frustumPlanes[i], pVertex)) < 0.0f)
+                return false; // entirely outside this plane
+        }
+        return true;
+    }
+
     void CRenderer::DrawSceneObjects(int pass, std::function<void(IRenderer *pRenderer, IRenderCtx *pRenderCtx, int pass)> renderCallback)
     {
         if (renderCallback)
@@ -826,13 +866,46 @@ namespace Caustic
 
             // Render point-light shadow cubemaps
             RenderPointShadows(pass, renderCallback);
+            RenderSpotShadows(pass, renderCallback);
         }
         else
         {
+            // Extract frustum planes for culling (if enabled)
+            DirectX::XMVECTOR frustumPlanes[6];
+            if (m_frustumCullingEnabled)
+            {
+                DirectX::XMMATRIX vp = DirectX::XMMatrixMultiply(
+                    m_spCamera->GetView(), m_spCamera->GetProjection());
+                DirectX::XMFLOAT4X4 m;
+                DirectX::XMStoreFloat4x4(&m, DirectX::XMMatrixTranspose(vp));
+                // Left:   row3 + row0
+                frustumPlanes[0] = DirectX::XMVectorSet(m._14 + m._11, m._24 + m._21, m._34 + m._31, m._44 + m._41);
+                // Right:  row3 - row0
+                frustumPlanes[1] = DirectX::XMVectorSet(m._14 - m._11, m._24 - m._21, m._34 - m._31, m._44 - m._41);
+                // Bottom: row3 + row1
+                frustumPlanes[2] = DirectX::XMVectorSet(m._14 + m._12, m._24 + m._22, m._34 + m._32, m._44 + m._42);
+                // Top:    row3 - row1
+                frustumPlanes[3] = DirectX::XMVectorSet(m._14 - m._12, m._24 - m._22, m._34 - m._32, m._44 - m._42);
+                // Near:   row2
+                frustumPlanes[4] = DirectX::XMVectorSet(m._13, m._23, m._33, m._43);
+                // Far:    row3 - row2
+                frustumPlanes[5] = DirectX::XMVectorSet(m._14 - m._13, m._24 - m._23, m._34 - m._33, m._44 - m._43);
+                for (int i = 0; i < 6; i++)
+                    frustumPlanes[i] = DirectX::XMPlaneNormalize(frustumPlanes[i]);
+            }
+
             for (size_t i = 0; i < m_singleObjs.size(); i++)
             {
                 if (m_singleObjs[i]->InPass(pass))
+                {
+                    if (m_frustumCullingEnabled)
+                    {
+                        BBox3 bbox;
+                        if (m_singleObjs[i]->GetBBox(&bbox) && !IsBoxInFrustum(bbox, frustumPlanes))
+                            continue; // culled
+                    }
                     m_singleObjs[i]->Render(this, m_lights, m_spRenderCtx);
+                }
             }
         }
     }
@@ -946,6 +1019,52 @@ namespace Caustic
         {
             pShader->SetPSParamInt(L"useTiledLighting", 0);
         }
+
+        // Bind spot-light shadow maps
+        pShader->SetPSParamInt(L"numSpotShadowLights", m_numSpotShadowLights);
+        for (int i = 0; i < m_numSpotShadowLights; i++)
+        {
+            wchar_t paramName[64];
+            swprintf_s(paramName, L"spotShadowMap[%d]", i);
+            pShader->SetPSParam(paramName, std::any(m_spSpotShadowMap[i]));
+            swprintf_s(paramName, L"spotShadowViewProj[%d]", i);
+            DirectX::XMFLOAT4X4 f4x4;
+            DirectX::XMStoreFloat4x4(&f4x4, m_spotShadowViewProj[i]);
+            Matrix mat(reinterpret_cast<float*>(&f4x4));
+            pShader->SetPSParam(paramName, std::any(mat));
+        }
+
+        // Upload area light data
+        int numAreaLights = 0;
+        for (int i = 0; i < (int)lights.size() && numAreaLights < 4; i++)
+        {
+            if (lights[i]->GetType() != ELightType::AreaLight)
+                continue;
+            IAreaLight* pArea = dynamic_cast<IAreaLight*>(lights[i].p);
+            if (pArea == nullptr)
+                continue;
+            Vector3 corners[4];
+            pArea->GetCorners(corners);
+            for (int c = 0; c < 4; c++)
+            {
+                wchar_t paramName[64];
+                swprintf_s(paramName, L"areaLightCorners[%d]", numAreaLights * 4 + c);
+                Float4 corner(corners[c].x, corners[c].y, corners[c].z, 0.0f);
+                pShader->SetPSParam(paramName, std::any(corner));
+            }
+            {
+                wchar_t paramName[64];
+                FRGBColor clr = pArea->GetColor();
+                swprintf_s(paramName, L"areaLightColor[%d]", numAreaLights);
+                Float4 color(clr.r, clr.g, clr.b, 0.0f);
+                pShader->SetPSParam(paramName, std::any(color));
+                swprintf_s(paramName, L"areaLightIntensity[%d]", numAreaLights);
+                Float4 inten(pArea->GetIntensity(), 0.0f, 0.0f, 0.0f);
+                pShader->SetPSParam(paramName, std::any(inten));
+            }
+            numAreaLights++;
+        }
+        pShader->SetPSParamInt(L"numAreaLights", numAreaLights);
     }
 
     //**********************************************************************
@@ -2206,6 +2325,87 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Method: RenderSpotShadows
+    // Renders shadow maps for shadow-casting spot lights. Each spot light
+    // uses a single perspective frustum aligned to the light's direction
+    // with the outer cone angle as the FOV.
+    //**********************************************************************
+    void CRenderer::RenderSpotShadows(int pass, std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)> renderCallback)
+    {
+        m_numSpotShadowLights = 0;
+        for (size_t i = 0; i < m_lights.size() && m_numSpotShadowLights < c_MaxSpotShadowLights; i++)
+        {
+            if (m_lights[i]->GetType() != ELightType::SpotLight || !m_lights[i]->GetCastsShadows())
+                continue;
+
+            int idx = m_numSpotShadowLights;
+            Vector3 lightPos = m_lights[i]->GetPosition();
+            Vector3 lightDir = m_lights[i]->GetDirection();
+            float lightRange = m_lights[i]->GetRange();
+
+            // Get outer angle for FOV (stored as float2 via ISpotLight::GetAngles)
+            // We need to cast to ISpotLight — but since we know it's a spot light, use the outer angle from PushLights
+            // The angles are inner.x, outer.y in degrees
+            float outerAngle = 45.0f; // default
+            // Access the spot light angles through dynamic behavior
+            // Since ILight doesn't expose GetAngles, we'll use a reasonable default FOV
+            // The outer cone angle is typically between 30-90 degrees
+            // For shadow map, we use 2x outer angle as the FOV to cover the full cone
+            float fov = outerAngle * 2.0f;
+
+            // Push shadow render state
+            ShadowMapRenderState rs;
+            rs.m_viewport = m_viewport;
+            rs.m_spOldCamera = GetCamera();
+            m_spContext->OMGetRenderTargets(1, &rs.m_spOldRT, &rs.m_spOldStencil);
+            m_shadowMapRenderState.push(rs);
+
+            // Set up depth-only render target
+            m_spContext->OMSetRenderTargets(0, nullptr, m_spSpotShadowDSV[idx]);
+            m_spContext->ClearDepthStencilView(m_spSpotShadowDSV[idx], D3D11_CLEAR_DEPTH, 1.0f, 0);
+
+            D3D11_VIEWPORT shadowVP = {};
+            shadowVP.Width = (float)c_SpotShadowMapSize;
+            shadowVP.Height = (float)c_SpotShadowMapSize;
+            shadowVP.MaxDepth = 1.0f;
+            m_viewport = shadowVP;
+            m_spContext->RSSetViewports(1, &shadowVP);
+
+            // Create shadow camera aligned to spot light
+            auto spShadowCamera = CreateCamera(true);
+            // Compute an up vector that isn't parallel to lightDir
+            Vector3 up(0.0f, 1.0f, 0.0f);
+            if (abs(lightDir.y) > 0.99f)
+                up = Vector3(1.0f, 0.0f, 0.0f);
+            spShadowCamera->SetPosition(lightPos, lightDir, up);
+            spShadowCamera->SetParams(fov, 1.0f, 0.1f, lightRange);
+            this->SetCamera(spShadowCamera);
+
+            // Store view-projection matrix for shader
+            DirectX::XMMATRIX viewMat = spShadowCamera->GetView();
+            DirectX::XMMATRIX projMat = spShadowCamera->GetProjection();
+            m_spotShadowViewProj[idx] = DirectX::XMMatrixMultiply(viewMat, projMat);
+
+            // Render shadow-casting objects
+            for (size_t j = 0; j < m_singleObjs.size(); j++)
+            {
+                if (m_singleObjs[j]->InPass(pass))
+                    m_singleObjs[j]->Render(this, m_lights, m_spRenderCtx);
+            }
+
+            // Restore state
+            ShadowMapRenderState rsPop = m_shadowMapRenderState.top();
+            this->SetCamera(rsPop.m_spOldCamera);
+            m_viewport = rsPop.m_viewport;
+            m_spContext->RSSetViewports(1, &m_viewport);
+            m_shadowMapRenderState.pop();
+            m_spContext->OMSetRenderTargets(1, &rsPop.m_spOldRT.p, rsPop.m_spOldStencil);
+
+            m_numSpotShadowLights++;
+        }
+    }
+
+    //**********************************************************************
     // Method: GenerateIBLMaps
     // Generates irradiance and pre-filtered specular cubemaps from the
     // current environment map for image-based lighting.
@@ -2336,7 +2536,9 @@ namespace Caustic
         float intensity;
         int type;
         int shadowIndex;
-        float pad;
+        float innerAngle;  // spot inner cone angle in degrees
+        float outerAngle;  // spot outer cone angle in degrees
+        float pad[3];
     };
 
     //**********************************************************************
@@ -2387,7 +2589,15 @@ namespace Caustic
             lightData[i].intensity = m_lights[i]->GetIntensity();
             lightData[i].type = (int)m_lights[i]->GetType();
             lightData[i].shadowIndex = m_lights[i]->GetCastsShadows() ? i : -1;
-            lightData[i].pad = 0.0f;
+            lightData[i].innerAngle = 0.0f;
+            lightData[i].outerAngle = 0.0f;
+            if (m_lights[i]->GetType() == ELightType::SpotLight)
+            {
+                auto angles = dynamic_cast<ISpotLight*>(m_lights[i].p)->GetAngles();
+                lightData[i].innerAngle = angles.x;
+                lightData[i].outerAngle = angles.y;
+            }
+            lightData[i].pad[0] = lightData[i].pad[1] = lightData[i].pad[2] = 0.0f;
         }
         m_spLightBuffer->CopyFromCPU(this, (uint8_t*)lightData.data());
 

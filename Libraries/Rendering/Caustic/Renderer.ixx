@@ -310,6 +310,14 @@ export namespace Caustic
         CRefObj<ITexture> m_spPointShadowCubemap[c_MaxPointShadowLights];
         int m_numPointShadowLights;
 
+        // Spot-light shadow maps
+        static const int c_MaxSpotShadowLights = 4;
+        static const int c_SpotShadowMapSize = 1024;
+        CRefObj<ITexture> m_spSpotShadowMap[c_MaxSpotShadowLights];
+        CComPtr<ID3D11DepthStencilView> m_spSpotShadowDSV[c_MaxSpotShadowLights];
+        DirectX::XMMATRIX m_spotShadowViewProj[c_MaxSpotShadowLights];
+        int m_numSpotShadowLights;
+
         // IBL (Image-Based Lighting)
         CRefObj<ITexture> m_spEnvironmentMap;       // User-provided HDR cubemap
         CRefObj<ITexture> m_spIrradianceMap;        // Diffuse irradiance cubemap (32x32)
@@ -349,8 +357,11 @@ export namespace Caustic
         void ComputeCascadeViewProj(ICamera* pCamera, const Vector3& lightDir, float nearSplit, float farSplit, DirectX::XMMATRIX& outViewProj);
         void RunPostProcessing();
         void RenderPointShadows(int pass, std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)> renderCallback);
+        void RenderSpotShadows(int pass, std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)> renderCallback);
         void GenerateIBLMaps();
         void DispatchTileLightCull();
+        bool IsBoxInFrustum(const BBox3& bbox, const DirectX::XMVECTOR frustumPlanes[6]);
+        bool m_frustumCullingEnabled;
     public:
         explicit CRenderer();
         virtual ~CRenderer();
@@ -452,5 +463,6 @@ export namespace Caustic
         }
         virtual void SetTiledLightingEnabled(bool enabled) override { m_tiledLightingEnabled = enabled; }
         virtual void SetSSREnabled(bool enabled) override { m_ssrEnabled = enabled; }
+        virtual void SetFrustumCullingEnabled(bool enabled) override { m_frustumCullingEnabled = enabled; }
     };
 }

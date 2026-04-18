@@ -12,6 +12,7 @@ export module Rendering.Caustic.IRenderable;
 import Base.Core.Core;
 import Base.Core.IRefCount;
 import Base.Math.Vector;
+import Base.Math.BBox;
 import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.IRenderMesh;
 import Rendering.Caustic.IRenderer;
@@ -49,6 +50,18 @@ export namespace Caustic
         // Returns the world position of the object
         //**********************************************************************
         virtual Vector3 GetPos() = 0;
+
+        //**********************************************************************
+        // Method: GetBBox
+        // Returns the world-space axis-aligned bounding box of the object.
+        //
+        // Parameters:
+        // pBBox - receives the bounding box
+        //
+        // Returns:
+        // True if a valid bounding box was returned, false if unknown.
+        //**********************************************************************
+        virtual bool GetBBox(BBox3* pBBox) = 0;
 
         //**********************************************************************
         // Method: Render

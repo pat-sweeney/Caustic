@@ -19,6 +19,7 @@ import Rendering.Caustic.Sampler;
 import Rendering.Caustic.ICamera;
 import Rendering.Caustic.ILight;
 import Rendering.Caustic.IPointLight;
+import Rendering.Caustic.ISpotLight;
 import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.IShaderInfo;
 import Rendering.Caustic.IShader;
@@ -857,6 +858,18 @@ namespace Caustic
             SetParam(L"lightType", i, std::any((Int)lightType), m_psParams);
             int shadowIndex = lights[i]->GetCastsShadows() ? (int)i : -1;
             SetParam(L"lightShadowIndex", i, std::any((Int)shadowIndex), m_psParams);
+            // Upload spot light angles (inner/outer in degrees, 0 for non-spot lights)
+            float innerAngle = 0.0f;
+            float outerAngle = 0.0f;
+            if (lights[i]->GetType() == ELightType::SpotLight)
+            {
+                // GetAngles returns float2(inner, outer) in degrees
+                auto angles = dynamic_cast<ISpotLight*>(lights[i].p)->GetAngles();
+                innerAngle = angles.x;
+                outerAngle = angles.y;
+            }
+            SetParam(L"lightInnerAngle", i, std::any(innerAngle), m_psParams);
+            SetParam(L"lightOuterAngle", i, std::any(outerAngle), m_psParams);
         }
         SetPSParam(L"numLights", std::any((Int)numLights));
     }

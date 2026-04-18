@@ -20,7 +20,9 @@ struct LightData
     float intensity;
     int type;           // LIGHT_TYPE_*
     int shadowIndex;    // -1 = no shadow, 0+ = shadow map index
-    float pad;
+    float innerAngle;   // spot inner cone angle in degrees
+    float outerAngle;   // spot outer cone angle in degrees
+    float3 pad;
 };
 
 struct VSInput

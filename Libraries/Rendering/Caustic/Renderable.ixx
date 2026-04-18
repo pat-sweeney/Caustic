@@ -17,9 +17,11 @@ import Base.Core.RefCount;
 import Base.Core.IRefCount;
 import Base.Core.Event;
 import Base.Core.CritSec;
+import Base.Math.BBox;
 import Rendering.Caustic.Shader;
 import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.IRenderable;
+import Rendering.Caustic.IRenderMesh;
 import Rendering.Caustic.RendererFlags;
 
 //**********************************************************************
@@ -72,6 +74,34 @@ export namespace Caustic
         // IRenderable
         //**********************************************************************
         virtual Vector3 GetPos() override { return Vector3(DirectX::XMVectorGetX(m_xform.r[3]), DirectX::XMVectorGetY(m_xform.r[3]), DirectX::XMVectorGetZ(m_xform.r[3])); }
+        virtual bool GetBBox(BBox3* pBBox) override
+        {
+            if (m_spSubMesh == nullptr || pBBox == nullptr)
+                return false;
+            BBox3 localBBox;
+            m_spSubMesh->GetBBox(&localBBox);
+            if (localBBox.Empty())
+                return false;
+            // Transform the 8 corners of the local AABB to world space
+            Vector3 corners[8] = {
+                Vector3(localBBox.minPt.x, localBBox.minPt.y, localBBox.minPt.z),
+                Vector3(localBBox.maxPt.x, localBBox.minPt.y, localBBox.minPt.z),
+                Vector3(localBBox.minPt.x, localBBox.maxPt.y, localBBox.minPt.z),
+                Vector3(localBBox.maxPt.x, localBBox.maxPt.y, localBBox.minPt.z),
+                Vector3(localBBox.minPt.x, localBBox.minPt.y, localBBox.maxPt.z),
+                Vector3(localBBox.maxPt.x, localBBox.minPt.y, localBBox.maxPt.z),
+                Vector3(localBBox.minPt.x, localBBox.maxPt.y, localBBox.maxPt.z),
+                Vector3(localBBox.maxPt.x, localBBox.maxPt.y, localBBox.maxPt.z)
+            };
+            *pBBox = BBox3();
+            for (int i = 0; i < 8; i++)
+            {
+                DirectX::XMVECTOR v = DirectX::XMVector3Transform(
+                    DirectX::XMVectorSet(corners[i].x, corners[i].y, corners[i].z, 1.0f), m_xform);
+                pBBox->AddPoint(DirectX::XMVectorGetX(v), DirectX::XMVectorGetY(v), DirectX::XMVectorGetZ(v));
+            }
+            return true;
+        }
         virtual void Render(IRenderer* pRenderer, std::vector<CRefObj<ILight>> &lights, IRenderCtx *pRenderCtx);
         virtual void SetTransform(DirectX::XMMATRIX &mat) override { m_xform = mat; }
         virtual DirectX::XMMATRIX &GetTransform() override { return m_xform; }

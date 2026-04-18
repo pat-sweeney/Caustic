@@ -17,6 +17,7 @@ import Base.Core.IRefCount;
 import Base.Core.RefCount;
 import Base.Core.Event;
 import Base.Core.CritSec;
+import Base.Math.BBox;
 import Rendering.Caustic.Renderable;
 import Rendering.Caustic.Shader;
 import Rendering.Caustic.IRenderMaterial;
@@ -80,6 +81,7 @@ export namespace Caustic
         // IRenderable
         //**********************************************************************
         virtual Vector3 GetPos() override { return m_renderable.GetPos(); }
+        virtual bool GetBBox(BBox3* pBBox) override { return m_renderable.GetBBox(pBBox); }
         virtual void Render(IRenderer* pRenderer, std::vector<CRefObj<ILight>>& lights, IRenderCtx* pRenderCtx);
         virtual void SetTransform(DirectX::XMMATRIX& mat) override { m_renderable.SetTransform(mat); }
         virtual DirectX::XMMATRIX& GetTransform() override { return m_renderable.GetTransform(); }

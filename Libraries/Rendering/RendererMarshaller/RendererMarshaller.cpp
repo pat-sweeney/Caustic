@@ -868,4 +868,9 @@ namespace Caustic
     {
         RunOnRenderer([enabled](IRenderer* pRenderer) { pRenderer->SetSSREnabled(enabled); }, false);
     }
+
+    void CRendererMarshaller::SetFrustumCullingEnabled(bool enabled)
+    {
+        RunOnRenderer([enabled](IRenderer* pRenderer) { pRenderer->SetFrustumCullingEnabled(enabled); }, false);
+    }
 }

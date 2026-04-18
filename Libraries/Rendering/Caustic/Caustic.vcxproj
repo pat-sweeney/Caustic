@@ -458,6 +458,9 @@
     <ClCompile Include="ShaderMgr.ixx" />
     <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="SpotLight.ixx" />
+    <ClCompile Include="IAreaLight.ixx" />
+    <ClCompile Include="AreaLight.cpp" />
+    <ClCompile Include="AreaLight.ixx" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Texture.ixx" />
     <ClCompile Include="Trackball.cpp" />

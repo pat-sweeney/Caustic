@@ -563,6 +563,15 @@ export namespace Caustic
         // enabled - whether to enable SSR
         //**********************************************************************
         virtual void SetSSREnabled(bool enabled) = 0;
+
+        //**********************************************************************
+        // Method: SetFrustumCullingEnabled
+        // Enables or disables view-frustum culling of renderable objects.
+        //
+        // Parameters:
+        // enabled - whether to enable frustum culling
+        //**********************************************************************
+        virtual void SetFrustumCullingEnabled(bool enabled) = 0;
     };
 
     //**********************************************************************

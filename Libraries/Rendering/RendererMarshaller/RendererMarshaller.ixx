@@ -177,5 +177,6 @@ export namespace Caustic
         virtual void SetEnvironmentMap(ITexture* pCubemap) override;
         virtual void SetTiledLightingEnabled(bool enabled) override;
         virtual void SetSSREnabled(bool enabled) override;
+        virtual void SetFrustumCullingEnabled(bool enabled) override;
     };
 }
