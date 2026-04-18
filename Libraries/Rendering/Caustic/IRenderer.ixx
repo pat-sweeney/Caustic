@@ -598,6 +598,22 @@ export namespace Caustic
             float scattering, float maxDistance, float startHeight) = 0;
 
         //**********************************************************************
+        // Method: SetSSSEnabled
+        // Enables or disables screen-space subsurface scattering.
+        //**********************************************************************
+        virtual void SetSSSEnabled(bool enabled) = 0;
+
+        //**********************************************************************
+        // Method: SetSSSParams
+        // Configures SSS parameters.
+        //
+        // Parameters:
+        // width - global scattering radius scale multiplier
+        // color - global SSS scattering tint (e.g. reddish for skin)
+        //**********************************************************************
+        virtual void SetSSSParams(float width, FRGBColor& color) = 0;
+
+        //**********************************************************************
         // Method: AddDecal
         // Adds a projected decal to the scene.
         //

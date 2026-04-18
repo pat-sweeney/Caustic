@@ -76,6 +76,8 @@ cbuffer PS_CONSTANT_BUFFER
     float4 areaLightCorners[16];       // 4 corners per light, up to 4 lights (corners[lightIdx*4+cornerIdx])
     float4 areaLightColor[4];          // color.rgb for each area light
     float4 areaLightIntensity[4];      // intensity.x for each area light
+    float sssStrength;                  // SSS scattering radius (0 = no SSS)
+    float3 sssPad;                      // padding to 16-byte alignment
 };
 
 //**********************************************************************
@@ -177,7 +179,6 @@ float ComputeSpotShadow(float3 fragPosWS, int shadowIdx)
         return 1.0;
     float4 fragPosLightSpace = mul(float4(fragPosWS, 1.0), spotShadowViewProj[shadowIdx]);
     float3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
-    // Map from NDC [-1,1] to [0,1] UV space
     float2 shadowUV = projCoords.xy * 0.5 + 0.5;
     shadowUV.y = 1.0 - shadowUV.y;
     if (shadowUV.x < 0.0 || shadowUV.x > 1.0 || shadowUV.y < 0.0 || shadowUV.y > 1.0)
@@ -186,7 +187,16 @@ float ComputeSpotShadow(float3 fragPosWS, int shadowIdx)
     if (currentDepth > 1.0)
         return 1.0;
     float bias = 0.002;
-    float closestDepth = spotShadowMap[shadowIdx].Sample(pointShadowSampler, shadowUV).r;
+    // Use switch to avoid dynamic texture array indexing (FXC limitation)
+    float closestDepth = 0.0;
+    switch (shadowIdx)
+    {
+        case 0: closestDepth = spotShadowMap[0].Sample(pointShadowSampler, shadowUV).r; break;
+        case 1: closestDepth = spotShadowMap[1].Sample(pointShadowSampler, shadowUV).r; break;
+        case 2: closestDepth = spotShadowMap[2].Sample(pointShadowSampler, shadowUV).r; break;
+        case 3: closestDepth = spotShadowMap[3].Sample(pointShadowSampler, shadowUV).r; break;
+        default: return 1.0;
+    }
     return (currentDepth - bias > closestDepth) ? 0.3 : 1.0;
 }
 
@@ -308,6 +318,7 @@ struct PSOutput
 {
     float4 color : SV_Target0;
     float4 normal : SV_Target1;  // View-space normal (xy), roughness (z), metallic (w)
+    float  sss : SV_Target2;    // SSS scattering radius (0 = no SSS)
 };
 
 //**********************************************************************
@@ -366,9 +377,10 @@ PSOutput PS(VSOutput p)
         uint baseOffset = tileIndex * (32 + 1); // MAX_TILE_LIGHTS + 1
         uint tileLightCount = tileLightData[baseOffset];
 
-        [loop]
-        for (uint ti = 0; ti < tileLightCount; ti++)
+        for (uint ti = 0; ti < 32u; ti++)
         {
+            if (ti >= tileLightCount)
+                break;
             uint li = tileLightData[baseOffset + 1 + ti];
             LightData light = lightBuffer[li];
 
@@ -527,6 +539,9 @@ PSOutput PS(VSOutput p)
     // View-space normal for SSR
     float3 normalVS = normalize(mul(float4(N, 0.0), view).xyz);
     output.normal = float4(normalVS.xy * 0.5 + 0.5, rough, met);
+
+    // SSS mask: write scattering radius for SSS-enabled materials
+    output.sss = sssStrength;
 
     return output;
 }

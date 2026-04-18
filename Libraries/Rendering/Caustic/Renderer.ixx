@@ -366,6 +366,14 @@ export namespace Caustic
         std::vector<CRefObj<IParticleSystem>> m_particleSystems;
         std::chrono::high_resolution_clock::time_point m_lastFrameTime;
         bool m_hasLastFrameTime = false;
+
+        // Screen-space subsurface scattering
+        CRefObj<IShader> m_spSSSBlurShader;
+        CComPtr<ID3D11RenderTargetView> m_spSSSMaskRTV;
+        CRefObj<ITexture> m_spSSSMaskTextureObj;
+        bool m_sssEnabled;
+        float m_sssWidth;
+        FRGBColor m_sssColor;
         CComPtr<ID3D11BlendState> m_spDecalBlendState;
         CComPtr<ID3D11RasterizerState> m_spDecalRastState;
         CRefObj<ITexture> m_spDepthCopy;            // Copy of depth for SRV during decal pass
@@ -506,6 +514,12 @@ export namespace Caustic
             m_fogScattering = scattering;
             m_fogMaxDistance = maxDistance;
             m_fogStartHeight = startHeight;
+        }
+        virtual void SetSSSEnabled(bool enabled) override { m_sssEnabled = enabled; }
+        virtual void SetSSSParams(float width, FRGBColor& color) override
+        {
+            m_sssWidth = width;
+            m_sssColor = color;
         }
         virtual void AddDecal(IDecal* pDecal) override { m_decals.push_back(CRefObj<IDecal>(pDecal)); }
         virtual void RemoveDecal(IDecal* pDecal) override

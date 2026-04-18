@@ -184,6 +184,8 @@ export namespace Caustic
         virtual void SetFogEnabled(bool enabled) override;
         virtual void SetFogParams(float density, FRGBColor& color, float heightFalloff,
             float scattering, float maxDistance, float startHeight) override;
+        virtual void SetSSSEnabled(bool enabled) override;
+        virtual void SetSSSParams(float width, FRGBColor& color) override;
         virtual void AddDecal(IDecal* pDecal) override;
         virtual void RemoveDecal(IDecal* pDecal) override;
         virtual void AddParticleSystem(IParticleSystem* pParticleSystem) override;

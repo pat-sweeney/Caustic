@@ -896,6 +896,20 @@ namespace Caustic
         RunOnRenderer([spDecal](IRenderer* pRenderer) { pRenderer->AddDecal(spDecal.p); }, false);
     }
 
+    void CRendererMarshaller::SetSSSEnabled(bool enabled)
+    {
+        RunOnRenderer([enabled](IRenderer* pRenderer) { pRenderer->SetSSSEnabled(enabled); }, false);
+    }
+
+    void CRendererMarshaller::SetSSSParams(float width, FRGBColor& color)
+    {
+        FRGBColor c = color;
+        RunOnRenderer([width, c](IRenderer* pRenderer) {
+            FRGBColor localColor = c;
+            pRenderer->SetSSSParams(width, localColor);
+        }, false);
+    }
+
     void CRendererMarshaller::RemoveDecal(IDecal* pDecal)
     {
         CRefObj<IDecal> spDecal(pDecal);

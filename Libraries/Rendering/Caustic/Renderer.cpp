@@ -68,7 +68,10 @@ namespace Caustic
         m_fogHeightFalloff(0.1f),
         m_fogScattering(0.3f),
         m_fogMaxDistance(200.0f),
-        m_fogStartHeight(0.0f)
+        m_fogStartHeight(0.0f),
+        m_sssEnabled(false),
+        m_sssWidth(1.0f),
+        m_sssColor(1.0f, 0.8f, 0.6f)
     {
         m_freezeEvent = CreateEvent(nullptr, true, false, nullptr);
         m_freeze = 0;
@@ -152,6 +155,20 @@ namespace Caustic
             CComPtr<ID3D11ShaderResourceView> spDepthCopySRV;
             CT(m_spDevice->CreateShaderResourceView(spDepthCopyTex, NULL, &spDepthCopySRV));
             m_spDepthCopy = CRefObj<ITexture>(new CTexture(spDepthCopyTex, spDepthCopySRV));
+        }
+
+        // Create SSS mask render target (R16_FLOAT for per-pixel scattering radius)
+        m_spSSSMaskRTV = nullptr;
+        m_spSSSMaskTextureObj = nullptr;
+        {
+            CComPtr<ID3D11Texture2D> spSSSTex;
+            CD3D11_TEXTURE2D_DESC sssDesc(DXGI_FORMAT_R16_FLOAT, m_BBDesc.Width, m_BBDesc.Height,
+                1, 1, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
+            CT(m_spDevice->CreateTexture2D(&sssDesc, NULL, &spSSSTex));
+            CT(m_spDevice->CreateRenderTargetView(spSSSTex, NULL, &m_spSSSMaskRTV));
+            CComPtr<ID3D11ShaderResourceView> spSSSSRV;
+            CT(m_spDevice->CreateShaderResourceView(spSSSTex, NULL, &spSSSSRV));
+            m_spSSSMaskTextureObj = CRefObj<ITexture>(new CTexture(spSSSTex, spSSSSRV));
         }
     }
 
@@ -259,6 +276,7 @@ namespace Caustic
         try { m_spFogShader = m_spShaderMgr->FindShader(L"VolumetricFog"); } catch (...) {}
         try { m_spFogCompositeShader = m_spShaderMgr->FindShader(L"FogComposite"); } catch (...) {}
         try { m_spDecalShader = m_spShaderMgr->FindShader(L"Decal"); } catch (...) {}
+        try { m_spSSSBlurShader = m_spShaderMgr->FindShader(L"SSSBlur"); } catch (...) {}
         m_tiledLightingEnabled = false;
         m_ssrEnabled = false;
 
@@ -1492,13 +1510,35 @@ namespace Caustic
 
         m_spContext->OMSetRenderTargets(1, &pSceneRTV, pStencilView);
 
-        // Set up MRT for SSR normal buffer if enabled
-        if (m_ssrEnabled && m_spNormalRTV != nullptr)
+        // Set up MRT: bind normal buffer (for SSR) and/or SSS mask as needed
+        bool needNormal = m_ssrEnabled && m_spNormalRTV != nullptr;
+        bool needSSS = m_sssEnabled && m_spSSSMaskRTV != nullptr;
+        if (needNormal || needSSS)
         {
-            FLOAT blackNorm[4] = { 0.5f, 0.5f, 0.0f, 0.0f };
-            m_spContext->ClearRenderTargetView(m_spNormalRTV, blackNorm);
-            ID3D11RenderTargetView* rtvs[2] = { pSceneRTV, m_spNormalRTV };
-            m_spContext->OMSetRenderTargets(2, rtvs, pStencilView);
+            if (needNormal)
+            {
+                FLOAT blackNorm[4] = { 0.5f, 0.5f, 0.0f, 0.0f };
+                m_spContext->ClearRenderTargetView(m_spNormalRTV, blackNorm);
+            }
+            if (needSSS)
+            {
+                FLOAT zero[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+                m_spContext->ClearRenderTargetView(m_spSSSMaskRTV, zero);
+            }
+
+            ID3D11RenderTargetView* rtvs[3] = { pSceneRTV, nullptr, nullptr };
+            int mrtCount = 1;
+            if (needNormal)
+            {
+                rtvs[1] = m_spNormalRTV;
+                mrtCount = 2;
+            }
+            if (needSSS)
+            {
+                rtvs[2] = m_spSSSMaskRTV;
+                mrtCount = 3;
+            }
+            m_spContext->OMSetRenderTargets(mrtCount, rtvs, pStencilView);
         }
 
         // Generate IBL maps if environment map changed
@@ -2212,6 +2252,70 @@ namespace Caustic
 
             pCurrentTex = m_spPostProcessTexObj[pingPongIndex];
             pingPongIndex = 1 - pingPongIndex;
+#ifdef _DEBUG
+            spCtx2->EndEvent();
+#endif
+        }
+
+        //**********************************************************************
+        // Pass: Screen-Space Subsurface Scattering (separable H+V blur)
+        //**********************************************************************
+        if (m_sssEnabled && m_spSSSBlurShader != nullptr && m_spSSSMaskTextureObj != nullptr)
+        {
+#ifdef _DEBUG
+            spCtx2->BeginEventInt(L"SSSSS", 0);
+#endif
+            // Compute projection scale for world-to-pixel conversion
+            DirectX::XMFLOAT4X4 sssProjF;
+            DirectX::XMStoreFloat4x4(&sssProjF, GetCamera()->GetProjection());
+            float projScaleVal = (float)m_BBDesc.Height * sssProjF._22 * 0.5f;
+
+            // Extract near/far from projection matrix
+            float sssNear = -sssProjF._43 / sssProjF._33;
+            float sssFar = sssProjF._43 / (1.0f - sssProjF._33);
+            if (sssNear <= 0.0f) sssNear = 0.1f;
+            if (sssFar <= sssNear) sssFar = 1000.0f;
+
+            // Two-pass separable blur: horizontal then vertical
+            for (int sssPass = 0; sssPass < 2; sssPass++)
+            {
+                m_spContext->OMSetRenderTargets(1, &m_spPostProcessRTV[pingPongIndex].p, nullptr);
+                FLOAT black[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+                m_spContext->ClearRenderTargetView(m_spPostProcessRTV[pingPongIndex], black);
+
+                D3D11_VIEWPORT ppVP = {};
+                ppVP.Width = (float)m_BBDesc.Width;
+                ppVP.Height = (float)m_BBDesc.Height;
+                ppVP.MaxDepth = 1.0f;
+                m_spContext->RSSetViewports(1, &ppVP);
+
+                m_spSSSBlurShader->SetPSParam(L"sceneTexture", std::any(pCurrentTex));
+                m_spSSSBlurShader->SetPSParam(L"sssTexture", std::any(m_spSSSMaskTextureObj));
+                m_spSSSBlurShader->SetPSParam(L"depthTexture", std::any(m_spDepthTextureObj));
+                m_spSSSBlurShader->SetPSParamFloat(L"screenWidth", (float)m_BBDesc.Width);
+                m_spSSSBlurShader->SetPSParamFloat(L"screenHeight", (float)m_BBDesc.Height);
+                m_spSSSBlurShader->SetPSParamFloat(L"dirX", (sssPass == 0) ? 1.0f : 0.0f);
+                m_spSSSBlurShader->SetPSParamFloat(L"dirY", (sssPass == 0) ? 0.0f : 1.0f);
+                m_spSSSBlurShader->SetPSParamFloat(L"sssWidth", m_sssWidth);
+                m_spSSSBlurShader->SetPSParamFloat(L"projScale", projScaleVal);
+                m_spSSSBlurShader->SetPSParamFloat(L"depthThreshold", 0.05f);
+                m_spSSSBlurShader->SetPSParamFloat(L"sssColorR", m_sssColor.r);
+                m_spSSSBlurShader->SetPSParamFloat(L"sssColorG", m_sssColor.g);
+                m_spSSSBlurShader->SetPSParamFloat(L"sssColorB", m_sssColor.b);
+                m_spSSSBlurShader->SetPSParamFloat(L"nearPlane", sssNear);
+                m_spSSSBlurShader->SetPSParamFloat(L"farPlane", sssFar);
+                m_spSSSBlurShader->SetVSParamFloat(L"minu", 0.0f);
+                m_spSSSBlurShader->SetVSParamFloat(L"minv", 0.0f);
+                m_spSSSBlurShader->SetVSParamFloat(L"maxu", 1.0f);
+                m_spSSSBlurShader->SetVSParamFloat(L"maxv", 1.0f);
+
+                m_spSSSBlurShader->BeginRender(this, nullptr, emptyLights, nullptr);
+                m_spContext->DrawIndexed(6, 0, 0);
+                m_spSSSBlurShader->EndRender(this);
+
+                pCurrentTex = m_spPostProcessTexObj[pingPongIndex];
+                pingPongIndex = 1 - pingPongIndex;
+            }
 #ifdef _DEBUG
             spCtx2->EndEvent();
 #endif

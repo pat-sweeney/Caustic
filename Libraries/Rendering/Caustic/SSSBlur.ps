@@ -1,0 +1,143 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2026
+// Licensed under the MIT license.
+// See file LICENSE for details.
+// File: SSSBlur.ps
+//
+// Screen-space subsurface scattering blur using Burley normalized
+// diffusion profile. Separable: run horizontal then vertical.
+// Depth-aware rejection prevents bleeding across depth discontinuities.
+// Mask-aware: only blurs pixels marked with SSS (sssStrength > 0).
+//**********************************************************************
+#include "defs.h"
+
+Texture2D sceneTexture : register(t0);
+SamplerState sceneSampler : register(s0);
+Texture2D sssTexture : register(t1);     // R16_FLOAT SSS mask (scattering radius)
+SamplerState sssSampler : register(s1);
+Texture2D depthTexture : register(t2);
+SamplerState depthSampler : register(s2);
+
+cbuffer PS_CONSTANT_BUFFER
+{
+    float screenWidth;
+    float screenHeight;
+    float dirX;          // 1 for horizontal pass, 0 for vertical
+    float dirY;          // 0 for horizontal pass, 1 for vertical
+    float sssWidth;      // global scattering scale multiplier
+    float projScale;     // screenHeight * proj[1][1] / 2 for world->pixel conversion
+    float depthThreshold; // depth difference threshold for rejection
+    float sssColorR;     // global SSS tint
+    float sssColorG;
+    float sssColorB;
+    float nearPlane;
+    float farPlane;
+};
+
+//**********************************************************************
+// Linearize a hardware depth value [0,1] to view-space Z
+//**********************************************************************
+float LinearizeDepth(float hwDepth)
+{
+    // For a standard perspective projection where depth buffer stores
+    // z_ndc = (far * z - far * near) / (z * (far - near))
+    // Solving for z: z = near * far / (far - hwDepth * (far - near))
+    return nearPlane * farPlane / (farPlane - hwDepth * (farPlane - nearPlane));
+}
+
+//**********************************************************************
+// Burley normalized diffusion profile R(r)
+// Two-term exponential approximation of the diffuse reflectance profile.
+// r is the distance normalized by the scattering radius.
+//**********************************************************************
+float BurleyProfile(float r)
+{
+    // R(r) = A * exp(-r / d) + B * exp(-r / (3*d))
+    // where d = 1, A = 0.233, B = 0.467 (normalized so integral = 1)
+    float a = exp(-r);
+    float b = exp(-r / 3.0);
+    return 0.233 * a + 0.467 * b;
+}
+
+struct PSInput
+{
+    float4 posPS : SV_POSITION;
+    float2 uvs : TEXCOORD0;
+};
+
+float4 PS(PSInput input) : SV_TARGET
+{
+    float2 uv = input.uvs;
+    float4 centerColor = sceneTexture.Sample(sceneSampler, uv);
+    float centerSSS = sssTexture.Sample(sssSampler, uv).r;
+
+    // If this pixel has no SSS, pass through unchanged
+    if (centerSSS <= 0.0)
+        return centerColor;
+
+    float centerDepth = depthTexture.Sample(depthSampler, uv).r;
+    float centerLinZ = LinearizeDepth(centerDepth);
+
+    // Compute kernel radius in pixels from world-space scattering radius
+    float worldRadius = centerSSS * sssWidth;
+    float pixelRadius = projScale * worldRadius / centerLinZ;
+    pixelRadius = clamp(pixelRadius, 1.0, 64.0); // clamp to reasonable range
+
+    // Texel step in the blur direction
+    float2 step = float2(dirX / screenWidth, dirY / screenHeight);
+
+    // Accumulate weighted samples using Burley profile
+    float3 colorSum = centerColor.rgb * BurleyProfile(0.0);
+    float weightSum = BurleyProfile(0.0);
+
+    static const int MAX_SAMPLES = 17;
+    int nSamples = min((int)pixelRadius, MAX_SAMPLES);
+
+    [loop]
+    for (int i = 1; i <= nSamples; i++)
+    {
+        float offset = (float)i;
+        float normalizedDist = offset / pixelRadius;
+
+        // Skip samples outside the profile's meaningful range
+        if (normalizedDist > 3.0)
+            break;
+
+        float w = BurleyProfile(normalizedDist);
+
+        // Sample in both directions along the blur axis
+        [unroll]
+        for (int sign = -1; sign <= 1; sign += 2)
+        {
+            float2 sampleUV = uv + step * offset * (float)sign;
+
+            // Bounds check
+            if (sampleUV.x < 0.0 || sampleUV.x > 1.0 || sampleUV.y < 0.0 || sampleUV.y > 1.0)
+                continue;
+
+            // Depth-aware rejection: skip samples at very different depths
+            float sampleDepth = depthTexture.Sample(depthSampler, sampleUV).r;
+            float sampleLinZ = LinearizeDepth(sampleDepth);
+            float depthDiff = abs(sampleLinZ - centerLinZ) / centerLinZ;
+            if (depthDiff > depthThreshold)
+                continue;
+
+            // Mask-aware: only include neighbors that also have SSS
+            float sampleSSS = sssTexture.Sample(sssSampler, sampleUV).r;
+            if (sampleSSS <= 0.0)
+                continue;
+
+            float3 sampleColor = sceneTexture.Sample(sceneSampler, sampleUV).rgb;
+            colorSum += sampleColor * w;
+            weightSum += w;
+        }
+    }
+
+    float3 blurred = colorSum / weightSum;
+
+    // Apply global SSS color tint (subtle tint toward scattering color)
+    float3 sssColor = float3(sssColorR, sssColorG, sssColorB);
+    blurred *= sssColor;
+
+    return float4(blurred, centerColor.a);
+}

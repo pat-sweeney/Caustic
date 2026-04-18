@@ -83,6 +83,7 @@ namespace Caustic
         spShader->SetPSParam(L"hasMetallicRoughnessTexture", std::any(0.0f));
         spShader->SetPSParam(L"hasNormalTexture", std::any(0.0f));
         spShader->SetPSParam(L"hasAOTexture", std::any(0.0f));
+        spShader->SetPSParam(L"sssStrength", std::any(0.0f));
         
         if (m_spMaterial)
         {
