@@ -17,6 +17,7 @@ module;
 #include <string>
 #include <atlbase.h>
 #include <memory>
+#include <chrono>
 
 module Rendering.Caustic.Renderer;
 import Base.Core.Core;
@@ -34,6 +35,7 @@ import Rendering.Caustic.CausticFactory;
 import Rendering.Caustic.ICausticFactory;
 import Rendering.Caustic.ISpotLight;
 import Rendering.Caustic.IAreaLight;
+import Rendering.Caustic.IParticleSystem;
 import Rendering.Caustic.ICamera;
 import Geometry.Mesh.RenderTypes;
 
@@ -1417,6 +1419,10 @@ namespace Caustic
                 );
                 DrawSceneObjects(pass, renderCallback);
                 m_spContext->OMSetBlendState(spOldBlendState, oldBlendFactor, oldSampleMask);
+
+                // Render particle systems (additive blend, depth test on, depth write off)
+                for (auto& ps : m_particleSystems)
+                    ps->Render(this);
 #ifdef _DEBUG
                 spCtx2->EndEvent();
 #endif
@@ -1500,6 +1506,20 @@ namespace Caustic
         {
             GenerateIBLMaps();
             m_spContext->OMSetRenderTargets(1, &pSceneRTV, pStencilView);
+        }
+
+        // Update particle systems
+        {
+            auto now = std::chrono::high_resolution_clock::now();
+            if (m_hasLastFrameTime)
+            {
+                float dt = std::chrono::duration<float>(now - m_lastFrameTime).count();
+                dt = (dt > 0.1f) ? 0.1f : dt; // clamp to avoid spiral of death
+                for (auto& ps : m_particleSystems)
+                    ps->Update(this, dt);
+            }
+            m_lastFrameTime = now;
+            m_hasLastFrameTime = true;
         }
 
         RenderScene(renderCallback);

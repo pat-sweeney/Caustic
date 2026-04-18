@@ -22,6 +22,7 @@ import Rendering.Caustic.IShaderMgr;
 import Rendering.Caustic.ITexture;
 import Rendering.Caustic.IVideoTexture;
 import Rendering.Caustic.IDecal;
+import Rendering.Caustic.IParticleSystem;
 import Imaging.Color;
 import Rendering.RendererMarshaller.IRendererMarshaller;
 
@@ -185,5 +186,7 @@ export namespace Caustic
             float scattering, float maxDistance, float startHeight) override;
         virtual void AddDecal(IDecal* pDecal) override;
         virtual void RemoveDecal(IDecal* pDecal) override;
+        virtual void AddParticleSystem(IParticleSystem* pParticleSystem) override;
+        virtual void RemoveParticleSystem(IParticleSystem* pParticleSystem) override;
     };
 }

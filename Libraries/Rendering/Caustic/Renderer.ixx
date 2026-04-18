@@ -8,6 +8,7 @@ module;
 #include <any>
 #include <vector>
 #include <stack>
+#include <chrono>
 #include <atlbase.h>
 #include <d3d11.h>
 #include <d3d11_4.h>
@@ -34,6 +35,7 @@ import Rendering.Caustic.IShader;
 import Rendering.Caustic.IShaderInfo;
 import Rendering.Caustic.IShaderMgr;
 import Rendering.Caustic.IDecal;
+import Rendering.Caustic.IParticleSystem;
 import Imaging.Color;
 import Rendering.Caustic.ICamera;
 import Rendering.Caustic.IRenderMaterial;
@@ -359,6 +361,11 @@ export namespace Caustic
         // Decals
         CRefObj<IShader> m_spDecalShader;
         std::vector<CRefObj<IDecal>> m_decals;
+
+        // Particles
+        std::vector<CRefObj<IParticleSystem>> m_particleSystems;
+        std::chrono::high_resolution_clock::time_point m_lastFrameTime;
+        bool m_hasLastFrameTime = false;
         CComPtr<ID3D11BlendState> m_spDecalBlendState;
         CComPtr<ID3D11RasterizerState> m_spDecalRastState;
         CRefObj<ITexture> m_spDepthCopy;            // Copy of depth for SRV during decal pass
@@ -508,6 +515,18 @@ export namespace Caustic
                 if (it->p == pDecal)
                 {
                     m_decals.erase(it);
+                    return;
+                }
+            }
+        }
+        virtual void AddParticleSystem(IParticleSystem* pParticleSystem) override { m_particleSystems.push_back(CRefObj<IParticleSystem>(pParticleSystem)); }
+        virtual void RemoveParticleSystem(IParticleSystem* pParticleSystem) override
+        {
+            for (auto it = m_particleSystems.begin(); it != m_particleSystems.end(); ++it)
+            {
+                if (it->p == pParticleSystem)
+                {
+                    m_particleSystems.erase(it);
                     return;
                 }
             }

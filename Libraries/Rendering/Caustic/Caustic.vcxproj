@@ -412,6 +412,26 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\Libraries\Rendering\Caustic\Decal.ps;$(CausticRoot)\Libraries\Rendering\Caustic\Decal.vs</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\Libraries\Rendering\Caustic\Decal.ps;$(CausticRoot)\Libraries\Rendering\Caustic\Decal.vs</AdditionalInputs>
     </CustomBuild>
+    <CustomBuild Include="ParticleSimulate.xml">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\ParticleSimulate.xml -o $(CausticRoot)\$(Configuration)\ParticleSimulate.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\ParticleSimulate.xml -o $(CausticRoot)\$(Configuration)\ParticleSimulate.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\ParticleSimulate.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\ParticleSimulate.shi</Outputs>
+      <SubType>Designer</SubType>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\Libraries\Rendering\Caustic\ParticleSimulate.cs</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\Libraries\Rendering\Caustic\ParticleSimulate.cs</AdditionalInputs>
+    </CustomBuild>
+    <CustomBuild Include="ParticleBillboard.xml">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\ParticleBillboard.xml -o $(CausticRoot)\$(Configuration)\ParticleBillboard.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\ParticleBillboard.xml -o $(CausticRoot)\$(Configuration)\ParticleBillboard.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\ParticleBillboard.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\ParticleBillboard.shi</Outputs>
+      <SubType>Designer</SubType>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\Libraries\Rendering\Caustic\ParticleBillboard.vs;$(CausticRoot)\Libraries\Rendering\Caustic\ParticleBillboard.ps</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\Libraries\Rendering\Caustic\ParticleBillboard.vs;$(CausticRoot)\Libraries\Rendering\Caustic\ParticleBillboard.ps</AdditionalInputs>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="defs.h" />
@@ -494,6 +514,9 @@
     <ClCompile Include="IDecal.ixx" />
     <ClCompile Include="Decal.cpp" />
     <ClCompile Include="Decal.ixx" />
+    <ClCompile Include="IParticleSystem.ixx" />
+    <ClCompile Include="ParticleSystem.ixx" />
+    <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Texture.ixx" />
     <ClCompile Include="Trackball.cpp" />

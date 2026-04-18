@@ -44,6 +44,7 @@ export namespace Caustic
     struct IShaderMgr;
     struct ILight;
     struct IDecal;
+    struct IParticleSystem;
     struct ITexture;
 
     //**********************************************************************
@@ -613,6 +614,24 @@ export namespace Caustic
         // pDecal - the decal to remove
         //**********************************************************************
         virtual void RemoveDecal(IDecal* pDecal) = 0;
+
+        //**********************************************************************
+        // Method: AddParticleSystem
+        // Adds a GPU particle system to the scene.
+        //
+        // Parameters:
+        // pParticleSystem - the particle system to add
+        //**********************************************************************
+        virtual void AddParticleSystem(IParticleSystem* pParticleSystem) = 0;
+
+        //**********************************************************************
+        // Method: RemoveParticleSystem
+        // Removes a GPU particle system from the scene.
+        //
+        // Parameters:
+        // pParticleSystem - the particle system to remove
+        //**********************************************************************
+        virtual void RemoveParticleSystem(IParticleSystem* pParticleSystem) = 0;
     };
 
     //**********************************************************************

@@ -1,0 +1,30 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2026
+// Licensed under the MIT license.
+// See file LICENSE for details.
+// File: ParticleBillboard.ps
+//
+// Pixel shader for GPU particle billboard rendering. Outputs the
+// interpolated particle color with a soft circular falloff based
+// on distance from the billboard center.
+//**********************************************************************
+
+struct PSInput
+{
+    float4 posPS  : SV_POSITION;
+    float4 color  : COLOR0;
+    float2 uvs    : TEXCOORD0;
+};
+
+float4 PS(PSInput input) : SV_TARGET
+{
+    // Soft circular falloff from center
+    float2 centered = input.uvs - 0.5;
+    float dist = length(centered) * 2.0; // 0 at center, 1 at edge
+    float falloff = saturate(1.0 - dist * dist);
+
+    float4 result = input.color;
+    result.a *= falloff;
+
+    return result;
+}

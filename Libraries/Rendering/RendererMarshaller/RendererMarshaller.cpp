@@ -25,6 +25,7 @@ import Rendering.Caustic.ICamera;
 import Rendering.Caustic.ITexture;
 import Rendering.Caustic.IVideoTexture;
 import Rendering.RendererMarshaller.IRendererMarshaller;
+import Rendering.Caustic.IParticleSystem;
 import Rendering.SceneGraph.ISceneGraph;
 
 //**********************************************************************
@@ -899,5 +900,17 @@ namespace Caustic
     {
         CRefObj<IDecal> spDecal(pDecal);
         RunOnRenderer([spDecal](IRenderer* pRenderer) { pRenderer->RemoveDecal(spDecal.p); }, false);
+    }
+
+    void CRendererMarshaller::AddParticleSystem(IParticleSystem* pParticleSystem)
+    {
+        CRefObj<IParticleSystem> spPS(pParticleSystem);
+        RunOnRenderer([spPS](IRenderer* pRenderer) { pRenderer->AddParticleSystem(spPS.p); }, false);
+    }
+
+    void CRendererMarshaller::RemoveParticleSystem(IParticleSystem* pParticleSystem)
+    {
+        CRefObj<IParticleSystem> spPS(pParticleSystem);
+        RunOnRenderer([spPS](IRenderer* pRenderer) { pRenderer->RemoveParticleSystem(spPS.p); }, false);
     }
 }
