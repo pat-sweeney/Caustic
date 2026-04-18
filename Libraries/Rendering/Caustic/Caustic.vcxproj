@@ -255,6 +255,17 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\Libraries\Rendering\Caustic\TexturedWithShadow.ps</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\Libraries\Rendering\Caustic\TexturedWithShadow.ps</AdditionalInputs>
     </CustomBuild>
+    <CustomBuild Include="PBR.xml">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\PBR.xml -o $(CausticRoot)\$(Configuration)\PBR.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\PBR.xml -o $(CausticRoot)\$(Configuration)\PBR.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\PBR.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\PBR.shi</Outputs>
+      <SubType>Designer</SubType>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\Libraries\Rendering\Caustic\PBR.ps</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\Libraries\Rendering\Caustic\PBR.ps</AdditionalInputs>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="defs.h" />
@@ -364,6 +375,8 @@
     <None Include="ObjShader.ps" />
     <None Include="TexturedWithShadow.ps" />
     <None Include="TexturedWithShadow.vs" />
+    <None Include="PBR.ps" />
+    <None Include="PBR.vs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Tools\ParseShader\ParseShader.vcxproj">

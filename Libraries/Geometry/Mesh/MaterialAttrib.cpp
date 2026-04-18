@@ -51,6 +51,21 @@ namespace Caustic
         return CRefObj<IMaterialAttrib>(new CMaterialAttrib());
     }
 
+    //**********************************************************************
+    // Function: CreatePBRMaterialAttrib
+    // Creates a PBR material with metallic-roughness properties.
+    //**********************************************************************
+    CRefObj<IMaterialAttrib> CreatePBRMaterialAttrib(FRGBColor albedo, float metallic, float roughness, float ao)
+    {
+        std::unique_ptr<CMaterialAttrib> spMaterial(new CMaterialAttrib());
+        spMaterial->SetColor(L"albedo", albedo);
+        spMaterial->SetScalar(L"metallic", metallic);
+        spMaterial->SetScalar(L"roughness", roughness);
+        spMaterial->SetScalar(L"ao", ao);
+        spMaterial->SetScalar(L"pbrModel", 1.0f);
+        return CRefObj<IMaterialAttrib>(spMaterial.release());
+    }
+
     FRGBColor CMaterialAttrib::GetColor(const wchar_t* pName)
     {
         std::map<std::wstring, FRGBAColor>::iterator it = m_colors.find(std::wstring(pName));

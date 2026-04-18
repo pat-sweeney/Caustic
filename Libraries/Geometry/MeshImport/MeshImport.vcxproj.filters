@@ -28,5 +28,11 @@
     <ClCompile Include="MeshImportPLY.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MeshImportglTF.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="glTF.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

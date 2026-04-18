@@ -214,7 +214,7 @@ Base/Core  ←── Base/Math
 | `Geometry.Mesh.IMaterialAttrib` | `IMaterialAttrib` | Material properties (colors, textures, scalars) |
 | `Geometry.Mesh.RenderTypes` | `CGeomVertex` | Vertex format for rendering |
 | `Geometry.Mesh.MeshFuncs` | `CreateSphere()`, etc. | Common shape generators |
-| `Geometry.MeshImport` | `MeshImport::LoadObj()`, `LoadPLY()` | File format importers (OBJ, PLY, Lightwave) |
+| `Geometry.MeshImport` | `MeshImport::LoadObj()`, `LoadPLY()`, `LoadglTF()` | File format importers (OBJ, PLY, Lightwave, glTF) |
 | `Geometry.GeomDS.*` | `IKDTree`, `IPath2`, `IPolygon` | Geometric data structures |
 | `Geometry.Rast.Bresenham` | `Bresenham` | Line/circle rasterization |
 
@@ -340,6 +340,40 @@ MeshImport::LoadObj(filename)
   4. Return IMesh with submeshes + materials
 ```
 
+### Mesh Loading Path (glTF example)
+
+```
+MeshImport::LoadglTF(filename)
+  1. Parse .gltf JSON via JSon parser → DOM tree
+  2. Load binary .bin buffer(s) from URI references
+  3. Parse bufferViews and accessors (stride, offset, component type)
+  4. Parse materials:
+     a. pbrMetallicRoughness → baseColorFactor, metallicFactor, roughnessFactor
+     b. Texture references → albedo, metallicRoughness, normal, occlusion maps
+     c. CreatePBRMaterialAttrib() → sets pbrModel=1.0 marker scalar
+  5. Parse mesh primitives:
+     a. Read POSITION, NORMAL, TEXCOORD_0 via accessors → CGeomVertex array
+     b. Read indices → flat face index array
+     c. CreateSubMesh() with materialID linkage
+  6. SetMaterials() on mesh → return IMesh
+```
+
+### PBR Material System
+
+Materials in Caustic use a property-bag model (`IMaterialAttrib`) with named colors, scalars, and textures. PBR extends this without changing the interface:
+
+- **`CreatePBRMaterialAttrib()`** — factory that sets `albedo` (color), `metallic`, `roughness`, `ao` (scalars), and `pbrModel=1.0` (marker scalar)
+- **Shader selection** — `CRenderSubMesh::Render()` checks the `pbrModel` scalar: if > 0 → selects the `PBR` shader, otherwise falls through to Default/Textured logic
+- **PBR shader** (`PBR.ps`) — Cook-Torrance BRDF with:
+  - GGX normal distribution function
+  - Schlick-GGX geometry function (Smith method)
+  - Fresnel-Schlick approximation
+  - Cotangent-frame normal mapping (using screen-space derivatives — no per-vertex tangents needed)
+  - CSM shadow support
+  - Reinhard tone mapping + gamma correction
+- **Texture slots**: albedoTexture (t0), shadowMapTexture (t1), metallicRoughnessTexture (t2), normalTexture (t3), aoTexture (t4)
+- **glTF convention**: metallic-roughness texture packs roughness in G channel, metallic in B channel
+
 ---
 
 ## Shader System
@@ -359,6 +393,7 @@ Shaders are HLSL files compiled by FXC:
 - `Default` — basic rendering
 - `Textured` / `TexturedWithShadow` — textured surfaces
 - `ObjShader` — OBJ file material rendering
+- `PBR` — physically based rendering (Cook-Torrance BRDF, metallic-roughness workflow)
 - `ShadowMap` — shadow map generation
 - `Line` — line rendering
 - `PointCloud` — point cloud rendering

@@ -118,4 +118,23 @@ export namespace Caustic
     // {Link:import Rendering.Caustic.IMaterialAttrib;{Rendering/Caustic/IMaterialAttrib.ixx}}
     //**********************************************************************
     CRefObj<IMaterialAttrib> CreateMaterialAttrib();
+
+    //**********************************************************************
+    // Function: CreatePBRMaterialAttrib
+    // Creates a PBR (Physically Based Rendering) material using the
+    // metallic-roughness workflow.
+    //
+    // Parameters:
+    // albedo - base color of the surface
+    // metallic - metalness value (0 = dielectric, 1 = metal)
+    // roughness - surface roughness (0 = smooth, 1 = rough)
+    // ao - ambient occlusion factor (0 = fully occluded, 1 = no occlusion)
+    //
+    // Returns:
+    // Returns the new PBR material object
+    //
+    // Module:
+    // {Link:import Rendering.Caustic.IMaterialAttrib;{Rendering/Caustic/IMaterialAttrib.ixx}}
+    //**********************************************************************
+    CRefObj<IMaterialAttrib> CreatePBRMaterialAttrib(FRGBColor albedo, float metallic, float roughness, float ao = 1.0f);
 }

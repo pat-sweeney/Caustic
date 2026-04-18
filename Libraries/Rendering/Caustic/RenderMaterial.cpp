@@ -63,7 +63,7 @@ namespace Caustic
 
     void CRenderMaterial::Render(IRenderer* pRenderer, std::vector<CRefObj<ILight>> &lights, IRenderCtx * /*pRenderCtx*/, IShader *spShader)
     {
-        // First make sure defaults are set
+        // Set defaults for Phong shaders
         Float4 vAmbient(0.1f, 0.1f, 0.1f, 0.1f);
         Float4 vDiffuse(0.7f, 0.7f, 0.7f, 1.0f);
         Float4 vSpecular(0.7f, 0.7f, 0.7f, 1.0f);
@@ -73,6 +73,16 @@ namespace Caustic
         spShader->SetPSParam(L"specularColor", std::any(vSpecular));
         spShader->SetPSParam(L"specularExp", std::any(vSpecularExp));
         spShader->SetPSParam(L"transparency", std::any(Float4(transparency, transparency, transparency, transparency)));
+
+        // Set defaults for PBR shader (silently ignored by non-PBR shaders)
+        spShader->SetPSParam(L"albedo", std::any(Float4(0.8f, 0.8f, 0.8f, 1.0f)));
+        spShader->SetPSParam(L"metallic", std::any(0.0f));
+        spShader->SetPSParam(L"roughness", std::any(0.5f));
+        spShader->SetPSParam(L"ao", std::any(1.0f));
+        spShader->SetPSParam(L"hasAlbedoTexture", std::any(0.0f));
+        spShader->SetPSParam(L"hasMetallicRoughnessTexture", std::any(0.0f));
+        spShader->SetPSParam(L"hasNormalTexture", std::any(0.0f));
+        spShader->SetPSParam(L"hasAOTexture", std::any(0.0f));
         
         if (m_spMaterial)
         {
@@ -112,6 +122,16 @@ namespace Caustic
                         spShader->SetPSParam(t.first, std::any(t.second.m_spTexture));
                     if (t.second.m_access == EShaderAccess::Both || t.second.m_access == EShaderAccess::VertexShader)
                         spShader->SetVSParam(t.first, std::any(t.second.m_spTexture));
+
+                    // Set PBR texture presence flags
+                    if (t.first == L"albedoTexture")
+                        spShader->SetPSParam(L"hasAlbedoTexture", std::any(1.0f));
+                    else if (t.first == L"metallicRoughnessTexture")
+                        spShader->SetPSParam(L"hasMetallicRoughnessTexture", std::any(1.0f));
+                    else if (t.first == L"normalTexture")
+                        spShader->SetPSParam(L"hasNormalTexture", std::any(1.0f));
+                    else if (t.first == L"aoTexture")
+                        spShader->SetPSParam(L"hasAOTexture", std::any(1.0f));
                 }
                 if (t.second.m_spSampler && (t.second.m_access == EShaderAccess::Both || t.second.m_access == EShaderAccess::PixelShader))
                     spShader->SetPSParam(t.second.m_samplerName, std::any(CSamplerRef(t.second.m_spSampler)));

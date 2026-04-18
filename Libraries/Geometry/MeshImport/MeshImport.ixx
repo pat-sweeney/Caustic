@@ -15,3 +15,4 @@ import Geometry.Mesh.IMesh;
 export import Geometry.MeshImport.Obj;
 export import Geometry.MeshImport.Lightwave;
 export import Geometry.MeshImport.PLY;
+export import Geometry.MeshImport.glTF;

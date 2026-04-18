@@ -60,8 +60,13 @@ namespace Caustic
             if (spShader == nullptr)
             {
                 auto spMaterialAttrib = (m_spFrontMaterial) ? m_spFrontMaterial->GetMaterial() : nullptr;
-                CRefObj<IImage> spDiffuseTexture = (spMaterialAttrib) ? spMaterialAttrib->GetTexture(L"diffuseTexture") : nullptr;
-                spShader = pRenderer->GetShaderMgr()->FindShader((spDiffuseTexture == nullptr) ? L"Default" : L"Textured");
+                if (spMaterialAttrib && spMaterialAttrib->GetScalar(L"pbrModel") > 0.0f)
+                    spShader = pRenderer->GetShaderMgr()->FindShader(L"PBR");
+                else
+                {
+                    CRefObj<IImage> spDiffuseTexture = (spMaterialAttrib) ? spMaterialAttrib->GetTexture(L"diffuseTexture") : nullptr;
+                    spShader = pRenderer->GetShaderMgr()->FindShader((spDiffuseTexture == nullptr) ? L"Default" : L"Textured");
+                }
             }
         }
         if (spShader)

@@ -1,0 +1,245 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2026
+// Licensed under the MIT license.
+// See file LICENSE for details.
+// File: PBR.ps
+//
+// Pixel shader implementing PBR metallic-roughness workflow using
+// Cook-Torrance BRDF with GGX, Schlick-GGX, and Fresnel-Schlick.
+// Normal mapping uses cotangent-frame reconstruction from screen-space
+// derivatives, avoiding the need for per-vertex tangent vectors.
+//**********************************************************************
+#include "defs.h"
+
+static const float PI = 3.14159265359;
+
+Texture2D albedoTexture : register(t0);
+SamplerState albedoSampler : register(s0);
+Texture2D shadowMapTexture : register(t1);
+SamplerState shadowMapSampler : register(s1);
+Texture2D metallicRoughnessTexture : register(t2);
+SamplerState metallicRoughnessSampler : register(s2);
+Texture2D normalTexture : register(t3);
+SamplerState normalSampler : register(s3);
+Texture2D aoTexture : register(t4);
+SamplerState aoSampler : register(s4);
+
+// Atlas offsets for each cascade in the 2x2 grid
+static const float2 cascadeOffsets[NUM_CASCADES] = {
+    float2(0.0, 0.0), float2(0.5, 0.0),
+    float2(0.0, 0.5), float2(0.5, 0.5)
+};
+
+cbuffer PS_CONSTANT_BUFFER
+{
+    float4 lightPosWS[MAX_LIGHTS];
+    float4 lightColor[MAX_LIGHTS];
+    float4 intensity[MAX_LIGHTS];
+    float4 albedo;
+    float metallic;
+    float roughness;
+    float ao;
+    float pbrModel;
+    matrix viewInv;
+    int numLights;
+    float hasAlbedoTexture;
+    float hasMetallicRoughnessTexture;
+    float hasNormalTexture;
+    float hasAOTexture;
+    float4 cascadeSplitDepths[NUM_CASCADES];
+};
+
+//**********************************************************************
+// Cotangent-frame TBN reconstruction from screen-space derivatives.
+// Avoids the need for per-vertex tangent vectors.
+//**********************************************************************
+float3x3 CotangentFrame(float3 N, float3 p, float2 uv)
+{
+    float3 dp1 = ddx(p);
+    float3 dp2 = ddy(p);
+    float2 duv1 = ddx(uv);
+    float2 duv2 = ddy(uv);
+
+    float3 dp2perp = cross(dp2, N);
+    float3 dp1perp = cross(N, dp1);
+
+    float3 T = dp2perp * duv1.x + dp1perp * duv2.x;
+    float3 B = dp2perp * duv1.y + dp1perp * duv2.y;
+
+    float invmax = rsqrt(max(dot(T, T), dot(B, B)));
+    return float3x3(T * invmax, B * invmax, N);
+}
+
+//**********************************************************************
+// GGX/Trowbridge-Reitz normal distribution function
+//**********************************************************************
+float DistributionGGX(float3 N, float3 H, float roughness)
+{
+    float a = roughness * roughness;
+    float a2 = a * a;
+    float NdotH = max(dot(N, H), 0.0);
+    float NdotH2 = NdotH * NdotH;
+
+    float denom = (NdotH2 * (a2 - 1.0) + 1.0);
+    denom = PI * denom * denom;
+
+    return a2 / max(denom, 0.0000001);
+}
+
+//**********************************************************************
+// Schlick-GGX geometry function (single direction)
+//**********************************************************************
+float GeometrySchlickGGX(float NdotV, float roughness)
+{
+    float r = (roughness + 1.0);
+    float k = (r * r) / 8.0;
+    return NdotV / (NdotV * (1.0 - k) + k);
+}
+
+//**********************************************************************
+// Smith's method combining geometry obstruction and shadowing
+//**********************************************************************
+float GeometrySmith(float3 N, float3 V, float3 L, float roughness)
+{
+    float NdotV = max(dot(N, V), 0.0);
+    float NdotL = max(dot(N, L), 0.0);
+    float ggx2 = GeometrySchlickGGX(NdotV, roughness);
+    float ggx1 = GeometrySchlickGGX(NdotL, roughness);
+    return ggx1 * ggx2;
+}
+
+//**********************************************************************
+// Fresnel-Schlick approximation
+//**********************************************************************
+float3 FresnelSchlick(float cosTheta, float3 F0)
+{
+    return F0 + (1.0 - F0) * pow(saturate(1.0 - cosTheta), 5.0);
+}
+
+//**********************************************************************
+// CSM shadow computation (same algorithm as ObjShader.ps)
+//**********************************************************************
+float ComputeShadowCSM(VSOutput p)
+{
+    int cascade = NUM_CASCADES - 1;
+    for (int i = 0; i < NUM_CASCADES; i++)
+    {
+        if (p.viewDepth < cascadeSplitDepths[i].x)
+        {
+            cascade = i;
+            break;
+        }
+    }
+
+    float4 lightSpacePos = p.cascadePosLS[cascade];
+    float3 projCoords = lightSpacePos.xyz / lightSpacePos.w;
+
+    float2 shadowUV;
+    shadowUV.x = projCoords.x * 0.5 + 0.5;
+    shadowUV.y = -projCoords.y * 0.5 + 0.5;
+
+    if (shadowUV.x < 0.0 || shadowUV.x > 1.0 || shadowUV.y < 0.0 || shadowUV.y > 1.0)
+        return 1.0;
+
+    shadowUV = shadowUV * 0.5 + cascadeOffsets[cascade];
+
+    // PCF 3x3
+    float shadow = 0.0;
+    float bias = 0.002;
+    float fragDepth = projCoords.z;
+    float texelSize = 1.0 / 8192.0;
+
+    [unroll]
+    for (int x = -1; x <= 1; x++)
+    {
+        [unroll]
+        for (int y = -1; y <= 1; y++)
+        {
+            float depth = shadowMapTexture.Sample(shadowMapSampler,
+                shadowUV + float2(x, y) * texelSize).r;
+            shadow += (fragDepth - bias > depth) ? 0.0 : 1.0;
+        }
+    }
+    return shadow / 9.0;
+}
+
+//**********************************************************************
+// PBR pixel shader main
+//**********************************************************************
+float4 PS(VSOutput p) : SV_Target
+{
+    // Sample material properties
+    float3 baseColor = albedo.rgb;
+    if (hasAlbedoTexture > 0.0)
+        baseColor *= albedoTexture.Sample(albedoSampler, p.uvs).rgb;
+
+    float met = metallic;
+    float rough = roughness;
+    if (hasMetallicRoughnessTexture > 0.0)
+    {
+        // glTF convention: roughness in G, metallic in B
+        float4 mr = metallicRoughnessTexture.Sample(metallicRoughnessSampler, p.uvs);
+        rough *= mr.g;
+        met *= mr.b;
+    }
+    rough = max(rough, 0.04); // prevent division issues at roughness=0
+
+    float aoFactor = ao;
+    if (hasAOTexture > 0.0)
+        aoFactor *= aoTexture.Sample(aoSampler, p.uvs).r;
+
+    // Normal mapping via cotangent frame
+    float3 N = normalize(p.normWS);
+    if (hasNormalTexture > 0.0)
+    {
+        float3 tangentNormal = normalTexture.Sample(normalSampler, p.uvs).rgb * 2.0 - 1.0;
+        float3x3 TBN = CotangentFrame(N, p.posWS, p.uvs);
+        N = normalize(mul(tangentNormal, TBN));
+    }
+
+    float3 viewPosWS = mul(float4(0.0f, 0.0f, 0.0f, 1.0f), viewInv).xyz;
+    float3 V = normalize(viewPosWS - p.posWS);
+
+    // Dielectric F0 = 0.04, metals use albedo as F0
+    float3 F0 = lerp(float3(0.04, 0.04, 0.04), baseColor, met);
+
+    // Shadow
+    float shadowFactor = ComputeShadowCSM(p);
+
+    // Accumulate direct lighting
+    float3 Lo = float3(0.0, 0.0, 0.0);
+    for (int i = 0; i < numLights; i++)
+    {
+        float3 L = normalize(lightPosWS[i].xyz - p.posWS);
+        float3 H = normalize(V + L);
+        float distance = length(lightPosWS[i].xyz - p.posWS);
+        float attenuation = intensity[i].x / (distance * distance + 1.0);
+        float3 radiance = lightColor[i].rgb * attenuation;
+
+        // Cook-Torrance BRDF
+        float NDF = DistributionGGX(N, H, rough);
+        float G = GeometrySmith(N, V, L, rough);
+        float3 F = FresnelSchlick(max(dot(H, V), 0.0), F0);
+
+        float3 numerator = NDF * G * F;
+        float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001;
+        float3 specular = numerator / denominator;
+
+        // Energy conservation
+        float3 kS = F;
+        float3 kD = (1.0 - kS) * (1.0 - met);
+
+        float NdotL = max(dot(N, L), 0.0);
+        Lo += (kD * baseColor / PI + specular) * radiance * NdotL * shadowFactor;
+    }
+
+    // Ambient (simple constant, AO applied only here)
+    float3 ambient = float3(0.03, 0.03, 0.03) * baseColor * aoFactor;
+    float3 color = ambient + Lo;
+
+    // HDR tone mapping (Reinhard) and gamma correction
+    color = color / (color + 1.0);
+    color = pow(color, 1.0 / 2.2);
+
+    return float4(color, 1.0);
+}
