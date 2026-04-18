@@ -1,0 +1,91 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2026
+// Licensed under the MIT license.
+// See file LICENSE for details.
+// File: FogComposite.ps
+//
+// Composites volumetric fog over the HDR scene. Uses bilateral
+// depth-aware upsampling when the fog texture is half resolution
+// to prevent halo artifacts at depth discontinuities.
+// Blends: finalColor = sceneColor * transmittance + inscattering
+//**********************************************************************
+
+Texture2D sceneTexture : register(t0);
+SamplerState sceneSampler : register(s0);
+Texture2D fogTexture : register(t1);
+SamplerState fogSampler : register(s1);
+Texture2D depthTexture : register(t2);
+SamplerState depthSampler : register(s2);
+
+struct PSInput
+{
+    float4 pos : SV_POSITION;
+    float2 uvs : TEXCOORD0;
+};
+
+cbuffer PS_CONSTANT_BUFFER
+{
+    float screenWidth;
+    float screenHeight;
+    float fogTexWidth;      // half-res width
+    float fogTexHeight;     // half-res height
+    float depthThreshold;   // bilateral depth threshold
+    float3 pad;
+};
+
+//**********************************************************************
+// Bilateral depth-aware upsample of the half-res fog texture.
+// Samples 4 nearest texels and weights by depth similarity.
+//**********************************************************************
+float4 BilateralUpsample(float2 uv, float fullResDepth)
+{
+    float2 texelSize = float2(1.0 / fogTexWidth, 1.0 / fogTexHeight);
+
+    // 4 bilinear neighbor offsets
+    float2 offsets[4] = {
+        float2(-0.5, -0.5),
+        float2( 0.5, -0.5),
+        float2(-0.5,  0.5),
+        float2( 0.5,  0.5)
+    };
+
+    float4 result = float4(0.0, 0.0, 0.0, 0.0);
+    float totalWeight = 0.0;
+
+    for (int i = 0; i < 4; i++)
+    {
+        float2 sampleUV = uv + offsets[i] * texelSize;
+        float4 fogSample = fogTexture.Sample(fogSampler, sampleUV);
+        float sampleDepth = depthTexture.Sample(depthSampler, sampleUV).r;
+
+        // Weight by depth similarity — reject samples across depth edges
+        float depthDiff = abs(fullResDepth - sampleDepth);
+        float weight = exp(-depthDiff * depthDiff / (depthThreshold * depthThreshold + 0.0001));
+
+        result += fogSample * weight;
+        totalWeight += weight;
+    }
+
+    if (totalWeight > 0.0001)
+        result /= totalWeight;
+    else
+        result = fogTexture.Sample(fogSampler, uv);
+
+    return result;
+}
+
+float4 PS(PSInput p) : SV_TARGET
+{
+    float4 sceneColor = sceneTexture.Sample(sceneSampler, p.uvs);
+    float fullResDepth = depthTexture.Sample(depthSampler, p.uvs).r;
+
+    // Bilateral upsample fog from half-res
+    float4 fog = BilateralUpsample(p.uvs, fullResDepth);
+
+    float3 inscattering = fog.rgb;
+    float transmittance = fog.a;
+
+    // Composite: scene * transmittance + inscattering
+    float3 finalColor = sceneColor.rgb * transmittance + inscattering;
+    return float4(finalColor, sceneColor.a);
+}

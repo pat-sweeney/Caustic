@@ -21,6 +21,8 @@ import Rendering.Caustic.IRenderer;
 import Rendering.Caustic.IShaderMgr;
 import Rendering.Caustic.ITexture;
 import Rendering.Caustic.IVideoTexture;
+import Rendering.Caustic.IDecal;
+import Imaging.Color;
 import Rendering.RendererMarshaller.IRendererMarshaller;
 
 //**********************************************************************
@@ -178,5 +180,10 @@ export namespace Caustic
         virtual void SetTiledLightingEnabled(bool enabled) override;
         virtual void SetSSREnabled(bool enabled) override;
         virtual void SetFrustumCullingEnabled(bool enabled) override;
+        virtual void SetFogEnabled(bool enabled) override;
+        virtual void SetFogParams(float density, FRGBColor& color, float heightFalloff,
+            float scattering, float maxDistance, float startHeight) override;
+        virtual void AddDecal(IDecal* pDecal) override;
+        virtual void RemoveDecal(IDecal* pDecal) override;
     };
 }

@@ -58,7 +58,15 @@ namespace Caustic
         m_bloomThreshold(1.0f),
         m_bloomIntensity(0.5f),
         m_exposure(1.0f),
-        m_frustumCullingEnabled(true)
+        m_frustumCullingEnabled(true),
+        m_fogEnabled(false),
+        m_fogFrameCounter(0),
+        m_fogDensity(0.02f),
+        m_fogColor(0.5f, 0.6f, 0.7f),
+        m_fogHeightFalloff(0.1f),
+        m_fogScattering(0.3f),
+        m_fogMaxDistance(200.0f),
+        m_fogStartHeight(0.0f)
     {
         m_freezeEvent = CreateEvent(nullptr, true, false, nullptr);
         m_freeze = 0;
@@ -115,6 +123,34 @@ namespace Caustic
     void CRenderer::DeviceWindowResized(uint32_t width, uint32_t height)
     {
         CGraphicsBase::DeviceWindowResizedInternal(width, height);
+
+        // Create half-res fog render target
+        {
+            uint32_t fogW = m_BBDesc.Width / 2;
+            uint32_t fogH = m_BBDesc.Height / 2;
+            fogW = (fogW < 1) ? 1 : fogW;
+            fogH = (fogH < 1) ? 1 : fogH;
+            CComPtr<ID3D11Texture2D> spFogTex;
+            CD3D11_TEXTURE2D_DESC fogDesc(DXGI_FORMAT_R16G16B16A16_FLOAT, fogW, fogH,
+                1, 1, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
+            CT(m_spDevice->CreateTexture2D(&fogDesc, NULL, &spFogTex));
+            m_spFogRTV = nullptr;
+            CT(m_spDevice->CreateRenderTargetView(spFogTex, NULL, &m_spFogRTV));
+            CComPtr<ID3D11ShaderResourceView> spFogSRV;
+            CT(m_spDevice->CreateShaderResourceView(spFogTex, NULL, &spFogSRV));
+            m_spFogRT = CRefObj<ITexture>(new CTexture(spFogTex, spFogSRV));
+        }
+
+        // Create depth copy texture for decal pass (avoids DSV/SRV conflict)
+        {
+            CComPtr<ID3D11Texture2D> spDepthCopyTex;
+            CD3D11_TEXTURE2D_DESC depthCopyDesc(DXGI_FORMAT_R32_FLOAT, m_BBDesc.Width, m_BBDesc.Height,
+                1, 1, D3D11_BIND_SHADER_RESOURCE);
+            CT(m_spDevice->CreateTexture2D(&depthCopyDesc, NULL, &spDepthCopyTex));
+            CComPtr<ID3D11ShaderResourceView> spDepthCopySRV;
+            CT(m_spDevice->CreateShaderResourceView(spDepthCopyTex, NULL, &spDepthCopySRV));
+            m_spDepthCopy = CRefObj<ITexture>(new CTexture(spDepthCopyTex, spDepthCopySRV));
+        }
     }
 
     //**********************************************************************
@@ -218,8 +254,32 @@ namespace Caustic
         try { m_spPrefilterShader = m_spShaderMgr->FindShader(L"PrefilterEnvMap"); } catch (...) {}
         try { m_spTileCullShader = m_spShaderMgr->FindShader(L"TileLightCull"); } catch (...) {}
         try { m_spSSRShader = m_spShaderMgr->FindShader(L"SSR"); } catch (...) {}
+        try { m_spFogShader = m_spShaderMgr->FindShader(L"VolumetricFog"); } catch (...) {}
+        try { m_spFogCompositeShader = m_spShaderMgr->FindShader(L"FogComposite"); } catch (...) {}
+        try { m_spDecalShader = m_spShaderMgr->FindShader(L"Decal"); } catch (...) {}
         m_tiledLightingEnabled = false;
         m_ssrEnabled = false;
+
+        // Create decal blend state (SrcAlpha/InvSrcAlpha) and rasterizer state (front-face cull)
+        {
+            D3D11_BLEND_DESC blendDesc = {};
+            blendDesc.RenderTarget[0].BlendEnable = TRUE;
+            blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+            blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+            blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+            blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+            blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+            blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+            blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+            CT(m_spDevice->CreateBlendState(&blendDesc, &m_spDecalBlendState));
+
+            D3D11_RASTERIZER_DESC rastDesc = {};
+            rastDesc.FillMode = D3D11_FILL_SOLID;
+            rastDesc.CullMode = D3D11_CULL_FRONT; // Render back faces so decals work when camera is inside
+            rastDesc.FrontCounterClockwise = FALSE;
+            rastDesc.DepthClipEnable = TRUE;
+            CT(m_spDevice->CreateRasterizerState(&rastDesc, &m_spDecalRastState));
+        }
 
         // Generate BRDF LUT (one-time, doesn't depend on environment map)
         if (m_spBRDFLUTShader != nullptr)
@@ -307,6 +367,34 @@ namespace Caustic
             data.SysMemPitch = 0;
             data.SysMemSlicePitch = 0;
             CT(m_spDevice->CreateBuffer(&indexbufdesc, &data, &m_spQuadIB));
+        }
+
+        //**********************************************************************
+        // Create vertex/index buffer for decal unit cube [-0.5, +0.5]^3
+        //**********************************************************************
+        {
+            struct CubeVertex { float x, y, z; };
+            CubeVertex cubeVerts[8] = {
+                { -0.5f, -0.5f, -0.5f }, { -0.5f, +0.5f, -0.5f },
+                { +0.5f, +0.5f, -0.5f }, { +0.5f, -0.5f, -0.5f },
+                { -0.5f, -0.5f, +0.5f }, { -0.5f, +0.5f, +0.5f },
+                { +0.5f, +0.5f, +0.5f }, { +0.5f, -0.5f, +0.5f }
+            };
+            CD3D11_BUFFER_DESC cubeVBDesc(sizeof(cubeVerts), D3D11_BIND_VERTEX_BUFFER);
+            D3D11_SUBRESOURCE_DATA cubeVBData = { cubeVerts, 0, 0 };
+            CT(m_spDevice->CreateBuffer(&cubeVBDesc, &cubeVBData, &m_spCubeVB));
+
+            UINT cubeIndices[36] = {
+                0,1,2, 0,2,3, // front
+                4,6,5, 4,7,6, // back
+                0,4,5, 0,5,1, // left
+                3,2,6, 3,6,7, // right
+                1,5,6, 1,6,2, // top
+                0,3,7, 0,7,4  // bottom
+            };
+            CD3D11_BUFFER_DESC cubeIBDesc(sizeof(cubeIndices), D3D11_BIND_INDEX_BUFFER);
+            D3D11_SUBRESOURCE_DATA cubeIBData = { cubeIndices, 0, 0 };
+            CT(m_spDevice->CreateBuffer(&cubeIBDesc, &cubeIBData, &m_spCubeIB));
         }
     }
 
@@ -1165,6 +1253,86 @@ namespace Caustic
 #endif
                 DispatchTileLightCull();
                 DrawSceneObjects(pass, renderCallback);
+
+                // Render decals after opaque objects
+                if (!m_decals.empty() && m_spDecalShader != nullptr && m_spDepthCopy != nullptr)
+                {
+#ifdef _DEBUG
+                    spCtx2->BeginEventInt(L"DecalPass", 0);
+#endif
+                    // Copy depth buffer to separate texture (avoid DSV/SRV conflict)
+                    m_spContext->CopyResource(m_spDepthCopy->GetD3DTexture(), m_spDepthStencilBuffer);
+
+                    // Save current blend/raster/dsv state
+                    CComPtr<ID3D11BlendState> spOldBlend;
+                    float oldBlendFactor[4];
+                    UINT oldSampleMask;
+                    m_spContext->OMGetBlendState(&spOldBlend, oldBlendFactor, &oldSampleMask);
+                    CComPtr<ID3D11RasterizerState> spOldRast;
+                    m_spContext->RSGetState(&spOldRast);
+
+                    // Set decal blend and rasterizer state
+                    m_spContext->OMSetBlendState(m_spDecalBlendState, nullptr, 0xffffffff);
+                    m_spContext->RSSetState(m_spDecalRastState);
+
+                    // Unbind DSV, keep HDR RT with alpha blend
+                    ID3D11RenderTargetView* pHDRRT = m_spHDRRTView;
+                    m_spContext->OMSetRenderTargets(1, &pHDRRT, nullptr);
+
+                    // Bind decal cube mesh
+                    UINT cubeVertSize = sizeof(float) * 3;
+                    UINT cubeOffset = 0;
+                    m_spContext->IASetVertexBuffers(0, 1, &m_spCubeVB.p, &cubeVertSize, &cubeOffset);
+                    m_spContext->IASetIndexBuffer(m_spCubeIB, DXGI_FORMAT_R32_UINT, 0);
+                    m_spContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+                    // Compute viewProjInv
+                    DirectX::XMMATRIX viewProj = DirectX::XMMatrixMultiply(GetCamera()->GetView(), GetCamera()->GetProjection());
+                    DirectX::XMMATRIX viewProjInv = DirectX::XMMatrixInverse(nullptr, viewProj);
+                    DirectX::XMFLOAT4X4 f4x4;
+                    DirectX::XMStoreFloat4x4(&f4x4, viewProjInv);
+                    Matrix viewProjInvMat(reinterpret_cast<float*>(&f4x4));
+
+                    for (auto& spDecal : m_decals)
+                    {
+                        Matrix4x4 decalWorld = spDecal->GetTransform();
+                        // Compute decalWorldInv
+                        DirectX::XMMATRIX xmDecalWorld = DirectX::XMLoadFloat4x4(reinterpret_cast<DirectX::XMFLOAT4X4*>(&decalWorld));
+                        DirectX::XMMATRIX xmDecalWorldInv = DirectX::XMMatrixInverse(nullptr, xmDecalWorld);
+                        DirectX::XMStoreFloat4x4(&f4x4, xmDecalWorldInv);
+                        Matrix decalWorldInvMat(reinterpret_cast<float*>(&f4x4));
+
+                        // worldViewProj for VS
+                        DirectX::XMMATRIX wvp = DirectX::XMMatrixMultiply(xmDecalWorld, viewProj);
+                        DirectX::XMStoreFloat4x4(&f4x4, wvp);
+                        Matrix wvpMat(reinterpret_cast<float*>(&f4x4));
+
+                        m_spDecalShader->SetVSParam(L"worldViewProj", std::any(wvpMat));
+
+                        m_spDecalShader->SetPSParam(L"viewProjInv", std::any(viewProjInvMat));
+                        m_spDecalShader->SetPSParam(L"decalWorldInv", std::any(decalWorldInvMat));
+                        m_spDecalShader->SetPSParam(L"depthTexture", std::any(m_spDepthCopy));
+                        if (spDecal->GetAlbedoTexture() != nullptr)
+                            m_spDecalShader->SetPSParam(L"decalTexture", std::any(spDecal->GetAlbedoTexture()));
+                        m_spDecalShader->SetPSParamFloat(L"decalOpacity", spDecal->GetOpacity());
+                        m_spDecalShader->SetPSParamFloat(L"screenWidth", (float)m_BBDesc.Width);
+                        m_spDecalShader->SetPSParamFloat(L"screenHeight", (float)m_BBDesc.Height);
+
+                        std::vector<CRefObj<ILight>> emptyLights;
+                        m_spDecalShader->BeginRender(this, nullptr, emptyLights, nullptr);
+                        m_spContext->DrawIndexed(36, 0, 0);
+                        m_spDecalShader->EndRender(this);
+                    }
+
+                    // Restore state
+                    m_spContext->OMSetBlendState(spOldBlend, oldBlendFactor, oldSampleMask);
+                    m_spContext->RSSetState(spOldRast);
+                    // Re-bind DSV
+                    m_spContext->OMSetRenderTargets(1, &pHDRRT, m_spStencilView);
+#ifdef _DEBUG
+                    spCtx2->EndEvent();
+#endif
+                }
 #ifdef _DEBUG
                 spCtx2->EndEvent();
 #endif
@@ -2024,6 +2192,131 @@ namespace Caustic
 
             pCurrentTex = m_spPostProcessTexObj[pingPongIndex];
             pingPongIndex = 1 - pingPongIndex;
+#ifdef _DEBUG
+            spCtx2->EndEvent();
+#endif
+        }
+
+        //**********************************************************************
+        // Pass: Volumetric Fog (half-res ray-march then bilateral composite)
+        //**********************************************************************
+        if (m_fogEnabled && m_spFogShader != nullptr && m_spFogCompositeShader != nullptr && m_spFogRT != nullptr)
+        {
+#ifdef _DEBUG
+            spCtx2->BeginEventInt(L"VolumetricFog", 0);
+#endif
+            // Step 1: Half-res fog ray-march
+            {
+                uint32_t fogW = m_BBDesc.Width / 2;
+                uint32_t fogH = m_BBDesc.Height / 2;
+                fogW = (fogW < 1) ? 1 : fogW;
+                fogH = (fogH < 1) ? 1 : fogH;
+                D3D11_VIEWPORT fogVP = {};
+                fogVP.Width = (float)fogW;
+                fogVP.Height = (float)fogH;
+                fogVP.MaxDepth = 1.0f;
+                m_spContext->RSSetViewports(1, &fogVP);
+                m_spContext->OMSetRenderTargets(1, &m_spFogRTV.p, nullptr);
+                FLOAT black[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+                m_spContext->ClearRenderTargetView(m_spFogRTV, black);
+
+                m_spFogShader->SetPSParam(L"depthTexture", std::any(m_spDepthTextureObj));
+
+                // Bind directional shadow map if available
+                m_spFogShader->SetPSParam(L"shadowMapTexture", std::any(GetShadowmapTexture(0)));
+
+                // Camera matrices
+                DirectX::XMFLOAT4X4 f4x4;
+                DirectX::XMStoreFloat4x4(&f4x4, DirectX::XMMatrixInverse(nullptr, GetCamera()->GetView()));
+                Matrix viewInvMat(reinterpret_cast<float*>(&f4x4));
+                m_spFogShader->SetPSParam(L"viewInv", std::any(viewInvMat));
+
+                DirectX::XMStoreFloat4x4(&f4x4, DirectX::XMMatrixInverse(nullptr, GetCamera()->GetProjection()));
+                Matrix projInvMat(reinterpret_cast<float*>(&f4x4));
+                m_spFogShader->SetPSParam(L"projInv", std::any(projInvMat));
+
+                DirectX::XMStoreFloat4x4(&f4x4, GetCamera()->GetView());
+                Matrix viewMat(reinterpret_cast<float*>(&f4x4));
+                m_spFogShader->SetPSParam(L"view", std::any(viewMat));
+
+                // Cascade shadow data
+                for (int c = 0; c < c_NumCascades; c++)
+                {
+                    DirectX::XMStoreFloat4x4(&f4x4, m_cascadeData.cascadeViewProj[c]);
+                    Matrix cascMat(reinterpret_cast<float*>(&f4x4));
+                    m_spFogShader->SetPSParam(L"cascadeViewProj", c, std::any(cascMat));
+                    Float4 splitDepth(m_cascadeData.cascadeSplitDepths[c], 0.0f, 0.0f, 0.0f);
+                    m_spFogShader->SetPSParam(L"cascadeSplitDepths", c, std::any(splitDepth));
+                }
+
+                // Camera position
+                Vector3 camPos;
+                GetCamera()->GetPosition(&camPos, nullptr, nullptr, nullptr, nullptr, nullptr);
+                m_spFogShader->SetPSParamFloat(L"cameraPosX", camPos.x);
+                m_spFogShader->SetPSParamFloat(L"cameraPosY", camPos.y);
+                m_spFogShader->SetPSParamFloat(L"cameraPosZ", camPos.z);
+
+                // Fog parameters
+                m_spFogShader->SetPSParamFloat(L"fogDensity", m_fogDensity);
+                m_spFogShader->SetPSParam(L"fogColor", std::any(Float3(m_fogColor.r, m_fogColor.g, m_fogColor.b)));
+                m_spFogShader->SetPSParamFloat(L"fogHeightFalloff", m_fogHeightFalloff);
+                m_spFogShader->SetPSParamFloat(L"fogScattering", m_fogScattering);
+                m_spFogShader->SetPSParamFloat(L"fogMaxDistance", m_fogMaxDistance);
+                m_spFogShader->SetPSParamFloat(L"fogStartHeight", m_fogStartHeight);
+
+                // Light direction and color (use first directional light)
+                m_spFogShader->SetPSParam(L"lightDirWS", std::any(Float3(0.0f, -1.0f, 0.0f)));
+                m_spFogShader->SetPSParamFloat(L"lightIntensity", 1.0f);
+                m_spFogShader->SetPSParam(L"lightColor", std::any(Float3(1.0f, 1.0f, 1.0f)));
+
+                m_spFogShader->SetPSParamFloat(L"screenWidth", (float)m_BBDesc.Width);
+                m_spFogShader->SetPSParamFloat(L"screenHeight", (float)m_BBDesc.Height);
+
+                // Camera
+                m_spFogShader->SetPSParam(L"cameraPosWS", std::any(Float3(camPos.x, camPos.y, camPos.z)));
+                m_spFogShader->SetPSParamFloat(L"nearPlane", 0.1f);
+                m_spFogShader->SetPSParamFloat(L"farPlane", 1000.0f);
+
+                m_spFogShader->SetVSParamFloat(L"minu", 0.0f);
+                m_spFogShader->SetVSParamFloat(L"minv", 0.0f);
+                m_spFogShader->SetVSParamFloat(L"maxu", 1.0f);
+                m_spFogShader->SetVSParamFloat(L"maxv", 1.0f);
+
+                m_spFogShader->BeginRender(this, nullptr, emptyLights, nullptr);
+                m_spContext->DrawIndexed(6, 0, 0);
+                m_spFogShader->EndRender(this);
+            }
+
+            // Step 2: Bilateral upsample + composite
+            {
+                D3D11_VIEWPORT ppVP = {};
+                ppVP.Width = (float)m_BBDesc.Width;
+                ppVP.Height = (float)m_BBDesc.Height;
+                ppVP.MaxDepth = 1.0f;
+                m_spContext->RSSetViewports(1, &ppVP);
+                m_spContext->OMSetRenderTargets(1, &m_spPostProcessRTV[pingPongIndex].p, nullptr);
+
+                m_spFogCompositeShader->SetPSParam(L"sceneTexture", std::any(pCurrentTex));
+                m_spFogCompositeShader->SetPSParam(L"fogTexture", std::any(m_spFogRT));
+                m_spFogCompositeShader->SetPSParam(L"depthTexture", std::any(m_spDepthTextureObj));
+                m_spFogCompositeShader->SetPSParamFloat(L"screenWidth", (float)m_BBDesc.Width);
+                m_spFogCompositeShader->SetPSParamFloat(L"screenHeight", (float)m_BBDesc.Height);
+                m_spFogCompositeShader->SetPSParamFloat(L"fogTexWidth", (float)(m_BBDesc.Width / 2));
+                m_spFogCompositeShader->SetPSParamFloat(L"fogTexHeight", (float)(m_BBDesc.Height / 2));
+                m_spFogCompositeShader->SetPSParamFloat(L"depthThreshold", 0.01f);
+
+                m_spFogCompositeShader->SetVSParamFloat(L"minu", 0.0f);
+                m_spFogCompositeShader->SetVSParamFloat(L"minv", 0.0f);
+                m_spFogCompositeShader->SetVSParamFloat(L"maxu", 1.0f);
+                m_spFogCompositeShader->SetVSParamFloat(L"maxv", 1.0f);
+
+                m_spFogCompositeShader->BeginRender(this, nullptr, emptyLights, nullptr);
+                m_spContext->DrawIndexed(6, 0, 0);
+                m_spFogCompositeShader->EndRender(this);
+
+                pCurrentTex = m_spPostProcessTexObj[pingPongIndex];
+                pingPongIndex = 1 - pingPongIndex;
+            }
 #ifdef _DEBUG
             spCtx2->EndEvent();
 #endif

@@ -23,6 +23,7 @@ import Geometry.Mesh.IMesh;
 import Geometry.Mesh.IMaterialAttrib;
 import Rendering.Caustic.RendererFlags;
 import Imaging.Image.IImage;
+import Imaging.Color;
 
 //**********************************************************************
 // File: IRenderer.ixx
@@ -42,6 +43,7 @@ export namespace Caustic
     struct IRenderMesh;
     struct IShaderMgr;
     struct ILight;
+    struct IDecal;
     struct ITexture;
 
     //**********************************************************************
@@ -572,6 +574,45 @@ export namespace Caustic
         // enabled - whether to enable frustum culling
         //**********************************************************************
         virtual void SetFrustumCullingEnabled(bool enabled) = 0;
+
+        //**********************************************************************
+        // Method: SetFogEnabled
+        // Enables or disables volumetric fog.
+        //**********************************************************************
+        virtual void SetFogEnabled(bool enabled) = 0;
+
+        //**********************************************************************
+        // Method: SetFogParams
+        // Configures volumetric fog parameters.
+        //
+        // Parameters:
+        // density - base fog density
+        // color - fog inscattering color
+        // heightFalloff - exponential height falloff rate
+        // scattering - Henyey-Greenstein asymmetry parameter (-1..1)
+        // maxDistance - maximum ray march distance
+        // startHeight - height above which fog density is zero
+        //**********************************************************************
+        virtual void SetFogParams(float density, FRGBColor& color, float heightFalloff,
+            float scattering, float maxDistance, float startHeight) = 0;
+
+        //**********************************************************************
+        // Method: AddDecal
+        // Adds a projected decal to the scene.
+        //
+        // Parameters:
+        // pDecal - the decal to add
+        //**********************************************************************
+        virtual void AddDecal(IDecal* pDecal) = 0;
+
+        //**********************************************************************
+        // Method: RemoveDecal
+        // Removes a decal from the scene.
+        //
+        // Parameters:
+        // pDecal - the decal to remove
+        //**********************************************************************
+        virtual void RemoveDecal(IDecal* pDecal) = 0;
     };
 
     //**********************************************************************

@@ -382,6 +382,36 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\Libraries\Rendering\Caustic\SSR.ps</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\Libraries\Rendering\Caustic\SSR.ps</AdditionalInputs>
     </CustomBuild>
+    <CustomBuild Include="VolumetricFog.xml">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\VolumetricFog.xml -o $(CausticRoot)\$(Configuration)\VolumetricFog.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\VolumetricFog.xml -o $(CausticRoot)\$(Configuration)\VolumetricFog.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\VolumetricFog.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\VolumetricFog.shi</Outputs>
+      <SubType>Designer</SubType>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\Libraries\Rendering\Caustic\VolumetricFog.ps</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\Libraries\Rendering\Caustic\VolumetricFog.ps</AdditionalInputs>
+    </CustomBuild>
+    <CustomBuild Include="FogComposite.xml">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\FogComposite.xml -o $(CausticRoot)\$(Configuration)\FogComposite.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\FogComposite.xml -o $(CausticRoot)\$(Configuration)\FogComposite.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\FogComposite.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\FogComposite.shi</Outputs>
+      <SubType>Designer</SubType>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\Libraries\Rendering\Caustic\FogComposite.ps</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\Libraries\Rendering\Caustic\FogComposite.ps</AdditionalInputs>
+    </CustomBuild>
+    <CustomBuild Include="Decal.xml">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\Decal.xml -o $(CausticRoot)\$(Configuration)\Decal.shi</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(PlatformTarget)\$(Configuration)\ParseShader.exe -v CausticRoot $(CausticRoot) -v Configuration $(Configuration) -i $(CausticRoot)\Libraries\Rendering\Caustic\Decal.xml -o $(CausticRoot)\$(Configuration)\Decal.shi</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\$(Configuration)\Decal.shi</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\$(Configuration)\Decal.shi</Outputs>
+      <SubType>Designer</SubType>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(CausticRoot)\Libraries\Rendering\Caustic\Decal.ps;$(CausticRoot)\Libraries\Rendering\Caustic\Decal.vs</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(CausticRoot)\Libraries\Rendering\Caustic\Decal.ps;$(CausticRoot)\Libraries\Rendering\Caustic\Decal.vs</AdditionalInputs>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="defs.h" />
@@ -461,6 +491,9 @@
     <ClCompile Include="IAreaLight.ixx" />
     <ClCompile Include="AreaLight.cpp" />
     <ClCompile Include="AreaLight.ixx" />
+    <ClCompile Include="IDecal.ixx" />
+    <ClCompile Include="Decal.cpp" />
+    <ClCompile Include="Decal.ixx" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Texture.ixx" />
     <ClCompile Include="Trackball.cpp" />

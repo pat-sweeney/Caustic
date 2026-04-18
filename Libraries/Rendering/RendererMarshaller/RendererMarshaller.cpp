@@ -873,4 +873,31 @@ namespace Caustic
     {
         RunOnRenderer([enabled](IRenderer* pRenderer) { pRenderer->SetFrustumCullingEnabled(enabled); }, false);
     }
+
+    void CRendererMarshaller::SetFogEnabled(bool enabled)
+    {
+        RunOnRenderer([enabled](IRenderer* pRenderer) { pRenderer->SetFogEnabled(enabled); }, false);
+    }
+
+    void CRendererMarshaller::SetFogParams(float density, FRGBColor& color, float heightFalloff,
+        float scattering, float maxDistance, float startHeight)
+    {
+        FRGBColor c = color;
+        RunOnRenderer([density, c, heightFalloff, scattering, maxDistance, startHeight](IRenderer* pRenderer) {
+            FRGBColor localColor = c;
+            pRenderer->SetFogParams(density, localColor, heightFalloff, scattering, maxDistance, startHeight);
+        }, false);
+    }
+
+    void CRendererMarshaller::AddDecal(IDecal* pDecal)
+    {
+        CRefObj<IDecal> spDecal(pDecal);
+        RunOnRenderer([spDecal](IRenderer* pRenderer) { pRenderer->AddDecal(spDecal.p); }, false);
+    }
+
+    void CRendererMarshaller::RemoveDecal(IDecal* pDecal)
+    {
+        CRefObj<IDecal> spDecal(pDecal);
+        RunOnRenderer([spDecal](IRenderer* pRenderer) { pRenderer->RemoveDecal(spDecal.p); }, false);
+    }
 }

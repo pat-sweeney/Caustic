@@ -1,0 +1,192 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2026
+// Licensed under the MIT license.
+// See file LICENSE for details.
+// File: VolumetricFog.ps
+//
+// Half-resolution volumetric fog ray-march shader. For each pixel,
+// reconstructs world-space position from the depth buffer and marches
+// from the camera toward the surface, accumulating fog density with
+// exponential height falloff and Henyey-Greenstein phase function.
+// Samples CSM shadow maps for shadowed light shafts.
+// Output: float4(inscatteringRGB, transmittance)
+//**********************************************************************
+#include "defs.h"
+
+Texture2D depthTexture : register(t0);
+SamplerState depthSampler : register(s0);
+Texture2D shadowMapTexture : register(t1);
+SamplerState shadowMapSampler : register(s1);
+
+struct PSInput
+{
+    float4 pos : SV_POSITION;
+    float2 uvs : TEXCOORD0;
+};
+
+cbuffer PS_CONSTANT_BUFFER
+{
+    matrix viewInv;
+    matrix projInv;
+    matrix view;
+    // Cascade shadow data
+    matrix cascadeViewProj[NUM_CASCADES];
+    float4 cascadeSplitDepths[NUM_CASCADES];
+    // Fog parameters
+    float3 fogColor;
+    float fogDensity;
+    float fogHeightFalloff;
+    float fogScattering;      // Henyey-Greenstein asymmetry g
+    float fogMaxDistance;
+    float fogStartHeight;     // height above which fog density is 0
+    // Light info for scattering
+    float3 lightDirWS;
+    float lightIntensity;
+    float3 lightColor;
+    float pad;
+    // Screen info
+    float screenWidth;
+    float screenHeight;
+    float2 pad2;
+    // Camera
+    float3 cameraPosWS;
+    float nearPlane;
+    float farPlane;
+    float3 pad3;
+};
+
+//**********************************************************************
+// Henyey-Greenstein phase function for anisotropic scattering
+//**********************************************************************
+float HenyeyGreenstein(float cosTheta, float g)
+{
+    float g2 = g * g;
+    float denom = 1.0 + g2 - 2.0 * g * cosTheta;
+    return (1.0 - g2) / (4.0 * 3.14159265 * pow(abs(denom), 1.5));
+}
+
+//**********************************************************************
+// Reconstruct world-space position from UV and depth
+//**********************************************************************
+float3 ReconstructWorldPos(float2 uv, float depth)
+{
+    float4 clipPos = float4(uv * 2.0 - 1.0, depth, 1.0);
+    clipPos.y = -clipPos.y;
+    float4 viewPos = mul(clipPos, projInv);
+    viewPos /= viewPos.w;
+    float4 worldPos = mul(viewPos, viewInv);
+    return worldPos.xyz;
+}
+
+//**********************************************************************
+// Sample CSM shadow map at a world position
+//**********************************************************************
+float SampleShadow(float3 posWS)
+{
+    // Determine view-space depth for cascade selection
+    float4 viewPos = mul(float4(posWS, 1.0), view);
+    float viewDepth = viewPos.z;
+
+    int cascade = NUM_CASCADES - 1;
+    for (int i = 0; i < NUM_CASCADES; i++)
+    {
+        if (viewDepth < cascadeSplitDepths[i].x)
+        {
+            cascade = i;
+            break;
+        }
+    }
+
+    // Project into cascade light space
+    float4 lightSpacePos = mul(float4(posWS, 1.0), cascadeViewProj[cascade]);
+    float3 projCoords = lightSpacePos.xyz / lightSpacePos.w;
+    float2 shadowUV = projCoords.xy * 0.5 + 0.5;
+    shadowUV.y = 1.0 - shadowUV.y;
+
+    // Offset into 2x2 atlas tile
+    float2 atlasOffset = float2((cascade % 2) * 0.5, (cascade / 2) * 0.5);
+    shadowUV = atlasOffset + shadowUV * 0.5;
+
+    if (shadowUV.x < atlasOffset.x || shadowUV.x > atlasOffset.x + 0.5 ||
+        shadowUV.y < atlasOffset.y || shadowUV.y > atlasOffset.y + 0.5)
+        return 1.0;
+
+    float shadowDepth = shadowMapTexture.Sample(shadowMapSampler, shadowUV).r;
+    float currentDepth = projCoords.z;
+    return (currentDepth - 0.005 > shadowDepth) ? 0.0 : 1.0;
+}
+
+//**********************************************************************
+// Exponential fog density with height falloff
+//**********************************************************************
+float FogDensityAtPoint(float3 posWS)
+{
+    float heightAboveBase = posWS.y - fogStartHeight;
+    float heightAtten = exp(-max(heightAboveBase, 0.0) * fogHeightFalloff);
+    return fogDensity * heightAtten;
+}
+
+float4 PS(PSInput p) : SV_TARGET
+{
+    float depth = depthTexture.Sample(depthSampler, p.uvs).r;
+
+    // Reconstruct world position of the surface
+    float3 surfacePosWS = ReconstructWorldPos(p.uvs, depth);
+
+    // Compute ray from camera to surface
+    float3 rayDir = surfacePosWS - cameraPosWS;
+    float rayLength = length(rayDir);
+    rayDir = normalize(rayDir);
+
+    // For sky pixels, march to max distance
+    if (depth >= 0.9999)
+        rayLength = fogMaxDistance;
+    else
+        rayLength = min(rayLength, fogMaxDistance);
+
+    // Henyey-Greenstein phase for the view-light angle
+    float cosTheta = dot(rayDir, -normalize(lightDirWS));
+    float phase = HenyeyGreenstein(cosTheta, fogScattering);
+
+    // Ray march with fixed step count
+    static const int NUM_STEPS = 32;
+    float stepSize = rayLength / (float)NUM_STEPS;
+
+    float3 inscattering = float3(0.0, 0.0, 0.0);
+    float transmittance = 1.0;
+
+    // Dithering offset to reduce banding
+    float ditherOffset = frac(sin(dot(p.uvs, float2(12.9898, 78.233))) * 43758.5453);
+
+    [loop]
+    for (int i = 0; i < NUM_STEPS; i++)
+    {
+        float t = ((float)i + ditherOffset) * stepSize;
+        float3 samplePos = cameraPosWS + rayDir * t;
+
+        float density = FogDensityAtPoint(samplePos);
+        if (density < 0.0001)
+            continue;
+
+        // Shadow test for light shafts
+        float shadow = SampleShadow(samplePos);
+
+        // In-scattering from directional light
+        float3 lightContrib = lightColor * lightIntensity * phase * shadow;
+
+        // Accumulate with beer's law
+        float extinction = density * stepSize;
+        float sampleTransmittance = exp(-extinction);
+
+        // Energy-conserving integration
+        float3 scatterContrib = (fogColor + lightContrib) * density * stepSize * transmittance;
+        inscattering += scatterContrib;
+        transmittance *= sampleTransmittance;
+
+        // Early exit when transmittance is nearly zero
+        if (transmittance < 0.01)
+            break;
+    }
+
+    return float4(inscattering, transmittance);
+}

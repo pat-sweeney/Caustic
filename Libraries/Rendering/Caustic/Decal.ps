@@ -1,0 +1,68 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2026
+// Licensed under the MIT license.
+// See file LICENSE for details.
+// File: Decal.ps
+//
+// Pixel shader for projected decals. Reconstructs the world-space
+// position of the underlying geometry from the depth buffer, then
+// transforms it into the decal's local OBB space. If the point is
+// inside the unit cube [-0.5, +0.5]^3, the decal's albedo texture
+// is sampled using the local XZ as UVs and blended with alpha.
+//**********************************************************************
+
+Texture2D depthTexture : register(t0);
+SamplerState depthSampler : register(s0);
+Texture2D decalTexture : register(t1);
+SamplerState decalSampler : register(s1);
+
+struct PSInput
+{
+    float4 posPS : SV_POSITION;
+    float4 posCS : TEXCOORD0;
+};
+
+cbuffer PS_CONSTANT_BUFFER
+{
+    matrix viewProjInv;         // inverse of camera view * proj
+    matrix decalWorldInv;       // inverse of decal OBB world transform
+    float decalOpacity;
+    float screenWidth;
+    float screenHeight;
+    float pad;
+};
+
+float4 PS(PSInput p) : SV_TARGET
+{
+    // Compute screen UV from pixel position
+    float2 screenUV = float2(p.posPS.x / screenWidth, p.posPS.y / screenHeight);
+
+    // Sample depth at this screen position
+    float depth = depthTexture.Sample(depthSampler, screenUV).r;
+
+    // Skip sky pixels
+    if (depth >= 0.9999)
+        discard;
+
+    // Reconstruct world position from depth
+    float4 clipPos = float4(screenUV * 2.0 - 1.0, depth, 1.0);
+    clipPos.y = -clipPos.y;
+    float4 worldPos = mul(clipPos, viewProjInv);
+    worldPos /= worldPos.w;
+
+    // Transform to decal local space
+    float4 localPos = mul(worldPos, decalWorldInv);
+
+    // Check if inside unit cube [-0.5, +0.5]
+    if (abs(localPos.x) > 0.5 || abs(localPos.y) > 0.5 || abs(localPos.z) > 0.5)
+        discard;
+
+    // Use local XZ as decal UVs (Y is the projection axis)
+    float2 decalUV = localPos.xz + 0.5;
+
+    // Sample decal albedo
+    float4 decalColor = decalTexture.Sample(decalSampler, decalUV);
+
+    // Output with alpha blending
+    return float4(decalColor.rgb, decalColor.a * decalOpacity);
+}

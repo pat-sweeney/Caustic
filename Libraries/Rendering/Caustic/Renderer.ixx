@@ -33,6 +33,8 @@ import Rendering.Caustic.Shader;
 import Rendering.Caustic.IShader;
 import Rendering.Caustic.IShaderInfo;
 import Rendering.Caustic.IShaderMgr;
+import Rendering.Caustic.IDecal;
+import Imaging.Color;
 import Rendering.Caustic.ICamera;
 import Rendering.Caustic.IRenderMaterial;
 import Rendering.Caustic.ISampler;
@@ -286,6 +288,8 @@ export namespace Caustic
         CRefObj<IShader> m_spLineShader;                    // Shader used to draw lines
         CComPtr<ID3D11Buffer> m_spQuadVB;                   // Vertex buffer used to draw screen space quads
         CComPtr<ID3D11Buffer> m_spQuadIB;                   // Index buffer used to draw screen space quads
+        CComPtr<ID3D11Buffer> m_spCubeVB;                   // Vertex buffer for decal unit cube
+        CComPtr<ID3D11Buffer> m_spCubeIB;                   // Index buffer for decal unit cube
         CRefObj<IShader> m_spQuadShader;                    // Shader used to draw screen space quads
         CComPtr<ID3D11RasterizerState> m_spRasterizerState;
         bool m_depthTestEnabled;
@@ -337,6 +341,27 @@ export namespace Caustic
         // SSR (Screen-Space Reflections)
         CRefObj<IShader> m_spSSRShader;
         bool m_ssrEnabled;
+
+        // Volumetric fog
+        CRefObj<IShader> m_spFogShader;
+        CRefObj<IShader> m_spFogCompositeShader;
+        CRefObj<ITexture> m_spFogRT;                // Half-res fog render target
+        CComPtr<ID3D11RenderTargetView> m_spFogRTV;
+        bool m_fogEnabled;
+        uint32_t m_fogFrameCounter;
+        float m_fogDensity;
+        FRGBColor m_fogColor;
+        float m_fogHeightFalloff;
+        float m_fogScattering;      // Henyey-Greenstein g parameter
+        float m_fogMaxDistance;
+        float m_fogStartHeight;
+
+        // Decals
+        CRefObj<IShader> m_spDecalShader;
+        std::vector<CRefObj<IDecal>> m_decals;
+        CComPtr<ID3D11BlendState> m_spDecalBlendState;
+        CComPtr<ID3D11RasterizerState> m_spDecalRastState;
+        CRefObj<ITexture> m_spDepthCopy;            // Copy of depth for SRV during decal pass
 
         void CheckThread()
         {
@@ -464,5 +489,28 @@ export namespace Caustic
         virtual void SetTiledLightingEnabled(bool enabled) override { m_tiledLightingEnabled = enabled; }
         virtual void SetSSREnabled(bool enabled) override { m_ssrEnabled = enabled; }
         virtual void SetFrustumCullingEnabled(bool enabled) override { m_frustumCullingEnabled = enabled; }
+        virtual void SetFogEnabled(bool enabled) override { m_fogEnabled = enabled; }
+        virtual void SetFogParams(float density, FRGBColor& color, float heightFalloff,
+            float scattering, float maxDistance, float startHeight) override
+        {
+            m_fogDensity = density;
+            m_fogColor = color;
+            m_fogHeightFalloff = heightFalloff;
+            m_fogScattering = scattering;
+            m_fogMaxDistance = maxDistance;
+            m_fogStartHeight = startHeight;
+        }
+        virtual void AddDecal(IDecal* pDecal) override { m_decals.push_back(CRefObj<IDecal>(pDecal)); }
+        virtual void RemoveDecal(IDecal* pDecal) override
+        {
+            for (auto it = m_decals.begin(); it != m_decals.end(); ++it)
+            {
+                if (it->p == pDecal)
+                {
+                    m_decals.erase(it);
+                    return;
+                }
+            }
+        }
     };
 }
