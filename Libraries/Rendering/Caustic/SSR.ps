@@ -1,0 +1,147 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2026
+// Licensed under the MIT license.
+// See file LICENSE for details.
+// File: SSR.ps
+//
+// Screen-space reflections using ray marching against the depth buffer.
+// Uses linear stepping with binary refinement for accurate hit detection.
+//**********************************************************************
+
+Texture2D sceneTexture : register(t0);
+SamplerState sceneSampler : register(s0);
+Texture2D depthTexture : register(t1);
+SamplerState depthSampler : register(s1);
+Texture2D normalTexture : register(t2);
+SamplerState normalSampler : register(s2);
+
+struct PSInput
+{
+    float4 pos : SV_POSITION;
+    float2 uvs : TEXCOORD0;
+};
+
+cbuffer PS_CONSTANT_BUFFER
+{
+    matrix projMatrix;
+    matrix projInv;
+    float screenWidth;
+    float screenHeight;
+    float maxDistance;
+    float thickness;
+    float minu;
+    float minv;
+    float maxu;
+    float maxv;
+};
+
+// Reconstruct view-space position from depth and UV
+float3 ReconstructViewPos(float2 uv, float depth)
+{
+    float4 clipPos = float4(uv * 2.0 - 1.0, depth, 1.0);
+    clipPos.y = -clipPos.y;
+    float4 viewPos = mul(clipPos, projInv);
+    return viewPos.xyz / viewPos.w;
+}
+
+float4 PS(PSInput p) : SV_TARGET
+{
+    float4 sceneColor = sceneTexture.Sample(sceneSampler, p.uvs);
+    float depth = depthTexture.Sample(depthSampler, p.uvs).r;
+
+    // Skip sky pixels
+    if (depth >= 1.0)
+        return sceneColor;
+
+    // Read view-space normal and material data
+    float4 normalData = normalTexture.Sample(normalSampler, p.uvs);
+    float3 normalVS;
+    normalVS.xy = normalData.xy * 2.0 - 1.0;
+    normalVS.z = sqrt(max(0.0, 1.0 - dot(normalVS.xy, normalVS.xy)));
+    float roughness = normalData.z;
+
+    // Skip very rough surfaces (no sharp reflections)
+    if (roughness > 0.7)
+        return sceneColor;
+
+    // Reconstruct view-space position
+    float3 posVS = ReconstructViewPos(p.uvs, depth);
+    float3 viewDir = normalize(posVS);
+    float3 reflDir = reflect(viewDir, normalVS);
+
+    // Ray march in screen space
+    static const int MAX_STEPS = 64;
+    static const int BINARY_STEPS = 8;
+    float3 startVS = posVS;
+    float stepSize = maxDistance / (float)MAX_STEPS;
+    float3 rayStep = reflDir * stepSize;
+
+    float3 currentVS = startVS + reflDir * 0.01; // small offset to avoid self-intersection
+    bool hit = false;
+    float2 hitUV = float2(0.0, 0.0);
+
+    [loop]
+    for (int i = 0; i < MAX_STEPS; i++)
+    {
+        currentVS += rayStep;
+
+        // Project to screen space
+        float4 clipPos = mul(float4(currentVS, 1.0), projMatrix);
+        clipPos.xy /= clipPos.w;
+        float2 sampleUV = float2(clipPos.x * 0.5 + 0.5, -clipPos.y * 0.5 + 0.5);
+
+        // Check bounds
+        if (sampleUV.x < 0.0 || sampleUV.x > 1.0 || sampleUV.y < 0.0 || sampleUV.y > 1.0)
+            break;
+
+        // Sample depth at this screen position
+        float sampleDepth = depthTexture.Sample(depthSampler, sampleUV).r;
+        float3 sampleVS = ReconstructViewPos(sampleUV, sampleDepth);
+
+        // Check if ray is behind the surface
+        float depthDiff = currentVS.z - sampleVS.z;
+        if (depthDiff > 0.0 && depthDiff < thickness)
+        {
+            // Binary refinement
+            float3 midVS = currentVS;
+            float3 lastStep = rayStep;
+            for (int b = 0; b < BINARY_STEPS; b++)
+            {
+                lastStep *= 0.5;
+                float4 midClip = mul(float4(midVS, 1.0), projMatrix);
+                midClip.xy /= midClip.w;
+                float2 midUV = float2(midClip.x * 0.5 + 0.5, -midClip.y * 0.5 + 0.5);
+                float midSampleDepth = depthTexture.Sample(depthSampler, midUV).r;
+                float3 midSampleVS = ReconstructViewPos(midUV, midSampleDepth);
+                float midDepthDiff = midVS.z - midSampleVS.z;
+                if (midDepthDiff > 0.0)
+                    midVS -= lastStep;
+                else
+                    midVS += lastStep;
+            }
+            float4 finalClip = mul(float4(midVS, 1.0), projMatrix);
+            finalClip.xy /= finalClip.w;
+            hitUV = float2(finalClip.x * 0.5 + 0.5, -finalClip.y * 0.5 + 0.5);
+            hit = true;
+            break;
+        }
+    }
+
+    if (!hit)
+        return sceneColor;
+
+    // Edge fade: reduce reflection near screen edges
+    float2 edgeFade = smoothstep(0.0, 0.1, hitUV) * (1.0 - smoothstep(0.9, 1.0, hitUV));
+    float fadeFactor = edgeFade.x * edgeFade.y;
+
+    // Roughness-based fade
+    float roughnessFade = 1.0 - smoothstep(0.3, 0.7, roughness);
+    fadeFactor *= roughnessFade;
+
+    // Sample reflected color
+    float3 reflectedColor = sceneTexture.Sample(sceneSampler, hitUV).rgb;
+
+    // Blend with scene
+    float3 finalColor = lerp(sceneColor.rgb, reflectedColor, fadeFactor * 0.5);
+    return float4(finalColor, 1.0);
+}

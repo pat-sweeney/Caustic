@@ -1,0 +1,80 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2026
+// Licensed under the MIT license.
+// See file LICENSE for details.
+// File: IrradianceConvolution.ps
+//
+// Convolves an environment cubemap into an irradiance map for diffuse IBL.
+// Renders to each face of a low-resolution cubemap.
+//**********************************************************************
+
+static const float PI = 3.14159265359;
+
+TextureCube environmentMap : register(t0);
+SamplerState envSampler : register(s0);
+
+struct PSInput
+{
+    float4 pos : SV_POSITION;
+    float2 uvs : TEXCOORD0;
+};
+
+cbuffer PS_CONSTANT_BUFFER
+{
+    int faceIndex;
+    float minu;
+    float minv;
+    float maxu;
+    float maxv;
+};
+
+// Convert UV + face index to cubemap direction
+float3 UVToDirection(float2 uv, int face)
+{
+    // Remap UV from [0,1] to [-1,1]
+    float u = uv.x * 2.0 - 1.0;
+    float v = -(uv.y * 2.0 - 1.0); // Flip V for D3D
+
+    float3 dir;
+    switch (face)
+    {
+    case 0: dir = float3( 1.0,    v,   -u); break; // +X
+    case 1: dir = float3(-1.0,    v,    u); break; // -X
+    case 2: dir = float3(   u,  1.0,   -v); break; // +Y
+    case 3: dir = float3(   u, -1.0,    v); break; // -Y
+    case 4: dir = float3(   u,    v,  1.0); break; // +Z
+    case 5: dir = float3(  -u,    v, -1.0); break; // -Z
+    }
+    return normalize(dir);
+}
+
+float4 PS(PSInput p) : SV_TARGET
+{
+    float3 N = UVToDirection(p.uvs, faceIndex);
+    float3 irradiance = float3(0.0, 0.0, 0.0);
+
+    // Build tangent frame
+    float3 up = abs(N.y) < 0.999 ? float3(0.0, 1.0, 0.0) : float3(0.0, 0.0, 1.0);
+    float3 right = normalize(cross(up, N));
+    up = cross(N, right);
+
+    float sampleDelta = 0.025;
+    float nrSamples = 0.0;
+
+    for (float phi = 0.0; phi < 2.0 * PI; phi += sampleDelta)
+    {
+        for (float theta = 0.0; theta < 0.5 * PI; theta += sampleDelta)
+        {
+            // Spherical to cartesian (tangent space)
+            float3 tangentSample = float3(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));
+            // Tangent space to world
+            float3 sampleVec = tangentSample.x * right + tangentSample.y * up + tangentSample.z * N;
+
+            irradiance += environmentMap.Sample(envSampler, sampleVec).rgb * cos(theta) * sin(theta);
+            nrSamples++;
+        }
+    }
+
+    irradiance = PI * irradiance * (1.0 / float(nrSamples));
+    return float4(irradiance, 1.0);
+}

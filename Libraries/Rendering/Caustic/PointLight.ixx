@@ -58,6 +58,8 @@ export namespace Caustic
         virtual bool GetCastsShadows() override { return m_castsShadows; }
         virtual void SetCastsLight(bool casts) override { m_castsLight = casts; }
         virtual bool GetCastsLight() override { return m_castsLight; }
+        virtual void SetRange(float range) override { m_range = range; }
+        virtual float GetRange() override { return m_range; }
         virtual void SetPosition(Vector3& pos) override { m_pos = pos; }
         virtual Vector3 GetPosition() override { return m_pos; }
         virtual Vector3 GetDirection() override { return Vector3(0.0f, 0.0f, 0.0f); }

@@ -22,6 +22,16 @@ import Rendering.Caustic.IRenderer;
 export namespace Caustic
 {
     //**********************************************************************
+    // Enum: ETextureType
+    // Describes the dimensionality of a texture resource
+    //**********************************************************************
+    enum class ETextureType
+    {
+        Texture2D,
+        TextureCube
+    };
+
+    //**********************************************************************
     // Interface: ITexture
     // Defines how clients interact with textures
     //
@@ -30,6 +40,13 @@ export namespace Caustic
     //**********************************************************************
     struct ITexture : public IRefCount
     {
+        //**********************************************************************
+        // Method: GetTextureType
+        // Returns:
+        // Returns the type of texture (2D, Cube, etc.)
+        //**********************************************************************
+        virtual ETextureType GetTextureType() { return ETextureType::Texture2D; }
+
         //**********************************************************************
         // Method: GetWidth
         // Returns:
@@ -136,6 +153,26 @@ export namespace Caustic
         // pImage - image to copy data to
         //**********************************************************************
         virtual void  CopyToImage(IRenderer* pRenderer, IImage *pImage) = 0;
+
+        //**********************************************************************
+        // Method: GetFaceRTV
+        // Returns a render target view for a specific face of a cubemap texture.
+        // Only valid for TextureCube types. Returns nullptr for Texture2D.
+        //
+        // Parameters:
+        // face - cube face index (0-5: +X, -X, +Y, -Y, +Z, -Z)
+        //**********************************************************************
+        virtual CComPtr<ID3D11RenderTargetView> GetFaceRTV(uint32_t face) { return nullptr; }
+
+        //**********************************************************************
+        // Method: GetFaceDSV
+        // Returns a depth stencil view for a specific face of a cubemap depth texture.
+        // Only valid for TextureCube depth types. Returns nullptr for Texture2D.
+        //
+        // Parameters:
+        // face - cube face index (0-5: +X, -X, +Y, -Y, +Z, -Z)
+        //**********************************************************************
+        virtual CComPtr<ID3D11DepthStencilView> GetFaceDSV(uint32_t face) { return nullptr; }
     };
 
     //**********************************************************************
@@ -224,4 +261,37 @@ export namespace Caustic
     // {Link:import Rendering.Caustic.ITexture;{Rendering/Caustic/ITexture.ixx}}
     //**********************************************************************
     CRefObj<ITexture> LoadTexture(const wchar_t* pFilename, IRenderer* pRenderer);
+
+    //**********************************************************************
+    // Function: CreateCubemapTexture
+    // Creates a cubemap texture with color render target views per face.
+    //
+    // Parameters:
+    // pRenderer - Renderer
+    // size - width and height of each cube face in pixels
+    // format - pixel format (e.g. DXGI_FORMAT_R16G16B16A16_FLOAT)
+    //
+    // Returns:
+    // Returns the created cubemap texture with SRV and per-face RTVs
+    //
+    // Module:
+    // {Link:import Rendering.Caustic.ITexture;{Rendering/Caustic/ITexture.ixx}}
+    //**********************************************************************
+    CRefObj<ITexture> CreateCubemapTexture(IRenderer* pRenderer, uint32_t size, DXGI_FORMAT format, uint32_t mipLevels = 1);
+
+    //**********************************************************************
+    // Function: CreateCubemapDepthTexture
+    // Creates a cubemap depth texture with depth stencil views per face.
+    //
+    // Parameters:
+    // pRenderer - Renderer
+    // size - width and height of each cube face in pixels
+    //
+    // Returns:
+    // Returns the created cubemap depth texture with SRV and per-face DSVs
+    //
+    // Module:
+    // {Link:import Rendering.Caustic.ITexture;{Rendering/Caustic/ITexture.ixx}}
+    //**********************************************************************
+    CRefObj<ITexture> CreateCubemapDepthTexture(IRenderer* pRenderer, uint32_t size);
 }

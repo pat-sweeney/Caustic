@@ -534,6 +534,35 @@ export namespace Caustic
         // exposure - exposure value (default 1.0)
         //**********************************************************************
         virtual void SetExposure(float exposure) = 0;
+
+        //**********************************************************************
+        // Method: SetEnvironmentMap
+        // Sets the HDR environment cubemap for IBL (image-based lighting).
+        // When set, the renderer will generate irradiance and pre-filtered
+        // specular maps for indirect lighting in PBR shaders.
+        //
+        // Parameters:
+        // pCubemap - cubemap texture (TextureCube type), or nullptr to disable IBL
+        //**********************************************************************
+        virtual void SetEnvironmentMap(ITexture* pCubemap) = 0;
+
+        //**********************************************************************
+        // Method: SetTiledLightingEnabled
+        // Enables or disables tiled forward light culling.
+        //
+        // Parameters:
+        // enabled - whether to enable tiled light culling
+        //**********************************************************************
+        virtual void SetTiledLightingEnabled(bool enabled) = 0;
+
+        //**********************************************************************
+        // Method: SetSSREnabled
+        // Enables or disables screen-space reflections.
+        //
+        // Parameters:
+        // enabled - whether to enable SSR
+        //**********************************************************************
+        virtual void SetSSREnabled(bool enabled) = 0;
     };
 
     //**********************************************************************

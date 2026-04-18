@@ -174,5 +174,8 @@ export namespace Caustic
         virtual void SetFXAAEnabled(bool enabled) override;
         virtual void SetSSAOEnabled(bool enabled) override;
         virtual void SetExposure(float exposure) override;
+        virtual void SetEnvironmentMap(ITexture* pCubemap) override;
+        virtual void SetTiledLightingEnabled(bool enabled) override;
+        virtual void SetSSREnabled(bool enabled) override;
     };
 }

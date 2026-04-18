@@ -59,4 +59,52 @@ export namespace Caustic
         virtual void CopyToImage(IRenderer* pRenderer, IImage *pImage) override;
         virtual void Copy(IRenderer* pRenderer, ITexture* pDst) override;
     };
+
+    //**********************************************************************
+    // Class: CTextureCube
+    // Implementation of ITexture for cubemap textures (6-face cube)
+    //
+    // Module:
+    // {Link:import Rendering.Caustic.Texture;{Rendering/Caustic/Texture.ixx}}
+    //**********************************************************************
+    class CTextureCube :
+        public ITexture,
+        public CRefCount
+    {
+    protected:
+        uint32_t m_Size;
+        DXGI_FORMAT m_Format;
+        bool m_isDepth;
+        CComPtr<ID3D11Texture2D> m_spTexture;
+        CComPtr<ID3D11ShaderResourceView> m_spTextureRV;
+        CComPtr<ID3D11RenderTargetView> m_spFaceRTV[6];
+        CComPtr<ID3D11DepthStencilView> m_spFaceDSV[6];
+    public:
+        CTextureCube(IRenderer* pRenderer, uint32_t size, DXGI_FORMAT format, bool isDepth, uint32_t mipLevels = 1);
+
+        //**********************************************************************
+        // IRefCount
+        //**********************************************************************
+        virtual uint32_t AddRef() override { return CRefCount::AddRef(); }
+        virtual uint32_t Release() override { return CRefCount::Release(); }
+
+        //**********************************************************************
+        // ITexture
+        //**********************************************************************
+        virtual ETextureType GetTextureType() override { return ETextureType::TextureCube; }
+        virtual uint32_t GetWidth() override { return m_Size; }
+        virtual uint32_t GetHeight() override { return m_Size; }
+        virtual DXGI_FORMAT GetFormat() override { return m_Format; }
+        virtual void Update(IRenderer* /*pRenderer*/) override {}
+        virtual CComPtr<ID3D11Texture2D> GetD3DTexture() override { return m_spTexture; }
+        virtual CComPtr<ID3D11ShaderResourceView> GetD3DTextureRV() override { return m_spTextureRV; }
+        virtual void GenerateMips(IRenderer* pRenderer) override;
+        virtual void Render(IRenderer* pRenderer, int slot, bool isPixelShader) override;
+        virtual void CopyFromImage(IRenderer* pRenderer, IImage* pImage, bool generateMipMap = false) override {}
+        virtual CRefObj<IImage> CopyToImage(IRenderer* pRenderer) override { return CRefObj<IImage>(); }
+        virtual void CopyToImage(IRenderer* pRenderer, IImage* pImage) override {}
+        virtual void Copy(IRenderer* pRenderer, ITexture* pDst) override {}
+        virtual CComPtr<ID3D11RenderTargetView> GetFaceRTV(uint32_t face) override;
+        virtual CComPtr<ID3D11DepthStencilView> GetFaceDSV(uint32_t face) override;
+    };
 };

@@ -75,6 +75,25 @@ export namespace Caustic
         virtual float GetIntensity() = 0;
 
         //**********************************************************************
+        // Method: SetRange
+        // Sets the maximum range of the light. Beyond this distance, the light
+        // has no effect. Used for attenuation cutoff and tiled light culling.
+        //
+        // Parameters:
+        // range - Maximum range of the light in world units
+        //**********************************************************************
+        virtual void SetRange(float range) = 0;
+
+        //**********************************************************************
+        // Method: GetRange
+        // Returns the maximum range of the light
+        //
+        // Return:
+        // Maximum range of the light in world units
+        //**********************************************************************
+        virtual float GetRange() = 0;
+
+        //**********************************************************************
         // Method: SetCastsLight
         // Indicates whether this light illuminates the scene. By default all lights
         // do, however it is possible to create a light that only is used for shadow

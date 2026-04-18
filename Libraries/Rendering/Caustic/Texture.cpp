@@ -359,4 +359,125 @@ namespace Caustic
             });
         return;
     }
+
+    //**********************************************************************
+    // CTextureCube implementation
+    //**********************************************************************
+    CTextureCube::CTextureCube(IRenderer* pRenderer, uint32_t size, DXGI_FORMAT format, bool isDepth, uint32_t mipLevels) :
+        m_Size(size),
+        m_Format(format),
+        m_isDepth(isDepth)
+    {
+        CT(pRenderer->IsRenderThread() ? S_OK : E_FAIL);
+        auto spDevice = pRenderer->GetDevice();
+
+        if (isDepth)
+        {
+            // Depth cubemap: R32_TYPELESS with DSV + SRV
+            CD3D11_TEXTURE2D_DESC desc(DXGI_FORMAT_R32_TYPELESS, size, size, 6, 1,
+                D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE);
+            desc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
+            CT(spDevice->CreateTexture2D(&desc, nullptr, &m_spTexture));
+
+            // Cube SRV
+            D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+            srvDesc.Format = DXGI_FORMAT_R32_FLOAT;
+            srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
+            srvDesc.TextureCube.MipLevels = 1;
+            srvDesc.TextureCube.MostDetailedMip = 0;
+            CT(spDevice->CreateShaderResourceView(m_spTexture, &srvDesc, &m_spTextureRV));
+
+            // Per-face DSVs
+            for (uint32_t face = 0; face < 6; face++)
+            {
+                D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+                dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
+                dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
+                dsvDesc.Texture2DArray.MipSlice = 0;
+                dsvDesc.Texture2DArray.FirstArraySlice = face;
+                dsvDesc.Texture2DArray.ArraySize = 1;
+                CT(spDevice->CreateDepthStencilView(m_spTexture, &dsvDesc, &m_spFaceDSV[face]));
+            }
+        }
+        else
+        {
+            // Color cubemap: specified format with RTV + SRV
+            CD3D11_TEXTURE2D_DESC desc(format, size, size, 6, mipLevels,
+                D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
+            desc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
+            if (mipLevels > 1)
+                desc.MiscFlags |= D3D11_RESOURCE_MISC_GENERATE_MIPS;
+            CT(spDevice->CreateTexture2D(&desc, nullptr, &m_spTexture));
+
+            // Cube SRV
+            D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+            srvDesc.Format = format;
+            srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
+            srvDesc.TextureCube.MipLevels = mipLevels;
+            srvDesc.TextureCube.MostDetailedMip = 0;
+            CT(spDevice->CreateShaderResourceView(m_spTexture, &srvDesc, &m_spTextureRV));
+
+            // Per-face RTVs (mip 0 only — use GetD3DTexture + manual RTV for other mips)
+            for (uint32_t face = 0; face < 6; face++)
+            {
+                D3D11_RENDER_TARGET_VIEW_DESC rtvDesc = {};
+                rtvDesc.Format = format;
+                rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
+                rtvDesc.Texture2DArray.MipSlice = 0;
+                rtvDesc.Texture2DArray.FirstArraySlice = face;
+                rtvDesc.Texture2DArray.ArraySize = 1;
+                CT(spDevice->CreateRenderTargetView(m_spTexture, &rtvDesc, &m_spFaceRTV[face]));
+            }
+        }
+    }
+
+    void CTextureCube::GenerateMips(IRenderer* pRenderer)
+    {
+        pRenderer->RunOnRenderer(
+            [&](IRenderer* pRenderer)
+            {
+                if (m_spTextureRV != nullptr)
+                    pRenderer->GetContext()->GenerateMips(m_spTextureRV);
+            });
+    }
+
+    void CTextureCube::Render(IRenderer* pRenderer, int slot, bool isPixelShader)
+    {
+        pRenderer->RunOnRenderer(
+            [&](IRenderer* pRenderer)
+            {
+                auto ctx = pRenderer->GetContext();
+                if (m_spTextureRV != nullptr)
+                {
+                    CComPtr<ID3D11ShaderResourceView> spResource = m_spTextureRV;
+                    if (isPixelShader)
+                        ctx->PSSetShaderResources(slot, 1, &spResource.p);
+                    else
+                        ctx->VSSetShaderResources(slot, 1, &spResource.p);
+                }
+            });
+    }
+
+    CComPtr<ID3D11RenderTargetView> CTextureCube::GetFaceRTV(uint32_t face)
+    {
+        return (face < 6) ? m_spFaceRTV[face] : CComPtr<ID3D11RenderTargetView>();
+    }
+
+    CComPtr<ID3D11DepthStencilView> CTextureCube::GetFaceDSV(uint32_t face)
+    {
+        return (face < 6) ? m_spFaceDSV[face] : CComPtr<ID3D11DepthStencilView>();
+    }
+
+    //**********************************************************************
+    // Factory functions for cubemap textures
+    //**********************************************************************
+    CRefObj<ITexture> CreateCubemapTexture(IRenderer* pRenderer, uint32_t size, DXGI_FORMAT format, uint32_t mipLevels)
+    {
+        return CRefObj<ITexture>(new CTextureCube(pRenderer, size, format, false, mipLevels));
+    }
+
+    CRefObj<ITexture> CreateCubemapDepthTexture(IRenderer* pRenderer, uint32_t size)
+    {
+        return CRefObj<ITexture>(new CTextureCube(pRenderer, size, DXGI_FORMAT_R32_TYPELESS, true));
+    }
 };

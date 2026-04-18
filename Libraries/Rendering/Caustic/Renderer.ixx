@@ -30,6 +30,7 @@ import Base.Core.CritSec;
 import Base.Math.BBox;
 import Geometry.Mesh.Mesh;
 import Rendering.Caustic.Shader;
+import Rendering.Caustic.IShader;
 import Rendering.Caustic.IShaderInfo;
 import Rendering.Caustic.IShaderMgr;
 import Rendering.Caustic.ICamera;
@@ -192,6 +193,9 @@ export namespace Caustic
         CComPtr<ID3D11Texture2D> m_spBloomMipTexture[c_BloomMipCount];
         CComPtr<ID3D11RenderTargetView> m_spBloomMipRTV[c_BloomMipCount];
         CRefObj<ITexture> m_spBloomMipTexObj[c_BloomMipCount]; // ITexture wrappers for shader binding
+        // Normal buffer for SSR (written as MRT from PBR pass)
+        CRefObj<ITexture> m_spNormalBufferObj;
+        CComPtr<ID3D11RenderTargetView> m_spNormalRTV;
         CRefObj<IShaderMgr> m_spShaderMgr;                  // Our shader manager
         CComPtr<ID3D11Texture2D> m_spShadowTexture[c_MaxShadowMaps];        // Texture for shadow map
         CComPtr<ID3D11ShaderResourceView> m_spShadowSRView[c_MaxShadowMaps];  // Shader resource view for m_spShadowTexture
@@ -300,6 +304,32 @@ export namespace Caustic
         float m_bloomIntensity;
         float m_exposure;
 
+        // Point-light shadow cubemap
+        static const int c_MaxPointShadowLights = 1;
+        static const int c_PointShadowMapSize = 512;
+        CRefObj<ITexture> m_spPointShadowCubemap[c_MaxPointShadowLights];
+        int m_numPointShadowLights;
+
+        // IBL (Image-Based Lighting)
+        CRefObj<ITexture> m_spEnvironmentMap;       // User-provided HDR cubemap
+        CRefObj<ITexture> m_spIrradianceMap;        // Diffuse irradiance cubemap (32x32)
+        CRefObj<ITexture> m_spPrefilteredMap;       // Specular pre-filtered cubemap (128x128, 5 mips)
+        CRefObj<ITexture> m_spBRDFLUT;              // BRDF integration LUT (512x512)
+        CRefObj<IShader> m_spBRDFLUTShader;
+        CRefObj<IShader> m_spIrradianceShader;
+        CRefObj<IShader> m_spPrefilterShader;
+        bool m_iblDirty;                            // True when env map changed, need to regenerate
+
+        // Tiled forward lighting
+        CRefObj<IShader> m_spTileCullShader;
+        CRefObj<IGPUBuffer> m_spLightBuffer;        // StructuredBuffer<LightData> for all lights
+        CRefObj<IGPUBuffer> m_spTileLightBuffer;    // RWStructuredBuffer<uint> for per-tile light indices
+        bool m_tiledLightingEnabled;
+
+        // SSR (Screen-Space Reflections)
+        CRefObj<IShader> m_spSSRShader;
+        bool m_ssrEnabled;
+
         void CheckThread()
         {
 #ifdef DIAGNOSTICS
@@ -318,6 +348,9 @@ export namespace Caustic
         void ComputeCascadeSplits(float nearClip, float farClip, float splitDepths[c_NumCascades]);
         void ComputeCascadeViewProj(ICamera* pCamera, const Vector3& lightDir, float nearSplit, float farSplit, DirectX::XMMATRIX& outViewProj);
         void RunPostProcessing();
+        void RenderPointShadows(int pass, std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)> renderCallback);
+        void GenerateIBLMaps();
+        void DispatchTileLightCull();
     public:
         explicit CRenderer();
         virtual ~CRenderer();
@@ -412,5 +445,12 @@ export namespace Caustic
         virtual void SetFXAAEnabled(bool enabled) override { m_fxaaEnabled = enabled; }
         virtual void SetSSAOEnabled(bool enabled) override { m_ssaoEnabled = enabled; }
         virtual void SetExposure(float exposure) override { m_exposure = exposure; }
+        virtual void SetEnvironmentMap(ITexture* pCubemap) override
+        {
+            m_spEnvironmentMap = CRefObj<ITexture>(pCubemap);
+            m_iblDirty = true;
+        }
+        virtual void SetTiledLightingEnabled(bool enabled) override { m_tiledLightingEnabled = enabled; }
+        virtual void SetSSREnabled(bool enabled) override { m_ssrEnabled = enabled; }
     };
 }

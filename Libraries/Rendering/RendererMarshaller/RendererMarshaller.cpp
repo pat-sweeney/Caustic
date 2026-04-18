@@ -852,4 +852,20 @@ namespace Caustic
     {
         RunOnRenderer([exposure](IRenderer* pRenderer) { pRenderer->SetExposure(exposure); }, false);
     }
+
+    void CRendererMarshaller::SetEnvironmentMap(ITexture* pCubemap)
+    {
+        CRefObj<ITexture> spCubemap(pCubemap);
+        RunOnRenderer([spCubemap](IRenderer* pRenderer) { pRenderer->SetEnvironmentMap(spCubemap.p); }, false);
+    }
+
+    void CRendererMarshaller::SetTiledLightingEnabled(bool enabled)
+    {
+        RunOnRenderer([enabled](IRenderer* pRenderer) { pRenderer->SetTiledLightingEnabled(enabled); }, false);
+    }
+
+    void CRendererMarshaller::SetSSREnabled(bool enabled)
+    {
+        RunOnRenderer([enabled](IRenderer* pRenderer) { pRenderer->SetSSREnabled(enabled); }, false);
+    }
 }

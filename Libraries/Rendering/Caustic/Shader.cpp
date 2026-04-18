@@ -457,7 +457,7 @@ namespace Caustic
     // pRenderer - D3D11 device/context to use
     // params - list of shader parameters
     //**********************************************************************
-    void CShader::PopBuffers(IRenderer* pRenderer, std::map<std::wstring, ShaderParamInstance>& params)
+    void CShader::PopBuffers(IRenderer* pRenderer, std::map<std::wstring, ShaderParamInstance>& params, bool isPixelShader)
     {
         CComPtr<ID3D11DeviceContext> spCtx = pRenderer->GetContext();
         for (auto& it : params)
@@ -481,7 +481,10 @@ namespace Caustic
             if (it.second.m_type == EShaderParamType::ShaderType_StructuredBuffer)
             {
                 ID3D11ShaderResourceView* nullar[1] = { nullptr };
-                spCtx->CSSetShaderResources(it.second.m_offset, 1, &nullar[0]);
+                if (isPixelShader)
+                    spCtx->PSSetShaderResources(it.second.m_offset, 1, &nullar[0]);
+                else
+                    spCtx->CSSetShaderResources(it.second.m_offset, 1, &nullar[0]);
             }
             else
             {
@@ -501,7 +504,7 @@ namespace Caustic
     // params - List of parameters to push
     //**********************************************************************
     void CShader::PushBuffers(IRenderer* pRenderer,
-        std::map<std::wstring, ShaderParamInstance>& params)
+        std::map<std::wstring, ShaderParamInstance>& params, bool isPixelShader)
     {
         CComPtr<ID3D11DeviceContext> spCtx = pRenderer->GetContext();
         for (auto &it : params)
@@ -518,7 +521,10 @@ namespace Caustic
             if (it.second.m_type == EShaderParamType::ShaderType_StructuredBuffer)
             {
                 auto spSRView = spBuffer->GetSRView();
-                spCtx->CSSetShaderResources(it.second.m_offset, 1, &spSRView.p);
+                if (isPixelShader)
+                    spCtx->PSSetShaderResources(it.second.m_offset, 1, &spSRView.p);
+                else
+                    spCtx->CSSetShaderResources(it.second.m_offset, 1, &spSRView.p);
             }
             else
             {
@@ -838,11 +844,19 @@ namespace Caustic
             Float4 lightColor(color.r, color.g, color.b, 1.0f);
             SetParam(L"lightColor", i, std::any(lightColor), m_psParams);
             Caustic::Vector3 pos = lights[i]->GetPosition();
-            Float4 lightPos(pos.x, pos.y, pos.z, 1.0f);
+            float range = lights[i]->GetRange();
+            Float4 lightPos(pos.x, pos.y, pos.z, range);
             SetParam(L"lightPosWS", i, std::any(lightPos), m_psParams);
             float intensity = lights[i]->GetIntensity();
             Float4 lightIntensity(intensity, intensity, intensity, 1.0f);
             SetParam(L"intensity", i, std::any(lightIntensity), m_psParams);
+            Caustic::Vector3 dir = lights[i]->GetDirection();
+            Float4 lightDir(dir.x, dir.y, dir.z, 0.0f);
+            SetParam(L"lightDirWS", i, std::any(lightDir), m_psParams);
+            int lightType = (int)lights[i]->GetType();
+            SetParam(L"lightType", i, std::any((Int)lightType), m_psParams);
+            int shadowIndex = lights[i]->GetCastsShadows() ? (int)i : -1;
+            SetParam(L"lightShadowIndex", i, std::any((Int)shadowIndex), m_psParams);
         }
         SetPSParam(L"numLights", std::any((Int)numLights));
     }
@@ -977,15 +991,16 @@ namespace Caustic
             PushSamplers(pRenderer, m_psParams, true);
             PushConstants(pRenderer, &m_pixelConstants, m_psParams);
             spCtx->PSSetConstantBuffers(0, 1, &m_pixelConstants.m_spBuffer.p);
+            PushBuffers(pRenderer, m_psParams, true);
         }
         if (hasCS)
         {
             PushSamplers(pRenderer, m_csParams, false);
             PushConstants(pRenderer, &m_computeConstants, m_csParams);
             spCtx->CSSetConstantBuffers(0, 1, &m_computeConstants.m_spBuffer.p);
-            PushBuffers(pRenderer, m_csParams);
+            PushBuffers(pRenderer, m_csParams, false);
             spCtx->Dispatch(m_xThreads, m_yThreads, m_zThreads);
-            PopBuffers(pRenderer, m_csParams);
+            PopBuffers(pRenderer, m_csParams, false);
             spCtx->CSSetShader(nullptr, nullptr, 0);
             ///ID3D11UnorderedAccessView* uavNull[1] = { nullptr };
             ///ID3D11ShaderResourceView* srvNull[1] = { nullptr };

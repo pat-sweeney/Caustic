@@ -23,6 +23,16 @@ Texture2D normalTexture : register(t3);
 SamplerState normalSampler : register(s3);
 Texture2D aoTexture : register(t4);
 SamplerState aoSampler : register(s4);
+TextureCube pointShadowMap : register(t5);
+SamplerState pointShadowSampler : register(s5);
+TextureCube irradianceMap : register(t6);
+SamplerState irradianceSampler : register(s6);
+TextureCube prefilteredMap : register(t7);
+SamplerState prefilteredSampler : register(s7);
+Texture2D brdfLUT : register(t8);
+SamplerState brdfSampler : register(s8);
+StructuredBuffer<LightData> lightBuffer : register(t9);
+StructuredBuffer<uint> tileLightData : register(t10);
 
 // Atlas offsets for each cascade in the 2x2 grid
 static const float2 cascadeOffsets[NUM_CASCADES] = {
@@ -32,20 +42,28 @@ static const float2 cascadeOffsets[NUM_CASCADES] = {
 
 cbuffer PS_CONSTANT_BUFFER
 {
-    float4 lightPosWS[MAX_LIGHTS];
+    float4 lightPosWS[MAX_LIGHTS];      // xyz = position, w = range
     float4 lightColor[MAX_LIGHTS];
     float4 intensity[MAX_LIGHTS];
+    float4 lightDirWS[MAX_LIGHTS];      // xyz = direction (for directional/spot)
+    int lightType[MAX_LIGHTS];           // LIGHT_TYPE_*
+    int lightShadowIndex[MAX_LIGHTS];    // -1 = no shadow
     float4 albedo;
     float metallic;
     float roughness;
     float ao;
     float pbrModel;
     matrix viewInv;
+    matrix view;
     int numLights;
     float hasAlbedoTexture;
     float hasMetallicRoughnessTexture;
     float hasNormalTexture;
     float hasAOTexture;
+    float pointShadowFarPlane;
+    int useIBL;
+    int useTiledLighting;
+    int numTilesX;
     float4 cascadeSplitDepths[NUM_CASCADES];
 };
 
@@ -117,6 +135,18 @@ float3 FresnelSchlick(float cosTheta, float3 F0)
 }
 
 //**********************************************************************
+// Point-light shadow sampling from cubemap
+//**********************************************************************
+float ComputePointShadow(float3 fragPosWS, float3 lightPosWS, float farPlane)
+{
+    float3 fragToLight = fragPosWS - lightPosWS;
+    float currentDepth = length(fragToLight);
+    float closestDepth = pointShadowMap.Sample(pointShadowSampler, fragToLight).r * farPlane;
+    float bias = 0.05;
+    return (currentDepth - bias > closestDepth) ? 0.3 : 1.0;
+}
+
+//**********************************************************************
 // CSM shadow computation (same algorithm as ObjShader.ps)
 //**********************************************************************
 float ComputeShadowCSM(VSOutput p)
@@ -163,11 +193,18 @@ float ComputeShadowCSM(VSOutput p)
     return shadow / 9.0;
 }
 
+struct PSOutput
+{
+    float4 color : SV_Target0;
+    float4 normal : SV_Target1;  // View-space normal (xy), roughness (z), metallic (w)
+};
+
 //**********************************************************************
 // PBR pixel shader main
 //**********************************************************************
-float4 PS(VSOutput p) : SV_Target
+PSOutput PS(VSOutput p)
 {
+    PSOutput output;
     // Sample material properties
     float3 baseColor = albedo.rgb;
     if (hasAlbedoTexture > 0.0)
@@ -208,15 +245,93 @@ float4 PS(VSOutput p) : SV_Target
 
     // Accumulate direct lighting
     float3 Lo = float3(0.0, 0.0, 0.0);
+
+    if (useTiledLighting)
+    {
+        // Tiled path: read light indices from per-tile list
+        int tileX = (int)p.posPS.x / 16;
+        int tileY = (int)p.posPS.y / 16;
+        uint tileIndex = tileY * numTilesX + tileX;
+        uint baseOffset = tileIndex * (32 + 1); // MAX_TILE_LIGHTS + 1
+        uint tileLightCount = tileLightData[baseOffset];
+
+        [loop]
+        for (uint ti = 0; ti < tileLightCount; ti++)
+        {
+            uint li = tileLightData[baseOffset + 1 + ti];
+            LightData light = lightBuffer[li];
+
+            float3 L;
+            float attenuation;
+            if (light.type == LIGHT_TYPE_DIRECTIONAL)
+            {
+                L = normalize(-light.dirWS.xyz);
+                attenuation = light.intensity;
+            }
+            else
+            {
+                L = normalize(light.posWS.xyz - p.posWS);
+                float distance = length(light.posWS.xyz - p.posWS);
+                float lightRange = light.posWS.w;
+                float rangeAtten = saturate(1.0 - pow(distance / lightRange, 4.0));
+                rangeAtten *= rangeAtten;
+                attenuation = light.intensity / (distance * distance + 1.0) * rangeAtten;
+            }
+
+            float3 H = normalize(V + L);
+            float3 radiance = light.color.rgb * attenuation;
+
+            float NDF = DistributionGGX(N, H, rough);
+            float G = GeometrySmith(N, V, L, rough);
+            float3 F = FresnelSchlick(max(dot(H, V), 0.0), F0);
+
+            float3 numerator = NDF * G * F;
+            float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001;
+            float3 specular = numerator / denominator;
+
+            float3 kS = F;
+            float3 kD = (1.0 - kS) * (1.0 - met);
+            float NdotL = max(dot(N, L), 0.0);
+
+            float lightShadow = 1.0;
+            if (light.shadowIndex >= 0)
+            {
+                if (light.type == LIGHT_TYPE_DIRECTIONAL)
+                    lightShadow = shadowFactor;
+                else if (light.type == LIGHT_TYPE_POINT && pointShadowFarPlane > 0.0)
+                    lightShadow = ComputePointShadow(p.posWS, light.posWS.xyz, pointShadowFarPlane);
+            }
+
+            Lo += (kD * baseColor / PI + specular) * radiance * NdotL * lightShadow;
+        }
+    }
+    else
+    {
+    // Array path (original)
     for (int i = 0; i < numLights; i++)
     {
-        float3 L = normalize(lightPosWS[i].xyz - p.posWS);
+        float3 lightPos = lightPosWS[i].xyz;
+        float lightRange = lightPosWS[i].w;
+        float3 L;
+        float attenuation;
+
+        if (lightType[i] == LIGHT_TYPE_DIRECTIONAL)
+        {
+            L = normalize(-lightDirWS[i].xyz);
+            attenuation = intensity[i].x;
+        }
+        else
+        {
+            L = normalize(lightPos - p.posWS);
+            float distance = length(lightPos - p.posWS);
+            float rangeAtten = saturate(1.0 - pow(distance / lightRange, 4.0));
+            rangeAtten *= rangeAtten;
+            attenuation = intensity[i].x / (distance * distance + 1.0) * rangeAtten;
+        }
+
         float3 H = normalize(V + L);
-        float distance = length(lightPosWS[i].xyz - p.posWS);
-        float attenuation = intensity[i].x / (distance * distance + 1.0);
         float3 radiance = lightColor[i].rgb * attenuation;
 
-        // Cook-Torrance BRDF
         float NDF = DistributionGGX(N, H, rough);
         float G = GeometrySmith(N, V, L, rough);
         float3 F = FresnelSchlick(max(dot(H, V), 0.0), F0);
@@ -225,18 +340,59 @@ float4 PS(VSOutput p) : SV_Target
         float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001;
         float3 specular = numerator / denominator;
 
-        // Energy conservation
         float3 kS = F;
         float3 kD = (1.0 - kS) * (1.0 - met);
 
         float NdotL = max(dot(N, L), 0.0);
-        Lo += (kD * baseColor / PI + specular) * radiance * NdotL * shadowFactor;
+
+        float lightShadow = 1.0;
+        if (lightShadowIndex[i] >= 0)
+        {
+            if (lightType[i] == LIGHT_TYPE_DIRECTIONAL)
+                lightShadow = shadowFactor;
+            else if (lightType[i] == LIGHT_TYPE_POINT && pointShadowFarPlane > 0.0)
+                lightShadow = ComputePointShadow(p.posWS, lightPosWS[i].xyz, pointShadowFarPlane);
+        }
+
+        Lo += (kD * baseColor / PI + specular) * radiance * NdotL * lightShadow;
+    }
     }
 
-    // Ambient (simple constant, AO applied only here)
-    float3 ambient = float3(0.03, 0.03, 0.03) * baseColor * aoFactor;
+    // Ambient / IBL
+    float3 ambient;
+    if (useIBL)
+    {
+        // Fresnel-Schlick with roughness for IBL
+        float NdotV = max(dot(N, V), 0.0);
+        float3 F_ibl = F0 + (max(float3(1.0 - rough, 1.0 - rough, 1.0 - rough), F0) - F0) * pow(1.0 - NdotV, 5.0);
+        float3 kS_ibl = F_ibl;
+        float3 kD_ibl = (1.0 - kS_ibl) * (1.0 - met);
+
+        // Diffuse IBL from irradiance map
+        float3 irradiance = irradianceMap.Sample(irradianceSampler, N).rgb;
+        float3 diffuseIBL = irradiance * baseColor;
+
+        // Specular IBL from pre-filtered env map + BRDF LUT
+        float3 R = reflect(-V, N);
+        const float MAX_REFLECTION_LOD = 4.0;
+        float3 prefilteredColor = prefilteredMap.SampleLevel(prefilteredSampler, R, rough * MAX_REFLECTION_LOD).rgb;
+        float2 brdf = brdfLUT.Sample(brdfSampler, float2(NdotV, rough)).rg;
+        float3 specularIBL = prefilteredColor * (F_ibl * brdf.x + brdf.y);
+
+        ambient = (kD_ibl * diffuseIBL + specularIBL) * aoFactor;
+    }
+    else
+    {
+        ambient = float3(0.03, 0.03, 0.03) * baseColor * aoFactor;
+    }
     float3 color = ambient + Lo;
 
     // Output linear HDR - tonemapping and gamma are applied in the post-processing chain
-    return float4(color, 1.0);
+    output.color = float4(color, 1.0);
+
+    // View-space normal for SSR
+    float3 normalVS = normalize(mul(float4(N, 0.0), view).xyz);
+    output.normal = float4(normalVS.xy * 0.5 + 0.5, rough, met);
+
+    return output;
 }

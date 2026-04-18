@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Shader>
+  <ComputeShader Filename="$(CausticRoot)\Libraries\Rendering\Caustic\TileLightCull.cs" Output="$(CausticRoot)\$(Configuration)\TileLightCull_CS.cso"/>
+</Shader>

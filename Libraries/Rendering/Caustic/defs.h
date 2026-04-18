@@ -3,8 +3,25 @@
 // Licensed under the MIT license.
 // See file LICENSE for details.
 //**********************************************************************
-#define MAX_LIGHTS 4
+#define MAX_LIGHTS 16
 #define NUM_CASCADES 4
+
+// Light type constants (matches ELightType enum in C++)
+#define LIGHT_TYPE_POINT       0
+#define LIGHT_TYPE_DIRECTIONAL 1
+#define LIGHT_TYPE_SPOT        2
+#define LIGHT_TYPE_AREA        3
+
+struct LightData
+{
+    float4 posWS;       // xyz = position, w = range
+    float4 dirWS;       // xyz = direction (for directional/spot), w = unused
+    float4 color;       // rgb = color, a = unused
+    float intensity;
+    int type;           // LIGHT_TYPE_*
+    int shadowIndex;    // -1 = no shadow, 0+ = shadow map index
+    float pad;
+};
 
 struct VSInput
 {

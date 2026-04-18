@@ -184,6 +184,64 @@ namespace Caustic
         try { m_spSSAOShader = m_spShaderMgr->FindShader(L"SSAO"); } catch (...) {}
         try { m_spSSAOBlurShader = m_spShaderMgr->FindShader(L"SSAOBlur"); } catch (...) {}
 
+        // Create point-light shadow cubemaps
+        m_numPointShadowLights = 0;
+        m_iblDirty = false;
+        for (int i = 0; i < c_MaxPointShadowLights; i++)
+        {
+            m_spPointShadowCubemap[i] = CreateCubemapDepthTexture(this, c_PointShadowMapSize);
+        }
+
+        // Load IBL shaders
+        try { m_spBRDFLUTShader = m_spShaderMgr->FindShader(L"BRDFLUT"); } catch (...) {}
+        try { m_spIrradianceShader = m_spShaderMgr->FindShader(L"IrradianceConvolution"); } catch (...) {}
+        try { m_spPrefilterShader = m_spShaderMgr->FindShader(L"PrefilterEnvMap"); } catch (...) {}
+        try { m_spTileCullShader = m_spShaderMgr->FindShader(L"TileLightCull"); } catch (...) {}
+        try { m_spSSRShader = m_spShaderMgr->FindShader(L"SSR"); } catch (...) {}
+        m_tiledLightingEnabled = false;
+        m_ssrEnabled = false;
+
+        // Generate BRDF LUT (one-time, doesn't depend on environment map)
+        if (m_spBRDFLUTShader != nullptr)
+        {
+            m_spBRDFLUT = CreateTexture(this, 512, 512, DXGI_FORMAT_R16G16_FLOAT,
+                (D3D11_CPU_ACCESS_FLAG)0, (D3D11_BIND_FLAG)(D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE));
+
+            // Render BRDF LUT
+            CComPtr<ID3D11RenderTargetView> spBRDFRTV;
+            CT(m_spDevice->CreateRenderTargetView(m_spBRDFLUT->GetD3DTexture(), NULL, &spBRDFRTV));
+
+            CComPtr<ID3D11RenderTargetView> spOldRT;
+            CComPtr<ID3D11DepthStencilView> spOldDS;
+            m_spContext->OMGetRenderTargets(1, &spOldRT, &spOldDS);
+            D3D11_VIEWPORT oldVP = m_viewport;
+
+            m_spContext->OMSetRenderTargets(1, &spBRDFRTV.p, nullptr);
+            D3D11_VIEWPORT brdfVP = {};
+            brdfVP.Width = 512.0f;
+            brdfVP.Height = 512.0f;
+            brdfVP.MaxDepth = 1.0f;
+            m_spContext->RSSetViewports(1, &brdfVP);
+
+            std::vector<CRefObj<ILight>> emptyLights;
+            m_spBRDFLUTShader->SetVSParamFloat(L"minu", 0.0f);
+            m_spBRDFLUTShader->SetVSParamFloat(L"minv", 0.0f);
+            m_spBRDFLUTShader->SetVSParamFloat(L"maxu", 1.0f);
+            m_spBRDFLUTShader->SetVSParamFloat(L"maxv", 1.0f);
+            m_spBRDFLUTShader->BeginRender(this, nullptr, emptyLights, nullptr);
+            UINT brdfOffset = 0;
+            UINT brdfVertexSize = sizeof(CQuadVertex);
+            m_spContext->IASetVertexBuffers(0, 1, &m_spQuadVB.p, &brdfVertexSize, &brdfOffset);
+            m_spContext->IASetIndexBuffer(m_spQuadIB, DXGI_FORMAT_R32_UINT, 0);
+            m_spContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+            m_spContext->DrawIndexed(6, 0, 0);
+            m_spBRDFLUTShader->EndRender(this);
+
+            m_spContext->OMSetRenderTargets(1, &spOldRT.p, spOldDS);
+            m_viewport = oldVP;
+            m_spContext->RSSetViewports(1, &m_viewport);
+        }
+
         //**********************************************************************
         // Create vertex buffer used to draw lines
         //**********************************************************************
@@ -765,6 +823,9 @@ namespace Caustic
                     m_spContext->OMSetRenderTargets(1, &rsPop.m_spOldRT.p, rsPop.m_spOldStencil);
                 }
             }
+
+            // Render point-light shadow cubemaps
+            RenderPointShadows(pass, renderCallback);
         }
         else
         {
@@ -841,6 +902,49 @@ namespace Caustic
             pShader->SetVSParam(L"cascadeViewProj", i, std::any(mat));
             Float4 splitDepth(m_cascadeData.cascadeSplitDepths[i], 0.0f, 0.0f, 0.0f);
             pShader->SetPSParam(L"cascadeSplitDepths", i, std::any(splitDepth));
+        }
+
+        // Bind point-light shadow cubemap if available
+        if (m_numPointShadowLights > 0 && m_spPointShadowCubemap[0] != nullptr)
+        {
+            pShader->SetPSParam(L"pointShadowMap", std::any(m_spPointShadowCubemap[0]));
+            // Find the point light's range for depth comparison
+            for (int i = 0; i < (int)lights.size(); i++)
+            {
+                if (lights[i]->GetType() == ELightType::PointLight && lights[i]->GetCastsShadows())
+                {
+                    float range = lights[i]->GetRange();
+                    pShader->SetPSParamFloat(L"pointShadowFarPlane", range);
+                    break;
+                }
+            }
+        }
+
+        // Bind IBL textures if available
+        if (m_spIrradianceMap != nullptr && m_spPrefilteredMap != nullptr && m_spBRDFLUT != nullptr)
+        {
+            pShader->SetPSParam(L"irradianceMap", std::any(m_spIrradianceMap));
+            pShader->SetPSParam(L"prefilteredMap", std::any(m_spPrefilteredMap));
+            pShader->SetPSParam(L"brdfLUT", std::any(m_spBRDFLUT));
+            pShader->SetPSParamInt(L"useIBL", 1);
+        }
+        else
+        {
+            pShader->SetPSParamInt(L"useIBL", 0);
+        }
+
+        // Bind tiled lighting data if available
+        if (m_tiledLightingEnabled && m_spLightBuffer != nullptr && m_spTileLightBuffer != nullptr)
+        {
+            pShader->SetPSParam(L"lightBuffer", std::any(m_spLightBuffer));
+            pShader->SetPSParam(L"tileLightData", std::any(m_spTileLightBuffer));
+            pShader->SetPSParamInt(L"useTiledLighting", 1);
+            int numTilesX = (m_BBDesc.Width + 15) / 16;
+            pShader->SetPSParamInt(L"numTilesX", numTilesX);
+        }
+        else
+        {
+            pShader->SetPSParamInt(L"useTiledLighting", 0);
         }
     }
 
@@ -940,6 +1044,7 @@ namespace Caustic
 #ifdef _DEBUG
                 spCtx2->BeginEventInt(L"OpaquePass", 0);
 #endif
+                DispatchTileLightCull();
                 DrawSceneObjects(pass, renderCallback);
 #ifdef _DEBUG
                 spCtx2->EndEvent();
@@ -1094,12 +1199,28 @@ namespace Caustic
 
         m_spContext->OMSetRenderTargets(1, &pSceneRTV, pStencilView);
 
+        // Set up MRT for SSR normal buffer if enabled
+        if (m_ssrEnabled && m_spNormalRTV != nullptr)
+        {
+            FLOAT blackNorm[4] = { 0.5f, 0.5f, 0.0f, 0.0f };
+            m_spContext->ClearRenderTargetView(m_spNormalRTV, blackNorm);
+            ID3D11RenderTargetView* rtvs[2] = { pSceneRTV, m_spNormalRTV };
+            m_spContext->OMSetRenderTargets(2, rtvs, pStencilView);
+        }
+
+        // Generate IBL maps if environment map changed
+        if (m_iblDirty)
+        {
+            GenerateIBLMaps();
+            m_spContext->OMSetRenderTargets(1, &pSceneRTV, pStencilView);
+        }
+
         RenderScene(renderCallback);
 
         // Run post-processing chain
         if (usePostProcess)
         {
-            // Unbind depth so SSAO can read it
+            // Unbind MRT and depth so post-process can read them
             m_spContext->OMSetRenderTargets(1, &pSceneRTV, nullptr);
             RunPostProcessing();
         }
@@ -1351,6 +1472,20 @@ namespace Caustic
             CComPtr<ID3D11ShaderResourceView> spSRV;
             CT(m_spDevice->CreateShaderResourceView(m_spPostProcessRT[i], NULL, &spSRV));
             m_spPostProcessTexObj[i] = CRefObj<ITexture>(new CTexture(m_spPostProcessRT[i], spSRV));
+        }
+
+        // Create normal buffer for SSR (R16G16B16A16: normalVS.xy, roughness, metallic)
+        m_spNormalRTV = nullptr;
+        m_spNormalBufferObj = nullptr;
+        {
+            CComPtr<ID3D11Texture2D> spNormalTex;
+            CD3D11_TEXTURE2D_DESC normalDesc(DXGI_FORMAT_R16G16B16A16_FLOAT, m_BBDesc.Width, m_BBDesc.Height,
+                1, 1, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
+            CT(m_spDevice->CreateTexture2D(&normalDesc, NULL, &spNormalTex));
+            CT(m_spDevice->CreateRenderTargetView(spNormalTex, NULL, &m_spNormalRTV));
+            CComPtr<ID3D11ShaderResourceView> spNormalSRV;
+            CT(m_spDevice->CreateShaderResourceView(spNormalTex, NULL, &spNormalSRV));
+            m_spNormalBufferObj = CRefObj<ITexture>(new CTexture(spNormalTex, spNormalSRV));
         }
 
         // Recreate bloom mip chain
@@ -1725,6 +1860,57 @@ namespace Caustic
         }
 
         //**********************************************************************
+        // Pass: SSR (Screen-Space Reflections)
+        //**********************************************************************
+        if (m_ssrEnabled && m_spSSRShader != nullptr && m_spNormalBufferObj != nullptr)
+        {
+#ifdef _DEBUG
+            spCtx2->BeginEventInt(L"SSR", 0);
+#endif
+            m_spContext->OMSetRenderTargets(1, &m_spPostProcessRTV[pingPongIndex].p, nullptr);
+            FLOAT black[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+            m_spContext->ClearRenderTargetView(m_spPostProcessRTV[pingPongIndex], black);
+
+            D3D11_VIEWPORT ppVP = {};
+            ppVP.Width = (float)m_BBDesc.Width;
+            ppVP.Height = (float)m_BBDesc.Height;
+            ppVP.MaxDepth = 1.0f;
+            m_spContext->RSSetViewports(1, &ppVP);
+
+            m_spSSRShader->SetPSParam(L"sceneTexture", std::any(pCurrentTex));
+            m_spSSRShader->SetPSParam(L"depthTexture", std::any(m_spDepthTextureObj));
+            m_spSSRShader->SetPSParam(L"normalTexture", std::any(m_spNormalBufferObj));
+
+            // Pass projection matrix and inverse
+            DirectX::XMFLOAT4X4 f4x4;
+            DirectX::XMStoreFloat4x4(&f4x4, GetCamera()->GetProjection());
+            Matrix projMat(reinterpret_cast<float*>(&f4x4));
+            m_spSSRShader->SetPSParam(L"projMatrix", std::any(projMat));
+            DirectX::XMStoreFloat4x4(&f4x4, DirectX::XMMatrixInverse(nullptr, GetCamera()->GetProjection()));
+            Matrix projInvMat(reinterpret_cast<float*>(&f4x4));
+            m_spSSRShader->SetPSParam(L"projInv", std::any(projInvMat));
+
+            m_spSSRShader->SetPSParamFloat(L"screenWidth", (float)m_BBDesc.Width);
+            m_spSSRShader->SetPSParamFloat(L"screenHeight", (float)m_BBDesc.Height);
+            m_spSSRShader->SetPSParamFloat(L"maxDistance", 50.0f);
+            m_spSSRShader->SetPSParamFloat(L"thickness", 0.5f);
+            m_spSSRShader->SetVSParamFloat(L"minu", 0.0f);
+            m_spSSRShader->SetVSParamFloat(L"minv", 0.0f);
+            m_spSSRShader->SetVSParamFloat(L"maxu", 1.0f);
+            m_spSSRShader->SetVSParamFloat(L"maxv", 1.0f);
+
+            m_spSSRShader->BeginRender(this, nullptr, emptyLights, nullptr);
+            m_spContext->DrawIndexed(6, 0, 0);
+            m_spSSRShader->EndRender(this);
+
+            pCurrentTex = m_spPostProcessTexObj[pingPongIndex];
+            pingPongIndex = 1 - pingPongIndex;
+#ifdef _DEBUG
+            spCtx2->EndEvent();
+#endif
+        }
+
+        //**********************************************************************
         // Pass: Bloom
         //**********************************************************************
         if (m_bloomEnabled && m_spBloomExtractShader != nullptr && m_spBloomBlurShader != nullptr && m_spBloomCompositeShader != nullptr)
@@ -1916,5 +2102,333 @@ namespace Caustic
 #ifdef _DEBUG
         spCtx2->EndEvent();
 #endif
+    }
+
+    //**********************************************************************
+    // Method: RenderPointShadows
+    // Renders shadow cubemaps for point lights that cast shadows.
+    // For each shadow-casting point light, renders the scene depth
+    // into 6 cube faces using 90° FOV perspective projection.
+    //**********************************************************************
+    void CRenderer::RenderPointShadows(int pass, std::function<void(IRenderer* pRenderer, IRenderCtx* pRenderCtx, int pass)> renderCallback)
+    {
+        using namespace DirectX;
+
+        m_numPointShadowLights = 0;
+
+        // Cube face view directions and up vectors
+        // Order: +X, -X, +Y, -Y, +Z, -Z
+        static const XMVECTORF32 faceDirs[6] = {
+            {{ 1.0f,  0.0f,  0.0f, 0.0f}},  // +X
+            {{-1.0f,  0.0f,  0.0f, 0.0f}},  // -X
+            {{ 0.0f,  1.0f,  0.0f, 0.0f}},  // +Y
+            {{ 0.0f, -1.0f,  0.0f, 0.0f}},  // -Y
+            {{ 0.0f,  0.0f,  1.0f, 0.0f}},  // +Z
+            {{ 0.0f,  0.0f, -1.0f, 0.0f}}   // -Z
+        };
+        static const XMVECTORF32 faceUps[6] = {
+            {{ 0.0f, 1.0f,  0.0f, 0.0f}},  // +X
+            {{ 0.0f, 1.0f,  0.0f, 0.0f}},  // -X
+            {{ 0.0f, 0.0f, -1.0f, 0.0f}},  // +Y
+            {{ 0.0f, 0.0f,  1.0f, 0.0f}},  // -Y
+            {{ 0.0f, 1.0f,  0.0f, 0.0f}},  // +Z
+            {{ 0.0f, 1.0f,  0.0f, 0.0f}}   // -Z
+        };
+
+        for (int li = 0; li < (int)m_lights.size() && m_numPointShadowLights < c_MaxPointShadowLights; li++)
+        {
+            if (m_lights[li]->GetType() != ELightType::PointLight || !m_lights[li]->GetCastsShadows())
+                continue;
+
+            int shadowIdx = m_numPointShadowLights;
+            Vector3 lightPos = m_lights[li]->GetPosition();
+            float lightRange = m_lights[li]->GetRange();
+            XMVECTOR lightPosV = XMVectorSet(lightPos.x, lightPos.y, lightPos.z, 1.0f);
+
+            // 90° FOV perspective projection
+            XMMATRIX projMatrix = XMMatrixPerspectiveFovLH(XM_PIDIV2, 1.0f, 0.1f, lightRange);
+
+            // Render each face
+            for (uint32_t face = 0; face < 6; face++)
+            {
+                // Save current state
+                ShadowMapRenderState rs;
+                m_spContext->OMGetRenderTargets(1, &rs.m_spOldRT, &rs.m_spOldStencil);
+                rs.m_spOldCamera = m_spCamera;
+                rs.m_viewport = m_viewport;
+                m_shadowMapRenderState.push(rs);
+
+                // Set face DSV as render target
+                CComPtr<ID3D11DepthStencilView> spFaceDSV = m_spPointShadowCubemap[shadowIdx]->GetFaceDSV(face);
+                m_spContext->OMSetRenderTargets(0, nullptr, spFaceDSV);
+                m_spContext->ClearDepthStencilView(spFaceDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);
+
+                // Set viewport
+                D3D11_VIEWPORT vp = {};
+                vp.Width = (float)c_PointShadowMapSize;
+                vp.Height = (float)c_PointShadowMapSize;
+                vp.MinDepth = 0.0f;
+                vp.MaxDepth = 1.0f;
+                m_viewport = vp;
+                m_spContext->RSSetViewports(1, &m_viewport);
+
+                // Create shadow camera for this face
+                XMMATRIX viewMatrix = XMMatrixLookToLH(lightPosV, faceDirs[face], faceUps[face]);
+                CRefObj<ICamera> spShadowCamera = CreateCamera(true);
+                XMFLOAT3 target;
+                XMStoreFloat3(&target, XMVectorAdd(lightPosV, faceDirs[face]));
+                Vector3 dir(target.x - lightPos.x, target.y - lightPos.y, target.z - lightPos.z);
+                XMFLOAT3 upF;
+                XMStoreFloat3(&upF, faceUps[face]);
+                Vector3 up(upF.x, upF.y, upF.z);
+                spShadowCamera->SetPosition(lightPos, dir, up);
+                spShadowCamera->SetParams(90.0f, 1.0f, 0.1f, lightRange);
+                this->SetCamera(spShadowCamera);
+
+                // Render shadow-casting objects
+                for (size_t j = 0; j < m_singleObjs.size(); j++)
+                {
+                    if (m_singleObjs[j]->InPass(pass))
+                        m_singleObjs[j]->Render(this, m_lights, m_spRenderCtx);
+                }
+
+                // Restore state
+                ShadowMapRenderState rsPop = m_shadowMapRenderState.top();
+                this->SetCamera(rsPop.m_spOldCamera);
+                m_viewport = rsPop.m_viewport;
+                m_spContext->RSSetViewports(1, &m_viewport);
+                m_shadowMapRenderState.pop();
+                m_spContext->OMSetRenderTargets(1, &rsPop.m_spOldRT.p, rsPop.m_spOldStencil);
+            }
+
+            m_numPointShadowLights++;
+        }
+    }
+
+    //**********************************************************************
+    // Method: GenerateIBLMaps
+    // Generates irradiance and pre-filtered specular cubemaps from the
+    // current environment map for image-based lighting.
+    //**********************************************************************
+    void CRenderer::GenerateIBLMaps()
+    {
+        if (m_spEnvironmentMap == nullptr)
+            return;
+
+        std::vector<CRefObj<ILight>> emptyLights;
+        UINT quadVertexSize = sizeof(CQuadVertex);
+        UINT quadOffset = 0;
+
+        // Save current state
+        CComPtr<ID3D11RenderTargetView> spOldRT;
+        CComPtr<ID3D11DepthStencilView> spOldDS;
+        m_spContext->OMGetRenderTargets(1, &spOldRT, &spOldDS);
+        D3D11_VIEWPORT oldVP = m_viewport;
+
+        //**********************************************************************
+        // Generate irradiance cubemap (32x32 per face)
+        //**********************************************************************
+        if (m_spIrradianceShader != nullptr)
+        {
+            const int irradSize = 32;
+            m_spIrradianceMap = CreateCubemapTexture(this, irradSize, DXGI_FORMAT_R16G16B16A16_FLOAT);
+
+            D3D11_VIEWPORT irradVP = {};
+            irradVP.Width = (float)irradSize;
+            irradVP.Height = (float)irradSize;
+            irradVP.MaxDepth = 1.0f;
+            m_spContext->RSSetViewports(1, &irradVP);
+
+            for (int face = 0; face < 6; face++)
+            {
+                ID3D11RenderTargetView* pFaceRTV = m_spIrradianceMap->GetFaceRTV(face);
+                m_spContext->OMSetRenderTargets(1, &pFaceRTV, nullptr);
+                FLOAT black[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+                m_spContext->ClearRenderTargetView(pFaceRTV, black);
+
+                m_spIrradianceShader->SetPSParam(L"environmentMap", std::any(m_spEnvironmentMap));
+                m_spIrradianceShader->SetPSParamInt(L"faceIndex", face);
+                m_spIrradianceShader->SetVSParamFloat(L"minu", 0.0f);
+                m_spIrradianceShader->SetVSParamFloat(L"minv", 0.0f);
+                m_spIrradianceShader->SetVSParamFloat(L"maxu", 1.0f);
+                m_spIrradianceShader->SetVSParamFloat(L"maxv", 1.0f);
+                m_spIrradianceShader->BeginRender(this, nullptr, emptyLights, nullptr);
+                m_spContext->IASetVertexBuffers(0, 1, &m_spQuadVB.p, &quadVertexSize, &quadOffset);
+                m_spContext->IASetIndexBuffer(m_spQuadIB, DXGI_FORMAT_R32_UINT, 0);
+                m_spContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+                m_spContext->DrawIndexed(6, 0, 0);
+                m_spIrradianceShader->EndRender(this);
+            }
+        }
+
+        //**********************************************************************
+        // Generate pre-filtered specular cubemap (128x128, 5 mip levels)
+        //**********************************************************************
+        if (m_spPrefilterShader != nullptr)
+        {
+            const int prefilterSize = 128;
+            const int maxMipLevels = 5;
+            m_spPrefilteredMap = CreateCubemapTexture(this, prefilterSize, DXGI_FORMAT_R16G16B16A16_FLOAT, maxMipLevels);
+
+            for (int mip = 0; mip < maxMipLevels; mip++)
+            {
+                int mipWidth = prefilterSize >> mip;
+                int mipHeight = prefilterSize >> mip;
+                float roughness = (float)mip / (float)(maxMipLevels - 1);
+
+                D3D11_VIEWPORT prefilterVP = {};
+                prefilterVP.Width = (float)mipWidth;
+                prefilterVP.Height = (float)mipHeight;
+                prefilterVP.MaxDepth = 1.0f;
+                m_spContext->RSSetViewports(1, &prefilterVP);
+
+                for (int face = 0; face < 6; face++)
+                {
+                    // Create RTV for this specific mip level of this face
+                    D3D11_RENDER_TARGET_VIEW_DESC rtvDesc = {};
+                    rtvDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+                    rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
+                    rtvDesc.Texture2DArray.MipSlice = mip;
+                    rtvDesc.Texture2DArray.FirstArraySlice = face;
+                    rtvDesc.Texture2DArray.ArraySize = 1;
+
+                    CComPtr<ID3D11RenderTargetView> spMipFaceRTV;
+                    CT(m_spDevice->CreateRenderTargetView(m_spPrefilteredMap->GetD3DTexture(), &rtvDesc, &spMipFaceRTV));
+
+                    m_spContext->OMSetRenderTargets(1, &spMipFaceRTV.p, nullptr);
+                    FLOAT black[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+                    m_spContext->ClearRenderTargetView(spMipFaceRTV, black);
+
+                    m_spPrefilterShader->SetPSParam(L"environmentMap", std::any(m_spEnvironmentMap));
+                    m_spPrefilterShader->SetPSParamInt(L"faceIndex", face);
+                    m_spPrefilterShader->SetPSParamFloat(L"roughness", roughness);
+                    m_spPrefilterShader->SetPSParamFloat(L"envMapSize", (float)prefilterSize);
+                    m_spPrefilterShader->SetVSParamFloat(L"minu", 0.0f);
+                    m_spPrefilterShader->SetVSParamFloat(L"minv", 0.0f);
+                    m_spPrefilterShader->SetVSParamFloat(L"maxu", 1.0f);
+                    m_spPrefilterShader->SetVSParamFloat(L"maxv", 1.0f);
+                    m_spPrefilterShader->BeginRender(this, nullptr, emptyLights, nullptr);
+                    m_spContext->IASetVertexBuffers(0, 1, &m_spQuadVB.p, &quadVertexSize, &quadOffset);
+                    m_spContext->IASetIndexBuffer(m_spQuadIB, DXGI_FORMAT_R32_UINT, 0);
+                    m_spContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+                    m_spContext->DrawIndexed(6, 0, 0);
+                    m_spPrefilterShader->EndRender(this);
+                }
+            }
+        }
+
+        // Restore state
+        m_spContext->OMSetRenderTargets(1, &spOldRT.p, spOldDS);
+        m_viewport = oldVP;
+        m_spContext->RSSetViewports(1, &m_viewport);
+
+        m_iblDirty = false;
+    }
+
+    //**********************************************************************
+    // GPU-side light data struct (must match LightData in defs.h)
+    //**********************************************************************
+    struct GPULightData
+    {
+        float posWS[4];    // xyz = position, w = range
+        float dirWS[4];    // xyz = direction, w = unused
+        float color[4];    // rgb = color, a = unused
+        float intensity;
+        int type;
+        int shadowIndex;
+        float pad;
+    };
+
+    //**********************************************************************
+    // Method: DispatchTileLightCull
+    // Runs the tiled light culling compute shader to build per-tile light
+    // index lists for the current frame's lights.
+    //**********************************************************************
+    void CRenderer::DispatchTileLightCull()
+    {
+        if (m_spTileCullShader == nullptr || !m_tiledLightingEnabled)
+            return;
+        if (m_lights.empty())
+            return;
+
+        const int TILE_SIZE = 16;
+        const int MAX_TILE_LIGHTS = 32;
+        int numLights = (int)m_lights.size();
+
+        // Create/recreate light buffer if needed
+        if (m_spLightBuffer == nullptr || numLights > 0)
+        {
+            m_spLightBuffer = CreateGPUBuffer(this, EBufferType::StructuredBuffer,
+                numLights, sizeof(GPULightData), 0);
+        }
+
+        // Upload light data
+        std::vector<GPULightData> lightData(numLights);
+        for (int i = 0; i < numLights; i++)
+        {
+            Vector3 pos = m_lights[i]->GetPosition();
+            lightData[i].posWS[0] = pos.x;
+            lightData[i].posWS[1] = pos.y;
+            lightData[i].posWS[2] = pos.z;
+            lightData[i].posWS[3] = m_lights[i]->GetRange();
+
+            Vector3 dir = m_lights[i]->GetDirection();
+            lightData[i].dirWS[0] = dir.x;
+            lightData[i].dirWS[1] = dir.y;
+            lightData[i].dirWS[2] = dir.z;
+            lightData[i].dirWS[3] = 0.0f;
+
+            FRGBColor clr = m_lights[i]->GetColor();
+            lightData[i].color[0] = clr.r;
+            lightData[i].color[1] = clr.g;
+            lightData[i].color[2] = clr.b;
+            lightData[i].color[3] = 0.0f;
+
+            lightData[i].intensity = m_lights[i]->GetIntensity();
+            lightData[i].type = (int)m_lights[i]->GetType();
+            lightData[i].shadowIndex = m_lights[i]->GetCastsShadows() ? i : -1;
+            lightData[i].pad = 0.0f;
+        }
+        m_spLightBuffer->CopyFromCPU(this, (uint8_t*)lightData.data());
+
+        // Create tile output buffer
+        int numTilesX = (m_BBDesc.Width + TILE_SIZE - 1) / TILE_SIZE;
+        int numTilesY = (m_BBDesc.Height + TILE_SIZE - 1) / TILE_SIZE;
+        int totalTiles = numTilesX * numTilesY;
+        int tileBufferElems = totalTiles * (MAX_TILE_LIGHTS + 1);
+
+        if (m_spTileLightBuffer == nullptr)
+        {
+            m_spTileLightBuffer = CreateGPUBuffer(this, EBufferType::RWStructuredBuffer,
+                tileBufferElems, sizeof(uint32_t), 0);
+        }
+
+        // Set compute shader params
+        Matrix viewMat;
+        {
+            DirectX::XMFLOAT4X4 f4x4;
+            DirectX::XMStoreFloat4x4(&f4x4, GetCamera()->GetView());
+            viewMat = Matrix(reinterpret_cast<float*>(&f4x4));
+        }
+        m_spTileCullShader->SetCSParam(L"viewMatrix", std::any(viewMat));
+        Matrix projMat;
+        {
+            DirectX::XMFLOAT4X4 f4x4;
+            DirectX::XMStoreFloat4x4(&f4x4, GetCamera()->GetProjection());
+            projMat = Matrix(reinterpret_cast<float*>(&f4x4));
+        }
+        m_spTileCullShader->SetCSParam(L"projMatrix", std::any(projMat));
+        m_spTileCullShader->SetCSParamInt(L"numLights", numLights);
+        m_spTileCullShader->SetCSParamInt(L"screenWidth", (int)m_BBDesc.Width);
+        m_spTileCullShader->SetCSParamInt(L"screenHeight", (int)m_BBDesc.Height);
+        m_spTileCullShader->SetCSParam(L"lightBuffer", std::any(m_spLightBuffer));
+        m_spTileCullShader->SetCSParam(L"depthTexture", std::any(m_spDepthTextureObj));
+        m_spTileCullShader->SetCSParam(L"tileLightData", std::any(m_spTileLightBuffer));
+
+        // Dispatch
+        std::vector<CRefObj<ILight>> emptyLights;
+        m_spTileCullShader->BeginRender(this, nullptr, emptyLights, nullptr);
+        m_spContext->Dispatch(numTilesX, numTilesY, 1);
+        m_spTileCullShader->EndRender(this);
     }
 }

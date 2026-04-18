@@ -339,8 +339,8 @@ export namespace Caustic
         void PushConstants(IRenderer* pRenderer, SBuffer *pBuffer, std::map<std::wstring, ShaderParamInstance> &params);
         void ClearSamplers(IRenderer* pRenderer);
         void PushSamplers(IRenderer* pRenderer, std::map<std::wstring, ShaderParamInstance>& params, bool isPixelShader);
-        void PushBuffers(IRenderer* pRenderer, std::map<std::wstring, ShaderParamInstance>& params);
-        void PopBuffers(IRenderer* pRenderer, std::map<std::wstring, ShaderParamInstance>& params);
+        void PushBuffers(IRenderer* pRenderer, std::map<std::wstring, ShaderParamInstance>& params, bool isPixelShader);
+        void PopBuffers(IRenderer* pRenderer, std::map<std::wstring, ShaderParamInstance>& params, bool isPixelShader);
         void SetParam(const std::wstring& paramName, const std::any& value, std::map<std::wstring, ShaderParamInstance>& params);
         void SetParam(const wchar_t* paramName, const std::any& value, std::map<std::wstring, ShaderParamInstance>& params);
         void SetParam(const std::wstring& paramName, int index, const std::any& value, std::map<std::wstring, ShaderParamInstance>& params);
