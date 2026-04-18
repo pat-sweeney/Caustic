@@ -42,8 +42,11 @@ namespace Caustic
 
         CRefObj<IMaterialAttrib> spOldMaterial = pSceneCtx->m_spCurrentMaterial;
         CRefObj<IShader> spOldShader = pSceneCtx->m_spCurrentShader;
+        bool oldReceiveShadows = pSceneCtx->m_receiveShadows;
         pSceneCtx->m_spCurrentMaterial = m_spMaterial;
         pSceneCtx->m_spCurrentShader = m_spShader;
+        if (!(GetFlags() & ESceneElemFlags::ReceivesShadow))
+            pSceneCtx->m_receiveShadows = false;
         bool oldState = false;
         if (!(GetFlags() & DepthTested))
             oldState = pRenderer->EnableDepthTest(false);
@@ -52,6 +55,7 @@ namespace Caustic
             pRenderer->EnableDepthTest(oldState);
         pSceneCtx->m_spCurrentMaterial = spOldMaterial;
         pSceneCtx->m_spCurrentShader = spOldShader;
+        pSceneCtx->m_receiveShadows = oldReceiveShadows;
         if (m_postrenderCallback)
             m_postrenderCallback(pRenderCtx->GetCurrentPass());
     }

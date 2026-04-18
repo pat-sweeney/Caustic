@@ -116,6 +116,8 @@ void FillInspector_Elem(ISceneElem* pElem)
         bool isHidden = (flags & ESceneElemFlags::Hidden) ? true : false;
         bool isSelected = (flags & ESceneElemFlags::Selected) ? true : false;
         bool depthTested = (flags & ESceneElemFlags::DepthTested) ? true : false;
+        bool castsShadow = (flags & ESceneElemFlags::CastsShadow) ? true : false;
+        bool receivesShadow = (flags & ESceneElemFlags::ReceivesShadow) ? true : false;
         bool bboxDirty = (flags & ESceneElemFlags::BBoxDirty) ? true : false;
         bool renderableDirty = (flags & ESceneElemFlags::RenderableDirty) ? true : false;
         bool materialDirty = (flags & ESceneElemFlags::MaterialDirty) ? true : false;
@@ -126,6 +128,10 @@ void FillInspector_Elem(ISceneElem* pElem)
         finalFlags |= (isSelected) ? ESceneElemFlags::Selected : 0;
         ImGui::Checkbox("DepthTested", &depthTested);
         finalFlags |= (depthTested) ? ESceneElemFlags::DepthTested : 0;
+        ImGui::Checkbox("Casts Shadow", &castsShadow);
+        finalFlags |= (castsShadow) ? ESceneElemFlags::CastsShadow : 0;
+        ImGui::Checkbox("Receives Shadow", &receivesShadow);
+        finalFlags |= (receivesShadow) ? ESceneElemFlags::ReceivesShadow : 0;
         ImGui::BeginDisabled();
         ImGui::Checkbox("BBoxDirty", &bboxDirty);
         ImGui::Checkbox("RenderableDirty", &renderableDirty);
@@ -1044,11 +1050,13 @@ ImVec2 BuildMenuBar(ImFont *pFont)
 
                     CRefObj<IShader> spShader = app.m_spRenderWindow->GetRenderer()->GetShaderMgr()->FindShader(L"Textured");
                     CRefObj<ISceneMaterialElem> spMaterialElem = app.m_spSceneFactory->CreateMaterialElem();
+                    spMaterialElem->SetName(L"GroundPlane Material");
                     spMaterialElem->SetMaterial(spMaterial);
                     spMaterialElem->SetShader(spShader);
                     spMaterialElem->AddChild(spMeshElem);
 
                     auto spLightElem = app.m_spSceneFactory->CreateLightCollectionElem();
+                    spLightElem->SetName(L"GroundPlane Lights");
                     Vector3 lightPos(0.0f, 100.0f, 0.0f);
                     FRGBColor lightColor(1.0f, 1.0f, 1.0f);
                     spLightElem->AddLight(app.m_spCausticFactory->CreatePointLight(lightPos, lightColor, 1.0f, true));

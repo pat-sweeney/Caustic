@@ -41,7 +41,7 @@ export namespace Caustic
         void DrawSelected(IRenderer* pRenderer, ISceneElem* pElem, SceneCtx* pSceneCtx);
     public:
         CSceneElem() :
-            m_Flags(DepthTested),
+            m_Flags(DepthTested | CastsShadow | ReceivesShadow),
             m_passes(c_PassOpaque | c_PassShadow | c_PassTransparent | c_PassEnvironment)
         {
         }

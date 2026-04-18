@@ -41,6 +41,8 @@ namespace Caustic
             return;
         if (pSceneCtx->m_CurrentPass == c_PassShadow && !pSceneCtx->m_inShadowLightGroup)
             return; // We are in the middle of a shadow pass, but we are not under any lights
+        if (pSceneCtx->m_CurrentPass == c_PassShadow && !(GetFlags() & ESceneElemFlags::CastsShadow))
+            return; // This element does not cast shadows
 
         if (m_prerenderCallback)
             if (!m_prerenderCallback(pRenderCtx->GetCurrentPass()))
@@ -74,7 +76,22 @@ namespace Caustic
             spCtx->BeginEventInt(GetName().c_str(), 0);
         }
 #endif
+        // Temporarily disable shadow receiving if the scene context or this element says no
+        bool overrideShadowReceiver = false;
+        bool oldShadowReceiver = false;
+        if (pSceneCtx->m_spCurrentMaterial != nullptr &&
+            (!pSceneCtx->m_receiveShadows || !(GetFlags() & ESceneElemFlags::ReceivesShadow)))
+        {
+            oldShadowReceiver = pSceneCtx->m_spCurrentMaterial->GetIsShadowReceiver();
+            if (oldShadowReceiver)
+            {
+                pSceneCtx->m_spCurrentMaterial->SetIsShadowReceiver(false);
+                overrideShadowReceiver = true;
+            }
+        }
         m_spRenderMesh->Render(pRenderer, pRenderCtx, (IRenderMaterial*)nullptr, nullptr, pSceneCtx->m_lights, &xm);
+        if (overrideShadowReceiver)
+            pSceneCtx->m_spCurrentMaterial->SetIsShadowReceiver(oldShadowReceiver);
 #ifdef _DEBUG
         if (spCtx)
             spCtx->EndEvent();

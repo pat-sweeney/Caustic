@@ -42,6 +42,8 @@ namespace Caustic
 #endif
         if (!(m_passes & pRenderCtx->GetCurrentPass()))
             return;
+        if (pRenderCtx->GetCurrentPass() == c_PassShadow && !(GetFlags() & ESceneElemFlags::CastsShadow))
+            return; // This group does not cast shadows
         if (m_prerenderCallback)
             if (!m_prerenderCallback(pRenderCtx->GetCurrentPass()))
                 return;

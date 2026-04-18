@@ -36,6 +36,7 @@ export namespace Caustic
                 0.0f, 0.0f, 0.0f, 1.0f);
             m_CurrentPass = c_PassFirst;
             m_inShadowLightGroup = false;
+            m_receiveShadows = true;
         }
 
         //**********************************************************************
@@ -68,6 +69,13 @@ export namespace Caustic
         // that cast shadows. Otherwise, during the shadow pass we will skip rendering.
         //**********************************************************************
         bool m_inShadowLightGroup;
+
+        //**********************************************************************
+        // Property: m_receiveShadows
+        // Indicates whether the current subtree should receive shadows.
+        // Set to false when a scene element has ReceivesShadow flag cleared.
+        //**********************************************************************
+        bool m_receiveShadows;
 
         //**********************************************************************
         // Property: m_spCurrentMaterial
