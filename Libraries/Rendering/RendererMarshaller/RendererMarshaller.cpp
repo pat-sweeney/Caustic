@@ -937,4 +937,14 @@ namespace Caustic
         CRefObj<IParticleSystem> spPS(pParticleSystem);
         RunOnRenderer([spPS](IRenderer* pRenderer) { pRenderer->RemoveParticleSystem(spPS.p); }, false);
     }
+
+    void CRendererMarshaller::SetOITEnabled(bool enabled)
+    {
+        RunOnRenderer([enabled](IRenderer* pRenderer) { pRenderer->SetOITEnabled(enabled); }, false);
+    }
+
+    bool CRendererMarshaller::IsOITActive()
+    {
+        return false; // OIT active state is only meaningful on the render thread
+    }
 }

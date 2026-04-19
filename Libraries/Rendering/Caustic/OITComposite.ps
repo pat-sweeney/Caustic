@@ -1,0 +1,39 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2026
+// Licensed under the MIT license.
+// See file LICENSE for details.
+// File: OITComposite.ps
+//
+// Composites Weighted Blended OIT accumulation and revealage
+// buffers over the opaque scene using alpha blending.
+// Output alpha = (1 - revealage) so that SrcAlpha/InvSrcAlpha
+// blend produces the correct composite without reading the scene RT.
+//**********************************************************************
+Texture2D accumTexture : register(t0);       // OIT accumulation (premultiplied weighted color)
+SamplerState accumSampler : register(s0);
+Texture2D revealageTexture : register(t1);   // OIT revealage (product of 1-alpha)
+SamplerState revealageSampler : register(s1);
+
+struct VSOutput
+{
+    float4 posPS : SV_POSITION;
+    float2 uvs : TEXCOORD0;
+};
+
+float4 PS(VSOutput p) : SV_Target
+{
+    float4 accum = accumTexture.Sample(accumSampler, p.uvs);
+    float revealage = revealageTexture.Sample(revealageSampler, p.uvs).r;
+
+    // If no transparent fragments, output fully transparent (no effect)
+    if (revealage >= 0.999)
+        discard;
+
+    // Recover average transparent color
+    float3 transparentColor = accum.rgb / max(accum.a, 0.00001);
+
+    // Output with alpha = (1 - revealage)
+    // With SrcAlpha/InvSrcAlpha blend:
+    //   result = transparentColor * (1-revealage) + sceneColor * revealage
+    return float4(transparentColor, 1.0 - revealage);
+}

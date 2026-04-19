@@ -192,5 +192,7 @@ export namespace Caustic
         virtual void RemoveDecal(IDecal* pDecal) override;
         virtual void AddParticleSystem(IParticleSystem* pParticleSystem) override;
         virtual void RemoveParticleSystem(IParticleSystem* pParticleSystem) override;
+        virtual void SetOITEnabled(bool enabled) override;
+        virtual bool IsOITActive() override;
     };
 }

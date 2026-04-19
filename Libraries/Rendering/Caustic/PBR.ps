@@ -77,7 +77,9 @@ cbuffer PS_CONSTANT_BUFFER
     float4 areaLightColor[4];          // color.rgb for each area light
     float4 areaLightIntensity[4];      // intensity.x for each area light
     float sssStrength;                  // SSS scattering radius (0 = no SSS)
-    float3 sssPad;                      // padding to 16-byte alignment
+    float transparency;                 // Material transparency (0 = opaque, 1 = fully transparent)
+    float oitEnabled;                   // 1.0 when OIT accumulation pass is active
+    float sssPad;                       // padding to 16-byte alignment
 };
 
 //**********************************************************************
@@ -534,14 +536,26 @@ PSOutput PS(VSOutput p)
     float3 color = ambient + Lo;
 
     // Output linear HDR - tonemapping and gamma are applied in the post-processing chain
-    output.color = float4(color, 1.0);
-
-    // View-space normal for SSR
-    float3 normalVS = normalize(mul(float4(N, 0.0), view).xyz);
-    output.normal = float4(normalVS.xy * 0.5 + 0.5, rough, met);
-
-    // SSS mask: write scattering radius for SSS-enabled materials
-    output.sss = sssStrength;
+    float alpha = 1.0 - transparency;
+    if (oitEnabled > 0.5)
+    {
+        // Weighted Blended OIT (McGuire/Bavoil 2013)
+        float viewDepth = abs(mul(float4(p.posWS, 1.0), view).z);
+        float w = alpha * max(0.01, min(3000.0, 10.0 / (0.00001 + pow(viewDepth / 200.0, 4.0))));
+        output.color = float4(color * alpha * w, alpha * w);
+        // Revealage output to Target1 (blended as product via ZERO/INV_SRC_ALPHA)
+        output.normal = float4(alpha, alpha, alpha, alpha);
+        output.sss = 0.0;
+    }
+    else
+    {
+        output.color = float4(color, alpha);
+        // View-space normal for SSR
+        float3 normalVS = normalize(mul(float4(N, 0.0), view).xyz);
+        output.normal = float4(normalVS.xy * 0.5 + 0.5, rough, met);
+        // SSS mask
+        output.sss = sssStrength;
+    }
 
     return output;
 }

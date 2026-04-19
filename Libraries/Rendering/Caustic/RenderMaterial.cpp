@@ -84,6 +84,8 @@ namespace Caustic
         spShader->SetPSParam(L"hasNormalTexture", std::any(0.0f));
         spShader->SetPSParam(L"hasAOTexture", std::any(0.0f));
         spShader->SetPSParam(L"sssStrength", std::any(0.0f));
+        spShader->SetPSParam(L"transparency", std::any(0.0f));
+        spShader->SetPSParam(L"oitEnabled", std::any(pRenderer->IsOITActive() ? 1.0f : 0.0f));
         
         if (m_spMaterial)
         {

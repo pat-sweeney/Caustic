@@ -396,6 +396,16 @@ export namespace Caustic
         EAntiAliasMode m_aaMode;
         float m_taaBlendFactor;
 
+        // Order-Independent Transparency (Weighted Blended OIT)
+        CRefObj<IShader> m_spOITCompositeShader;
+        CComPtr<ID3D11RenderTargetView> m_spOITAccumRTV;
+        CRefObj<ITexture> m_spOITAccumTexObj;
+        CComPtr<ID3D11RenderTargetView> m_spOITRevealageRTV;
+        CRefObj<ITexture> m_spOITRevealageTexObj;
+        CComPtr<ID3D11BlendState> m_spOITAccumBlendState;
+        bool m_oitEnabled;
+        bool m_oitActive;   // True during OIT accumulation pass
+
         void CheckThread()
         {
 #ifdef DIAGNOSTICS
@@ -565,6 +575,8 @@ export namespace Caustic
             }
         }
         virtual void AddParticleSystem(IParticleSystem* pParticleSystem) override { m_particleSystems.push_back(CRefObj<IParticleSystem>(pParticleSystem)); }
+        virtual void SetOITEnabled(bool enabled) override { m_oitEnabled = enabled; }
+        virtual bool IsOITActive() override { return m_oitActive; }
         virtual void RemoveParticleSystem(IParticleSystem* pParticleSystem) override
         {
             for (auto it = m_particleSystems.begin(); it != m_particleSystems.end(); ++it)

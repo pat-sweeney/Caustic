@@ -685,6 +685,24 @@ export namespace Caustic
         // pParticleSystem - the particle system to remove
         //**********************************************************************
         virtual void RemoveParticleSystem(IParticleSystem* pParticleSystem) = 0;
+
+        //**********************************************************************
+        // Method: SetOITEnabled
+        // Enables or disables Order-Independent Transparency (Weighted Blended OIT).
+        // When enabled, transparent objects are composited using depth-weighted
+        // blending that produces correct results regardless of draw order.
+        //
+        // Parameters:
+        // enabled - true to enable OIT for transparent objects
+        //**********************************************************************
+        virtual void SetOITEnabled(bool enabled) = 0;
+
+        //**********************************************************************
+        // Method: IsOITActive
+        // Returns true when the renderer is currently in an OIT accumulation pass.
+        // Used by materials to set appropriate shader parameters.
+        //**********************************************************************
+        virtual bool IsOITActive() = 0;
     };
 
     //**********************************************************************

@@ -79,7 +79,9 @@ namespace Caustic
         m_taaHistoryValid(false),
         m_taaFrameIndex(0),
         m_aaMode(EAntiAliasMode::FXAA),
-        m_taaBlendFactor(0.05f)
+        m_taaBlendFactor(0.05f),
+        m_oitEnabled(false),
+        m_oitActive(false)
     {
         m_freezeEvent = CreateEvent(nullptr, true, false, nullptr);
         m_freeze = 0;
@@ -208,6 +210,32 @@ namespace Caustic
             m_spTAAHistoryTexObj[i] = CRefObj<ITexture>(new CTexture(spHistTex, spHistSRV));
         }
         m_taaHistoryValid = false;
+
+        // Create OIT render targets: accumulation (RGBA16F) and revealage (R8_UNORM)
+        m_spOITAccumRTV = nullptr;
+        m_spOITAccumTexObj = nullptr;
+        m_spOITRevealageRTV = nullptr;
+        m_spOITRevealageTexObj = nullptr;
+        {
+            CComPtr<ID3D11Texture2D> spAccumTex;
+            CD3D11_TEXTURE2D_DESC accumDesc(DXGI_FORMAT_R16G16B16A16_FLOAT, m_BBDesc.Width, m_BBDesc.Height,
+                1, 1, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
+            CT(m_spDevice->CreateTexture2D(&accumDesc, NULL, &spAccumTex));
+            CT(m_spDevice->CreateRenderTargetView(spAccumTex, NULL, &m_spOITAccumRTV));
+            CComPtr<ID3D11ShaderResourceView> spAccumSRV;
+            CT(m_spDevice->CreateShaderResourceView(spAccumTex, NULL, &spAccumSRV));
+            m_spOITAccumTexObj = CRefObj<ITexture>(new CTexture(spAccumTex, spAccumSRV));
+        }
+        {
+            CComPtr<ID3D11Texture2D> spRevTex;
+            CD3D11_TEXTURE2D_DESC revDesc(DXGI_FORMAT_R8_UNORM, m_BBDesc.Width, m_BBDesc.Height,
+                1, 1, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
+            CT(m_spDevice->CreateTexture2D(&revDesc, NULL, &spRevTex));
+            CT(m_spDevice->CreateRenderTargetView(spRevTex, NULL, &m_spOITRevealageRTV));
+            CComPtr<ID3D11ShaderResourceView> spRevSRV;
+            CT(m_spDevice->CreateShaderResourceView(spRevTex, NULL, &spRevSRV));
+            m_spOITRevealageTexObj = CRefObj<ITexture>(new CTexture(spRevTex, spRevSRV));
+        }
     }
 
     //**********************************************************************
@@ -317,6 +345,7 @@ namespace Caustic
         try { m_spFogCompositeShader = m_spShaderMgr->FindShader(L"FogComposite"); } catch (...) {}
         try { m_spDecalShader = m_spShaderMgr->FindShader(L"Decal"); } catch (...) {}
         try { m_spSSSBlurShader = m_spShaderMgr->FindShader(L"SSSBlur"); } catch (...) {}
+        try { m_spOITCompositeShader = m_spShaderMgr->FindShader(L"OITComposite"); } catch (...) {}
         m_tiledLightingEnabled = false;
         m_ssrEnabled = false;
 
@@ -339,6 +368,31 @@ namespace Caustic
             rastDesc.FrontCounterClockwise = FALSE;
             rastDesc.DepthClipEnable = TRUE;
             CT(m_spDevice->CreateRasterizerState(&rastDesc, &m_spDecalRastState));
+        }
+
+        // Create OIT blend state: RT0 = ONE/ONE additive, RT1 = ZERO/INV_SRC_ALPHA (product blend for revealage)
+        {
+            D3D11_BLEND_DESC blendDesc = {};
+            blendDesc.IndependentBlendEnable = TRUE;
+            // RT0: Accumulation — additive blend (ONE/ONE)
+            blendDesc.RenderTarget[0].BlendEnable = TRUE;
+            blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+            blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
+            blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+            blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+            blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
+            blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+            blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+            // RT1: Revealage — product blend (ZERO / INV_SRC_COLOR)
+            blendDesc.RenderTarget[1].BlendEnable = TRUE;
+            blendDesc.RenderTarget[1].SrcBlend = D3D11_BLEND_ZERO;
+            blendDesc.RenderTarget[1].DestBlend = D3D11_BLEND_INV_SRC_COLOR;
+            blendDesc.RenderTarget[1].BlendOp = D3D11_BLEND_OP_ADD;
+            blendDesc.RenderTarget[1].SrcBlendAlpha = D3D11_BLEND_ZERO;
+            blendDesc.RenderTarget[1].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
+            blendDesc.RenderTarget[1].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+            blendDesc.RenderTarget[1].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+            CT(m_spDevice->CreateBlendState(&blendDesc, &m_spOITAccumBlendState));
         }
 
         // Generate BRDF LUT (one-time, doesn't depend on environment map)
@@ -1423,60 +1477,165 @@ namespace Caustic
 #ifdef _DEBUG
                 spCtx2->BeginEventInt(L"TransparentPass", 0);
 #endif
-                // Setup blend state
-                CComPtr<ID3D11BlendState> spBlendState;
-                D3D11_BLEND_DESC blendState;
-                ZeroMemory(&blendState, sizeof(D3D11_BLEND_DESC));
-                blendState.AlphaToCoverageEnable = false;
-                blendState.IndependentBlendEnable = false;
-                for (int i = 0; i < 8; i++)
+                if (m_oitEnabled && m_spOITAccumRTV != nullptr && m_spOITRevealageRTV != nullptr && m_spOITCompositeShader != nullptr)
                 {
-                    if (i == 0)
-                    {
-                        blendState.RenderTarget[i].BlendEnable = true;
-                        blendState.RenderTarget[i].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-                        blendState.RenderTarget[i].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-                        blendState.RenderTarget[i].BlendOp = D3D11_BLEND_OP_ADD;
-                        blendState.RenderTarget[i].SrcBlendAlpha = D3D11_BLEND_ONE;
-                        blendState.RenderTarget[i].DestBlendAlpha = D3D11_BLEND_ZERO;
-                        blendState.RenderTarget[i].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-                        blendState.RenderTarget[i].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-                    }
-                    else
-                    {
-                        blendState.RenderTarget[i].BlendEnable = false;
-                        blendState.RenderTarget[i].SrcBlend = D3D11_BLEND_ONE;
-                        blendState.RenderTarget[i].DestBlend = D3D11_BLEND_ZERO;
-                        blendState.RenderTarget[i].BlendOp = D3D11_BLEND_OP_ADD;
-                        blendState.RenderTarget[i].SrcBlendAlpha = D3D11_BLEND_ONE;
-                        blendState.RenderTarget[i].DestBlendAlpha = D3D11_BLEND_ZERO;
-                        blendState.RenderTarget[i].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-                        blendState.RenderTarget[i].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-                    }
-                }
-                m_spDevice->CreateBlendState(&blendState, &spBlendState);
-                CComPtr<ID3D11BlendState> spOldBlendState;
-                float oldBlendFactor[4];
-                UINT oldSampleMask;
-                m_spContext->OMGetBlendState(&spOldBlendState, oldBlendFactor, &oldSampleMask);
-                m_spContext->OMSetBlendState(spBlendState, nullptr, 0xffffffff);
+                    // --- Order-Independent Transparency (Weighted Blended OIT) ---
 
-                std::vector<int> order;
-                order.resize(m_singleObjs.size());
-                std::sort(m_singleObjs.begin(), m_singleObjs.end(),
-                    [&](IRenderable *left, IRenderable *right)->bool
+                    // Save current render targets
+                    CComPtr<ID3D11RenderTargetView> spSavedRT;
+                    CComPtr<ID3D11DepthStencilView> spSavedDS;
+                    m_spContext->OMGetRenderTargets(1, &spSavedRT, &spSavedDS);
+
+                    // Clear OIT buffers: accumulation to (0,0,0,0), revealage to 1.0
+                    FLOAT accumClear[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+                    FLOAT revealClear[4] = { 1.0f, 0.0f, 0.0f, 0.0f };
+                    m_spContext->ClearRenderTargetView(m_spOITAccumRTV, accumClear);
+                    m_spContext->ClearRenderTargetView(m_spOITRevealageRTV, revealClear);
+
+                    // Bind OIT accumulation + revealage as MRT
+                    ID3D11RenderTargetView* oitRTVs[2] = { m_spOITAccumRTV, m_spOITRevealageRTV };
+                    m_spContext->OMSetRenderTargets(2, oitRTVs, spSavedDS);
+
+                    // Set depth to read-only (test on, write off)
+                    CD3D11_DEPTH_STENCIL_DESC oitDepthDesc(D3D11_DEFAULT);
+                    oitDepthDesc.DepthEnable = TRUE;
+                    oitDepthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+                    oitDepthDesc.DepthFunc = D3D11_COMPARISON_LESS;
+                    CComPtr<ID3D11DepthStencilState> spOITDepthState;
+                    CT(m_spDevice->CreateDepthStencilState(&oitDepthDesc, &spOITDepthState));
+                    m_spContext->OMSetDepthStencilState(spOITDepthState, 0);
+
+                    // Set OIT blend state
+                    CComPtr<ID3D11BlendState> spOldBlendState;
+                    float oldBlendFactor[4];
+                    UINT oldSampleMask;
+                    m_spContext->OMGetBlendState(&spOldBlendState, oldBlendFactor, &oldSampleMask);
+                    m_spContext->OMSetBlendState(m_spOITAccumBlendState, nullptr, 0xffffffff);
+
+                    // Set OIT active flag so materials can query it
+                    m_oitActive = true;
+
+                    DrawSceneObjects(pass, renderCallback);
+
+                    m_oitActive = false;
+
+                    // Restore blend state
+                    m_spContext->OMSetBlendState(spOldBlendState, oldBlendFactor, oldSampleMask);
+
+                    // Restore depth write
+                    CD3D11_DEPTH_STENCIL_DESC restoreDepthDesc(D3D11_DEFAULT);
+                    restoreDepthDesc.DepthEnable = TRUE;
+                    restoreDepthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+                    restoreDepthDesc.DepthFunc = D3D11_COMPARISON_LESS;
+                    CComPtr<ID3D11DepthStencilState> spRestoreDepthState;
+                    CT(m_spDevice->CreateDepthStencilState(&restoreDepthDesc, &spRestoreDepthState));
+                    m_spContext->OMSetDepthStencilState(spRestoreDepthState, 0);
+
+                    // Restore scene RT for composite
+                    m_spContext->OMSetRenderTargets(1, &spSavedRT.p, nullptr);
+
+                    // Composite OIT over opaque scene using SrcAlpha/InvSrcAlpha blend
+                    D3D11_VIEWPORT ppVP = {};
+                    ppVP.Width = (float)m_BBDesc.Width;
+                    ppVP.Height = (float)m_BBDesc.Height;
+                    ppVP.MinDepth = 0.0f;
+                    ppVP.MaxDepth = 1.0f;
+                    m_spContext->RSSetViewports(1, &ppVP);
+
+                    // Set alpha blend for composite (SrcAlpha / InvSrcAlpha)
+                    CComPtr<ID3D11BlendState> spCompositeBlendState;
+                    D3D11_BLEND_DESC compositeBlend = {};
+                    compositeBlend.RenderTarget[0].BlendEnable = TRUE;
+                    compositeBlend.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+                    compositeBlend.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+                    compositeBlend.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+                    compositeBlend.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+                    compositeBlend.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+                    compositeBlend.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+                    compositeBlend.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+                    CT(m_spDevice->CreateBlendState(&compositeBlend, &spCompositeBlendState));
+                    m_spContext->OMSetBlendState(spCompositeBlendState, nullptr, 0xffffffff);
+
+                    m_spOITCompositeShader->SetPSParam(L"accumTexture", std::any(m_spOITAccumTexObj));
+                    m_spOITCompositeShader->SetPSParam(L"revealageTexture", std::any(m_spOITRevealageTexObj));
+                    m_spOITCompositeShader->SetVSParam(L"minu", std::any(0.0f));
+                    m_spOITCompositeShader->SetVSParam(L"minv", std::any(0.0f));
+                    m_spOITCompositeShader->SetVSParam(L"maxu", std::any(1.0f));
+                    m_spOITCompositeShader->SetVSParam(L"maxv", std::any(1.0f));
+
+                    std::vector<CRefObj<ILight>> noLights;
+                    m_spOITCompositeShader->BeginRender(this, nullptr, noLights, nullptr);
+                    UINT offset = 0;
+                    UINT vertexSize = sizeof(CQuadVertex);
+                    m_spContext->IASetVertexBuffers(0, 1, &m_spQuadVB.p, &vertexSize, &offset);
+                    m_spContext->IASetIndexBuffer(m_spQuadIB, DXGI_FORMAT_R32_UINT, 0);
+                    m_spContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+                    m_spContext->DrawIndexed(6, 0, 0);
+                    m_spOITCompositeShader->EndRender(this);
+
+                    // Restore blend and depth state
+                    m_spContext->OMSetBlendState(spOldBlendState, oldBlendFactor, oldSampleMask);
+
+                    // Re-bind scene RT with depth for particle rendering
+                    m_spContext->OMSetRenderTargets(1, &spSavedRT.p, spSavedDS);
+                }
+                else
+                {
+                    // Standard alpha blend path (non-OIT fallback)
+                    CComPtr<ID3D11BlendState> spBlendState;
+                    D3D11_BLEND_DESC blendState;
+                    ZeroMemory(&blendState, sizeof(D3D11_BLEND_DESC));
+                    blendState.AlphaToCoverageEnable = false;
+                    blendState.IndependentBlendEnable = false;
+                    for (int i = 0; i < 8; i++)
                     {
-                        Vector3 cameraPos;
-                        GetCamera()->GetPosition(&cameraPos, nullptr, nullptr, nullptr, nullptr, nullptr);
-                        float dist1 = (left->GetPos() - cameraPos).Length();
-                        float dist2 = (right->GetPos() - cameraPos).Length();
-                        if (dist1 < dist2)
-                            return true;
-                        return false;
+                        if (i == 0)
+                        {
+                            blendState.RenderTarget[i].BlendEnable = true;
+                            blendState.RenderTarget[i].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+                            blendState.RenderTarget[i].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+                            blendState.RenderTarget[i].BlendOp = D3D11_BLEND_OP_ADD;
+                            blendState.RenderTarget[i].SrcBlendAlpha = D3D11_BLEND_ONE;
+                            blendState.RenderTarget[i].DestBlendAlpha = D3D11_BLEND_ZERO;
+                            blendState.RenderTarget[i].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+                            blendState.RenderTarget[i].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+                        }
+                        else
+                        {
+                            blendState.RenderTarget[i].BlendEnable = false;
+                            blendState.RenderTarget[i].SrcBlend = D3D11_BLEND_ONE;
+                            blendState.RenderTarget[i].DestBlend = D3D11_BLEND_ZERO;
+                            blendState.RenderTarget[i].BlendOp = D3D11_BLEND_OP_ADD;
+                            blendState.RenderTarget[i].SrcBlendAlpha = D3D11_BLEND_ONE;
+                            blendState.RenderTarget[i].DestBlendAlpha = D3D11_BLEND_ZERO;
+                            blendState.RenderTarget[i].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+                            blendState.RenderTarget[i].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+                        }
                     }
-                );
-                DrawSceneObjects(pass, renderCallback);
-                m_spContext->OMSetBlendState(spOldBlendState, oldBlendFactor, oldSampleMask);
+                    m_spDevice->CreateBlendState(&blendState, &spBlendState);
+                    CComPtr<ID3D11BlendState> spOldBlendState;
+                    float oldBlendFactor[4];
+                    UINT oldSampleMask;
+                    m_spContext->OMGetBlendState(&spOldBlendState, oldBlendFactor, &oldSampleMask);
+                    m_spContext->OMSetBlendState(spBlendState, nullptr, 0xffffffff);
+
+                    std::vector<int> order;
+                    order.resize(m_singleObjs.size());
+                    std::sort(m_singleObjs.begin(), m_singleObjs.end(),
+                        [&](IRenderable *left, IRenderable *right)->bool
+                        {
+                            Vector3 cameraPos;
+                            GetCamera()->GetPosition(&cameraPos, nullptr, nullptr, nullptr, nullptr, nullptr);
+                            float dist1 = (left->GetPos() - cameraPos).Length();
+                            float dist2 = (right->GetPos() - cameraPos).Length();
+                            if (dist1 < dist2)
+                                return true;
+                            return false;
+                        }
+                    );
+                    DrawSceneObjects(pass, renderCallback);
+                    m_spContext->OMSetBlendState(spOldBlendState, oldBlendFactor, oldSampleMask);
+                }
 
                 // Render particle systems (additive blend, depth test on, depth write off)
                 for (auto& ps : m_particleSystems)
