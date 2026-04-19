@@ -136,6 +136,11 @@ void ParseLoop(ID3D11ShaderReflection *pReflection, HANDLE oh, EShaderType shade
         {
             D3D11_SIGNATURE_PARAMETER_DESC paramDesc;
             CT(pReflection->GetInputParameterDesc(i, &paramDesc));
+            // Skip system-value semantics (SV_VertexID, SV_InstanceID, etc.)
+            // except SV_POSITION which is part of the vertex layout
+            if (_strnicmp(paramDesc.SemanticName, "SV_", 3) == 0 &&
+                _stricmp(paramDesc.SemanticName, "SV_POSITION") != 0)
+                continue;
             std::string format;
             GetDXGIFormat(paramDesc, format);
             WriteStr(oh, "            <Field Name='%s' Semantic='%s' SemanticIndex='%d' Format='%s'/>\n",
