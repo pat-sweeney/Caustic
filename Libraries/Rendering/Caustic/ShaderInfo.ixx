@@ -39,7 +39,7 @@ export namespace Caustic
         void ParseSamplersOrTextures(IXMLDOMNode *pNode, EShaderType shaderType);
         void ParseLayout(IXMLDOMNode *pNode);
         void ParseCBuffer(IXMLDOMNode* pNode, EShaderType shaderType);
-        void ParseBuffers(IXMLDOMNode* pNode);
+        void ParseBuffers(IXMLDOMNode* pNode, EShaderType shaderType);
         DXGI_FORMAT StringToFormat(BSTR bstrStr);
         uint32_t FormatSize(DXGI_FORMAT format);
         void ParseShaderEntry(IXMLDOMNode *pNode, EShaderType shaderType);

@@ -1822,10 +1822,14 @@ namespace Caustic
             m_spContext->OMSetRenderTargets(1, &pSceneRTV, nullptr);
             RunPostProcessing();
         }
-        else
+
+        // Switch to backbuffer for prePresentCallback (e.g. ImGui overlay).
+        // Post-processing writes to m_spFinalRTView; we need the swap chain
+        // backbuffer as the render target so ImGui can display the final
+        // texture and draw UI on top of it.
+        if (m_spFinalRTView != nullptr)
         {
-            if (m_spFinalRTView != nullptr)
-                m_spContext->OMSetRenderTargets(1, &m_spRTView.p, m_spStencilView);
+            m_spContext->OMSetRenderTargets(1, &m_spRTView.p, m_spStencilView);
         }
 
         if (prePresentCallback)

@@ -71,6 +71,7 @@ export namespace Caustic
         CComPtr<ID3D11Buffer> m_spQuadIB;
         CComPtr<ID3D11BlendState> m_spAdditiveBlend;
         CComPtr<ID3D11DepthStencilState> m_spDepthNoWrite;
+        CComPtr<ID3D11RasterizerState> m_spNoCullRS;
 
         // Shaders
         CRefObj<IShader> m_spSimulateShader;

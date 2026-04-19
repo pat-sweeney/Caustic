@@ -158,6 +158,16 @@ namespace Caustic
             CT(spDevice->CreateDepthStencilState(&dsDesc, &m_spDepthNoWrite));
         }
 
+        // Create no-cull rasterizer state for billboards
+        {
+            D3D11_RASTERIZER_DESC rsDesc = {};
+            rsDesc.FillMode = D3D11_FILL_SOLID;
+            rsDesc.CullMode = D3D11_CULL_NONE;
+            rsDesc.FrontCounterClockwise = FALSE;
+            rsDesc.DepthClipEnable = TRUE;
+            CT(spDevice->CreateRasterizerState(&rsDesc, &m_spNoCullRS));
+        }
+
         // Find shaders
         auto spShaderMgr = pRenderer->GetShaderMgr();
         try { m_spSimulateShader = spShaderMgr->FindShader(L"ParticleSimulate"); } catch (...) {}
@@ -243,6 +253,11 @@ namespace Caustic
         spCtx->OMSetBlendState(m_spAdditiveBlend, nullptr, 0xffffffff);
         spCtx->OMSetDepthStencilState(m_spDepthNoWrite, 0);
 
+        // Disable back-face culling for billboards
+        CComPtr<ID3D11RasterizerState> spOldRS;
+        spCtx->RSGetState(&spOldRS);
+        spCtx->RSSetState(m_spNoCullRS);
+
         // Bind particle SRV to VS slot 0 (manual, since engine only supports PS/CS)
         spCtx->VSSetShaderResources(0, 1, &m_spParticleSRV.p);
 
@@ -283,6 +298,7 @@ namespace Caustic
         spCtx->VSSetShaderResources(0, 1, &nullSRV);
 
         // Restore state
+        spCtx->RSSetState(spOldRS);
         spCtx->OMSetBlendState(spOldBlend, oldBlendFactor, oldSampleMask);
         spCtx->OMSetDepthStencilState(spOldDS, oldStencilRef);
     }

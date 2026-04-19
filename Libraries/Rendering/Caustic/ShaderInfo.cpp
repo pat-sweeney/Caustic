@@ -565,7 +565,7 @@ namespace Caustic
         }
     }
 
-    void CShaderInfo::ParseBuffers(IXMLDOMNode* pNode)
+    void CShaderInfo::ParseBuffers(IXMLDOMNode* pNode, EShaderType shaderType)
     {
         CComPtr<IXMLDOMNodeList> spChildren;
         CT(pNode->get_childNodes(&spChildren));
@@ -615,7 +615,14 @@ namespace Caustic
                     else if (attribName == "ElemSize")
                         param.m_elemSize = _wtoi(attribVal.bstrVal);
                 }
-                m_computeShaderParamDefs.push_back(param);
+                if (shaderType == EShaderType::TypePixelShader)
+                    m_pixelShaderParamDefs.push_back(param);
+                else if (shaderType == EShaderType::TypeVertexShader)
+                    m_vertexShaderParamDefs.push_back(param);
+                else if (shaderType == EShaderType::TypeComputeShader)
+                    m_computeShaderParamDefs.push_back(param);
+                else
+                    CT(E_UNEXPECTED);
             }
         }
     }
@@ -683,7 +690,7 @@ namespace Caustic
             if (bstrName == L"VertexLayout" && shaderType == EShaderType::TypeVertexShader)
                 ParseLayout(spNode);
             else if (bstrName == L"Buffers")
-                ParseBuffers(spNode);
+                ParseBuffers(spNode, shaderType);
             else if (bstrName == L"CBuffer")
                 ParseCBuffer(spNode, shaderType);
             else if (bstrName == L"Textures")

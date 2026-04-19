@@ -387,7 +387,20 @@ namespace Caustic
                 m_renderQueue.m_queue.pop();
             }
             LeaveCriticalSection(&m_renderQueue.m_cs);
-            m_spRenderer->RenderFrame(m_renderCallback, m_prePresentCallback);
+            try
+            {
+                m_spRenderer->RenderFrame(m_renderCallback, m_prePresentCallback);
+            }
+            catch (std::exception& e)
+            {
+                wchar_t buf[512];
+                swprintf_s(buf, L"RenderFrame exception: %S\n", e.what());
+                OutputDebugString(buf);
+            }
+            catch (...)
+            {
+                OutputDebugString(L"RenderFrame unknown exception\n");
+            }
         }
     }
 
