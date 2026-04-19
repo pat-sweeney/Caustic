@@ -7,6 +7,7 @@ module;
 #include <atlbase.h>
 #include <d3d11.h>
 #include <string>
+#include <vector>
 
 export module Geometry.Mesh.RenderTypes;
 import Base.Core.Core;
@@ -50,6 +51,22 @@ export namespace Caustic
     };
 
     //**********************************************************************
+    // Constant: c_MaxMorphTargets
+    // Maximum number of simultaneous morph targets (blend shapes).
+    //**********************************************************************
+    const int c_MaxMorphTargets = 8;
+
+    //**********************************************************************
+    // Struct: MorphTargetDelta
+    // Per-vertex position and normal deltas for a single morph target.
+    //**********************************************************************
+    struct MorphTargetDelta
+    {
+        Vector3 positionDelta;
+        Vector3 normalDelta;
+    };
+
+    //**********************************************************************
     // Struct: MeshData
     // Defines class for holding mesh data (i.e. vertices and indices)
     //
@@ -72,6 +89,9 @@ export namespace Caustic
         uint32_t m_numIndices;
         BBox3 m_bbox;
         std::string m_name;
+
+        std::vector<std::vector<MorphTargetDelta>> m_morphTargets; // Per-target vertex deltas (remapped to compacted VB order)
+        std::vector<float> m_morphWeights; // Default morph weights
 
         MeshData() :
             m_vertexSize(0),

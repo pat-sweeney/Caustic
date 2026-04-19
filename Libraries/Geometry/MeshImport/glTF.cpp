@@ -12,7 +12,6 @@
 // Limitations (can be extended later):
 // - No .glb (single binary) support
 // - No skeleton/animation support
-// - No morph targets
 // - No embedded base64 image data
 //**********************************************************************
 module;
@@ -525,6 +524,55 @@ namespace Caustic
                 uint32_t materialID = (matIdx >= 0 && matIdx < (int)materials.size()) ? (uint32_t)matIdx : 0;
 
                 CRefObj<ISubMesh> spSubMesh = CreateSubMesh(verts, faceIndices, materialID);
+
+                // Parse morph targets (blend shapes) if present
+                auto spTargetsArr = GetProperty(spPrim, "targets");
+                if (spTargetsArr != nullptr)
+                {
+                    std::vector<std::vector<MorphTargetDelta>> morphTargets;
+                    for (auto& spTarget : GetArray(spTargetsArr))
+                    {
+                        std::vector<float> posDelta, normDelta;
+
+                        auto spPosIdx = GetProperty(spTarget, "POSITION");
+                        if (spPosIdx != nullptr)
+                            posDelta = ReadFloatAccessor(accessors[GetInt(spPosIdx)], bufferViews, buffers);
+
+                        auto spNormIdx = GetProperty(spTarget, "NORMAL");
+                        if (spNormIdx != nullptr)
+                            normDelta = ReadFloatAccessor(accessors[GetInt(spNormIdx)], bufferViews, buffers);
+
+                        std::vector<MorphTargetDelta> deltas(numVerts);
+                        for (int v = 0; v < numVerts; v++)
+                        {
+                            if (v * 3 + 2 < (int)posDelta.size())
+                                deltas[v].positionDelta = Vector3(posDelta[v * 3], posDelta[v * 3 + 1], posDelta[v * 3 + 2]);
+                            else
+                                deltas[v].positionDelta = Vector3(0, 0, 0);
+
+                            if (v * 3 + 2 < (int)normDelta.size())
+                                deltas[v].normalDelta = Vector3(normDelta[v * 3], normDelta[v * 3 + 1], normDelta[v * 3 + 2]);
+                            else
+                                deltas[v].normalDelta = Vector3(0, 0, 0);
+                        }
+                        morphTargets.push_back(std::move(deltas));
+                    }
+
+                    if (!morphTargets.empty())
+                        spSubMesh->SetMorphTargets(morphTargets);
+                }
+
+                // Parse default morph weights from the mesh object
+                auto spWeightsArr = GetProperty(spGltfMesh, "weights");
+                if (spWeightsArr != nullptr)
+                {
+                    std::vector<float> defaultWeights;
+                    for (auto& spW : GetArray(spWeightsArr))
+                        defaultWeights.push_back(GetFloat(spW, 0.0f));
+                    if (!defaultWeights.empty())
+                        spSubMesh->SetMorphWeights(defaultWeights);
+                }
+
                 spMesh->AddSubMesh(spSubMesh);
             }
         }

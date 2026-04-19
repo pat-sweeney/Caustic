@@ -30,13 +30,43 @@ namespace Caustic
         std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld)
     {
         ID3D11DeviceContext* pContext = pRenderer->GetContext();
+
+        // Set morph target params (always set to prevent stale values)
+        pShader->SetVSParam(L"morphTargetCount", std::any((int)m_numMorphTargets));
+        pShader->SetVSParam(L"morphNumVertices", std::any((int)m_morphNumVertices));
+        pShader->SetVSParam(L"morphWeights0", std::any(Float4(m_morphWeights[0], m_morphWeights[1], m_morphWeights[2], m_morphWeights[3])));
+        pShader->SetVSParam(L"morphWeights1", std::any(Float4(m_morphWeights[4], m_morphWeights[5], m_morphWeights[6], m_morphWeights[7])));
+
         pShader->BeginRender(pRenderer, pMaterial, lights, pWorld);
+
+        // Manually bind morph StructuredBuffer SRV to VS slot 0
+        // (engine's shader param system only supports PS/CS SRV binding)
+        if (m_numMorphTargets > 0 && m_spMorphBuffer != nullptr)
+        {
+            CComPtr<ID3D11ShaderResourceView> spSRV = m_spMorphBuffer->GetSRView();
+            ID3D11ShaderResourceView* pSRV = spSRV.p;
+            pContext->VSSetShaderResources(0, 1, &pSRV);
+        }
+        else
+        {
+            ID3D11ShaderResourceView* pNullSRV = nullptr;
+            pContext->VSSetShaderResources(0, 1, &pNullSRV);
+        }
+
         uint32_t vertexSize = pShader->GetShaderInfo()->GetVertexSize();
         uint32_t numVertices = m_VB.m_numVertices;
         UINT offset = 0;
         pContext->IASetVertexBuffers(0, 1, &m_VB.m_spVB.p, &vertexSize, &offset);
         pContext->IASetIndexBuffer(m_VB.m_spIB, DXGI_FORMAT::DXGI_FORMAT_R32_UINT, 0);
         pContext->DrawIndexed(m_VB.m_numIndices, 0, 0);
+
+        // Unbind VS SRV to avoid hazards
+        if (m_numMorphTargets > 0)
+        {
+            ID3D11ShaderResourceView* pNullSRV = nullptr;
+            pContext->VSSetShaderResources(0, 1, &pNullSRV);
+        }
+
         pShader->EndRender(pRenderer);
     }
 
@@ -304,5 +334,58 @@ namespace Caustic
         BuildIndexBuffer(pRenderer, faces, &meshData);
         spSubMesh->SetMeshData(meshData);
         return spSubMesh;
+    }
+
+    //**********************************************************************
+    // Method: SetMorphTargets
+    // See <IRenderSubMesh::SetMorphTargets>
+    //**********************************************************************
+    void CRenderSubMesh::SetMorphTargets(IRenderer* pRenderer, std::vector<std::vector<MorphTargetDelta>>& targets)
+    {
+        m_numMorphTargets = (int)targets.size();
+        if (m_numMorphTargets > c_MaxMorphTargets)
+            m_numMorphTargets = c_MaxMorphTargets;
+
+        if (m_numMorphTargets == 0 || targets[0].empty())
+        {
+            m_spMorphBuffer = nullptr;
+            m_numMorphTargets = 0;
+            m_morphNumVertices = 0;
+            return;
+        }
+
+        m_morphNumVertices = (int)targets[0].size();
+
+        // Pack all targets into a flat buffer: [target0_v0, target0_v1, ..., target1_v0, ...]
+        uint32_t totalElems = m_numMorphTargets * m_morphNumVertices;
+        std::vector<MorphTargetDelta> flatData(totalElems);
+        for (int t = 0; t < m_numMorphTargets; t++)
+        {
+            int numVerts = (int)targets[t].size();
+            for (int v = 0; v < m_morphNumVertices; v++)
+            {
+                if (v < numVerts)
+                    flatData[t * m_morphNumVertices + v] = targets[t][v];
+                else
+                    flatData[t * m_morphNumVertices + v] = { Vector3(0,0,0), Vector3(0,0,0) };
+            }
+        }
+
+        // Create StructuredBuffer (each element = MorphTargetDelta = 2x float3 = 24 bytes)
+        m_spMorphBuffer = CreateGPUBuffer(pRenderer, EBufferType::StructuredBuffer,
+            totalElems, sizeof(MorphTargetDelta), D3D11_BIND_SHADER_RESOURCE);
+        m_spMorphBuffer->CopyFromCPU(pRenderer, (uint8_t*)flatData.data());
+    }
+
+    //**********************************************************************
+    // Method: SetMorphWeights
+    // See <IRenderSubMesh::SetMorphWeights>
+    //**********************************************************************
+    void CRenderSubMesh::SetMorphWeights(float* weights, int count)
+    {
+        memset(m_morphWeights, 0, sizeof(m_morphWeights));
+        int numWeights = (count < c_MaxMorphTargets) ? count : c_MaxMorphTargets;
+        for (int i = 0; i < numWeights; i++)
+            m_morphWeights[i] = weights[i];
     }
 }

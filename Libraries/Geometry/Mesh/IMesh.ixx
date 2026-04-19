@@ -432,6 +432,37 @@ export namespace Caustic
         // Returns renderable form of the mesh
         //**********************************************************************
         virtual MeshData ToMeshData(ID3D11Device* pDevice, std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout, uint32_t vertexSize) = 0;
+
+        //**********************************************************************
+        // Method: SetMorphTargets
+        // Sets morph target (blend shape) delta data on this submesh.
+        // Each target is a vector of per-vertex position+normal deltas.
+        //
+        // Parameters:
+        // targets - vector of morph targets, each containing per-vertex deltas
+        //**********************************************************************
+        virtual void SetMorphTargets(std::vector<std::vector<MorphTargetDelta>>& targets) = 0;
+
+        //**********************************************************************
+        // Method: GetMorphTargets
+        // Returns the morph target delta data stored on this submesh.
+        //**********************************************************************
+        virtual const std::vector<std::vector<MorphTargetDelta>>& GetMorphTargets() = 0;
+
+        //**********************************************************************
+        // Method: SetMorphWeights
+        // Sets default morph target weights.
+        //
+        // Parameters:
+        // weights - vector of default weights (one per target)
+        //**********************************************************************
+        virtual void SetMorphWeights(std::vector<float>& weights) = 0;
+
+        //**********************************************************************
+        // Method: GetMorphWeights
+        // Returns the default morph target weights.
+        //**********************************************************************
+        virtual const std::vector<float>& GetMorphWeights() = 0;
     };
 
     //**********************************************************************

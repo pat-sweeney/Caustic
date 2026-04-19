@@ -5,6 +5,7 @@
 // File: Default.vs
 //**********************************************************************
 #include "defs.h"
+#include "morph.h"
 
 cbuffer VS_CONSTANT_BUFFER : register(b0)
 {
@@ -14,16 +15,24 @@ cbuffer VS_CONSTANT_BUFFER : register(b0)
     float4x4 viewInv; // View => World
     float4x4 cascadeViewProj[NUM_CASCADES]; // World => cascade light space
     float4 lightPosWS;
+    int morphTargetCount;
+    int morphNumVertices;
+    float2 morphPad;
+    float4 morphWeights0;
+    float4 morphWeights1;
 };
 
-VSOutput VS(VSInput p)
+VSOutput VS(VSInput p, uint vertexID : SV_VertexID)
 {
-    VSOutput v;
+    float3 pos = p.posOS;
+    float3 norm = p.normOS;
+    ApplyMorphTargets(vertexID, morphTargetCount, morphNumVertices,
+        morphWeights0, morphWeights1, pos, norm);
 
-    // Transform our vertex normal from object space to world space
-    v.normWS = normalize(mul(float4(p.normOS,1.0f), worldInvTranspose).xyz);
-    v.posWS = mul(float4(p.posOS, 1.0f), world).xyz;
-    v.posPS = mul(float4(p.posOS, 1.0f), worldViewProj);
+    VSOutput v;
+    v.normWS = normalize(mul(float4(norm,1.0f), worldInvTranspose).xyz);
+    v.posWS = mul(float4(pos, 1.0f), world).xyz;
+    v.posPS = mul(float4(pos, 1.0f), worldViewProj);
     v.uvs = p.uvs;
     v.viewDepth = v.posPS.w;
     [unroll]

@@ -162,6 +162,34 @@ export namespace Caustic
         // pWorld - world matrix. Maybe nullptr
         //**********************************************************************
         virtual void Render(IRenderer* pRenderer, IRenderCtx *pRenderCtx, IShader* pShader, IRenderMaterial* pMaterial, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld) = 0;
+
+        //**********************************************************************
+        // Method: SetMorphTargets
+        // Sets morph target (blend shape) data for this submesh.
+        // Each target is a vector of per-vertex position/normal deltas.
+        // The delta arrays must be ordered to match the vertex buffer layout.
+        //
+        // Parameters:
+        // pRenderer - renderer (for GPU buffer creation)
+        // targets - vector of morph targets, each containing per-vertex deltas
+        //**********************************************************************
+        virtual void SetMorphTargets(IRenderer* pRenderer, std::vector<std::vector<MorphTargetDelta>>& targets) = 0;
+
+        //**********************************************************************
+        // Method: SetMorphWeights
+        // Sets the blend weights for active morph targets.
+        //
+        // Parameters:
+        // weights - array of blend weights (up to c_MaxMorphTargets)
+        // count - number of weights
+        //**********************************************************************
+        virtual void SetMorphWeights(float* weights, int count) = 0;
+
+        //**********************************************************************
+        // Method: GetMorphTargetCount
+        // Returns the number of morph targets on this submesh.
+        //**********************************************************************
+        virtual int GetMorphTargetCount() = 0;
     };
 
     //**********************************************************************

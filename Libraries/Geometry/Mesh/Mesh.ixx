@@ -44,6 +44,8 @@ export namespace Caustic
         uint32_t m_materialID;
         EVertexFlags m_vertexFlags;
         EMeshFlags m_meshFlags;
+        std::vector<std::vector<MorphTargetDelta>> m_morphTargets;
+        std::vector<float> m_morphWeights;
         static bool s_allocatorInitialized;
         static CBlockAllocator<CGeomVertex> m_vertexAllocator;
         static CBlockAllocator<CFaceVertex> m_faceVertexAllocator;
@@ -262,6 +264,10 @@ export namespace Caustic
         virtual uint32_t EdgeToIndex(CHalfEdge *pEdge) override;
         virtual void Triangulate(ETriangulateMethod method) override;
         virtual MeshData ToMeshData(ID3D11Device* pDevice, std::vector<D3D11_INPUT_ELEMENT_DESC>& vertexLayout, uint32_t vertexSize) override;
+        virtual void SetMorphTargets(std::vector<std::vector<MorphTargetDelta>>& targets) override { m_morphTargets = targets; }
+        virtual const std::vector<std::vector<MorphTargetDelta>>& GetMorphTargets() override { return m_morphTargets; }
+        virtual void SetMorphWeights(std::vector<float>& weights) override { m_morphWeights = weights; }
+        virtual const std::vector<float>& GetMorphWeights() override { return m_morphWeights; }
 
         //**********************************************************************
         // ISerialize

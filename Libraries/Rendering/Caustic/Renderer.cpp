@@ -111,6 +111,15 @@ namespace Caustic
             CRefObj<IRenderSubMesh> spRenderSubMesh = spFactory->CreateRenderSubMesh();
             spRenderSubMesh->SetMeshData(md);
             spRenderSubMesh->SetName(md.m_name.c_str());
+
+            // Transfer morph target data if present
+            if (!md.m_morphTargets.empty())
+            {
+                spRenderSubMesh->SetMorphTargets(this, md.m_morphTargets);
+                if (!md.m_morphWeights.empty())
+                    spRenderSubMesh->SetMorphWeights(md.m_morphWeights.data(), (int)md.m_morphWeights.size());
+            }
+
             spRenderMesh->AddSubMesh(spRenderSubMesh);
         }
         return spRenderMesh;

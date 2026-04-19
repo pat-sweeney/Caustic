@@ -237,6 +237,31 @@ namespace Caustic
         BuildVertexBuffer(pDevice, vertexLayout, vertexSize, vertexReferenced, &md);
         BuildIndexBuffer(pDevice, vertexReferenced, &md);
         md.m_name = std::string(GetName().c_str());
+
+        // Remap morph target deltas to match compacted vertex buffer order
+        if (!m_morphTargets.empty() && md.m_numVertices > 0)
+        {
+            uint32_t numOldVerts = GetNumberVertices();
+            int numTargets = (int)m_morphTargets.size();
+            md.m_morphTargets.resize(numTargets);
+            for (int t = 0; t < numTargets; t++)
+            {
+                md.m_morphTargets[t].resize(md.m_numVertices);
+                for (uint32_t i = 0; i < numOldVerts; i++)
+                {
+                    if (vertexReferenced[i] >= 0 && vertexReferenced[i] != c_Vertex_Unreferenced)
+                    {
+                        int newIdx = vertexReferenced[i];
+                        if (i < (uint32_t)m_morphTargets[t].size())
+                            md.m_morphTargets[t][newIdx] = m_morphTargets[t][i];
+                        else
+                            md.m_morphTargets[t][newIdx] = { Vector3(0,0,0), Vector3(0,0,0) };
+                    }
+                }
+            }
+            md.m_morphWeights = m_morphWeights;
+        }
+
         return md;
     }
 

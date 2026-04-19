@@ -48,12 +48,21 @@ export namespace Caustic
         CRefObj<IRenderMaterial> m_spBackMaterial;
         uint32_t m_flags;
 
+        // Morph target (blend shape) data
+        CRefObj<IGPUBuffer> m_spMorphBuffer;   // StructuredBuffer with all target deltas
+        int m_numMorphTargets;
+        int m_morphNumVertices;                // vertex count for structured buffer indexing
+        float m_morphWeights[c_MaxMorphTargets];
+
         void RenderSubMesh(IRenderer* pRenderer, IShader* pShader, IRenderMaterial* pMaterial,
             std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld);
     public:
         CRenderSubMesh() :
-            m_flags(0)
+            m_flags(0),
+            m_numMorphTargets(0),
+            m_morphNumVertices(0)
         {
+            memset(m_morphWeights, 0, sizeof(m_morphWeights));
         }
 
         //**********************************************************************
@@ -79,8 +88,9 @@ export namespace Caustic
         virtual void GetBBox(BBox3 *pBBox) override { *pBBox = m_VB.m_bbox; };
         virtual void Render(IRenderer* pRenderer, IRenderCtx *pRenderCtx, IRenderMaterial* pFrontMaterialOverride, IRenderMaterial* pBackMaterialOverride, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld) override;
         virtual void Render(IRenderer* pRenderer, IRenderCtx* pRenderCtx, IShader* pShader, IRenderMaterial* pMaterial, std::vector<CRefObj<ILight>>& lights, DirectX::XMMATRIX* pWorld) override;
-////        virtual void SetShader(IShader *pShader) override { m_spShader = pShader; }
-////        virtual CRefObj<IShader> GetShader() override { return m_spShader; }
+        virtual void SetMorphTargets(IRenderer* pRenderer, std::vector<std::vector<MorphTargetDelta>>& targets) override;
+        virtual void SetMorphWeights(float* weights, int count) override;
+        virtual int GetMorphTargetCount() override { return m_numMorphTargets; }
     };
 
     //**********************************************************************
