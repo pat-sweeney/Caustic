@@ -306,6 +306,9 @@ export namespace Caustic
         bool m_bloomEnabled;
         bool m_fxaaEnabled;
         bool m_ssaoEnabled;
+        float m_ssaoRadius;
+        float m_ssaoIntensity;
+        float m_ssaoFalloff;
         float m_bloomThreshold;
         float m_bloomIntensity;
         float m_exposure;
@@ -517,6 +520,12 @@ export namespace Caustic
                 m_taaHistoryValid = false;
         }
         virtual void SetSSAOEnabled(bool enabled) override { m_ssaoEnabled = enabled; }
+        virtual void SetSSAOParams(float radius, float intensity, float falloff) override
+        {
+            m_ssaoRadius = radius;
+            m_ssaoIntensity = intensity;
+            m_ssaoFalloff = falloff;
+        }
         virtual void SetExposure(float exposure) override { m_exposure = exposure; }
         virtual void SetEnvironmentMap(ITexture* pCubemap) override
         {

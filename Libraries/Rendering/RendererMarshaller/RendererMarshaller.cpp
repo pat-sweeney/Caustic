@@ -921,6 +921,11 @@ namespace Caustic
         RunOnRenderer([mode](IRenderer* pRenderer) { pRenderer->SetAntiAliasMode(mode); }, false);
     }
 
+    void CRendererMarshaller::SetSSAOParams(float radius, float intensity, float falloff)
+    {
+        RunOnRenderer([radius, intensity, falloff](IRenderer* pRenderer) { pRenderer->SetSSAOParams(radius, intensity, falloff); }, false);
+    }
+
     void CRendererMarshaller::AddParticleSystem(IParticleSystem* pParticleSystem)
     {
         CRefObj<IParticleSystem> spPS(pParticleSystem);

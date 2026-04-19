@@ -4,11 +4,11 @@
 // See file LICENSE for details.
 // File: SSAO.ps
 //
-// Screen-Space Ambient Occlusion shader. Reconstructs view-space
-// positions from depth buffer, samples a hemisphere kernel around
-// each pixel, and computes an occlusion factor. The AO factor is
-// multiplied into the scene color (applied to ambient term only in
-// the ideal case, but applied uniformly here as an approximation).
+// Ground Truth Ambient Occlusion (GTAO) implementation.
+// Uses horizon-based angle integration in screen space for
+// physically-based AO with multi-scale occlusion support.
+// Reconstructs view-space positions using the actual projection
+// matrix rather than hardcoded FOV/near/far.
 //**********************************************************************
 Texture2D sceneTexture : register(t0);
 SamplerState sceneSampler : register(s0);
@@ -25,73 +25,135 @@ cbuffer PS_CONSTANT_BUFFER
 {
     float screenWidth;
     float screenHeight;
+    float aoRadius;
+    float aoIntensity;
+    float aoFalloff;
+    float3 padding;
+    float4x4 projMatrix;
 };
 
-// Reconstruct view-space position from depth
-// Uses reverse-engineered projection assuming standard perspective
+static const float c_PI = 3.14159265;
+static const int c_NumDirections = 8;
+static const int c_NumSteps = 4;
+
+float LinearizeDepth(float d)
+{
+    float z = projMatrix._43 / (d - projMatrix._33);
+    return z;
+}
+
 float3 ReconstructViewPos(float2 uv, float depth)
 {
-    // Remap UV to clip space [-1, 1]
-    float x = uv.x * 2.0 - 1.0;
-    float y = (1.0 - uv.y) * 2.0 - 1.0;
-
-    // Approximate perspective reconstruction
-    // Assumes near=0.1, far=1000 for depth linearization
-    float near = 0.1;
-    float far = 1000.0;
-    float linearDepth = near * far / (far - depth * (far - near));
-
-    // Approximate FOV-based reconstruction (assumes ~60 degree FOV)
-    float aspect = screenWidth / screenHeight;
-    float tanHalfFov = 0.5773502; // tan(30 degrees)
-    float viewX = x * linearDepth * tanHalfFov * aspect;
-    float viewY = y * linearDepth * tanHalfFov;
-
-    return float3(viewX, viewY, linearDepth);
+    float linearZ = LinearizeDepth(depth);
+    float cx = uv.x * 2.0 - 1.0;
+    float cy = (1.0 - uv.y) * 2.0 - 1.0;
+    float viewX = cx * linearZ / projMatrix._11;
+    float viewY = cy * linearZ / projMatrix._22;
+    return float3(viewX, viewY, linearZ);
 }
 
-// Simple hash for pseudo-random kernel rotation per pixel
-float2 GetNoiseVec(float2 uv)
-{
-    float noiseX = frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453);
-    float noiseY = frac(sin(dot(uv, float2(93.9898, 67.345))) * 24634.6345);
-    return normalize(float2(noiseX, noiseY) * 2.0 - 1.0);
-}
-
-// Reconstruct view-space normal from depth via cross product of neighbors
 float3 ReconstructNormal(float2 uv, float2 texelSize)
 {
-    float depthC = depthTexture.Sample(depthSampler, uv).r;
-    float depthR = depthTexture.Sample(depthSampler, uv + float2(texelSize.x, 0.0)).r;
-    float depthU = depthTexture.Sample(depthSampler, uv + float2(0.0, -texelSize.y)).r;
+    float dC = depthTexture.SampleLevel(depthSampler, uv, 0).r;
+    float dR = depthTexture.SampleLevel(depthSampler, uv + float2(texelSize.x, 0.0), 0).r;
+    float dD = depthTexture.SampleLevel(depthSampler, uv + float2(0.0, texelSize.y), 0).r;
+    float dL = depthTexture.SampleLevel(depthSampler, uv - float2(texelSize.x, 0.0), 0).r;
+    float dU = depthTexture.SampleLevel(depthSampler, uv - float2(0.0, texelSize.y), 0).r;
 
-    float3 posC = ReconstructViewPos(uv, depthC);
-    float3 posR = ReconstructViewPos(uv + float2(texelSize.x, 0.0), depthR);
-    float3 posU = ReconstructViewPos(uv + float2(0.0, -texelSize.y), depthU);
+    float3 posC = ReconstructViewPos(uv, dC);
 
-    float3 normal = normalize(cross(posR - posC, posU - posC));
-    return normal;
+    float3 ddx_val = (abs(dR - dC) < abs(dC - dL))
+        ? ReconstructViewPos(uv + float2(texelSize.x, 0.0), dR) - posC
+        : posC - ReconstructViewPos(uv - float2(texelSize.x, 0.0), dL);
+    float3 ddy_val = (abs(dD - dC) < abs(dC - dU))
+        ? ReconstructViewPos(uv + float2(0.0, texelSize.y), dD) - posC
+        : posC - ReconstructViewPos(uv - float2(0.0, texelSize.y), dU);
+
+    return normalize(cross(ddy_val, ddx_val));
 }
 
-// Hemisphere sample kernel (8 samples for reasonable quality/performance)
-static const float3 ssaoKernel[8] = {
-    float3( 0.2024537,  0.8414984,  0.1531024),
-    float3(-0.3265630, -0.1959330,  0.6935066),
-    float3( 0.5835228,  0.2347714,  0.3641148),
-    float3(-0.6440040,  0.5227710,  0.2105740),
-    float3( 0.1014600, -0.6870860,  0.4291000),
-    float3(-0.1570400,  0.1359740,  0.8671940),
-    float3( 0.4427980, -0.3714700,  0.5362090),
-    float3(-0.7692680,  0.0635500,  0.3060460)
-};
+float SpatialNoise(float2 pixelCoord)
+{
+    return frac(sin(dot(pixelCoord, float2(12.9898, 78.233))) * 43758.5453);
+}
+
+float GTAO(float2 uv, float3 viewPos, float3 viewNormal, float2 texelSize)
+{
+    float projScale = projMatrix._22 * screenHeight * 0.5;
+    float screenRadius = (aoRadius * projScale) / viewPos.z;
+    screenRadius = max(screenRadius, 3.0);
+    screenRadius = min(screenRadius, min(screenWidth, screenHeight) * 0.5);
+
+    float stepSize = screenRadius / (float)c_NumSteps;
+    float noise = SpatialNoise(uv * float2(screenWidth, screenHeight));
+
+    float totalAO = 0.0;
+
+    for (int dir = 0; dir < c_NumDirections; dir++)
+    {
+        float angle = (c_PI / (float)c_NumDirections) * ((float)dir + noise);
+        float2 direction = float2(cos(angle), sin(angle)) * texelSize;
+
+        float maxAnglePos = -c_PI;
+        float maxAngleNeg = -c_PI;
+
+        for (int step = 1; step <= c_NumSteps; step++)
+        {
+            float2 offset = direction * (float)step * stepSize;
+
+            float2 sUVP = uv + offset;
+            if (sUVP.x >= 0.0 && sUVP.x <= 1.0 && sUVP.y >= 0.0 && sUVP.y <= 1.0)
+            {
+                float sdP = depthTexture.SampleLevel(depthSampler, sUVP, 0).r;
+                if (sdP < 1.0)
+                {
+                    float3 hVec = ReconstructViewPos(sUVP, sdP) - viewPos;
+                    float dist = length(hVec);
+                    float fo = saturate(1.0 - pow(dist / aoRadius, aoFalloff));
+                    float ha = atan2(hVec.z, length(hVec.xy));
+                    maxAnglePos = max(maxAnglePos, ha * fo);
+                }
+            }
+
+            float2 sUVN = uv - offset;
+            if (sUVN.x >= 0.0 && sUVN.x <= 1.0 && sUVN.y >= 0.0 && sUVN.y <= 1.0)
+            {
+                float sdN = depthTexture.SampleLevel(depthSampler, sUVN, 0).r;
+                if (sdN < 1.0)
+                {
+                    float3 hVec = ReconstructViewPos(sUVN, sdN) - viewPos;
+                    float dist = length(hVec);
+                    float fo = saturate(1.0 - pow(dist / aoRadius, aoFalloff));
+                    float ha = atan2(hVec.z, length(hVec.xy));
+                    maxAngleNeg = max(maxAngleNeg, ha * fo);
+                }
+            }
+        }
+
+        float3 sliceDir = float3(cos(angle), sin(angle), 0.0);
+        float3 projNormal = viewNormal - sliceDir * dot(viewNormal, sliceDir);
+        float projNormalLen = length(projNormal);
+        float normalAngle = atan2(projNormal.z, length(projNormal.xy));
+
+        float h1 = max(maxAngleNeg, normalAngle);
+        float h2 = max(maxAnglePos, normalAngle);
+        float inner = 0.25 * (-cos(2.0 * h1 - normalAngle) + cos(normalAngle) +
+                               2.0 * h1 * sin(normalAngle));
+        inner += 0.25 * (-cos(2.0 * h2 - normalAngle) + cos(normalAngle) +
+                          2.0 * h2 * sin(normalAngle));
+
+        totalAO += projNormalLen * inner;
+    }
+
+    totalAO /= (float)c_NumDirections;
+    return saturate(totalAO);
+}
 
 float4 PS(VSOutput p) : SV_Target
 {
     float2 texelSize = float2(1.0 / screenWidth, 1.0 / screenHeight);
+    float depth = depthTexture.SampleLevel(depthSampler, p.uvs, 0).r;
 
-    float depth = depthTexture.Sample(depthSampler, p.uvs).r;
-
-    // Skip sky pixels
     if (depth >= 1.0)
     {
         float3 scene = sceneTexture.Sample(sceneSampler, p.uvs).rgb;
@@ -100,45 +162,9 @@ float4 PS(VSOutput p) : SV_Target
 
     float3 viewPos = ReconstructViewPos(p.uvs, depth);
     float3 viewNormal = ReconstructNormal(p.uvs, texelSize);
-    float2 noiseVec = GetNoiseVec(p.uvs * float2(screenWidth, screenHeight) * 0.25);
 
-    float ssaoRadius = 0.5;
-    float ssaoBias = 0.025;
-    float occlusion = 0.0;
-
-    [unroll]
-    for (int i = 0; i < 8; i++)
-    {
-        // Rotate kernel sample by noise
-        float3 sampleVec = ssaoKernel[i];
-        float3 rotated;
-        rotated.x = sampleVec.x * noiseVec.x - sampleVec.y * noiseVec.y;
-        rotated.y = sampleVec.x * noiseVec.y + sampleVec.y * noiseVec.x;
-        rotated.z = sampleVec.z;
-
-        // Orient to hemisphere
-        if (dot(rotated, viewNormal) < 0.0)
-            rotated = -rotated;
-
-        float3 samplePos = viewPos + rotated * ssaoRadius;
-
-        // Project sample to screen space
-        float aspect = screenWidth / screenHeight;
-        float tanHalfFov = 0.5773502;
-        float2 sampleUV;
-        sampleUV.x = (samplePos.x / (samplePos.z * tanHalfFov * aspect)) * 0.5 + 0.5;
-        sampleUV.y = 1.0 - ((samplePos.y / (samplePos.z * tanHalfFov)) * 0.5 + 0.5);
-
-        float sampleDepth = depthTexture.Sample(depthSampler, sampleUV).r;
-        float3 actualPos = ReconstructViewPos(sampleUV, sampleDepth);
-
-        // Range check and accumulate
-        float rangeCheck = smoothstep(0.0, 1.0, ssaoRadius / abs(viewPos.z - actualPos.z));
-        occlusion += (actualPos.z >= samplePos.z + ssaoBias ? 1.0 : 0.0) * rangeCheck;
-    }
-
-    float ao = 1.0 - (occlusion / 8.0);
-    ao = pow(ao, 2.0); // Strengthen effect
+    float ao = GTAO(p.uvs, viewPos, viewNormal, texelSize);
+    ao = pow(ao, aoIntensity);
 
     float3 scene = sceneTexture.Sample(sceneSampler, p.uvs).rgb;
     return float4(scene * ao, 1.0);

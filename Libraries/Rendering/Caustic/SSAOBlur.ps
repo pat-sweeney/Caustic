@@ -4,11 +4,13 @@
 // See file LICENSE for details.
 // File: SSAOBlur.ps
 //
-// Bilateral blur for SSAO. Smooths the noisy AO result while
-// preserving depth discontinuities to avoid halo artifacts.
+// Depth-aware bilateral blur for GTAO. Smooths the AO result while
+// preserving depth discontinuities and geometric edges.
 //**********************************************************************
 Texture2D tex : register(t0);
 SamplerState s : register(s0);
+Texture2D depthTexture : register(t1);
+SamplerState depthSampler : register(s1);
 
 struct VSOutput
 {
@@ -20,6 +22,8 @@ cbuffer PS_CONSTANT_BUFFER
 {
     float texelWidth;
     float texelHeight;
+    float depthThreshold;
+    float padding;
 };
 
 float4 PS(VSOutput p) : SV_Target
@@ -29,9 +33,9 @@ float4 PS(VSOutput p) : SV_Target
     float totalWeight = 0.0;
 
     float3 centerColor = tex.Sample(s, p.uvs).rgb;
-    float centerLum = dot(centerColor, float3(0.2126, 0.7152, 0.0722));
+    float centerDepth = depthTexture.SampleLevel(depthSampler, p.uvs, 0).r;
 
-    // 5x5 bilateral blur
+    // 5x5 bilateral blur with depth-aware weighting
     [unroll]
     for (int x = -2; x <= 2; x++)
     {
@@ -39,18 +43,22 @@ float4 PS(VSOutput p) : SV_Target
         for (int y = -2; y <= 2; y++)
         {
             float2 offset = float2(float(x), float(y)) * texelSize;
-            float3 sampleColor = tex.Sample(s, p.uvs + offset).rgb;
-            float sampleLum = dot(sampleColor, float3(0.2126, 0.7152, 0.0722));
+            float2 sampleUV = p.uvs + offset;
+            float3 sampleColor = tex.Sample(s, sampleUV).rgb;
+            float sampleDepth = depthTexture.SampleLevel(depthSampler, sampleUV, 0).r;
 
-            // Bilateral weight: spatial * range
+            // Spatial weight (Gaussian)
             float spatial = exp(-float(x * x + y * y) / 4.5);
-            float range = exp(-abs(centerLum - sampleLum) * 20.0);
-            float weight = spatial * range;
 
+            // Depth weight: reject samples across depth discontinuities
+            float depthDiff = abs(centerDepth - sampleDepth);
+            float depthWeight = exp(-depthDiff * depthDiff / (depthThreshold * depthThreshold));
+
+            float weight = spatial * depthWeight;
             result += sampleColor * weight;
             totalWeight += weight;
         }
     }
 
-    return float4(result / totalWeight, 1.0);
+    return float4(result / max(totalWeight, 0.0001), 1.0);
 }

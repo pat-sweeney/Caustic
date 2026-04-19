@@ -57,6 +57,9 @@ namespace Caustic
         m_bloomEnabled(true),
         m_fxaaEnabled(true),
         m_ssaoEnabled(true),
+        m_ssaoRadius(0.5f),
+        m_ssaoIntensity(2.0f),
+        m_ssaoFalloff(2.0f),
         m_bloomThreshold(1.0f),
         m_bloomIntensity(0.5f),
         m_exposure(1.0f),
@@ -2255,6 +2258,13 @@ namespace Caustic
             m_spSSAOShader->SetPSParam(L"depthTexture", std::any(m_spDepthTextureObj));
             m_spSSAOShader->SetPSParamFloat(L"screenWidth", (float)m_BBDesc.Width);
             m_spSSAOShader->SetPSParamFloat(L"screenHeight", (float)m_BBDesc.Height);
+            m_spSSAOShader->SetPSParamFloat(L"aoRadius", m_ssaoRadius);
+            m_spSSAOShader->SetPSParamFloat(L"aoIntensity", m_ssaoIntensity);
+            m_spSSAOShader->SetPSParamFloat(L"aoFalloff", m_ssaoFalloff);
+
+            DirectX::XMFLOAT4X4 projF;
+            DirectX::XMStoreFloat4x4(&projF, GetCamera()->GetProjection());
+            m_spSSAOShader->SetPSParam(L"projMatrix", std::any(projF));
 
             m_spSSAOShader->SetVSParamFloat(L"minu", 0.0f);
             m_spSSAOShader->SetVSParamFloat(L"minv", 0.0f);
@@ -2275,8 +2285,10 @@ namespace Caustic
                 m_spContext->ClearRenderTargetView(m_spPostProcessRTV[pingPongIndex], black);
 
                 m_spSSAOBlurShader->SetPSParam(L"tex", std::any(pCurrentTex));
+                m_spSSAOBlurShader->SetPSParam(L"depthTexture", std::any(m_spDepthTextureObj));
                 m_spSSAOBlurShader->SetPSParamFloat(L"texelWidth", 1.0f / (float)m_BBDesc.Width);
                 m_spSSAOBlurShader->SetPSParamFloat(L"texelHeight", 1.0f / (float)m_BBDesc.Height);
+                m_spSSAOBlurShader->SetPSParamFloat(L"depthThreshold", 0.01f);
 
                 m_spSSAOBlurShader->SetVSParamFloat(L"minu", 0.0f);
                 m_spSSAOBlurShader->SetVSParamFloat(L"minv", 0.0f);

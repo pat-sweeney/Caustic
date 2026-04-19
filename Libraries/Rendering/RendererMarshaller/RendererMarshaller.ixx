@@ -187,6 +187,7 @@ export namespace Caustic
         virtual void SetSSSEnabled(bool enabled) override;
         virtual void SetSSSParams(float width, FRGBColor& color) override;
         virtual void SetAntiAliasMode(EAntiAliasMode mode) override;
+        virtual void SetSSAOParams(float radius, float intensity, float falloff) override;
         virtual void AddDecal(IDecal* pDecal) override;
         virtual void RemoveDecal(IDecal* pDecal) override;
         virtual void AddParticleSystem(IParticleSystem* pParticleSystem) override;

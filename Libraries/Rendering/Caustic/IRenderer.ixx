@@ -556,6 +556,17 @@ export namespace Caustic
         virtual void SetSSAOEnabled(bool enabled) = 0;
 
         //**********************************************************************
+        // Method: SetSSAOParams
+        // Configures GTAO ambient occlusion parameters.
+        //
+        // Parameters:
+        // radius - world-space AO sampling radius (default 0.5)
+        // intensity - AO strength power exponent (default 2.0)
+        // falloff - distance falloff exponent (default 2.0)
+        //**********************************************************************
+        virtual void SetSSAOParams(float radius, float intensity, float falloff) = 0;
+
+        //**********************************************************************
         // Method: SetExposure
         // Sets the exposure value for HDR tonemapping
         //
