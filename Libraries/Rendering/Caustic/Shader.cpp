@@ -141,6 +141,7 @@ namespace Caustic
             s += ShaderTypeSize(d);
             it->second.m_dirty = true;
             it->second.m_offset = (pDefs[i].m_type == EShaderParamType::ShaderType_Texture ||
+                pDefs[i].m_type == EShaderParamType::ShaderType_Sampler ||
                 pDefs[i].m_type == EShaderParamType::ShaderType_AppendStructuredBuffer ||
                 pDefs[i].m_type == EShaderParamType::ShaderType_RWStructuredBuffer ||
                 pDefs[i].m_type == EShaderParamType::ShaderType_RWByteAddressBuffer ||
