@@ -243,14 +243,14 @@ namespace Caustic
 
     void CShader::ClearSamplers(IRenderer* pRenderer)
     {
-        // Set deafult sampler
+        // Set default sampler
         CComPtr<ID3D11DeviceContext> spCtx = pRenderer->GetContext();
         spCtx->PSSetSamplers(0, 1, &m_spSamplerState.p);
         spCtx->VSSetSamplers(0, 1, &m_spSamplerState.p);
 
-        // Clear the old textures
+        // Clear the old textures (use <= to include the highest slot)
         ID3D11ShaderResourceView* const nullref[1] = { NULL };
-        for (int i = 0; i < m_maxTextureSlot; i++)
+        for (int i = 0; i <= m_maxTextureSlot; i++)
             spCtx->PSSetShaderResources(i, 1, nullref);
         m_maxTextureSlot = 0;
     }
@@ -279,6 +279,12 @@ namespace Caustic
                 {
                     Caustic::CSamplerRef v = std::any_cast<CSamplerRef>(it.second.m_value);
                     v.m_spSampler->Render(pRenderer, it.second.m_offset, isPixelShader);
+                }
+                else if (isPixelShader)
+                {
+                    // Bind default sampler to avoid DEVICE_DRAW_SAMPLER_NOT_SET warnings
+                    CComPtr<ID3D11DeviceContext> spCtx = pRenderer->GetContext();
+                    spCtx->PSSetSamplers(it.second.m_offset, 1, &m_spSamplerState.p);
                 }
             }
             break;
@@ -1033,8 +1039,12 @@ namespace Caustic
     // Parameters:
     // pRenderer - D3D11 device/context to use
     //**********************************************************************
-    void CShader::EndRender(IRenderer * /*pRenderer*/)
+    void CShader::EndRender(IRenderer *pRenderer)
     {
+        // Unbind PS shader resource views so that subsequent OMSetRenderTargets
+        // calls don't hit SRV/RT hazard warnings (a texture still bound as
+        // input being set as a render target).
+        ClearSamplers(pRenderer);
     }
 
     //**********************************************************************
