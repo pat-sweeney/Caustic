@@ -463,6 +463,21 @@ export namespace Caustic
         // Returns the default morph target weights.
         //**********************************************************************
         virtual const std::vector<float>& GetMorphWeights() = 0;
+
+        //**********************************************************************
+        // Method: SetFromIndexedData
+        // Fast-path initialization from pre-built indexed vertex/face data.
+        // Directly populates internal vertex and face arrays without building
+        // the half-edge structure or KD-tree, making it much faster for
+        // imported mesh data (e.g. glTF) that already has proper vertex/index
+        // arrays.
+        //
+        // Parameters:
+        // srcVerts - source vertex data (positions, normals, UVs)
+        // faceIndices - triangle indices (every 3 ints = one triangle)
+        // materialID - material ID to assign
+        //**********************************************************************
+        virtual void SetFromIndexedData(std::vector<CGeomVertex>& srcVerts, std::vector<int>& faceIndices, uint32_t materialID) = 0;
     };
 
     //**********************************************************************

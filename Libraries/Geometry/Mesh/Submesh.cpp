@@ -557,4 +557,50 @@ namespace Caustic
         flags = m_meshFlags;
         CT(pStream->Write(&flags, sizeof(flags), &bytesWritten));
     }
+
+    //**********************************************************************
+    // Method: SetFromIndexedData
+    // Fast-path initialization from pre-built indexed vertex/face data.
+    // Skips half-edge construction and KD-tree inserts for performance.
+    //**********************************************************************
+    void CSubMesh::SetFromIndexedData(std::vector<CGeomVertex>& srcVerts, std::vector<int>& faceIndices, uint32_t materialID)
+    {
+        m_materialID = materialID;
+
+        // Allocate and populate vertices (skip KD-tree)
+        m_vertices.reserve(srcVerts.size());
+        for (size_t i = 0; i < srcVerts.size(); i++)
+        {
+            CGeomVertex* pVert = m_vertexAllocator.Allocate();
+            *pVert = srcVerts[i];
+            pVert->index = (int)i;
+            m_vertices.push_back(pVert);
+            m_bbox.AddPoint(pVert->pos);
+        }
+
+        // Build faces from triangle indices (skip edges)
+        size_t numTriangles = faceIndices.size() / 3;
+        m_faces.reserve(numTriangles);
+        for (size_t i = 0; i < faceIndices.size(); i += 3)
+        {
+            CFace* pFace = m_faceAllocator.Allocate();
+            pFace->index = (int)m_faces.size();
+            pFace->m_pEdge = nullptr;
+
+            CGeomVertex* v0 = m_vertices[faceIndices[i]];
+            CGeomVertex* v1 = m_vertices[faceIndices[i + 1]];
+            CGeomVertex* v2 = m_vertices[faceIndices[i + 2]];
+            pFace->m_vertices.push_back(v0);
+            pFace->m_vertices.push_back(v1);
+            pFace->m_vertices.push_back(v2);
+
+            pFace->m_center = Vector3(
+                (v0->pos.x + v1->pos.x + v2->pos.x) / 3.0f,
+                (v0->pos.y + v1->pos.y + v2->pos.y) / 3.0f,
+                (v0->pos.z + v1->pos.z + v2->pos.z) / 3.0f);
+            pFace->ComputeFaceNormal();
+
+            m_faces.push_back(pFace);
+        }
+    }
 }

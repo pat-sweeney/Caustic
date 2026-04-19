@@ -13,7 +13,6 @@
 // Limitations (can be extended later):
 // - No skeleton/animation support
 // - No embedded base64 image data
-// - Embedded GLB images (bufferView-based) are not yet supported
 //**********************************************************************
 module;
 #include <Windows.h>
@@ -35,6 +34,7 @@ import Geometry.Mesh.IMaterialAttrib;
 import Geometry.Mesh.RenderTypes;
 import Geometry.Mesh.IMesh;
 import Geometry.Mesh.Mesh;
+import Geometry.Mesh.MeshFuncs;
 import Imaging.Color;
 import Imaging.Image.IImage;
 import Parsers.JSon.IJSonParser;
@@ -423,8 +423,57 @@ namespace Caustic
                 }
                 else
                 {
-                    // Embedded GLB image (bufferView-based) — not yet supported
-                    imagePaths.push_back(L"");
+                    // Embedded GLB image: extract from bufferView and write to temp file
+                    int bvIdx = GetInt(GetProperty(spImg, "bufferView"), -1);
+                    std::string mimeType = GetString(GetProperty(spImg, "mimeType"));
+                    if (bvIdx >= 0 && bvIdx < (int)bufferViews.size())
+                    {
+                        auto& bv = bufferViews[bvIdx];
+                        if (bv.buffer < (int)buffers.size())
+                        {
+                            const uint8_t* pData = buffers[bv.buffer].data() + bv.byteOffset;
+                            int dataLen = bv.byteLength;
+
+                            // Determine file extension from MIME type
+                            std::wstring ext = L".bin";
+                            if (mimeType == "image/png") ext = L".png";
+                            else if (mimeType == "image/jpeg") ext = L".jpg";
+
+                            // Write to temp file
+                            wchar_t tempPath[MAX_PATH];
+                            wchar_t tempFile[MAX_PATH];
+                            GetTempPathW(MAX_PATH, tempPath);
+                            GetTempFileNameW(tempPath, L"glb", 0, tempFile);
+
+                            // Rename with proper extension
+                            std::wstring finalPath = std::wstring(tempFile) + ext;
+                            DeleteFileW(finalPath.c_str());
+                            MoveFileW(tempFile, finalPath.c_str());
+
+                            // Write image data
+                            HANDLE hFile = CreateFileW(finalPath.c_str(), GENERIC_WRITE, 0, nullptr,
+                                CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
+                            if (hFile != INVALID_HANDLE_VALUE)
+                            {
+                                DWORD bytesWritten;
+                                WriteFile(hFile, pData, (DWORD)dataLen, &bytesWritten, nullptr);
+                                CloseHandle(hFile);
+                                imagePaths.push_back(finalPath);
+                            }
+                            else
+                            {
+                                imagePaths.push_back(L"");
+                            }
+                        }
+                        else
+                        {
+                            imagePaths.push_back(L"");
+                        }
+                    }
+                    else
+                    {
+                        imagePaths.push_back(L"");
+                    }
                 }
             }
         }
@@ -621,7 +670,8 @@ namespace Caustic
                 int matIdx = GetInt(GetProperty(spPrim, "material"), -1);
                 uint32_t materialID = (matIdx >= 0 && matIdx < (int)materials.size()) ? (uint32_t)matIdx : 0;
 
-                CRefObj<ISubMesh> spSubMesh = CreateSubMesh(verts, faceIndices, materialID);
+                CRefObj<ISubMesh> spSubMesh = CreateEmptySubMesh();
+                spSubMesh->SetFromIndexedData(verts, faceIndices, materialID);
 
                 // Parse morph targets (blend shapes) if present
                 auto spTargetsArr = GetProperty(spPrim, "targets");

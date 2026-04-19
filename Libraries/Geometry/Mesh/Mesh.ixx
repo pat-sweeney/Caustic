@@ -268,6 +268,7 @@ export namespace Caustic
         virtual const std::vector<std::vector<MorphTargetDelta>>& GetMorphTargets() override { return m_morphTargets; }
         virtual void SetMorphWeights(std::vector<float>& weights) override { m_morphWeights = weights; }
         virtual const std::vector<float>& GetMorphWeights() override { return m_morphWeights; }
+        virtual void SetFromIndexedData(std::vector<CGeomVertex>& srcVerts, std::vector<int>& faceIndices, uint32_t materialID) override;
 
         //**********************************************************************
         // ISerialize
