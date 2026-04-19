@@ -5,14 +5,15 @@
 //
 // glTF 2.0 importer for Caustic. Supports:
 // - .gltf (JSON) + .bin (binary buffer) format
+// - .glb (single binary container) format
 // - Triangle meshes with positions, normals, UVs, indices
 // - PBR metallic-roughness material model
 // - External texture image files
 //
 // Limitations (can be extended later):
-// - No .glb (single binary) support
 // - No skeleton/animation support
 // - No embedded base64 image data
+// - Embedded GLB images (bufferView-based) are not yet supported
 //**********************************************************************
 module;
 #include <Windows.h>
@@ -259,6 +260,27 @@ namespace Caustic
     }
 
     //**********************************************************************
+    // Helper: Check if filename has .glb extension (case-insensitive)
+    //**********************************************************************
+    static bool IsGLBFile(const wchar_t* pFilename)
+    {
+        std::wstring fn(pFilename);
+        if (fn.size() < 4)
+            return false;
+        std::wstring ext = fn.substr(fn.size() - 4);
+        for (auto& c : ext) c = towlower(c);
+        return ext == L".glb";
+    }
+
+    //**********************************************************************
+    // GLB constants
+    //**********************************************************************
+    static const uint32_t c_GLBMagic = 0x46546C67;   // "glTF"
+    static const uint32_t c_GLBVersion = 2;
+    static const uint32_t c_ChunkTypeJSON = 0x4E4F534A; // "JSON"
+    static const uint32_t c_ChunkTypeBIN  = 0x004E4942; // "BIN\0"
+
+    //**********************************************************************
     // Function: LoadglTF
     // See MeshImportglTF.ixx for description
     //**********************************************************************
@@ -266,23 +288,89 @@ namespace Caustic
     {
         std::wstring folder = GetFolderPath(pFilename);
 
-        // Parse the .gltf JSON file
         CRefObj<IJSonParser> spParser = CreateJSonParser();
-        std::wstring fn(pFilename);
-        CRefObj<IJSonObj> spRoot = spParser->LoadDOM(fn);
-        if (spRoot == nullptr)
-            CT(E_FAIL);
+        CRefObj<IJSonObj> spRoot;
 
-        // Parse buffers
+        // GLB embedded binary chunk (empty for .gltf files)
+        std::vector<uint8_t> glbBinChunk;
+        bool isGLB = IsGLBFile(pFilename);
+
+        if (isGLB)
+        {
+            // Load entire .glb file
+            std::vector<uint8_t> fileData = LoadBinaryBuffer(std::wstring(pFilename));
+            if (fileData.size() < 12)
+                CT(E_FAIL);
+
+            // Parse GLB header
+            uint32_t magic, version, totalLength;
+            memcpy(&magic, fileData.data(), 4);
+            memcpy(&version, fileData.data() + 4, 4);
+            memcpy(&totalLength, fileData.data() + 8, 4);
+            if (magic != c_GLBMagic || version != c_GLBVersion)
+                CT(E_FAIL);
+            if (totalLength > fileData.size())
+                CT(E_FAIL);
+
+            // Parse chunks
+            size_t offset = 12;
+            bool foundJSON = false;
+            while (offset + 8 <= totalLength)
+            {
+                uint32_t chunkLength, chunkType;
+                memcpy(&chunkLength, fileData.data() + offset, 4);
+                memcpy(&chunkType, fileData.data() + offset + 4, 4);
+                offset += 8;
+
+                if (offset + chunkLength > totalLength)
+                    CT(E_FAIL);
+
+                if (chunkType == c_ChunkTypeJSON && !foundJSON)
+                {
+                    // Null-terminate the JSON for the parser
+                    std::string jsonStr(reinterpret_cast<const char*>(fileData.data() + offset), chunkLength);
+                    spRoot = spParser->ReadDOM(jsonStr.c_str());
+                    foundJSON = true;
+                }
+                else if (chunkType == c_ChunkTypeBIN && glbBinChunk.empty())
+                {
+                    glbBinChunk.assign(fileData.data() + offset, fileData.data() + offset + chunkLength);
+                }
+
+                offset += chunkLength;
+            }
+
+            if (!foundJSON || spRoot == nullptr)
+                CT(E_FAIL);
+        }
+        else
+        {
+            // Standard .gltf JSON file
+            std::wstring fn(pFilename);
+            spRoot = spParser->LoadDOM(fn);
+            if (spRoot == nullptr)
+                CT(E_FAIL);
+        }
+
+        // Parse buffers — for GLB, buffers without a URI use the embedded BIN chunk
         std::vector<std::vector<uint8_t>> buffers;
         auto spBuffersArr = GetProperty(spRoot, "buffers");
         if (spBuffersArr != nullptr)
         {
             for (auto& spBuf : GetArray(spBuffersArr))
             {
-                std::string uri = GetString(GetProperty(spBuf, "uri"));
-                std::wstring bufPath = folder + str2wstr(uri);
-                buffers.push_back(LoadBinaryBuffer(bufPath));
+                auto spUri = GetProperty(spBuf, "uri");
+                std::string uri = GetString(spUri);
+                if (uri.empty())
+                {
+                    // No URI — use embedded GLB binary chunk
+                    buffers.push_back(glbBinChunk);
+                }
+                else
+                {
+                    std::wstring bufPath = folder + str2wstr(uri);
+                    buffers.push_back(LoadBinaryBuffer(bufPath));
+                }
             }
         }
 
@@ -326,8 +414,17 @@ namespace Caustic
         {
             for (auto& spImg : GetArray(spImagesArr))
             {
-                std::string uri = GetString(GetProperty(spImg, "uri"));
-                imagePaths.push_back(folder + str2wstr(uri));
+                auto spUri = GetProperty(spImg, "uri");
+                std::string uri = GetString(spUri);
+                if (!uri.empty())
+                {
+                    imagePaths.push_back(folder + str2wstr(uri));
+                }
+                else
+                {
+                    // Embedded GLB image (bufferView-based) — not yet supported
+                    imagePaths.push_back(L"");
+                }
             }
         }
 
@@ -386,7 +483,7 @@ namespace Caustic
                         if (texIdx >= 0 && texIdx < (int)textureImageIndex.size())
                         {
                             int imgIdx = textureImageIndex[texIdx];
-                            if (imgIdx >= 0 && imgIdx < (int)imagePaths.size())
+                            if (imgIdx >= 0 && imgIdx < (int)imagePaths.size() && !imagePaths[imgIdx].empty())
                                 spMaterial->SetTextureViaFilename(L"albedoTexture", imagePaths[imgIdx], EShaderAccess::PixelShader);
                         }
                     }
@@ -398,7 +495,7 @@ namespace Caustic
                         if (texIdx >= 0 && texIdx < (int)textureImageIndex.size())
                         {
                             int imgIdx = textureImageIndex[texIdx];
-                            if (imgIdx >= 0 && imgIdx < (int)imagePaths.size())
+                            if (imgIdx >= 0 && imgIdx < (int)imagePaths.size() && !imagePaths[imgIdx].empty())
                                 spMaterial->SetTextureViaFilename(L"metallicRoughnessTexture", imagePaths[imgIdx], EShaderAccess::PixelShader);
                         }
                     }
@@ -412,7 +509,7 @@ namespace Caustic
                     if (texIdx >= 0 && texIdx < (int)textureImageIndex.size())
                     {
                         int imgIdx = textureImageIndex[texIdx];
-                        if (imgIdx >= 0 && imgIdx < (int)imagePaths.size())
+                        if (imgIdx >= 0 && imgIdx < (int)imagePaths.size() && !imagePaths[imgIdx].empty())
                             spMaterial->SetTextureViaFilename(L"normalTexture", imagePaths[imgIdx], EShaderAccess::PixelShader);
                     }
                 }
@@ -425,7 +522,7 @@ namespace Caustic
                     if (texIdx >= 0 && texIdx < (int)textureImageIndex.size())
                     {
                         int imgIdx = textureImageIndex[texIdx];
-                        if (imgIdx >= 0 && imgIdx < (int)imagePaths.size())
+                        if (imgIdx >= 0 && imgIdx < (int)imagePaths.size() && !imagePaths[imgIdx].empty())
                             spMaterial->SetTextureViaFilename(L"aoTexture", imagePaths[imgIdx], EShaderAccess::PixelShader);
                     }
                 }

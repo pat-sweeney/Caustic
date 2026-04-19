@@ -23,11 +23,11 @@ export namespace Caustic
     {
         //**********************************************************************
         // Function: LoadglTF
-        // Loads a glTF 2.0 model file (.gltf + .bin).
+        // Loads a glTF 2.0 model file (.gltf + .bin or .glb binary).
         // Supports the PBR metallic-roughness material model.
         //
         // Parameters:
-        // pFilename - path to the .gltf file
+        // pFilename - path to the .gltf or .glb file
         //
         // Returns:
         // IMesh object containing all mesh primitives with PBR materials
