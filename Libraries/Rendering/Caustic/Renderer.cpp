@@ -2432,7 +2432,8 @@ namespace Caustic
 
             DirectX::XMFLOAT4X4 projF;
             DirectX::XMStoreFloat4x4(&projF, GetCamera()->GetProjection());
-            m_spSSAOShader->SetPSParam(L"projMatrix", std::any(projF));
+            Matrix ssaoProjMat(reinterpret_cast<float*>(&projF));
+            m_spSSAOShader->SetPSParam(L"projMatrix", std::any(ssaoProjMat));
 
             m_spSSAOShader->SetVSParamFloat(L"minu", 0.0f);
             m_spSSAOShader->SetVSParamFloat(L"minv", 0.0f);
@@ -2745,9 +2746,11 @@ namespace Caustic
 
                 DirectX::XMFLOAT4X4 f4x4;
                 DirectX::XMStoreFloat4x4(&f4x4, currVPInv);
-                m_spMotionVectorShader->SetPSParam(L"currViewProjInv", std::any(f4x4));
+                Matrix currVPInvMat(reinterpret_cast<float*>(&f4x4));
+                m_spMotionVectorShader->SetPSParam(L"currViewProjInv", std::any(currVPInvMat));
                 DirectX::XMStoreFloat4x4(&f4x4, m_prevJitteredViewProj);
-                m_spMotionVectorShader->SetPSParam(L"prevViewProj", std::any(f4x4));
+                Matrix prevVPMat(reinterpret_cast<float*>(&f4x4));
+                m_spMotionVectorShader->SetPSParam(L"prevViewProj", std::any(prevVPMat));
                 m_spMotionVectorShader->SetPSParam(L"screenSize",
                     std::any(Float2((float)m_BBDesc.Width, (float)m_BBDesc.Height)));
 

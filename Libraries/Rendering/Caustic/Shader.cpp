@@ -1118,7 +1118,7 @@ namespace Caustic
         ID3D11Device* pDevice = pRenderer->GetDevice();
         m_spShaderInfo = pShaderInfo;
         DetermineMatricesUsed();
-        if (pShaderInfo->HasShader(EShaderType::TypeVertexShader))
+        if (pShaderInfo->HasShader(EShaderType::TypeVertexShader) && pVSBlob != nullptr)
         {
             const byte* pVSByteCodes = (const byte*)pVSBlob->GetBufferPointer();
             uint32_t vsBufferLen = (uint32_t)pVSBlob->GetBufferSize();
@@ -1130,7 +1130,7 @@ namespace Caustic
                 (uint32_t)pShaderInfo->VertexShaderParameterDefs().size(), m_vsParams, &m_vertexConstants);
             CT(pDevice->CreateVertexShader(pVSByteCodes, vsBufferLen, nullptr, &m_spVertexShader));
         }
-        if (pShaderInfo->HasShader(EShaderType::TypePixelShader))
+        if (pShaderInfo->HasShader(EShaderType::TypePixelShader) && pPSBlob != nullptr)
         {
             const byte* pPSByteCodes = (const byte*)pPSBlob->GetBufferPointer();
             uint32_t psBufferLen = (uint32_t)pPSBlob->GetBufferSize();
@@ -1138,7 +1138,7 @@ namespace Caustic
                 (uint32_t)pShaderInfo->PixelShaderParameterDefs().size(), m_psParams, &m_pixelConstants);
             CT(pDevice->CreatePixelShader(pPSByteCodes, psBufferLen, nullptr, &m_spPixelShader));
         }
-        if (pShaderInfo->HasShader(EShaderType::TypeComputeShader))
+        if (pShaderInfo->HasShader(EShaderType::TypeComputeShader) && pCSBlob != nullptr)
         {
             const byte* pPSByteCodes = (const byte*)pCSBlob->GetBufferPointer();
             uint32_t psBufferLen = (uint32_t)pCSBlob->GetBufferSize();

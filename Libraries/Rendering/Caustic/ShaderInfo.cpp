@@ -340,7 +340,18 @@ namespace Caustic
         "POSITION",
         "NORMAL",
         "TEXCOORD",
-        "SV_POSITION"
+        "SV_POSITION",
+        "TANGENT",
+        "BINORMAL",
+        "COLOR",
+        "BLENDWEIGHT",
+        "BLENDINDICES",
+        "PSIZE",
+        "FOG",
+        "DEPTH",
+        "TESSFACTOR",
+        "SV_VertexID",
+        "SV_InstanceID",
     };
 
     void CShaderInfo::ParseLayout(IXMLDOMNode *pNode)
@@ -351,6 +362,10 @@ namespace Caustic
         CT(spChildren->get_length(&len));
         m_vertexLayout.clear();
         m_vertexSize = 0;
+
+		wchar_t buf[256];
+		swprintf_s(buf, L"ParseLayout: %ld fields\n", len);
+		OutputDebugString(buf);
         for (long i = 0; i < len; i++)
         {
             CComPtr<IXMLDOMNode> spNode;
@@ -360,11 +375,14 @@ namespace Caustic
             if (bstrName == L"Field")
             {
                 //     <Field Name = 'POSITION' Semantic = 'POSITION' SemanticIndex = '0' Format = 'DXGI_FORMAT_R32G32B32_FLOAT' / >
-                D3D11_INPUT_ELEMENT_DESC desc;
+                D3D11_INPUT_ELEMENT_DESC desc = D3D11_INPUT_ELEMENT_DESC();
                 CComPtr<IXMLDOMNamedNodeMap> spAttribs;
                 CT(spNode->get_attributes(&spAttribs));
                 long numAttribs;
                 CT(spAttribs->get_length(&numAttribs));
+                std::wstring fieldSemantic;
+                int fieldSemanticIndex = 0;
+                std::wstring fieldFormat;
                 for (long j = 0; j < numAttribs; j++)
                 {
                     CComPtr<IXMLDOMNode> spAttrib;
@@ -375,6 +393,7 @@ namespace Caustic
                     CT(spAttrib->get_nodeValue(&attribVal));
                     if (attribName == L"Semantic")
                     {
+                        fieldSemantic = attribVal.bstrVal;
                         std::string str = Caustic::wstr2str(attribVal.bstrVal);
                         for (auto name : s_SemanticNames)
                         {
@@ -390,18 +409,30 @@ namespace Caustic
                     {
                         std::string str = Caustic::wstr2str(attribVal.bstrVal);
                         desc.SemanticIndex = std::stoi(str);
+                        fieldSemanticIndex = desc.SemanticIndex;
                     }
                     else if (attribName == L"Format")
+                    {
+                        fieldFormat = attribVal.bstrVal;
                         desc.Format = StringToFormat(attribVal.bstrVal);
+                    }
                 }
+                uint32_t fieldSize = FormatSize(desc.Format);
+                wchar_t buf[256];
+                swprintf_s(buf, L"  Field[%ld]: Semantic=%s SemanticIndex=%d Format=%s Size=%u\n",
+                    i, fieldSemantic.c_str(), fieldSemanticIndex, fieldFormat.c_str(), fieldSize);
+                OutputDebugString(buf);
                 desc.InputSlot = 0;
                 desc.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
                 desc.InputSlotClass = D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA;
                 desc.InstanceDataStepRate = 0;
                 m_vertexLayout.push_back(desc);
-                m_vertexSize += FormatSize(desc.Format);
+                m_vertexSize += fieldSize;
             }
         }
+        wchar_t buf2[256];
+        swprintf_s(buf2, L"ParseLayout: Total vertex size = %u bytes\n", m_vertexSize);
+        OutputDebugString(buf2);
     }
 
     void CShaderInfo::ParseCBuffer(IXMLDOMNode* pNode, EShaderType shaderType)
