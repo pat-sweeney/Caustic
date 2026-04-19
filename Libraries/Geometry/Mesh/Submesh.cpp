@@ -598,7 +598,15 @@ namespace Caustic
                 (v0->pos.x + v1->pos.x + v2->pos.x) / 3.0f,
                 (v0->pos.y + v1->pos.y + v2->pos.y) / 3.0f,
                 (v0->pos.z + v1->pos.z + v2->pos.z) / 3.0f);
-            pFace->ComputeFaceNormal();
+
+            // Compute face normal via cross product (no half-edges available)
+            Vector3 e1(v1->pos.x - v0->pos.x, v1->pos.y - v0->pos.y, v1->pos.z - v0->pos.z);
+            Vector3 e2(v2->pos.x - v0->pos.x, v2->pos.y - v0->pos.y, v2->pos.z - v0->pos.z);
+            pFace->m_normal = Vector3(
+                e1.y * e2.z - e1.z * e2.y,
+                e1.z * e2.x - e1.x * e2.z,
+                e1.x * e2.y - e1.y * e2.x);
+            pFace->m_normal.Normalize();
 
             m_faces.push_back(pFace);
         }
