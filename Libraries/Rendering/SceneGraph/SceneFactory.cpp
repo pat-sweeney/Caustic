@@ -24,6 +24,7 @@ import Rendering.SceneGraph.ISceneSphereElem;
 import Rendering.SceneGraph.ISceneCubeElem;
 import Rendering.SceneGraph.ISceneCylinderElem;
 import Rendering.SceneGraph.ISceneLevelOfDetailElem;
+import Rendering.SceneGraph.ISceneParticleSystemElem;
 
 namespace Caustic
 {
@@ -109,5 +110,10 @@ namespace Caustic
     {
         return CRefObj<ISceneElem>(nullptr);
 //        return Caustic::CreateInstanceElem(pTemplate);
+    }
+
+    CRefObj<ISceneParticleSystemElem> CSceneFactory::CreateParticleSystemElem(IParticleSystem* pParticleSystem)
+    {
+        return Caustic::CreateSceneParticleSystemElem(pParticleSystem);
     }
 };

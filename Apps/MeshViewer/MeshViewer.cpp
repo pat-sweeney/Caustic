@@ -56,6 +56,7 @@ import Rendering.SceneGraph.ISceneMeshElem;
 import Rendering.SceneGraph.ISceneGroupElem;
 import Rendering.SceneGraph.ISceneLightCollectionElem;
 import Rendering.SceneGraph.ISceneMaterialElem;
+import Rendering.SceneGraph.ISceneParticleSystemElem;
 import Rendering.SceneImport.Collada;
 import Rendering.Caustic.IParticleSystem;
 
@@ -75,7 +76,7 @@ public:
     CRefObj<ICausticFactory> m_spCausticFactory;
     CRefObj<ISceneFactory> m_spSceneFactory;
     CRefObj<ICamera> m_spDefaultCamera;
-    CRefObj<IParticleSystem> m_spParticleSystem;
+    CRefObj<ISceneParticleSystemElem> m_spParticleSystemElem;
     int nodeCounter;
     int selectedNode;
     CRefObj<ISceneElem> m_spSelectedNode;
@@ -636,14 +637,23 @@ void FillInspector_SceneGraph(ISceneGraph* pSceneGraph)
         pSceneGraph->SetShowProxyObjects(f);
 }
 
+void FillInspector_ParticleSystem(ISceneParticleSystemElem* pElem)
+{
+    FillInspector_Elem(pElem);
+    auto spPS = pElem->GetParticleSystem();
+    ImGui::Text("Max Particles: %u", spPS->GetMaxParticles());
+}
+
 //**********************************************************************
 // Function: BuildParticleSystemPanel
 // Builds a separate ImGui window for controlling the active particle system.
 //**********************************************************************
 void BuildParticleSystemPanel()
 {
-    if (app.m_spParticleSystem == nullptr)
+    if (app.m_spParticleSystemElem == nullptr)
         return;
+
+    CRefObj<IParticleSystem> spPS = app.m_spParticleSystemElem->GetParticleSystem();
 
     static bool showPanel = true;
     if (!showPanel)
@@ -656,40 +666,40 @@ void BuildParticleSystemPanel()
         if (ImGui::DragFloat3("Position", pos, 0.1f))
         {
             Vector3 v(pos[0], pos[1], pos[2]);
-            app.m_spParticleSystem->SetEmitterPosition(v);
+            spPS->SetEmitterPosition(v);
         }
 
         // Emission rate
         static float emissionRate = 500.0f;
         if (ImGui::SliderFloat("Emission Rate", &emissionRate, 1.0f, 10000.0f, "%.0f"))
-            app.m_spParticleSystem->SetEmissionRate(emissionRate);
+            spPS->SetEmissionRate(emissionRate);
 
         // Lifetime
         static float lifetime = 3.0f;
         if (ImGui::SliderFloat("Lifetime (s)", &lifetime, 0.1f, 30.0f))
-            app.m_spParticleSystem->SetParticleLifetime(lifetime);
+            spPS->SetParticleLifetime(lifetime);
 
         // Initial speed
         static float speed = 5.0f;
         if (ImGui::SliderFloat("Initial Speed", &speed, 0.0f, 50.0f))
-            app.m_spParticleSystem->SetInitialSpeed(speed);
+            spPS->SetInitialSpeed(speed);
 
         // Spread angle
         static float spreadDeg = 30.0f;
         if (ImGui::SliderFloat("Spread (deg)", &spreadDeg, 0.0f, 180.0f))
-            app.m_spParticleSystem->SetEmitSpread(Caustic::DegreesToRadians(spreadDeg));
+            spPS->SetEmitSpread(Caustic::DegreesToRadians(spreadDeg));
 
         // Particle size
         static float particleSize = 0.1f;
         if (ImGui::SliderFloat("Size", &particleSize, 0.001f, 2.0f))
-            app.m_spParticleSystem->SetParticleSize(particleSize);
+            spPS->SetParticleSize(particleSize);
 
         // Color
         static float color[4] = { 1.0f, 0.6f, 0.1f, 0.8f };
         if (ImGui::ColorEdit4("Color", color))
         {
             Vector4 c(color[0], color[1], color[2], color[3]);
-            app.m_spParticleSystem->SetParticleColor(c);
+            spPS->SetParticleColor(c);
         }
 
         // Gravity
@@ -697,7 +707,7 @@ void BuildParticleSystemPanel()
         if (ImGui::DragFloat3("Gravity", gravity, 0.1f))
         {
             Vector3 g(gravity[0], gravity[1], gravity[2]);
-            app.m_spParticleSystem->SetGravity(g);
+            spPS->SetGravity(g);
         }
 
         // Wind
@@ -705,16 +715,17 @@ void BuildParticleSystemPanel()
         if (ImGui::DragFloat3("Wind", wind, 0.1f))
         {
             Vector3 w(wind[0], wind[1], wind[2]);
-            app.m_spParticleSystem->SetWind(w);
+            spPS->SetWind(w);
         }
 
         ImGui::Separator();
-        ImGui::Text("Max Particles: %u", app.m_spParticleSystem->GetMaxParticles());
+        ImGui::Text("Max Particles: %u", spPS->GetMaxParticles());
 
         if (ImGui::Button("Remove"))
         {
-            app.m_spRenderWindow->GetRenderer()->RemoveParticleSystem(app.m_spParticleSystem);
-            app.m_spParticleSystem = nullptr;
+            // Hide the particle system in the scene graph
+            app.m_spParticleSystemElem->SetFlags(app.m_spParticleSystemElem->GetFlags() | ESceneElemFlags::Hidden);
+            app.m_spParticleSystemElem = nullptr;
         }
     }
     ImGui::End();
@@ -852,6 +863,9 @@ void AddGroupNodesCallback(ISceneGraph* pSceneGraph, ISceneGroupElem* pGroup)
             break;
         case ESceneElemType::SphereElem:
             BuildCollapsableNode(pSceneGraph, spChild, true, "Sphere", nullptr, [spChild]() { FillInspector_Sphere((ISceneSphereElem*)spChild.p); });
+            break;
+        case ESceneElemType::ParticleSystemElem:
+            BuildCollapsableNode(pSceneGraph, spChild, true, "ParticleSystem", nullptr, [spChild]() { FillInspector_ParticleSystem((ISceneParticleSystemElem*)spChild.p); });
             break;
         }
     }
@@ -1243,25 +1257,27 @@ ImVec2 BuildMenuBar(ImFont *pFont)
                 CRefObj<ICamera> spCamera = app.m_spCausticFactory->CreateCamera(true);
                 app.m_spRenderWindow->GetSceneGraph()->GetCameras()->AddCamera(spCamera);
             }
-            if (ImGui::MenuItem("Particle System", nullptr, false, app.m_spParticleSystem == nullptr))
+            if (ImGui::MenuItem("Particle System", nullptr, false, app.m_spParticleSystemElem == nullptr))
             {
                 CRefObj<IRenderer> spRenderer = app.m_spRenderWindow->GetRenderer();
-                app.m_spParticleSystem = CreateParticleSystem(spRenderer, 65536);
+                CRefObj<IParticleSystem> spPS = CreateParticleSystem(spRenderer, 65536);
 
                 // Set defaults for a nice fire-like fountain
                 Vector3 emitPos(0.0f, 0.0f, 0.0f);
-                app.m_spParticleSystem->SetEmitterPosition(emitPos);
-                app.m_spParticleSystem->SetEmissionRate(500.0f);
-                app.m_spParticleSystem->SetParticleLifetime(3.0f);
-                app.m_spParticleSystem->SetInitialSpeed(5.0f);
-                app.m_spParticleSystem->SetEmitSpread(Caustic::DegreesToRadians(30.0f));
-                app.m_spParticleSystem->SetParticleSize(0.1f);
+                spPS->SetEmitterPosition(emitPos);
+                spPS->SetEmissionRate(500.0f);
+                spPS->SetParticleLifetime(3.0f);
+                spPS->SetInitialSpeed(5.0f);
+                spPS->SetEmitSpread(Caustic::DegreesToRadians(30.0f));
+                spPS->SetParticleSize(0.1f);
                 Vector4 particleColor(1.0f, 0.6f, 0.1f, 0.8f);
-                app.m_spParticleSystem->SetParticleColor(particleColor);
+                spPS->SetParticleColor(particleColor);
                 Vector3 gravity(0.0f, -9.8f, 0.0f);
-                app.m_spParticleSystem->SetGravity(gravity);
+                spPS->SetGravity(gravity);
 
-                spRenderer->AddParticleSystem(app.m_spParticleSystem);
+                // Create scene graph element and add to scene
+                app.m_spParticleSystemElem = app.m_spSceneFactory->CreateParticleSystemElem(spPS);
+                AddNewElement(app.m_spParticleSystemElem.p);
             }
             if (ImGui::MenuItem("PDF Sphere"))
             {

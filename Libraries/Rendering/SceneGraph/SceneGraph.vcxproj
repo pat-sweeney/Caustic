@@ -127,6 +127,8 @@
     <ClCompile Include="ISceneMeshElem.ixx" />
     <ClCompile Include="ISceneOverlay2DElem.cpp" />
     <ClCompile Include="ISceneOverlay2DElem.ixx" />
+    <ClCompile Include="ISceneParticleSystemElem.cpp" />
+    <ClCompile Include="ISceneParticleSystemElem.ixx" />
     <ClCompile Include="ISceneSphereElem.cpp" />
     <ClCompile Include="ISceneSphereElem.ixx" />
     <ClCompile Include="LevelOfDetailElem.cpp" />
@@ -142,6 +144,7 @@
     <ClCompile Include="MeshElem.ixx" />
     <ClCompile Include="Overlay2D.cpp" />
     <ClCompile Include="Overlay2D.ixx" />
+    <ClCompile Include="ParticleSystemElem.ixx" />
     <ClCompile Include="SceneCtx.ixx" />
     <ClCompile Include="SceneElem.cpp" />
     <ClCompile Include="SceneElem.ixx" />

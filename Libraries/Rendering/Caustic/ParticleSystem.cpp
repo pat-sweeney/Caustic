@@ -262,14 +262,17 @@ namespace Caustic
         spCtx->VSSetShaderResources(0, 1, &m_spParticleSRV.p);
 
         // Set billboard shader params
+        // Transpose to column-major for HLSL (D3DMatrixToMatrix does this
+        // for the standard render path; we must do it manually here)
+        DirectX::XMMATRIX xmView = pRenderer->GetCamera()->GetView();
+        DirectX::XMMATRIX xmProj = pRenderer->GetCamera()->GetProjection();
         DirectX::XMFLOAT4X4 f4x4;
-        DirectX::XMStoreFloat4x4(&f4x4, pRenderer->GetCamera()->GetView());
+        DirectX::XMStoreFloat4x4(&f4x4, DirectX::XMMatrixTranspose(xmView));
         Matrix viewMat(reinterpret_cast<float*>(&f4x4));
-        DirectX::XMStoreFloat4x4(&f4x4, pRenderer->GetCamera()->GetProjection());
+        DirectX::XMStoreFloat4x4(&f4x4, DirectX::XMMatrixTranspose(xmProj));
         Matrix projMat(reinterpret_cast<float*>(&f4x4));
 
         // Extract camera right and up from view matrix for billboarding
-        DirectX::XMMATRIX xmView = pRenderer->GetCamera()->GetView();
         DirectX::XMFLOAT4X4 viewF;
         DirectX::XMStoreFloat4x4(&viewF, xmView);
         Float3 camRight(viewF._11, viewF._21, viewF._31);

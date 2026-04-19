@@ -51,6 +51,9 @@
     <ClCompile Include="SphereElem.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleSystemElem.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="CylinderElem.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -109,6 +112,9 @@
       <Filter>Source Files\Interfaces</Filter>
     </ClCompile>
     <ClCompile Include="ISceneSphereElem.ixx">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="ISceneParticleSystemElem.ixx">
       <Filter>Source Files\Interfaces</Filter>
     </ClCompile>
     <ClCompile Include="ISceneCubeElem.ixx">
@@ -181,6 +187,9 @@
       <Filter>Source Files\Interfaces</Filter>
     </ClCompile>
     <ClCompile Include="ISceneSphereElem.cpp">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="ISceneParticleSystemElem.cpp">
       <Filter>Source Files\Interfaces</Filter>
     </ClCompile>
     <ClCompile Include="ISceneCameraCollectionElem.ixx">

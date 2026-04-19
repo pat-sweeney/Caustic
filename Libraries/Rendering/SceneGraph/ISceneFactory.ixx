@@ -28,6 +28,7 @@ import Rendering.SceneGraph.ISceneCubeElem;
 import Rendering.SceneGraph.ISceneCylinderElem;
 import Rendering.SceneGraph.ISceneCustomRenderElem;
 import Rendering.SceneGraph.ISceneOverlay2DElem;
+import Rendering.SceneGraph.ISceneParticleSystemElem;
 import Rendering.SceneGraph.ISceneGraph;
 import Rendering.SceneGraph.SceneCtx;
 
@@ -138,6 +139,15 @@ export namespace Caustic
         // pShader - override shader to use. If nullptr then default shader is used.
         //**********************************************************************
         virtual CRefObj<ISceneOverlay2DElem> CreateOverlay2DElem(IShader* pShader = nullptr) = 0;
+
+        //**********************************************************************
+        // Method: CreateParticleSystemElem
+        // Creates a particle system scene graph element.
+        //
+        // Parameters:
+        // pParticleSystem - the particle system to wrap
+        //**********************************************************************
+        virtual CRefObj<ISceneParticleSystemElem> CreateParticleSystemElem(IParticleSystem* pParticleSystem) = 0;
 
         //**********************************************************************
         // Method: CreateSceneGraph

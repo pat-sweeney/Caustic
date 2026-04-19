@@ -52,7 +52,8 @@ export namespace Caustic
         LineElem,
         CubeElem,
         CylinderElem,
-        SphereElem
+        SphereElem,
+        ParticleSystemElem
     };
 
     //**********************************************************************
