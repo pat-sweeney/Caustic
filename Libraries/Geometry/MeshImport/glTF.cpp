@@ -49,9 +49,9 @@ namespace Caustic
     {
         if (pObj == nullptr || pObj->GetType() != CJSonType::Object)
             return CRefObj<IJSonObj>(nullptr);
-        auto map = std::any_cast<std::map<std::string, CRefObj<IJSonObj>>>(pObj->GetValue());
-        auto it = map.find(key);
-        if (it != map.end())
+        auto pMap = std::any_cast<std::map<std::string, CRefObj<IJSonObj>>*>(pObj->GetValue());
+        auto it = pMap->find(key);
+        if (it != pMap->end())
             return it->second;
         return CRefObj<IJSonObj>(nullptr);
     }
@@ -63,7 +63,8 @@ namespace Caustic
     {
         if (pObj == nullptr || pObj->GetType() != CJSonType::Array)
             return {};
-        return std::any_cast<std::vector<CRefObj<IJSonObj>>>(pObj->GetValue());
+        auto pVec = std::any_cast<std::vector<CRefObj<IJSonObj>>*>(pObj->GetValue());
+        return *pVec;
     }
 
     //**********************************************************************
