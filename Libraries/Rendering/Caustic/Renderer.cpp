@@ -71,11 +71,18 @@ namespace Caustic
         m_fogStartHeight(0.0f),
         m_sssEnabled(false),
         m_sssWidth(1.0f),
-        m_sssColor(1.0f, 0.8f, 0.6f)
+        m_sssColor(1.0f, 0.8f, 0.6f),
+        m_taaHistoryIndex(0),
+        m_taaHistoryValid(false),
+        m_taaFrameIndex(0),
+        m_aaMode(EAntiAliasMode::FXAA),
+        m_taaBlendFactor(0.05f)
     {
         m_freezeEvent = CreateEvent(nullptr, true, false, nullptr);
         m_freeze = 0;
         m_finalViewport = BBox2(0.0f, 0.0f, 1.0f, 1.0f);
+        m_prevJitteredViewProj = DirectX::XMMatrixIdentity();
+        m_jitteredProjection = DirectX::XMMatrixIdentity();
     }
 
     //**********************************************************************
@@ -170,6 +177,34 @@ namespace Caustic
             CT(m_spDevice->CreateShaderResourceView(spSSSTex, NULL, &spSSSSRV));
             m_spSSSMaskTextureObj = CRefObj<ITexture>(new CTexture(spSSSTex, spSSSSRV));
         }
+
+        // Create TAA render targets: motion vectors (RG16F) and history buffers (RGBA16F x2)
+        m_spMotionVectorRTV = nullptr;
+        m_spMotionVectorTexObj = nullptr;
+        {
+            CComPtr<ID3D11Texture2D> spMVTex;
+            CD3D11_TEXTURE2D_DESC mvDesc(DXGI_FORMAT_R16G16_FLOAT, m_BBDesc.Width, m_BBDesc.Height,
+                1, 1, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
+            CT(m_spDevice->CreateTexture2D(&mvDesc, NULL, &spMVTex));
+            CT(m_spDevice->CreateRenderTargetView(spMVTex, NULL, &m_spMotionVectorRTV));
+            CComPtr<ID3D11ShaderResourceView> spMVSRV;
+            CT(m_spDevice->CreateShaderResourceView(spMVTex, NULL, &spMVSRV));
+            m_spMotionVectorTexObj = CRefObj<ITexture>(new CTexture(spMVTex, spMVSRV));
+        }
+        for (int i = 0; i < 2; i++)
+        {
+            m_spTAAHistoryRTV[i] = nullptr;
+            m_spTAAHistoryTexObj[i] = nullptr;
+            CComPtr<ID3D11Texture2D> spHistTex;
+            CD3D11_TEXTURE2D_DESC histDesc(DXGI_FORMAT_R16G16B16A16_FLOAT, m_BBDesc.Width, m_BBDesc.Height,
+                1, 1, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
+            CT(m_spDevice->CreateTexture2D(&histDesc, NULL, &spHistTex));
+            CT(m_spDevice->CreateRenderTargetView(spHistTex, NULL, &m_spTAAHistoryRTV[i]));
+            CComPtr<ID3D11ShaderResourceView> spHistSRV;
+            CT(m_spDevice->CreateShaderResourceView(spHistTex, NULL, &spHistSRV));
+            m_spTAAHistoryTexObj[i] = CRefObj<ITexture>(new CTexture(spHistTex, spHistSRV));
+        }
+        m_taaHistoryValid = false;
     }
 
     //**********************************************************************
@@ -242,6 +277,8 @@ namespace Caustic
         try { m_spFXAAShader = m_spShaderMgr->FindShader(L"FXAA"); } catch (...) {}
         try { m_spSSAOShader = m_spShaderMgr->FindShader(L"SSAO"); } catch (...) {}
         try { m_spSSAOBlurShader = m_spShaderMgr->FindShader(L"SSAOBlur"); } catch (...) {}
+        try { m_spMotionVectorShader = m_spShaderMgr->FindShader(L"MotionVectors"); } catch (...) {}
+        try { m_spTAAResolveShader = m_spShaderMgr->FindShader(L"TAAResolve"); } catch (...) {}
 
         // Create point-light shadow cubemaps
         m_numPointShadowLights = 0;
@@ -1562,7 +1599,50 @@ namespace Caustic
             m_hasLastFrameTime = true;
         }
 
+        // TAA: Apply sub-pixel jitter to projection matrix
+        DirectX::XMMATRIX unjitteredProj = GetCamera()->GetProjection();
+        if (m_aaMode == EAntiAliasMode::TAA)
+        {
+            // Halton sequence for sub-pixel jitter
+            auto Halton = [](uint32_t index, uint32_t base) -> float
+            {
+                float f = 1.0f;
+                float r = 0.0f;
+                uint32_t i = index;
+                while (i > 0)
+                {
+                    f /= (float)base;
+                    r += f * (float)(i % base);
+                    i /= base;
+                }
+                return r;
+            };
+
+            uint32_t jitterIdx = (m_taaFrameIndex % 16) + 1; // 1-based to avoid (0,0)
+            float jx = Halton(jitterIdx, 2) - 0.5f;
+            float jy = Halton(jitterIdx, 3) - 0.5f;
+
+            // Convert pixel offset to projection-space offset
+            float jitterX = jx * 2.0f / (float)m_BBDesc.Width;
+            float jitterY = jy * 2.0f / (float)m_BBDesc.Height;
+
+            // Apply jitter to projection matrix columns [2][0] and [2][1]
+            // For row-major matrices with row-vector convention (v * M)
+            m_jitteredProjection = unjitteredProj;
+            m_jitteredProjection.r[2] = DirectX::XMVectorAdd(
+                m_jitteredProjection.r[2],
+                DirectX::XMVectorSet(jitterX, jitterY, 0.0f, 0.0f));
+
+            GetCamera()->SetProjection(m_jitteredProjection);
+        }
+
         RenderScene(renderCallback);
+
+        // TAA: Restore unjittered projection after scene render
+        if (m_aaMode == EAntiAliasMode::TAA)
+        {
+            GetCamera()->SetProjection(unjitteredProj);
+        }
 
         // Run post-processing chain
         if (usePostProcess)
@@ -1579,6 +1659,15 @@ namespace Caustic
 
         if (prePresentCallback)
             (prePresentCallback)(this);
+
+        // TAA: Store current jittered viewProj for next frame's reprojection
+        if (m_aaMode == EAntiAliasMode::TAA)
+        {
+            m_prevJitteredViewProj = DirectX::XMMatrixMultiply(
+                GetCamera()->GetView(), m_jitteredProjection);
+            m_taaFrameIndex++;
+        }
+
         m_spSwapChain->Present(1, 0);
     }
 
@@ -2440,6 +2529,117 @@ namespace Caustic
 
                 pCurrentTex = m_spPostProcessTexObj[pingPongIndex];
                 pingPongIndex = 1 - pingPongIndex;
+            }
+#ifdef _DEBUG
+            spCtx2->EndEvent();
+#endif
+        }
+
+        //**********************************************************************
+        // Pass: TAA (Temporal Anti-Aliasing)
+        // 1. Generate motion vectors from depth + current/previous viewProj
+        // 2. Resolve: reproject history, neighborhood clamp, blend
+        //**********************************************************************
+        if (m_aaMode == EAntiAliasMode::TAA && m_spMotionVectorShader != nullptr && m_spTAAResolveShader != nullptr
+            && m_spMotionVectorTexObj != nullptr && m_spTAAHistoryTexObj[0] != nullptr)
+        {
+#ifdef _DEBUG
+            spCtx2->BeginEventInt(L"TAA", 0);
+#endif
+            // Step 1: Generate motion vectors
+            {
+                m_spContext->OMSetRenderTargets(1, &m_spMotionVectorRTV.p, nullptr);
+                FLOAT black[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+                m_spContext->ClearRenderTargetView(m_spMotionVectorRTV, black);
+
+                D3D11_VIEWPORT ppVP = {};
+                ppVP.Width = (float)m_BBDesc.Width;
+                ppVP.Height = (float)m_BBDesc.Height;
+                ppVP.MaxDepth = 1.0f;
+                m_spContext->RSSetViewports(1, &ppVP);
+
+                // Current jittered viewProj inverse
+                DirectX::XMMATRIX currJitteredVP = DirectX::XMMatrixMultiply(
+                    GetCamera()->GetView(), m_jitteredProjection);
+                DirectX::XMMATRIX currVPInv = DirectX::XMMatrixInverse(nullptr, currJitteredVP);
+
+                DirectX::XMFLOAT4X4 f4x4;
+                DirectX::XMStoreFloat4x4(&f4x4, currVPInv);
+                m_spMotionVectorShader->SetPSParam(L"currViewProjInv", std::any(f4x4));
+                DirectX::XMStoreFloat4x4(&f4x4, m_prevJitteredViewProj);
+                m_spMotionVectorShader->SetPSParam(L"prevViewProj", std::any(f4x4));
+                m_spMotionVectorShader->SetPSParam(L"screenSize",
+                    std::any(Float2((float)m_BBDesc.Width, (float)m_BBDesc.Height)));
+
+                m_spMotionVectorShader->SetPSParam(L"depthTex", std::any(m_spDepthTextureObj));
+
+                m_spMotionVectorShader->SetVSParamFloat(L"minu", 0.0f);
+                m_spMotionVectorShader->SetVSParamFloat(L"minv", 0.0f);
+                m_spMotionVectorShader->SetVSParamFloat(L"maxu", 1.0f);
+                m_spMotionVectorShader->SetVSParamFloat(L"maxv", 1.0f);
+
+                m_spMotionVectorShader->BeginRender(this, nullptr, emptyLights, nullptr);
+                m_spContext->DrawIndexed(6, 0, 0);
+                m_spMotionVectorShader->EndRender(this);
+            }
+
+            // Step 2: TAA resolve
+            {
+                int readIdx = m_taaHistoryIndex;
+                int writeIdx = 1 - m_taaHistoryIndex;
+
+                // On first frame, copy current to history
+                if (!m_taaHistoryValid)
+                {
+                    m_spContext->OMSetRenderTargets(1, &m_spTAAHistoryRTV[readIdx].p, nullptr);
+                    D3D11_VIEWPORT ppVP = {};
+                    ppVP.Width = (float)m_BBDesc.Width;
+                    ppVP.Height = (float)m_BBDesc.Height;
+                    ppVP.MaxDepth = 1.0f;
+                    m_spContext->RSSetViewports(1, &ppVP);
+
+                    m_spQuadShader->SetPSParam(L"tex", std::any(pCurrentTex));
+                    m_spQuadShader->SetVSParamFloat(L"minu", 0.0f);
+                    m_spQuadShader->SetVSParamFloat(L"minv", 0.0f);
+                    m_spQuadShader->SetVSParamFloat(L"maxu", 1.0f);
+                    m_spQuadShader->SetVSParamFloat(L"maxv", 1.0f);
+
+                    m_spQuadShader->BeginRender(this, nullptr, emptyLights, nullptr);
+                    m_spContext->DrawIndexed(6, 0, 0);
+                    m_spQuadShader->EndRender(this);
+                    m_taaHistoryValid = true;
+                }
+
+                // Resolve into write history buffer
+                m_spContext->OMSetRenderTargets(1, &m_spTAAHistoryRTV[writeIdx].p, nullptr);
+                FLOAT black[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+                m_spContext->ClearRenderTargetView(m_spTAAHistoryRTV[writeIdx], black);
+
+                D3D11_VIEWPORT ppVP = {};
+                ppVP.Width = (float)m_BBDesc.Width;
+                ppVP.Height = (float)m_BBDesc.Height;
+                ppVP.MaxDepth = 1.0f;
+                m_spContext->RSSetViewports(1, &ppVP);
+
+                m_spTAAResolveShader->SetPSParam(L"currentTex", std::any(pCurrentTex));
+                m_spTAAResolveShader->SetPSParam(L"historyTex", std::any(m_spTAAHistoryTexObj[readIdx]));
+                m_spTAAResolveShader->SetPSParam(L"motionTex", std::any(m_spMotionVectorTexObj));
+                m_spTAAResolveShader->SetPSParamFloat(L"rcpFrameX", 1.0f / (float)m_BBDesc.Width);
+                m_spTAAResolveShader->SetPSParamFloat(L"rcpFrameY", 1.0f / (float)m_BBDesc.Height);
+                m_spTAAResolveShader->SetPSParamFloat(L"blendFactor", m_taaBlendFactor);
+
+                m_spTAAResolveShader->SetVSParamFloat(L"minu", 0.0f);
+                m_spTAAResolveShader->SetVSParamFloat(L"minv", 0.0f);
+                m_spTAAResolveShader->SetVSParamFloat(L"maxu", 1.0f);
+                m_spTAAResolveShader->SetVSParamFloat(L"maxv", 1.0f);
+
+                m_spTAAResolveShader->BeginRender(this, nullptr, emptyLights, nullptr);
+                m_spContext->DrawIndexed(6, 0, 0);
+                m_spTAAResolveShader->EndRender(this);
+
+                // TAA output becomes current for remaining passes
+                pCurrentTex = m_spTAAHistoryTexObj[writeIdx];
+                m_taaHistoryIndex = writeIdx;
             }
 #ifdef _DEBUG
             spCtx2->EndEvent();

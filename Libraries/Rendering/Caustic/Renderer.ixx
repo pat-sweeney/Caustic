@@ -378,6 +378,21 @@ export namespace Caustic
         CComPtr<ID3D11RasterizerState> m_spDecalRastState;
         CRefObj<ITexture> m_spDepthCopy;            // Copy of depth for SRV during decal pass
 
+        // Temporal Anti-Aliasing (TAA)
+        CRefObj<IShader> m_spMotionVectorShader;
+        CRefObj<IShader> m_spTAAResolveShader;
+        CComPtr<ID3D11RenderTargetView> m_spMotionVectorRTV;
+        CRefObj<ITexture> m_spMotionVectorTexObj;
+        CComPtr<ID3D11RenderTargetView> m_spTAAHistoryRTV[2];
+        CRefObj<ITexture> m_spTAAHistoryTexObj[2];
+        int m_taaHistoryIndex;              // Ping-pong index: read from [index], write to [1-index]
+        bool m_taaHistoryValid;             // False on first frame or after resize
+        DirectX::XMMATRIX m_prevJitteredViewProj;   // Previous frame's jittered viewProj
+        DirectX::XMMATRIX m_jitteredProjection;     // Current frame jittered projection
+        uint32_t m_taaFrameIndex;           // Halton sequence frame counter
+        EAntiAliasMode m_aaMode;
+        float m_taaBlendFactor;
+
         void CheckThread()
         {
 #ifdef DIAGNOSTICS
@@ -493,7 +508,14 @@ export namespace Caustic
         virtual void SetPostProcessEnabled(bool enabled) override { m_postProcessEnabled = enabled; }
         virtual void SetBloomEnabled(bool enabled) override { m_bloomEnabled = enabled; }
         virtual void SetBloomParams(float threshold, float intensity) override { m_bloomThreshold = threshold; m_bloomIntensity = intensity; }
-        virtual void SetFXAAEnabled(bool enabled) override { m_fxaaEnabled = enabled; }
+        virtual void SetFXAAEnabled(bool enabled) override { m_fxaaEnabled = enabled; m_aaMode = enabled ? EAntiAliasMode::FXAA : EAntiAliasMode::None; }
+        virtual void SetAntiAliasMode(EAntiAliasMode mode) override
+        {
+            m_aaMode = mode;
+            m_fxaaEnabled = (mode == EAntiAliasMode::FXAA);
+            if (mode != EAntiAliasMode::TAA)
+                m_taaHistoryValid = false;
+        }
         virtual void SetSSAOEnabled(bool enabled) override { m_ssaoEnabled = enabled; }
         virtual void SetExposure(float exposure) override { m_exposure = exposure; }
         virtual void SetEnvironmentMap(ITexture* pCubemap) override

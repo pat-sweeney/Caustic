@@ -48,6 +48,22 @@ export namespace Caustic
     struct ITexture;
 
     //**********************************************************************
+    // Enum: EAntiAliasMode
+    // Selects the anti-aliasing technique used by the renderer.
+    //
+    // Members:
+    // None - No anti-aliasing
+    // FXAA - Fast approximate anti-aliasing (post-process spatial filter)
+    // TAA - Temporal anti-aliasing (jittered sampling + history reprojection)
+    //**********************************************************************
+    enum class EAntiAliasMode
+    {
+        None,
+        FXAA,
+        TAA
+    };
+
+    //**********************************************************************
     // Interface: IRenderer
     // Defines our basic renderer. IRenderer handles all rendering commands.
     // It is generally expected that this object is running on its own thread.
@@ -519,6 +535,16 @@ export namespace Caustic
         // enabled - true to enable FXAA
         //**********************************************************************
         virtual void SetFXAAEnabled(bool enabled) = 0;
+
+        //**********************************************************************
+        // Method: SetAntiAliasMode
+        // Sets the anti-aliasing technique. Replaces SetFXAAEnabled for
+        // more granular control.
+        //
+        // Parameters:
+        // mode - one of EAntiAliasMode::None, FXAA, or TAA
+        //**********************************************************************
+        virtual void SetAntiAliasMode(EAntiAliasMode mode) = 0;
 
         //**********************************************************************
         // Method: SetSSAOEnabled

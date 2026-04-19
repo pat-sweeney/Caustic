@@ -186,6 +186,7 @@ export namespace Caustic
             float scattering, float maxDistance, float startHeight) override;
         virtual void SetSSSEnabled(bool enabled) override;
         virtual void SetSSSParams(float width, FRGBColor& color) override;
+        virtual void SetAntiAliasMode(EAntiAliasMode mode) override;
         virtual void AddDecal(IDecal* pDecal) override;
         virtual void RemoveDecal(IDecal* pDecal) override;
         virtual void AddParticleSystem(IParticleSystem* pParticleSystem) override;

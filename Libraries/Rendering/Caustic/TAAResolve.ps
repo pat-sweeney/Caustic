@@ -1,0 +1,112 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2026
+// Licensed under the MIT license.
+// See file LICENSE for details.
+// File: TAAResolve.ps
+//
+// Temporal Anti-Aliasing resolve shader. Reprojects history using
+// motion vectors, applies neighborhood clamping (AABB) to reduce
+// ghosting, and blends with current frame.
+//**********************************************************************
+Texture2D currentTex : register(t0);     // Current frame HDR color
+Texture2D historyTex : register(t1);     // Previous frame TAA result
+Texture2D motionTex : register(t2);      // Screen-space motion vectors (RG16F)
+SamplerState linearSampler : register(s0);
+SamplerState pointSampler : register(s1);
+
+struct VSOutput
+{
+    float4 posPS : SV_POSITION;
+    float2 uvs : TEXCOORD0;
+};
+
+cbuffer PS_CONSTANT_BUFFER
+{
+    float rcpFrameX;    // 1.0 / screenWidth
+    float rcpFrameY;    // 1.0 / screenHeight
+    float blendFactor;  // Base blend factor (0.05-0.1 typical)
+    float padding;
+};
+
+float3 RGBToYCoCg(float3 rgb)
+{
+    float co = rgb.r - rgb.b;
+    float t = rgb.b + co * 0.5;
+    float cg = rgb.g - t;
+    float y = t + cg * 0.5;
+    return float3(y, co, cg);
+}
+
+float3 YCoCgToRGB(float3 ycocg)
+{
+    float t = ycocg.x - ycocg.z * 0.5;
+    float g = ycocg.z + t;
+    float b = t - ycocg.y * 0.5;
+    float r = ycocg.y + b;
+    return float3(r, g, b);
+}
+
+float4 PS(VSOutput p) : SV_Target
+{
+    float2 uv = p.uvs;
+    float2 rcpFrame = float2(rcpFrameX, rcpFrameY);
+
+    // Sample motion vector
+    float2 motion = motionTex.Sample(pointSampler, uv).rg;
+
+    // Compute previous UV
+    float2 prevUV = uv - motion;
+
+    // Sample current color
+    float3 current = currentTex.Sample(pointSampler, uv).rgb;
+
+    // Neighborhood clamping in YCoCg space (better perceptual results)
+    // Sample 3x3 neighborhood
+    float3 s0 = currentTex.Sample(pointSampler, uv + float2(-1.0,  -1.0) * rcpFrame).rgb;
+    float3 s1 = currentTex.Sample(pointSampler, uv + float2( 0.0,  -1.0) * rcpFrame).rgb;
+    float3 s2 = currentTex.Sample(pointSampler, uv + float2( 1.0,  -1.0) * rcpFrame).rgb;
+    float3 s3 = currentTex.Sample(pointSampler, uv + float2(-1.0,   0.0) * rcpFrame).rgb;
+    float3 s4 = current;
+    float3 s5 = currentTex.Sample(pointSampler, uv + float2( 1.0,   0.0) * rcpFrame).rgb;
+    float3 s6 = currentTex.Sample(pointSampler, uv + float2(-1.0,   1.0) * rcpFrame).rgb;
+    float3 s7 = currentTex.Sample(pointSampler, uv + float2( 0.0,   1.0) * rcpFrame).rgb;
+    float3 s8 = currentTex.Sample(pointSampler, uv + float2( 1.0,   1.0) * rcpFrame).rgb;
+
+    // Convert to YCoCg
+    float3 y0 = RGBToYCoCg(s0); float3 y1 = RGBToYCoCg(s1); float3 y2 = RGBToYCoCg(s2);
+    float3 y3 = RGBToYCoCg(s3); float3 y4 = RGBToYCoCg(s4); float3 y5 = RGBToYCoCg(s5);
+    float3 y6 = RGBToYCoCg(s6); float3 y7 = RGBToYCoCg(s7); float3 y8 = RGBToYCoCg(s8);
+
+    // Compute AABB (min/max of neighborhood)
+    float3 minColor = min(y0, min(y1, min(y2, min(y3, min(y4, min(y5, min(y6, min(y7, y8))))))));
+    float3 maxColor = max(y0, max(y1, max(y2, max(y3, max(y4, max(y5, max(y6, max(y7, y8))))))));
+
+    // Tighter clip box: use cross-shaped samples for variance
+    float3 crossMin = min(y1, min(y3, min(y4, min(y5, y7))));
+    float3 crossMax = max(y1, max(y3, max(y4, max(y5, y7))));
+    minColor = (minColor + crossMin) * 0.5;
+    maxColor = (maxColor + crossMax) * 0.5;
+
+    // Sample history with bilinear filtering
+    float3 history = historyTex.Sample(linearSampler, prevUV).rgb;
+    float3 historyYCoCg = RGBToYCoCg(history);
+
+    // Clamp history to neighborhood AABB
+    historyYCoCg = clamp(historyYCoCg, minColor, maxColor);
+    history = YCoCgToRGB(historyYCoCg);
+
+    // Increase blend factor when history is unreliable
+    float alpha = blendFactor;
+
+    // Off-screen rejection: if previous UV is out of bounds, use current only
+    if (prevUV.x < 0.0 || prevUV.x > 1.0 || prevUV.y < 0.0 || prevUV.y > 1.0)
+        alpha = 1.0;
+
+    // Velocity-based weighting: faster motion = more current frame
+    float motionLength = length(motion * float2(1.0 / rcpFrameX, 1.0 / rcpFrameY));
+    alpha = clamp(alpha + motionLength * 0.02, blendFactor, 1.0);
+
+    // Final blend: alpha = weight of current frame
+    float3 result = lerp(history, current, alpha);
+    return float4(result, 1.0);
+}

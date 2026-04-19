@@ -1,0 +1,53 @@
+//**********************************************************************
+// Copyright Patrick Sweeney 2026
+// Licensed under the MIT license.
+// See file LICENSE for details.
+// File: MotionVectors.ps
+//
+// Generates screen-space motion vectors from depth buffer using
+// camera-only reprojection (current jittered VP -> previous jittered VP).
+//**********************************************************************
+Texture2D depthTex : register(t0);
+SamplerState pointSampler : register(s0);
+
+struct VSOutput
+{
+    float4 posPS : SV_POSITION;
+    float2 uvs : TEXCOORD0;
+};
+
+cbuffer PS_CONSTANT_BUFFER
+{
+    float4x4 currViewProjInv;   // inverse of current jittered viewProj
+    float4x4 prevViewProj;      // previous frame's jittered viewProj
+    float2 screenSize;          // (width, height)
+    float2 padding;
+};
+
+float4 PS(VSOutput p) : SV_Target
+{
+    float depth = depthTex.Sample(pointSampler, p.uvs).r;
+
+    // Skip sky pixels (depth == 1.0)
+    if (depth >= 1.0)
+        return float4(0.0, 0.0, 0.0, 0.0);
+
+    // Reconstruct clip-space position from UV and depth
+    float2 clipXY = p.uvs * 2.0 - 1.0;
+    clipXY.y = -clipXY.y; // UV y is flipped relative to clip y
+    float4 clipPos = float4(clipXY, depth, 1.0);
+
+    // Reconstruct world position
+    float4 worldPos = mul(clipPos, currViewProjInv);
+    worldPos /= worldPos.w;
+
+    // Reproject to previous frame's clip space
+    float4 prevClip = mul(worldPos, prevViewProj);
+    float2 prevNDC = prevClip.xy / prevClip.w;
+    float2 prevUV = prevNDC * float2(0.5, -0.5) + 0.5;
+
+    // Motion vector = current UV - previous UV
+    float2 motion = p.uvs - prevUV;
+
+    return float4(motion, 0.0, 1.0);
+}

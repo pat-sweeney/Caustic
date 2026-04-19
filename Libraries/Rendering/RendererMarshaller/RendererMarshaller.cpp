@@ -916,6 +916,11 @@ namespace Caustic
         RunOnRenderer([spDecal](IRenderer* pRenderer) { pRenderer->RemoveDecal(spDecal.p); }, false);
     }
 
+    void CRendererMarshaller::SetAntiAliasMode(EAntiAliasMode mode)
+    {
+        RunOnRenderer([mode](IRenderer* pRenderer) { pRenderer->SetAntiAliasMode(mode); }, false);
+    }
+
     void CRendererMarshaller::AddParticleSystem(IParticleSystem* pParticleSystem)
     {
         CRefObj<IParticleSystem> spPS(pParticleSystem);
