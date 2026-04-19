@@ -32,8 +32,8 @@ namespace Caustic
         ID3D11DeviceContext* pContext = pRenderer->GetContext();
 
         // Set morph target params (always set to prevent stale values)
-        pShader->SetVSParam(L"morphTargetCount", std::any((int)m_numMorphTargets));
-        pShader->SetVSParam(L"morphNumVertices", std::any((int)m_morphNumVertices));
+        pShader->SetVSParam(L"morphTargetCount", std::any(Int((int)m_numMorphTargets)));
+        pShader->SetVSParam(L"morphNumVertices", std::any(Int((int)m_morphNumVertices)));
         pShader->SetVSParam(L"morphWeights0", std::any(Float4(m_morphWeights[0], m_morphWeights[1], m_morphWeights[2], m_morphWeights[3])));
         pShader->SetVSParam(L"morphWeights1", std::any(Float4(m_morphWeights[4], m_morphWeights[5], m_morphWeights[6], m_morphWeights[7])));
 
