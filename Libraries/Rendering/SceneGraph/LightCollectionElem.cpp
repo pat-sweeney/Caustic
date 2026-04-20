@@ -106,11 +106,11 @@ namespace Caustic
         {
 #pragma warning(push)
 #pragma warning(disable: 4996)
-            const char* pModelDir = std::getenv("AppModelDir");
+            const char* pCausticRoot = std::getenv("CausticRoot");
 #pragma warning(pop)
-            if (pModelDir == nullptr)
-                pModelDir = "D:\\Models";
-            std::string fn = std::string(pModelDir) + "\\LightBulb.obj";
+            if (pCausticRoot == nullptr)
+                pCausticRoot = "D:\\github\\Caustic";
+            std::string fn = std::string(pCausticRoot) + "\\ModelData\\lightbulb.obj";
             std::wstring wfn = Caustic::str2wstr(fn);
             CRefObj<ISceneFactory> spSceneFactory = CSceneFactory::Instance();
             CRefObj<ISceneMeshElem> spMeshElem = spSceneFactory->CreateMeshElem();
