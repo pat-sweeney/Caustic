@@ -1564,12 +1564,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     spMaterialElem->SetShader(spShader);
 
                     auto spLightCollectionElem = app.m_spSceneFactory->CreateLightCollectionElem();
-                    Vector3 lightPos(1000.0f, 1000.0f, 0.0f);
+                    Vector3 lightPos(5.0f, 5.0f, 5.0f);
                     FRGBColor lightColor(1.0f, 1.0f, 1.0f);
                     CRefObj<ILight> spLight(app.m_spCausticFactory->CreatePointLight(lightPos, lightColor, 1.0f, true));
+                    spLight->SetRange(100.0f);
                     spLightCollectionElem->AddLight(spLight);
                     Vector3 lightDir(-1.0f, -1.0f, -1.0f);
-                    spLight = app.m_spCausticFactory->CreateDirectionalLight(lightPos, lightDir, lightColor, 1.0f, true);
+                    spLight = app.m_spCausticFactory->CreateDirectionalLight(lightPos, lightDir, lightColor, 3.0f, true);
                     spLight->SetCastsShadows(true);
                     spLightCollectionElem->AddLight(spLight);
 
