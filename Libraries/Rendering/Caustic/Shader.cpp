@@ -895,9 +895,9 @@ namespace Caustic
             Float4 lightDir(dir.x, dir.y, dir.z, 0.0f);
             SetParam(L"lightDirWS", i, std::any(lightDir), m_psParams);
             int lightType = (int)lights[i]->GetType();
-            SetParam(L"lightType", i, std::any((Int)lightType), m_psParams);
+            SetParam(L"lightType", i, std::any(Float4((float)lightType, 0.0f, 0.0f, 0.0f)), m_psParams);
             int shadowIndex = lights[i]->GetCastsShadows() ? (int)i : -1;
-            SetParam(L"lightShadowIndex", i, std::any((Int)shadowIndex), m_psParams);
+            SetParam(L"lightShadowIndex", i, std::any(Float4((float)shadowIndex, 0.0f, 0.0f, 0.0f)), m_psParams);
             // Upload spot light angles (inner/outer in degrees, 0 for non-spot lights)
             float innerAngle = 0.0f;
             float outerAngle = 0.0f;
@@ -908,8 +908,8 @@ namespace Caustic
                 innerAngle = angles.x;
                 outerAngle = angles.y;
             }
-            SetParam(L"lightInnerAngle", i, std::any(innerAngle), m_psParams);
-            SetParam(L"lightOuterAngle", i, std::any(outerAngle), m_psParams);
+            SetParam(L"lightInnerAngle", i, std::any(Float4(innerAngle, 0.0f, 0.0f, 0.0f)), m_psParams);
+            SetParam(L"lightOuterAngle", i, std::any(Float4(outerAngle, 0.0f, 0.0f, 0.0f)), m_psParams);
         }
         SetPSParam(L"numLights", std::any((Int)numLights));
     }

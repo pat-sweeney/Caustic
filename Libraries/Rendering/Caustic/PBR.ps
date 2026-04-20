@@ -48,8 +48,8 @@ cbuffer PS_CONSTANT_BUFFER
     float4 lightColor[MAX_LIGHTS];
     float4 intensity[MAX_LIGHTS];
     float4 lightDirWS[MAX_LIGHTS];      // xyz = direction (for directional/spot)
-    int lightType[MAX_LIGHTS];           // LIGHT_TYPE_*
-    int lightShadowIndex[MAX_LIGHTS];    // -1 = no shadow
+    float4 lightType[MAX_LIGHTS];        // .x = LIGHT_TYPE_*
+    float4 lightShadowIndex[MAX_LIGHTS]; // .x = -1 = no shadow
     float4 albedo;
     float metallic;
     float roughness;
@@ -67,8 +67,8 @@ cbuffer PS_CONSTANT_BUFFER
     int useTiledLighting;
     int numTilesX;
     float4 cascadeSplitDepths[NUM_CASCADES];
-    float lightInnerAngle[MAX_LIGHTS]; // spot inner angle in degrees
-    float lightOuterAngle[MAX_LIGHTS]; // spot outer angle in degrees
+    float4 lightInnerAngle[MAX_LIGHTS]; // .x = spot inner angle in degrees
+    float4 lightOuterAngle[MAX_LIGHTS]; // .x = spot outer angle in degrees
     matrix spotShadowViewProj[4];      // view-proj matrices for spot shadow maps
     int numSpotShadowLights;
     int numAreaLights;                  // number of active area lights (max 4)
@@ -445,7 +445,7 @@ PSOutput PS(VSOutput p)
         float3 L;
         float attenuation;
 
-        if (lightType[i] == LIGHT_TYPE_DIRECTIONAL)
+        if (lightType[i].x == LIGHT_TYPE_DIRECTIONAL)
         {
             L = normalize(-lightDirWS[i].xyz);
             attenuation = intensity[i].x;
@@ -458,8 +458,8 @@ PSOutput PS(VSOutput p)
             rangeAtten *= rangeAtten;
             attenuation = intensity[i].x / (distance * distance + 1.0) * rangeAtten;
             // Apply spot cone attenuation
-            if (lightType[i] == LIGHT_TYPE_SPOT)
-                attenuation *= SpotConeAttenuation(L, lightDirWS[i].xyz, lightInnerAngle[i], lightOuterAngle[i]);
+            if (lightType[i].x == LIGHT_TYPE_SPOT)
+                attenuation *= SpotConeAttenuation(L, lightDirWS[i].xyz, lightInnerAngle[i].x, lightOuterAngle[i].x);
         }
 
         float3 H = normalize(V + L);
@@ -479,14 +479,14 @@ PSOutput PS(VSOutput p)
         float NdotL = max(dot(N, L), 0.0);
 
         float lightShadow = 1.0;
-        if (lightShadowIndex[i] >= 0)
+        if (lightShadowIndex[i].x >= 0)
         {
-            if (lightType[i] == LIGHT_TYPE_DIRECTIONAL)
+            if (lightType[i].x == LIGHT_TYPE_DIRECTIONAL)
                 lightShadow = shadowFactor;
-            else if (lightType[i] == LIGHT_TYPE_POINT && pointShadowFarPlane > 0.0)
+            else if (lightType[i].x == LIGHT_TYPE_POINT && pointShadowFarPlane > 0.0)
                 lightShadow = ComputePointShadow(p.posWS, lightPosWS[i].xyz, pointShadowFarPlane);
-            else if (lightType[i] == LIGHT_TYPE_SPOT)
-                lightShadow = ComputeSpotShadow(p.posWS, lightShadowIndex[i]);
+            else if (lightType[i].x == LIGHT_TYPE_SPOT)
+                lightShadow = ComputeSpotShadow(p.posWS, (int)lightShadowIndex[i].x);
         }
 
         Lo += (kD * baseColor / PI + specular) * radiance * NdotL * lightShadow;

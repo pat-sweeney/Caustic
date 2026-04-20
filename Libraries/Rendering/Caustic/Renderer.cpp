@@ -1174,7 +1174,7 @@ namespace Caustic
     {
         if (lights.size() == 0)
             return;
-        pShader->SetPSParam(L"shadowMapTexture", std::any(m_spShadowTexture[whichShadowMap]));
+        pShader->SetPSParam(L"shadowMapTexture", std::any(GetShadowmapTexture(whichShadowMap)));
 
         // Pass cascade view-projection matrices and split depths to shaders
         for (int i = 0; i < c_NumCascades; i++)
