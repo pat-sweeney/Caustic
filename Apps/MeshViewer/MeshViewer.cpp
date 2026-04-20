@@ -633,10 +633,8 @@ void FillInspector_Material(ISceneMaterialElem *pMaterialElem, IMaterialAttrib* 
 void FillInspector_SceneGraph(ISceneGraph* pSceneGraph)
 {
     FillInspector_Elem(pSceneGraph);
-    ImGui::Text("Show Proxies:");
-    ImGui::SameLine();
     bool f = pSceneGraph->GetShowProxyObjects();
-    if (ImGui::Checkbox("##ShowProxies", &f))
+    if (ImGui::Checkbox("Show Proxies", &f))
         pSceneGraph->SetShowProxyObjects(f);
 }
 
@@ -1212,6 +1210,14 @@ ImVec2 BuildMenuBar(ImFont *pFont)
             ImGui::EndMenu();
         }
         static bool isAboutOpen = false;
+        if (ImGui::BeginMenu("View"))
+        {
+            auto spSceneGraph = app.m_spRenderWindow->GetSceneGraph();
+            bool showProxies = spSceneGraph->GetShowProxyObjects();
+            if (ImGui::MenuItem("Show Proxies", nullptr, &showProxies))
+                spSceneGraph->SetShowProxyObjects(showProxies);
+            ImGui::EndMenu();
+        }
         if (ImGui::BeginMenu("Help"))
         {
             if (ImGui::MenuItem("About"))
