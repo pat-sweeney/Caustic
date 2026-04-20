@@ -267,10 +267,21 @@ namespace Caustic
             {
                 if (it.second.m_value.has_value())
                 {
-                    CRefObj<ITexture> v = std::any_cast<CRefObj<ITexture>>(it.second.m_value);
-                    v->Render(pRenderer, it.second.m_offset, isPixelShader);
-                    if (it.second.m_offset > (uint32_t)m_maxTextureSlot)
-                        m_maxTextureSlot = it.second.m_offset;
+                    try
+                    {
+                        CRefObj<ITexture> v = std::any_cast<CRefObj<ITexture>>(it.second.m_value);
+                        v->Render(pRenderer, it.second.m_offset, isPixelShader);
+                        if (it.second.m_offset > (uint32_t)m_maxTextureSlot)
+                            m_maxTextureSlot = it.second.m_offset;
+                    }
+                    catch (std::bad_any_cast&)
+                    {
+                        std::string typeName = it.second.m_value.type().name();
+                        wchar_t buf[512];
+                        swprintf_s(buf, L"PushSamplers(Texture) bad_any_cast: param='%s' actualType='%S'\n",
+                            it.first.c_str(), typeName.c_str());
+                        OutputDebugString(buf);
+                    }
                 }
             }
             break;
@@ -278,8 +289,19 @@ namespace Caustic
             {
                 if (it.second.m_value.has_value())
                 {
-                    Caustic::CSamplerRef v = std::any_cast<CSamplerRef>(it.second.m_value);
-                    v.m_spSampler->Render(pRenderer, it.second.m_offset, isPixelShader);
+                    try
+                    {
+                        Caustic::CSamplerRef v = std::any_cast<CSamplerRef>(it.second.m_value);
+                        v.m_spSampler->Render(pRenderer, it.second.m_offset, isPixelShader);
+                    }
+                    catch (std::bad_any_cast&)
+                    {
+                        std::string typeName = it.second.m_value.type().name();
+                        wchar_t buf[512];
+                        swprintf_s(buf, L"PushSamplers(Sampler) bad_any_cast: param='%s' actualType='%S'\n",
+                            it.first.c_str(), typeName.c_str());
+                        OutputDebugString(buf);
+                    }
                 }
                 else if (isPixelShader)
                 {
@@ -314,6 +336,8 @@ namespace Caustic
         for (auto &it : params)
         {
             BYTE* pb = reinterpret_cast<BYTE*>(ms.pData) + it.second.m_cbOffset;
+            try
+            {
             switch (it.second.m_type)
             {
             case EShaderParamType::ShaderType_Sampler:
@@ -451,6 +475,15 @@ namespace Caustic
                     }
                 }
                 break;
+            }
+            }
+            catch (std::bad_any_cast&)
+            {
+                std::string typeName = it.second.m_value.has_value() ? it.second.m_value.type().name() : "empty";
+                wchar_t buf[512];
+                swprintf_s(buf, L"PushConstants bad_any_cast: param='%s' expectedType=%d actualType='%S'\n",
+                    it.first.c_str(), (int)it.second.m_type, typeName.c_str());
+                OutputDebugString(buf);
             }
         }
         pRenderer->GetContext()->Unmap(pBuffer->m_spBuffer, 0);

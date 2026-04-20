@@ -63,16 +63,15 @@ namespace Caustic
 
     void CRenderMaterial::Render(IRenderer* pRenderer, std::vector<CRefObj<ILight>> &lights, IRenderCtx * /*pRenderCtx*/, IShader *spShader)
     {
-        // Set defaults for Phong shaders
-        Float4 vAmbient(0.1f, 0.1f, 0.1f, 0.1f);
+        bool isPBR = spShader->GetShaderInfo()->PSUsesVariable(L"pbrModel");
+
+        // Set defaults for Phong shaders (silently ignored by PBR shaders)
         Float4 vDiffuse(0.7f, 0.7f, 0.7f, 1.0f);
         Float4 vSpecular(0.7f, 0.7f, 0.7f, 1.0f);
         Float4 vSpecularExp(60.0f, 60.0f, 60.0f, 60.0f);
-        float transparency = 1.0f;
         spShader->SetPSParam(L"diffuseColor", std::any(vDiffuse));
         spShader->SetPSParam(L"specularColor", std::any(vSpecular));
         spShader->SetPSParam(L"specularExp", std::any(vSpecularExp));
-        spShader->SetPSParam(L"transparency", std::any(Float4(transparency, transparency, transparency, transparency)));
 
         // Set defaults for PBR shader (silently ignored by non-PBR shaders)
         spShader->SetPSParam(L"albedo", std::any(Float4(0.8f, 0.8f, 0.8f, 1.0f)));
@@ -84,8 +83,13 @@ namespace Caustic
         spShader->SetPSParam(L"hasNormalTexture", std::any(0.0f));
         spShader->SetPSParam(L"hasAOTexture", std::any(0.0f));
         spShader->SetPSParam(L"sssStrength", std::any(0.0f));
-        spShader->SetPSParam(L"transparency", std::any(0.0f));
         spShader->SetPSParam(L"oitEnabled", std::any(pRenderer->IsOITActive() ? 1.0f : 0.0f));
+
+        // transparency has different types: float for PBR, float4 for Phong shaders
+        if (isPBR)
+            spShader->SetPSParam(L"transparency", std::any(0.0f));
+        else
+            spShader->SetPSParam(L"transparency", std::any(Float4(1.0f, 1.0f, 1.0f, 1.0f)));
         
         if (m_spMaterial)
         {
