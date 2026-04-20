@@ -151,7 +151,12 @@ namespace Caustic
             {
                 auto lightPos = m_lights[i]->GetPosition();
                 auto spLightProxyMaterialElem = LoadLightProxies(pRenderer);
-                auto mat = Matrix4x4::TranslationMatrix(lightPos.x, lightPos.y, lightPos.z);
+                // Scale the proxy (model is ~0.15 units) and translate to light position
+                float s = 5.0f;
+                auto mat = Matrix4x4::ScalingMatrix(s, s, s);
+                mat.v[3][0] = lightPos.x;
+                mat.v[3][1] = lightPos.y;
+                mat.v[3][2] = lightPos.z;
                 spLightProxyMaterialElem->SetTransform(mat);
                 spLightProxyMaterialElem->Render(pRenderer, pRenderCtx, pSceneCtx);
             }
