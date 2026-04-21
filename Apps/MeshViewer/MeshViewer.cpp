@@ -562,10 +562,26 @@ void FillInspector_Light(ILight* pLight, int lightIndex)
             std::max<float>(fabs(bbox.minPt.x), std::max<float>(fabs(bbox.minPt.y), fabs(bbox.minPt.z)))
             ), 1.0f);
 
-    ImGui_Vector("Position:",
-        [pLight]()->Vector3 { return pLight->GetPosition(); },
-        [pLight](Vector3 v) { pLight->SetPosition(v); }, -maxV, maxV);
-
+    ImGui::Text("Position:");
+    ImGui::Text("      X:"); ImGui::SameLine();
+    static float maxPos = 1.0f;
+	Vector3 pos = pLight->GetPosition();
+    if (fabs(pos.x) > maxPos * 0.95f) maxPos *= 1.02f;
+    if (fabs(pos.y) > maxPos * 0.95f) maxPos *= 1.02f;
+    if (fabs(pos.z) > maxPos * 0.95f) maxPos *= 1.02f;
+    bool changed = false;
+    if (ImGui::SliderFloat(std::string("##PositionX").c_str(), &pos.x, -maxPos, maxPos))
+        changed = true;
+    ImGui::Text("      Y:"); ImGui::SameLine();
+    if (ImGui::SliderFloat(std::string("##PositionY").c_str(), &pos.y, -maxPos, maxPos))
+        changed = true;
+    ImGui::Text("      Z:"); ImGui::SameLine();
+    if (ImGui::SliderFloat(std::string("##PositionZ").c_str(), &pos.z, -maxPos, maxPos))
+        changed = true;
+    if (changed)
+    {
+        pLight->SetPosition(pos);
+    }
     if (pLight->GetType() == ELightType::DirectionalLight)
     {
         ImGui_Vector("Direction:",
@@ -1310,6 +1326,145 @@ void BuildPanels(ITexture *pFinalRT, ImFont *pFont)
     ImGui::Begin(inspectorTitle.c_str());
     if (app.fillInspectorFunc)
         app.fillInspectorFunc();
+    ImGui::End();
+
+    // Post Processing panel
+    ImGui::Begin("Post Processing");
+    if (app.m_spRenderer)
+    {
+        static bool postProcessEnabled = false;
+        if (ImGui::Checkbox("Enable Post Processing", &postProcessEnabled))
+            app.m_spRenderer->SetPostProcessEnabled(postProcessEnabled);
+
+        if (postProcessEnabled)
+        {
+            ImGui::Separator();
+
+            // Tonemapping / Exposure
+            ImGui::Text("Tonemapping");
+            static float exposure = 1.0f;
+            if (ImGui::SliderFloat("Exposure", &exposure, 0.1f, 10.0f))
+                app.m_spRenderer->SetExposure(exposure);
+
+            ImGui::Separator();
+
+            // Bloom
+            static bool bloomEnabled = false;
+            if (ImGui::Checkbox("Bloom", &bloomEnabled))
+                app.m_spRenderer->SetBloomEnabled(bloomEnabled);
+            if (bloomEnabled)
+            {
+                static float bloomThreshold = 1.0f;
+                static float bloomIntensity = 1.0f;
+                bool bloomChanged = false;
+                bloomChanged |= ImGui::SliderFloat("Bloom Threshold", &bloomThreshold, 0.0f, 5.0f);
+                bloomChanged |= ImGui::SliderFloat("Bloom Intensity", &bloomIntensity, 0.0f, 5.0f);
+                if (bloomChanged)
+                    app.m_spRenderer->SetBloomParams(bloomThreshold, bloomIntensity);
+            }
+
+            ImGui::Separator();
+
+            // Anti-Aliasing
+            ImGui::Text("Anti-Aliasing");
+            static int aaMode = 0; // 0=None, 1=FXAA, 2=TAA
+            if (ImGui::RadioButton("None", &aaMode, 0))
+                app.m_spRenderer->SetAntiAliasMode(EAntiAliasMode::None);
+            ImGui::SameLine();
+            if (ImGui::RadioButton("FXAA", &aaMode, 1))
+                app.m_spRenderer->SetAntiAliasMode(EAntiAliasMode::FXAA);
+            ImGui::SameLine();
+            if (ImGui::RadioButton("TAA", &aaMode, 2))
+                app.m_spRenderer->SetAntiAliasMode(EAntiAliasMode::TAA);
+
+            ImGui::Separator();
+
+            // SSAO / GTAO
+            static bool ssaoEnabled = false;
+            if (ImGui::Checkbox("SSAO (GTAO)", &ssaoEnabled))
+                app.m_spRenderer->SetSSAOEnabled(ssaoEnabled);
+            if (ssaoEnabled)
+            {
+                static float ssaoRadius = 0.5f;
+                static float ssaoIntensity = 2.0f;
+                static float ssaoFalloff = 2.0f;
+                bool ssaoChanged = false;
+                ssaoChanged |= ImGui::SliderFloat("AO Radius", &ssaoRadius, 0.01f, 5.0f);
+                ssaoChanged |= ImGui::SliderFloat("AO Intensity", &ssaoIntensity, 0.1f, 10.0f);
+                ssaoChanged |= ImGui::SliderFloat("AO Falloff", &ssaoFalloff, 0.1f, 10.0f);
+                if (ssaoChanged)
+                    app.m_spRenderer->SetSSAOParams(ssaoRadius, ssaoIntensity, ssaoFalloff);
+            }
+
+            ImGui::Separator();
+
+            // Screen-Space Reflections
+            static bool ssrEnabled = false;
+            if (ImGui::Checkbox("Screen-Space Reflections", &ssrEnabled))
+                app.m_spRenderer->SetSSREnabled(ssrEnabled);
+
+            ImGui::Separator();
+
+            // Volumetric Fog
+            static bool fogEnabled = false;
+            if (ImGui::Checkbox("Volumetric Fog", &fogEnabled))
+                app.m_spRenderer->SetFogEnabled(fogEnabled);
+            if (fogEnabled)
+            {
+                static float fogDensity = 0.02f;
+                static float fogColor[3] = { 0.5f, 0.6f, 0.7f };
+                static float fogHeightFalloff = 0.1f;
+                static float fogScattering = 0.5f;
+                static float fogMaxDistance = 100.0f;
+                static float fogStartHeight = 10.0f;
+                bool fogChanged = false;
+                fogChanged |= ImGui::SliderFloat("Fog Density", &fogDensity, 0.001f, 1.0f);
+                fogChanged |= ImGui::ColorEdit3("Fog Color", fogColor);
+                fogChanged |= ImGui::SliderFloat("Height Falloff", &fogHeightFalloff, 0.001f, 1.0f);
+                fogChanged |= ImGui::SliderFloat("Scattering", &fogScattering, -1.0f, 1.0f);
+                fogChanged |= ImGui::SliderFloat("Max Distance", &fogMaxDistance, 1.0f, 1000.0f);
+                fogChanged |= ImGui::SliderFloat("Start Height", &fogStartHeight, 0.0f, 100.0f);
+                if (fogChanged)
+                {
+                    FRGBColor color(fogColor[0], fogColor[1], fogColor[2]);
+                    app.m_spRenderer->SetFogParams(fogDensity, color, fogHeightFalloff,
+                        fogScattering, fogMaxDistance, fogStartHeight);
+                }
+            }
+
+            ImGui::Separator();
+
+            // Subsurface Scattering
+            static bool sssEnabled = false;
+            if (ImGui::Checkbox("Subsurface Scattering", &sssEnabled))
+                app.m_spRenderer->SetSSSEnabled(sssEnabled);
+            if (sssEnabled)
+            {
+                static float sssWidth = 1.0f;
+                static float sssColor[3] = { 0.8f, 0.2f, 0.1f };
+                bool sssChanged = false;
+                sssChanged |= ImGui::SliderFloat("SSS Width", &sssWidth, 0.01f, 10.0f);
+                sssChanged |= ImGui::ColorEdit3("SSS Color", sssColor);
+                if (sssChanged)
+                {
+                    FRGBColor color(sssColor[0], sssColor[1], sssColor[2]);
+                    app.m_spRenderer->SetSSSParams(sssWidth, color);
+                }
+            }
+
+            ImGui::Separator();
+
+            // Tiled Lighting
+            static bool tiledLighting = false;
+            if (ImGui::Checkbox("Tiled Lighting", &tiledLighting))
+                app.m_spRenderer->SetTiledLightingEnabled(tiledLighting);
+
+            // Frustum Culling
+            static bool frustumCulling = false;
+            if (ImGui::Checkbox("Frustum Culling", &frustumCulling))
+                app.m_spRenderer->SetFrustumCullingEnabled(frustumCulling);
+        }
+    }
     ImGui::End();
 
     if (pFinalRT != nullptr)
