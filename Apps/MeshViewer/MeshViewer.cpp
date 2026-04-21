@@ -564,7 +564,7 @@ void FillInspector_Light(ILight* pLight, int lightIndex)
 
     ImGui_Vector("Position:",
         [pLight]()->Vector3 { return pLight->GetPosition(); },
-        [pLight](Vector3 v) { pLight->SetPosition(v); }, 0.0f, (maxV == FLT_MAX) ? 10000.0f : 1.0f);
+        [pLight](Vector3 v) { pLight->SetPosition(v); }, -maxV, maxV);
 
     if (pLight->GetType() == ELightType::DirectionalLight)
     {
